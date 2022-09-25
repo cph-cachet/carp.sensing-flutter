@@ -1,7 +1,7 @@
-import 'package:carp_core/carp_common/carp_core_common.dart';
 import 'package:carp_core/carp_protocols/carp_core_protocols.dart';
 import 'package:carp_core/carp_deployment/carp_core_deployment.dart';
 import 'package:carp_core/carp_client/carp_core_client.dart';
+import 'package:carp_serializable/carp_serializable.dart';
 
 // These examples tries to mimic the example from the carp_core Kotlin
 // example at https://github.com/cph-cachet/carp.core-kotlin#example
@@ -32,7 +32,7 @@ void carpCoreProtocolExample() async {
     Measure(type: 'dk.cachet.stepcount'),
   ];
 
-  TaskDescriptor startMeasures = ConcurrentTask(
+  TaskDescriptor startMeasures = BackgroundTask(
     name: "Start measures",
     measures: measures,
   );
@@ -49,75 +49,83 @@ void carpCoreProtocolExample() async {
 
 /// Example of how to use the **deployment** sub-system domain models
 void carpCoreDeploymentExample() async {
-  DeploymentService deploymentService;
-  StudyProtocol trackPatientStudy;
+  DeploymentService? deploymentService;
+  StudyProtocol trackPatientStudy = StudyProtocol(
+    ownerId: 'abc@dtu.dk',
+    name: 'Tracking',
+  );
   Smartphone patientPhone = trackPatientStudy.masterDevices.first as Smartphone;
 
   // This is called by `StudyService` when deploying a participant group.
-  StudyDeploymentStatus status =
-      await deploymentService.createStudyDeployment(trackPatientStudy);
-  String studyDeploymentId = status.studyDeploymentId;
+  StudyDeploymentStatus? status =
+      await deploymentService?.createStudyDeployment(trackPatientStudy);
+  String studyDeploymentId = status!.studyDeploymentId;
 
   // What comes after is similar to what is called by the client in `carp.client`:
   // - Register the device to be deployed.
   var registration = DeviceRegistration();
-  status = await deploymentService.registerDevice(
+  status = await deploymentService?.registerDevice(
       studyDeploymentId, patientPhone.roleName, registration);
 
   // - Retrieve information on what to run and indicate the device is ready to
   //   collect the requested data.
-  DeviceDeploymentStatus patientPhoneStatus = status.masterDeviceStatus;
-  if (patientPhoneStatus.remainingDevicesToRegisterBeforeDeployment
+  DeviceDeploymentStatus? patientPhoneStatus = status?.masterDeviceStatus;
+  if (patientPhoneStatus!.remainingDevicesToRegisterBeforeDeployment!
       .isEmpty) // True since there are no dependent devices.
   {
-    MasterDeviceDeployment deploymentInformation = await deploymentService
-        .getDeviceDeploymentFor(studyDeploymentId, patientPhone.roleName);
+    MasterDeviceDeployment? deploymentInformation = await deploymentService
+        ?.getDeviceDeploymentFor(studyDeploymentId, patientPhone.roleName);
     DateTime deploymentDate =
-        deploymentInformation.lastUpdateDate; // To verify correct deployment.
-    await deploymentService.deploymentSuccessfulFor(
+        deploymentInformation!.lastUpdateDate; // To verify correct deployment.
+    await deploymentService?.deploymentSuccessfulFor(
         studyDeploymentId, patientPhone.roleName, deploymentDate);
   }
 
   // Now that all devices have been registered and deployed, the deployment is ready.
-  status = await deploymentService.getStudyDeploymentStatus(studyDeploymentId);
-  var isReady = status.status == StudyDeploymentStatusTypes.DeploymentReady;
+  status = await deploymentService?.getStudyDeploymentStatus(studyDeploymentId);
+  var isReady = status?.status == StudyDeploymentStatusTypes.DeploymentReady;
   assert(isReady, true);
 }
 
 /// Example of how to use the **client** sub-system domain models
 void carpCoreClientExample() async {
-  ParticipationService participationService;
-  DeploymentService deploymentService;
-  DeviceDataCollectorFactory deviceRegistry;
+  ParticipationService? participationService;
+  DeploymentService? deploymentService;
+  DeviceDataCollectorFactory? deviceRegistry;
 
   // Retrieve invitation to participate in the study using a specific device.
-  ActiveParticipationInvitation invitation = (await participationService
-          .getActiveParticipationInvitations('accountId'))
-      .first;
-  String studyDeploymentId = invitation.studyDeploymentId;
-  String deviceToUse = invitation.devices.first.deviceRoleName;
+  ActiveParticipationInvitation? invitation = (await participationService
+          ?.getActiveParticipationInvitations('accountId'))
+      ?.first;
+  String? studyDeploymentId = invitation?.studyDeploymentId;
+  String? deviceToUse = invitation?.devices?.first.deviceRoleName;
 
   // Create a study runtime for the study.
-  var client = ClientManager(
-      deploymentService: deploymentService, deviceRegistry: deviceRegistry);
+  var client = ClientManager();
+  // Configure the client by specifying the deployment servie, the device controller,
+  // and a unique device id.
   client.configure(
-    // Device-specific registration options can be accessed from here.
-    // Depending on the device type, different options are available.
-    // E.g., for a smartphone, a UUID deviceId is generated. To override this default:
+    deploymentService: deploymentService!,
+    deviceController: deviceRegistry!,
     deviceId: "xxxxxxxxx",
   );
-  StudyRuntime runtime = await client.addStudy(studyDeploymentId, deviceToUse);
+
+  Study study = Study(studyDeploymentId!, deviceToUse!);
+  StudyStatus status = await client.addStudy(study);
 
   // Register connected devices in case needed.
-  if (runtime.status == StudyRuntimeStatus.RegisteringDevices) {
-    var connectedDevice = runtime.remainingDevicesToRegister.first;
-    var connectedRegistration = DeviceRegistration();
+  if (status == StudyStatus.RegisteringDevices) {
+    var connectedDevice = study.deviceRoleName;
+    var connectedRegistration = client.registration;
     deploymentService.registerDevice(
-        studyDeploymentId, connectedDevice.roleName, connectedRegistration);
+      studyDeploymentId,
+      connectedDevice,
+      connectedRegistration!,
+    );
 
-    // Re-try deployment now that devices have been registered.
-    StudyRuntimeStatus status = await client.tryDeployment(runtime.id);
-    var isDeployed = status == StudyRuntimeStatus.Deployed;
+    // Try deployment now that devices have been registered.
+    StudyStatus status = await client.tryDeployment(study);
+    var isDeployed = status == StudyStatus.Deployed;
     assert(isDeployed, true);
   }
 }

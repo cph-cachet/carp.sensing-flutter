@@ -1,11 +1,25 @@
 /*
- * Copyright 2021 Copenhagen Center for Health Technology (CACHET) at the
+ * Copyright 2021-2022 Copenhagen Center for Health Technology (CACHET) at the
  * Technical University of Denmark (DTU).
  * Use of this source code is governed by a MIT-style license that can be
  * found in the LICENSE file.
  */
 
 part of esense;
+
+// This is the debug sampling schema used by bardram
+// His eSense devices are
+//
+//        |     name    |     id
+//  ------+-------------+--------------------
+//  right | eSense-0917 |  00:04:79:00:0F:4D
+//  left  | eSense-0332 |  00:04:79:00:0D:04
+//
+// As recommended;:
+//   "it would be better to use the right earbud to record only sound samples
+//    and the left earbud to record only IMU data."
+//
+// Hence, connect the right earbud (eSense-0917) to the phone.
 
 /// A [DeviceDescriptor] for an eSense device used in a [StudyProtocol].
 @JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
@@ -26,51 +40,38 @@ class ESenseDevice extends DeviceDescriptor {
   int? samplingRate;
 
   ESenseDevice({
-    String? roleName,
+    super.roleName = ESenseDevice.DEFAULT_ROLENAME,
     this.deviceName,
     this.samplingRate,
-    List<String>? supportedDataTypes,
+    super.supportedDataTypes,
   }) : super(
-          roleName: roleName ?? DEFAULT_ROLENAME,
           isMasterDevice: false,
-          supportedDataTypes: supportedDataTypes,
         );
 
+  @override
   Function get fromJsonFunction => _$ESenseDeviceFromJson;
   factory ESenseDevice.fromJson(Map<String, dynamic> json) =>
       FromJsonFactory().fromJson(json) as ESenseDevice;
+  @override
   Map<String, dynamic> toJson() => _$ESenseDeviceToJson(this);
 }
 
 /// A [DeviceManager] for the eSense device.
-class ESenseDeviceManager extends DeviceManager {
+class ESenseDeviceManager
+    extends HardwareDeviceManager<DeviceRegistration, ESenseDevice> {
   // the last known voltage level of the eSense device
-  double _voltageLevel = 4;
+  double? _voltageLevel;
 
   /// A handle to the [ESenseManager] plugin.
   ESenseManager? manager;
 
   @override
-  ESenseDevice? get deviceDescriptor => super.deviceDescriptor as ESenseDevice;
-
-  @override
   String get id => deviceDescriptor?.deviceName ?? 'eSense-????';
-
-  @override
-  void onInitialize(DeviceDescriptor descriptor) {
-    assert(descriptor is ESenseDevice,
-        '$runtimeType initialized with a wrong device descriptor of type ${descriptor.runtimeType}');
-    assert(
-        deviceDescriptor?.deviceName != null &&
-            deviceDescriptor!.deviceName!.isNotEmpty,
-        'Cannot initialize an $runtimeType with a null or empty device name. '
-        "Please specify a valid device name, typically on the form 'eSense-1234'");
-  }
 
   /// A estimate of the battery level of the eSense device.
   ///
   /// It assumes a liniar relationship based on a regression on
-  /// these measures:
+  /// these measures of battery and voltages levels:
   ///
   /// ```
   ///   B  |  V
@@ -87,17 +88,31 @@ class ESenseDeviceManager extends DeviceManager {
   ///
   /// See e.g. https://en.wikipedia.org/wiki/State_of_charge#Voltage_method
   @override
-  int get batteryLevel => ((1.19 * _voltageLevel - 3.91) * 100).toInt();
+  int? get batteryLevel => (_voltageLevel != null)
+      ? ((1.19 * _voltageLevel! - 3.91) * 100).toInt()
+      : null;
 
   @override
-  bool canConnect() => status == DeviceStatus.paired;
-
-  @override
-  Future<bool> onConnect() async {
+  void onInitialize(DeviceDescriptor descriptor) {
     if (deviceDescriptor?.deviceName == null ||
-        deviceDescriptor!.deviceName!.isEmpty) return false;
+        deviceDescriptor!.deviceName!.isEmpty) {
+      warning(
+          'Cannot initialize an $runtimeType with a null or empty device name. '
+          "Please specify a valid device name, typically on the form 'eSense-1234'");
+    }
+  }
+
+  @override
+  Future<bool> canConnect() async => (deviceDescriptor?.deviceName != null &&
+      deviceDescriptor!.deviceName!.isNotEmpty);
+
+  @override
+  Future<DeviceStatus> onConnect() async {
+    if (deviceDescriptor?.deviceName == null ||
+        deviceDescriptor!.deviceName!.isEmpty) return DeviceStatus.error;
 
     manager = ESenseManager(id);
+
     // listen for connection events
     manager?.connectionEvents.listen((event) {
       debug('$runtimeType - $event');
@@ -113,15 +128,13 @@ class ESenseDeviceManager extends DeviceManager {
           // when connected, listen for battery events
           manager!.eSenseEvents.listen((event) {
             if (event is BatteryRead) {
-              debug('$runtimeType - getting voltage event, $event');
               _voltageLevel = event.voltage ?? 4;
             }
           });
 
           // set up a timer that asks for the voltage level
-          Timer.periodic(const Duration(minutes: 1), (_) {
+          Timer.periodic(const Duration(minutes: 2), (_) {
             if (status == DeviceStatus.connected) {
-              debug('$runtimeType - requesting voltage...');
               manager?.getBatteryVoltage();
             }
           });
@@ -135,15 +148,14 @@ class ESenseDeviceManager extends DeviceManager {
         case ConnectionType.device_not_found:
         case ConnectionType.disconnected:
           status = DeviceStatus.disconnected;
+          _voltageLevel = null;
           // _eventSubscription?.cancel();
           break;
       }
     });
 
-    // debug('$runtimeType - configuring sampling rate...');
-    // await manager?.setSamplingRate(deviceDescriptor?.samplingRate ?? 10);
-    debug('$runtimeType - connecting to eSense device, name: $id');
-    return await manager?.connect() ?? false;
+    manager?.connect();
+    return DeviceStatus.connecting;
   }
 
   @override

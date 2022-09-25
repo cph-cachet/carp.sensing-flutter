@@ -6,22 +6,24 @@ part of health_package;
 // JsonSerializableGenerator
 // **************************************************************************
 
-HealthMeasure _$HealthMeasureFromJson(Map<String, dynamic> json) =>
-    HealthMeasure(
-      type: json['type'] as String,
-      name: json['name'] as String?,
-      description: json['description'] as String?,
-      enabled: json['enabled'] as bool? ?? true,
-      history: json['history'] == null
+HealthSamplingConfiguration _$HealthSamplingConfigurationFromJson(
+        Map<String, dynamic> json) =>
+    HealthSamplingConfiguration(
+      past: json['past'] == null
           ? null
-          : Duration(microseconds: json['history'] as int),
-      healthDataType:
-          $enumDecode(_$HealthDataTypeEnumMap, json['healthDataType']),
+          : Duration(microseconds: json['past'] as int),
+      healthDataTypes: (json['healthDataTypes'] as List<dynamic>)
+          .map((e) => $enumDecode(_$HealthDataTypeEnumMap, e))
+          .toList(),
     )
       ..$type = json[r'$type'] as String?
-      ..configuration = Map<String, String>.from(json['configuration'] as Map);
+      ..lastTime = json['lastTime'] == null
+          ? null
+          : DateTime.parse(json['lastTime'] as String)
+      ..future = Duration(microseconds: json['future'] as int);
 
-Map<String, dynamic> _$HealthMeasureToJson(HealthMeasure instance) {
+Map<String, dynamic> _$HealthSamplingConfigurationToJson(
+    HealthSamplingConfiguration instance) {
   final val = <String, dynamic>{};
 
   void writeNotNull(String key, dynamic value) {
@@ -31,18 +33,17 @@ Map<String, dynamic> _$HealthMeasureToJson(HealthMeasure instance) {
   }
 
   writeNotNull(r'$type', instance.$type);
-  val['type'] = instance.type;
-  writeNotNull('name', instance.name);
-  writeNotNull('description', instance.description);
-  val['enabled'] = instance.enabled;
-  val['configuration'] = instance.configuration;
-  val['history'] = instance.history.inMicroseconds;
-  val['healthDataType'] = _$HealthDataTypeEnumMap[instance.healthDataType];
+  writeNotNull('lastTime', instance.lastTime?.toIso8601String());
+  val['past'] = instance.past.inMicroseconds;
+  val['future'] = instance.future.inMicroseconds;
+  val['healthDataTypes'] =
+      instance.healthDataTypes.map((e) => _$HealthDataTypeEnumMap[e]!).toList();
   return val;
 }
 
 const _$HealthDataTypeEnumMap = {
   HealthDataType.ACTIVE_ENERGY_BURNED: 'ACTIVE_ENERGY_BURNED',
+  HealthDataType.AUDIOGRAM: 'AUDIOGRAM',
   HealthDataType.BASAL_ENERGY_BURNED: 'BASAL_ENERGY_BURNED',
   HealthDataType.BLOOD_GLUCOSE: 'BLOOD_GLUCOSE',
   HealthDataType.BLOOD_OXYGEN: 'BLOOD_OXYGEN',
@@ -87,7 +88,7 @@ const _$HealthDataTypeEnumMap = {
 };
 
 HealthDatum _$HealthDatumFromJson(Map<String, dynamic> json) => HealthDatum(
-      json['value'] as num,
+      _healthValueFromJson(json['value']),
       json['unit'] as String,
       json['data_type'] as String,
       DateTime.parse(json['date_from'] as String),

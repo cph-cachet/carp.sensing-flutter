@@ -12,12 +12,15 @@ part of sensors;
 abstract class BufferingSensorProbe extends BufferingPeriodicStreamProbe {
   MultiDatum datum = MultiDatum();
 
+  @override
   Future<Datum?> getDatum() async => datum;
 
+  @override
   void onSamplingStart() {
     datum = MultiDatum();
   }
 
+  @override
   void onSamplingEnd() {}
 }
 
@@ -26,6 +29,7 @@ abstract class BufferingSensorProbe extends BufferingPeriodicStreamProbe {
 /// Note that this probe generates a lot of data and should be used
 /// with caution.
 class AccelerometerProbe extends StreamProbe {
+  @override
   Stream<Datum> get stream => accelerometerEvents
       .map((event) => AccelerometerDatum.fromAccelerometerEvent(event));
 }
@@ -33,12 +37,19 @@ class AccelerometerProbe extends StreamProbe {
 /// A probe that collects accelerometer events and buffers them and return
 /// a [MultiDatum] with all the buffered [AccelerometerDatum]s.
 ///
-/// See [PeriodicMeasure] on how to configure this probe, including setting the
-/// [frequency] and [duration] of the sampling rate.
+/// See [PeriodicSamplingConfiguration] on how to configure this probe, including
+/// setting the [interval] and [duration] of the sampling rate.
 class BufferingAccelerometerProbe extends BufferingSensorProbe {
+  @override
   Stream<dynamic> get bufferingStream => accelerometerEvents;
-  void onSamplingData(event) => datum.addDatum(
-      AccelerometerDatum.fromAccelerometerEvent(event, multiDatum: true));
+
+  @override
+  void onSamplingData(event) {
+    if (event is AccelerometerEvent) {
+      datum.addDatum(
+          AccelerometerDatum.fromAccelerometerEvent(event, multiDatum: true));
+    }
+  }
 }
 
 /// A  probe collecting raw data from the gyroscope.
@@ -46,18 +57,25 @@ class BufferingAccelerometerProbe extends BufferingSensorProbe {
 /// Note that this probe generates a lot of data and should be used
 /// with caution.
 class GyroscopeProbe extends StreamProbe {
+  @override
   Stream<Datum> get stream =>
       gyroscopeEvents.map((event) => GyroscopeDatum.fromGyroscopeEvent(event));
 }
 
 /// A probe that collects gyroscope events and buffers them and return
-/// a [MultiDatum] with
-/// all the buffered [GyroscopeDatum]s.
+/// a [MultiDatum] with all the buffered [GyroscopeDatum]s.
 ///
-/// See [PeriodicMeasure] on how to configure this probe, including setting the
-/// [frequency] and [duration] of the sampling rate.
+/// See [PeriodicSamplingConfiguration] on how to configure this probe, including
+/// setting the [interval] and [duration] of the sampling rate.
 class BufferingGyroscopeProbe extends BufferingSensorProbe {
+  @override
   Stream<dynamic> get bufferingStream => gyroscopeEvents;
-  void onSamplingData(dynamic event) => datum
-      .addDatum(GyroscopeDatum.fromGyroscopeEvent(event, multiDatum: true));
+
+  @override
+  void onSamplingData(dynamic event) {
+    if (event is GyroscopeEvent) {
+      datum
+          .addDatum(GyroscopeDatum.fromGyroscopeEvent(event, multiDatum: true));
+    }
+  }
 }

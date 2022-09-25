@@ -27,8 +27,8 @@ void main() {
   late CarpUser user;
   CarpStudyProtocolManager manager = CarpStudyProtocolManager();
 
-  // make sure that the json functions are loaded
-  DomainJsonFactory();
+  // Initialization of serialization
+  CarpMobileSensing();
 
   // register the context, eSense & audio sampling package
   // this is used to be able to deserialize the downloaded protocol
@@ -41,6 +41,7 @@ void main() {
   /// Runs once before all tests.
   setUpAll(() async {
     Settings().saveAppTaskQueue = false;
+    Settings().debugLevel = DebugLevel.DEBUG;
 
     StudyProtocol(ownerId: 'user@dtu.dk', name: 'ignored'); // ...
 
@@ -53,6 +54,9 @@ void main() {
 
     CarpService().configure(app);
     await manager.initialize();
+
+    // create a carp data manager in order to initialize jsoon serialization
+    CarpDataManager();
 
     user = await CarpService().authenticate(
       username: username,
@@ -72,14 +76,14 @@ void main() {
     test('- authentication', () async {
       print('CarpService : ${CarpService().app}');
       print(" - signed in as: $user");
-      expect(user.accountId, accountId);
+      expect(user.accountId?.length, isPositive);
     });
 
     test('- get invitations for this account (user)', () async {
       List<ActiveParticipationInvitation> invitations =
           await CarpParticipationService().getActiveParticipationInvitations();
       invitations.forEach((invitation) => print(invitation));
-      //assert(invitations.length > 0);
+      expect(invitations.length, isNonNegative);
     }, skip: false);
 
     test('- get deployment status', () async {

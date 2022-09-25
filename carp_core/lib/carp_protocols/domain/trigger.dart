@@ -30,35 +30,41 @@ class Trigger extends Serializable {
     this.requiresMasterDevice,
   }) : super();
 
+  @override
   Function get fromJsonFunction => _$TriggerFromJson;
   factory Trigger.fromJson(Map<String, dynamic> json) =>
       FromJsonFactory().fromJson(json) as Trigger;
+  @override
   Map<String, dynamic> toJson() => _$TriggerToJson(this);
+  @override
   String get jsonType => '$_triggerNamespace.$runtimeType';
 }
 
-/// A trigger which starts a task after a specified amount of time has elapsed
-/// since the start of a study deployment.
-/// The start of a study deployment is determined by the first successful
-/// deployment of all participating devices.
-/// This trigger needs to be evaluated on a master device since it is time
-/// bound and therefore requires a task scheduler.
+/// An interface marking that a [Trigger] can be scheduled.
+///
+/// Used when scheduling user tasks persistently on a phone.
+abstract class Scheduleable {}
+
+/// A trigger which starts a task after [elapsedTime] has elapsed since the start
+/// of a study deployment, i.e. when a protocol is deployed on the phone for
+/// the first time.
+///
+/// Never stops sampling once started.
 @JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
-class ElapsedTimeTrigger extends Trigger {
-  Duration? elapsedTime;
+class ElapsedTimeTrigger extends Trigger implements Scheduleable {
+  Duration elapsedTime;
 
   ElapsedTimeTrigger({
-    String? sourceDeviceRoleName,
-    bool? requiresMasterDevice = true,
-    this.elapsedTime,
-  }) : super(
-          sourceDeviceRoleName: sourceDeviceRoleName,
-          requiresMasterDevice: requiresMasterDevice,
-        );
+    super.sourceDeviceRoleName,
+    super.requiresMasterDevice = true,
+    required this.elapsedTime,
+  });
 
+  @override
   Function get fromJsonFunction => _$ElapsedTimeTriggerFromJson;
   factory ElapsedTimeTrigger.fromJson(Map<String, dynamic> json) =>
       FromJsonFactory().fromJson(json) as ElapsedTimeTrigger;
+  @override
   Map<String, dynamic> toJson() => _$ElapsedTimeTriggerToJson(this);
 }
 
@@ -74,18 +80,17 @@ class ManualTrigger extends Trigger {
   String? description;
 
   ManualTrigger({
-    String? sourceDeviceRoleName,
-    bool? requiresMasterDevice = false,
+    super.sourceDeviceRoleName,
+    super.requiresMasterDevice = false,
     this.label,
     this.description,
-  }) : super(
-          sourceDeviceRoleName: sourceDeviceRoleName,
-          requiresMasterDevice: requiresMasterDevice,
-        );
+  });
 
+  @override
   Function get fromJsonFunction => _$ManualTriggerFromJson;
   factory ManualTrigger.fromJson(Map<String, dynamic> json) =>
       FromJsonFactory().fromJson(json) as ManualTrigger;
+  @override
   Map<String, dynamic> toJson() => _$ManualTriggerToJson(this);
 }
 
@@ -98,38 +103,88 @@ class ManualTrigger extends Trigger {
 /// This trigger needs to be evaluated on a master device since it is time bound
 /// and therefore requires a task scheduler.
 @JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
-class ScheduledTrigger extends Trigger {
+class ScheduledTrigger extends Trigger implements Scheduleable {
+  /// The time of the day to trigger.
   TimeOfDay time;
+
+  /// Reccurrence rule according to the
+  /// [iCalendar RFC 5545 standard](https://tools.ietf.org/html/rfc5545#section-3.3.10).
   RecurrenceRule recurrenceRule;
 
   ScheduledTrigger({
-    String? sourceDeviceRoleName,
-    bool? requiresMasterDevice = false,
+    super.sourceDeviceRoleName,
+    super.requiresMasterDevice = false,
     required this.time,
     required this.recurrenceRule,
-  }) : super(
-          sourceDeviceRoleName: sourceDeviceRoleName,
-          requiresMasterDevice: requiresMasterDevice,
-        );
+  });
 
+  @override
+  String toString() => '$runtimeType - time: $time, rrule: $recurrenceRule';
+
+  @override
   Function get fromJsonFunction => _$ScheduledTriggerFromJson;
   factory ScheduledTrigger.fromJson(Map<String, dynamic> json) =>
       FromJsonFactory().fromJson(json) as ScheduledTrigger;
+  @override
   Map<String, dynamic> toJson() => _$ScheduledTriggerToJson(this);
 }
 
-/// A time on a day. Used in a [ScheduledTrigger].
+/// A time on a day in 24-hour format. Used in a [ScheduledTrigger].
 ///
-/// Follows the conventions in the [DartTime] class, but only uses the Time
+/// Follows the conventions in the [DateTime] class, but only uses the Time
 /// part in a 24 hour time format.
 @JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
 class TimeOfDay {
-  /// 24 hour format.
-  int hour;
-  int minute;
-  int second;
+  /// The hour in 24 hour format.
+  final int hour;
 
-  TimeOfDay({this.hour = 0, this.minute = 0, this.second = 0}) : super();
+  /// The minute 0-59.
+  final int minute;
+
+  /// The second 0-59.
+  final int second;
+
+  /// Constructs an instance of [TimeOfDay].
+  const TimeOfDay({
+    this.hour = 0,
+    this.minute = 0,
+    this.second = 0,
+  })  : assert(hour >= 0 && hour < 24),
+        assert(minute >= 0 && minute < 60),
+        assert(second >= 0 && second < 60),
+        super();
+
+  /// Creates a [TimeOfDay] based on the given [time].
+  TimeOfDay.fromDateTime(DateTime time)
+      : hour = time.hour,
+        minute = time.minute,
+        second = time.second;
+
+  /// Constructs a [TimeOfDay] instance with current time in the
+  /// local time zone.
+  factory TimeOfDay.now() => TimeOfDay.fromDateTime(DateTime.now());
+
+  /// Returns true if [this] occurs before [other].
+  ///
+  /// The comparison is independent of whether the time is in UTC or in
+  /// the local time zone.
+  bool isBefore(TimeOfDay other) => DateTime(2021, 1, 1, hour, minute, second)
+      .isBefore(DateTime(2021, 1, 1, other.hour, other.minute, other.second));
+
+  /// Returns true if [this] occurs after [other].
+  ///
+  /// The comparison is independent of whether the time is in UTC or in
+  /// the local time zone.
+  bool isAfter(TimeOfDay other) => DateTime(2021, 1, 1, hour, minute, second)
+      .isAfter(DateTime(2021, 1, 1, other.hour, other.minute, other.second));
+
+  /// Returns a [Duration] with the difference when subtracting [other] from
+  /// [this].
+  ///
+  ///  The returned [Duration] will be negative if [other] occurs after [this].
+  Duration difference(TimeOfDay other) =>
+      DateTime(2021, 1, 1, hour, minute, second).difference(
+          DateTime(2021, 1, 1, other.hour, other.minute, other.second));
 
   static String _twoDigits(int n) => (n >= 10) ? '$n' : '0$n';
 
@@ -139,6 +194,7 @@ class TimeOfDay {
 
   /// Output as ISO 8601 extended time format with seconds accuracy, omitting
   /// the 24th hour and 60th leap second. E.g., "09:30:00".
+  @override
   String toString() =>
       '${_twoDigits(hour)}:${_twoDigits(minute)}:${_twoDigits(second)}';
 }
@@ -151,7 +207,7 @@ class TimeOfDay {
 @JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
 class RecurrenceRule {
   /// Specifies the type of interval at which to repeat events, or multiples thereof.
-  Frequency frequency;
+  final Frequency frequency;
 
   /// The interval at which [frequency] repeats.
   /// The default is 1. For example, with [Frequency.DAILY], a value
@@ -160,14 +216,44 @@ class RecurrenceRule {
 
   /// Specifies when, if ever, to stop repeating events.
   /// Default recurrence is forever.
-  End? end = End.never();
+  End end = End.never();
 
-  RecurrenceRule(this.frequency, {this.interval = 1, this.end}) : super();
+  RecurrenceRule(this.frequency, {this.interval = 1, End? end}) : super() {
+    this.end = end ?? End.never();
+  }
 
   /// Initialize a [RecurrenceRule] based on a [rrule] string.
   factory RecurrenceRule.fromString(String rrule) {
-    // TODO: implement RecurrenceRule.fromString
-    throw UnimplementedError();
+    var str = rrule.substring(rrule.indexOf('RRULE:') + 6);
+    var parameters = <String, String>{};
+    str.split(';').forEach((element) {
+      var par = element.split('=');
+      parameters[par[0]] = par[1];
+    });
+
+    var frequency = Frequency.DAILY;
+    for (var element in Frequency.values) {
+      if (element.name == parameters['FREQ']) frequency = element;
+    }
+
+    var end = End.never();
+    int interval = 1;
+    parameters.forEach((key, value) {
+      switch (key) {
+        case 'INTERVAL':
+          interval = int.tryParse(value) ?? 1;
+          break;
+        case 'UNTIL':
+          end = End.until(Duration(milliseconds: int.tryParse(value) ?? 1));
+          break;
+        case 'COUNT':
+          end = End.count(int.tryParse(value) ?? 1);
+          break;
+        default:
+      }
+    });
+
+    return RecurrenceRule(frequency, interval: interval, end: end);
   }
 
   /// A valid RFC 5545 string representation of this recurrence rule, except
@@ -176,10 +262,11 @@ class RecurrenceRule {
   /// which need to be added to a desired start date.
   /// 'UNTIL' should be reassigned to a calculated end date time, formatted using
   /// the RFC 5545 specifications: https://tools.ietf.org/html/rfc5545#section-3.3.5
+  @override
   String toString() {
-    String rule = 'RRULE:FREQ=$frequency';
+    String rule = 'RRULE:FREQ=${frequency.name}';
     rule += (interval != 1) ? ';INTERVAL=$interval' : '';
-    rule += (end!.type != EndType.NEVER) ? rule += ';$end' : '';
+    rule += (end.type != EndType.NEVER) ? ';$end' : '';
 
     return rule;
   }
@@ -189,11 +276,14 @@ class RecurrenceRule {
   Map<String, dynamic> toJson() => _$RecurrenceRuleToJson(this);
 }
 
-/// Specify repeating events based on an interval of a chosen type or multiples thereof.
+/// Specify repeating events in a [RecurrenceRule] based on an interval of a
+/// chosen type or multiples thereof.
 enum Frequency { SECONDLY, MINUTELY, HOURLY, DAILY, WEEKLY, MONTHLY, YEARLY }
 
+/// Specify how a [RecurrenceRule] may end as specified in [End].
 enum EndType { UNTIL, COUNT, NEVER }
 
+/// Specify how a [RecurrenceRule] ends.
 @JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
 class End {
   final EndType type;
@@ -213,6 +303,18 @@ class End {
 
   /// The recurrence repeats forever.
   factory End.never() => End(EndType.NEVER);
+
+  @override
+  String toString() {
+    switch (type) {
+      case EndType.UNTIL:
+        return 'UNTIL=${elapsedTime!.inMilliseconds}';
+      case EndType.COUNT:
+        return 'COUNT=$count';
+      case EndType.NEVER:
+        return '';
+    }
+  }
 
   factory End.fromJson(Map<String, dynamic> json) => _$EndFromJson(json);
   Map<String, dynamic> toJson() => _$EndToJson(this);

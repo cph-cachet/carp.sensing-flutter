@@ -1,5 +1,5 @@
 /*
- * Copyright 2021 Copenhagen Center for Health Technology (CACHET) at the
+ * Copyright 2018-2022 Copenhagen Center for Health Technology (CACHET) at the
  * Technical University of Denmark (DTU).
  * Use of this source code is governed by a MIT-style license that can be
  * found in the LICENSE file.
@@ -43,29 +43,49 @@ class FileDataEndPoint extends DataEndPoint {
   /// [type] is defined in [DataEndPointTypes]. Is typically of type
   /// [DataEndPointType.FILE] but specialized file types can be specified.
   FileDataEndPoint({
-    String type = DataEndPointTypes.FILE,
-    String dataFormat = NameSpace.CARP,
+    super.type = DataEndPointTypes.FILE,
+    super.dataFormat = NameSpace.CARP,
     this.bufferSize = 500 * 1000,
     this.zip = true,
     this.encrypt = false,
     this.publicKey,
-  }) : super(
-          type: type,
-          dataFormat: dataFormat,
-        );
+  });
 
-  /// The function which can transform this [FileDataEndPoint] into JSON.
-  ///
-  /// See [Serializable].
+  @override
   Function get fromJsonFunction => _$FileDataEndPointFromJson;
 
-  /// Create a [FileDataEndPoint] from a JSON map.
+  @override
   factory FileDataEndPoint.fromJson(Map<String, dynamic> json) =>
       FromJsonFactory().fromJson(json) as FileDataEndPoint;
 
-  /// Serialize this [FileDataEndPoint] as a JSON map.
+  @override
   Map<String, dynamic> toJson() => _$FileDataEndPointToJson(this);
 
-  String toString() => 'FILE - buffer ${(bufferSize / 1000).round()} KB'
+  @override
+  String toString() => '$runtimeType - buffer ${(bufferSize / 1000).round()} KB'
       '${zip ? ', zipped' : ''}${encrypt ? ', encrypted' : ''}';
+}
+
+/// Specify an endpoint for using the [SQLiteDataManager] to store JSON
+/// data in a SQLite database locally on the phone.
+@JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
+class SQLiteDataEndPoint extends DataEndPoint {
+  /// Creates a [SQLiteDataEndPoint].
+  ///
+  /// [type] is defined in [DataEndPointTypes]. Is typically of type
+  /// [DataEndPointType.SQLITE] but specialized file types can be specified.
+  SQLiteDataEndPoint({
+    super.type = DataEndPointTypes.SQLITE,
+    super.dataFormat = NameSpace.CARP,
+  });
+
+  @override
+  Function get fromJsonFunction => _$SQLiteDataEndPointFromJson;
+
+  @override
+  factory SQLiteDataEndPoint.fromJson(Map<String, dynamic> json) =>
+      FromJsonFactory().fromJson(json) as SQLiteDataEndPoint;
+
+  @override
+  Map<String, dynamic> toJson() => _$SQLiteDataEndPointToJson(this);
 }

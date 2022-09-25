@@ -32,7 +32,7 @@ class DeviceInfo {
   Map<String, dynamic> deviceData = {};
 
   /// Initialize the device info using the [DeviceInfoPlugin].
-  Future init() async {
+  Future<void> init() async {
     // early out
     if (deviceData.isNotEmpty) return;
 

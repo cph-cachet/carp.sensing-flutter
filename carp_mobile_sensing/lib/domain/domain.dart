@@ -11,16 +11,17 @@ import 'package:json_annotation/json_annotation.dart';
 import 'package:uuid/uuid.dart';
 
 import 'package:carp_core/carp_core.dart';
+import 'package:carp_serializable/carp_serializable.dart';
 import 'package:carp_mobile_sensing/carp_mobile_sensing.dart';
 
 part 'study_protocol.dart';
 part 'study_description.dart';
 part 'data_endpoint.dart';
 part 'sampling_schema.dart';
-part 'measures.dart';
+part 'sampling_configurations.dart';
 part 'device_descriptor.dart';
 part 'device_deployment.dart';
-part 'tasks.dart';
+part 'app_task.dart';
 part 'triggers.dart';
 part 'datum.dart';
 part 'device_info.dart';

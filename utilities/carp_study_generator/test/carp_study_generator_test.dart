@@ -1,13 +1,12 @@
 import 'dart:io';
 import 'dart:convert';
 import 'package:test/test.dart';
-import 'package:carp_study_generator/carp_study_generator.dart';
 import 'package:carp_core/carp_core.dart';
 import 'package:carp_mobile_sensing/carp_mobile_sensing.dart';
 import 'package:research_package/model.dart';
 import 'package:carp_apps_package/apps.dart';
-import 'package:carp_communication_package/communication.dart';
-import 'package:carp_context_package/context.dart';
+// import 'package:carp_communication_package/communication.dart';
+import 'package:carp_context_package/carp_context_package.dart';
 import 'package:carp_audio_package/media.dart';
 import 'package:carp_esense_package/esense.dart';
 import 'package:carp_survey_package/survey.dart';
@@ -15,8 +14,8 @@ import 'package:carp_health_package/health_package.dart';
 
 void main() {
   setUp(() {
-    // make sure that the json functions are loaded
-    DomainJsonFactory();
+    // Initialization of serialization
+    CarpMobileSensing();
 
     // create two dummy RPTask to register json deserialization functions for RP
     RPTask(identifier: 'ignored');
@@ -24,7 +23,7 @@ void main() {
     // register the sampling packages
     // this is used to be able to deserialize the json protocol
     SamplingPackageRegistry().register(AppsSamplingPackage());
-    SamplingPackageRegistry().register(CommunicationSamplingPackage());
+    // SamplingPackageRegistry().register(CommunicationSamplingPackage());
     SamplingPackageRegistry().register(ContextSamplingPackage());
     SamplingPackageRegistry().register(MediaSamplingPackage());
     SamplingPackageRegistry().register(ESenseSamplingPackage());

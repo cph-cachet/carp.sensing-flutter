@@ -1,5 +1,5 @@
 /*
- * Copyright 2021 Copenhagen Center for Health Technology (CACHET) at the
+ * Copyright 2019-2022 Copenhagen Center for Health Technology (CACHET) at the
  * Technical University of Denmark (DTU).
  * Use of this source code is governed by a MIT-style license that can be
  * found in the LICENSE file.
@@ -13,7 +13,7 @@ part of mobile_sensing_app;
 /// [TaskDescriptor]s and [Measure]s.
 class LocalStudyProtocolManager implements StudyProtocolManager {
   @override
-  Future initialize() async {}
+  Future<void> initialize() async {}
 
   @override
   Future<SmartphoneStudyProtocol> getStudyProtocol(String protocolId) async {
@@ -37,7 +37,7 @@ class LocalStudyProtocolManager implements StudyProtocolManager {
         ));
 
     protocol.dataEndPoint = (bloc.deploymentMode == DeploymentMode.LOCAL)
-        ? FileDataEndPoint()
+        ? SQLiteDataEndPoint()
         : CarpDataEndPoint(
             uploadMethod: CarpUploadMethod.DATA_POINT,
             name: 'CARP Server',
@@ -46,155 +46,181 @@ class LocalStudyProtocolManager implements StudyProtocolManager {
     // set the format of the data to upload - e.g. Open mHealth
     protocol.dataEndPoint!.dataFormat = bloc.dataFormat;
 
-    // Define which devices are used for data collection.
+    // define the master device
     Smartphone phone = Smartphone();
-    ESenseDevice eSense = ESenseDevice(
-      deviceName: 'eSense-0332',
-      samplingRate: 10,
-    );
-    // MovisensDevice movisens = MovisensDevice();
+    protocol.addMasterDevice(phone);
 
-    protocol
-      ..addMasterDevice(phone)
-      ..addConnectedDevice(eSense);
+    // build-in measure from sensor and device sampling packages
+    protocol.addTriggeredTask(
+        ImmediateTrigger(),
+        BackgroundTask()
+          ..addMeasures([
+            Measure(type: SensorSamplingPackage.PEDOMETER),
+            Measure(type: SensorSamplingPackage.LIGHT),
+            Measure(type: DeviceSamplingPackage.SCREEN),
+            Measure(type: DeviceSamplingPackage.MEMORY),
+            Measure(type: DeviceSamplingPackage.BATTERY),
+          ]),
+        phone);
+
+    // a random trigger - 3-8 times during time period of 8-20
+    protocol.addTriggeredTask(
+        RandomRecurrentTrigger(
+          startTime: TimeOfDay(hour: 8),
+          endTime: TimeOfDay(hour: 20),
+          minNumberOfTriggers: 3,
+          maxNumberOfTriggers: 8,
+        ),
+        BackgroundTask()
+          ..addMeasure(Measure(type: DeviceSamplingPackage.DEVICE)),
+        phone);
+
+    // activity measure using the phone
+    protocol.addTriggeredTask(
+        ImmediateTrigger(),
+        BackgroundTask()
+          ..addMeasure(Measure(type: ContextSamplingPackage.ACTIVITY)),
+        phone);
+
+    // Define the online location service and add it as a 'device'
+    LocationService locationService = LocationService();
+    protocol.addConnectedDevice(locationService);
+
+    // Add a background task that collects location on a regular basis
+    protocol.addTriggeredTask(
+        IntervalTrigger(period: Duration(minutes: 5)),
+        BackgroundTask()
+          ..addMeasure(Measure(type: ContextSamplingPackage.LOCATION)),
+        locationService);
+
+    // Add a background task that continously collects geolocation and mobility
+    protocol.addTriggeredTask(
+        ImmediateTrigger(),
+        BackgroundTask()
+          ..addMeasure(Measure(type: ContextSamplingPackage.GEOLOCATION))
+          ..addMeasure(Measure(type: ContextSamplingPackage.MOBILITY)),
+        locationService);
+
+    // Define the online weather service and add it as a 'device'
+    WeatherService weatherService =
+        WeatherService(apiKey: '12b6e28582eb9298577c734a31ba9f4f');
+    protocol.addConnectedDevice(weatherService);
+
+    // Add a background task that collects weather every 30 miutes.
+    protocol.addTriggeredTask(
+        IntervalTrigger(period: Duration(minutes: 30)),
+        BackgroundTask()
+          ..addMeasure(Measure(type: ContextSamplingPackage.WEATHER)),
+        weatherService);
+
+    // Define the online air quality service and add it as a 'device'
+    AirQualityService airQualityService =
+        AirQualityService(apiKey: '9e538456b2b85c92647d8b65090e29f957638c77');
+    protocol.addConnectedDevice(airQualityService);
+
+    // Add a background task that air quality every 30 miutes.
+    protocol.addTriggeredTask(
+        IntervalTrigger(period: Duration(minutes: 30)),
+        BackgroundTask()
+          ..addMeasure(Measure(type: ContextSamplingPackage.AIR_QUALITY)),
+        airQualityService);
 
     protocol.addTriggeredTask(
         ImmediateTrigger(),
-        AutomaticTask()
-          ..measures = SamplingPackageRegistry().debug.getMeasureList(
-            types: [
-              DeviceSamplingPackage.DEVICE,
-              DeviceSamplingPackage.BATTERY,
-              SensorSamplingPackage.PEDOMETER, // 60 s
-              SensorSamplingPackage.LIGHT, // 60 s
-              ConnectivitySamplingPackage.CONNECTIVITY,
-              ConnectivitySamplingPackage.WIFI, // 60 s
-              ConnectivitySamplingPackage.BLUETOOTH, // 60 s
-              MediaSamplingPackage.NOISE, // 60 s
-              DeviceSamplingPackage.MEMORY, // 60 s
-              DeviceSamplingPackage.SCREEN, // event-based
-              ContextSamplingPackage.ACTIVITY, // event-based
-              ContextSamplingPackage.GEOLOCATION, // event-based
-              // ContextSamplingPackage.MOBILITY, // event-based
-            ],
-          ),
+        BackgroundTask()..addMeasure(Measure(type: MediaSamplingPackage.NOISE)),
         phone);
 
-    // // a random trigger - 2-8 times during time period of 8-20
+    protocol.addTriggeredTask(
+        ImmediateTrigger(),
+        BackgroundTask()
+          ..addMeasures([
+            Measure(type: ConnectivitySamplingPackage.CONNECTIVITY),
+            Measure(type: ConnectivitySamplingPackage.WIFI),
+            Measure(type: ConnectivitySamplingPackage.BLUETOOTH),
+          ]),
+        phone);
+
+    // // Add an automatic task that collects SMS messages in/out
     // protocol.addTriggeredTask(
-    //     RandomRecurrentTrigger(
-    //       startTime: Time(hour: 8),
-    //       endTime: Time(hour: 20),
-    //       minNumberOfTriggers: 3,
-    //       maxNumberOfTriggers: 8,
-    //     ),
+    //     ImmediateTrigger(),
     //     AutomaticTask()
-    //       ..measures = SamplingPackageRegistry().debug().getMeasureList(
+    //       ..addMeasures(SamplingPackageRegistry().common.getMeasureList(
     //         types: [
-    //           DeviceSamplingPackage.DEVICE,
+    //           CommunicationSamplingPackage.TEXT_MESSAGE,
     //         ],
-    //       ),
+    //       )),
     //     phone);
 
+    // // Add an automatic task that collects the logs for:
+    // //  * in/out SMS
+    // //  * in/out phone calls
+    // //  * calendar entries
+    // protocol.addTriggeredTask(
+    //     ImmediateTrigger(),
+    //     AutomaticTask()
+    //       ..addMeasures(SamplingPackageRegistry().common.getMeasureList(
+    //         types: [
+    //           CommunicationSamplingPackage.PHONE_LOG,
+    //           CommunicationSamplingPackage.TEXT_MESSAGE_LOG,
+    //           CommunicationSamplingPackage.CALENDAR,
+    //         ],
+    //       )),
+    //     phone);
+
+    // // Add an automatic task that collects the list of installed apps
+    // // and a log of app usage activity
     // protocol.addTriggeredTask(
     //     PeriodicTrigger(
     //       period: const Duration(minutes: 1),
-    //       duration: const Duration(seconds: 2),
+    //       duration: const Duration(seconds: 10),
     //     ),
     //     AutomaticTask()
-    //       ..measures = SamplingPackageRegistry().debug().getMeasureList(
+    //       ..addMeasures(SamplingPackageRegistry().common.getMeasureList(
     //         types: [
-    //           ContextSamplingPackage.LOCATION,
+    //           AppsSamplingPackage.APPS,
+    //           AppsSamplingPackage.APP_USAGE,
     //         ],
-    //       ),
+    //       )),
     //     phone);
 
-    protocol.addTriggeredTask(
-        PeriodicTrigger(
-          period: const Duration(minutes: 30),
-          duration: const Duration(seconds: 2),
-        ),
-        AutomaticTask()
-          ..addMeasure(WeatherMeasure(
-              type: ContextSamplingPackage.WEATHER,
-              name: 'Weather',
-              description:
-                  "Collects local weather from the WeatherAPI web service",
-              apiKey: '12b6e28582eb9298577c734a31ba9f4f'))
-          ..addMeasure(AirQualityMeasure(
-              type: ContextSamplingPackage.AIR_QUALITY,
-              name: 'Air Quality',
-              description:
-                  "Collects local air quality from the Air Quality Index (AQI) web service",
-              apiKey: '9e538456b2b85c92647d8b65090e29f957638c77')),
-        phone);
+    // // define the sSense device and add its measures
+    // ESenseDevice eSense = ESenseDevice(
+    //   deviceName: 'eSense-0332',
+    //   samplingRate: 10,
+    // );
+    // protocol.addConnectedDevice(eSense);
 
     // protocol.addTriggeredTask(
-    //     PeriodicTrigger(
-    //       period: Duration(minutes: 2),
-    //       duration: Duration(seconds: 30),
-    //     ),
-    //     AutomaticTask()
-    //       ..measures = SamplingPackageRegistry().debug.getMeasureList(
-    //         types: [
-    //           MediaSamplingPackage.AUDIO,
-    //         ],
-    //       ),
-    //     phone);
+    //     ImmediateTrigger(),
+    //     BackgroundTask()
+    //       ..addMeasure(Measure(type: ESenseSamplingPackage.ESENSE_BUTTON))
+    //       ..addMeasure(Measure(type: ESenseSamplingPackage.ESENSE_SENSOR)),
+    //     eSense);
 
-    // Add an automatic task that collects SMS messages in/out
-    protocol.addTriggeredTask(
-        ImmediateTrigger(),
-        AutomaticTask()
-          ..addMeasures(SamplingPackageRegistry().common.getMeasureList(
-            types: [
-              CommunicationSamplingPackage.TEXT_MESSAGE,
-            ],
-          )),
-        phone);
+    // define the Polar device and add its measures
+    PolarDevice polar = PolarDevice(
+      identifier: 'B5FC172F',
+      name: 'Polar H10',
+      polarDeviceType: PolarDeviceType.H10,
+      roleName: 'polar-h10-device',
+    );
+    // PolarDevice polar = PolarDevice(
+    //   identifier: 'B36B5B21',
+    //   name: 'Polar PVS',
+    //   polarDeviceType: PolarDeviceType.PVS,
+    //   roleName: 'polar-pvs-device',
+    // );
 
-    // Add an automatic task that collects the logs for:
-    //  * in/out SMS
-    //  * in/out phone calls
-    //  * calendar entries
-    protocol.addTriggeredTask(
-        ImmediateTrigger(),
-        AutomaticTask()
-          ..addMeasures(SamplingPackageRegistry().common.getMeasureList(
-            types: [
-              CommunicationSamplingPackage.PHONE_LOG,
-              CommunicationSamplingPackage.TEXT_MESSAGE_LOG,
-              CommunicationSamplingPackage.CALENDAR,
-            ],
-          )),
-        phone);
-
-    // Add an automatic task that collects the list of installed apps
-    // and a log of app usage activity
-    protocol.addTriggeredTask(
-        PeriodicTrigger(
-          period: const Duration(minutes: 1),
-          duration: const Duration(seconds: 10),
-        ),
-        AutomaticTask()
-          ..addMeasures(SamplingPackageRegistry().common.getMeasureList(
-            types: [
-              AppsSamplingPackage.APPS,
-              AppsSamplingPackage.APP_USAGE,
-            ],
-          )),
-        phone);
+    protocol.addConnectedDevice(polar);
 
     protocol.addTriggeredTask(
         ImmediateTrigger(),
-        AutomaticTask()
-          ..measures = SamplingPackageRegistry().debug.getMeasureList(
-            types: [
-              ESenseSamplingPackage.ESENSE_BUTTON,
-              ESenseSamplingPackage.ESENSE_SENSOR,
-            ],
-          ),
-        eSense);
+        BackgroundTask()
+          ..addMeasure(Measure(type: PolarSamplingPackage.POLAR_HR))
+          ..addMeasure(Measure(type: PolarSamplingPackage.POLAR_ECG))
+          ..addMeasure(Measure(type: PolarSamplingPackage.POLAR_PPG))
+          ..addMeasure(Measure(type: PolarSamplingPackage.POLAR_PPI)),
+        polar);
 
     // // add a measure for ECG monitoring using the Movisens device
     // protocol.addTriggeredTask(
@@ -237,7 +263,7 @@ class LocalStudyProtocolManager implements StudyProtocolManager {
   DataEndPoint getDataEndPoint() {
     switch (bloc.deploymentMode) {
       case DeploymentMode.LOCAL:
-        return FileDataEndPoint();
+        return SQLiteDataEndPoint();
       case DeploymentMode.CARP_PRODUCTION:
       case DeploymentMode.CARP_STAGING:
         return CarpDataEndPoint(
@@ -247,6 +273,7 @@ class LocalStudyProtocolManager implements StudyProtocolManager {
     }
   }
 
+  @override
   Future<bool> saveStudyProtocol(String studyId, StudyProtocol protocol) async {
     throw UnimplementedError();
   }

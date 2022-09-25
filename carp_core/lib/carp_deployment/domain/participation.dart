@@ -7,28 +7,32 @@
 
 part of carp_core_deployment;
 
-/// Set [data] for all expected participant data in the study deployment
+/// Expected participant [data] for all participants in a study deployment
 /// with [studyDeploymentId].
-/// Data which is not set equals null.
 @JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
 class ParticipantData {
   String studyDeploymentId;
-  Map<String, dynamic>? data;
+  Map<String, dynamic> data;
 
-  ParticipantData({required this.studyDeploymentId, this.data}) : super();
+  ParticipantData({
+    required this.studyDeploymentId,
+    required this.data,
+  }) : super();
 
-  dynamic operator [](String key) => data![key];
-  operator []=(String key, dynamic value) => data![key] = value;
+  dynamic operator [](String key) => data[key];
+  void operator []=(String key, dynamic value) => data[key] = value;
 
   factory ParticipantData.fromJson(Map<String, dynamic> json) =>
       _$ParticipantDataFromJson(json);
   Map<String, dynamic> toJson() => _$ParticipantDataToJson(this);
 
+  @override
   String toString() => '$runtimeType - studyDeploymentId: $studyDeploymentId';
 }
 
 /// Identifies an [Account].
 abstract class AccountIdentity extends Serializable {
+  @override
   String get jsonType => 'dk.cachet.carp.common.users.$runtimeType';
 }
 
@@ -38,10 +42,13 @@ class EmailAccountIdentity extends AccountIdentity {
   String emailAddress;
   EmailAccountIdentity(this.emailAddress);
 
+  @override
   Function get fromJsonFunction => _$EmailAccountIdentityFromJson;
   factory EmailAccountIdentity.fromJson(Map<String, dynamic> json) =>
       FromJsonFactory().fromJson(json) as EmailAccountIdentity;
+  @override
   Map<String, dynamic> toJson() => _$EmailAccountIdentityToJson(this);
 
+  @override
   String toString() => '$runtimeType - emailAddress: $emailAddress';
 }

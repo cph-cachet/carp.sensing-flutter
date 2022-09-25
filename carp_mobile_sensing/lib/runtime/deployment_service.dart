@@ -50,12 +50,12 @@ class SmartphoneDeploymentService implements DeploymentService {
   Future<Set<String>> removeStudyDeployments(
       Set<String> studyDeploymentIds) async {
     Set<String> removedKeys = {};
-    studyDeploymentIds.forEach((key) {
+    for (var key in studyDeploymentIds) {
       if (_repository.containsKey(key)) {
         _repository.remove(key);
         removedKeys.add(key);
       }
-    });
+    }
     return removedKeys;
   }
 

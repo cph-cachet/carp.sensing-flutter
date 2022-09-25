@@ -84,19 +84,25 @@ abstract class DatumTransformerSchema {
 
 /// A default [DatumTransformerSchema] for CARP no-operation transformers
 class CARPTransformerSchema extends DatumTransformerSchema {
+  @override
   String get namespace => NameSpace.CARP;
+  @override
   void onRegister() {}
 }
 
 /// A default [DatumTransformerSchema] for Open mHealth (OMH) transformers
 class OMHTransformerSchema extends DatumTransformerSchema {
+  @override
   String get namespace => NameSpace.OMH;
+  @override
   void onRegister() {}
 }
 
 /// A default [DatumTransformerSchema] for HL7 FHIR transformers
 class FHIRTransformerSchema extends DatumTransformerSchema {
+  @override
   String get namespace => NameSpace.FHIR;
+  @override
   void onRegister() {}
 }
 
@@ -104,6 +110,8 @@ class FHIRTransformerSchema extends DatumTransformerSchema {
 class PrivacySchema extends DatumTransformerSchema {
   static const String DEFAULT = 'default-privacy-schema';
 
+  @override
   String get namespace => DEFAULT;
+  @override
   void onRegister() {}
 }

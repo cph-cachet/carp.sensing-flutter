@@ -6,18 +6,25 @@ part of survey;
 // JsonSerializableGenerator
 // **************************************************************************
 
-RPTaskMeasure _$RPTaskMeasureFromJson(Map<String, dynamic> json) =>
-    RPTaskMeasure(
+RPAppTask _$RPAppTaskFromJson(Map<String, dynamic> json) => RPAppTask(
       type: json['type'] as String,
       name: json['name'] as String?,
-      description: json['description'] as String?,
-      enabled: json['enabled'] as bool? ?? true,
-      surveyTask: RPTask.fromJson(json['surveyTask'] as Map<String, dynamic>),
+      title: json['title'] as String? ?? '',
+      description: json['description'] as String? ?? '',
+      instructions: json['instructions'] as String? ?? '',
+      minutesToComplete: json['minutesToComplete'] as int?,
+      expire: json['expire'] == null
+          ? null
+          : Duration(microseconds: json['expire'] as int),
+      notification: json['notification'] as bool? ?? false,
+      rpTask: RPTask.fromJson(json['rpTask'] as Map<String, dynamic>),
     )
       ..$type = json[r'$type'] as String?
-      ..configuration = Map<String, String>.from(json['configuration'] as Map);
+      ..measures = (json['measures'] as List<dynamic>)
+          .map((e) => Measure.fromJson(e as Map<String, dynamic>))
+          .toList();
 
-Map<String, dynamic> _$RPTaskMeasureToJson(RPTaskMeasure instance) {
+Map<String, dynamic> _$RPAppTaskToJson(RPAppTask instance) {
   final val = <String, dynamic>{};
 
   void writeNotNull(String key, dynamic value) {
@@ -27,12 +34,16 @@ Map<String, dynamic> _$RPTaskMeasureToJson(RPTaskMeasure instance) {
   }
 
   writeNotNull(r'$type', instance.$type);
+  val['name'] = instance.name;
+  val['measures'] = instance.measures;
   val['type'] = instance.type;
-  writeNotNull('name', instance.name);
-  writeNotNull('description', instance.description);
-  val['enabled'] = instance.enabled;
-  val['configuration'] = instance.configuration;
-  val['surveyTask'] = instance.surveyTask;
+  val['title'] = instance.title;
+  val['description'] = instance.description;
+  val['instructions'] = instance.instructions;
+  writeNotNull('minutesToComplete', instance.minutesToComplete);
+  writeNotNull('expire', instance.expire?.inMicroseconds);
+  val['notification'] = instance.notification;
+  val['rpTask'] = instance.rpTask;
   return val;
 }
 

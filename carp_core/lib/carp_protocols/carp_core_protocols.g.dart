@@ -75,7 +75,8 @@ Map<String, dynamic> _$MasterDeviceDescriptorToJson(
 CustomProtocolDevice _$CustomProtocolDeviceFromJson(
         Map<String, dynamic> json) =>
     CustomProtocolDevice(
-      roleName: json['roleName'] as String?,
+      roleName:
+          json['roleName'] as String? ?? CustomProtocolDevice.DEFAULT_ROLENAME,
       supportedDataTypes: (json['supportedDataTypes'] as List<dynamic>?)
           ?.map((e) => e as String)
           .toList(),
@@ -107,7 +108,7 @@ Map<String, dynamic> _$CustomProtocolDeviceToJson(
 }
 
 Smartphone _$SmartphoneFromJson(Map<String, dynamic> json) => Smartphone(
-      roleName: json['roleName'] as String?,
+      roleName: json['roleName'] as String? ?? Smartphone.DEFAULT_ROLENAME,
       supportedDataTypes: (json['supportedDataTypes'] as List<dynamic>?)
           ?.map((e) => e as String)
           .toList(),
@@ -191,7 +192,13 @@ Map<String, dynamic> _$DeviceConnectionToJson(DeviceConnection instance) {
 
 Measure _$MeasureFromJson(Map<String, dynamic> json) => Measure(
       type: json['type'] as String,
-    )..$type = json[r'$type'] as String?;
+    )
+      ..$type = json[r'$type'] as String?
+      ..overrideSamplingConfiguration = json['overrideSamplingConfiguration'] ==
+              null
+          ? null
+          : SamplingConfiguration.fromJson(
+              json['overrideSamplingConfiguration'] as Map<String, dynamic>);
 
 Map<String, dynamic> _$MeasureToJson(Measure instance) {
   final val = <String, dynamic>{};
@@ -204,46 +211,8 @@ Map<String, dynamic> _$MeasureToJson(Measure instance) {
 
   writeNotNull(r'$type', instance.$type);
   val['type'] = instance.type;
-  return val;
-}
-
-DataTypeMeasure _$DataTypeMeasureFromJson(Map<String, dynamic> json) =>
-    DataTypeMeasure(
-      type: json['type'] as String,
-    )..$type = json[r'$type'] as String?;
-
-Map<String, dynamic> _$DataTypeMeasureToJson(DataTypeMeasure instance) {
-  final val = <String, dynamic>{};
-
-  void writeNotNull(String key, dynamic value) {
-    if (value != null) {
-      val[key] = value;
-    }
-  }
-
-  writeNotNull(r'$type', instance.$type);
-  val['type'] = instance.type;
-  return val;
-}
-
-PhoneSensorMeasure _$PhoneSensorMeasureFromJson(Map<String, dynamic> json) =>
-    PhoneSensorMeasure(
-      type: json['type'] as String,
-      duration: json['duration'] as int?,
-    )..$type = json[r'$type'] as String?;
-
-Map<String, dynamic> _$PhoneSensorMeasureToJson(PhoneSensorMeasure instance) {
-  final val = <String, dynamic>{};
-
-  void writeNotNull(String key, dynamic value) {
-    if (value != null) {
-      val[key] = value;
-    }
-  }
-
-  writeNotNull(r'$type', instance.$type);
-  val['type'] = instance.type;
-  writeNotNull('duration', instance.duration);
+  writeNotNull(
+      'overrideSamplingConfiguration', instance.overrideSamplingConfiguration);
   return val;
 }
 
@@ -325,15 +294,18 @@ Map<String, dynamic> _$TaskDescriptorToJson(TaskDescriptor instance) {
   return val;
 }
 
-ConcurrentTask _$ConcurrentTaskFromJson(Map<String, dynamic> json) =>
-    ConcurrentTask(
+BackgroundTask _$BackgroundTaskFromJson(Map<String, dynamic> json) =>
+    BackgroundTask(
       name: json['name'] as String?,
       measures: (json['measures'] as List<dynamic>?)
           ?.map((e) => Measure.fromJson(e as Map<String, dynamic>))
           .toList(),
+      duration: json['duration'] == null
+          ? null
+          : Duration(microseconds: json['duration'] as int),
     )..$type = json[r'$type'] as String?;
 
-Map<String, dynamic> _$ConcurrentTaskToJson(ConcurrentTask instance) {
+Map<String, dynamic> _$BackgroundTaskToJson(BackgroundTask instance) {
   final val = <String, dynamic>{};
 
   void writeNotNull(String key, dynamic value) {
@@ -345,6 +317,7 @@ Map<String, dynamic> _$ConcurrentTaskToJson(ConcurrentTask instance) {
   writeNotNull(r'$type', instance.$type);
   val['name'] = instance.name;
   val['measures'] = instance.measures;
+  writeNotNull('duration', instance.duration?.inMicroseconds);
   return val;
 }
 
@@ -379,7 +352,11 @@ TriggeredTask _$TriggeredTaskFromJson(Map<String, dynamic> json) =>
       json['triggerId'] as int,
     )
       ..taskName = json['taskName'] as String
-      ..targetDeviceRoleName = json['targetDeviceRoleName'] as String?;
+      ..targetDeviceRoleName = json['targetDeviceRoleName'] as String?
+      ..targetDeviceType = json['targetDeviceType'] as String?
+      ..hasBeenScheduledUntil = json['hasBeenScheduledUntil'] == null
+          ? null
+          : DateTime.parse(json['hasBeenScheduledUntil'] as String);
 
 Map<String, dynamic> _$TriggeredTaskToJson(TriggeredTask instance) {
   final val = <String, dynamic>{
@@ -394,6 +371,9 @@ Map<String, dynamic> _$TriggeredTaskToJson(TriggeredTask instance) {
   }
 
   writeNotNull('targetDeviceRoleName', instance.targetDeviceRoleName);
+  writeNotNull('targetDeviceType', instance.targetDeviceType);
+  writeNotNull('hasBeenScheduledUntil',
+      instance.hasBeenScheduledUntil?.toIso8601String());
   return val;
 }
 
@@ -418,9 +398,7 @@ Map<String, dynamic> _$TriggerToJson(Trigger instance) {
 ElapsedTimeTrigger _$ElapsedTimeTriggerFromJson(Map<String, dynamic> json) =>
     ElapsedTimeTrigger(
       sourceDeviceRoleName: json['sourceDeviceRoleName'] as String?,
-      elapsedTime: json['elapsedTime'] == null
-          ? null
-          : Duration(microseconds: json['elapsedTime'] as int),
+      elapsedTime: Duration(microseconds: json['elapsedTime'] as int),
     )..$type = json[r'$type'] as String?;
 
 Map<String, dynamic> _$ElapsedTimeTriggerToJson(ElapsedTimeTrigger instance) {
@@ -434,7 +412,7 @@ Map<String, dynamic> _$ElapsedTimeTriggerToJson(ElapsedTimeTrigger instance) {
 
   writeNotNull(r'$type', instance.$type);
   writeNotNull('sourceDeviceRoleName', instance.sourceDeviceRoleName);
-  writeNotNull('elapsedTime', instance.elapsedTime?.inMicroseconds);
+  val['elapsedTime'] = instance.elapsedTime.inMicroseconds;
   return val;
 }
 
@@ -506,21 +484,12 @@ RecurrenceRule _$RecurrenceRuleFromJson(Map<String, dynamic> json) =>
           : End.fromJson(json['end'] as Map<String, dynamic>),
     );
 
-Map<String, dynamic> _$RecurrenceRuleToJson(RecurrenceRule instance) {
-  final val = <String, dynamic>{
-    'frequency': _$FrequencyEnumMap[instance.frequency],
-    'interval': instance.interval,
-  };
-
-  void writeNotNull(String key, dynamic value) {
-    if (value != null) {
-      val[key] = value;
-    }
-  }
-
-  writeNotNull('end', instance.end);
-  return val;
-}
+Map<String, dynamic> _$RecurrenceRuleToJson(RecurrenceRule instance) =>
+    <String, dynamic>{
+      'frequency': _$FrequencyEnumMap[instance.frequency]!,
+      'interval': instance.interval,
+      'end': instance.end,
+    };
 
 const _$FrequencyEnumMap = {
   Frequency.SECONDLY: 'SECONDLY',
@@ -542,7 +511,7 @@ End _$EndFromJson(Map<String, dynamic> json) => End(
 
 Map<String, dynamic> _$EndToJson(End instance) {
   final val = <String, dynamic>{
-    'type': _$EndTypeEnumMap[instance.type],
+    'type': _$EndTypeEnumMap[instance.type]!,
   };
 
   void writeNotNull(String key, dynamic value) {
@@ -579,6 +548,52 @@ Map<String, dynamic> _$SamplingConfigurationToJson(
   writeNotNull(r'$type', instance.$type);
   return val;
 }
+
+BatteryAwareSamplingConfiguration _$BatteryAwareSamplingConfigurationFromJson(
+        Map<String, dynamic> json) =>
+    BatteryAwareSamplingConfiguration(
+      normal: SamplingConfiguration.fromJson(
+          json['normal'] as Map<String, dynamic>),
+      low: SamplingConfiguration.fromJson(json['low'] as Map<String, dynamic>),
+      critical: SamplingConfiguration.fromJson(
+          json['critical'] as Map<String, dynamic>),
+    )..$type = json[r'$type'] as String?;
+
+Map<String, dynamic> _$BatteryAwareSamplingConfigurationToJson(
+    BatteryAwareSamplingConfiguration instance) {
+  final val = <String, dynamic>{};
+
+  void writeNotNull(String key, dynamic value) {
+    if (value != null) {
+      val[key] = value;
+    }
+  }
+
+  writeNotNull(r'$type', instance.$type);
+  val['normal'] = instance.normal;
+  val['low'] = instance.low;
+  val['critical'] = instance.critical;
+  return val;
+}
+
+GranularitySamplingConfiguration _$GranularitySamplingConfigurationFromJson(
+        Map<String, dynamic> json) =>
+    GranularitySamplingConfiguration(
+      $enumDecode(_$GranularityEnumMap, json['granularity']),
+    )..$type = json[r'$type'] as String?;
+
+Map<String, dynamic> _$GranularitySamplingConfigurationToJson(
+        GranularitySamplingConfiguration instance) =>
+    <String, dynamic>{
+      r'$type': instance.$type,
+      'granularity': _$GranularityEnumMap[instance.granularity]!,
+    };
+
+const _$GranularityEnumMap = {
+  Granularity.Detailed: 'Detailed',
+  Granularity.Balanced: 'Balanced',
+  Granularity.Coarse: 'Coarse',
+};
 
 StudyProtocolId _$StudyProtocolIdFromJson(Map<String, dynamic> json) =>
     StudyProtocolId(

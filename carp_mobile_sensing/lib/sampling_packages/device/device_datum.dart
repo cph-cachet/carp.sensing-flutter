@@ -14,6 +14,7 @@ part of device;
 ///   * [IosDeviceInfo](https://pub.dev/documentation/device_info/latest/device_info/IosDeviceInfo-class.html)
 @JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)
 class DeviceDatum extends Datum {
+  @override
   DataFormat get format => DataFormat.fromString(DeviceSamplingPackage.DEVICE);
 
   ///The platform type from which this Datum was collected.
@@ -55,28 +56,23 @@ class DeviceDatum extends Datum {
       : super();
 
   /// Returns `true` if the [deviceId] is equal.
+  @override
   bool equivalentTo(ConditionalEvent? event) => deviceId == event!['deviceId'];
 
   factory DeviceDatum.fromJson(Map<String, dynamic> json) =>
       _$DeviceDatumFromJson(json);
+  @override
   Map<String, dynamic> toJson() => _$DeviceDatumToJson(this);
 
+  @override
   String toString() =>
-      super.toString() +
-      ', platform: $platform'
-          ', deviceId: $deviceId'
-          ', hardware: $hardware'
-          ', name: $deviceName'
-          ', manufacturer: $deviceManufacturer'
-          ', model: $deviceModel'
-          ', OS: $operatingSystem'
-          ', SDK: $sdk'
-          ', release: $release';
+      '${super.toString()}, platform: $platform, deviceId: $deviceId, hardware: $hardware, name: $deviceName, manufacturer: $deviceManufacturer, model: $deviceModel, OS: $operatingSystem, SDK: $sdk, release: $release';
 }
 
 /// A [Datum] that holds battery level collected from the phone.
 @JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)
 class BatteryDatum extends Datum {
+  @override
   DataFormat get format => DataFormat.fromString(DeviceSamplingPackage.BATTERY);
 
   static const String STATE_FULL = 'full';
@@ -94,7 +90,7 @@ class BatteryDatum extends Datum {
   ///  - unknown
   String? batteryStatus;
 
-  BatteryDatum() : super();
+  BatteryDatum([this.batteryLevel, this.batteryStatus]) : super();
 
   BatteryDatum.fromBatteryState(int level, BatteryState state)
       : batteryLevel = level,
@@ -115,20 +111,24 @@ class BatteryDatum extends Datum {
   }
 
   /// Returns `true` if the [batteryLevel] is equal.
+  @override
   bool equivalentTo(ConditionalEvent? event) =>
       batteryLevel == event!['batteryLevel'];
 
   factory BatteryDatum.fromJson(Map<String, dynamic> json) =>
       _$BatteryDatumFromJson(json);
+  @override
   Map<String, dynamic> toJson() => _$BatteryDatumToJson(this);
 
+  @override
   String toString() =>
-      super.toString() + ', level: $batteryLevel%, status: $batteryStatus';
+      '${super.toString()}, level: $batteryLevel%, status: $batteryStatus';
 }
 
 /// Holds information about free memory on the phone.
 @JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)
 class FreeMemoryDatum extends Datum {
+  @override
   DataFormat get format => DataFormat.fromString(DeviceSamplingPackage.MEMORY);
 
   /// Amount of free physical memory in bytes.
@@ -137,22 +137,22 @@ class FreeMemoryDatum extends Datum {
   /// Amount of free virtual memory in bytes.
   int? freeVirtualMemory;
 
-  FreeMemoryDatum() : super();
+  FreeMemoryDatum([this.freePhysicalMemory, this.freeVirtualMemory]) : super();
 
   factory FreeMemoryDatum.fromJson(Map<String, dynamic> json) =>
       _$FreeMemoryDatumFromJson(json);
+  @override
   Map<String, dynamic> toJson() => _$FreeMemoryDatumToJson(this);
 
+  @override
   String toString() =>
-      super.toString() +
-      ', physical: $freePhysicalMemory, virtual: $freeVirtualMemory';
+      '${super.toString()}, physical: $freePhysicalMemory, virtual: $freeVirtualMemory';
 }
 
 /// Holds a screen event collected from the phone.
 @JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)
 class ScreenDatum extends Datum {
-  // static const DataFormat CARP_DATA_FORMAT =
-  //     DataFormat(NameSpace.CARP, DeviceSamplingPackage.SCREEN);
+  @override
   DataFormat get format => DataFormat.fromString(DeviceSamplingPackage.SCREEN);
 
   /// A screen event:
@@ -161,7 +161,7 @@ class ScreenDatum extends Datum {
   /// - SCREEN_UNLOCKED
   String? screenEvent;
 
-  ScreenDatum() : super();
+  ScreenDatum([this.screenEvent]) : super();
 
   factory ScreenDatum.fromScreenStateEvent(ScreenStateEvent event) {
     ScreenDatum sd = ScreenDatum();
@@ -181,12 +181,15 @@ class ScreenDatum extends Datum {
   }
 
   /// Returns `true` if the [screenEvent] is equal.
+  @override
   bool equivalentTo(ConditionalEvent? event) =>
       screenEvent == event!['screenEvent'];
 
   factory ScreenDatum.fromJson(Map<String, dynamic> json) =>
       _$ScreenDatumFromJson(json);
+  @override
   Map<String, dynamic> toJson() => _$ScreenDatumToJson(this);
 
-  String toString() => super.toString() + ', screenEvent: $screenEvent';
+  @override
+  String toString() => '${super.toString()}, screenEvent: $screenEvent';
 }

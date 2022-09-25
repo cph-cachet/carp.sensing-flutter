@@ -1,6 +1,6 @@
 import 'package:carp_core/carp_core.dart';
 import 'package:carp_mobile_sensing/carp_mobile_sensing.dart';
-import 'package:carp_movisens_package/movisens.dart';
+import 'package:carp_movisens_package/carp_movisens_package.dart';
 import 'package:movisens_flutter/movisens_flutter.dart';
 
 /// This is a very simple example of how this sampling package is used with
@@ -37,7 +37,7 @@ void main() async {
   // adding a movisens measure
   protocol.addTriggeredTask(
       ImmediateTrigger(),
-      AutomaticTask(name: 'Movisens Task')
+      BackgroundTask(name: 'Movisens Task')
         ..addMeasure(Measure(type: MovisensSamplingPackage.MOVISENS)),
       movisens);
 }

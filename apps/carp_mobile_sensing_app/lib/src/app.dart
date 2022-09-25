@@ -1,6 +1,7 @@
 part of mobile_sensing_app;
 
 class App extends StatelessWidget {
+  @override
   Widget build(BuildContext context) {
     return MaterialApp(
       // debugShowCheckedModeBanner: false,
@@ -26,8 +27,9 @@ class LoadingPage extends StatelessWidget {
 
       // check if there is a local deploymed id
       // if not, get a deployment id based on an invitation
-      if (bloc.studyDeploymentId == null)
+      if (bloc.studyDeploymentId == null) {
         await CarpBackend().getStudyInvitation(context);
+      }
     }
     await Sensing().initialize();
 
@@ -53,6 +55,7 @@ class LoadingPage extends StatelessWidget {
 
 class CarpMobileSensingApp extends StatefulWidget {
   CarpMobileSensingApp({Key? key}) : super(key: key);
+  @override
   CarpMobileSensingAppState createState() => CarpMobileSensingAppState();
 }
 
@@ -60,21 +63,19 @@ class CarpMobileSensingAppState extends State<CarpMobileSensingApp> {
   int _selectedIndex = 0;
 
   final _pages = [
-    StudyVisualization(),
+    StudyDeploymentPage(),
     ProbesList(),
     // DataVisualization(),
     DevicesList(),
   ];
 
-  void initState() {
-    super.initState();
-  }
-
+  @override
   void dispose() {
-    bloc.dispose();
+    bloc.stop();
     super.dispose();
   }
 
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: _pages[_selectedIndex],
@@ -102,18 +103,13 @@ class CarpMobileSensingAppState extends State<CarpMobileSensingApp> {
     });
   }
 
-  void stop() {
-    setState(() {
-      if (bloc.isRunning) bloc.stop();
-    });
-  }
-
   void restart() {
     setState(() {
-      if (bloc.isRunning)
+      if (bloc.isRunning) {
         bloc.pause();
-      else
+      } else {
         bloc.resume();
+      }
     });
   }
 }

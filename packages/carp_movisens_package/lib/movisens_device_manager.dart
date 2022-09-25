@@ -5,7 +5,7 @@
  * found in the LICENSE file.
  */
 
-part of movisens;
+part of carp_movisens_package;
 
 /// A [DeviceDescriptor] for a Movisens device used in a [StudyProtocol].
 ///
@@ -61,19 +61,22 @@ class MovisensDevice extends DeviceDescriptor {
           supportedDataTypes: [MovisensSamplingPackage.MOVISENS],
         );
 
+  @override
   Function get fromJsonFunction => _$MovisensDeviceFromJson;
   factory MovisensDevice.fromJson(Map<String, dynamic> json) =>
       FromJsonFactory().fromJson(json) as MovisensDevice;
+  @override
   Map<String, dynamic> toJson() => _$MovisensDeviceToJson(this);
 }
 
 /// A Movisens [DeviceManager].
 class MovisensDeviceManager extends BTLEDeviceManager {
   // the last known voltage level of the Movisens device
-  int _batteryLevel = 100;
+  int _batteryLevel = -1;
   String? _connectionStatus;
   StreamSubscription<Map<String, dynamic>>? _subscription;
 
+  @override
   MovisensDevice get deviceDescriptor =>
       super.deviceDescriptor as MovisensDevice;
 
@@ -82,7 +85,7 @@ class MovisensDeviceManager extends BTLEDeviceManager {
   /// [initialize] method.
   Movisens? movisens;
 
-  /// Movisens user data as specified in the [MovisensDevice].
+  /// Movisens user data as specified in the [MovisensDevice] device descriptor.
   /// Only available after this device manger has been initialized via the
   /// [initialize] method.
   UserData? userData;
@@ -93,9 +96,9 @@ class MovisensDeviceManager extends BTLEDeviceManager {
   String? get connectionStatus => _connectionStatus;
 
   @override
-  Future onInitialize(DeviceDescriptor descriptor) async {
+  Future<void> onInitialize(DeviceDescriptor descriptor) async {
     assert(descriptor is MovisensDevice,
-        '$runtimeType - can only be initialized with a MovisensDeviceDescriptor');
+        '$runtimeType - can only be initialized with a MovisensDevice device descriptor');
 
     userData = UserData(
       deviceDescriptor.weight,
@@ -116,25 +119,30 @@ class MovisensDeviceManager extends BTLEDeviceManager {
   String get btleAddress => deviceDescriptor.address;
 
   @override
-  bool canConnect() => userData != null;
+  Future<bool> canConnect() async => userData != null;
 
   @override
-  Future<bool> onConnect() async {
+  Future<DeviceStatus> onConnect() async {
     try {
       // create and connect to the Movisens device
       movisens = Movisens(userData!);
 
       // listen for Movisens events
-      _subscription = movisens!.movisensStream.listen((event) {
-        info('$runtimeType :: Movisens event : $event');
+      _subscription = movisens?.movisensStream.listen((event) {
+        debug('$runtimeType :: Movisens event : $event');
 
-        if (event.containsKey("BatteryLevel"))
-          _batteryLevel =
-              int.parse(jsonDecode(event["BatteryLevel"])[BATTERY_LEVEL]);
+        if (event.containsKey("BatteryLevel")) {
+          _batteryLevel = int.tryParse(
+                  jsonDecode(event["BatteryLevel"].toString())[BATTERY_LEVEL]
+                      .toString()) ??
+              -1;
+        }
 
         if (event.containsKey("ConnectionStatus")) {
           _connectionStatus =
-              jsonDecode(event["ConnectionStatus"])[CONNECTION_STATUS];
+              jsonDecode(event["BatteryLevel"].toString())[BATTERY_LEVEL]
+                  .toString();
+
           // TODO - set the right connection status - can this be other than connected?
           status = DeviceStatus.connected;
         }
@@ -142,10 +150,10 @@ class MovisensDeviceManager extends BTLEDeviceManager {
     } catch (error) {
       warning(
           "$runtimeType - could not connect to device of type '$type' - error: $error");
-      return false;
+      return DeviceStatus.error;
     }
 
-    return true;
+    return DeviceStatus.connecting;
   }
 
   @override

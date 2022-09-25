@@ -7,12 +7,12 @@ part of connectivity;
 Datum blueetothNameAnoymizer(Datum datum) {
   assert(datum is BluetoothDatum);
   BluetoothDatum bt = datum as BluetoothDatum;
-  bt.scanResult.forEach((result) {
+  for (var result in bt.scanResult) {
     result.bluetoothDeviceName =
         sha1.convert(utf8.encode(result.bluetoothDeviceName)).toString();
     result.advertisementName =
         sha1.convert(utf8.encode(result.advertisementName)).toString();
-  });
+  }
   return bt;
 }
 

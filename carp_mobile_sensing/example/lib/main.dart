@@ -4,9 +4,10 @@
  * Use of this source code is governed by a MIT-style license that can be
  * found in the LICENSE file.
  */
+import 'package:carp_serializable/carp_serializable.dart';
 import 'package:carp_core/carp_core.dart';
 import 'package:carp_mobile_sensing/carp_mobile_sensing.dart';
-import 'package:flutter/material.dart';
+import 'package:flutter/material.dart' hide TimeOfDay;
 
 void main() => runApp(CARPMobileSensingApp());
 
@@ -24,11 +25,11 @@ class CARPMobileSensingApp extends StatelessWidget {
 
 class ConsolePage extends StatefulWidget {
   final String title;
-  ConsolePage({Key? key, required this.title}) : super(key: key);
+  ConsolePage({super.key, required this.title});
   Console createState() => Console();
 }
 
-/// A simple UI with a console that logs/prints the sensed data in a json format.
+/// A simple UI with a console that shows the sensed data in a json format.
 class Console extends State<ConsolePage> {
   String _log = '';
   Sensing? sensing;
@@ -36,13 +37,15 @@ class Console extends State<ConsolePage> {
   void initState() {
     super.initState();
     sensing = Sensing();
-    Settings().init().then((future) {
-      sensing!.init().then((future) {
-        log('Setting up study protocol: ${sensing!.protocol}');
+    Settings().init().then((_) {
+      sensing!.init().then((_) {
+        log('Setting up study : ${sensing!.study}');
+        log('Deployment status : ${sensing!.status}');
       });
     });
   }
 
+  @override
   void dispose() {
     sensing!.stop();
     super.dispose();
@@ -108,59 +111,76 @@ class Console extends State<ConsolePage> {
 /// This example is useful for creating a Business Logical Object (BLOC) in a
 /// Flutter app. See e.g. the CARP Mobile Sensing App.
 class Sensing {
+  // Specify the deployment id for this study.
+  // In a real app, the user would somehow specify this.
+  String studyDeploymentId = '83ec1e70-c647-11ec-8b84-214a8597ae84';
+
   StudyProtocol? protocol;
-  StudyDeploymentStatus? _status;
+  DeploymentService service = SmartphoneDeploymentService();
   SmartphoneDeploymentController? controller;
+  Study? study;
 
   /// Initialize sensing.
-  Future init() async {
+  Future<void> init() async {
     Settings().debugLevel = DebugLevel.DEBUG;
 
-    // get the protocol from the local protocol manager (defined below)
-    protocol = await LocalStudyProtocolManager().getStudyProtocol('ignored');
+    // Configure the on-phone deployment service with a protocol.
+    protocol =
+        await LocalStudyProtocolManager().getStudyProtocol(studyDeploymentId);
+    StudyDeploymentStatus status =
+        await service.createStudyDeployment(protocol!, studyDeploymentId);
 
-    // deploy this protocol using the on-phone deployment service
-    _status =
-        await SmartphoneDeploymentService().createStudyDeployment(protocol!);
-
-    String studyDeploymentId = _status!.studyDeploymentId;
-    String deviceRolename = _status!.masterDeviceStatus!.device.roleName;
-
-    // create and configure a client manager for this phone
+    // Create and configure a client manager for this phone.
     SmartPhoneClientManager client = SmartPhoneClientManager();
-    await client.configure();
+    await client.configure(deploymentService: service);
 
-    // add and deploy this study deployment
-    controller = await client.addStudy(studyDeploymentId, deviceRolename);
-    await controller?.tryDeployment();
+    // Define the study and add it to the client.
+    study = Study(
+      status.studyDeploymentId,
+      status.masterDeviceStatus!.device.roleName,
+    );
+    await client.addStudy(study!);
 
-    // configure the controller
-    // notifications are disabled, since we're not using app tasks in this simple app
-    // see https://github.com/cph-cachet/carp.sensing-flutter/wiki/3.1-The-AppTask-Model#notifications
+    // Get the study controller and try to deploy the study.
+    //
+    // Note that if the study has already been deployed on this phone
+    // it has been cached locally in a file and the local cache will
+    // be used pr. default.
+    // If not deployed before (i.e., cached) the study deployment will be
+    // fetched from the deployment service.
+    controller = client.getStudyRuntime(study!);
+    await controller?.tryDeployment(useCached: false);
+
+    // Configure the controller.
+    //
+    // Notifications are enabled for demo purpose and if you add an AppTask to the
+    // protocol below, you should see notifications on the phone.
+    // However, nothing will happen when you click on them.
+    // See the PulmonaryMonitor demo app for a full-scale example of how to use
+    // the App Task model.
     await controller!.configure(
-      enableNotifications: false,
+      enableNotifications: true,
     );
 
-    // controller.resume();
-
-    // listening on the data stream and print them as json
+    // Listening on the data stream and print them as json.
     controller!.data.listen((data) => print(toJsonString(data)));
   }
 
-  /// get the status of the study deployment.
-  StudyDeploymentStatus? get status => _status;
-
-  /// is sensing running, i.e. has the study executor been resumed?
+  /// Is sensing running, i.e. has the study executor been resumed?
   bool get isRunning =>
-      (controller != null) && controller!.executor!.state == ProbeState.resumed;
+      (controller != null) &&
+      controller!.executor!.state == ExecutorState.resumed;
 
-  /// resume sensing
-  void resume() async => controller!.resume();
+  /// Status of sensing.
+  StudyStatus? get status => controller?.status;
 
-  /// pause sensing
-  void pause() async => controller!.pause();
+  /// Resume sensing
+  void resume() async => controller?.executor?.resume();
 
-  /// stop sensing.
+  /// Pause sensing
+  void pause() async => controller?.executor?.pause();
+
+  /// Stop sensing.
   void stop() async => controller!.stop();
 }
 
@@ -169,95 +189,134 @@ class Sensing {
 /// This class shows how to configure a [StudyProtocol] with [Tigger]s,
 /// [TaskDescriptor]s and [Measure]s.
 class LocalStudyProtocolManager implements StudyProtocolManager {
-  Future initialize() async {}
+  Future<void> initialize() async {}
 
   /// Create a new CAMS study protocol.
-  Future<SmartphoneStudyProtocol> getStudyProtocol(String studyId) async {
+  Future<SmartphoneStudyProtocol> getStudyProtocol(String id) async {
     SmartphoneStudyProtocol protocol = SmartphoneStudyProtocol(
-      ownerId: 'AB',
-      name: 'Track patient movement',
-    );
+        ownerId: 'AB',
+        name: 'Track patient movement',
+        dataEndPoint: SQLiteDataEndPoint());
 
-    // define which devices are used for data collection.
-    Smartphone phone = Smartphone();
-    DeviceDescriptor eSense = DeviceDescriptor(roleName: 'esense');
+    // Define which devices are used for data collection.
+    //
+    // In this case, its only this phone.
+    // See the CARP Mobile Sensing app for a full-blown example of how to
+    // use connected devices (e.g., a Polar heart rate monitor) and online
+    // services (e.g., a weather service).
+    var phone = Smartphone();
+    protocol.addMasterDevice(phone);
 
-    protocol
-      ..addMasterDevice(phone)
-      ..addConnectedDevice(eSense);
-
-    // add default measures from the SensorSamplingPackage
+    // Add measures from the [DeviceSamplingPackage] and [SensorSamplingPackage]
+    // sampling packages.
     protocol.addTriggeredTask(
         ImmediateTrigger(),
-        AutomaticTask()
-          ..measures = SamplingPackageRegistry().debug.getMeasureList(
-            types: [
-              // SensorSamplingPackage.ACCELEROMETER,
-              // SensorSamplingPackage.GYROSCOPE,
-              SensorSamplingPackage.PERIODIC_ACCELEROMETER,
-              SensorSamplingPackage.PERIODIC_GYROSCOPE,
-              SensorSamplingPackage.PEDOMETER,
-              SensorSamplingPackage.LIGHT,
-            ],
-          ),
+        BackgroundTask()
+          ..addMeasures([
+            // Measure(type: SensorSamplingPackage.ACCELEROMETER),
+            // Measure(type: SensorSamplingPackage.GYROSCOPE),
+            Measure(type: DeviceSamplingPackage.MEMORY),
+            Measure(type: DeviceSamplingPackage.BATTERY),
+            Measure(type: DeviceSamplingPackage.SCREEN),
+            Measure(type: SensorSamplingPackage.PEDOMETER),
+            Measure(type: SensorSamplingPackage.LIGHT)
+          ]),
         phone);
 
-    // add default measures from the DeviceSamplingPackage
+    // Collect device info only once
     protocol.addTriggeredTask(
-        ImmediateTrigger(),
-        AutomaticTask()
-          ..measures = SamplingPackageRegistry().debug.getMeasureList(
-            types: [
-              DeviceSamplingPackage.MEMORY,
-              DeviceSamplingPackage.BATTERY,
-              DeviceSamplingPackage.SCREEN,
-            ],
-          ),
+        OneTimeTrigger(),
+        BackgroundTask()
+          ..addMeasure(Measure(type: DeviceSamplingPackage.DEVICE)),
         phone);
 
-    // collect device info only once
+    // add a random trigger to collect device info at random times
     protocol.addTriggeredTask(
-        OneTimeTrigger('device'),
-        AutomaticTask()
-          ..measures = SamplingPackageRegistry().debug.getMeasureList(
-            types: [
-              DeviceSamplingPackage.DEVICE,
-            ],
-          ),
+        RandomRecurrentTrigger(
+          startTime: TimeOfDay(hour: 07, minute: 45),
+          endTime: TimeOfDay(hour: 22, minute: 30),
+          minNumberOfTriggers: 2,
+          maxNumberOfTriggers: 8,
+        ),
+        BackgroundTask()
+          ..addMeasure(Measure(type: DeviceSamplingPackage.DEVICE)),
         phone);
 
-    // // add a random trigger to collect device info at random times
-    // protocol.addTriggeredTask(
-    //     RandomRecurrentTrigger(
-    //       startTime: Time(hour: 22, minute: 00),
-    //       endTime: Time(hour: 22, minute: 30),
-    //       minNumberOfTriggers: 2,
-    //       maxNumberOfTriggers: 8,
-    //     ),
-    //     AutomaticTask()
-    //       ..measures = SamplingPackageRegistry().debug.getMeasureList(
-    //         types: [
-    //           DeviceSamplingPackage.DEVICE,
-    //         ],
-    //       ),
-    //     phone);
-
-    // add a ConditionalPeriodicTrigger to chech periodically
+    // add a ConditionalPeriodicTrigger to check periodically
     protocol.addTriggeredTask(
         ConditionalPeriodicTrigger(
           period: Duration(seconds: 10),
           resumeCondition: () {
+            //
             return ('jakob'.length == 5);
           },
           pauseCondition: () => true,
         ),
-        AutomaticTask()
-          ..measures = SamplingPackageRegistry().debug.getMeasureList(
-            types: [
-              DeviceSamplingPackage.DEVICE,
-            ],
-          ),
+        BackgroundTask()
+          ..addMeasure(Measure(type: DeviceSamplingPackage.DEVICE)),
         phone);
+
+    // Add an app task 2 minutes after deployment and make a notification.
+    //
+    // This App Task is added for demo purpose and you should see notifications
+    // on the phone. However, nothing will happen when you click on it.
+    // See the PulmonaryMonitor demo app for a full-scale example of how to use
+    // the App Task model.
+    protocol.addTriggeredTask(
+        ElapsedTimeTrigger(
+          elapsedTime: const Duration(minutes: 2),
+        ),
+        AppTask(
+          type: BackgroundSensingUserTask.ONE_TIME_SENSING_TYPE,
+          title: "Elapsed Time - 2 minutes",
+          notification: true,
+        )..addMeasure(Measure(type: DeviceSamplingPackage.DEVICE)),
+        phone);
+
+    // // add an app task at exact date & time
+    // protocol.addTriggeredTask(
+    //     DateTimeTrigger(schedule: DateTime(2022, 5, 15, 21, 00)),
+    //     AppTask(
+    //       type: BackgroundSensingUserTask.ONE_TIME_SENSING_TYPE,
+    //       title: "DateTime - 15/5 2022 at 21:00",
+    //       notification: true,
+    //     )..addMeasure(Measure(type: DeviceSamplingPackage.DEVICE)),
+    //     phone);
+
+    // // add an app task every hour
+    // protocol.addTriggeredTask(
+    //     IntervalTrigger(period: const Duration(hours: 1)),
+    //     AppTask(
+    //       type: BackgroundSensingUserTask.ONE_TIME_SENSING_TYPE,
+    //       title: "Interval - Every hour",
+    //       notification: true,
+    //     )..addMeasure(Measure(type: DeviceSamplingPackage.DEVICE)),
+    //     phone);
+
+    // // add a cron job every day at 11:45
+    // protocol.addTriggeredTask(
+    //     CronScheduledTrigger.parse(cronExpression: '45 11 * * *'),
+    //     AppTask(
+    //       type: BackgroundSensingUserTask.ONE_TIME_SENSING_TYPE,
+    //       title: "Cron - every day at 11:45",
+    //       notification: true,
+    //     )..addMeasure(Measure(type: DeviceSamplingPackage.DEVICE)),
+    //     phone);
+
+    // // add a random app task
+    // protocol.addTriggeredTask(
+    //     RandomRecurrentTrigger(
+    //       startTime: TimeOfDay(hour: 8),
+    //       endTime: TimeOfDay(hour: 20),
+    //       minNumberOfTriggers: 2,
+    //       maxNumberOfTriggers: 8,
+    //     ),
+    //     AppTask(
+    //       type: BackgroundSensingUserTask.ONE_TIME_SENSING_TYPE,
+    //       title: "Random - 2-8 times at 08:00-20:00",
+    //       notification: true,
+    //     )..addMeasure(Measure(type: DeviceSamplingPackage.DEVICE)),
+    //     phone);
 
     return protocol;
   }

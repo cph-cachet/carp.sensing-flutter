@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 import 'package:test/test.dart';
 
+import 'package:carp_serializable/carp_serializable.dart';
 import 'package:carp_core/carp_core.dart';
 import 'package:carp_mobile_sensing/carp_mobile_sensing.dart';
 import 'package:carp_survey_package/survey.dart';
@@ -11,8 +12,8 @@ void main() {
   Smartphone phone;
 
   setUp(() {
-    // make sure that the json functions are loaded
-    DomainJsonFactory();
+    // Initialization of serialization
+    CarpMobileSensing();
 
     // register the survey sampling package
     SamplingPackageRegistry().register(SurveySamplingPackage());
@@ -28,13 +29,28 @@ void main() {
 
     protocol.addMasterDevice(phone);
 
-    // adding all measure from the common schema to one one trigger and one task
+    // adding all available measures to one one trigger and one task
     protocol.addTriggeredTask(
       ImmediateTrigger(),
-      AutomaticTask()
-        ..measures = SamplingPackageRegistry().common.measures.values.toList(),
+      BackgroundTask()
+        ..measures = SamplingPackageRegistry()
+            .dataTypes
+            .map((type) => Measure(type: type))
+            .toList(),
       phone,
     );
+
+    // add a WHO-5 survey as an app task
+    // plus collect device and ambient light information when survey is done
+    protocol.addTriggeredTask(
+        DelayedTrigger(delay: Duration(seconds: 30)),
+        RPAppTask(
+            type: SurveyUserTask.WHO5_SURVEY_TYPE,
+            name: 'WHO-5 Survey',
+            rpTask: who5Task)
+          ..measures.add(Measure(type: DeviceSamplingPackage.DEVICE))
+          ..measures.add(Measure(type: SensorSamplingPackage.LIGHT)),
+        phone);
   });
 
   test('CAMSStudyProtocol -> JSON', () async {
@@ -62,11 +78,8 @@ void main() {
 
     expect(protocol.ownerId, 'alex@uni.dk');
     expect(protocol.masterDevices.first.roleName, Smartphone.DEFAULT_ROLENAME);
-    expect(
-        protocol.tasks.first.measures
-            .firstWhere((measure) => measure is RPTaskMeasure)
-            .type,
-        "dk.cachet.carp.survey");
+    expect((protocol.tasks.last as RPAppTask).type,
+        SurveyUserTask.WHO5_SURVEY_TYPE);
     print(toJsonString(protocol));
   });
 }

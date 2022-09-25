@@ -9,6 +9,7 @@ part of sensors;
 /// A [Datum] that holds acceleration data collected from the native accelerometer on the phone.
 @JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)
 class AccelerometerDatum extends Datum {
+  @override
   DataFormat get format =>
       DataFormat.fromString(SensorSamplingPackage.ACCELEROMETER);
 
@@ -21,8 +22,7 @@ class AccelerometerDatum extends Datum {
   /// Acceleration force along the z axis (including gravity) measured in m/s^2.
   double? z;
 
-  AccelerometerDatum({bool multiDatum = false, this.x, this.y, this.z})
-      : super(multiDatum: multiDatum);
+  AccelerometerDatum({super.multiDatum = false, this.x, this.y, this.z});
 
   factory AccelerometerDatum.fromAccelerometerEvent(AccelerometerEvent event,
           {bool multiDatum = false}) =>
@@ -33,14 +33,17 @@ class AccelerometerDatum extends Datum {
 
   factory AccelerometerDatum.fromJson(Map<String, dynamic> json) =>
       _$AccelerometerDatumFromJson(json);
+  @override
   Map<String, dynamic> toJson() => _$AccelerometerDatumToJson(this);
 
-  String toString() => super.toString() + ', x: $x, y: $y, z: $z';
+  @override
+  String toString() => '${super.toString()}, x: $x, y: $y, z: $z';
 }
 
 /// A [Datum] that holds rotation data collected from the native gyroscope on the phone.
 @JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)
 class GyroscopeDatum extends Datum {
+  @override
   DataFormat get format =>
       DataFormat.fromString(SensorSamplingPackage.GYROSCOPE);
 
@@ -53,8 +56,7 @@ class GyroscopeDatum extends Datum {
   /// Rate of rotation around the z axis measured in rad/s.
   double? z;
 
-  GyroscopeDatum({bool multiDatum = false, this.x, this.y, this.z})
-      : super(multiDatum: multiDatum);
+  GyroscopeDatum({super.multiDatum = false, this.x, this.y, this.z});
 
   factory GyroscopeDatum.fromGyroscopeEvent(GyroscopeEvent event,
           {bool multiDatum = false}) =>
@@ -65,14 +67,17 @@ class GyroscopeDatum extends Datum {
 
   factory GyroscopeDatum.fromJson(Map<String, dynamic> json) =>
       _$GyroscopeDatumFromJson(json);
+  @override
   Map<String, dynamic> toJson() => _$GyroscopeDatumToJson(this);
 
-  String toString() => super.toString() + ', x: $x, y: $y, z: $z';
+  @override
+  String toString() => '${super.toString()}, x: $x, y: $y, z: $z';
 }
 
 /// A [Datum] that holds light intensity in Lux from the light sensor on the phone.
 @JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)
 class LightDatum extends Datum {
+  @override
   DataFormat get format => DataFormat.fromString(SensorSamplingPackage.LIGHT);
 
   /// Intensity in Lux
@@ -86,16 +91,18 @@ class LightDatum extends Datum {
 
   factory LightDatum.fromJson(Map<String, dynamic> json) =>
       _$LightDatumFromJson(json);
+  @override
   Map<String, dynamic> toJson() => _$LightDatumToJson(this);
 
+  @override
   String toString() =>
-      super.toString() +
-      ', avgLux: $meanLux, stdLux: $stdLux, minLux: $minLux, maxLux: $maxLux';
+      '${super.toString()}, avgLux: $meanLux, stdLux: $stdLux, minLux: $minLux, maxLux: $maxLux';
 }
 
 /// Holds the step count.
 @JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)
 class PedometerDatum extends Datum {
+  @override
   DataFormat get format =>
       DataFormat.fromString(SensorSamplingPackage.PEDOMETER);
 
@@ -105,12 +112,15 @@ class PedometerDatum extends Datum {
   PedometerDatum([this.stepCount]) : super();
 
   /// Returns `true` if the [stepCount] is equal.
+  @override
   bool equivalentTo(ConditionalEvent? event) =>
       stepCount == event!['stepCount'];
 
   factory PedometerDatum.fromJson(Map<String, dynamic> json) =>
       _$PedometerDatumFromJson(json);
+  @override
   Map<String, dynamic> toJson() => _$PedometerDatumToJson(this);
 
-  String toString() => super.toString() + ', steps: $stepCount';
+  @override
+  String toString() => '${super.toString()}, steps: $stepCount';
 }

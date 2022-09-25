@@ -13,7 +13,7 @@ void main() async {
   // Create a study protocol
   StudyProtocol protocol = StudyProtocol(
     ownerId: 'owner@dtu.dk',
-    name: 'Context Sensing Example',
+    name: 'Audio Sensing Example',
   );
 
   // define which devices are used for data collection
@@ -24,12 +24,12 @@ void main() async {
   // Add an automatic task that immediately starts collecting audio and noise.
   protocol.addTriggeredTask(
       ImmediateTrigger(),
-      AutomaticTask()
-        ..addMeasures(SensorSamplingPackage().common.getMeasureList(
-          types: [
-            MediaSamplingPackage.AUDIO,
-            MediaSamplingPackage.NOISE,
+      BackgroundTask()
+        ..addMeasures(
+          [
+            Measure(type: MediaSamplingPackage.AUDIO),
+            Measure(type: MediaSamplingPackage.NOISE),
           ],
-        )),
+        ),
       phone);
 }

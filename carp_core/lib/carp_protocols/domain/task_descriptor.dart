@@ -39,31 +39,45 @@ class TaskDescriptor extends Serializable {
     this.measures = measures ?? [];
   }
 
+  @override
   Function get fromJsonFunction => _$TaskDescriptorFromJson;
   factory TaskDescriptor.fromJson(Map<String, dynamic> json) =>
       FromJsonFactory().fromJson(json) as TaskDescriptor;
+  @override
   Map<String, dynamic> toJson() => _$TaskDescriptorToJson(this);
+  @override
   String get jsonType => 'dk.cachet.carp.protocols.domain.tasks.$runtimeType';
 
+  @override
   String toString() =>
       '$runtimeType - name: $name, measures size: ${measures.length}';
 }
 
-/// A [TaskDescriptor] which specifies that all containing measures and/or outputs
-/// should start immediately once triggered and run indefinitely until all
-/// containing measures have completed.
+/// A task which specifies that all containing measures and/or
+/// outputs should immediately start running in the background once triggered.
+/// The task runs for the specified [duration], or until stopped, or until
+/// all measures and/or outputs have completed.
 @JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
-class ConcurrentTask extends TaskDescriptor {
-  ConcurrentTask({String? name, List<Measure>? measures})
-      : super(name: name, measures: measures);
+class BackgroundTask extends TaskDescriptor {
+  /// The optional duration over the course of which the [measures] need to
+  /// be sampled. `null` implies infinite by default.
+  Duration? duration;
 
-  Function get fromJsonFunction => _$ConcurrentTaskFromJson;
-  factory ConcurrentTask.fromJson(Map<String, dynamic> json) =>
-      FromJsonFactory().fromJson(json) as ConcurrentTask;
-  Map<String, dynamic> toJson() => _$ConcurrentTaskToJson(this);
+  BackgroundTask({
+    super.name,
+    super.measures,
+    this.duration,
+  });
+
+  @override
+  Function get fromJsonFunction => _$BackgroundTaskFromJson;
+  factory BackgroundTask.fromJson(Map<String, dynamic> json) =>
+      FromJsonFactory().fromJson(json) as BackgroundTask;
+  @override
+  Map<String, dynamic> toJson() => _$BackgroundTaskToJson(this);
 }
 
-/// A [TaskDescriptor] which contains a definition on how to run tasks, measures,
+/// A task which contains a definition on how to run tasks, measures,
 /// and triggers which differs from the CARP domain model.
 @JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
 class CustomProtocolTask extends TaskDescriptor {
@@ -73,14 +87,17 @@ class CustomProtocolTask extends TaskDescriptor {
   // The measures list is empty, since measures are defined in [studyProtocol]
   // in a different format.
   CustomProtocolTask({
-    String? name,
+    super.name,
     required this.studyProtocol,
-  }) : super(name: name, measures: []);
+  }) : super(measures: []);
 
+  @override
   Function get fromJsonFunction => _$CustomProtocolTaskFromJson;
   factory CustomProtocolTask.fromJson(Map<String, dynamic> json) =>
       FromJsonFactory().fromJson(json) as CustomProtocolTask;
+  @override
   Map<String, dynamic> toJson() => _$CustomProtocolTaskToJson(this);
 
+  @override
   String toString() => '${super.toString()}, studyProtocol: $studyProtocol';
 }

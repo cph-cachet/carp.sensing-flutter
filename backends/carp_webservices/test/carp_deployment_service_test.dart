@@ -1,6 +1,8 @@
 import 'dart:convert';
 
+import 'package:carp_serializable/carp_serializable.dart';
 import 'package:carp_core/carp_core.dart';
+import 'package:carp_mobile_sensing/carp_mobile_sensing.dart';
 import 'package:carp_webservices/carp_auth/carp_auth.dart';
 import 'package:carp_webservices/carp_services/carp_services.dart';
 import 'package:test/test.dart';
@@ -17,6 +19,8 @@ void main() {
   /// Setup CARP and authenticate.
   /// Runs once before all tests.
   setUpAll(() async {
+    Settings().debugLevel = DebugLevel.DEBUG;
+
     app = new CarpApp(
       // studyId: testStudyId,
       studyDeploymentId: testDeploymentId,
@@ -53,7 +57,7 @@ void main() {
     }, skip: false);
   });
 
-  group("Participation - deployment id: $testDeploymentId", () {
+  group("Participation", () {
     test(
       '- get invitations for this account (user)',
       () async {
@@ -61,7 +65,7 @@ void main() {
             await CarpParticipationService()
                 .getActiveParticipationInvitations();
         invitations.forEach((invitation) => print(invitation));
-        assert(invitations.length > 0);
+        assert(invitations.length >= 0);
         // print(_encode(invitations));
       },
       skip: false,
@@ -87,13 +91,13 @@ void main() {
 
         ParticipantData data_1 = ParticipantData(
           studyDeploymentId: testDeploymentId,
-          data: {'name': 'Ole Pedersen'},
+          data: {'dk.cachet.carp.input.sex': 'Male'},
         );
 
         print(_encode(data_1));
 
         ParticipantData data_2 = await participation.setParticipantData(
-          'dk.cachet.carp.input.name',
+          'dk.cachet.carp.input.sex',
           data_1,
         );
         print(_encode(data_2));

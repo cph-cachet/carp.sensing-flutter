@@ -1,28 +1,27 @@
 /*
- * Copyright 2021 Copenhagen Center for Health Technology (CACHET) at the
+ * Copyright 2021-2022 Copenhagen Center for Health Technology (CACHET) at the
  * Technical University of Denmark (DTU).
  * Use of this source code is governed by a MIT-style license that can be
  * found in the LICENSE file.
  */
 part of runtime;
 
-// TODO - should be/extend an [Executor] and handle the triggered task associated with this device.... and its probes....
-
-/// A [DeviceManager] handles a device on runtime.
-abstract class DeviceManager extends DeviceDataCollector {
+/// A [DeviceManager] handles a hardware device or online service on runtime.
+abstract class DeviceManager<TDeviceRegistration extends DeviceRegistration,
+        TDeviceDescriptor extends DeviceDescriptor>
+    extends DeviceDataCollector<TDeviceRegistration, TDeviceDescriptor> {
   final StreamController<DeviceStatus> _eventController =
       StreamController.broadcast();
   final Set<String> _supportedDataTypes = {};
 
+  /// The set of executors that use this device manager.
+  final Set<Executor> executors = {};
+
   DeviceManager([
-    String? type,
-    DeviceRegistration? deviceRegistration,
-    DeviceDescriptor? deviceDescriptor,
-  ]) : super(
-          type,
-          deviceRegistration,
-          deviceDescriptor,
-        );
+    super.type,
+    super.deviceRegistration,
+    super.deviceDescriptor,
+  ]);
 
   @override
   Set<String> get supportedDataTypes => _supportedDataTypes;
@@ -35,25 +34,22 @@ abstract class DeviceManager extends DeviceDataCollector {
   /// The runtime status of this device.
   DeviceStatus get status => _status;
 
+  /// Change the runtime status of this device.
+  set status(DeviceStatus newStatus) {
+    debug('$runtimeType - setting device status: $newStatus');
+    _status = newStatus;
+    _eventController.add(_status);
+  }
+
   /// Has this device manager been initialized?
   bool get isInitialized => status.index >= DeviceStatus.initialized.index;
 
   /// Has this device manager been connected?
-  bool get isConnected =>
-      (status == DeviceStatus.connected || status == DeviceStatus.sampling);
-
-  /// Change the runtime status of this device.
-  set status(DeviceStatus newStatus) {
-    debug('$runtimeType - setting device status: $status');
-    _status = newStatus;
-    _eventController.add(newStatus);
-  }
-
-  /// The runtime battery level of this device.
-  int? get batteryLevel;
+  bool get isConnected => status == DeviceStatus.connected;
 
   /// Initialize the device manager by specifying its device [descriptor].
-  void initialize(DeviceDescriptor descriptor) {
+  @nonVirtual
+  void initialize(TDeviceDescriptor descriptor) {
     info('Initializing device manager, type: $type, descriptor.: $descriptor');
     deviceDescriptor = descriptor;
     onInitialize(descriptor);
@@ -62,37 +58,61 @@ abstract class DeviceManager extends DeviceDataCollector {
 
   /// Callback on [initialize].
   ///
-  /// Is often overriden in sub-classes. Note, however, that it must not be
+  /// Is to be overriden in sub-classes. Note, however, that it must not be
   /// doing a lot of work on startup.
-  void onInitialize(DeviceDescriptor descriptor);
+  void onInitialize(TDeviceDescriptor descriptor);
 
-  /// Ask this [DeviceManager] to connect to the device.
+  /// Ask this [DeviceManager] to start connecting to the device.
   ///
   /// Returns true if successful, false if not.
-  Future<bool> connect() async {
-    bool _success = false;
-    assert(isInitialized,
-        '$runtimeType has not been initialized - cannot connect to it.');
+  @nonVirtual
+  Future<DeviceStatus> connect() async {
+    if (!isInitialized) {
+      warning('$runtimeType has not been initialized - cannot connect to it.');
+      return status;
+    }
 
     info(
         '$runtimeType - Trying to connect to device of type: $type and id: $id');
-    _success = await onConnect();
-    status = (_success) ? DeviceStatus.connected : DeviceStatus.error;
-
-    return _success;
+    return status = await onConnect();
   }
 
-  /// Callback on [connect].
+  /// Callback on [connect]. Returns the [DeviceStatus] of the device.
   ///
-  /// Is often overriden in sub-classes. Note, however, that it must not be
-  /// doing a lot of work on startup.
-  Future<bool> onConnect();
+  /// Is to be overriden in sub-classes.
+  Future<DeviceStatus> onConnect();
+
+  /// Restart sampling of the measures using this device.
+  ///
+  /// This entails that all measures in the study protocol using this device's
+  /// type is restarted. This method is useful after the device is connected.
+  @nonVirtual
+  void restart() {
+    for (var executor in executors) {
+      executor.restart();
+      if (executor.state == ExecutorState.resumed) {
+        executor.resume();
+      }
+    }
+  }
+
+  /// Pause sampling of the measures using this device.
+  ///
+  /// This entails that all measures in the study protocol using this device's
+  /// type is paused.
+  @nonVirtual
+  void pause() {
+    for (var executor in executors) {
+      executor.pause();
+    }
+  }
 
   /// Ask this [DeviceManager] to disconnect from the device.
   ///
   /// Returns true if successful, false if not.
+  @nonVirtual
   Future<bool> disconnect() async {
-    bool _success = false;
+    bool success = false;
     if (status != DeviceStatus.connected) {
       warning(
           '$runtimeType is not connected, so nothing to disconnect from....');
@@ -101,22 +121,39 @@ abstract class DeviceManager extends DeviceDataCollector {
 
     info(
         '$runtimeType - Trying to disconnect to device of type: $type and id: $id');
-    _success = await onDisconnect();
-    status = (_success) ? DeviceStatus.disconnected : DeviceStatus.error;
+    success = await onDisconnect();
+    status = (success) ? DeviceStatus.disconnected : DeviceStatus.error;
 
-    return _success;
+    return success;
   }
 
   /// Callback on [disconnect].
   ///
-  /// Is often overriden in sub-classes. Note, however, that it must not be
-  /// doing a lot of work on startup.
+  /// Is to be overriden in sub-classes.
   Future<bool> onDisconnect();
 }
 
+/// A [DeviceManager] for an online service, like a weather service.
+abstract class OnlineServiceManager<
+        TDeviceRegistration extends DeviceRegistration,
+        TDeviceDescriptor extends OnlineService>
+    extends DeviceManager<TDeviceRegistration, TDeviceDescriptor> {}
+
+/// A [DeviceManager] for a hardware device.
+abstract class HardwareDeviceManager<
+        TDeviceRegistration extends DeviceRegistration,
+        TDeviceDescriptor extends DeviceDescriptor>
+    extends DeviceManager<TDeviceRegistration, TDeviceDescriptor> {
+  /// The runtime battery level of this hardware device.
+  /// Returns null if unknown.
+  int? get batteryLevel;
+}
+
 /// A device manager for a smartphone.
-class SmartphoneDeviceManager extends DeviceManager {
+class SmartphoneDeviceManager
+    extends HardwareDeviceManager<DeviceRegistration, Smartphone> {
   int? _batteryLevel = 0;
+  Battery battery = Battery();
 
   @override
   String get id => DeviceInfo().deviceID!;
@@ -124,11 +161,8 @@ class SmartphoneDeviceManager extends DeviceManager {
   @override
   void onInitialize(DeviceDescriptor descriptor) {
     // listen to the battery
-    BatteryProbe()
-      ..data.listen((dataPoint) =>
-          _batteryLevel = (dataPoint.data as BatteryDatum).batteryLevel)
-      ..initialize(Measure(type: DeviceSamplingPackage.BATTERY))
-      ..resume();
+    battery.onBatteryStateChanged
+        .listen((state) async => _batteryLevel = await battery.batteryLevel);
 
     // find the supported datatypes
     for (var package in SamplingPackageRegistry().packages) {
@@ -142,22 +176,36 @@ class SmartphoneDeviceManager extends DeviceManager {
   int? get batteryLevel => _batteryLevel;
 
   @override
-  bool canConnect() => true; // can always connect to the phone
+  Future<bool> canConnect() async => true; // can always connect to the phone
 
   @override
-  Future<bool> onConnect() async => true; // always connected to the phone
+  Future<DeviceStatus> onConnect() async => DeviceStatus.connected;
 
   @override
-  Future<bool> onDisconnect() async => true; // always connected to the phone
+  Future<bool> onDisconnect() async => true;
 }
 
-abstract class BTLEDeviceManager extends DeviceManager {
-  /// The Bluetooth address of this BTLE device in the form
-  /// `00:04:79:00:0F:4D`.
-  String get btleAddress;
+/// A device manager for a connectable bluetooth device.
+abstract class BTLEDeviceManager<TDeviceRegistration extends DeviceRegistration,
+        TDeviceDescriptor extends DeviceDescriptor>
+    extends HardwareDeviceManager<TDeviceRegistration, TDeviceDescriptor> {
+  /// The Bluetooth address of this BTLE device in the form `00:04:79:00:0F:4D`.
+  /// Returns null if unknown.
+  String? get btleAddress;
+
+  @override
+  @mustCallSuper
+  void onInitialize(DeviceDescriptor descriptor) {
+    statusEvents.listen((event) {
+      // when this device is (re)connected, restart sampling
+      if (event == DeviceStatus.connected) {
+        restart();
+      }
+    });
+  }
 }
 
-/// Different status for a device.
+/// Runtime status for a [DeviceManager].
 enum DeviceStatus {
   /// The state of the device is unknown.
   unknown,
@@ -169,14 +217,14 @@ enum DeviceStatus {
   initialized,
 
   /// The device is paired with this phone.
-  /// Mainly used for [BTLEDeviceManager].
+  /// Mainly used for a [BTLEDeviceManager].
   paired,
 
-  /// The device is connected.
-  connected,
+  /// The device is trying to connect.
+  connecting,
 
-  /// The device is sampling measures.
-  sampling,
+  /// The device is connected and ready to be used.
+  connected,
 
   /// The device is disconnected.
   disconnected,

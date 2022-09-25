@@ -4,13 +4,14 @@
  * Use of this source code is governed by a MIT-style license that can be
  * found in the LICENSE file.
  */
-part of movisens;
+part of carp_movisens_package;
 
 /// A [Datum] which can hold an OMH [DataPoint](https://www.openmhealth.org/documentation/#/schema-docs/schema-library/schemas/omh_data-point)
 /// and provide its correct OMH [format] and [provenance].
 class OMHMovisensDataPoint extends Datum {
   static const DataFormat DATA_FORMAT =
       DataFormat(NameSpace.OMH, omh.SchemaSupport.DATA_POINT);
+  @override
   DataFormat get format => DATA_FORMAT;
 
   omh.DataPoint datapoint;
@@ -30,6 +31,7 @@ class OMHMovisensDataPoint extends Datum {
 
   OMHMovisensDataPoint(this.datapoint);
 
+  @override
   Map<String, dynamic> toJson() => datapoint.toJson();
 }
 
@@ -111,6 +113,7 @@ class FHIRHeartRateObservation extends Datum
       DataFormat(NameSpace.FHIR, "observation-vitalsigns");
   static const String DEFAULT_HR_UNIT = "beats/min";
 
+  @override
   DataFormat get format => DATA_FORMAT;
 
   Map<String, dynamic> fhirJson;
@@ -167,6 +170,7 @@ class FHIRHeartRateObservation extends Datum
         json.decode(fhirString) as Map<String, dynamic>);
   }
 
+  @override
   Map<String, dynamic> toJson() => fhirJson;
   factory FHIRHeartRateObservation.fromJson(Map<String, dynamic> json) =>
       FHIRHeartRateObservation(json);

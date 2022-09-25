@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:carp_serializable/carp_serializable.dart';
 import 'package:carp_core/carp_core.dart';
 import 'package:carp_mobile_sensing/carp_mobile_sensing.dart';
 
@@ -19,51 +20,48 @@ void sensing() async {
   // add selected measures from the sampling packages
   protocol.addTriggeredTask(
       ImmediateTrigger(),
-      AutomaticTask()
-        ..measures = SamplingPackageRegistry().debug.getMeasureList(
-          types: [
-            //SensorSamplingPackage.ACCELEROMETER,
-            //SensorSamplingPackage.GYROSCOPE,
-            SensorSamplingPackage.PEDOMETER,
-            SensorSamplingPackage.LIGHT,
-            DeviceSamplingPackage.MEMORY,
-            DeviceSamplingPackage.DEVICE,
-            DeviceSamplingPackage.BATTERY,
-            DeviceSamplingPackage.SCREEN,
-          ],
-        ),
+      BackgroundTask()
+        // ..addMeasure(Measure(type: SensorSamplingPackage.ACCELEROMETER))
+        // ..addMeasure(Measure(type: SensorSamplingPackage.GYROSCOPE))
+        ..addMeasure(Measure(type: DeviceSamplingPackage.MEMORY))
+        ..addMeasure(Measure(type: DeviceSamplingPackage.BATTERY))
+        ..addMeasure(Measure(type: DeviceSamplingPackage.SCREEN))
+        ..addMeasure(Measure(type: SensorSamplingPackage.PEDOMETER))
+        ..addMeasure(Measure(type: SensorSamplingPackage.LIGHT)),
       phone);
 
   // deploy this protocol using the on-phone deployment service
   StudyDeploymentStatus status =
       await SmartphoneDeploymentService().createStudyDeployment(protocol);
 
-  String studyDeploymentId = status.studyDeploymentId;
-  String deviceRolename = status.masterDeviceStatus!.device.roleName;
-
   // create and configure a client manager for this phone
   SmartPhoneClientManager client = SmartPhoneClientManager();
   await client.configure();
 
-  SmartphoneDeploymentController controller =
-      await client.addStudy(studyDeploymentId, deviceRolename);
-  await controller.tryDeployment();
+  Study study = Study(
+    status.studyDeploymentId,
+    status.masterDeviceStatus!.device.roleName,
+  );
 
-  // configure the controller and resume sampling
-  await controller.configure();
-  controller.resume();
+  // add the study and get the study runtime (controller)
+  await client.addStudy(study);
+  SmartphoneDeploymentController? controller = client.getStudyRuntime(study);
+  // deploy the study on this phone
+  await controller?.tryDeployment();
+
+  // configure the controller and start the study
+  await controller?.configure();
+  controller?.start();
 
   // listening on the data stream and print them as json to the debug console
-  controller.data.listen((data) => print(toJsonString(data)));
+  controller?.data.listen((data) => print(toJsonString(data)));
 
   // subscribe to events
-  controller.data.listen((DataPoint dataPoint) {
+  controller?.data.listen((DataPoint dataPoint) {
     // do something w. the data, e.g. print the json
     print(JsonEncoder.withIndent(' ').convert(dataPoint));
   });
 
   // listening on events of a specific type
-  await ProbeRegistry()
-      .eventsByType(DeviceSamplingPackage.SCREEN)
-      .forEach(print);
+  controller?.dataByType(DeviceSamplingPackage.SCREEN).forEach(print);
 }

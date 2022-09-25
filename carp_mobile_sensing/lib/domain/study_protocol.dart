@@ -19,14 +19,11 @@ class SmartphoneStudyProtocol extends StudyProtocol {
   /// purpose, and the responsible researcher for this study.
   StudyDescription? protocolDescription;
 
+  @override
   String get description => protocolDescription?.description ?? '';
 
   /// The PI responsible for this protocol.
   StudyResponsible? get responsible => protocolDescription?.responsible;
-
-  /// The sampling strategy used in this study based on the standard
-  /// [SamplingSchemaType] types.
-  SamplingSchemaType samplingStrategy;
 
   /// Specifies where and how to stored or upload the data collected from this
   /// deployment. If `null`, the sensed data is not stored, but may still be
@@ -35,20 +32,16 @@ class SmartphoneStudyProtocol extends StudyProtocol {
 
   /// Create a new [SmartphoneStudyProtocol].
   SmartphoneStudyProtocol({
-    required String ownerId,
-    required String name,
+    required super.ownerId,
+    required super.name,
     this.protocolDescription,
-    this.samplingStrategy = SamplingSchemaType.normal,
     this.dataEndPoint,
   }) : super(
-          ownerId: ownerId,
-          name: name,
           description: protocolDescription?.description ?? '',
         );
 
   factory SmartphoneStudyProtocol.fromJson(Map<String, dynamic> json) =>
       _$SmartphoneStudyProtocolFromJson(json);
+  @override
   Map<String, dynamic> toJson() => _$SmartphoneStudyProtocolToJson(this);
-
-  String toString() => '${super.toString()}, description: $protocolDescription';
 }

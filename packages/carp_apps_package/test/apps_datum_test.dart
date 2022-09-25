@@ -9,8 +9,8 @@ String _encode(Object object) =>
 
 void main() {
   setUp(() {
-    // make sure that the json functions are loaded
-    DomainJsonFactory();
+    // Initialization of serialization
+    CarpMobileSensing();
     AppsSamplingPackage().onRegister();
   });
 

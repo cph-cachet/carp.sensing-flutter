@@ -39,13 +39,17 @@ class DeviceDescriptor extends Serializable {
     this.supportedDataTypes,
   }) : super();
 
+  @override
   String toString() =>
       '$runtimeType - roleName: $roleName, isMasterDevice: $isMasterDevice';
 
+  @override
   Function get fromJsonFunction => _$DeviceDescriptorFromJson;
   factory DeviceDescriptor.fromJson(Map<String, dynamic> json) =>
       FromJsonFactory().fromJson(json) as DeviceDescriptor;
+  @override
   Map<String, dynamic> toJson() => _$DeviceDescriptorToJson(this);
+  @override
   String get jsonType => '$DEVICE_NAMESPACE.$runtimeType';
 }
 
@@ -54,17 +58,15 @@ class DeviceDescriptor extends Serializable {
 @JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
 class MasterDeviceDescriptor extends DeviceDescriptor {
   MasterDeviceDescriptor({
-    required String roleName,
-    List<String>? supportedDataTypes,
-  }) : super(
-          roleName: roleName,
-          isMasterDevice: true,
-          supportedDataTypes: supportedDataTypes,
-        );
+    required super.roleName,
+    super.supportedDataTypes,
+  }) : super(isMasterDevice: true);
 
+  @override
   Function get fromJsonFunction => _$MasterDeviceDescriptorFromJson;
   factory MasterDeviceDescriptor.fromJson(Map<String, dynamic> json) =>
       FromJsonFactory().fromJson(json) as MasterDeviceDescriptor;
+  @override
   Map<String, dynamic> toJson() => _$MasterDeviceDescriptorToJson(this);
 }
 
@@ -78,16 +80,15 @@ class CustomProtocolDevice extends MasterDeviceDescriptor {
   /// Create a new [CustomProtocolDevice] device descriptor.
   /// If [roleName] is not specified, then the  [DEFAULT_ROLENAME] is used.
   CustomProtocolDevice({
-    String? roleName,
-    List<String>? supportedDataTypes,
-  }) : super(
-          roleName: roleName ?? DEFAULT_ROLENAME,
-          supportedDataTypes: supportedDataTypes,
-        );
+    super.roleName = CustomProtocolDevice.DEFAULT_ROLENAME,
+    super.supportedDataTypes,
+  });
 
+  @override
   Function get fromJsonFunction => _$CustomProtocolDeviceFromJson;
   factory CustomProtocolDevice.fromJson(Map<String, dynamic> json) =>
       FromJsonFactory().fromJson(json) as CustomProtocolDevice;
+  @override
   Map<String, dynamic> toJson() => _$CustomProtocolDeviceToJson(this);
 }
 
@@ -105,16 +106,15 @@ class Smartphone extends MasterDeviceDescriptor {
   /// Create a new Smartphone device descriptor.
   /// If [roleName] is not specified, then the [DEFAULT_ROLENAME] is used.
   Smartphone({
-    String? roleName,
-    List<String>? supportedDataTypes,
-  }) : super(
-          roleName: roleName ?? DEFAULT_ROLENAME,
-          supportedDataTypes: supportedDataTypes,
-        );
+    super.roleName = Smartphone.DEFAULT_ROLENAME,
+    super.supportedDataTypes,
+  });
 
+  @override
   Function get fromJsonFunction => _$SmartphoneFromJson;
   factory Smartphone.fromJson(Map<String, dynamic> json) =>
       FromJsonFactory().fromJson(json) as Smartphone;
+  @override
   Map<String, dynamic> toJson() => _$SmartphoneToJson(this);
 }
 
@@ -122,16 +122,14 @@ class Smartphone extends MasterDeviceDescriptor {
 @JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
 class AltBeacon extends DeviceDescriptor {
   AltBeacon({
-    String roleName = 'AltBeacon',
-    List<String>? supportedDataTypes,
-  }) : super(
-          roleName: roleName,
-          isMasterDevice: false,
-          supportedDataTypes: supportedDataTypes,
-        );
+    super.roleName = 'AltBeacon',
+    super.supportedDataTypes,
+  }) : super(isMasterDevice: false);
 
+  @override
   Function get fromJsonFunction => _$AltBeaconFromJson;
   factory AltBeacon.fromJson(Map<String, dynamic> json) =>
       FromJsonFactory().fromJson(json) as AltBeacon;
+  @override
   Map<String, dynamic> toJson() => _$AltBeaconToJson(this);
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright 2018-2021 Copenhagen Center for Health Technology (CACHET) at the
+ * Copyright 2018-2022 Copenhagen Center for Health Technology (CACHET) at the
  * Technical University of Denmark (DTU).
  * Use of this source code is governed by a MIT-style license that can be
  * found in the LICENSE file.
@@ -11,11 +11,13 @@ part of communication;
 ///
 /// Only works on Android.
 class PhoneLogProbe extends DatumProbe {
+  @override
   Future<Datum> getDatum() async {
-    MarkedMeasure m = (measure as MarkedMeasure);
+    HistoricSamplingConfiguration m =
+        (samplingConfiguration as HistoricSamplingConfiguration);
     int from = (m.lastTime != null)
         ? m.lastTime!.millisecondsSinceEpoch
-        : DateTime.now().subtract(m.history).millisecondsSinceEpoch;
+        : DateTime.now().subtract(m.past).millisecondsSinceEpoch;
     int now = DateTime.now().millisecondsSinceEpoch;
     Iterable<CallLogEntry> entries =
         await CallLog.query(dateFrom: from, dateTo: now);
@@ -45,6 +47,7 @@ class TextMessageLogProbe extends DatumProbe {
     SmsColumn.TYPE,
   ];
 
+  @override
   Future<Datum> getDatum() async {
     List<SmsMessage> allSms = [];
     allSms
@@ -66,7 +69,7 @@ StreamController<Datum> _textMessageProbeController =
 
 /// The top-level call-back method for handling in-coming SMS messages when
 /// the app is in the background.
-backgrounMessageHandler(SmsMessage message) async {
+void backgrounMessageHandler(SmsMessage message) async {
   _textMessageProbeController.add(
       TextMessageDatum.fromTextMessage(TextMessage.fromSmsMessage(message)));
 }
@@ -80,10 +83,10 @@ class TextMessageProbe extends StreamProbe {
   Stream<Datum> get stream => _textMessageProbeController.stream;
 
   @override
-  void onInitialize(Measure measure) {
-    super.onInitialize(measure);
-    if (!Platform.isAndroid)
+  bool onInitialize() {
+    if (!Platform.isAndroid) {
       throw SensingException('TextMessageProbe only available on Android.');
+    }
 
     Telephony.instance.listenIncomingSms(
       onNewMessage: (SmsMessage message) {
@@ -92,6 +95,7 @@ class TextMessageProbe extends StreamProbe {
       },
       onBackgroundMessage: backgrounMessageHandler,
     );
+    return true;
   }
 }
 
@@ -99,15 +103,15 @@ class TextMessageProbe extends StreamProbe {
 ///
 /// See [CalendarMeasure] for how to configure this probe's measure.
 class CalendarProbe extends DatumProbe {
-  DeviceCalendarPlugin _deviceCalendar = DeviceCalendarPlugin();
+  final DeviceCalendarPlugin _deviceCalendar = DeviceCalendarPlugin();
   List<Calendar>? _calendars;
   late Iterator<Calendar> _calendarIterator;
   List<CalendarEvent> _events = [];
 
-  void onInitialize(Measure measure) {
-    assert(measure is CalendarMeasure);
-    super.onInitialize(measure);
+  @override
+  bool onInitialize() {
     _retrieveCalendars();
+    return true;
   }
 
   Future<bool> _retrieveCalendars() async {
@@ -125,31 +129,36 @@ class CalendarProbe extends DatumProbe {
     return true;
   }
 
+  @override
+  HistoricSamplingConfiguration get samplingConfiguration =>
+      super.samplingConfiguration as HistoricSamplingConfiguration;
+
   // Collects events from the [calendar].
   Future<bool> _retrieveEvents(Calendar calendar) async {
-    final startDate =
-        new DateTime.now().subtract((measure as CalendarMeasure).past);
-    final endDate = new DateTime.now().add((measure as CalendarMeasure).future);
+    final startDate = DateTime.now().subtract(samplingConfiguration.past);
+    final endDate = DateTime.now().add(samplingConfiguration.future);
 
-    var _calendarEventsResult = await _deviceCalendar.retrieveEvents(
-        calendar.id,
+    var calendarEventsResult = await _deviceCalendar.retrieveEvents(calendar.id,
         RetrieveEventsParams(startDate: startDate, endDate: endDate));
-    List<Event>? _calendarEvents = _calendarEventsResult.data;
-    if (_calendarEvents != null) {
-      _calendarEvents
-          .forEach((event) => _events.add(CalendarEvent.fromEvent(event)));
+    List<Event>? calendarEvents = calendarEventsResult.data;
+    if (calendarEvents != null) {
+      for (var event in calendarEvents) {
+        _events.add(CalendarEvent.fromEvent(event));
+      }
     } else {
       return false;
     }
 
     // recursively collect events from the next calendar in the iterator
-    if (_calendarIterator.moveNext())
+    if (_calendarIterator.moveNext()) {
       return await _retrieveEvents(_calendarIterator.current);
+    }
 
     return true;
   }
 
   /// Get the [CalendarDatum].
+  @override
   Future<Datum> getDatum() async {
     if (_calendars == null) await _retrieveCalendars();
 
@@ -157,8 +166,9 @@ class CalendarProbe extends DatumProbe {
       _events = [];
       _calendarIterator = _calendars!.iterator;
 
-      if (_calendarIterator.moveNext())
+      if (_calendarIterator.moveNext()) {
         await _retrieveEvents(_calendarIterator.current);
+      }
 
       return CalendarDatum()..calendarEvents = _events;
     } else {

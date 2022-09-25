@@ -1,15 +1,15 @@
 import 'dart:convert';
 import 'dart:io';
-import 'package:json_annotation/json_annotation.dart';
 import 'package:test/test.dart';
 import 'package:carp_core/carp_core.dart';
-
-part 'carp_core_test.g.dart';
+import 'package:carp_serializable/carp_serializable.dart';
 
 void main() {
   late StudyProtocol protocol;
 
   setUp(() {
+    Core();
+
     protocol = StudyProtocol(
       ownerId: 'xyz@dtu.dk',
       name: 'Test Study Protocol',
@@ -18,34 +18,38 @@ void main() {
 
     // Define which devices are used for data collection.
     Smartphone phone = Smartphone(roleName: 'masterphone');
-    DeviceDescriptor eSense = DeviceDescriptor(
-      roleName: 'eSense',
+    DeviceDescriptor connectedDevice = DeviceDescriptor(
+      roleName: 'connected_device',
     );
 
     protocol
       ..addMasterDevice(phone)
-      ..addConnectedDevice(eSense);
+      ..addConnectedDevice(connectedDevice);
 
     // Define what needs to be measured, on which device, when.
     List<Measure> measures = [
-      Measure(type: DataType(NameSpace.CARP, 'light').toString()),
-      DataTypeMeasure(type: DataType(NameSpace.CARP, 'gps').toString()),
-      PhoneSensorMeasure(
-        type: DataType(NameSpace.CARP, 'steps').toString(),
-        duration: 10,
-      ),
+      Measure(type: const DataType(NameSpace.CARP, 'light').toString()),
+      Measure(type: const DataType(NameSpace.CARP, 'gps').toString()),
+      Measure(type: const DataType(NameSpace.CARP, 'steps').toString()),
     ];
 
-    ConcurrentTask task = ConcurrentTask(name: 'Start measures')
+    BackgroundTask task = BackgroundTask(name: 'Start measures')
       ..addMeasures(measures);
     protocol.addTriggeredTask(
       Trigger(sourceDeviceRoleName: phone.roleName),
       task,
       phone,
     );
+
+    Measure measure = Measure(type: 'dk.cachet.carp.steps');
+    measure.overrideSamplingConfiguration = BatteryAwareSamplingConfiguration(
+        normal: GranularitySamplingConfiguration(Granularity.Detailed),
+        low: GranularitySamplingConfiguration(Granularity.Balanced),
+        critical: GranularitySamplingConfiguration(Granularity.Coarse));
+
     protocol.addTriggeredTask(
-      ManualTrigger(sourceDeviceRoleName: phone.roleName),
-      task,
+      ManualTrigger(),
+      BackgroundTask()..addMeasure(measure),
       phone,
     );
   });
@@ -56,7 +60,7 @@ void main() {
     expect(protocol.ownerId, 'xyz@dtu.dk');
     expect(protocol.triggers.length, 2);
     expect(protocol.triggers.keys.first, '0');
-    expect(protocol.tasks.length, 1);
+    expect(protocol.tasks.length, 2);
     expect(protocol.triggeredTasks.length, 2);
   });
 
@@ -89,7 +93,7 @@ void main() {
     DataPoint dataPoint = DataPoint(
       DataPointHeader(
         studyId: '1234',
-        dataFormat: DataFormat(NameSpace.CARP, 'light'),
+        dataFormat: const DataFormat(NameSpace.CARP, 'light'),
       ),
       Data(),
     );
@@ -99,39 +103,34 @@ void main() {
     print(toJsonString(dataPoint));
     assert(dataPoint.carpBody != null);
   });
-  test('A & B -> JSON', () async {
-    A a = A();
-    B b = B();
-    a.index = 1;
-    b.str = 'abc';
 
-    print(toJsonString(a));
-    print(toJsonString(b));
+  test('ScheduledTrigger', () async {
+    var st = ScheduledTrigger(
+        time: const TimeOfDay(hour: 12),
+        recurrenceRule: RecurrenceRule(Frequency.DAILY, interval: 2));
+    expect(st.recurrenceRule.toString(),
+        RecurrenceRule.fromString('RRULE:FREQ=DAILY;INTERVAL=2').toString());
+    print(st);
+
+    st = ScheduledTrigger(
+        time: const TimeOfDay(hour: 12),
+        recurrenceRule:
+            RecurrenceRule(Frequency.DAILY, interval: 2, end: End.count(3)));
+    expect(
+        st.recurrenceRule.toString(),
+        RecurrenceRule.fromString('RRULE:FREQ=DAILY;INTERVAL=2;COUNT=3')
+            .toString());
+    print(st);
+
+    st = ScheduledTrigger(
+        time: const TimeOfDay(hour: 12),
+        recurrenceRule: RecurrenceRule(Frequency.DAILY,
+            interval: 2, end: End.until(const Duration(days: 30))));
+    expect(
+        st.recurrenceRule.toString(),
+        RecurrenceRule.fromString(
+                'RRULE:FREQ=DAILY;INTERVAL=2;UNTIL=2592000000')
+            .toString());
+    print(st);
   });
-}
-
-/// An example class.
-@JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
-class A extends Serializable {
-  int? index;
-
-  A() : super();
-
-  Function get fromJsonFunction => _$AFromJson;
-  factory A.fromJson(Map<String, dynamic> json) =>
-      FromJsonFactory().fromJson(json) as A;
-  Map<String, dynamic> toJson() => _$AToJson(this);
-}
-
-@JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
-class B extends A {
-  String? str;
-
-  B() : super();
-
-  Function get fromJsonFunction => _$BFromJson;
-  factory B.fromJson(Map<String, dynamic> json) =>
-      FromJsonFactory().fromJson(json) as B;
-  Map<String, dynamic> toJson() => _$BToJson(this);
-  String get jsonType => 'dk.cachet.$runtimeType';
 }

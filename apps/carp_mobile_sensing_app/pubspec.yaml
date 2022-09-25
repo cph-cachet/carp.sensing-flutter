@@ -1,18 +1,20 @@
 name: carp_mobile_sensing_app
 description: The CARP Mobile Sensing App
-version: 0.33.0
+version: 0.40.0
 homepage: https://github.com/cph-cachet/carp.sensing-flutter/tree/master/apps/carp_mobile_sensing_app
 publish_to: 'none' 
 
 environment:
-  sdk: '>=2.12.0 <3.0.0'
-  flutter: ">=2.2.0"
+  sdk: '>=2.17.0 <3.0.0'
+  flutter: ">=3.0.0"
 
 dependencies:
   flutter:
     sdk: flutter
-  flutter_launcher_icons: ^0.9.1
+  flutter_launcher_icons: ^0.10.0
+  # font_awesome_flutter: ^10.1.0
   
+  carp_serializable: ^1.0.0
   #carp_core: ^0.30.0      # the core CARP domain model
   #carp_mobile_sensing: ^0.30.6
   #carp_connectivity_package: ^0.30.0  # conflict w. RP - different versions of rxdart
@@ -29,7 +31,7 @@ dependencies:
   # carp_esense_package: ^0.30.2
   # carp_movisens_package: ^0.32.0
 
-  research_package: ^0.7.2
+  research_package: ^0.9.3
 
 # Overriding carp libraries to use the local copy
 dependency_overrides:
@@ -41,28 +43,31 @@ dependency_overrides:
     path: ../../packages/carp_context_package/
   carp_connectivity_package:
     path: ../../packages/carp_connectivity_package/
-  carp_communication_package:
-    path: ../../packages/carp_communication_package/
+  # due to version conflict in device_calendar this cannot be included for now
+  # carp_communication_package:
+  #   path: ../../packages/carp_communication_package/
   carp_audio_package:
     path: ../../packages/carp_audio_package/
   carp_apps_package:
     path: ../../packages/carp_apps_package/
   carp_esense_package:
     path: ../../packages/carp_esense_package/
-  esense_flutter:
-    path: ../../../../flutter-plugins/packages/esense_flutter/
+  carp_polar_package:
+    path: ../../packages/carp_polar_package/
+  # esense_flutter:
+  #   path: ../../../../flutter-plugins/packages/esense_flutter/
   carp_backend:
     path: ../../backends/carp_backend/
   carp_webservices:
     path: ../../backends/carp_webservices/
-#  research_package:
-#    path: ../../../../research.package/
+  # research_package:
+  #   path: ../../../../research.package/
 
 
 dev_dependencies:
-#  flutter_test:
-#    sdk: flutter
   test: any 
+  lints: any
+
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec

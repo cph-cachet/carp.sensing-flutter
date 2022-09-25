@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:carp_serializable/carp_serializable.dart';
 import 'package:carp_core/carp_core.dart';
 import 'package:carp_mobile_sensing/carp_mobile_sensing.dart';
 import 'package:carp_health_package/health_package.dart';
@@ -15,8 +16,9 @@ void main() {
   Smartphone phone;
 
   setUp(() {
-    // make sure that the json functions are loaded
-    DomainJsonFactory();
+    // Initialization of serialization
+    CarpMobileSensing();
+
     // register the context sampling package
     SamplingPackageRegistry().register(HealthSamplingPackage());
 
@@ -28,63 +30,43 @@ void main() {
 
     // Define which devices are used for data collection.
     phone = Smartphone();
+    protocol.addMasterDevice(phone);
 
-    protocol..addMasterDevice(phone);
-
-    // adding all measure from the common schema to one one trigger and one task
+    // adding all available measures to one one trigger and one task
     protocol.addTriggeredTask(
-      ImmediateTrigger(), // a simple trigger that starts immediately
-      AutomaticTask()
-        ..measures = SamplingPackageRegistry().common.measures.values.toList(),
-      phone, // a task with all measures
+      ImmediateTrigger(),
+      BackgroundTask()
+        ..measures = SamplingPackageRegistry()
+            .dataTypes
+            .map((type) => Measure(type: type))
+            .toList(),
+      phone,
     );
 
     protocol.addTriggeredTask(
         // collect every hour
-        PeriodicTrigger(
-          period: Duration(minutes: 60),
-          duration: Duration(seconds: 10),
-        ),
-        AutomaticTask()
-          ..measures.add(HealthMeasure(
-            type: HealthSamplingPackage.HEALTH,
-            healthDataType: HealthDataType.BLOOD_GLUCOSE,
-          ))
-          ..measures.add(HealthMeasure(
-            type: HealthSamplingPackage.HEALTH,
-            healthDataType: HealthDataType.BLOOD_PRESSURE_DIASTOLIC,
-          ))
-          ..measures.add(HealthMeasure(
-            type: HealthSamplingPackage.HEALTH,
-            healthDataType: HealthDataType.BLOOD_PRESSURE_SYSTOLIC,
-          ))
-          ..measures.add(HealthMeasure(
-            type: HealthSamplingPackage.HEALTH,
-            healthDataType: HealthDataType.HEART_RATE,
-          ))
-          ..measures.add(HealthMeasure(
-            type: HealthSamplingPackage.HEALTH,
-            healthDataType: HealthDataType.STEPS,
-            name: 'Step Counts',
-            description:
-                "Collects the step counts from Apple Health / Google Fit",
-          )),
+        IntervalTrigger(period: Duration(minutes: 60)),
+        BackgroundTask()
+          ..addMeasure(Measure(type: HealthSamplingPackage.HEALTH)
+            ..overrideSamplingConfiguration =
+                HealthSamplingConfiguration(healthDataTypes: [
+              HealthDataType.BLOOD_GLUCOSE,
+              HealthDataType.BLOOD_PRESSURE_DIASTOLIC,
+              HealthDataType.BLOOD_PRESSURE_SYSTOLIC,
+              HealthDataType.BLOOD_PRESSURE_DIASTOLIC,
+              HealthDataType.HEART_RATE,
+              HealthDataType.STEPS,
+            ])),
         phone);
 
     protocol.addTriggeredTask(
         // collect every day at 23:00
         RecurrentScheduledTrigger(
-            type: RecurrentType.daily,
-            time: Time(
-              hour: 23,
-              minute: 00,
-            ),
-            duration: Duration(seconds: 10)),
-        AutomaticTask()
-          ..measures.add(HealthMeasure(
-            type: HealthSamplingPackage.HEALTH,
-            healthDataType: HealthDataType.WEIGHT,
-          )),
+            type: RecurrentType.daily, time: TimeOfDay(hour: 23, minute: 00)),
+        BackgroundTask()
+          ..addMeasure(Measure(type: HealthSamplingPackage.HEALTH)
+            ..overrideSamplingConfiguration = HealthSamplingConfiguration(
+                healthDataTypes: [HealthDataType.WEIGHT])),
         phone);
   });
 
@@ -116,16 +98,18 @@ void main() {
     print(toJsonString(protocol));
   });
 
-  test(' - measure -> json', () async {
-    HealthMeasure mh = HealthMeasure(
-      type: HealthSamplingPackage.HEALTH,
-      healthDataType: HealthDataType.STEPS,
+  test(' - HealthSamplingConfiguration -> JSON', () async {
+    HealthSamplingConfiguration configuration = HealthSamplingConfiguration(
+      healthDataTypes: [
+        HealthDataType.STEPS,
+        HealthDataType.ACTIVE_ENERGY_BURNED,
+      ],
     );
-    print(mh.toJson());
-    print(_encode(mh));
+    print(configuration.toJson());
+    print(_encode(configuration));
   });
 
-  group("DASES Data Types", () {
+  group("Data Types", () {
     test(' - CALORIES_INTAKE', () {
       DateTime to = DateTime.now();
       DateTime from = to.subtract(Duration(milliseconds: 10000));
@@ -137,8 +121,16 @@ void main() {
       String deviceId = '1234';
       String uuid = "4321";
 
-      HealthDatum hd =
-          HealthDatum(value, unit, type, from, to, platform, deviceId, uuid);
+      HealthDatum hd = HealthDatum(
+        NumericHealthValue(value),
+        unit,
+        type,
+        from,
+        to,
+        platform,
+        deviceId,
+        uuid,
+      );
 
       DataPoint dp_1 = DataPoint.fromData(hd);
       expect(dp_1.carpHeader.dataFormat.namespace,
@@ -151,7 +143,7 @@ void main() {
       DateTime to = DateTime.now();
       DateTime from = to.subtract(Duration(milliseconds: 10000));
       HealthDatum hd = HealthDatum(
-          6,
+          NumericHealthValue(6),
           enumToString(dasesDataTypeToUnit[DasesHealthDataType.ALCOHOL]),
           enumToString(DasesHealthDataType.ALCOHOL),
           from,
@@ -171,7 +163,7 @@ void main() {
       DateTime to = DateTime.now();
       DateTime from = to.subtract(Duration(hours: 8));
       HealthDatum hd = HealthDatum(
-          6,
+          NumericHealthValue(6),
           enumToString(dasesDataTypeToUnit[DasesHealthDataType.SLEEP]),
           enumToString(DasesHealthDataType.SLEEP),
           from,
@@ -192,7 +184,7 @@ void main() {
       DateTime from = to.subtract(Duration(hours: 8));
 
       HealthDatum smoking = HealthDatum(
-          12,
+          NumericHealthValue(12),
           enumToString(
               dasesDataTypeToUnit[DasesHealthDataType.SMOKED_CIGARETTES]),
           enumToString(DasesHealthDataType.SMOKED_CIGARETTES),
@@ -208,6 +200,53 @@ void main() {
       expect(dp_1.carpHeader.dataFormat.namespace,
           HealthSamplingPackage.HEALTH_NAMESPACE);
       expect(dp_1.carpHeader.dataFormat.name, "smoked_cigarettes");
+      print(_encode(dp_1));
+    });
+
+    test(' - AUDIOGRAM', () {
+      DateTime to = DateTime.now();
+      DateTime from = to.subtract(Duration(hours: 8));
+
+      HealthDatum audiogram = HealthDatum(
+          AudiogramHealthValue([12, 32], [1, 2, 3, 4], [1, 4, 7]),
+          enumToString(HealthDataUnit.NO_UNIT),
+          enumToString(HealthDataType.AUDIOGRAM),
+          from,
+          to,
+          (Platform.isAndroid)
+              ? enumToString(PlatformType.ANDROID)
+              : enumToString(PlatformType.IOS),
+          '1234',
+          '4321');
+
+      DataPoint dp_1 = DataPoint.fromData(audiogram);
+      expect(dp_1.carpHeader.dataFormat.namespace,
+          HealthSamplingPackage.HEALTH_NAMESPACE);
+      expect(dp_1.carpHeader.dataFormat.name, "audiogram");
+      print(_encode(dp_1));
+    });
+
+    test(' - WORKOUT', () {
+      DateTime to = DateTime.now();
+      DateTime from = to.subtract(Duration(hours: 8));
+
+      HealthDatum workout = HealthDatum(
+          WorkoutHealthValue(HealthWorkoutActivityType.AEROBICS, 8,
+              HealthDataUnit.KILOCALORIE, 1000, HealthDataUnit.METER),
+          enumToString(HealthDataUnit.NO_UNIT),
+          enumToString(HealthDataType.WORKOUT),
+          from,
+          to,
+          (Platform.isAndroid)
+              ? enumToString(PlatformType.ANDROID)
+              : enumToString(PlatformType.IOS),
+          '1234',
+          '4321');
+
+      DataPoint dp_1 = DataPoint.fromData(workout);
+      expect(dp_1.carpHeader.dataFormat.namespace,
+          HealthSamplingPackage.HEALTH_NAMESPACE);
+      expect(dp_1.carpHeader.dataFormat.name, "workout");
       print(_encode(dp_1));
     });
   });

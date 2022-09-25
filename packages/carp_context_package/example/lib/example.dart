@@ -1,6 +1,6 @@
 import 'package:carp_core/carp_core.dart';
 import 'package:carp_mobile_sensing/carp_mobile_sensing.dart';
-import 'package:carp_context_package/context.dart';
+import 'package:carp_context_package/carp_context_package.dart';
 
 /// This is a very simple example of how this sampling package is used as part
 /// of defining a study protocol in CARP Mobile Sensing (CAMS).
@@ -20,46 +20,73 @@ void main() async {
     name: 'Context Sensing Example',
   );
 
-  // define which devices are used for data collection
-  // in this case, its only this smartphone
+  // Define the smartphone as the master device.
   Smartphone phone = Smartphone();
   protocol.addMasterDevice(phone);
 
-  // Add an automatic task that starts collecting location, geolocation,
-  // activity, and a geofence after 5 minutes.
-  // Is using the 'common' measure definitions in the package.
+  // Add a background task that collects activity data from the phone
   protocol.addTriggeredTask(
-      DelayedTrigger(delay: Duration(minutes: 5)),
-      AutomaticTask()
-        ..addMeasures(DeviceSamplingPackage().common.getMeasureList(
-          types: [
-            ContextSamplingPackage.LOCATION,
-            ContextSamplingPackage.GEOLOCATION,
-            ContextSamplingPackage.ACTIVITY,
-            ContextSamplingPackage.GEOFENCE,
-          ],
-        )),
+      ImmediateTrigger(),
+      BackgroundTask()
+        ..addMeasure(Measure(type: ContextSamplingPackage.ACTIVITY)),
       phone);
 
-  // Add an automatic task that collects weather and air_quality every 30 miutes.
-  // Not that API keys for the weather and air_quality measure must be specified.
+  // Define the online location service and add it as a 'device'
+  LocationService locationService = LocationService(
+      accuracy: GeolocationAccuracy.high,
+      distance: 10,
+      interval: const Duration(minutes: 1));
+  protocol.addConnectedDevice(locationService);
+
+  // Add a background task that collects location on a regular basis
   protocol.addTriggeredTask(
-      PeriodicTrigger(
-        period: Duration(minutes: 30),
-        duration: Duration(seconds: 10),
-      ),
-      AutomaticTask()
-        ..addMeasure(WeatherMeasure(
-            type: ContextSamplingPackage.WEATHER,
-            name: 'Weather',
-            description:
-                "Collects local weather from the WeatherAPI web service",
-            apiKey: 'Open_Weather_API_key_goes_here'))
-        ..addMeasure(AirQualityMeasure(
-            type: ContextSamplingPackage.AIR_QUALITY,
-            name: 'Air Quality',
-            description:
-                "Collects local air quality from the Air Quality Index (AQI) web service",
-            apiKey: 'AQI_API_key_goes_here')),
-      phone);
+      IntervalTrigger(period: Duration(minutes: 5)),
+      BackgroundTask()
+        ..addMeasure(Measure(type: ContextSamplingPackage.LOCATION)),
+      locationService);
+
+  // Add a background task that continously collects geolocation and mobility
+  // patterns. Delays sampling by 5 minutes.
+  protocol.addTriggeredTask(
+      DelayedTrigger(delay: Duration(minutes: 5)),
+      BackgroundTask()
+        ..addMeasure(Measure(type: ContextSamplingPackage.GEOLOCATION))
+        ..addMeasure(Measure(type: ContextSamplingPackage.MOBILITY)),
+      locationService);
+
+  // Add a background task that collects geofence events using DTU as the
+  // center for the geofence.
+  protocol.addTriggeredTask(
+      ImmediateTrigger(),
+      BackgroundTask()
+        ..addMeasure(Measure(type: ContextSamplingPackage.GEOFENCE)
+          ..overrideSamplingConfiguration = GeofenceSamplingConfiguration(
+              center: GeoPosition(55.786025, 12.524159),
+              dwell: const Duration(minutes: 15),
+              radius: 10.0)),
+      locationService);
+
+  // Define the online weather service and add it as a 'device'
+  WeatherService weatherService =
+      WeatherService(apiKey: 'OW_API_key_goes_here');
+  protocol.addConnectedDevice(weatherService);
+
+  // Add a background task that collects weather every 30 miutes.
+  protocol.addTriggeredTask(
+      IntervalTrigger(period: Duration(minutes: 30)),
+      BackgroundTask()
+        ..addMeasure(Measure(type: ContextSamplingPackage.WEATHER)),
+      weatherService);
+
+  // Define the online air quality service and add it as a 'device'
+  AirQualityService airQualityService =
+      AirQualityService(apiKey: 'WAQI_API_key_goes_here');
+  protocol.addConnectedDevice(airQualityService);
+
+  // Add a background task that air quality every 30 miutes.
+  protocol.addTriggeredTask(
+      IntervalTrigger(period: Duration(minutes: 30)),
+      BackgroundTask()
+        ..addMeasure(Measure(type: ContextSamplingPackage.AIR_QUALITY)),
+      airQualityService);
 }

@@ -5,11 +5,12 @@
  * found in the LICENSE file.
  */
 
-part of context;
+part of carp_context_package;
 
 /// Holds information about a geofence event of entering, exiting, or dweling.
 @JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)
 class GeofenceDatum extends Datum {
+  @override
   DataFormat get format =>
       DataFormat.fromString(ContextSamplingPackage.GEOFENCE);
 
@@ -18,6 +19,7 @@ class GeofenceDatum extends Datum {
   factory GeofenceDatum.fromJson(Map<String, dynamic> json) =>
       _$GeofenceDatumFromJson(json);
 
+  @override
   Map<String, dynamic> toJson() => _$GeofenceDatumToJson(this);
 
   /// The name of this geofence.
@@ -29,7 +31,8 @@ class GeofenceDatum extends Datum {
   ///  - DWELL
   GeofenceType type;
 
-  String toString() => super.toString() + ', name: $name, type: $type';
+  @override
+  String toString() => '${super.toString()}, name: $name, type: $type';
 }
 
 enum GeofenceType { ENTER, EXIT, DWELL }

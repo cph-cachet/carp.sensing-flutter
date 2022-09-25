@@ -11,6 +11,8 @@ abstract class ProtocolServiceRequest extends ServiceRequest {
   final String _infrastructurePackageNamespace =
       'dk.cachet.carp.protocols.infrastructure';
   ProtocolServiceRequest() : super();
+
+  @override
   String get jsonType =>
       '$_infrastructurePackageNamespace.ProtocolServiceRequest.$runtimeType';
 }
@@ -26,20 +28,23 @@ class Add extends ProtocolServiceRequest {
     versionTag ??= DateTime.now().toUtc().toString();
   }
 
+  @override
   Function get fromJsonFunction => _$AddFromJson;
   factory Add.fromJson(Map<String, dynamic> json) =>
       FromJsonFactory().fromJson(json) as Add;
+  @override
   Map<String, dynamic> toJson() => _$AddToJson(this);
 }
 
 @JsonSerializable(fieldRename: FieldRename.none, includeIfNull: true)
 class AddVersion extends Add {
-  AddVersion(StudyProtocol? protocol, String? versionTag)
-      : super(protocol, versionTag);
+  AddVersion(super.protocol, super.versionTag);
 
+  @override
   Function get fromJsonFunction => _$AddVersionFromJson;
   factory AddVersion.fromJson(Map<String, dynamic> json) =>
       FromJsonFactory().fromJson(json) as AddVersion;
+  @override
   Map<String, dynamic> toJson() => _$AddVersionToJson(this);
 }
 
@@ -50,13 +55,17 @@ class UpdateParticipantDataConfiguration extends ProtocolServiceRequest {
   final List<ParticipantAttribute>? expectedParticipantData;
 
   UpdateParticipantDataConfiguration(
-      this.protocolId, this.versionTag, this.expectedParticipantData)
-      : super();
+    this.protocolId,
+    this.versionTag,
+    this.expectedParticipantData,
+  ) : super();
 
+  @override
   Function get fromJsonFunction => _$UpdateParticipantDataConfigurationFromJson;
   factory UpdateParticipantDataConfiguration.fromJson(
           Map<String, dynamic> json) =>
       FromJsonFactory().fromJson(json) as UpdateParticipantDataConfiguration;
+  @override
   Map<String, dynamic> toJson() =>
       _$UpdateParticipantDataConfigurationToJson(this);
 }
@@ -70,9 +79,11 @@ class GetBy extends ProtocolServiceRequest {
 
   GetBy(this.protocolId, this.versionTag) : super();
 
+  @override
   Function get fromJsonFunction => _$GetByFromJson;
   factory GetBy.fromJson(Map<String, dynamic> json) =>
       FromJsonFactory().fromJson(json) as GetBy;
+  @override
   Map<String, dynamic> toJson() => _$GetByToJson(this);
 }
 
@@ -82,9 +93,11 @@ class GetAllFor extends ProtocolServiceRequest {
 
   GetAllFor(this.ownerId) : super();
 
+  @override
   Function get fromJsonFunction => _$GetAllForFromJson;
   factory GetAllFor.fromJson(Map<String, dynamic> json) =>
       FromJsonFactory().fromJson(json) as GetAllFor;
+  @override
   Map<String, dynamic> toJson() => _$GetAllForToJson(this);
 }
 
@@ -94,9 +107,11 @@ class GetVersionHistoryFor extends ProtocolServiceRequest {
 
   GetVersionHistoryFor(this.protocolId) : super();
 
+  @override
   Function get fromJsonFunction => _$GetVersionHistoryForFromJson;
   factory GetVersionHistoryFor.fromJson(Map<String, dynamic> json) =>
       FromJsonFactory().fromJson(json) as GetVersionHistoryFor;
+  @override
   Map<String, dynamic> toJson() => _$GetVersionHistoryForToJson(this);
 }
 
@@ -108,14 +123,20 @@ class CreateCustomProtocol extends ProtocolServiceRequest {
   final String? customProtocol;
 
   CreateCustomProtocol(
-      this.ownerId, this.name, this.description, this.customProtocol)
-      : super();
+    this.ownerId,
+    this.name,
+    this.description,
+    this.customProtocol,
+  ) : super();
 
+  @override
   String get jsonType =>
       '$_infrastructurePackageNamespace.ProtocolFactoryServiceRequest.$runtimeType';
 
+  @override
   Function get fromJsonFunction => _$CreateCustomProtocolFromJson;
   factory CreateCustomProtocol.fromJson(Map<String, dynamic> json) =>
       FromJsonFactory().fromJson(json) as CreateCustomProtocol;
+  @override
   Map<String, dynamic> toJson() => _$CreateCustomProtocolToJson(this);
 }

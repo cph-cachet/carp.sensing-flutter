@@ -26,11 +26,17 @@ class DataEndPoint extends Serializable {
     this.dataFormat = NameSpace.CARP,
   }) : super();
 
+  @override
   Function get fromJsonFunction => _$DataEndPointFromJson;
+
+  @override
   factory DataEndPoint.fromJson(Map<String, dynamic> json) =>
       FromJsonFactory().fromJson(json) as DataEndPoint;
+
+  @override
   Map<String, dynamic> toJson() => _$DataEndPointToJson(this);
 
+  @override
   String toString() => '$runtimeType - type: $type, dataFormat: $dataFormat';
 }
 

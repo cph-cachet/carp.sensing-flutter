@@ -4,6 +4,7 @@ part of runtime;
 class SamplingPackageRegistry {
   final List<SamplingPackage> _packages = [];
   final List<Permission> _permissions = [];
+  SamplingSchema? _combinedSchemas;
 
   static final SamplingPackageRegistry _instance = SamplingPackageRegistry._();
 
@@ -17,9 +18,6 @@ class SamplingPackageRegistry {
   List<Permission> get permissions => _permissions;
 
   SamplingPackageRegistry._() {
-    // add the basic permissions needed
-    _permissions.add(Permission.storage);
-
     // register the built-in packages
     register(DeviceSamplingPackage());
     register(SensorSamplingPackage());
@@ -27,16 +25,18 @@ class SamplingPackageRegistry {
 
   /// Register a sampling package.
   void register(SamplingPackage package) {
+    _combinedSchemas = null;
     _packages.add(package);
-    package.permissions.forEach((permission) {
+    for (var permission in package.permissions) {
       if (!_permissions.contains(permission)) _permissions.add(permission);
-    });
+    }
     CAMSDataType.add(package.dataTypes);
 
     // register the package's device in the device registry
     DeviceController()
         .registerDevice(package.deviceType, package.deviceManager);
 
+    // call back to the package
     package.onRegister();
   }
 
@@ -44,171 +44,79 @@ class SamplingPackageRegistry {
   ///
   /// Typically, only one package supports a specific type. Howerver, if
   /// more than one package does, all packages are returned.
-  /// Maybe also be an empty list.
+  /// Can be an empty list.
   Set<SamplingPackage> lookup(String type) {
-    final Set<SamplingPackage> _packages = {};
+    final Set<SamplingPackage> supportedPackages = {};
 
-    packages.forEach((package) {
-      if (package.dataTypes.contains(type)) _packages.add(package);
-    });
+    for (var package in packages) {
+      if (package.dataTypes.contains(type)) supportedPackages.add(package);
+    }
 
-    return _packages;
+    return supportedPackages;
   }
 
-  /// A schema that does maximum sampling.
-  ///
-  /// Takes its settings from the [common] schema, but
-  /// enables all measures.
-  /// Also turns off power awareness.
-  SamplingSchema get maximum => common
-    ..type = SamplingSchemaType.maximum
-    ..name = 'Default ALL sampling'
-    ..powerAware = false
-    ..measures
-        .values
-        .forEach((measure) => (measure as CAMSMeasure).enabled = true);
-
-  /// A default `common` sampling schema.
-  ///
-  /// This schema contains measure configurations based on best-effort
-  /// experience and is intended for sampling on a daily basis with recharging
-  /// at least once pr. day. This scheme is power-aware.
-  ///
-  /// These default settings are described in this [table](https://github.com/cph-cachet/carp.sensing-flutter/wiki/Schemas#samplingschemacommon).
-  SamplingSchema get common {
-    SamplingSchema schema = SamplingSchema(
-      type: SamplingSchemaType.common,
-      name: 'Common (default) sampling',
-      powerAware: true,
-    );
-
-    // join sampling schemas from each registered sampling package.
-    packages.forEach((package) => schema.addSamplingSchema(package.common));
-
-    return schema;
+  /// The combined list of all measure types in all packages.
+  List<String> get dataTypes {
+    List<String> dataTypes = [];
+    for (var package in packages) {
+      dataTypes.addAll(package.dataTypes);
+    }
+    return dataTypes;
   }
 
-  /// A sampling schema that does not adapt any [Measure]s.
-  ///
-  /// This schema is used in the power-aware adaptation of sampling. See [PowerAwarenessState].
-  /// [SamplingSchema.normal] is an empty schema and therefore don't change anything when
-  /// used to adapt a [StudyProtocol] and its [Measure]s in the [adapt] method.
-  SamplingSchema get normal => SamplingSchema(
-        type: SamplingSchemaType.normal,
-        name: 'Default sampling',
-      );
-
-  // SamplingSchema normal({bool powerAware = true}) => SamplingSchema(
-  //       type: SamplingSchemaType.normal,
-  //       name: 'Default sampling',
-  //       powerAware: powerAware,
-  //     );
-
-  /// A default light sampling schema.
-  ///
-  /// This schema is used in the power-aware adaptation of sampling.
-  /// See [PowerAwarenessState].
-  /// This schema is intended for sampling on a daily basis with recharging
-  /// at least once pr. day. This scheme is power-aware.
-  ///
-  /// See this [table](https://github.com/cph-cachet/carp.sensing-flutter/wiki/Schemas#samplingschemalight) for an overview.
-  SamplingSchema get light {
-    SamplingSchema schema = SamplingSchema(
-      type: SamplingSchemaType.light,
-      name: 'Light sampling',
-      powerAware: true,
-    );
-
-    // join sampling schemas from each registered sampling package.
-    packages.forEach((package) => schema.addSamplingSchema(package.light));
-
-    return schema;
+  /// The combined sampling schema for all measure types in all packages.
+  SamplingSchema get samplingSchema {
+    if (_combinedSchemas == null) {
+      _combinedSchemas = SamplingSchema();
+      // join sampling schemas from each registered sampling package.
+      for (var package in packages) {
+        _combinedSchemas!.addSamplingSchema(package.samplingSchema);
+      }
+    }
+    return _combinedSchemas!;
   }
 
-  /// A default minimum sampling schema.
+  /// Create an instance of a probe based on its data type.
   ///
-  /// This schema is used in the power-aware adaptation of sampling.
-  /// See [PowerAwarenessState].
-  SamplingSchema get minimum {
-    SamplingSchema schema = SamplingSchema(
-      type: SamplingSchemaType.minimum,
-      name: 'Minimum sampling',
-      powerAware: true,
-    );
-
-    packages.forEach((package) => schema.addSamplingSchema(package.minimum));
-
-    return schema;
-  }
-
-  /// A non-sampling sampling schema.
+  /// This methods search this sampling package registry for a [SamplingPackage]
+  /// which has a probe of the specified [type].
   ///
-  /// This schema is used in the power-aware adaptation of sampling.
-  /// See [PowerAwarenessState].
-  /// This schema pauses all sampling by disabling all probes.
-  /// Sampling will be restored to the minimum level, once the device is
-  /// recharged above the [PowerAwarenessState.MINIMUM_SAMPLING_LEVEL] level.
-  SamplingSchema get none {
-    SamplingSchema schema = SamplingSchema(
-      type: SamplingSchemaType.none,
-      name: 'No sampling',
-      powerAware: true,
-    );
-    CAMSDataType.all.forEach((type) =>
-        schema.measures[type] = CAMSMeasure(type: type, enabled: false));
+  /// Returns `null` if no probe is found for the specified [type].
+  Probe? create(String type) {
+    Probe? probe;
 
-    return schema;
-  }
+    final packages = lookup(type);
 
-  /// A sampling schema for debugging purposes.
-  /// Collects and combines the [SamplingPackage.debug] [SamplingSchema]s
-  /// for each package.
-  SamplingSchema get debug {
-    SamplingSchema schema = SamplingSchema(
-      type: SamplingSchemaType.debug,
-      name: 'Debugging sampling',
-      powerAware: false,
-    );
+    if (packages.isNotEmpty) {
+      if (packages.length > 1) {
+        warning(
+            "$runtimeType - Creating probe, but it seems like the data type '$type' is defined in more than one sampling package.");
+      }
+      probe = packages.first.create(type);
+      probe?.deviceManager = packages.first.deviceManager;
+    }
 
-    packages.forEach((package) => schema.addSamplingSchema(package.debug));
-
-    return schema;
+    return probe;
   }
 }
 
 /// Interface for a sampling package.
 ///
 /// A sampling package provides information on sampling:
-///  - types supported
-///  - schemas - common and for power aware sampling
-///  - permissions needed
+///  * [dataTypes] - the data types supported
+///  * [samplingSchema] - the default [SamplingSchema] containing a set of [SamplingConfiguration]s for each data type.
+///  * [permissions] - a list of [Permission] needed for this package
+///  * [deviceType] - what type of device this package supports
 ///
 /// It also contains factory methods for:
-///  - creating a [Probe] based on a [Measure] type
-///  - creating a [DeviceManager] based on a device type
+///  * creating a [Probe] based on a [Measure] type
+///  * creating a [DeviceManager] based on a device type
 abstract class SamplingPackage {
   /// The list of data type this package supports.
   List<String> get dataTypes;
 
-  /// The default (common) sampling schema for all measures in this package.
-  SamplingSchema get common;
-
-  /// The sampling schema for normal sampling, when power-aware sampling
-  /// is enabled. See [PowerAwarenessState].
-  SamplingSchema get normal;
-
-  /// The sampling schema for light sampling, when power-aware sampling is
-  /// enabled. See [PowerAwarenessState].
-  SamplingSchema get light;
-
-  /// The sampling schema for minimum sampling, when power-aware sampling is
-  /// enabled. See [PowerAwarenessState].
-  SamplingSchema get minimum;
-
-  /// A debugging sampling schema for all measures in this package.
-  /// Typically provides very detailed and frequent sampling in order to
-  /// debug the probes.
-  SamplingSchema get debug;
+  /// The default sampling schema for all [dataTypes] in this package.
+  SamplingSchema get samplingSchema;
 
   /// The list of permissions that this package need.
   ///
@@ -245,6 +153,9 @@ abstract class SamplingPackage {
 /// An abstract class for all sampling packages that run on the phone itself.
 abstract class SmartphoneSamplingPackage implements SamplingPackage {
   final SmartphoneDeviceManager _deviceManager = SmartphoneDeviceManager();
+  @override
   String get deviceType => Smartphone.DEVICE_TYPE;
+
+  @override
   DeviceManager get deviceManager => _deviceManager;
 }

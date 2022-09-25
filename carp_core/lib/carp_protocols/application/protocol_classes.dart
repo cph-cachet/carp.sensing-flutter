@@ -28,6 +28,7 @@ class StudyProtocolId {
       _$StudyProtocolIdFromJson(json);
   Map<String, dynamic> toJson() => _$StudyProtocolIdToJson(this);
 
+  @override
   String toString() => '$runtimeType - ownerId: $ownerId, name: $name';
 }
 
@@ -60,5 +61,6 @@ class ProtocolVersion {
       _$ProtocolVersionFromJson(json);
   Map<String, dynamic> toJson() => _$ProtocolVersionToJson(this);
 
+  @override
   String toString() => '$runtimeType - tag: $tag, date: $date';
 }

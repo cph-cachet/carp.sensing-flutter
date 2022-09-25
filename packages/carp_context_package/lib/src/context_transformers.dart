@@ -1,4 +1,4 @@
-part of context;
+part of carp_context_package;
 
 /// A [Datum] which can hold an OMH [DataPoint](https://www.openmhealth.org/documentation/#/schema-docs/schema-library/schemas/omh_data-point)
 /// and provide its correct OMH [format] and [provenance].
@@ -6,6 +6,7 @@ class OMHContextDataPointDatum extends Datum {
   static const DataFormat DATA_FORMAT =
       DataFormat(NameSpace.OMH, omh.SchemaSupport.DATA_POINT);
 
+  @override
   DataFormat get format => DATA_FORMAT;
 
   omh.DataPoint datapoint;
@@ -19,6 +20,7 @@ class OMHContextDataPointDatum extends Datum {
 
   OMHContextDataPointDatum(this.datapoint);
 
+  @override
   Map<String, dynamic> toJson() => datapoint.toJson();
 }
 

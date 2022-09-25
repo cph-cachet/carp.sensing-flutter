@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 import 'package:test/test.dart';
 
+import 'package:carp_serializable/carp_serializable.dart';
 import 'package:carp_core/carp_core.dart';
 import 'package:carp_mobile_sensing/carp_mobile_sensing.dart';
 import 'package:carp_esense_package/esense.dart';
@@ -17,6 +18,9 @@ void main() {
   setUp(() {
     // register the eSense sampling package
     SamplingPackageRegistry().register(ESenseSamplingPackage());
+
+    // Initialization of serialization
+    CarpMobileSensing();
 
     // Create a new study protocol.
     protocol = StudyProtocol(
@@ -35,24 +39,24 @@ void main() {
       ..addMasterDevice(phone)
       ..addConnectedDevice(eSense);
 
-    // adding all measure from the common schema to one one trigger and one task
+    // adding all available measures to one one trigger and one task
     protocol.addTriggeredTask(
-      ImmediateTrigger(), // a simple trigger that starts immediately
-      AutomaticTask()
-        ..measures = SamplingPackageRegistry().common.measures.values.toList(),
-      phone, // a task with all measures
+      ImmediateTrigger(),
+      BackgroundTask()
+        ..measures = SamplingPackageRegistry()
+            .dataTypes
+            .map((type) => Measure(type: type))
+            .toList(),
+      phone,
     );
 
-    // add an automatic task that immediately starts collecting eSense button and sensor events
+    // Add a background task that immediately starts collecting eSense button and
+    // sensor events from the eSense device.
     protocol.addTriggeredTask(
         ImmediateTrigger(),
-        AutomaticTask()
-          ..addMeasures(ESenseSamplingPackage().debug.getMeasureList(
-            types: [
-              ESenseSamplingPackage.ESENSE_BUTTON,
-              ESenseSamplingPackage.ESENSE_SENSOR,
-            ],
-          )),
+        BackgroundTask()
+          ..addMeasure(Measure(type: ESenseSamplingPackage.ESENSE_BUTTON))
+          ..addMeasure(Measure(type: ESenseSamplingPackage.ESENSE_SENSOR)),
         eSense);
   });
 

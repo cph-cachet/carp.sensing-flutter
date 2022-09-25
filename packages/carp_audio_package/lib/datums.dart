@@ -14,7 +14,9 @@ enum MediaType { audio, video, image }
 /// as well as the timestamps of when the recording was started and stopped
 @JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)
 class MediaDatum extends FileDatum {
-  DataFormat get format => DataFormat.fromString(MediaSamplingPackage.AUDIO);
+  @override
+  @JsonKey(ignore: true)
+  DataFormat get format => DataFormat.fromString(MediaSamplingPackage.MEDIA);
 
   /// The type of media.
   MediaType mediaType;
@@ -26,24 +28,27 @@ class MediaDatum extends FileDatum {
   DateTime? endRecordingTime;
 
   MediaDatum({
-    required String filename,
+    required super.filename,
     required this.mediaType,
     this.startRecordingTime,
     this.endRecordingTime,
-  }) : super(filename: filename);
+  });
 
   factory MediaDatum.fromJson(Map<String, dynamic> json) =>
       _$MediaDatumFromJson(json);
 
+  @override
   Map<String, dynamic> toJson() => _$MediaDatumToJson(this);
 
+  @override
   String toString() =>
-      super.toString() + ', start: $startRecordingTime, end: $endRecordingTime';
+      '${super.toString()}, start: $startRecordingTime, end: $endRecordingTime';
 }
 
 /// A [NoiseDatum] that holds the noise level in decibel of a noise sampling.
 @JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)
 class NoiseDatum extends Datum {
+  @override
   DataFormat get format => DataFormat.fromString(MediaSamplingPackage.NOISE);
 
   // The sound intensity [dB] measurement statistics for a given sampling window.
@@ -70,9 +75,10 @@ class NoiseDatum extends Datum {
   factory NoiseDatum.fromJson(Map<String, dynamic> json) =>
       _$NoiseDatumFromJson(json);
 
+  @override
   Map<String, dynamic> toJson() => _$NoiseDatumToJson(this);
 
+  @override
   String toString() =>
-      super.toString() +
-      ', mean: $meanDecibel, std: $stdDecibel, min: $minDecibel, max: $maxDecibel';
+      '${super.toString()}, mean: $meanDecibel, std: $stdDecibel, min: $minDecibel, max: $maxDecibel';
 }

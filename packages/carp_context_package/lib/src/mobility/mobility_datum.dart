@@ -1,8 +1,9 @@
-part of context;
+part of carp_context_package;
 
 /// A [Datum] that holds mobility features information.
 @JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)
 class MobilityDatum extends Datum {
+  @override
   DataFormat get format =>
       DataFormat.fromString(ContextSamplingPackage.MOBILITY);
 
@@ -45,14 +46,10 @@ class MobilityDatum extends Datum {
   factory MobilityDatum.fromJson(Map<String, dynamic> json) =>
       _$MobilityDatumFromJson(json);
 
+  @override
   Map<String, dynamic> toJson() => _$MobilityDatumToJson(this);
 
+  @override
   String toString() =>
-      super.toString() +
-      ',number of places: $numberOfPlaces\n' +
-      'location variance: $locationVariance\n' +
-      'entropy: $entropy\n' +
-      'normalized entropy: $normalizedEntropy\n' +
-      'home stay: $homeStay\n' +
-      'distance travelled: $distanceTravelled\n';
+      '${super.toString()}, number of places: $numberOfPlaces, location variance: $locationVariance, entropy: $entropy, normalized entropy: $normalizedEntropy, home stay: $homeStay, distance travelled: $distanceTravelled';
 }

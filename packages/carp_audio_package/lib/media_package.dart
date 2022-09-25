@@ -1,5 +1,5 @@
 /*
- * Copyright 2021 Copenhagen Center for Health Technology (CACHET) at the
+ * Copyright 2021-2022 Copenhagen Center for Health Technology (CACHET) at the
  * Technical University of Denmark (DTU).
  * Use of this source code is governed by a MIT-style license that can be
  * found in the LICENSE file.
@@ -17,11 +17,23 @@ part of media;
 ///   SamplingPackageRegistry.register(AudioVideoSamplingPackage());
 /// ```
 class MediaSamplingPackage extends SmartphoneSamplingPackage {
-  static const String AUDIO = "dk.cachet.carp.audio";
-  static const String VIDEO = "dk.cachet.carp.video";
-  static const String IMAGE = "dk.cachet.carp.image";
-  static const String NOISE = "dk.cachet.carp.noise";
+  static const String MEDIA = "${NameSpace.CARP}.media";
+  static const String VIDEO = "${NameSpace.CARP}.video";
+  static const String IMAGE = "${NameSpace.CARP}.image";
 
+  /// Measure type for one-time collection of audio from the phone's microphone.
+  ///  * One-time measure.
+  ///  * Uses the [Smartphone] connected device for data collection.
+  ///  * No sampling configuration needed.
+  static const String AUDIO = "${NameSpace.CARP}.audio";
+
+  /// Measure type for periodic collection of noise data from the phone's microphone.
+  ///  * Periodic measure.
+  ///  * Uses the [Smartphone] master device for data collection.
+  ///  * Use a [PeriodicSamplingConfiguration] for configuration.
+  static const String NOISE = "${NameSpace.CARP}.noise";
+
+  @override
   List<String> get dataTypes => [
         AUDIO,
         VIDEO,
@@ -29,6 +41,7 @@ class MediaSamplingPackage extends SmartphoneSamplingPackage {
         NOISE,
       ];
 
+  @override
   Probe? create(String type) {
     switch (type) {
       case AUDIO:
@@ -44,95 +57,21 @@ class MediaSamplingPackage extends SmartphoneSamplingPackage {
     }
   }
 
-  void onRegister() {
-    FromJsonFactory().register(NoiseMeasure(
-      type: NOISE,
-      frequency: Duration(minutes: 5),
-      duration: Duration(seconds: 10),
-    ));
-  }
+  @override
+  void onRegister() {}
 
+  @override
   List<Permission> get permissions =>
       [Permission.microphone, Permission.camera];
 
-  SamplingSchema get common => SamplingSchema(
-      type: SamplingSchemaType.common,
-      name: 'Common (default) context sampling schema',
-      powerAware: true)
-    ..measures.addEntries([
-      MapEntry(
-          AUDIO,
-          CAMSMeasure(
-            type: AUDIO,
-            name: 'Audio Recording',
-            description:
-                "Collects an audio recording from the phone's microphone",
-            enabled: true,
-          )),
-      MapEntry(
-          VIDEO,
-          CAMSMeasure(
-            type: VIDEO,
-            name: 'Video Recording',
-            description: "Collects a video recording from the phone's camera",
-            enabled: true,
-          )),
-      MapEntry(
-          IMAGE,
-          CAMSMeasure(
-            type: IMAGE,
-            name: 'Image Capture',
-            description: "Collects an image from the phone's camera",
-            enabled: true,
-          )),
-      MapEntry(
-          NOISE,
-          NoiseMeasure(
-            type: NOISE,
-            name: 'Ambient Noise',
-            description:
-                "Collects noise in the background from the phone's microphone",
-            enabled: false,
-            frequency: Duration(minutes: 5),
-            duration: Duration(seconds: 10),
-          )),
-    ]);
-
-  SamplingSchema get light {
-    SamplingSchema light = common
-      ..type = SamplingSchemaType.light
-      ..name = 'Light context sampling';
-    (light.measures[AUDIO] as CAMSMeasure).enabled = false;
-    return light;
-  }
-
-  SamplingSchema get minimum {
-    SamplingSchema minimum = light
-      ..type = SamplingSchemaType.minimum
-      ..name = 'Minimum context sampling';
-    (minimum.measures[NOISE] as NoiseMeasure).enabled = false;
-    return minimum;
-  }
-
-  SamplingSchema get normal => common;
-
-  SamplingSchema get debug => common
-    ..type = SamplingSchemaType.debug
-    ..name = 'Debugging audio sampling schema'
-    ..powerAware = false
-    ..measures[AUDIO] = CAMSMeasure(
-      type: AUDIO,
-      name: 'Audio Recording',
-      description: "Collects an audio recording from the phone's microphone",
-      enabled: true,
-    )
-    ..measures[NOISE] = NoiseMeasure(
-      type: NOISE,
-      name: 'Ambient Noise',
-      description:
-          "Collects noise in the background from the phone's microphone",
-      enabled: true,
-      frequency: Duration(minutes: 1),
-      duration: Duration(seconds: 10),
-    );
+  /// Default samplings schema for:
+  ///  * [NOISE] - collects every 5 minutes for 10 seconds.
+  @override
+  SamplingSchema get samplingSchema => SamplingSchema()
+    ..addConfiguration(
+        NOISE,
+        PeriodicSamplingConfiguration(
+          interval: Duration(minutes: 5),
+          duration: Duration(seconds: 10),
+        ));
 }

@@ -5,7 +5,7 @@
  * found in the LICENSE file.
  */
 
-part of context;
+part of carp_context_package;
 
 /// Collects activity information from the underlying OS's activity recognition
 /// API. It generates an [ActivityDatum] every time an activity is detected.
@@ -13,13 +13,12 @@ part of context;
 /// Since the AR on both Android and iOS generates a lot of 'useless' events, the
 /// following AR event are removed:
 ///  * [ActivityType.UNKNOWN]
-///  * [ActivityType.TILTING]
 ///  * Activities with a low confidence level (<50%)
 class ActivityProbe extends StreamProbe {
   Stream<Datum>? _stream;
 
   @override
-  Future onResume() async {
+  Future<bool> onResume() async {
     // check permission to access the AR on Android
     final status = await Permission.activityRecognition.status;
     if (!status.isGranted) {
@@ -28,7 +27,7 @@ class ActivityProbe extends StreamProbe {
       await Permission.activityRecognition.request();
     }
 
-    super.onResume();
+    return super.onResume();
   }
 
   // @override

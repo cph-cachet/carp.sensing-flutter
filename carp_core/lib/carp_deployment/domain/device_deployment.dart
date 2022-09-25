@@ -35,8 +35,6 @@ class MasterDeviceDeployment {
   List<TriggeredTask> triggeredTasks;
 
   /// The time when this device deployment was last updated.
-  /// This corresponds to the most recent device registration as part of this
-  /// device deployment.
   late DateTime lastUpdateDate;
 
   MasterDeviceDeployment({
@@ -59,7 +57,9 @@ class MasterDeviceDeployment {
   TaskDescriptor? getTaskByName(String name) {
     if (_taskMap == null) {
       _taskMap = {};
-      tasks.forEach((task) => _taskMap![task.name] = task);
+      for (var task in tasks) {
+        _taskMap![task.name] = task;
+      }
     }
     return _taskMap![name];
   }
@@ -68,6 +68,7 @@ class MasterDeviceDeployment {
       _$MasterDeviceDeploymentFromJson(json);
   Map<String, dynamic> toJson() => _$MasterDeviceDeploymentToJson(this);
 
+  @override
   String toString() => '$runtimeType - device: ${deviceDescriptor.roleName}';
 }
 
@@ -95,16 +96,20 @@ class DeviceRegistration extends Serializable {
   ]) : super() {
     this.registrationCreationDate =
         registrationCreationDate ?? DateTime.now().toUtc();
-    this.deviceId = deviceId ?? Uuid().v1();
+    this.deviceId = deviceId ?? const Uuid().v1();
   }
 
+  @override
   Function get fromJsonFunction => _$DeviceRegistrationFromJson;
   factory DeviceRegistration.fromJson(Map<String, dynamic> json) =>
       FromJsonFactory().fromJson(json) as DeviceRegistration;
+  @override
   Map<String, dynamic> toJson() => _$DeviceRegistrationToJson(this);
+  @override
   String get jsonType =>
       'dk.cachet.carp.protocols.domain.devices.DefaultDeviceRegistration';
 
+  @override
   String toString() =>
       '$runtimeType - deviceId: $deviceId, registrationCreationDate: $registrationCreationDate';
 }
@@ -165,12 +170,16 @@ class DeviceDeploymentStatus extends Serializable {
     _status = DeviceDeploymentStatusTypes.Unregistered;
   }
 
+  @override
   Function get fromJsonFunction => _$DeviceDeploymentStatusFromJson;
   factory DeviceDeploymentStatus.fromJson(Map<String, dynamic> json) =>
       FromJsonFactory().fromJson(json) as DeviceDeploymentStatus;
+  @override
   Map<String, dynamic> toJson() => _$DeviceDeploymentStatusToJson(this);
+  @override
   String get jsonType => 'dk.cachet.carp.deployment.domain.$runtimeType';
 
+  @override
   String toString() => '$runtimeType - device: $device, status: $status';
 }
 
@@ -210,5 +219,6 @@ class DeviceInvitation {
       _$DeviceInvitationFromJson(json);
   Map<String, dynamic> toJson() => _$DeviceInvitationToJson(this);
 
+  @override
   String toString() => '$runtimeType - deviceRoleName: $deviceRoleName';
 }

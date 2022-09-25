@@ -1,21 +1,24 @@
 part of mobile_sensing_app;
 
-class StudyVisualization extends StatefulWidget {
-  const StudyVisualization({Key? key}) : super(key: key);
+class StudyDeploymentPage extends StatefulWidget {
+  const StudyDeploymentPage({super.key});
   static const String routeName = '/study';
 
-  _StudyVizState createState() => _StudyVizState(bloc.studyDeploymentModel);
+  @override
+  StudyDeploymentPageState createState() =>
+      StudyDeploymentPageState(bloc.studyDeploymentModel);
 }
 
-class _StudyVizState extends State<StudyVisualization> {
+class StudyDeploymentPageState extends State<StudyDeploymentPage> {
   static final GlobalKey<ScaffoldState> _scaffoldKey =
       GlobalKey<ScaffoldState>();
   final double _appBarHeight = 256.0;
 
   final StudyDeploymentModel studyDeploymentModel;
 
-  _StudyVizState(this.studyDeploymentModel) : super();
+  StudyDeploymentPageState(this.studyDeploymentModel) : super();
 
+  @override
   Widget build(BuildContext context) =>
       _buildStudyVisualization(context, bloc.studyDeploymentModel);
 
@@ -76,8 +79,9 @@ class _StudyVizState extends State<StudyVisualization> {
       child: _buildStudyControllerPanel(context, studyDeploymentModel),
     ));
 
-    studyDeploymentModel.deployment.tasks
-        .forEach((task) => children.add(_TaskPanel(task: task)));
+    for (var task in studyDeploymentModel.deployment.tasks) {
+      children.add(_TaskPanel(task: task));
+    }
 
     return children;
   }
@@ -115,18 +119,22 @@ class _StudyVizState extends State<StudyVisualization> {
                         heading: 'User'),
                     _StudyControllerLine(studyDeploymentModel.dataEndpoint,
                         heading: 'Data Endpoint'),
-                    StreamBuilder<ProbeState>(
+                    StreamBuilder<ExecutorState>(
                         stream: studyDeploymentModel.studyExecutorStateEvents,
-                        initialData: ProbeState.created,
-                        builder: (context, AsyncSnapshot<ProbeState> snapshot) {
-                          if (snapshot.hasData)
+                        initialData: ExecutorState.created,
+                        builder:
+                            (context, AsyncSnapshot<ExecutorState> snapshot) {
+                          if (snapshot.hasData) {
                             return _StudyControllerLine(
-                                probeStateLabel(snapshot.data!),
+                                ProbeDescription
+                                    .probeStateLabel[snapshot.data!],
                                 heading: 'State');
-                          else
+                          } else {
                             return _StudyControllerLine(
-                                probeStateLabel(ProbeState.initialized),
+                                ProbeDescription
+                                    .probeStateLabel[ExecutorState.initialized],
                                 heading: 'State');
+                          }
                         }),
                     StreamBuilder<DataPoint>(
                         stream: studyDeploymentModel.data,
@@ -220,9 +228,8 @@ class _MeasureLine extends StatelessWidget {
         : Icon(ProbeDescription.probeTypeIcon[DataType.UNKNOWN as String]!.icon,
             size: 25);
 
-    final String name = ((measure as CAMSMeasure).name != null)
-        ? (measure as CAMSMeasure).name!
-        : measure.runtimeType.toString();
+    final String name = ProbeDescription.descriptors[measure?.type]?.name ??
+        measure.runtimeType.toString();
 
     final List<Widget> columnChildren = [];
     columnChildren.add(Text(name));

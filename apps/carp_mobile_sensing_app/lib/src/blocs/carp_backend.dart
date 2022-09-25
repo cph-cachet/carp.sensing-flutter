@@ -1,5 +1,6 @@
 part of mobile_sensing_app;
 
+/// Handling communication to the [CarpService].
 class CarpBackend {
   static const String PROD_URI = "https://cans.cachet.dk";
   static const String STAGING_URI = "https://cans.cachet.dk/stage";
@@ -8,15 +9,17 @@ class CarpBackend {
   static const String CLIENT_ID = "carp";
   static const String CLIENT_SECRET = "carp";
 
+  static final CarpBackend _instance = CarpBackend._();
   CarpApp? _app;
+
+  CarpBackend._() : super();
+  factory CarpBackend() => _instance;
 
   /// The signed in user
   CarpUser? get user => CarpService().currentUser;
-  String? get username => CarpService().currentUser?.username;
 
-  static CarpBackend _instance = CarpBackend._();
-  CarpBackend._() : super();
-  factory CarpBackend() => _instance;
+  /// The username of the signed in user.
+  String? get username => CarpService().currentUser?.username;
 
   String get uri => (bloc.deploymentMode == DeploymentMode.CARP_PRODUCTION)
       ? PROD_URI
@@ -28,7 +31,7 @@ class CarpBackend {
 
   CarpApp? get app => _app;
 
-  Future initialize() async {
+  Future<void> initialize() async {
     _app = CarpApp(
       name: name,
       uri: Uri.parse(uri),
@@ -37,7 +40,6 @@ class CarpBackend {
 
     // configure and authenticate
     CarpService().configure(app!);
-    // await CarpService().authenticate(username: username, password: password);
 
     // register CARP as a data backend where data can be uploaded
     DataManagerRegistry().register(CarpDataManager());
@@ -57,11 +59,11 @@ class CarpBackend {
 
   /// Get the study invitation.
   Future<void> getStudyInvitation(BuildContext context) async {
-    ActiveParticipationInvitation? _invitation =
+    ActiveParticipationInvitation? invitation =
         await CarpParticipationService().getStudyInvitation(context);
-    debug('CARP Study Invitation: $_invitation');
+    debug('CARP Study Invitation: $invitation');
 
-    bloc.studyDeploymentId = _invitation?.studyDeploymentId;
-    info('Deployment ID: ${bloc.studyDeploymentId}');
+    bloc.studyDeploymentId = invitation?.studyDeploymentId;
+    info('Deployment ID from invitation: ${bloc.studyDeploymentId}');
   }
 }

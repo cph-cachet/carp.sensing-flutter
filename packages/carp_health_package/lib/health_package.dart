@@ -17,6 +17,7 @@ import 'package:json_annotation/json_annotation.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:uuid/uuid.dart';
 
+import 'package:carp_serializable/carp_serializable.dart';
 import 'package:carp_core/carp_core.dart';
 import 'package:carp_mobile_sensing/carp_mobile_sensing.dart';
 import 'package:health/health.dart';
@@ -36,50 +37,56 @@ HealthFactory _healthFactory = HealthFactory();
 /// ```
 class HealthSamplingPackage extends SmartphoneSamplingPackage {
   static const String HEALTH_NAMESPACE = "${NameSpace.CARP}.health";
+
+  /// Measure type for collection of health data from Apple Health or Google Fit.
+  ///  * One-time measure.
+  ///  * Uses the [Smartphone] master device for data collection.
+  ///  * Use a [HealthSamplingConfiguration] for sampling configuration.
+  ///
+  /// An example of a confguration of collection of health data once pr. hours is:
+  ///
+  /// ```dart
+  ///   protocol.addTriggeredTask(
+  ///         IntervalTrigger(period: Duration(minutes: 60)),
+  ///         BackgroundTask()
+  ///           ..addMeasure(Measure(type: HealthSamplingPackage.HEALTH)
+  ///             ..overrideSamplingConfiguration =
+  ///                 HealthSamplingConfiguration(healthDataTypes: [
+  ///               HealthDataType.BLOOD_GLUCOSE,
+  ///               HealthDataType.BLOOD_PRESSURE_DIASTOLIC,
+  ///               HealthDataType.BLOOD_PRESSURE_SYSTOLIC,
+  ///               HealthDataType.BLOOD_PRESSURE_DIASTOLIC,
+  ///               HealthDataType.HEART_RATE,
+  ///               HealthDataType.STEPS,
+  ///             ])),
+  ///         phone);
+  /// ```
   static const String HEALTH = "${NameSpace.CARP}.health";
 
+  @override
   List<String> get dataTypes => [
         HEALTH,
       ];
 
+  @override
   Probe? create(String type) => type == HEALTH ? HealthProbe() : null;
 
+  @override
   void onRegister() {
-    FromJsonFactory().register(HealthMeasure(
-      type: HEALTH,
-      healthDataType: HealthDataType.ACTIVE_ENERGY_BURNED,
-    ));
+    FromJsonFactory()
+        .register(HealthSamplingConfiguration(healthDataTypes: []));
   }
 
+  @override
   List<Permission> get permissions => [];
 
-  /// Request access to GoogleFit/Apple HealthKit.
+  /// Request access to Google Fit or Apple HealthKit.
   /// This method can be used from the app to request access at a 'convinient'
   /// time and will typically be done before sampling is started for
   /// all [types] that are needed.
   Future<bool> requestAuthorization(List<HealthDataType> types) async =>
       _healthFactory.requestAuthorization(types);
 
-  /// The `common` sampling schema for health.
-  /// Mainly returns a sampling schema collecting step counts.
-  SamplingSchema get common => SamplingSchema(
-        type: SamplingSchemaType.common,
-        name: 'Common (default) health sampling schema',
-        powerAware: true,
-      )..measures.addEntries([
-          MapEntry(
-              HEALTH,
-              HealthMeasure(
-                type: HEALTH,
-                name: 'Step Counts',
-                description:
-                    "Collects the step counts from Apple Health / Google Fit",
-                healthDataType: HealthDataType.STEPS,
-              )),
-        ]);
-
-  SamplingSchema get normal => common;
-  SamplingSchema get light => common;
-  SamplingSchema get minimum => common;
-  SamplingSchema get debug => common;
+  @override
+  SamplingSchema get samplingSchema => SamplingSchema();
 }

@@ -7,7 +7,30 @@
 
 part of esense;
 
-/// This is the base class for this eSense sampling package.
+/// The eSense sampling package supporting the following measures:
+///
+///  * dk.cachet.carp.esense.button
+///  * dk.cachet.carp.esense.sensor
+///
+/// Both measure types are continous collection of eSense data from an eSense
+/// device, which are:
+///
+///  * Event-based measure.
+///  * Uses the [ESenseDevice] connected device for data collection.
+///  * No sampling configuration needed.
+///
+/// An example of a study protocol configuration might be:
+///
+/// ```dart
+///   // Add a background task that immediately starts collecting eSense button
+///   // and sensor events from the eSense device.
+///   protocol.addTriggeredTask(
+///       ImmediateTrigger(),
+///       BackgroundTask()
+///         ..addMeasure(Measure(type: ESenseSamplingPackage.ESENSE_BUTTON))
+///         ..addMeasure(Measure(type: ESenseSamplingPackage.ESENSE_SENSOR)),
+///       eSense);
+/// ```
 ///
 /// To use this package, register it in the [carp_mobile_sensing] package using
 ///
@@ -16,14 +39,20 @@ part of esense;
 /// ```
 class ESenseSamplingPackage implements SamplingPackage {
   static const String ESENSE_NAMESPACE = "${NameSpace.CARP}.esense";
+
+  /// Measure type for continous collection of eSense button events (pressed/released).
   static const String ESENSE_BUTTON = "$ESENSE_NAMESPACE.button";
+
+  /// Measure type for continous collection of eSense sensor events
+  /// (accelorometer & gyroscope).
   static const String ESENSE_SENSOR = "$ESENSE_NAMESPACE.sensor";
 
-  // a singleton eSense device manager
-  DeviceManager _deviceManager = ESenseDeviceManager();
+  final DeviceManager _deviceManager = ESenseDeviceManager();
 
+  @override
   List<String> get dataTypes => [ESENSE_BUTTON, ESENSE_SENSOR];
 
+  @override
   Probe? create(String type) {
     switch (type) {
       case ESENSE_BUTTON:
@@ -35,13 +64,18 @@ class ESenseSamplingPackage implements SamplingPackage {
     }
   }
 
+  @override
   void onRegister() {
     FromJsonFactory().register(ESenseDevice());
   }
 
+  @override
   List<Permission> get permissions => [
         Permission.location,
         Permission.microphone,
+        Permission.bluetooth,
+        Permission.bluetoothConnect,
+        Permission.bluetoothScan,
       ];
 
   @override
@@ -50,47 +84,6 @@ class ESenseSamplingPackage implements SamplingPackage {
   @override
   DeviceManager get deviceManager => _deviceManager;
 
-  // Since the configuration of the eSense devices require the device name
-  // it is not possible to offer any 'common' device configuration.
-  // Hence, all the sampling schema getter return an empty schema.
-  SamplingSchema get common => SamplingSchema(type: SamplingSchemaType.common);
-  SamplingSchema get light => SamplingSchema(type: SamplingSchemaType.light);
-  SamplingSchema get minimum =>
-      SamplingSchema(type: SamplingSchemaType.minimum);
-  SamplingSchema get normal => SamplingSchema(type: SamplingSchemaType.normal);
-
-  // This is the debug sampling schema used by bardram
-  // His eSense devices are
-  //
-  //        |     name    |     id
-  //  ------+-------------+--------------------
-  //  right | eSense-0917 |  00:04:79:00:0F:4D
-  //  left  | eSense-0332 |  00:04:79:00:0D:04
-  //
-  // As recommended;:
-  //   "it would be better to use the right earbud to record only sound samples
-  //    and the left earbud to record only IMU data."
-  //
-  // Hence, connect the right earbud (eSense-0917) to the phone.
-  SamplingSchema get debug => SamplingSchema(
-        type: SamplingSchemaType.debug,
-        name: 'Debugging eSense sampling schema',
-        powerAware: false,
-      )..measures.addEntries([
-          MapEntry(
-              ESENSE_BUTTON,
-              CAMSMeasure(
-                type: ESENSE_BUTTON,
-                name: 'eSense - Button',
-                description: "Collects button event from the eSense device",
-              )),
-          MapEntry(
-              ESENSE_SENSOR,
-              CAMSMeasure(
-                type: ESENSE_SENSOR,
-                name: 'eSense - Sensor',
-                description:
-                    "Collects movement data from the eSense inertial measurement unit (IMU) sensor",
-              )),
-        ]);
+  @override
+  SamplingSchema get samplingSchema => SamplingSchema();
 }

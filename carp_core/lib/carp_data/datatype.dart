@@ -42,14 +42,17 @@ class DataType {
     return DataType(namespace, name);
   }
 
+  @override
   String toString() => '$namespace.$name';
 
+  @override
   bool operator ==(other) {
     if (other is! DataType) return false;
     return (other.namespace == namespace && other.name == name);
   }
 
   // taken from https://dart.dev/guides/libraries/library-tour#implementing-map-keys
+  @override
   int get hashCode {
     var result = 17;
     result = 37 * result + namespace.hashCode;

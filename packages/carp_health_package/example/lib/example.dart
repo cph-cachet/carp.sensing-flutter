@@ -14,7 +14,7 @@ void main() async {
   // Create a study protocol
   StudyProtocol protocol = StudyProtocol(
     ownerId: 'owner@dtu.dk',
-    name: 'Context Sensing Example',
+    name: 'Health Sensing Example',
   );
 
   // define which devices are used for data collection
@@ -22,46 +22,29 @@ void main() async {
   Smartphone phone = Smartphone();
   protocol.addMasterDevice(phone);
 
+  // collect a set of health data every hour
   protocol.addTriggeredTask(
-      // collect every hour
-      PeriodicTrigger(
-        period: Duration(minutes: 60),
-        duration: Duration(minutes: 10),
-      ),
-      AutomaticTask()
-        ..measures.add(HealthMeasure(
-          type: HealthSamplingPackage.HEALTH,
-          healthDataType: HealthDataType.BLOOD_GLUCOSE,
-        ))
-        ..measures.add(HealthMeasure(
-          type: HealthSamplingPackage.HEALTH,
-          healthDataType: HealthDataType.BLOOD_PRESSURE_DIASTOLIC,
-        ))
-        ..measures.add(HealthMeasure(
-          type: HealthSamplingPackage.HEALTH,
-          healthDataType: HealthDataType.BLOOD_PRESSURE_SYSTOLIC,
-        ))
-        ..measures.add(HealthMeasure(
-          type: HealthSamplingPackage.HEALTH,
-          healthDataType: HealthDataType.HEART_RATE,
-        ))
-        ..measures.add(HealthMeasure(
-          type: HealthSamplingPackage.HEALTH,
-          name: 'Step Counts',
-          description:
-              "Collects the step counts from Apple Health / Google Fit",
-          healthDataType: HealthDataType.STEPS,
-        )),
+      IntervalTrigger(period: Duration(minutes: 60)),
+      BackgroundTask()
+        ..addMeasure(Measure(type: HealthSamplingPackage.HEALTH)
+          ..overrideSamplingConfiguration =
+              HealthSamplingConfiguration(healthDataTypes: [
+            HealthDataType.BLOOD_GLUCOSE,
+            HealthDataType.BLOOD_PRESSURE_DIASTOLIC,
+            HealthDataType.BLOOD_PRESSURE_SYSTOLIC,
+            HealthDataType.BLOOD_PRESSURE_DIASTOLIC,
+            HealthDataType.HEART_RATE,
+            HealthDataType.STEPS,
+          ])),
       phone);
 
+  // collect weight every day at 23:00
   protocol.addTriggeredTask(
-      // collect every day at 23:00
       RecurrentScheduledTrigger(
-          type: RecurrentType.daily, time: Time(hour: 23, minute: 00)),
-      AutomaticTask()
-        ..measures.add(HealthMeasure(
-          type: HealthSamplingPackage.HEALTH,
-          healthDataType: HealthDataType.WEIGHT,
-        )),
+          type: RecurrentType.daily, time: TimeOfDay(hour: 23, minute: 00)),
+      BackgroundTask()
+        ..addMeasure(Measure(type: HealthSamplingPackage.HEALTH)
+          ..overrideSamplingConfiguration = HealthSamplingConfiguration(
+              healthDataTypes: [HealthDataType.WEIGHT])),
       phone);
 }

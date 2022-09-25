@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:carp_connectivity_package/connectivity.dart';
 import 'package:test/test.dart';
 
+import 'package:carp_serializable/carp_serializable.dart';
 import 'package:carp_core/carp_core.dart';
 import 'package:carp_mobile_sensing/carp_mobile_sensing.dart';
 
@@ -14,8 +15,8 @@ void main() {
   Smartphone phone;
 
   setUp(() {
-    // make sure that the json functions are loaded
-    DomainJsonFactory();
+    // Initialization of serialization
+    CarpMobileSensing();
 
     // register the context sampling package
     SamplingPackageRegistry().register(ConnectivitySamplingPackage());
@@ -31,12 +32,15 @@ void main() {
 
     protocol.addMasterDevice(phone);
 
-    // adding all measure from the common schema to one one trigger and one task
+    // adding all available measures to one one trigger and one task
     protocol.addTriggeredTask(
-      ImmediateTrigger(), // a simple trigger that starts immediately
-      AutomaticTask()
-        ..measures = SamplingPackageRegistry().common.measures.values.toList(),
-      phone, // a task with all measures
+      ImmediateTrigger(),
+      BackgroundTask()
+        ..measures = SamplingPackageRegistry()
+            .dataTypes
+            .map((type) => Measure(type: type))
+            .toList(),
+      phone,
     );
   });
 

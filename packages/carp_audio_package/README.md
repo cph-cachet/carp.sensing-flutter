@@ -14,9 +14,7 @@ This packages supports sampling of the following [`Measure`](https://pub.dev/doc
 
 The name of the Flutter pub.dev package is "audio" for historical reasons - however, it is now a "media" package and the CAMS package name is `MediaSamplingPackage`.
 
-See the [wiki]() for further documentation, particularly on available [measure types](https://github.com/cph-cachet/carp.sensing-flutter/wiki/A.-Measure-Types)
-and [sampling schemas](https://github.com/cph-cachet/carp.sensing-flutter/wiki/D.-Sampling-Schemas).
-
+See the [wiki](https://github.com/cph-cachet/carp.sensing-flutter/wiki) for further documentation, particularly on available [measure types](https://github.com/cph-cachet/carp.sensing-flutter/wiki/A.-Measure-Types).
 See the [CARP Mobile Sensing App](https://github.com/cph-cachet/carp.sensing-flutter/tree/master/apps/carp_mobile_sensing_app) for an example of how to build a mobile sensing app in Flutter.
 
 For Flutter plugins for other CARP products, see [CARP Mobile Sensing in Flutter](https://github.com/cph-cachet/carp.sensing-flutter).
@@ -49,11 +47,6 @@ Add the following to your app's `manifest.xml` file located in `android/app/src/
 <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
 ````
 
-> **NOTE:** Version 0.5.0 is migrated to AndroidX. This shouldn't result in any functional changes, but it requires any Android apps using this plugin to also 
-[migrate](https://developer.android.com/jetpack/androidx/migrate) if they're using the original support library. 
-See Flutter [AndroidX compatibility](https://flutter.dev/docs/development/packages-and-plugins/androidx-compatibility)
-
-
 ### iOS Integration
 
 Add this permission in the `Info.plist` file located in `ios/Runner`:
@@ -82,9 +75,27 @@ import 'package:carp_mobile_sensing/carp_mobile_sensing.dart';
 import 'package:carp_audio_package/media.dart';
 `````
 
-Before creating a study and running it, register this package in the 
+Before creating a study and running it, register this package in the
 [SamplingPackageRegistry](https://pub.dartlang.org/documentation/carp_mobile_sensing/latest/runtime/SamplingPackageRegistry.html).
 
-`````dart
+```dart
   SamplingPackageRegistry().register(MediaSamplingPackage());
-`````
+```
+
+Adding a measure from this package to a study protocol would look something like:
+
+```dart
+  // Add an automatic task that immediately starts collecting audio and noise.
+  protocol.addTriggeredTask(
+      ImmediateTrigger(),
+      BackgroundTask()
+        ..addMeasures(
+          [
+            Measure(type: MediaSamplingPackage.AUDIO),
+            Measure(type: MediaSamplingPackage.NOISE),
+          ],
+        ),
+      phone);
+```
+
+See the `example.dart` file for a full example of how to set up a CAMS study protocol for this sampling package.

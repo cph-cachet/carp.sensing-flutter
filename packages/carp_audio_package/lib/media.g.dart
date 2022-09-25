@@ -37,7 +37,7 @@ Map<String, dynamic> _$MediaDatumToJson(MediaDatum instance) {
   val['filename'] = instance.filename;
   val['upload'] = instance.upload;
   writeNotNull('metadata', instance.metadata);
-  val['media_type'] = _$MediaTypeEnumMap[instance.mediaType];
+  val['media_type'] = _$MediaTypeEnumMap[instance.mediaType]!;
   writeNotNull(
       'start_recording_time', instance.startRecordingTime?.toIso8601String());
   writeNotNull(
@@ -75,38 +75,5 @@ Map<String, dynamic> _$NoiseDatumToJson(NoiseDatum instance) {
   val['std_decibel'] = instance.stdDecibel;
   val['min_decibel'] = instance.minDecibel;
   val['max_decibel'] = instance.maxDecibel;
-  return val;
-}
-
-NoiseMeasure _$NoiseMeasureFromJson(Map<String, dynamic> json) => NoiseMeasure(
-      type: json['type'] as String,
-      name: json['name'] as String?,
-      description: json['description'] as String?,
-      enabled: json['enabled'] as bool? ?? true,
-      frequency: Duration(microseconds: json['frequency'] as int),
-      duration: Duration(microseconds: json['duration'] as int),
-      samplingRate: json['samplingRate'] as int?,
-    )
-      ..$type = json[r'$type'] as String?
-      ..configuration = Map<String, String>.from(json['configuration'] as Map);
-
-Map<String, dynamic> _$NoiseMeasureToJson(NoiseMeasure instance) {
-  final val = <String, dynamic>{};
-
-  void writeNotNull(String key, dynamic value) {
-    if (value != null) {
-      val[key] = value;
-    }
-  }
-
-  writeNotNull(r'$type', instance.$type);
-  val['type'] = instance.type;
-  writeNotNull('name', instance.name);
-  writeNotNull('description', instance.description);
-  val['enabled'] = instance.enabled;
-  val['configuration'] = instance.configuration;
-  val['frequency'] = instance.frequency.inMicroseconds;
-  val['duration'] = instance.duration.inMicroseconds;
-  val['samplingRate'] = instance.samplingRate;
   return val;
 }

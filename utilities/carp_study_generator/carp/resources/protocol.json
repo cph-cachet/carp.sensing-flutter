@@ -1,7 +1,7 @@
 {
     "ownerId": "abc@dtu.dk",
     "name": "CAMS App v 0.33.0",
-    "creationDate": "2022-03-16T12:31:54.806186Z",
+    "creationDate": "2022-05-30T16:08:08.582346Z",
     "masterDevices": [
      {
       "$type": "dk.cachet.carp.protocols.domain.devices.Smartphone",
@@ -11,6 +11,29 @@
      }
     ],
     "connectedDevices": [
+     {
+      "$type": "dk.cachet.carp.protocols.domain.devices.LocationService",
+      "isMasterDevice": false,
+      "roleName": "location_service",
+      "samplingConfiguration": {},
+      "accuracy": "balanced",
+      "distance": 0.0,
+      "interval": 60000000
+     },
+     {
+      "$type": "dk.cachet.carp.protocols.domain.devices.WeatherService",
+      "isMasterDevice": false,
+      "roleName": "weather_service",
+      "samplingConfiguration": {},
+      "apiKey": "12b6e28582eb9298577c734a31ba9f4f"
+     },
+     {
+      "$type": "dk.cachet.carp.protocols.domain.devices.AirQualityService",
+      "isMasterDevice": false,
+      "roleName": "air_quality_service",
+      "samplingConfiguration": {},
+      "apiKey": "9e538456b2b85c92647d8b65090e29f957638c77"
+     },
      {
       "$type": "dk.cachet.carp.protocols.domain.devices.ESenseDevice",
       "isMasterDevice": false,
@@ -26,249 +49,179 @@
       "$type": "dk.cachet.carp.protocols.domain.triggers.ImmediateTrigger"
      },
      "1": {
-      "$type": "dk.cachet.carp.protocols.domain.triggers.PeriodicTrigger",
-      "period": 1800000000,
-      "duration": 2000000
+      "$type": "dk.cachet.carp.protocols.domain.triggers.RandomRecurrentTrigger",
+      "startTime": {
+       "hour": 8,
+       "minute": 0,
+       "second": 0
+      },
+      "endTime": {
+       "hour": 20,
+       "minute": 0,
+       "second": 0
+      },
+      "minNumberOfTriggers": 3,
+      "maxNumberOfTriggers": 8,
+      "duration": 1000000
      },
      "2": {
       "$type": "dk.cachet.carp.protocols.domain.triggers.ImmediateTrigger"
      },
      "3": {
-      "$type": "dk.cachet.carp.protocols.domain.triggers.ImmediateTrigger"
+      "$type": "dk.cachet.carp.protocols.domain.triggers.IntervalTrigger",
+      "period": 60000000
      },
      "4": {
-      "$type": "dk.cachet.carp.protocols.domain.triggers.PeriodicTrigger",
-      "period": 60000000,
-      "duration": 10000000
+      "$type": "dk.cachet.carp.protocols.domain.triggers.ImmediateTrigger"
      },
      "5": {
+      "$type": "dk.cachet.carp.protocols.domain.triggers.IntervalTrigger",
+      "period": 1800000000
+     },
+     "6": {
+      "$type": "dk.cachet.carp.protocols.domain.triggers.IntervalTrigger",
+      "period": 1800000000
+     },
+     "7": {
+      "$type": "dk.cachet.carp.protocols.domain.triggers.ImmediateTrigger"
+     },
+     "8": {
+      "$type": "dk.cachet.carp.protocols.domain.triggers.ImmediateTrigger"
+     },
+     "9": {
       "$type": "dk.cachet.carp.protocols.domain.triggers.ImmediateTrigger"
      }
     },
     "tasks": [
      {
-      "$type": "dk.cachet.carp.protocols.domain.tasks.AutomaticTask",
-      "name": "Task #3",
+      "$type": "dk.cachet.carp.protocols.domain.tasks.BackgroundTask",
+      "name": "Task #5",
       "measures": [
        {
-        "$type": "dk.cachet.carp.protocols.domain.tasks.measures.CAMSMeasure",
-        "type": "dk.cachet.carp.device",
-        "name": "Basic Device Info",
-        "description": "Collects basic information about the phone.",
-        "enabled": true,
-        "configuration": {}
+        "$type": "dk.cachet.carp.protocols.domain.tasks.measures.Measure",
+        "type": "dk.cachet.carp.pedometer"
        },
        {
-        "$type": "dk.cachet.carp.protocols.domain.tasks.measures.CAMSMeasure",
-        "type": "dk.cachet.carp.battery",
-        "name": "Battery",
-        "description": "Collects information about the battery charging level.",
-        "enabled": true,
-        "configuration": {}
+        "$type": "dk.cachet.carp.protocols.domain.tasks.measures.Measure",
+        "type": "dk.cachet.carp.light"
        },
        {
-        "$type": "dk.cachet.carp.protocols.domain.tasks.measures.CAMSMeasure",
-        "type": "dk.cachet.carp.pedometer",
-        "name": "Pedometer (Step Count)",
-        "description": "Collects step events from the onboard phone step sensor.",
-        "enabled": true,
-        "configuration": {}
+        "$type": "dk.cachet.carp.protocols.domain.tasks.measures.Measure",
+        "type": "dk.cachet.carp.screen"
        },
        {
-        "$type": "dk.cachet.carp.protocols.domain.tasks.measures.PeriodicMeasure",
-        "type": "dk.cachet.carp.light",
-        "name": "Ambient Light",
-        "description": "Collects ambient light from the light sensor on the phone.",
-        "enabled": true,
-        "configuration": {},
-        "frequency": 60000000,
-        "duration": 1000000
+        "$type": "dk.cachet.carp.protocols.domain.tasks.measures.Measure",
+        "type": "dk.cachet.carp.memory"
        },
        {
-        "$type": "dk.cachet.carp.protocols.domain.tasks.measures.CAMSMeasure",
-        "type": "dk.cachet.carp.connectivity",
-        "enabled": true,
-        "configuration": {}
-       },
-       {
-        "$type": "dk.cachet.carp.protocols.domain.tasks.measures.PeriodicMeasure",
-        "type": "dk.cachet.carp.wifi",
-        "enabled": true,
-        "configuration": {},
-        "frequency": 60000000,
-        "duration": 5000000
-       },
-       {
-        "$type": "dk.cachet.carp.protocols.domain.tasks.measures.PeriodicMeasure",
-        "type": "dk.cachet.carp.bluetooth",
-        "enabled": true,
-        "configuration": {},
-        "frequency": 60000000,
-        "duration": 6000000
-       },
-       {
-        "$type": "dk.cachet.carp.protocols.domain.tasks.measures.NoiseMeasure",
-        "type": "dk.cachet.carp.noise",
-        "name": "Ambient Noise",
-        "description": "Collects noise in the background from the phone's microphone",
-        "enabled": true,
-        "configuration": {},
-        "frequency": 60000000,
-        "duration": 10000000,
-        "samplingRate": 500
-       },
-       {
-        "$type": "dk.cachet.carp.protocols.domain.tasks.measures.PeriodicMeasure",
-        "type": "dk.cachet.carp.memory",
-        "name": "Memory Usage",
-        "description": "Collects information about use of memory.",
-        "enabled": true,
-        "configuration": {},
-        "frequency": 60000000,
-        "duration": 1000000
-       },
-       {
-        "$type": "dk.cachet.carp.protocols.domain.tasks.measures.CAMSMeasure",
-        "type": "dk.cachet.carp.screen",
-        "name": "Screen Activity (lock/on/off)",
-        "description": "Collects information about lock/unlock event of the phone's screen.",
-        "enabled": true,
-        "configuration": {}
-       },
-       {
-        "$type": "dk.cachet.carp.protocols.domain.tasks.measures.CAMSMeasure",
-        "type": "dk.cachet.carp.activity",
-        "name": "Activity Recognition",
-        "description": "Collects activity type from the phone's activity recognition module",
-        "enabled": true,
-        "configuration": {}
-       },
-       {
-        "$type": "dk.cachet.carp.protocols.domain.tasks.measures.LocationMeasure",
-        "type": "dk.cachet.carp.geolocation",
-        "name": "Geo-location",
-        "description": "Continously collection of location from the phone's GPS sensor",
-        "enabled": true,
-        "configuration": {},
-        "accuracy": "navigation",
-        "distance": 0.0,
-        "interval": 10000000
+        "$type": "dk.cachet.carp.protocols.domain.tasks.measures.Measure",
+        "type": "dk.cachet.carp.battery"
        }
       ]
      },
      {
-      "$type": "dk.cachet.carp.protocols.domain.tasks.AutomaticTask",
+      "$type": "dk.cachet.carp.protocols.domain.tasks.BackgroundTask",
+      "name": "Task #6",
+      "measures": [
+       {
+        "$type": "dk.cachet.carp.protocols.domain.tasks.measures.Measure",
+        "type": "dk.cachet.carp.device"
+       }
+      ]
+     },
+     {
+      "$type": "dk.cachet.carp.protocols.domain.tasks.BackgroundTask",
       "name": "Task #7",
       "measures": [
        {
-        "$type": "dk.cachet.carp.protocols.domain.tasks.measures.WeatherMeasure",
-        "type": "dk.cachet.carp.weather",
-        "name": "Weather",
-        "description": "Collects local weather from the WeatherAPI web service",
-        "enabled": true,
-        "configuration": {},
-        "apiKey": "12b6e28582eb9298577c734a31ba9f4f"
-       },
-       {
-        "$type": "dk.cachet.carp.protocols.domain.tasks.measures.AirQualityMeasure",
-        "type": "dk.cachet.carp.air_quality",
-        "name": "Air Quality",
-        "description": "Collects local air quality from the Air Quality Index (AQI) web service",
-        "enabled": true,
-        "configuration": {},
-        "apiKey": "9e538456b2b85c92647d8b65090e29f957638c77"
+        "$type": "dk.cachet.carp.protocols.domain.tasks.measures.Measure",
+        "type": "dk.cachet.carp.activity"
        }
       ]
      },
      {
-      "$type": "dk.cachet.carp.protocols.domain.tasks.AutomaticTask",
+      "$type": "dk.cachet.carp.protocols.domain.tasks.BackgroundTask",
       "name": "Task #8",
       "measures": [
        {
-        "$type": "dk.cachet.carp.protocols.domain.tasks.measures.CAMSMeasure",
-        "type": "dk.cachet.carp.text_message",
-        "name": "Text Messages",
-        "description": "Collects the event when a text messages (SMS) is sent or received",
-        "enabled": true,
-        "configuration": {}
+        "$type": "dk.cachet.carp.protocols.domain.tasks.measures.Measure",
+        "type": "dk.cachet.carp.location"
        }
       ]
      },
      {
-      "$type": "dk.cachet.carp.protocols.domain.tasks.AutomaticTask",
+      "$type": "dk.cachet.carp.protocols.domain.tasks.BackgroundTask",
       "name": "Task #9",
       "measures": [
        {
-        "$type": "dk.cachet.carp.protocols.domain.tasks.measures.MarkedMeasure",
-        "type": "dk.cachet.carp.phone_log",
-        "name": "Phone Log",
-        "description": "Collects the log on in- and out-going calls from the phone",
-        "enabled": true,
-        "configuration": {},
-        "history": 86400000000
+        "$type": "dk.cachet.carp.protocols.domain.tasks.measures.Measure",
+        "type": "dk.cachet.carp.geolocation"
        },
        {
-        "$type": "dk.cachet.carp.protocols.domain.tasks.measures.CAMSMeasure",
-        "type": "dk.cachet.carp.text_message_log",
-        "name": "Text Messages Log",
-        "description": "Collects the log on in- and out-going text messages (SMS) from the phone",
-        "enabled": true,
-        "configuration": {}
-       },
-       {
-        "$type": "dk.cachet.carp.protocols.domain.tasks.measures.CalendarMeasure",
-        "type": "dk.cachet.carp.calendar",
-        "name": "Calendar Events",
-        "description": "Collects the list of calendar events on the calenders on the phone",
-        "enabled": true,
-        "configuration": {},
-        "past": 86400000000,
-        "future": 86400000000
+        "$type": "dk.cachet.carp.protocols.domain.tasks.measures.Measure",
+        "type": "dk.cachet.carp.mobility"
        }
       ]
      },
      {
-      "$type": "dk.cachet.carp.protocols.domain.tasks.AutomaticTask",
+      "$type": "dk.cachet.carp.protocols.domain.tasks.BackgroundTask",
       "name": "Task #10",
       "measures": [
        {
-        "$type": "dk.cachet.carp.protocols.domain.tasks.measures.CAMSMeasure",
-        "type": "dk.cachet.carp.apps",
-        "name": "Installed Apps",
-        "description": "Collects an list of the apps installed on this phone",
-        "enabled": true,
-        "configuration": {}
-       },
-       {
-        "$type": "dk.cachet.carp.protocols.domain.tasks.measures.MarkedMeasure",
-        "type": "dk.cachet.carp.app_usage",
-        "name": "Apps Usage",
-        "description": "Collects an log of the use of apps on the phone",
-        "enabled": true,
-        "configuration": {},
-        "history": 86400000000
+        "$type": "dk.cachet.carp.protocols.domain.tasks.measures.Measure",
+        "type": "dk.cachet.carp.weather"
        }
       ]
      },
      {
-      "$type": "dk.cachet.carp.protocols.domain.tasks.AutomaticTask",
+      "$type": "dk.cachet.carp.protocols.domain.tasks.BackgroundTask",
       "name": "Task #11",
       "measures": [
        {
-        "$type": "dk.cachet.carp.protocols.domain.tasks.measures.CAMSMeasure",
-        "type": "dk.cachet.carp.esense.button",
-        "name": "eSense - Button",
-        "description": "Collects button event from the eSense device",
-        "enabled": true,
-        "configuration": {}
+        "$type": "dk.cachet.carp.protocols.domain.tasks.measures.Measure",
+        "type": "dk.cachet.carp.air_quality"
+       }
+      ]
+     },
+     {
+      "$type": "dk.cachet.carp.protocols.domain.tasks.BackgroundTask",
+      "name": "Task #12",
+      "measures": [
+       {
+        "$type": "dk.cachet.carp.protocols.domain.tasks.measures.Measure",
+        "type": "dk.cachet.carp.noise"
+       }
+      ]
+     },
+     {
+      "$type": "dk.cachet.carp.protocols.domain.tasks.BackgroundTask",
+      "name": "Task #13",
+      "measures": [
+       {
+        "$type": "dk.cachet.carp.protocols.domain.tasks.measures.Measure",
+        "type": "dk.cachet.carp.connectivity"
        },
        {
-        "$type": "dk.cachet.carp.protocols.domain.tasks.measures.CAMSMeasure",
-        "type": "dk.cachet.carp.esense.sensor",
-        "name": "eSense - Sensor",
-        "description": "Collects movement data from the eSense inertial measurement unit (IMU) sensor",
-        "enabled": true,
-        "configuration": {}
+        "$type": "dk.cachet.carp.protocols.domain.tasks.measures.Measure",
+        "type": "dk.cachet.carp.wifi"
+       },
+       {
+        "$type": "dk.cachet.carp.protocols.domain.tasks.measures.Measure",
+        "type": "dk.cachet.carp.bluetooth"
+       }
+      ]
+     },
+     {
+      "$type": "dk.cachet.carp.protocols.domain.tasks.BackgroundTask",
+      "name": "Task #14",
+      "measures": [
+       {
+        "$type": "dk.cachet.carp.protocols.domain.tasks.measures.Measure",
+        "type": "dk.cachet.carp.esense.button"
+       },
+       {
+        "$type": "dk.cachet.carp.protocols.domain.tasks.measures.Measure",
+        "type": "dk.cachet.carp.esense.sensor"
        }
       ]
      }
@@ -276,32 +229,52 @@
     "triggeredTasks": [
      {
       "triggerId": 0,
-      "taskName": "Task #3",
+      "taskName": "Task #5",
       "targetDeviceRoleName": "masterphone"
      },
      {
       "triggerId": 1,
-      "taskName": "Task #7",
+      "taskName": "Task #6",
       "targetDeviceRoleName": "masterphone"
      },
      {
       "triggerId": 2,
-      "taskName": "Task #8",
+      "taskName": "Task #7",
       "targetDeviceRoleName": "masterphone"
      },
      {
       "triggerId": 3,
-      "taskName": "Task #9",
-      "targetDeviceRoleName": "masterphone"
+      "taskName": "Task #8",
+      "targetDeviceRoleName": "location_service"
      },
      {
       "triggerId": 4,
-      "taskName": "Task #10",
-      "targetDeviceRoleName": "masterphone"
+      "taskName": "Task #9",
+      "targetDeviceRoleName": "location_service"
      },
      {
       "triggerId": 5,
+      "taskName": "Task #10",
+      "targetDeviceRoleName": "weather_service"
+     },
+     {
+      "triggerId": 6,
       "taskName": "Task #11",
+      "targetDeviceRoleName": "air_quality_service"
+     },
+     {
+      "triggerId": 7,
+      "taskName": "Task #12",
+      "targetDeviceRoleName": "masterphone"
+     },
+     {
+      "triggerId": 8,
+      "taskName": "Task #13",
+      "targetDeviceRoleName": "masterphone"
+     },
+     {
+      "triggerId": 9,
+      "taskName": "Task #14",
       "targetDeviceRoleName": "esense"
      }
     ],
@@ -322,7 +295,6 @@
      }
     },
     "description": "The default study testing coverage of most measures. Used in the coverage tests.",
-    "samplingStrategy": "normal",
     "dataEndPoint": {
      "$type": "CarpDataEndPoint",
      "type": "CARP",

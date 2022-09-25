@@ -14,8 +14,8 @@ part of carp_backend;
 /// custom task hold the raw json desription of a [SmartphoneStudyProtocol].
 class CarpStudyProtocolManager implements StudyProtocolManager {
   Future initialize() async {
-    // initialize json serialization for CAMS and RP classes
-    DomainJsonFactory();
+    // Initialization of serialization
+    CarpMobileSensing();
     RPTask(identifier: '');
   }
 

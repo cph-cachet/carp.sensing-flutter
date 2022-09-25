@@ -3,15 +3,18 @@ part of mobile_sensing_app;
 class DevicesList extends StatefulWidget {
   const DevicesList({Key? key}) : super(key: key);
   static const String routeName = '/deviceslist';
-  _DevicesListState createState() => _DevicesListState();
+
+  @override
+  DevicesListState createState() => DevicesListState();
 }
 
-class _DevicesListState extends State<DevicesList> {
+class DevicesListState extends State<DevicesList> {
   static final GlobalKey<ScaffoldState> scaffoldKey =
       GlobalKey<ScaffoldState>();
 
+  @override
   Widget build(BuildContext context) {
-    List<DeviceModel> devices = bloc.runningDevices.toList();
+    List<DeviceModel> devices = bloc.availableDevices.toList();
 
     return Scaffold(
       key: scaffoldKey,
@@ -21,7 +24,6 @@ class _DevicesListState extends State<DevicesList> {
       body: StreamBuilder<UserTask>(
         stream: AppTaskController().userTaskEvents,
         builder: (context, AsyncSnapshot<UserTask> snapshot) {
-          print('>> $snapshot');
           return Scrollbar(
             child: ListView.builder(
               itemCount: devices.length,
@@ -55,30 +57,18 @@ class _DevicesListState extends State<DevicesList> {
                 trailing: device.stateIcon,
               ),
               const Divider(),
-              FlatButton(
+              TextButton(
                   child: const Text('How to use this device?'),
                   onPressed: () => print('Use the $device')),
               (device.status != DeviceStatus.connected)
                   ? Column(children: [
                       const Divider(),
-                      FlatButton(
+                      TextButton(
                         child: const Text('Connect to this device'),
                         onPressed: () => bloc.connectToDevice(device),
                       ),
                     ])
                   : Text(""),
-              // ]
-              //   (device.status != DeviceStatus.connected &&
-              //           device.status != DeviceStatus.sampling)
-              //       // (device.status != DeviceStatus.connected)
-              //       ? ButtonBar(
-              //           children: <Widget>[
-              //             FlatButton(
-              //                 child: const Text('CONNECT TO DEVICE'),
-              //                 onPressed: () => bloc.connectToDevice(device)),
-              //           ],
-              //         )
-              //       : Text(""),
             ],
           ),
         ),

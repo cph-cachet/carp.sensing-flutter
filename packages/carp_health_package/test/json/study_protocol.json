@@ -2,7 +2,7 @@
   "ownerId": "alex@uni.dk",
   "name": "Context package test",
   "description": "",
-  "creationDate": "2021-10-14T21:40:06.174875Z",
+  "creationDate": "2022-07-06T13:06:13.860922Z",
   "masterDevices": [
    {
     "$type": "dk.cachet.carp.protocols.domain.devices.Smartphone",
@@ -18,189 +18,111 @@
     "$type": "dk.cachet.carp.protocols.domain.triggers.ImmediateTrigger"
    },
    "1": {
-    "$type": "dk.cachet.carp.protocols.domain.triggers.PeriodicTrigger",
-    "period": 3600000000,
-    "duration": 1000000
+    "$type": "dk.cachet.carp.protocols.domain.triggers.IntervalTrigger",
+    "period": 3600000000
    },
    "2": {
     "$type": "dk.cachet.carp.protocols.domain.triggers.RecurrentScheduledTrigger",
-    "duration": 10000000,
+    "duration": 2000000,
     "type": "daily",
     "time": {
-     "$type": "Time",
      "hour": 23,
      "minute": 0,
      "second": 0
     },
     "separationCount": 0,
-    "remember": false,
     "period": 86400000000
    }
   },
   "tasks": [
    {
-    "$type": "dk.cachet.carp.protocols.domain.tasks.AutomaticTask",
+    "$type": "dk.cachet.carp.protocols.domain.tasks.BackgroundTask",
+    "name": "Task #5",
+    "measures": [
+     {
+      "$type": "dk.cachet.carp.protocols.domain.tasks.measures.Measure",
+      "type": "dk.cachet.carp.device"
+     },
+     {
+      "$type": "dk.cachet.carp.protocols.domain.tasks.measures.Measure",
+      "type": "dk.cachet.carp.memory"
+     },
+     {
+      "$type": "dk.cachet.carp.protocols.domain.tasks.measures.Measure",
+      "type": "dk.cachet.carp.battery"
+     },
+     {
+      "$type": "dk.cachet.carp.protocols.domain.tasks.measures.Measure",
+      "type": "dk.cachet.carp.screen"
+     },
+     {
+      "$type": "dk.cachet.carp.protocols.domain.tasks.measures.Measure",
+      "type": "dk.cachet.carp.accelerometer"
+     },
+     {
+      "$type": "dk.cachet.carp.protocols.domain.tasks.measures.Measure",
+      "type": "dk.cachet.carp.gyroscope"
+     },
+     {
+      "$type": "dk.cachet.carp.protocols.domain.tasks.measures.Measure",
+      "type": "dk.cachet.carp.periodic_accelerometer"
+     },
+     {
+      "$type": "dk.cachet.carp.protocols.domain.tasks.measures.Measure",
+      "type": "dk.cachet.carp.periodic_gyroscope"
+     },
+     {
+      "$type": "dk.cachet.carp.protocols.domain.tasks.measures.Measure",
+      "type": "dk.cachet.carp.pedometer"
+     },
+     {
+      "$type": "dk.cachet.carp.protocols.domain.tasks.measures.Measure",
+      "type": "dk.cachet.carp.light"
+     },
+     {
+      "$type": "dk.cachet.carp.protocols.domain.tasks.measures.Measure",
+      "type": "dk.cachet.carp.health"
+     }
+    ]
+   },
+   {
+    "$type": "dk.cachet.carp.protocols.domain.tasks.BackgroundTask",
     "name": "Task #6",
     "measures": [
      {
-      "$type": "dk.cachet.carp.protocols.domain.tasks.measures.CAMSMeasure",
-      "type": "dk.cachet.carp.device",
-      "name": "Basic Device Info",
-      "description": "Collects basic information about the phone.",
-      "enabled": true,
-      "configuration": {}
-     },
-     {
-      "$type": "dk.cachet.carp.protocols.domain.tasks.measures.PeriodicMeasure",
-      "type": "dk.cachet.carp.memory",
-      "name": "Memory Usage",
-      "description": "Collects information about use of memory.",
-      "enabled": true,
-      "configuration": {},
-      "frequency": 60000000,
-      "duration": 2000000
-     },
-     {
-      "$type": "dk.cachet.carp.protocols.domain.tasks.measures.CAMSMeasure",
-      "type": "dk.cachet.carp.battery",
-      "name": "Battery",
-      "description": "Collects information about the battery charging level.",
-      "enabled": true,
-      "configuration": {}
-     },
-     {
-      "$type": "dk.cachet.carp.protocols.domain.tasks.measures.CAMSMeasure",
-      "type": "dk.cachet.carp.screen",
-      "name": "Screen Activity (lock/on/off)",
-      "description": "Collects information about lock/unlock event of the phone's screen.",
-      "enabled": true,
-      "configuration": {}
-     },
-     {
-      "$type": "dk.cachet.carp.protocols.domain.tasks.measures.CAMSMeasure",
-      "type": "dk.cachet.carp.accelerometer",
-      "name": "Accelerometer",
-      "description": "Collects movement data based on the onboard phone accelerometer sensor.",
-      "enabled": false,
-      "configuration": {}
-     },
-     {
-      "$type": "dk.cachet.carp.protocols.domain.tasks.measures.CAMSMeasure",
-      "type": "dk.cachet.carp.gyroscope",
-      "name": "Gyroscope",
-      "description": "Collects movement data based on the onboard phone gyroscope sensor.",
-      "enabled": false,
-      "configuration": {}
-     },
-     {
-      "$type": "dk.cachet.carp.protocols.domain.tasks.measures.PeriodicMeasure",
-      "type": "dk.cachet.carp.periodic_accelerometer",
-      "name": "Accelerometer",
-      "description": "Collects movement data based on the onboard phone accelerometer sensor.",
-      "enabled": false,
-      "configuration": {},
-      "frequency": 5000000,
-      "duration": 1000000
-     },
-     {
-      "$type": "dk.cachet.carp.protocols.domain.tasks.measures.PeriodicMeasure",
-      "type": "dk.cachet.carp.periodic_gyroscope",
-      "name": "Gyroscope",
-      "description": "Collects movement data based on the onboard phone gyroscope sensor.",
-      "enabled": false,
-      "configuration": {},
-      "frequency": 5000000,
-      "duration": 1000000
-     },
-     {
-      "$type": "dk.cachet.carp.protocols.domain.tasks.measures.CAMSMeasure",
-      "type": "dk.cachet.carp.pedometer",
-      "name": "Pedometer (Step Count)",
-      "description": "Collects step events from the onboard phone step sensor.",
-      "enabled": true,
-      "configuration": {}
-     },
-     {
-      "$type": "dk.cachet.carp.protocols.domain.tasks.measures.PeriodicMeasure",
-      "type": "dk.cachet.carp.light",
-      "name": "Ambient Light",
-      "description": "Collects ambient light from the light sensor on the phone.",
-      "enabled": true,
-      "configuration": {},
-      "frequency": 60000000,
-      "duration": 1000000
-     },
-     {
-      "$type": "dk.cachet.carp.protocols.domain.tasks.measures.HealthMeasure",
+      "$type": "dk.cachet.carp.protocols.domain.tasks.measures.Measure",
       "type": "dk.cachet.carp.health",
-      "name": "Step Counts",
-      "description": "Collects the step counts from Apple Health / Google Fit",
-      "enabled": true,
-      "configuration": {},
-      "history": 86400000000,
-      "healthDataType": "STEPS"
+      "overrideSamplingConfiguration": {
+       "$type": "dk.cachet.carp.protocols.domain.sampling.SamplingConfiguration",
+       "past": 86400000000,
+       "future": 86400000000,
+       "healthDataTypes": [
+        "BLOOD_GLUCOSE",
+        "BLOOD_PRESSURE_DIASTOLIC",
+        "BLOOD_PRESSURE_SYSTOLIC",
+        "BLOOD_PRESSURE_DIASTOLIC",
+        "HEART_RATE",
+        "STEPS"
+       ]
+      }
      }
     ]
    },
    {
-    "$type": "dk.cachet.carp.protocols.domain.tasks.AutomaticTask",
+    "$type": "dk.cachet.carp.protocols.domain.tasks.BackgroundTask",
     "name": "Task #7",
     "measures": [
      {
-      "$type": "dk.cachet.carp.protocols.domain.tasks.measures.HealthMeasure",
+      "$type": "dk.cachet.carp.protocols.domain.tasks.measures.Measure",
       "type": "dk.cachet.carp.health",
-      "enabled": true,
-      "configuration": {},
-      "history": 86400000000,
-      "healthDataType": "BLOOD_GLUCOSE"
-     },
-     {
-      "$type": "dk.cachet.carp.protocols.domain.tasks.measures.HealthMeasure",
-      "type": "dk.cachet.carp.health",
-      "enabled": true,
-      "configuration": {},
-      "history": 86400000000,
-      "healthDataType": "BLOOD_PRESSURE_DIASTOLIC"
-     },
-     {
-      "$type": "dk.cachet.carp.protocols.domain.tasks.measures.HealthMeasure",
-      "type": "dk.cachet.carp.health",
-      "enabled": true,
-      "configuration": {},
-      "history": 86400000000,
-      "healthDataType": "BLOOD_PRESSURE_SYSTOLIC"
-     },
-     {
-      "$type": "dk.cachet.carp.protocols.domain.tasks.measures.HealthMeasure",
-      "type": "dk.cachet.carp.health",
-      "enabled": true,
-      "configuration": {},
-      "history": 86400000000,
-      "healthDataType": "HEART_RATE"
-     },
-     {
-      "$type": "dk.cachet.carp.protocols.domain.tasks.measures.HealthMeasure",
-      "type": "dk.cachet.carp.health",
-      "name": "Step Counts",
-      "description": "Collects the step counts from Apple Health / Google Fit",
-      "enabled": true,
-      "configuration": {},
-      "history": 86400000000,
-      "healthDataType": "STEPS"
-     }
-    ]
-   },
-   {
-    "$type": "dk.cachet.carp.protocols.domain.tasks.AutomaticTask",
-    "name": "Task #8",
-    "measures": [
-     {
-      "$type": "dk.cachet.carp.protocols.domain.tasks.measures.HealthMeasure",
-      "type": "dk.cachet.carp.health",
-      "enabled": true,
-      "configuration": {},
-      "history": 86400000000,
-      "healthDataType": "WEIGHT"
+      "overrideSamplingConfiguration": {
+       "$type": "dk.cachet.carp.protocols.domain.sampling.SamplingConfiguration",
+       "past": 86400000000,
+       "future": 86400000000,
+       "healthDataTypes": [
+        "WEIGHT"
+       ]
+      }
      }
     ]
    }
@@ -208,17 +130,17 @@
   "triggeredTasks": [
    {
     "triggerId": 0,
-    "taskName": "Task #6",
+    "taskName": "Task #5",
     "targetDeviceRoleName": "masterphone"
    },
    {
     "triggerId": 1,
-    "taskName": "Task #7",
+    "taskName": "Task #6",
     "targetDeviceRoleName": "masterphone"
    },
    {
     "triggerId": 2,
-    "taskName": "Task #8",
+    "taskName": "Task #7",
     "targetDeviceRoleName": "masterphone"
    }
   ],

@@ -197,6 +197,7 @@ class DataFormat {
     return DataFormat(namespace, name);
   }
 
+  @override
   String toString() => '$namespace.$name';
 
   factory DataFormat.fromJson(Map<String, dynamic> json) =>

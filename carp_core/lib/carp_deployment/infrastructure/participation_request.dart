@@ -19,8 +19,9 @@ part of carp_core_deployment;
 abstract class ParticipationServiceRequest extends DeploymentServiceRequest {
   final String _serviceRequestPackageNamespace =
       'dk.cachet.carp.deployment.infrastructure.ParticipationServiceRequest';
-  ParticipationServiceRequest([String? studyDeploymentId])
-      : super(studyDeploymentId);
+  ParticipationServiceRequest([super.studyDeploymentId]);
+
+  @override
   String get jsonType => '$_serviceRequestPackageNamespace.$runtimeType';
 }
 
@@ -29,30 +30,37 @@ abstract class ParticipationServiceRequest extends DeploymentServiceRequest {
 class GetActiveParticipationInvitations extends ParticipationServiceRequest {
   GetActiveParticipationInvitations(this.accountId) : super();
 
+  @override
   @JsonKey(ignore: true)
+  // ignore: overridden_fields
   String? studyDeploymentId;
 
   /// The CARP account (user) ID.
   String accountId;
 
+  @override
   Function get fromJsonFunction => _$GetActiveParticipationInvitationsFromJson;
   factory GetActiveParticipationInvitations.fromJson(
           Map<String, dynamic> json) =>
       FromJsonFactory().fromJson(json) as GetActiveParticipationInvitations;
+  @override
   Map<String, dynamic> toJson() =>
       _$GetActiveParticipationInvitationsToJson(this);
 
+  @override
   String toString() => '$runtimeType - accountId: $accountId';
 }
 
 /// A request for getting the status of a study deployment.
 @JsonSerializable(fieldRename: FieldRename.none, includeIfNull: true)
 class GetParticipantData extends ParticipationServiceRequest {
-  GetParticipantData(String studyDeploymentId) : super(studyDeploymentId);
+  GetParticipantData(super.studyDeploymentId);
 
+  @override
   Function get fromJsonFunction => _$GetParticipantDataFromJson;
   factory GetParticipantData.fromJson(Map<String, dynamic> json) =>
       FromJsonFactory().fromJson(json) as GetParticipantData;
+  @override
   Map<String, dynamic> toJson() => _$GetParticipantDataToJson(this);
 }
 
@@ -63,28 +71,54 @@ class GetParticipantDataList extends ParticipationServiceRequest {
   List<String> studyDeploymentIds;
   GetParticipantDataList(this.studyDeploymentIds) : super();
 
+  @override
   Function get fromJsonFunction => _$GetParticipantDataListFromJson;
   factory GetParticipantDataList.fromJson(Map<String, dynamic> json) =>
       FromJsonFactory().fromJson(json) as GetParticipantDataList;
+  @override
   Map<String, dynamic> toJson() => _$GetParticipantDataListToJson(this);
 }
 
 /// A request for adding data for a participant.
 @JsonSerializable(fieldRename: FieldRename.none, includeIfNull: true)
 class SetParticipantData extends ParticipationServiceRequest {
-  SetParticipantData(String studyDeploymentId, this.inputDataType, this.data)
-      : super(studyDeploymentId);
+  SetParticipantData(
+    super.studyDeploymentId,
+    this.inputDataType, [
+    this.participantData,
+  ]);
 
   /// The input data type.
   String inputDataType;
 
   /// The data to be set.
-  ParticipantData data;
+  @JsonKey(ignore: true)
+  ParticipantData? participantData;
 
+  set data(Map<String, dynamic> data) {
+    participantData = ParticipantData(
+      studyDeploymentId: studyDeploymentId!,
+      data: data,
+    );
+  }
+
+  Map<String, dynamic> get data {
+    Map<String, dynamic> data = {};
+    participantData?.data.forEach((key, value) {
+      data['\$type'] = key;
+      data['value'] = value;
+    });
+
+    return data;
+  }
+
+  @override
   Function get fromJsonFunction => _$SetParticipantDataFromJson;
   factory SetParticipantData.fromJson(Map<String, dynamic> json) =>
       FromJsonFactory().fromJson(json) as SetParticipantData;
+  @override
   Map<String, dynamic> toJson() => _$SetParticipantDataToJson(this);
 
+  @override
   String toString() => '${super.toString()}, inputDataType: $inputDataType';
 }

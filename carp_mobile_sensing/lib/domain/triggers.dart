@@ -11,9 +11,11 @@ part of domain;
 class ImmediateTrigger extends Trigger {
   ImmediateTrigger() : super();
 
+  @override
   Function get fromJsonFunction => _$ImmediateTriggerFromJson;
   factory ImmediateTrigger.fromJson(Map<String, dynamic> json) =>
       FromJsonFactory().fromJson(json) as ImmediateTrigger;
+  @override
   Map<String, dynamic> toJson() => _$ImmediateTriggerToJson(this);
 }
 
@@ -25,15 +27,19 @@ class ImmediateTrigger extends Trigger {
 /// information.
 @JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
 class OneTimeTrigger extends Trigger {
-  /// The unique id of this trigger.
-  /// Used to identify specific instances of one time triggeres.
-  String triggerId;
+  /// The timestamp of when this trigger was triggered.
+  DateTime? triggerTimestamp;
 
-  OneTimeTrigger(this.triggerId) : super();
+  /// Has this trigger been triggered?
+  bool get hasBeenTriggered => triggerTimestamp != null;
 
+  OneTimeTrigger() : super();
+
+  @override
   Function get fromJsonFunction => _$OneTimeTriggerFromJson;
   factory OneTimeTrigger.fromJson(Map<String, dynamic> json) =>
       FromJsonFactory().fromJson(json) as OneTimeTrigger;
+  @override
   Map<String, dynamic> toJson() => _$OneTimeTriggerToJson(this);
 }
 
@@ -61,9 +67,11 @@ class PassiveTrigger extends Trigger {
   /// which again implies that all [Measure]s in these tasks are paused.
   void pause() => executor.pause();
 
+  @override
   Function get fromJsonFunction => _$PassiveTriggerFromJson;
   factory PassiveTrigger.fromJson(Map<String, dynamic> json) =>
       FromJsonFactory().fromJson(json) as PassiveTrigger;
+  @override
   Map<String, dynamic> toJson() => _$PassiveTriggerToJson(this);
 }
 
@@ -79,62 +87,59 @@ class DelayedTrigger extends Trigger {
 
   DelayedTrigger({required this.delay}) : super();
 
+  @override
   Function get fromJsonFunction => _$DelayedTriggerFromJson;
   factory DelayedTrigger.fromJson(Map<String, dynamic> json) =>
       FromJsonFactory().fromJson(json) as DelayedTrigger;
+  @override
   Map<String, dynamic> toJson() => _$DelayedTriggerToJson(this);
 }
 
-/// A trigger that delays sampling for [delay] and then starts sampling.
-/// Never stops sampling once started.
-///
-/// In contrast to the [DelayedTrigger], the delay is measured from the **start
-/// of the deployment**, i.e. when a protocol is deployed on the phone for the first
-/// time. And since deployment information is saved across app restart, this delay
-/// is also consistent across app restart.
-@JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
-class DeploymentDelayedTrigger extends Trigger {
-  /// Delay before this trigger is executed.
-  Duration delay;
-
-  DeploymentDelayedTrigger({required this.delay}) : super();
-
-  Function get fromJsonFunction => _$DeploymentDelayedTriggerFromJson;
-  factory DeploymentDelayedTrigger.fromJson(Map<String, dynamic> json) =>
-      FromJsonFactory().fromJson(json) as DeploymentDelayedTrigger;
-  Map<String, dynamic> toJson() => _$DeploymentDelayedTriggerToJson(this);
-}
-
-/// A trigger that resume/pause sampling every [period] for a specific [duration].
-///
-/// It is important to specify **both** the [period] and the [duration] in order
-/// to specify the timing of resuming and pausing sampling.
+/// A trigger that resume sampling every [period] and then pauses.
 ///
 /// Daily, weekly and montly recurrent triggers can be specified using the
 /// [RecurrentScheduledTrigger].
 @JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
-class PeriodicTrigger extends Trigger {
+class IntervalTrigger extends Trigger implements Scheduleable {
   /// The period (reciprocal of frequency) of sampling.
   Duration period;
 
+  IntervalTrigger({required this.period}) : super();
+
+  @override
+  Function get fromJsonFunction => _$IntervalTriggerFromJson;
+  factory IntervalTrigger.fromJson(Map<String, dynamic> json) =>
+      FromJsonFactory().fromJson(json) as IntervalTrigger;
+  @override
+  Map<String, dynamic> toJson() => _$IntervalTriggerToJson(this);
+}
+
+/// A trigger that resumes sampling every [period] for a specific [duration].
+///
+/// It is important to specify **both** the [period] and the [duration] in order
+/// to specify the timing of resuming and pausing sampling.
+@JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
+class PeriodicTrigger extends IntervalTrigger {
   /// The duration (until paused) of the the sampling.
   Duration duration;
 
   PeriodicTrigger({
-    required this.period,
+    required super.period,
     required this.duration,
-  }) : super();
+  });
 
+  @override
   Function get fromJsonFunction => _$PeriodicTriggerFromJson;
   factory PeriodicTrigger.fromJson(Map<String, dynamic> json) =>
       FromJsonFactory().fromJson(json) as PeriodicTrigger;
+  @override
   Map<String, dynamic> toJson() => _$PeriodicTriggerToJson(this);
 }
 
 /// A trigger that starts sampling based on a [schedule] of a date and time,
 /// and runs for a specific [duration].
 @JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
-class DateTimeTrigger extends Trigger {
+class DateTimeTrigger extends Trigger implements Scheduleable {
   /// The scheduled date and time for resuming sampling.
   DateTime schedule;
 
@@ -147,75 +152,19 @@ class DateTimeTrigger extends Trigger {
     this.duration,
   }) : super();
 
+  @override
   Function get fromJsonFunction => _$DateTimeTriggerFromJson;
   factory DateTimeTrigger.fromJson(Map<String, dynamic> json) =>
       FromJsonFactory().fromJson(json) as DateTimeTrigger;
+  @override
   Map<String, dynamic> toJson() => _$DateTimeTriggerToJson(this);
 }
 
-/// Type of recurrence for a [RecurrentScheduledTrigger].
-enum RecurrentType {
-  daily,
-  weekly,
-  monthly,
-  //yearly,
-}
-
-/// A time on a day.
-///
-/// Follows the conventions in the [DartTime] class, but only uses the Time
-/// part in a 24 hour time format.
-///
-/// Used in a [RecurrentScheduledTrigger] and [RandomRecurrentTrigger].
-@JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
-class Time extends Serializable {
-  /// 24 hour format.
-  int hour;
-  int minute;
-  int second;
-
-  Time({this.hour = 0, this.minute = 0, this.second = 0}) : super();
-
-  factory Time.now() {
-    DateTime now = DateTime.now();
-    return Time(hour: now.hour, minute: now.minute, second: now.second);
-  }
-
-  /// Returns true if [this] occurs before [other].
-  ///
-  /// The comparison is independent of whether the time is in UTC or in
-  /// the local time zone.
-  bool isBefore(Time other) => DateTime(2021, 1, 1, hour, minute, second)
-      .isBefore(DateTime(2021, 1, 1, other.hour, other.minute, other.second));
-
-  /// Returns true if [this] occurs after [other].
-  ///
-  /// The comparison is independent of whether the time is in UTC or in
-  /// the local time zone.
-  bool isAfter(Time other) => DateTime(2021, 1, 1, hour, minute, second)
-      .isAfter(DateTime(2021, 1, 1, other.hour, other.minute, other.second));
-
-  /// Returns a [Duration] with the difference when subtracting [other] from
-  /// [this].
-  ///
-  ///  The returned [Duration] will be negative if [other] occurs after [this].
-  Duration difference(Time other) => DateTime(2021, 1, 1, hour, minute, second)
-      .difference(DateTime(2021, 1, 1, other.hour, other.minute, other.second));
-
-  Function get fromJsonFunction => _$TimeFromJson;
-  factory Time.fromJson(Map<String, dynamic> json) =>
-      FromJsonFactory().fromJson(json) as Time;
-  Map<String, dynamic> toJson() => _$TimeToJson(this);
-
-  static String _twoDigits(int n) => (n >= 10) ? '$n' : '0$n';
-  String toString() =>
-      '${_twoDigits(hour)}:${_twoDigits(minute)}:${_twoDigits(second)}';
-}
-
 /// A trigger that resume sampling based on a recurrent scheduled date and time.
+///
 /// Pause after the specified [duration]. If [duration] is not specified it
-/// defaults to 1 second. Useful for triggering one-time samplings, like collecting
-/// location of triggering a survey.
+/// defaults to 2 second. Useful for triggering one-time samplings, like collecting
+/// location or triggering a survey.
 ///
 /// Supports daily, weekly and monthly recurrences. Yearly recurrence is not
 /// supported, since data sampling is not intended to run on such long time scales.
@@ -224,49 +173,27 @@ class Time extends Serializable {
 ///
 /// ```
 ///  // collect every day at 13:30
-///  RecurrentScheduledTrigger(type: RecurrentType.daily, time: Time(hour: 13, minute: 30));
+///  RecurrentScheduledTrigger(type: RecurrentType.daily, time: TimeOfDay(hour: 13, minute: 30));
 ///
 ///  // collect every other day at 13:30
-///  RecurrentScheduledTrigger(type: RecurrentType.daily, separationCount: 1, time: Time(hour: 13, minute: 30));
+///  RecurrentScheduledTrigger(type: RecurrentType.daily, separationCount: 1, time: TimeOfDay(hour: 13, minute: 30));
 ///
 ///  // collect every wednesday at 12:23
-///  RecurrentScheduledTrigger(type: RecurrentType.weekly, dayOfWeek: DateTime.wednesday, time: Time(hour: 12, minute: 23));
+///  RecurrentScheduledTrigger(type: RecurrentType.weekly, dayOfWeek: DateTime.wednesday, time: TimeOfDay(hour: 12, minute: 23));
 ///
 ///  // collect every 2nd monday at 12:23
-///  RecurrentScheduledTrigger(type: RecurrentType.weekly, dayOfWeek: DateTime.monday, separationCount: 1, time: Time(hour: 12, minute: 23));
+///  RecurrentScheduledTrigger(type: RecurrentType.weekly, dayOfWeek: DateTime.monday, separationCount: 1, time: TimeOfDay(hour: 12, minute: 23));
 ///
 ///  // collect monthly in the second week on a monday at 14:30
-///  RecurrentScheduledTrigger(type: RecurrentType.monthly, weekOfMonth: 2, dayOfWeek: DateTime.monday, time: Time(hour: 14, minute: 30));
+///  RecurrentScheduledTrigger(type: RecurrentType.monthly, weekOfMonth: 2, dayOfWeek: DateTime.monday, time: TimeOfDay(hour: 14, minute: 30));
 ///
 ///  // collect quarterly on the 11th day of the first month in each quarter at 21:30
-///  RecurrentScheduledTrigger(type: RecurrentType.monthly, dayOfMonth: 11, separationCount: 2, time: Time(hour: 21, minute: 30));
+///  RecurrentScheduledTrigger(type: RecurrentType.monthly, dayOfMonth: 11, separationCount: 2, time: TimeOfDay(hour: 21, minute: 30));
 /// ```
-///
-/// Recurrent scheduled triggers can be saved across app shutdown by setting [remember] to true.
-/// For example;
-///
-/// ```
-///       RecurrentScheduledTrigger(
-///         triggerId: '1234wef',
-///         type: RecurrentType.monthly,
-///         dayOfMonth: 11,
-///         separationCount: 2,
-///         time: Time(hour: 21, minute: 30),
-///         remember: true,
-///       );
-/// ```
-///
-/// would create the quarterly schedule above. But if the app shuts down before
-/// this schedule, and restarted after, the trigger would still trigger (immediately).
-/// Note that the [triggerId] must be specified when remembering triggers (it
-/// is used as the key).
 ///
 /// Thanks to Shantanu Kher for inspiration in his blog post on
 /// [Again and Again! Managing Recurring Events In a Data Model](https://www.vertabelo.com/blog/technical-articles/again-and-again-managing-recurring-events-in-a-data-model).
 /// We are, however, not using yearly recurrence.
-/// Moreover, monthly recurrences make little sense in mobile sensing, even
-/// though it is supported.
-///
 @JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
 class RecurrentScheduledTrigger extends PeriodicTrigger {
   static const int daysPerWeek = 7;
@@ -276,7 +203,7 @@ class RecurrentScheduledTrigger extends PeriodicTrigger {
   RecurrentType type;
 
   /// The time of day of this trigger.
-  Time time;
+  TimeOfDay time;
 
   /// End time and date. If [null], this trigger keeps sampling forever.
   DateTime? end;
@@ -318,21 +245,6 @@ class RecurrentScheduledTrigger extends PeriodicTrigger {
   /// say the 25th. Possible numbers are 1..31 counting from the start of a month.
   int? dayOfMonth;
 
-  /// Should this recurrent scheduled trigger be remembered across app restart?
-  ///
-  /// This is useful for long schedules (e.g. daily, weekly, or monthly).
-  /// If, for example, a monthly trigger is specified, the app can be closed
-  /// at the time of the triggering. If not remembered, then the next trigger
-  /// would not happen until next month.
-  ///
-  /// It is important to specify a unique [triggerId] since this is used as key.
-  ///
-  /// See [Issue #80](https://github.com/cph-cachet/carp.sensing-flutter/issues/80).
-  bool remember = false;
-
-  /// The unique id of this trigger. Only used if [remember] is `true`.
-  String? triggerId;
-
   /// Creates a [RecurrentScheduledTrigger].
   RecurrentScheduledTrigger({
     required this.type,
@@ -343,12 +255,10 @@ class RecurrentScheduledTrigger extends PeriodicTrigger {
     this.dayOfWeek,
     this.weekOfMonth,
     this.dayOfMonth,
-    this.remember = false,
-    this.triggerId,
     Duration? duration,
   }) : super(
           period: const Duration(seconds: 1),
-          duration: duration ?? const Duration(seconds: 1),
+          duration: duration ?? const Duration(seconds: 2),
         ) {
     assert(separationCount >= 0, 'Separation count must be zero or positive.');
     if (type == RecurrentType.weekly) {
@@ -361,10 +271,6 @@ class RecurrentScheduledTrigger extends PeriodicTrigger {
           'dayOfMonth must be in the range [1-31]');
       assert(weekOfMonth == null || (weekOfMonth! >= 1 && weekOfMonth! <= 4),
           'weekOfMonth must be in the range [1-4]');
-    }
-    if (remember) {
-      assert(triggerId != null,
-          'A unique trigger ID should be specified when remembering scheduled triggers.');
     }
   }
 
@@ -425,6 +331,7 @@ class RecurrentScheduledTrigger extends PeriodicTrigger {
   }
 
   /// The period between the recurring samplings.
+  @override
   Duration get period {
     switch (type) {
       case RecurrentType.daily:
@@ -439,20 +346,32 @@ class RecurrentScheduledTrigger extends PeriodicTrigger {
     }
   }
 
+  @override
   Function get fromJsonFunction => _$RecurrentScheduledTriggerFromJson;
   factory RecurrentScheduledTrigger.fromJson(Map<String, dynamic> json) =>
       FromJsonFactory().fromJson(json) as RecurrentScheduledTrigger;
+  @override
   Map<String, dynamic> toJson() => _$RecurrentScheduledTriggerToJson(this);
 
+  @override
   String toString() =>
       'RecurrentScheduledTrigger - type: $type, time: $time, separationCount: $separationCount, dayOfWeek: $dayOfWeek, firstOccurrence: $firstOccurrence, period; $period';
+}
+
+/// Type of recurrence for a [RecurrentScheduledTrigger].
+enum RecurrentType {
+  daily,
+  weekly,
+  monthly,
+  //yearly,
 }
 
 /// A trigger that resume sampling based on a cron job specification.
 ///
 /// Bases on the [`cron`](https://pub.dev/packages/cron) package.
+/// See [crontab guru](https://crontab.guru) for a useful tool for specifying cron jobs.
 @JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
-class CronScheduledTrigger extends Trigger {
+class CronScheduledTrigger extends Trigger implements Scheduleable {
   /// The cron job expression.
   String cronExpression;
 
@@ -522,11 +441,14 @@ class CronScheduledTrigger extends Trigger {
       '${_cf(minute)} ${_cf(hour)} ${_cf(day)} ${_cf(month)} ${_cf(weekday)}';
   static String _cf(int? exp) => (exp == null) ? '*' : exp.toString();
 
+  @override
   Function get fromJsonFunction => _$CronScheduledTriggerFromJson;
   factory CronScheduledTrigger.fromJson(Map<String, dynamic> json) =>
       FromJsonFactory().fromJson(json) as CronScheduledTrigger;
+  @override
   Map<String, dynamic> toJson() => _$CronScheduledTriggerToJson(this);
 
+  @override
   String toString() => "$runtimeType - cron expression: '$cronExpression'";
 }
 
@@ -549,8 +471,7 @@ class SamplingEventTrigger extends Trigger {
   /// of this type.
   String measureType;
 
-  /// The [ConditionalEvent] specifying a specific sampling value to compare
-  /// with for resuming this trigger.
+  /// The specific sampling value to compare with for resuming this trigger.
   ///
   /// When comparing, the [Datum.equivalentTo] method. is used. Hence, the
   /// sampled datum must be "equivalent" to this resumeCondition in order to
@@ -575,9 +496,11 @@ class SamplingEventTrigger extends Trigger {
     this.pauseCondition,
   }) : super();
 
+  @override
   Function get fromJsonFunction => _$SamplingEventTriggerFromJson;
   factory SamplingEventTrigger.fromJson(Map<String, dynamic> json) =>
       FromJsonFactory().fromJson(json) as SamplingEventTrigger;
+  @override
   Map<String, dynamic> toJson() => _$SamplingEventTriggerToJson(this);
 }
 
@@ -594,9 +517,11 @@ class ConditionalEvent extends Serializable {
 
   dynamic operator [](String index) => condition[index];
 
+  @override
   Function get fromJsonFunction => _$ConditionalEventFromJson;
   factory ConditionalEvent.fromJson(Map<String, dynamic> json) =>
       FromJsonFactory().fromJson(json) as ConditionalEvent;
+  @override
   Map<String, dynamic> toJson() => _$ConditionalEventToJson(this);
 }
 
@@ -607,13 +532,13 @@ typedef ConditionalEventEvaluator = bool Function(DataPoint dataPoint);
 /// A trigger that resume and pause sampling when some (other) sampling event
 /// occurs and a application-specific condition is meet.
 ///
-/// Note that the [resumeCondition] and [pauseCondition] are an
-/// [ConditionalEventEvaluator] function which cannot be serialized to/from JSON.
-/// In contrast to other [Trigger]s, this trigger cannot be de/serialized
-/// from/to JSON.
-/// This implies that it can not be retrieved as part of a [StudyProtocol] from a
-/// [DeploymentService] since it relies on specifying a Dart-specific function as
-/// the [ConditionalEventEvaluator] methods. Hence, this trigger is mostly
+/// Note that the [resumeCondition] and [pauseCondition] are
+/// [ConditionalEvaluator] functions which cannot be serialized to/from JSON.
+/// Thus, even though this trigger can be de/serialized from/to JSON, its
+/// [resumeCondition] and [pauseCondition] cannot.
+/// This implies that these functions cannot be retrieved as part of a [StudyProtocol]
+/// from a [DeploymentService] since it relies on specifying a Dart-specific function as
+/// the [ConditionalEvaluator] methods. Hence, this trigger is mostly
 /// useful when creating a [StudyProtocol] directly in the app using Dart code.
 ///
 /// If you need to de/serialize an event trigger, use the [SamplingEventTrigger]
@@ -643,9 +568,11 @@ class ConditionalSamplingEventTrigger extends Trigger {
     this.pauseCondition,
   }) : super();
 
+  @override
   Function get fromJsonFunction => _$ConditionalSamplingEventTriggerFromJson;
   factory ConditionalSamplingEventTrigger.fromJson(Map<String, dynamic> json) =>
       FromJsonFactory().fromJson(json) as ConditionalSamplingEventTrigger;
+  @override
   Map<String, dynamic> toJson() =>
       _$ConditionalSamplingEventTriggerToJson(this);
 }
@@ -654,15 +581,15 @@ class ConditionalSamplingEventTrigger extends Trigger {
 /// Returns [true] if resume or pause should happen, [false] otherwise.
 typedef ConditionalEvaluator = bool Function();
 
-/// A trigger that checks if application-specific resume and pause conditions
-/// are meet.
+/// A trigger that periodically checks if application-specific resume and pause
+/// conditions are meet.
 ///
 /// Note that the [resumeCondition] and [pauseCondition] are
-/// [ConditionalEvaluator] function which cannot be serialized to/from JSON.
-/// In contrast to other [Trigger]s, this trigger cannot be de/serialized
-/// from/to JSON.
-/// This implies that it can not be retrieved as part of a [StudyProtocol] from a
-/// [DeploymentService] since it relies on specifying a Dart-specific function as
+/// [ConditionalEvaluator] functions which cannot be serialized to/from JSON.
+/// Thus, even though this trigger can be de/serialized from/to JSON, its
+/// [resumeCondition] and [pauseCondition] cannot.
+/// This implies that these functions cannot be retrieved as part of a [StudyProtocol]
+/// from a [DeploymentService] since it relies on specifying a Dart-specific function as
 /// the [ConditionalEvaluator] methods. Hence, this trigger is mostly
 /// useful when creating a [StudyProtocol] directly in the app using Dart code.
 @JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
@@ -690,25 +617,27 @@ class ConditionalPeriodicTrigger extends Trigger {
     this.pauseCondition,
   }) : super();
 
+  @override
   Function get fromJsonFunction => _$ConditionalPeriodicTriggerFromJson;
   factory ConditionalPeriodicTrigger.fromJson(Map<String, dynamic> json) =>
       FromJsonFactory().fromJson(json) as ConditionalPeriodicTrigger;
+  @override
   Map<String, dynamic> toJson() => _$ConditionalPeriodicTriggerToJson(this);
 }
 
-/// A trigger that triggers a random number of times within a defined
-/// period of time in a day.
+/// A daily trigger that triggers a random number of times within a defined
+/// period of time of the day.
 ///
 /// The random value is between the [minNumberOfTriggers] and [maxNumberOfTriggers]
 /// numbers specified.
 /// The time period is defined by a [startTime] and an [endTime].
 @JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
-class RandomRecurrentTrigger extends Trigger {
+class RandomRecurrentTrigger extends Trigger implements Scheduleable {
   /// Start time of the day where the trigger can happen.
-  Time startTime;
+  TimeOfDay startTime;
 
   /// End time of the day where the trigger can happen.
-  Time endTime;
+  TimeOfDay endTime;
 
   /// Minimum number of trigger per day.
   int minNumberOfTriggers;
@@ -718,6 +647,9 @@ class RandomRecurrentTrigger extends Trigger {
 
   /// The duration (until paused) of the the sampling.
   late Duration duration;
+
+  /// The timestamp of when this trigger was triggered last.
+  DateTime? lastTriggerTimestamp;
 
   /// Create a [RandomRecurrentTrigger].
   ///
@@ -737,8 +669,10 @@ class RandomRecurrentTrigger extends Trigger {
     this.duration = duration ?? const Duration(seconds: 1);
   }
 
+  @override
   Function get fromJsonFunction => _$RandomRecurrentTriggerFromJson;
   factory RandomRecurrentTrigger.fromJson(Map<String, dynamic> json) =>
       FromJsonFactory().fromJson(json) as RandomRecurrentTrigger;
+  @override
   Map<String, dynamic> toJson() => _$RandomRecurrentTriggerToJson(this);
 }

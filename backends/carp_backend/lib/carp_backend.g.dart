@@ -43,7 +43,7 @@ Map<String, dynamic> _$CarpDataEndPointToJson(CarpDataEndPoint instance) {
   val['zip'] = instance.zip;
   val['encrypt'] = instance.encrypt;
   writeNotNull('publicKey', instance.publicKey);
-  val['uploadMethod'] = _$CarpUploadMethodEnumMap[instance.uploadMethod];
+  val['uploadMethod'] = _$CarpUploadMethodEnumMap[instance.uploadMethod]!;
   val['name'] = instance.name;
   writeNotNull('uri', instance.uri);
   writeNotNull('clientId', instance.clientId);
@@ -79,7 +79,7 @@ Message _$MessageFromJson(Map<String, dynamic> json) => Message(
 Map<String, dynamic> _$MessageToJson(Message instance) {
   final val = <String, dynamic>{
     'id': instance.id,
-    'type': _$MessageTypeEnumMap[instance.type],
+    'type': _$MessageTypeEnumMap[instance.type]!,
     'timestamp': instance.timestamp.toIso8601String(),
   };
 

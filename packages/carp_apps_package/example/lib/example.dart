@@ -13,7 +13,7 @@ void main() async {
   // create a study protocol
   StudyProtocol protocol = StudyProtocol(
     ownerId: 'owner@dtu.dk',
-    name: 'Context Sensing Example',
+    name: 'Apps Sensing Example',
   );
 
   // define which devices are used for data collection
@@ -25,12 +25,8 @@ void main() async {
   // and a log of app usage activity
   protocol.addTriggeredTask(
       ImmediateTrigger(),
-      AutomaticTask()
-        ..addMeasures(SamplingPackageRegistry().common.getMeasureList(
-          types: [
-            AppsSamplingPackage.APPS,
-            AppsSamplingPackage.APP_USAGE,
-          ],
-        )),
+      BackgroundTask()
+        ..addMeasure(Measure(type: AppsSamplingPackage.APPS))
+        ..addMeasure(Measure(type: AppsSamplingPackage.APP_USAGE)),
       phone);
 }

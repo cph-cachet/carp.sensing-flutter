@@ -1,0 +1,173 @@
+{
+  "ownerId": "owner@dtu.dk",
+  "name": "Context Sensing Example",
+  "description": "",
+  "creationDate": "2022-05-26T20:51:17.913534Z",
+  "masterDevices": [
+   {
+    "$type": "dk.cachet.carp.protocols.domain.devices.Smartphone",
+    "isMasterDevice": true,
+    "roleName": "masterphone",
+    "samplingConfiguration": {}
+   }
+  ],
+  "connectedDevices": [
+   {
+    "$type": "dk.cachet.carp.protocols.domain.devices.LocationService",
+    "isMasterDevice": false,
+    "roleName": "location_service",
+    "samplingConfiguration": {},
+    "accuracy": "low",
+    "distance": 10.0,
+    "interval": 300000000
+   },
+   {
+    "$type": "dk.cachet.carp.protocols.domain.devices.WeatherService",
+    "isMasterDevice": false,
+    "roleName": "weather_service",
+    "samplingConfiguration": {},
+    "apiKey": "OW_API_key_goes_here"
+   },
+   {
+    "$type": "dk.cachet.carp.protocols.domain.devices.AirQualityService",
+    "isMasterDevice": false,
+    "roleName": "air_quality_service",
+    "samplingConfiguration": {},
+    "apiKey": "WAQI_API_key_goes_here"
+   }
+  ],
+  "connections": [],
+  "triggers": {
+   "0": {
+    "$type": "dk.cachet.carp.protocols.domain.triggers.ImmediateTrigger"
+   },
+   "1": {
+    "$type": "dk.cachet.carp.protocols.domain.triggers.IntervalTrigger",
+    "period": 300000000
+   },
+   "2": {
+    "$type": "dk.cachet.carp.protocols.domain.triggers.DelayedTrigger",
+    "delay": 300000000
+   },
+   "3": {
+    "$type": "dk.cachet.carp.protocols.domain.triggers.ImmediateTrigger"
+   },
+   "4": {
+    "$type": "dk.cachet.carp.protocols.domain.triggers.IntervalTrigger",
+    "period": 1800000000
+   },
+   "5": {
+    "$type": "dk.cachet.carp.protocols.domain.triggers.IntervalTrigger",
+    "period": 1800000000
+   }
+  },
+  "tasks": [
+   {
+    "$type": "dk.cachet.carp.protocols.domain.tasks.BackgroundTask",
+    "name": "Task #5",
+    "measures": [
+     {
+      "$type": "dk.cachet.carp.protocols.domain.tasks.measures.Measure",
+      "type": "dk.cachet.carp.activity"
+     }
+    ]
+   },
+   {
+    "$type": "dk.cachet.carp.protocols.domain.tasks.BackgroundTask",
+    "name": "Task #6",
+    "measures": [
+     {
+      "$type": "dk.cachet.carp.protocols.domain.tasks.measures.Measure",
+      "type": "dk.cachet.carp.location"
+     }
+    ]
+   },
+   {
+    "$type": "dk.cachet.carp.protocols.domain.tasks.BackgroundTask",
+    "name": "Task #7",
+    "measures": [
+     {
+      "$type": "dk.cachet.carp.protocols.domain.tasks.measures.Measure",
+      "type": "dk.cachet.carp.geolocation"
+     },
+     {
+      "$type": "dk.cachet.carp.protocols.domain.tasks.measures.Measure",
+      "type": "dk.cachet.carp.mobility"
+     }
+    ]
+   },
+   {
+    "$type": "dk.cachet.carp.protocols.domain.tasks.BackgroundTask",
+    "name": "Task #8",
+    "measures": [
+     {
+      "$type": "dk.cachet.carp.protocols.domain.tasks.measures.Measure",
+      "type": "dk.cachet.carp.geofence",
+      "overrideSamplingConfiguration": {
+       "$type": "dk.cachet.carp.protocols.domain.sampling.SamplingConfiguration",
+       "center": {
+        "$type": "GeoPosition",
+        "latitude": 55.786025,
+        "longitude": 12.524159
+       },
+       "radius": 10.0,
+       "dwell": 900000000
+      }
+     }
+    ]
+   },
+   {
+    "$type": "dk.cachet.carp.protocols.domain.tasks.BackgroundTask",
+    "name": "Task #9",
+    "measures": [
+     {
+      "$type": "dk.cachet.carp.protocols.domain.tasks.measures.Measure",
+      "type": "dk.cachet.carp.weather"
+     }
+    ]
+   },
+   {
+    "$type": "dk.cachet.carp.protocols.domain.tasks.BackgroundTask",
+    "name": "Task #10",
+    "measures": [
+     {
+      "$type": "dk.cachet.carp.protocols.domain.tasks.measures.Measure",
+      "type": "dk.cachet.carp.air_quality"
+     }
+    ]
+   }
+  ],
+  "triggeredTasks": [
+   {
+    "triggerId": 0,
+    "taskName": "Task #5",
+    "targetDeviceRoleName": "masterphone"
+   },
+   {
+    "triggerId": 1,
+    "taskName": "Task #6",
+    "targetDeviceRoleName": "location_service"
+   },
+   {
+    "triggerId": 2,
+    "taskName": "Task #7",
+    "targetDeviceRoleName": "location_service"
+   },
+   {
+    "triggerId": 3,
+    "taskName": "Task #8",
+    "targetDeviceRoleName": "location_service"
+   },
+   {
+    "triggerId": 4,
+    "taskName": "Task #9",
+    "targetDeviceRoleName": "weather_service"
+   },
+   {
+    "triggerId": 5,
+    "taskName": "Task #10",
+    "targetDeviceRoleName": "air_quality_service"
+   }
+  ],
+  "expectedParticipantData": []
+ }

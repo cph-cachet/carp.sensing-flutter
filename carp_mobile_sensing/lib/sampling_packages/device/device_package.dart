@@ -1,11 +1,32 @@
 part of device;
 
 class DeviceSamplingPackage extends SmartphoneSamplingPackage {
+  /// Measure type for collection of basic device information like device name,
+  /// model, manufacturer, operating system, and hardware profile.
+  ///  * One-time measure.
+  ///  * Uses the [Smartphone] master device for data collection.
+  ///  * No sampling configuration needed.
   static const String DEVICE = 'dk.cachet.carp.device';
+
+  /// Measure type for collection of free physical and virtual memory.
+  ///  * Interval-based measure.
+  ///  * Uses the [Smartphone] master device for data collection.
+  ///  * Use [IntervalSamplingConfiguration] for configuration.
   static const String MEMORY = 'dk.cachet.carp.memory';
+
+  /// Measure type for collection of battery level and charging status.
+  ///  * Event-based measure.
+  ///  * Uses the [Smartphone] master device for data collection.
+  ///  * No sampling configuration needed.
   static const String BATTERY = 'dk.cachet.carp.battery';
+
+  /// Measure type for collection of screen events (on/off/unlocked).
+  ///  * Event-based measure.
+  ///  * Uses the [Smartphone] master device for data collection.
+  ///  * No sampling configuration needed.
   static const String SCREEN = 'dk.cachet.carp.screen';
 
+  @override
   List<String> get dataTypes => [
         DEVICE,
         MEMORY,
@@ -13,6 +34,7 @@ class DeviceSamplingPackage extends SmartphoneSamplingPackage {
         SCREEN,
       ];
 
+  @override
   Probe? create(String type) {
     switch (type) {
       case DEVICE:
@@ -22,59 +44,22 @@ class DeviceSamplingPackage extends SmartphoneSamplingPackage {
       case BATTERY:
         return BatteryProbe();
       case SCREEN:
-        return ScreenProbe();
+        return (Platform.isAndroid) ? ScreenProbe() : null;
       default:
         return null;
     }
   }
 
+  @override
   void onRegister() {} // does nothing for this device sampling package
 
+  @override
   List<Permission> get permissions => [];
 
-  SamplingSchema get common => SamplingSchema(
-        type: SamplingSchemaType.common,
-        name: 'Common (default) device sampling schema',
-        powerAware: true,
-      )..addMeasures([
-          CAMSMeasure(
-            type: DEVICE,
-            name: 'Basic Device Info',
-            description: 'Collects basic information about the phone.',
-          ),
-          PeriodicMeasure(
-              type: MEMORY,
-              name: 'Memory Usage',
-              description: 'Collects information about use of memory.',
-              frequency: const Duration(minutes: 1)),
-          CAMSMeasure(
-            type: BATTERY,
-            name: 'Battery',
-            description:
-                'Collects information about the battery charging level.',
-          ),
-          CAMSMeasure(
-            type: SCREEN,
-            name: 'Screen Activity (lock/on/off)',
-            description:
-                "Collects information about lock/unlock event of the phone's screen.",
-          ),
-        ]);
-
-  SamplingSchema get light {
-    SamplingSchema light = common
-      ..type = SamplingSchemaType.light
-      ..name = 'Light sensor sampling';
-    (light.measures[DataType.fromString(MEMORY) as String] as CAMSMeasure)
-        .enabled = false;
-    return light;
-  }
-
-  SamplingSchema get minimum => light..type = SamplingSchemaType.minimum;
-  SamplingSchema get normal => common..type = SamplingSchemaType.normal;
-
-  SamplingSchema get debug => common
-    ..type = SamplingSchemaType.debug
-    ..powerAware = false
-    ..name = 'Debug device sampling';
+  /// Default samplings schema for:
+  ///  * [MEMORY] - once pr. minute.
+  @override
+  SamplingSchema get samplingSchema => SamplingSchema()
+    ..addConfiguration(MEMORY,
+        IntervalSamplingConfiguration(interval: const Duration(minutes: 1)));
 }

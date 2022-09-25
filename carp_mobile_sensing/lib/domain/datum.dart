@@ -10,6 +10,7 @@ part of domain;
 @JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)
 class Datum extends Data {
   /// The [DataFormat] of this type of [Datum].
+  @override
   @JsonKey(ignore: true)
   DataFormat get format => DataFormat.fromString(CAMSDataType.DATUM);
 
@@ -36,8 +37,10 @@ class Datum extends Data {
   factory Datum.fromJson(Map<String, dynamic> json) => _$DatumFromJson(json);
 
   /// Return a JSON encoding of this datum.
+  @override
   Map<String, dynamic> toJson() => _$DatumToJson(this);
 
+  @override
   String toString() =>
       '$runtimeType - format: $format, id: $id, timestamp: $timestamp';
 }
@@ -45,6 +48,7 @@ class Datum extends Data {
 /// A simple [Datum] that only holds a string datum object.
 @JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)
 class StringDatum extends Datum {
+  @override
   @JsonKey(ignore: true)
   DataFormat get format => DataFormat.fromString(CAMSDataType.STRING);
 
@@ -57,14 +61,17 @@ class StringDatum extends Datum {
   /// Create a [StringDatum] from a JSON map.
   factory StringDatum.fromJson(Map<String, dynamic> json) =>
       _$StringDatumFromJson(json);
+  @override
   Map<String, dynamic> toJson() => _$StringDatumToJson(this);
 
+  @override
   String toString() => '${super.toString()}, str: $str';
 }
 
 /// A generic [Datum] that holds a map of key, value string objects.
 @JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)
 class MapDatum extends Datum {
+  @override
   @JsonKey(ignore: true)
   DataFormat get format => DataFormat.fromString(CAMSDataType.MAP);
 
@@ -77,6 +84,7 @@ class MapDatum extends Datum {
   /// Create a [MapDatum] from a JSON map.
   factory MapDatum.fromJson(Map<String, dynamic> json) =>
       _$MapDatumFromJson(json);
+  @override
   Map<String, dynamic> toJson() => _$MapDatumToJson(this);
 }
 
@@ -84,6 +92,7 @@ class MapDatum extends Datum {
 /// sort of error, which is reported back.
 @JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)
 class ErrorDatum extends Datum {
+  @override
   @JsonKey(ignore: true)
   DataFormat get format => DataFormat.fromString(CAMSDataType.ERROR);
 
@@ -96,14 +105,17 @@ class ErrorDatum extends Datum {
   /// Create a [ErrorDatum] from a JSON map.
   factory ErrorDatum.fromJson(Map<String, dynamic> json) =>
       _$ErrorDatumFromJson(json);
+  @override
   Map<String, dynamic> toJson() => _$ErrorDatumToJson(this);
 
+  @override
   String toString() => '${super.toString()}, message: $message';
 }
 
 /// A [Datum] object holding a link to a file.
 @JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)
 class FileDatum extends Datum {
+  @override
   @JsonKey(ignore: true)
   DataFormat get format => DataFormat.fromString(CAMSDataType.FILE);
 
@@ -130,8 +142,10 @@ class FileDatum extends Datum {
   /// Create a [FileDatum] from a JSON map.
   factory FileDatum.fromJson(Map<String, dynamic> json) =>
       _$FileDatumFromJson(json);
+  @override
   Map<String, dynamic> toJson() => _$FileDatumToJson(this);
 
+  @override
   String toString() =>
       '${super.toString()}, filename: $filename, upload: $upload';
 }
@@ -148,6 +162,7 @@ class MultiDatum extends Datum {
   /// Create an empty [MultiDatum].
   MultiDatum() : super();
 
+  @override
   @JsonKey(ignore: true)
   DataFormat get format => (data.isNotEmpty)
       ? data.first.format
@@ -158,8 +173,10 @@ class MultiDatum extends Datum {
       _$MultiDatumFromJson(json);
 
   /// Serialize this object to JSON.
+  @override
   Map<String, dynamic> toJson() => _$MultiDatumToJson(this);
 
+  @override
   String toString() => '${super.toString()}, size: ${data.length}';
 }
 

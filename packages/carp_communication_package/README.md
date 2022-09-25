@@ -1,17 +1,18 @@
 # CARP Communication Sampling Package
 
-[![pub package](https://img.shields.io/pub/v/carp_communication_package.svg)](https://pub.dartlang.org/packages/carp_communication_package)
-
-This library contains a sampling package for communication sampling to work with 
+This library contains a sampling package for communication sampling to work with
 the [`carp_mobile_sensing`](https://pub.dartlang.org/packages/carp_mobile_sensing) package.
-This packages supports sampling of the following [`Measure`](https://pub.dartlang.org/documentation/carp_mobile_sensing/latest/domain/Measure-class.html) types:
+This packages supports sampling of the following [`Measure`](https://pub.dev/documentation/carp_core/latest/carp_core_protocols/Measure-class.html) types:
 
 * `dk.cachet.carp.phone_log` - the phone log.
 * `dk.cachet.carp.text-message-log` - the text (sms) message log.
 * `dk.cachet.carp.text-message` - incoming text (sms) messages.
 * `dk.cachet.carp.calendar` - all calendar entries.
 
-See the [wiki]() for further documentation, particularly on available [measure types](https://github.com/cph-cachet/carp.sensing-flutter/wiki/A.-Measure-Types) and [sampling schemas](https://github.com/cph-cachet/carp.sensing-flutter/wiki/D.-Sampling-Schemas). Note that collection of phone and text message data is only supported on Android.
+Note that collection of phone and text message data is only supported on Android.
+
+See the [wiki](https://github.com/cph-cachet/carp.sensing-flutter/wiki) for further documentation, particularly on available [measure types](https://github.com/cph-cachet/carp.sensing-flutter/wiki/A.-Measure-Types).
+See the [CARP Mobile Sensing App](https://github.com/cph-cachet/carp.sensing-flutter/tree/master/apps/carp_mobile_sensing_app) for an example of how to build a mobile sensing app in Flutter.
 
 There is privacy protection of text messages and phone numbers in the default [Privacy Schema](https://github.com/cph-cachet/carp.sensing-flutter/wiki/3.-Using-CARP-Mobile-Sensing#privacy-schema).
 
@@ -59,13 +60,13 @@ Add the following to your app's `manifest.xml` file located in `android/app/src/
 
 
   <application>
-	  ...
-	  ...
+   ...
+   ...
     <!-- Registration of broadcast reciever to listen to SMS messages 
          when the app is in the background -->
-	  <receiver android:name="com.shounakmulay.telephony.sms.IncomingSmsReceiver"
-		   android:permission="android.permission.BROADCAST_SMS" android:exported="true">
-		  <intent-filter>
+   <receiver android:name="com.shounakmulay.telephony.sms.IncomingSmsReceiver"
+     android:permission="android.permission.BROADCAST_SMS" android:exported="true">
+    <intent-filter>
         <action android:name="android.provider.Telephony.SMS_RECEIVED"/>
       </intent-filter>
     </receiver>
@@ -73,12 +74,6 @@ Add the following to your app's `manifest.xml` file located in `android/app/src/
    </application>
 </manifest>
 ````
-
-> **NOTE:** Version ^0.5.0 is migrated to AndroidX. This should not result in any functional changes, but it requires any Android apps using this plugin to also 
-[migrate](https://developer.android.com/jetpack/androidx/migrate) if they're using the original support library. 
-See Flutter [AndroidX compatibility](https://flutter.dev/docs/development/packages-and-plugins/androidx-compatibility)
-
-
 
 ### iOS Integration
 
@@ -100,9 +95,11 @@ import 'package:carp_mobile_sensing/carp_mobile_sensing.dart';
 import 'package:carp_communication_package/communication.dart';
 `````
 
-Before creating a study and running it, register this package in the 
+Before creating a study and running it, register this package in the
 [SamplingPackageRegistry](https://pub.dartlang.org/documentation/carp_mobile_sensing/latest/runtime/SamplingPackageRegistry.html).
 
 `````dart
   SamplingPackageRegistry().register(CommunicationSamplingPackage());
 `````
+
+See the `example.dart` file for a full example of how to set up a CAMS study protocol for this context sampling package.

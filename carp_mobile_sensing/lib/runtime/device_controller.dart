@@ -6,8 +6,8 @@
  */
 part of runtime;
 
-/// A [DeviceController] handles runtime managenent of all devices connected to
-/// this phone, including the phone itsel.
+/// A [DeviceController] handles runtime managenent of all devices and services
+/// connected to this phone, including the phone itself.
 class DeviceController implements DeviceDataCollectorFactory {
   static final DeviceController _instance = DeviceController._();
   final Map<String, DeviceManager> _devices = {};
@@ -18,6 +18,10 @@ class DeviceController implements DeviceDataCollectorFactory {
 
   @override
   Map<String, DeviceManager> get devices => _devices;
+
+  /// Get the list of connected devices defined in the study deployment.
+  List<DeviceManager> get connectedDevices =>
+      _devices.values.where((manager) => manager.isInitialized).toList();
 
   @override
   bool supportsDevice(String type) {
@@ -38,7 +42,7 @@ class DeviceController implements DeviceDataCollectorFactory {
     // early out if already registrered
     if (_devices.containsKey(deviceType)) return _devices[deviceType]!;
 
-    info('Creating device manager for device type: $deviceType');
+    info('$runtimeType - Creating device manager for device type: $deviceType');
 
     // look for a device manager of this type in the sampling packages
     DeviceManager? manager;
@@ -47,7 +51,7 @@ class DeviceController implements DeviceDataCollectorFactory {
     }
 
     if (manager == null) {
-      warning('No device manager found for device: $deviceType');
+      warning('$runtimeType - No device manager found for device: $deviceType');
     } else {
       registerDevice(deviceType, manager);
     }
@@ -78,8 +82,9 @@ class DeviceController implements DeviceDataCollectorFactory {
     // first initialize the master device (i.e. this phone)
     initializeDevice(masterDeviceDeployment.deviceDescriptor);
     // and then initialize all the connected devices (if any)
-    masterDeviceDeployment.connectedDevices
-        .forEach((descriptor) => initializeDevice(descriptor));
+    for (var descriptor in masterDeviceDeployment.connectedDevices) {
+      initializeDevice(descriptor);
+    }
   }
 
   @override
@@ -89,6 +94,20 @@ class DeviceController implements DeviceDataCollectorFactory {
     } else {
       warning(
           "A device of type '${descriptor.type}' is not available on this device.");
+    }
+  }
+
+  /// A convinient method for connecting all connectable devices available
+  /// in each [SamplingPackage] that has been registred in the
+  /// [SamplingPackageRegistry].
+  Future<void> connectAllConnectableDevices() async {
+    for (var package in SamplingPackageRegistry().packages) {
+      if (getDevice(package.deviceType) != null &&
+          getDevice(package.deviceType)!.isInitialized) {
+        if (await package.deviceManager.canConnect()) {
+          await getDevice(package.deviceType)?.connect();
+        }
+      }
     }
   }
 

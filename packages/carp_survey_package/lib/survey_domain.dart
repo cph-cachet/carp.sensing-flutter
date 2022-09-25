@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Copenhagen Center for Health Technology (CACHET) at the
+ * Copyright 2020-2022 Copenhagen Center for Health Technology (CACHET) at the
  * Technical University of Denmark (DTU).
  * Use of this source code is governed by a MIT-style license that can be
  * found in the LICENSE file.
@@ -7,54 +7,56 @@
 
 part of survey;
 
-/// A class representing how to configure a [RPTask] survey as a sensing [Measure].
+/// Specify the configuration of a [RPTask] as a special case of an [AppTask].
+/// This can be a survey, a cognitive test, or other tasks that implements the
+/// [RPTask] from the Research Package.
 ///
-/// This measure should be part of an [AppTask] in order for the app to handle
-/// how it wants to show the survey to the user.
-/// Note that only the first [RPTaskMeasure] in an [AppTask] is used.
-/// Hence, an [AppTask] should be used for each survey.
+/// A [RPAppTask] holding a survey can then be triggered in different
+/// ways. For example:
 ///
-/// The app task holding a survey measure can then be triggered in different ways.
-/// For example:
-///
-///  * a [PeriodicTrigger] would allow to collect the survey on a regular basis (frequency)
-///  * a [ScheduledTrigger] can be used to trigger the survey at a specific schedule (i.e., day and time)
-///  * a [RecurrentScheduledTrigger] allow to schedule a recurrent survey, e.g every Monday at 8pm.
+///  * a [PeriodicTrigger] would trigger the survey on a regular basis.
+///  * a [RecurrentScheduledTrigger] would schedule a recurrent survey, e.g every Monday at 8pm.
 ///
 @JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
-class RPTaskMeasure extends CAMSMeasure {
+class RPAppTask extends AppTask {
   /// The survey to be issued to the user.
-  RPTask surveyTask;
+  RPTask rpTask;
 
-  RPTaskMeasure({
-    required String type,
-    String? name,
-    String? description,
-    bool enabled = true,
-    required this.surveyTask,
-  }) : super(
-          type: type,
-          name: name,
-          description: description,
-          enabled: enabled,
-        );
+  RPAppTask({
+    required super.type,
+    super.name,
+    super.title,
+    super.description,
+    super.instructions,
+    super.minutesToComplete,
+    super.expire,
+    super.notification,
+    required this.rpTask,
+  });
 
-  Function get fromJsonFunction => _$RPTaskMeasureFromJson;
-  factory RPTaskMeasure.fromJson(Map<String, dynamic> json) =>
-      FromJsonFactory().fromJson(json) as RPTaskMeasure;
-  Map<String, dynamic> toJson() => _$RPTaskMeasureToJson(this);
+  @override
+  Function get fromJsonFunction => _$RPAppTaskFromJson;
+
+  @override
+  Map<String, dynamic> toJson() => _$RPAppTaskToJson(this);
+  factory RPAppTask.fromJson(Map<String, dynamic> json) =>
+      FromJsonFactory().fromJson(json) as RPAppTask;
 }
 
 /// Holds information about the result of a survey.
 @JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)
 class RPTaskResultDatum extends Datum {
+  @override
   DataFormat get format => DataFormat.fromString(SurveySamplingPackage.SURVEY);
 
+  // The survey result.
   RPTaskResult? surveyResult;
 
   RPTaskResultDatum([this.surveyResult]);
 
   factory RPTaskResultDatum.fromJson(Map<String, dynamic> json) =>
       _$RPTaskResultDatumFromJson(json);
+
+  @override
   Map<String, dynamic> toJson() => _$RPTaskResultDatumToJson(this);
 }

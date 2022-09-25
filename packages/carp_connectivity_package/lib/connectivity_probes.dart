@@ -10,13 +10,14 @@ part of connectivity;
 /// The [ConnectivityProbe] listens to the connectivity status of the phone and
 /// collect a [ConnectivityDatum] every time the connectivity state changes.
 class ConnectivityProbe extends StreamProbe {
+  @override
   Stream<Datum> get stream =>
       Connectivity().onConnectivityChanged.map((ConnectivityResult event) =>
           ConnectivityDatum.fromConnectivityResult(event));
 }
 
 // This probe requests access to location permissions (both on Android and iOS).
-// See https://pub.dev/packages/wifi_info_flutter
+// See https://pub.dev/packages/network_info_plus
 /// The [WifiProbe] get the wifi connectivity status of the phone and
 /// collect a [WifiDatum].
 ///
@@ -24,14 +25,15 @@ class ConnectivityProbe extends StreamProbe {
 /// 12 and 13), there is a set of requirements to meet for the app using this
 /// probe. See
 ///
-///  * [connectivity](https://pub.dev/packages/connectivity)
+///  * [network_info_plus](https://pub.dev/packages/network_info_plus)
 ///  * [CNCopyCurrentNetworkInfo](https://developer.apple.com/documentation/systemconfiguration/1614126-cncopycurrentnetworkinfo)
 ///
 /// Please note that it this probes does not work on emulators (returns null).
 ///
-/// From Android 8.0 onwards the GPS must be ON (high accuracy) in order to be
-/// able to obtain the BSSID.
-class WifiProbe extends PeriodicDatumProbe {
+/// From Android 10.0 onwards the `ACCESS_FINE_LOCATION` permission must be
+/// granted.
+class WifiProbe extends IntervalDatumProbe {
+  @override
   Future<Datum> getDatum() async {
     String? ssid = await NetworkInfo().getWifiName();
     String? bssid = await NetworkInfo().getWifiBSSID();
@@ -43,24 +45,43 @@ class WifiProbe extends PeriodicDatumProbe {
 
 /// The [BluetoothProbe] scans for nearby and visible Bluetooth devices and
 /// collects a [BluetoothDatum] that lists each device found during the scan.
-/// Uses a [PeriodicMeasure] for configuration the [frequency] and [duration]
-/// of the scan.
-class BluetoothProbe extends PeriodicDatumProbe {
+/// Uses a [PeriodicSamplingConfiguration] for configuration the [interval]
+/// and [duration] of the scan.
+class BluetoothProbe extends BufferingPeriodicStreamProbe {
   /// Default timeout for bluetooth scan - 4 secs
   static const DEFAULT_TIMEOUT = 4 * 1000;
+  Datum? _datum;
 
-  Future<Datum> getDatum() async {
-    Datum datum;
+  @override
+  Stream<dynamic> get bufferingStream => FlutterBluePlus.instance.scanResults;
+
+  @override
+  Future<Datum?> getDatum() async => _datum;
+
+  @override
+  void onSamplingStart() {
     try {
-      List<ScanResult> results = await FlutterBluePlus.instance.startScan(
+      FlutterBluePlus.instance.startScan(
           scanMode: ScanMode.lowLatency,
-          timeout: duration ?? Duration(milliseconds: DEFAULT_TIMEOUT));
-      datum = BluetoothDatum.fromScanResult(results);
+          timeout: samplingConfiguration?.duration ??
+              Duration(milliseconds: DEFAULT_TIMEOUT));
     } catch (error) {
-      await FlutterBluePlus.instance.stopScan();
-      datum = ErrorDatum('Error scanning for bluetooth - $error');
+      FlutterBluePlus.instance.stopScan();
+      _datum = ErrorDatum('Error scanning for bluetooth - $error');
     }
+  }
 
-    return datum;
+  @override
+  void onSamplingEnd() => FlutterBluePlus.instance.stopScan();
+
+  @override
+  void onSamplingData(event) {
+    print('>> scan event: $event');
+    if (event is List<ScanResult>) {
+      // add the datum for each scan list we get (don't wait for the scan to end)
+      addData(BluetoothDatum()
+        ..scanResult.addAll(event
+            .map((scanResult) => BluetoothDevice.fromScanResult(scanResult))));
+    }
   }
 }

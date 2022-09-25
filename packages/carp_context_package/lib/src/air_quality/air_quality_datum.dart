@@ -5,18 +5,19 @@
  * found in the LICENSE file.
  */
 
-part of context;
+part of carp_context_package;
 
 /// A [Datum] that holds air quality information collected via the
 /// [World's Air Quality Index (WAQI)](https://waqi.info) API.
 @JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)
 class AirQualityDatum extends Datum {
+  @override
   DataFormat get format =>
       DataFormat.fromString(ContextSamplingPackage.AIR_QUALITY);
 
   int airQualityIndex;
   String source, place;
-  var latitude, longitude;
+  double latitude, longitude;
   AirQualityLevel airQualityLevel;
 
   AirQualityDatum(
@@ -40,12 +41,10 @@ class AirQualityDatum extends Datum {
   factory AirQualityDatum.fromJson(Map<String, dynamic> json) =>
       _$AirQualityDatumFromJson(json);
 
+  @override
   Map<String, dynamic> toJson() => _$AirQualityDatumToJson(this);
 
+  @override
   String toString() =>
-      super.toString() +
-      ', place: $place (latitude:$latitude, longitude:$longitude), '
-          'souce: $source, '
-          'airQualityIndex: $airQualityIndex, '
-          'airQualityLevel: $airQualityLevel';
+      '${super.toString()}, place: $place (latitude:$latitude, longitude:$longitude), souce: $source, airQualityIndex: $airQualityIndex, airQualityLevel: $airQualityLevel';
 }

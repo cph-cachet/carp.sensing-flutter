@@ -64,7 +64,7 @@ class StudyDeployment {
   /// [studyDeploymentId] specify the study deployment id.
   /// If not specified, an UUID v1 id is generated.
   StudyDeployment(StudyProtocol protocol, [String? studyDeploymentId]) {
-    _studyDeploymentId = studyDeploymentId ?? Uuid().v1();
+    _studyDeploymentId = studyDeploymentId ?? const Uuid().v1();
     _protocol = protocol;
     _creationDate = DateTime.now();
     _status = StudyDeploymentStatus(studyDeploymentId: _studyDeploymentId);
@@ -74,10 +74,12 @@ class StudyDeployment {
   StudyDeploymentStatus get status {
     // set the status of each device - both master and connected devices
     _status.devicesStatus = [];
-    protocol.masterDevices.forEach((deviceDescriptor) =>
-        _status.devicesStatus.add(getDeviceStatus(deviceDescriptor)));
-    protocol.connectedDevices.forEach((deviceDescriptor) =>
-        _status.devicesStatus.add(getDeviceStatus(deviceDescriptor)));
+    for (var deviceDescriptor in protocol.masterDevices) {
+      _status.devicesStatus.add(getDeviceStatus(deviceDescriptor));
+    }
+    for (var deviceDescriptor in protocol.connectedDevices) {
+      _status.devicesStatus.add(getDeviceStatus(deviceDescriptor));
+    }
 
     // TODO - check that all devices are ready, before setting the overall status
     return _status;
@@ -147,9 +149,10 @@ class StudyDeployment {
 
     // create a map of device registration for the connected devices
     Map<String, DeviceRegistration?> connectedDeviceConfigurations = {};
-    connectedDevices.forEach((descriptor) =>
-        connectedDeviceConfigurations[descriptor.roleName] =
-            _registeredDevices[descriptor.roleName]);
+    for (var descriptor in connectedDevices) {
+      connectedDeviceConfigurations[descriptor.roleName] =
+          _registeredDevices[descriptor.roleName];
+    }
 
     List<TaskDescriptor> tasks = [];
     // get all tasks which need to be executed on this master device
@@ -157,8 +160,9 @@ class StudyDeployment {
 
     // .. and connected devices
     // note that connected devices need NOT to be registrered to be included
-    connectedDevices.forEach((descriptor) =>
-        tasks.addAll(protocol.getTasksForDeviceRoleName(descriptor.roleName)));
+    for (var descriptor in connectedDevices) {
+      tasks.addAll(protocol.getTasksForDeviceRoleName(descriptor.roleName));
+    }
 
     // Get all trigger information for this and connected devices.
     // TODO - this implementation just returns all triggers and triggered tasks.
@@ -254,6 +258,7 @@ class StudyDeploymentStatus extends Serializable {
     this.devicesStatus = const [],
   }) : super();
 
+  @override
   Function get fromJsonFunction => _$StudyDeploymentStatusFromJson;
 
   factory StudyDeploymentStatus.fromJson(Map<String, dynamic> json) {
@@ -261,7 +266,7 @@ class StudyDeploymentStatus extends Serializable {
         FromJsonFactory().fromJson(json) as StudyDeploymentStatus;
     // when this object was create from json deserialization,
     // the last part of the $type reflects the status
-    switch (status.$type!.split('.').last) {
+    switch (status.$type?.split('.').last) {
       case 'Invited':
         status.status = StudyDeploymentStatusTypes.Invited;
         break;
@@ -280,9 +285,13 @@ class StudyDeploymentStatus extends Serializable {
     return status;
   }
 
+  @override
   Map<String, dynamic> toJson() => _$StudyDeploymentStatusToJson(this);
+
+  @override
   String get jsonType => 'dk.cachet.carp.deployment.domain.$runtimeType';
 
+  @override
   String toString() =>
       '$runtimeType - deploymentId: $studyDeploymentId, status: ${status.toString().split('.').last}';
 }

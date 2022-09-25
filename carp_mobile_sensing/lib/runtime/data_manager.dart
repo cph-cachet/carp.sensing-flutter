@@ -12,17 +12,27 @@ part of runtime;
 /// Also supports JSON encoding via the [toJsonString] method.
 abstract class AbstractDataManager implements DataManager {
   late SmartphoneDeployment _deployment;
-  SmartphoneDeployment get deployment => _deployment;
-  String get studyDeploymentId => deployment.studyDeploymentId;
   DataEndPoint? _dataEndPoint;
   DataEndPoint? get dataEndPoint => _dataEndPoint;
 
   StreamController<DataManagerEvent> controller = StreamController.broadcast();
+
+  @override
+  SmartphoneDeployment get deployment => _deployment;
+
+  @override
+  String get studyDeploymentId => deployment.studyDeploymentId;
+
+  @override
   Stream<DataManagerEvent> get events => controller.stream;
+
+  /// Add [event] to the [events] stream.
+  @mustCallSuper
   void addEvent(DataManagerEvent event) => controller.add(event);
 
   @override
-  Future initialize(
+  @mustCallSuper
+  Future<void> initialize(
     MasterDeviceDeployment deployment,
     DataEndPoint dataEndPoint,
     Stream<DataPoint> data,
@@ -40,13 +50,15 @@ abstract class AbstractDataManager implements DataManager {
   }
 
   @override
-  Future close() async =>
+  @mustCallSuper
+  Future<void> close() async =>
       addEvent(DataManagerEvent(DataManagerEventTypes.CLOSED));
 
   /// Encode [object] to a JSON string.
   String toJsonString(Object object) =>
       const JsonEncoder.withIndent(' ').convert(object);
 
+  @override
   String toString() => runtimeType.toString();
 }
 
@@ -54,22 +66,20 @@ abstract class AbstractDataManager implements DataManager {
 ///
 /// When creating a new [DataManager] you can register it here using the
 /// [register] method which is later used to call [lookup] when trying to find
-/// an appropriate [DataManager] for a specific [DataEndPointType].
+/// an appropriate [DataManager] for a specific [DataEndPointTypes].
 class DataManagerRegistry {
   static final DataManagerRegistry _instance = DataManagerRegistry._();
 
   DataManagerRegistry._();
+  final Map<String, DataManager> _registry = {};
 
   /// Get the singleton [DataManagerRegistry].
   factory DataManagerRegistry() => _instance;
 
-  final Map<String, DataManager> _registry = {};
-
-  /// Register a [DataManager] with a specific type.
+  /// Register a [DataManager].
   void register(DataManager manager) => _registry[manager.type] = manager;
 
-  /// Lookup an instance of a [DataManager] based on the [DataEndPointType].
-  DataManager? lookup(String type) {
-    return _registry[type];
-  }
+  /// Lookup an instance of a [DataManager] based on the [type] as specified in
+  /// [DataEndPointTypes].
+  DataManager? lookup(String type) => _registry[type];
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright 2021 Copenhagen Center for Health Technology (CACHET) at the
+ * Copyright 2021-2022 Copenhagen Center for Health Technology (CACHET) at the
  * Technical University of Denmark (DTU).
  * Use of this source code is governed by a MIT-style license that can be
  * found in the LICENSE file.
@@ -8,15 +8,15 @@
 part of carp_core_client;
 
 /// Collects [Data] for a single device.
-abstract class DeviceDataCollector {
+abstract class DeviceDataCollector<TDeviceRegistration, TDeviceDescriptor> {
   /// The type of this device
   String? type;
 
   /// The registration for this device.
-  DeviceRegistration? deviceRegistration;
+  TDeviceRegistration? deviceRegistration;
 
   /// The description for this device.
-  DeviceDescriptor? deviceDescriptor;
+  TDeviceDescriptor? deviceDescriptor;
 
   /// The set of data types defining which data can be collected on this device.
   Set<String> get supportedDataTypes;
@@ -24,8 +24,9 @@ abstract class DeviceDataCollector {
   /// Get a unique id for this device.
   String get id;
 
-  /// Determines whether a connection can be made at this point in time to the device.
-  bool canConnect();
+  /// Determines whether a connection can be made at this point in time to
+  /// the device.
+  Future<bool> canConnect();
 
   DeviceDataCollector([
     this.type,
@@ -36,7 +37,8 @@ abstract class DeviceDataCollector {
 
 /// Supports creating and holding a registry of [DeviceDataCollector]s for devices.
 abstract class DeviceDataCollectorFactory {
-  /// The devices available in this [DeviceDataCollectorFactory] mapped to their device type.
+  /// The devices available in this [DeviceDataCollectorFactory] mapped to their
+  /// device type.
   Map<String, DeviceDataCollector> get devices;
 
   /// Returns the [DeviceDataCollector] of the given [deviceType].
@@ -64,6 +66,6 @@ abstract class DeviceDataCollectorFactory {
   /// Initialize all devices in a [masterDeviceDeployment].
   void initializeDevices(MasterDeviceDeployment masterDeviceDeployment);
 
-  /// Initialize the is the device [descriptor].
+  /// Initialize the device specified in the [descriptor].
   void initializeDevice(DeviceDescriptor descriptor);
 }

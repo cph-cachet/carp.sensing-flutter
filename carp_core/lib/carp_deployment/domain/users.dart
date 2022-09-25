@@ -26,6 +26,7 @@ class Participation {
       _$ParticipationFromJson(json);
   Map<String, dynamic> toJson() => _$ParticipationToJson(this);
 
+  @override
   String toString() =>
       '${super.toString()}, id: $id, studyDeploymentId: $studyDeploymentId, isRegistered: $isRegistered';
 }
@@ -53,6 +54,7 @@ class StudyInvitation {
       _$StudyInvitationFromJson(json);
   Map<String, dynamic> toJson() => _$StudyInvitationToJson(this);
 
+  @override
   String toString() =>
       '$runtimeType - name: $name, description: $description, applicationData: $applicationData';
 }
@@ -80,6 +82,7 @@ class ActiveParticipationInvitation {
       _$ActiveParticipationInvitationFromJson(json);
   Map<String, dynamic> toJson() => _$ActiveParticipationInvitationToJson(this);
 
+  @override
   String toString() =>
       '$runtimeType - participation: $participation, invitation: $invitation, devices size: ${devices!.length}';
 }

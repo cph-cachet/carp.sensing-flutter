@@ -24,6 +24,7 @@ part of managers;
 /// located in the `data/data/<package_name>/app_flutter` folder.
 /// Files can be accessed via AndroidStudio.
 class FileDataManager extends AbstractDataManager {
+  @override
   String get type => DataEndPointTypes.FILE;
 
   late FileDataEndPoint _fileDataEndPoint;
@@ -35,7 +36,7 @@ class FileDataManager extends AbstractDataManager {
   int _flushingSink = 0;
 
   @override
-  Future initialize(
+  Future<void> initialize(
     MasterDeviceDeployment deployment,
     DataEndPoint dataEndPoint,
     Stream<DataPoint> data,
@@ -44,13 +45,7 @@ class FileDataManager extends AbstractDataManager {
     await super.initialize(deployment, dataEndPoint, data);
 
     _fileDataEndPoint = dataEndPoint as FileDataEndPoint;
-    await Settings().deploymentBasePath;
-
-    assert(
-        studyDeploymentId == Settings().studyDeploymentId,
-        'The study deployment id do not match wth the id provided in Settings - '
-        'this study deployment id = $studyDeploymentId - '
-        'Settings().studyDeploymentId = ${Settings().studyDeploymentId}');
+    await Settings().getDeploymentBasePath(studyDeploymentId);
 
     if (_fileDataEndPoint.encrypt) {
       assert(_fileDataEndPoint.publicKey != null,
@@ -70,23 +65,23 @@ class FileDataManager extends AbstractDataManager {
   }
 
   @override
-  void onDataPoint(DataPoint dataPoint) => write(dataPoint);
+  Future<void> onDataPoint(DataPoint dataPoint) async => await write(dataPoint);
 
   @override
-  void onError(Object? error) =>
-      write(DataPoint.fromData(ErrorDatum(error.toString()))
+  Future<void> onError(Object? error) async =>
+      await write(DataPoint.fromData(ErrorDatum(error.toString()))
         ..carpHeader.dataFormat = DataFormat.fromString(CAMSDataType.ERROR)
         ..carpHeader.studyId = deployment.studyDeploymentId
         ..carpHeader.userId = deployment.userId);
 
   @override
-  void onDone() => close();
+  Future<void> onDone() async => await close();
 
   /// The full path where data files are stored on the device.
   Future<String> get path async {
     if (_path == null) {
       final directory = await Directory(
-              '${await Settings().deploymentBasePath}/${Settings.CARP_DATA_FILE_PATH}')
+              '${await Settings().getDeploymentBasePath(studyDeploymentId)}/${Settings.CARP_DATA_FILE_PATH}')
           .create(recursive: true);
       _path = directory.path;
     }
@@ -116,11 +111,11 @@ class FileDataManager extends AbstractDataManager {
   /// The current file being written to.
   Future<File> get file async {
     if (_file == null) {
-      final _filename = await filename;
-      _file = File(_filename);
-      info("Creating file '$_filename'");
+      final newFilename = await filename;
+      _file = File(newFilename);
+      info("Creating file '$newFilename'");
       addEvent(FileDataManagerEvent(
-          FileDataManagerEventTypes.FILE_CREATED, _filename));
+          FileDataManagerEventTypes.FILE_CREATED, newFilename));
     }
     return _file!;
   }
@@ -147,17 +142,18 @@ class FileDataManager extends AbstractDataManager {
 
     final json = jsonEncode(dataPoint);
 
-    await sink.then((_s) async {
+    await sink.then((activeSink) async {
       try {
-        _s.write(json);
-        _s.write('\n,\n'); // write a ',' to separate json objects in the list
+        activeSink.write(json);
         debug(
             'Writing data point to file - type: ${dataPoint.carpHeader.dataFormat}');
 
-        await file.then((_f) async {
-          await _f.length().then((len) {
+        await file.then((activeFile) async {
+          await activeFile.length().then((len) {
             if (len > _fileDataEndPoint.bufferSize) {
-              flush(_f, _s);
+              flush(activeFile, activeSink);
+            } else {
+              activeSink.write('\n,\n'); // write a ',' to separate json objects
             }
           });
         });
@@ -172,8 +168,8 @@ class FileDataManager extends AbstractDataManager {
   }
 
   /// Flushes data to the file, compress, encrypt, and close it.
-  void flush(File? flushFile, IOSink? flushSink) {
-    // if we're already flushing this file/sink, then do nothing.
+  void flush(File flushFile, IOSink flushSink) {
+    // fast exit if we're already flushing this file/sink
     if (flushSink.hashCode == _flushingSink) return;
 
     _flushingSink = flushSink.hashCode;
@@ -186,23 +182,22 @@ class FileDataManager extends AbstractDataManager {
     _file = null;
     // Start creating a new sink (and file) to be used in parallel
     // to flushing this file.
-    sink.then((value) {});
+    sink.then((_) {});
 
-    final _jsonFilePath = flushFile!.path;
-    var _finalFilePath = _jsonFilePath;
+    final jsonFilePath = flushFile.path;
+    var finalFilePath = jsonFilePath;
 
-    info("Written JSON to file '$_jsonFilePath'. Closing it.");
-    // write the closing json ']'
-    flushSink!.write('{}]\n');
+    info("Written JSON to file '$jsonFilePath'. Closing it.");
+    flushSink.write('\n]\n');
 
     // once finished closing the file, then zip and encrypt it
     flushSink.close().then((value) {
       if (_fileDataEndPoint.zip) {
         // create a new zip file and add the JSON file to this zip file
         final encoder = ZipFileEncoder();
-        final jsonFile = File(_jsonFilePath);
-        _finalFilePath = '$_jsonFilePath.zip';
-        encoder.create(_finalFilePath);
+        final jsonFile = File(jsonFilePath);
+        finalFilePath = '$jsonFilePath.zip';
+        encoder.create(finalFilePath);
         encoder.addFile(jsonFile);
         encoder.close();
 
@@ -216,20 +211,20 @@ class FileDataManager extends AbstractDataManager {
         // if the encrypted file gets another name, remember to
         // update _jsonFilePath
         addEvent(FileDataManagerEvent(
-            FileDataManagerEventTypes.FILE_ENCRYPTED, _finalFilePath));
+            FileDataManagerEventTypes.FILE_ENCRYPTED, finalFilePath));
       }
 
       addEvent(FileDataManagerEvent(
-          FileDataManagerEventTypes.FILE_CLOSED, _finalFilePath));
+          FileDataManagerEventTypes.FILE_CLOSED, finalFilePath));
     });
   }
 
   @override
-  Future close() async {
+  Future<void> close() async {
     _initialized = false;
-    await file.then((_f) {
-      sink.then((_s) {
-        flush(_f, _s);
+    await file.then((activeFile) {
+      sink.then((activeSink) {
+        flush(activeFile, activeSink);
       });
     });
     await super.close();
@@ -243,8 +238,9 @@ class FileDataManagerEvent extends DataManagerEvent {
   String path;
 
   /// Create a new [FileDataManagerEvent].
-  FileDataManagerEvent(String type, this.path) : super(type);
+  FileDataManagerEvent(super.type, this.path);
 
+  @override
   String toString() => 'FileDataManagerEvent - type: $type, path: $path';
 }
 

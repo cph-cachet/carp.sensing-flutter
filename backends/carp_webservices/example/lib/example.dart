@@ -41,7 +41,7 @@ void main() async {
   // ------------------- AUTHENTICATION --------------------------------
 
   // Try to authenticate
-  CarpUser user;
+  CarpUser? user;
   try {
     user = await CarpService().authenticate(
       username: 'a_username',
@@ -61,7 +61,7 @@ void main() async {
     });
 
     ConsentDocument downloaded =
-        await CarpService().getConsentDocument(uploaded.id);
+        await CarpService().getConsentDocument(uploaded.id!);
     print(downloaded);
   } catch (excp) {
     print(excp);
@@ -148,7 +148,7 @@ void main() async {
   print(updatedDocument);
 
   // get the document
-  DocumentSnapshot newDocument =
+  DocumentSnapshot? newDocument =
       await CarpService().collection('users').document(document.name).get();
 
   // get the document by its unique ID
@@ -158,8 +158,8 @@ void main() async {
   await CarpService().collection('users').document(document.name).delete();
 
   // get all collections from a document
-  List<String> collections = newDocument.collections;
-  collections.forEach(print);
+  List<String?>? collections = newDocument?.collections;
+  collections?.forEach(print);
 
   // get all documents in a collection.
   List<DocumentSnapshot> documents =

@@ -19,9 +19,8 @@ class CarpDataManager extends AbstractDataManager {
   late FileDataManager fileDataManager;
 
   CarpDataManager() : super() {
-    // since we're using json serialization, make sure that the json
-    // functions have been registred
-    DomainJsonFactory();
+    // Initialization of serialization
+    CarpMobileSensing();
 
     // register for de-serialization
     FromJsonFactory().register(CarpDataEndPoint(
@@ -105,15 +104,15 @@ class CarpDataManager extends AbstractDataManager {
     return CarpService().currentUser;
   }
 
-  void onDataPoint(DataPoint dataPoint) => uploadData(dataPoint);
+  Future<void> onDataPoint(DataPoint dataPoint) => uploadData(dataPoint);
 
-  void onError(Object? error) =>
+  Future<void> onError(Object? error) =>
       uploadData(DataPoint.fromData(ErrorDatum(error.toString()))
         ..carpHeader.dataFormat = DataFormat.fromString(CAMSDataType.ERROR)
         ..carpHeader.studyId = deployment.studyDeploymentId
         ..carpHeader.userId = deployment.userId);
 
-  void onDone() => close();
+  Future<void> onDone() => close();
 
   /// Handle upload of data depending on the specified [CarpUploadMethod].
   Future<bool> uploadData(DataPoint dataPoint) async {
@@ -155,7 +154,8 @@ class CarpDataManager extends AbstractDataManager {
           await CarpService()
               .collection('/${carpEndPoint.collection}')
               .document()
-              .setData(json.decode(json.encode(dataPoint)));
+              .setData(
+                  json.decode(json.encode(dataPoint)) as Map<String, dynamic>);
           return true;
       }
     }
@@ -264,8 +264,7 @@ class CarpDataManagerEvent extends DataManagerEvent {
   /// The URI of the file on the CARP server.
   String fileEndpointUri;
 
-  CarpDataManagerEvent(String type, this.path, this.id, this.fileEndpointUri)
-      : super(type);
+  CarpDataManagerEvent(super.type, this.path, this.id, this.fileEndpointUri);
 
   String toString() =>
       'CarpDataManagerEvent - type: $type, path: $path, id: $id, fileEndpointUri: $fileEndpointUri';

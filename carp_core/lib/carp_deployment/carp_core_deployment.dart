@@ -19,6 +19,7 @@ import 'package:uuid/uuid.dart';
 import 'package:carp_core/carp_common/carp_core_common.dart';
 import 'package:carp_core/carp_protocols/carp_core_protocols.dart';
 import 'package:carp_core/carp_data/carp_core_data.dart';
+import 'package:carp_serializable/carp_serializable.dart';
 
 export 'carp_core_deployment.dart';
 

@@ -11,10 +11,12 @@ part of communication;
 ///  - address
 ///  - body
 TextMessage textMessageAnoymizer(TextMessage msg) {
-  if (msg.address != null)
+  if (msg.address != null) {
     msg.address = sha1.convert(utf8.encode(msg.address!)).toString();
-  if (msg.body != null)
+  }
+  if (msg.body != null) {
     msg.body = sha1.convert(utf8.encode(msg.body!)).toString();
+  }
 
   return msg;
 }
@@ -32,7 +34,9 @@ Datum textMessageDatumAnoymizer(Datum datum) {
 Datum textMessageLogAnoymizer(Datum datum) {
   assert(datum is TextMessageLogDatum);
   TextMessageLogDatum log = datum as TextMessageLogDatum;
-  log.textMessageLog.forEach((msg) => textMessageAnoymizer(msg));
+  for (var msg in log.textMessageLog) {
+    textMessageAnoymizer(msg);
+  }
   return log;
 }
 
@@ -41,7 +45,9 @@ Datum textMessageLogAnoymizer(Datum datum) {
 Datum phoneLogAnoymizer(Datum datum) {
   assert(datum is PhoneLogDatum);
   PhoneLogDatum log = datum as PhoneLogDatum;
-  log.phoneLog.forEach((call) => phoneCallAnoymizer(call));
+  for (var call in log.phoneLog) {
+    phoneCallAnoymizer(call);
+  }
   return log;
 }
 
@@ -50,13 +56,16 @@ Datum phoneLogAnoymizer(Datum datum) {
 ///  - number
 ///  - name
 PhoneCall phoneCallAnoymizer(PhoneCall call) {
-  if (call.formattedNumber != null)
+  if (call.formattedNumber != null) {
     call.formattedNumber =
         sha1.convert(utf8.encode(call.formattedNumber!)).toString();
-  if (call.number != null)
+  }
+  if (call.number != null) {
     call.number = sha1.convert(utf8.encode(call.number!)).toString();
-  if (call.name != null)
+  }
+  if (call.name != null) {
     call.name = sha1.convert(utf8.encode(call.name!)).toString();
+  }
 
   return call;
 }
@@ -66,7 +75,9 @@ PhoneCall phoneCallAnoymizer(PhoneCall call) {
 Datum calendarAnoymizer(Datum datum) {
   assert(datum is CalendarDatum);
   CalendarDatum calendar = datum as CalendarDatum;
-  calendar.calendarEvents.forEach((event) => calendarEventAnoymizer(event));
+  for (var event in calendar.calendarEvents) {
+    calendarEventAnoymizer(event);
+  }
   return calendar;
 }
 
@@ -75,15 +86,18 @@ Datum calendarAnoymizer(Datum datum) {
 ///  - description
 ///  - names of all attendees
 CalendarEvent calendarEventAnoymizer(CalendarEvent event) {
-  if (event.title != null)
+  if (event.title != null) {
     event.title = sha1.convert(utf8.encode(event.title!)).toString();
-  if (event.description != null)
+  }
+  if (event.description != null) {
     event.description =
         sha1.convert(utf8.encode(event.description!)).toString();
-  if (event.attendees != null)
+  }
+  if (event.attendees != null) {
     event.attendees = event.attendees!
         .map((name) => sha1.convert(utf8.encode(name!)).toString())
         .toList();
+  }
 
   return event;
 }

@@ -2,13 +2,14 @@ import 'dart:convert';
 import 'dart:io';
 import 'package:test/test.dart';
 
+import 'package:carp_serializable/carp_serializable.dart';
 import 'package:carp_core/carp_core.dart';
 import 'package:carp_mobile_sensing/carp_mobile_sensing.dart';
 import 'package:carp_connectivity_package/connectivity.dart';
 import 'package:carp_esense_package/esense.dart';
-import 'package:carp_context_package/context.dart';
+import 'package:carp_context_package/carp_context_package.dart';
 import 'package:carp_audio_package/media.dart';
-import 'package:carp_communication_package/communication.dart';
+// import 'package:carp_communication_package/communication.dart';
 import 'package:carp_apps_package/apps.dart';
 import 'package:carp_backend/carp_backend.dart';
 import 'package:carp_webservices/carp_auth/carp_auth.dart';
@@ -25,13 +26,14 @@ void main() {
   StudyProtocol? protocol;
   late Smartphone phone;
   late ESenseDevice eSense;
+  late LocationService loc;
 
   setUp(() async {
     // register the different sampling package since we're using measures from them
     SamplingPackageRegistry().register(ConnectivitySamplingPackage());
     SamplingPackageRegistry().register(ContextSamplingPackage());
     SamplingPackageRegistry().register(MediaSamplingPackage());
-    SamplingPackageRegistry().register(CommunicationSamplingPackage());
+    // SamplingPackageRegistry().register(CommunicationSamplingPackage());
     SamplingPackageRegistry().register(AppsSamplingPackage());
     SamplingPackageRegistry().register(ESenseSamplingPackage());
 
@@ -41,6 +43,7 @@ void main() {
     // Define which devices are used for data collection.
     phone = Smartphone();
     eSense = ESenseDevice();
+    loc = LocationService();
   });
 
   group("Local Study Protocol Manager", () {
@@ -81,7 +84,8 @@ void main() {
 
       expect(protocol.ownerId, 'abc@dtu.dk');
       expect(protocol.masterDevices.first.roleName, phone.roleName);
-      expect(protocol.connectedDevices.first.roleName, eSense.roleName);
+      expect(protocol.connectedDevices.first.roleName, loc.roleName);
+      expect(protocol.connectedDevices.last.roleName, eSense.roleName);
       print(toJsonString(protocol));
     });
   });
@@ -105,7 +109,7 @@ void main() {
 
   group("CARP Study Protocol Manager", () {
     setUp(() async {
-      app = new CarpApp(
+      app = CarpApp(
         name: "Test",
         uri: Uri.parse(uri),
         oauth: OAuthEndPoint(clientID: clientID, clientSecret: clientSecret),
@@ -122,7 +126,7 @@ void main() {
       CarpParticipationService().configureFrom(CarpService());
 
       // make sure that the json functions are loaded
-      DomainJsonFactory();
+      CarpMobileSensing();
     });
 
     test('- authentication', () async {
@@ -139,12 +143,15 @@ void main() {
     }, skip: false);
 
     test(
-      '- get invitations for $username',
+      '- get invitations',
       () async {
         List<ActiveParticipationInvitation> invitations =
             await CarpParticipationService()
                 .getActiveParticipationInvitations();
-        invitations.forEach((invitation) => print(invitation));
+
+        for (var invitation in invitations) {
+          print(invitation);
+        }
       },
       skip: false,
     );

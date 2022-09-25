@@ -2,9 +2,10 @@ import 'dart:convert';
 import 'dart:io';
 import 'package:test/test.dart';
 
+import 'package:carp_serializable/carp_serializable.dart';
 import 'package:carp_core/carp_core.dart';
 import 'package:carp_mobile_sensing/carp_mobile_sensing.dart';
-import 'package:carp_context_package/context.dart';
+import 'package:carp_context_package/carp_context_package.dart';
 // import 'package:activity_recognition_flutter/activity_recognition_flutter.dart';
 import 'package:flutter_activity_recognition/flutter_activity_recognition.dart';
 import 'package:openmhealth_schemas/openmhealth_schemas.dart' as omh;
@@ -14,40 +15,118 @@ String _encode(Object object) =>
 
 void main() {
   late StudyProtocol protocol;
-  Smartphone phone;
 
   setUp(() {
-    // make sure that the json functions are loaded
-    DomainJsonFactory();
+    // Initialization of serialization
+    CarpMobileSensing();
     ContextSamplingPackage().onRegister();
 
     // register the context sampling package
     SamplingPackageRegistry().register(ContextSamplingPackage());
 
-    // Create a new study protocol.
+    // Create a study protocol
     protocol = StudyProtocol(
-      ownerId: 'alex@uni.dk',
-      name: 'Context package test',
-      description: '',
+      ownerId: 'owner@dtu.dk',
+      name: 'Context Sensing Example',
     );
 
-    // Define which devices are used for data collection.
-    phone = Smartphone();
+    // Define the smartphone as the master device.
+    Smartphone phone = Smartphone();
     protocol.addMasterDevice(phone);
 
-    // adding all measure from the common schema to one one trigger and one task
+    // Add a background task that collects activity data from the phone
     protocol.addTriggeredTask(
-      ImmediateTrigger(), // a simple trigger that starts immediately
-      AutomaticTask()
-        ..measures = SamplingPackageRegistry().common.measures.values.toList(),
-      phone, // a task with all measures
-    );
+        ImmediateTrigger(),
+        BackgroundTask()
+          ..addMeasure(Measure(type: ContextSamplingPackage.ACTIVITY)),
+        phone);
+
+    // Define the online location service and add it as a 'device'
+    LocationService locationService = LocationService(
+        accuracy: GeolocationAccuracy.low,
+        distance: 10,
+        interval: const Duration(minutes: 5));
+    protocol.addConnectedDevice(locationService);
+
+    // Add a background task that collects location on a regular basis
+    protocol.addTriggeredTask(
+        IntervalTrigger(period: Duration(minutes: 5)),
+        BackgroundTask()
+          ..addMeasure(Measure(type: ContextSamplingPackage.LOCATION)),
+        locationService);
+
+    // Add a background task that continously collects geolocation and mobility
+    // patterns. Delays sampling by 5 minutes.
+    protocol.addTriggeredTask(
+        DelayedTrigger(delay: Duration(minutes: 5)),
+        BackgroundTask()
+          ..addMeasure(Measure(type: ContextSamplingPackage.GEOLOCATION))
+          ..addMeasure(Measure(type: ContextSamplingPackage.MOBILITY)),
+        locationService);
+
+    // Add a background task that collects geofence events using DTU as the
+    // center for the geofence.
+    protocol.addTriggeredTask(
+        ImmediateTrigger(),
+        BackgroundTask()
+          ..addMeasure(Measure(type: ContextSamplingPackage.GEOFENCE)
+            ..overrideSamplingConfiguration = GeofenceSamplingConfiguration(
+                center: GeoPosition(55.786025, 12.524159),
+                dwell: const Duration(minutes: 15),
+                radius: 10.0)),
+        locationService);
+
+    // Define the online weather service and add it as a 'device'
+    WeatherService weatherService =
+        WeatherService(apiKey: 'OW_API_key_goes_here');
+    protocol.addConnectedDevice(weatherService);
+
+    // Add a background task that collects weather every 30 miutes.
+    protocol.addTriggeredTask(
+        IntervalTrigger(period: Duration(minutes: 30)),
+        BackgroundTask()
+          ..addMeasure(Measure(type: ContextSamplingPackage.WEATHER)),
+        weatherService);
+
+    // Define the online air quality service and add it as a 'device'
+    AirQualityService airQualityService =
+        AirQualityService(apiKey: 'WAQI_API_key_goes_here');
+    protocol.addConnectedDevice(airQualityService);
+
+    // Add a background task that air quality every 30 miutes.
+    protocol.addTriggeredTask(
+        IntervalTrigger(period: Duration(minutes: 30)),
+        BackgroundTask()
+          ..addMeasure(Measure(type: ContextSamplingPackage.AIR_QUALITY)),
+        airQualityService);
+
+    // // Create a new study protocol.
+    // protocol = StudyProtocol(
+    //   ownerId: 'alex@uni.dk',
+    //   name: 'Context package test',
+    //   description: '',
+    // );
+
+    // // Define which devices are used for data collection.
+    // phone = Smartphone();
+    // protocol.addMasterDevice(phone);
+
+    // // adding all available measures to one one trigger and one task
+    // protocol.addTriggeredTask(
+    //   ImmediateTrigger(),
+    //   BackgroundTask()
+    //     ..measures = SamplingPackageRegistry()
+    //         .dataTypes
+    //         .map((type) => Measure(type: type))
+    //         .toList(),
+    //   phone,
+    // );
   });
 
   test('CAMSStudyProtocol -> JSON', () async {
+    expect(protocol, isNotNull);
     print(protocol);
     print(toJsonString(protocol));
-    expect(protocol.ownerId, 'alex@uni.dk');
   });
 
   test('StudyProtocol -> JSON -> StudyProtocol :: deep assert', () async {
@@ -62,7 +141,7 @@ void main() {
 
   test('JSON File -> StudyProtocol', () async {
     // Read the study protocol from json file
-    String plainJson = File('test/json/study_1.json').readAsStringSync();
+    String plainJson = File('test/json/protocol.json').readAsStringSync();
 
     StudyProtocol protocolFromFile =
         StudyProtocol.fromJson(json.decode(plainJson) as Map<String, dynamic>);
@@ -88,7 +167,7 @@ void main() {
     expect(dp_1.carpHeader.dataFormat.namespace, NameSpace.CARP);
     print(_encode(dp_1));
 
-    loc.altitude = 'encrypted value';
+    // loc.altitude = 'encrypted value';
     print(_encode(dp_1));
   });
 
@@ -134,10 +213,13 @@ void main() {
     GeoPosition compute = GeoPosition(55.783499, 12.518914); // DTU Compute
     GeoPosition lyngby = GeoPosition(55.7704, 12.5038); // Kgs. Lyngby
 
-    GeofenceMeasure m = ContextSamplingPackage()
-        .common
-        .measures[ContextSamplingPackage.GEOFENCE] as GeofenceMeasure;
-    Geofence f = Geofence.fromMeasure(m)
+    GeofenceSamplingConfiguration config = GeofenceSamplingConfiguration(
+      center: home,
+      dwell: const Duration(minutes: 10),
+      radius: 5,
+    );
+
+    Geofence f = Geofence.fromGeofenceSamplingConfiguration(config)
       ..dwell = const Duration(seconds: 2); // dwell timeout 2 secs.
     print(f);
 

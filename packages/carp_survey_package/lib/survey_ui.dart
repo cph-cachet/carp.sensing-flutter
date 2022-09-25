@@ -17,6 +17,7 @@ class SurveyPage extends StatelessWidget {
     this.onSurveyCancel,
   }) : super();
 
+  @override
   Widget build(BuildContext context) {
     return RPUITask(
       task: task as RPOrderedTask,

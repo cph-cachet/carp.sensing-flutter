@@ -16,31 +16,31 @@ abstract class DataManager {
   /// The ID of the study deployment that this manager is handling.
   String get studyDeploymentId;
 
-  /// The type of this data manager as enumerated in [DataEndPointType].
+  /// The type of this data manager as enumerated in [DataEndPointTypes].
   String get type;
 
   /// Initialize the data manager by specifying the study [deployment], the
   /// [dataEndPoint], and the stream of [data] events to handle.
-  Future initialize(
+  Future<void> initialize(
     MasterDeviceDeployment deployment,
     DataEndPoint dataEndPoint,
     Stream<DataPoint> data,
   );
 
   /// Close the data manager (e.g. closing connections).
-  Future close();
+  Future<void> close();
 
   /// Stream of data manager events.
   Stream<DataManagerEvent> get events;
 
   /// On each data event from the data stream, the [onDataPoint] handler is called.
-  void onDataPoint(DataPoint dataPoint);
+  Future<void> onDataPoint(DataPoint dataPoint);
 
   /// When the data stream closes, the [onDone] handler is called.
-  void onDone();
+  Future<void> onDone();
 
   /// When an error event is send on the stream, the [onError] handler is called.
-  void onError(error);
+  Future<void> onError(Object error);
 }
 
 /// An event for a data manager.
@@ -51,6 +51,7 @@ class DataManagerEvent {
   /// Create a [DataManagerEvent].
   DataManagerEvent(this.type);
 
+  @override
   String toString() => 'DataManagerEvent - type: $type';
 }
 

@@ -13,7 +13,7 @@ void main() async {
   // Create a study protocol
   StudyProtocol protocol = StudyProtocol(
     ownerId: 'owner@dtu.dk',
-    name: 'Context Sensing Example',
+    name: 'Communication Sensing Example',
   );
 
   // define which devices are used for data collection
@@ -24,12 +24,8 @@ void main() async {
   // Add an automatic task that collects SMS messages in/out
   protocol.addTriggeredTask(
       ImmediateTrigger(),
-      AutomaticTask()
-        ..addMeasures(SamplingPackageRegistry().common.getMeasureList(
-          types: [
-            CommunicationSamplingPackage.TEXT_MESSAGE,
-          ],
-        )),
+      BackgroundTask()
+        ..addMeasure(Measure(type: CommunicationSamplingPackage.TEXT_MESSAGE)),
       phone);
 
   // Add an automatic task that every 3 hour collects the logs for:
@@ -40,13 +36,10 @@ void main() async {
       PeriodicTrigger(
           period: const Duration(hours: 3),
           duration: const Duration(seconds: 10)),
-      AutomaticTask()
-        ..addMeasures(SamplingPackageRegistry().common.getMeasureList(
-          types: [
-            CommunicationSamplingPackage.PHONE_LOG,
-            CommunicationSamplingPackage.TEXT_MESSAGE_LOG,
-            CommunicationSamplingPackage.CALENDAR,
-          ],
-        )),
+      BackgroundTask()
+        ..addMeasure(Measure(type: CommunicationSamplingPackage.PHONE_LOG))
+        ..addMeasure(
+            Measure(type: CommunicationSamplingPackage.TEXT_MESSAGE_LOG))
+        ..addMeasure(Measure(type: CommunicationSamplingPackage.CALENDAR)),
       phone);
 }

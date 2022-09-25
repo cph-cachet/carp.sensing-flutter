@@ -4,7 +4,7 @@
  * Use of this source code is governed by a MIT-style license that can be
  * found in the LICENSE file.
  */
-part of movisens;
+part of carp_movisens_package;
 
 /// A probe collecting data from the Movisens device using a [StreamProbe].
 class MovisensProbe extends StreamProbe {
@@ -12,6 +12,7 @@ class MovisensProbe extends StreamProbe {
   MovisensDeviceManager get deviceManager =>
       super.deviceManager as MovisensDeviceManager;
 
+  @override
   Stream<MovisensDatum>? get stream =>
       (deviceManager.movisens?.movisensStream != null)
           ? deviceManager.movisens!.movisensStream

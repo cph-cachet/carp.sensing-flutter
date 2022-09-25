@@ -40,6 +40,8 @@ void main() {
   /// Setup CARP and authenticate.
   /// Runs once before all tests.
   setUpAll(() async {
+    Settings().debugLevel = DebugLevel.DEBUG;
+
     // Create a new study protocol.
     protocol = StudyProtocol(
       ownerId: 'owner@dtu.dk',
@@ -726,7 +728,7 @@ void main() {
   }, skip: true);
 
   group("Files", () {
-    int id = -1;
+    // int id = -1;
 
     test('- upload', () async {
       final File myFile = File("test/img.jpg");
@@ -741,7 +743,6 @@ void main() {
 
       CarpFileResponse response = await uploadTask.onComplete;
       expect(response.id, greaterThan(0));
-      id = response.id;
 
       print('response.storageName : ${response.storageName}');
       print('response.studyId : ${response.studyId}');
@@ -761,7 +762,7 @@ void main() {
 
       CarpFileResponse response = await uploadTask.onComplete;
       expect(response.id, greaterThan(0));
-      id = response.id;
+      var id = response.id;
 
       final CarpFileResponse result =
           await CarpService().getFileStorageReference(id).get();
@@ -769,6 +770,36 @@ void main() {
       expect(result.id, id);
       print('result : $result');
     });
+
+    test('- download', () async {
+      final File upFile = File("test/img.jpg");
+
+      final FileUploadTask uploadTask = CarpService()
+          .getFileStorageReference()
+          .upload(upFile, {
+        'content-type': 'image/jpg',
+        'content-language': 'en',
+        'activity': 'test'
+      });
+
+      CarpFileResponse upResponse = await uploadTask.onComplete;
+      expect(upResponse.id, greaterThan(0));
+      var id = upResponse.id;
+
+      File downFile = File("test/img-$id.jpg");
+
+      final FileDownloadTask downloadTask =
+          CarpService().getFileStorageReference(id).download(downFile);
+
+      int downResponse = await downloadTask.onComplete;
+      expect(downResponse, 200);
+      print('status code : $downResponse');
+    });
+
+    // NOTE that the following "get non-existing, "get all", "query", and
+    // "get by name" unit tests ONLY works if you're authenticated as
+    // a RESEARCHER.
+    // See https://github.com/cph-cachet/carp.webservices-docker/issues/56
 
     test('- get non-existing', () async {
       try {
@@ -780,18 +811,6 @@ void main() {
             HttpStatus.notFound);
       }
     });
-
-    test('- download', () async {
-      final File myFile = File("test/img-$id.jpg");
-
-      final FileDownloadTask downloadTask =
-          CarpService().getFileStorageReference(id).download(myFile);
-
-      int response = await downloadTask.onComplete;
-      expect(response, 200);
-      print('status code : $response');
-    });
-
     test('- get all', () async {
       final List<CarpFileResponse> results = await CarpService().getAllFiles();
       print('result : $results');
@@ -817,8 +836,14 @@ void main() {
     });
 
     test('- delete', () async {
+      final FileStorageReference? reference =
+          await CarpService().getFileStorageReferenceByName('img.jpg');
+
+      assert(reference != null);
+      assert(reference?.id != null);
+
       final int result =
-          await CarpService().getFileStorageReference(id).delete();
+          await CarpService().getFileStorageReference(reference!.id).delete();
 
       expect(result, greaterThan(0));
       print('result : $result');

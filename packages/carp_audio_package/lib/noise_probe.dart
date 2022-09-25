@@ -9,34 +9,36 @@ part of media;
 
 /// A listening probe collecting noise sampling from the microphone.
 ///
-/// See [NoiseMeasure] on how to configure this probe, including setting the
-/// frequency, duration and sampling rate of the sampling rate.
+/// See [PeriodicSamplingConfiguration] on how to configure this probe,
+/// including setting the frequency and duration of the sampling rate.
 ///
 /// Does not record sound. Instead reports the audio level with a specified
 /// frequency, in a given sampling window as a [NoiseDatum].
 class NoiseProbe extends BufferingPeriodicStreamProbe {
   NoiseMeter? _noiseMeter;
-  List<NoiseReading> _noiseReadings = [];
-
-  Stream get bufferingStream => _noiseMeter!.noiseStream;
+  final List<NoiseReading> _noiseReadings = [];
 
   @override
-  void onInitialize(Measure measure) {
-    assert(measure is NoiseMeasure);
+  Stream<NoiseReading> get bufferingStream => _noiseMeter!.noiseStream;
+
+  @override
+  bool onInitialize() {
     _noiseMeter = NoiseMeter();
-    super.onInitialize(measure);
+    return true;
   }
 
   @override
-  Future onRestart() async {
+  Future<bool> onRestart() async {
     super.onRestart();
     _noiseMeter = NoiseMeter();
+    return true;
   }
 
   @override
-  Future onStop() async {
+  Future<bool> onStop() async {
     super.onStop();
     _noiseMeter = null;
+    return true;
   }
 
   @override
@@ -46,21 +48,23 @@ class NoiseProbe extends BufferingPeriodicStreamProbe {
   void onSamplingStart() {} // Do nothing
 
   @override
-  void onSamplingData(dynamic noiseReading) => _noiseReadings.add(noiseReading);
+  void onSamplingData(dynamic event) {
+    if (event is NoiseReading) _noiseReadings.add(event);
+  }
 
   @override
   Future<Datum?> getDatum() async {
-    if (_noiseReadings.length > 0) {
-      List<num> _meanList = [];
-      List<num> _maxList = [];
+    if (_noiseReadings.isNotEmpty) {
+      List<num> meanList = [];
+      List<num> maxList = [];
 
-      _noiseReadings.forEach((reading) {
-        _meanList.add(reading.meanDecibel);
-        _maxList.add(reading.maxDecibel);
-      });
+      for (var reading in _noiseReadings) {
+        meanList.add(reading.meanDecibel);
+        maxList.add(reading.maxDecibel);
+      }
 
-      Stats meanStats = Stats.fromData(_meanList);
-      Stats maxStats = Stats.fromData(_maxList);
+      Stats meanStats = Stats.fromData(meanList);
+      Stats maxStats = Stats.fromData(maxList);
       // get statistics from the list of mean db's
       num mean = meanStats.average;
       num std = meanStats.standardDeviation;
@@ -68,14 +72,15 @@ class NoiseProbe extends BufferingPeriodicStreamProbe {
       // get the max db from the list of max db's
       num max = maxStats.max;
 
-      if (mean.isFinite && std.isFinite && min.isFinite && max.isFinite)
+      if (mean.isFinite && std.isFinite && min.isFinite && max.isFinite) {
         return NoiseDatum(
             meanDecibel: mean.toDouble(),
             stdDecibel: std.toDouble(),
             minDecibel: min.toDouble(),
             maxDecibel: max.toDouble());
-    } else {
-      return null;
+      }
     }
+
+    return null;
   }
 }

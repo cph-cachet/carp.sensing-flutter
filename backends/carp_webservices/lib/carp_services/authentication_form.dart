@@ -127,11 +127,15 @@ class _InputState extends State<_InputWidget> {
         child: SizedBox(
           height: 40.0,
           width: 300,
-          child: new RaisedButton(
-            elevation: 5.0,
-            shape: new RoundedRectangleBorder(
-                borderRadius: new BorderRadius.circular(30.0)),
-            color: Colors.blue[900],
+          child: new ElevatedButton(
+            style: ButtonStyle(
+              elevation: MaterialStateProperty.all<double>(5.0),
+              backgroundColor: MaterialStateProperty.all(Colors.blue[900]),
+              shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                RoundedRectangleBorder(
+                    borderRadius: new BorderRadius.circular(30.0)),
+              ),
+            ),
             child: new Text('Sign in with CARP',
                 style: new TextStyle(fontSize: 20.0, color: Colors.white)),
             onPressed: _validateAndSubmit,

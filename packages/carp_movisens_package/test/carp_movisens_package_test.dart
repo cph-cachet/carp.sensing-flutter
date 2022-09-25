@@ -3,9 +3,10 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:movisens_flutter/movisens_flutter.dart';
-import 'package:carp_movisens_package/movisens.dart';
+import 'package:carp_movisens_package/carp_movisens_package.dart';
 import 'package:test/test.dart';
 
+import 'package:carp_serializable/carp_serializable.dart';
 import 'package:carp_core/carp_core.dart';
 import 'package:carp_mobile_sensing/carp_mobile_sensing.dart';
 import 'package:openmhealth_schemas/openmhealth_schemas.dart' as omh;
@@ -15,8 +16,8 @@ void main() {
   Smartphone phone;
 
   setUp(() {
-    // make sure that the json functions are loaded
-    DomainJsonFactory();
+    // Initialization of serialization
+    CarpMobileSensing();
 
     // register the context sampling package
     SamplingPackageRegistry().register(MovisensSamplingPackage());
@@ -43,23 +44,22 @@ void main() {
       ..addMasterDevice(phone)
       ..addConnectedDevice(movisens);
 
-    // adding all measure from the common schema to one one trigger and one task
+    // adding all available measures to one one trigger and one task
     protocol.addTriggeredTask(
-      ImmediateTrigger(), // a simple trigger that starts immediately
-      AutomaticTask()
-        ..measures = SamplingPackageRegistry().common.measures.values.toList(),
-      phone, // a task with all measures
+      ImmediateTrigger(),
+      BackgroundTask()
+        ..measures = SamplingPackageRegistry()
+            .dataTypes
+            .map((type) => Measure(type: type))
+            .toList(),
+      phone,
     );
 
-    // add an automatic task that immediately starts collecting Movisens events
+    // add a background task that immediately starts collecting Movisens events
     protocol.addTriggeredTask(
         ImmediateTrigger(),
-        AutomaticTask()
-          ..addMeasures(MovisensSamplingPackage().debug.getMeasureList(
-            types: [
-              MovisensSamplingPackage.MOVISENS,
-            ],
-          )),
+        BackgroundTask()
+          ..addMeasure(Measure(type: MovisensSamplingPackage.MOVISENS)),
         movisens);
   });
 
@@ -121,7 +121,7 @@ void main() {
       ..stepCount = '56'
       ..movisensDeviceName = 'unit_test_device_name';
 
-    steps..movisensTimestamp = DateTime.now().toUtc().toString();
+    steps.movisensTimestamp = DateTime.now().toUtc().toString();
 
     DataPoint dp_1 = DataPoint.fromData(steps);
     expect(dp_1.carpHeader.dataFormat.namespace,

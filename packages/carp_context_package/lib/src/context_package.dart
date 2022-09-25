@@ -1,182 +1,238 @@
 /*
- * Copyright 2018 Copenhagen Center for Health Technology (CACHET) at the
+ * Copyright 2018-2022 Copenhagen Center for Health Technology (CACHET) at the
  * Technical University of Denmark (DTU).
  * Use of this source code is governed by a MIT-style license that can be
  * found in the LICENSE file.
  */
 
-part of context;
+part of carp_context_package;
 
 /// This is the base class for this context sampling package.
 ///
 /// To use this package, register it in the [carp_mobile_sensing] package using
 ///
 /// ```
-///   SamplingPackageRegistry.register(ContextSamplingPackage());
+///   SamplingPackageRegistry().register(ContextSamplingPackage());
 /// ```
 class ContextSamplingPackage extends SmartphoneSamplingPackage {
-  static const String LOCATION = "${NameSpace.CARP}.location";
-  static const String GEOLOCATION = "${NameSpace.CARP}.geolocation";
+  /// Measure type for continous collection of activity as recognized by the phone's
+  /// activity recognition sub-system.
+  ///  * Event-based measure.
+  ///  * Uses the [Smartphone] master device for data collection.
+  ///  * No sampling configuration needed.
   static const String ACTIVITY = "${NameSpace.CARP}.activity";
-  static const String WEATHER = "${NameSpace.CARP}.weather";
-  static const String AIR_QUALITY = "${NameSpace.CARP}.air_quality";
+
+  /// Measure type for one-time collection of GPS location.
+  ///  * One-time measure.
+  ///  * Uses the [LocationService] connected device for data collection.
+  ///  * No sampling configuration needed.
+  static const String LOCATION = "${NameSpace.CARP}.location";
+
+  /// Measure type for continous collection of GPS location data.
+  ///  * Event-based measure.
+  ///  * Uses the [LocationService] connected device for data collection.
+  ///  * No sampling configuration needed.
+  static const String GEOLOCATION = "${NameSpace.CARP}.geolocation";
+
+  /// Measure type for collection of geofence events (enter/exit/dwell).
+  ///  * Event-based measure.
+  ///  * Uses the [LocationService] connected device for data collection.
+  ///  * Use [GeofenceSamplingConfiguration] for configuration.
   static const String GEOFENCE = "${NameSpace.CARP}.geofence";
+
+  /// Measure type for continous collection of mobility features like number of
+  /// places visited, home stay percentage, and location entrophy.
+  ///
+  ///  * Event-based measure.
+  ///  * Uses the [LocationService] connected device for data collection.
+  ///  * Use [MobilitySamplingConfiguration] for configuration.
   static const String MOBILITY = "${NameSpace.CARP}.mobility";
 
+  /// Measure type for collection of air quality data from the
+  /// [World's Air Quality Index (WAQI)](https://waqi.info) API.
+  ///  * One-time measure.
+  ///  * Uses the [AirQualityService] connected device for data collection.
+  ///  * No sampling configuration needed.
+  static const String AIR_QUALITY = "${NameSpace.CARP}.air_quality";
+
+  /// Measure type for collection of weather data from the
+  /// [Open Weather]( https://openweathermap.org/) API.
+  ///  * One-time measure.
+  ///  * Uses the [WeatherService] connected device for data collection.
+  ///  * No sampling configuration needed.
+  static const String WEATHER = "${NameSpace.CARP}.weather";
+
+  @override
   List<String> get dataTypes => [
-        LOCATION,
-        GEOLOCATION,
         ACTIVITY,
-        WEATHER,
-        AIR_QUALITY,
-        GEOFENCE,
-        MOBILITY,
       ];
 
+  @override
   Probe? create(String type) {
     switch (type) {
-      case LOCATION:
-        return LocationProbe();
-      case GEOLOCATION:
-        return GeoLocationProbe();
       case ACTIVITY:
         return ActivityProbe();
-      case WEATHER:
-        return WeatherProbe();
-      case AIR_QUALITY:
-        return AirQualityProbe();
-      case GEOFENCE:
+      default:
+        return null;
+    }
+  }
+
+  @override
+  void onRegister() {
+    // first register all configurations to be de/serializable
+    FromJsonFactory()
+      ..register(AirQualityService(apiKey: ''))
+      ..register(
+        GeofenceSamplingConfiguration(
+            center: GeoPosition(1.1, 1.1),
+            dwell: const Duration(),
+            radius: 1.0),
+      )
+      ..register(LocationService())
+      ..register(WeatherService(apiKey: ''))
+      ..register(AirQualityService(apiKey: ''))
+      ..register(GeoPosition(1.1, 1.1));
+
+    // registering the transformers from CARP to OMH for geolocation and physical activity
+    // we assume that there is an OMH schema registered already...
+    TransformerSchemaRegistry().lookup(NameSpace.OMH)!
+      ..add(LOCATION, OMHGeopositionDataPoint.transformer)
+      ..add(ACTIVITY, OMHPhysicalActivityDataPoint.transformer);
+
+    // register the sub-packages
+    SamplingPackageRegistry()
+      ..register(LocationSamplingPackage())
+      ..register(AirQualitySamplingPackage())
+      ..register(WeatherSamplingPackage());
+  }
+
+  @override
+  List<Permission> get permissions =>
+      [Permission.locationAlways, Permission.activityRecognition];
+
+  /// Default samplings schema for:
+  ///  * [MOBILITY] - place radius on 50 meters, stop radius on 5 meters, and stop duration at 30 seconds.
+  @override
+  SamplingSchema get samplingSchema => SamplingSchema()
+    ..addConfiguration(
+        MOBILITY,
+        MobilitySamplingConfiguration(
+            placeRadius: 50,
+            stopRadius: 5,
+            usePriorContexts: true,
+            stopDuration: Duration(seconds: 30)));
+}
+
+/// The location sampling package.
+class LocationSamplingPackage extends SmartphoneSamplingPackage {
+  final DeviceManager _deviceManager = LocationServiceManager();
+
+  @override
+  List<String> get dataTypes => [
+        ContextSamplingPackage.LOCATION,
+        ContextSamplingPackage.GEOLOCATION,
+        ContextSamplingPackage.GEOFENCE,
+        ContextSamplingPackage.MOBILITY,
+      ];
+
+  @override
+  Probe? create(String type) {
+    switch (type) {
+      case ContextSamplingPackage.LOCATION:
+        return LocationProbe();
+      case ContextSamplingPackage.GEOLOCATION:
+        return GeoLocationProbe();
+      case ContextSamplingPackage.GEOFENCE:
         return GeofenceProbe();
-      case MOBILITY:
+      case ContextSamplingPackage.MOBILITY:
         return MobilityProbe();
       default:
         return null;
     }
   }
 
-  void onRegister() {
-    // first register all measure to be de/serializable
-    dataTypes.forEach(
-        (measure) => FromJsonFactory().register(common.measures[measure]!));
-    // register the GeoPosition class used in the GeofenceMeasure
-    FromJsonFactory().register(GeoPosition(1.1, 1.1));
+  @override
+  void onRegister() {}
 
-    // registering the transformers from CARP to OMH for geolocation and physical activity.
-    // we assume that there is an OMH schema registered already...
-    TransformerSchemaRegistry()
-        .lookup(NameSpace.OMH)!
-        .add(LOCATION, OMHGeopositionDataPoint.transformer);
-    TransformerSchemaRegistry()
-        .lookup(NameSpace.OMH)!
-        .add(ACTIVITY, OMHPhysicalActivityDataPoint.transformer);
+  @override
+  List<Permission> get permissions => [];
+
+  @override
+  String get deviceType => LocationService.DEVICE_TYPE;
+
+  @override
+  DeviceManager get deviceManager => _deviceManager;
+
+  @override
+  SamplingSchema get samplingSchema => SamplingSchema();
+}
+
+/// The air quality sampling package.
+class AirQualitySamplingPackage extends SmartphoneSamplingPackage {
+  final DeviceManager _deviceManager = AirQualityServiceManager();
+
+  @override
+  List<String> get dataTypes => [
+        ContextSamplingPackage.AIR_QUALITY,
+      ];
+
+  @override
+  Probe? create(String type) {
+    switch (type) {
+      case ContextSamplingPackage.AIR_QUALITY:
+        return AirQualityProbe();
+      default:
+        return null;
+    }
   }
 
-  List<Permission> get permissions =>
-      [Permission.locationAlways, Permission.activityRecognition];
+  @override
+  void onRegister() {}
 
-  SamplingSchema get common => SamplingSchema(
-      type: SamplingSchemaType.common,
-      name: 'Common (default) context sampling schema',
-      powerAware: true)
-    ..measures.addEntries([
-      MapEntry(
-        LOCATION,
-        LocationMeasure(
-          type: LOCATION,
-          name: 'Location',
-          description:
-              "Ont-time collection of location from the phone's GPS sensor",
-        ),
-      ),
-      MapEntry(
-          GEOLOCATION,
-          LocationMeasure(
-            type: GEOLOCATION,
-            name: 'Geo-location',
-            description:
-                "Continously collection of location from the phone's GPS sensor",
-            accuracy: GeolocationAccuracy.low,
-            interval: const Duration(minutes: 5),
-            distance: 10,
-          )),
-      MapEntry(
-        ACTIVITY,
-        CAMSMeasure(
-          type: ACTIVITY,
-          name: 'Activity Recognition',
-          description:
-              "Collects activity type from the phone's activity recognition module",
-        ),
-      ),
-      MapEntry(
-          WEATHER,
-          WeatherMeasure(
-              type: WEATHER,
-              name: 'Weather',
-              description:
-                  "Collects local weather from the WeatherAPI web service",
-              apiKey: 'Open_Weather_API_key_goes_here')),
-      MapEntry(
-          AIR_QUALITY,
-          AirQualityMeasure(
-              type: AIR_QUALITY,
-              name: 'Air Quality',
-              description:
-                  "Collects local air quality from the OpenWeatherMap (OWM) web service",
-              apiKey: 'AQI_API_key_goes_here')),
-      MapEntry(
-          GEOFENCE,
-          GeofenceMeasure(
-              type: GEOFENCE,
-              center: GeoPosition(55.7943601, 12.4461956),
-              radius: 500,
-              dwell: Duration(minutes: 30),
-              name: 'Geofence',
-              description:
-                  "Collects geofence events when then phone enters, leaves, or dwell in a geographic area",
-              label: 'Geofence (Virum)')),
-      MapEntry(
-          MOBILITY,
-          MobilityMeasure(
-              type: MOBILITY,
-              name: 'Mobility Features',
-              description:
-                  "Extracts mobility features based on location tracking",
-              placeRadius: 50,
-              stopRadius: 5,
-              usePriorContexts: true,
-              stopDuration: Duration(seconds: 30))),
-    ]);
+  @override
+  List<Permission> get permissions => [];
 
-  SamplingSchema get light {
-    SamplingSchema light = common
-      ..type = SamplingSchemaType.light
-      ..name = 'Light context sampling';
-    (light.measures[WEATHER] as WeatherMeasure).enabled = false;
-    return light;
+  @override
+  String get deviceType => AirQualityService.DEVICE_TYPE;
+
+  @override
+  DeviceManager get deviceManager => _deviceManager;
+
+  @override
+  SamplingSchema get samplingSchema => SamplingSchema();
+}
+
+/// The air quality sampling package.
+class WeatherSamplingPackage extends SmartphoneSamplingPackage {
+  final DeviceManager _deviceManager = WeatherServiceManager();
+
+  @override
+  List<String> get dataTypes => [
+        ContextSamplingPackage.WEATHER,
+      ];
+
+  @override
+  Probe? create(String type) {
+    switch (type) {
+      case ContextSamplingPackage.WEATHER:
+        return WeatherProbe();
+      default:
+        return null;
+    }
   }
 
-  SamplingSchema get minimum {
-    SamplingSchema minimum = light
-      ..type = SamplingSchemaType.minimum
-      ..name = 'Minimum context sampling';
-    (minimum.measures[ACTIVITY] as CAMSMeasure).enabled = false;
-    (minimum.measures[GEOFENCE] as GeofenceMeasure).enabled = false;
-    return minimum;
-  }
+  @override
+  void onRegister() {}
 
-  SamplingSchema get normal => common;
+  @override
+  List<Permission> get permissions => [];
 
-  SamplingSchema get debug {
-    SamplingSchema debug = common
-      ..type = SamplingSchemaType.debug
-      ..name = 'Debugging context sampling schema'
-      ..powerAware = false;
-    (debug.measures[GEOLOCATION] as LocationMeasure)
-      ..interval = const Duration(seconds: 10)
-      ..distance = 0
-      ..accuracy = GeolocationAccuracy.navigation;
+  @override
+  String get deviceType => WeatherService.DEVICE_TYPE;
 
-    return debug;
-  }
+  @override
+  DeviceManager get deviceManager => _deviceManager;
+
+  @override
+  SamplingSchema get samplingSchema => SamplingSchema();
 }

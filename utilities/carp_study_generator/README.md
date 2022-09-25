@@ -1,6 +1,6 @@
 # CARP Study Generator Utility Package
 
-This utility package helps generate the configuration files needed for a CARP Mobile Sensing study, and uploading this to the CARP web server. 
+This utility package helps generate the configuration files needed for a CARP Mobile Sensing study, and uploading this to the CARP web server.
 
 ## Configuration and Setup
 
@@ -14,12 +14,12 @@ To use the study generator, do the following in you app:
 
 The `carpspec.yaml` can be configured using the following properties for:
 
- * the CARP Server 
- * the study ID
- * the protocol
- * the informed consent
- * messages
- * language localizations
+* the CARP Server
+* the study ID
+* the protocol
+* the informed consent
+* messages
+* language localizations
 
 ```yaml
 server:
@@ -69,9 +69,9 @@ All files used for creating and uploading configurations to CARP is stored in th
 | File                      |   Description |
 |---------------------------|---------------|
 | `resources/protocol.json` | JSON definition of your [`SmartphoneStudyProtocol`](https://pub.dev/documentation/carp_mobile_sensing/latest/domain/SmartphoneStudyProtocol-class.html). |  
-| `resources/consent.json`  | JSON definition of your [`RPOrderedTask`](https://pub.dev/documentation/research_package/latest/research_package_model/RPOrderedTask-class.html) with the informed consent to show to the user. | 
-| `lang/<language>.json`    | The JSON language file for each language supported of the form `<language>.json`. | 
-| `messages/<name>.json`    | The name of each JSON message file to upload. | 
+| `resources/consent.json`  | JSON definition of your [`RPOrderedTask`](https://pub.dev/documentation/research_package/latest/research_package_model/RPOrderedTask-class.html) with the informed consent to show to the user. |
+| `lang/<language>.json`    | The JSON language file for each language supported of the form `<language>.json`. |
+| `messages/<name>.json`    | The name of each JSON message file to upload. |
 
 Please ignore the test scripts in the `carp` folder (these are used to execute the commands).
 
@@ -94,7 +94,7 @@ The available commands are:
   localization           Upload the localization files to the CARP server.
   message                Upload the list of messages to the CARP server.
   message-delete-all     Delete all messages on the CARP server.
-``` 
+```
 
 Before uploading a any json files to CARP, run the `dryrun` command first. It will check and output a list like the following:
 
@@ -111,6 +111,3 @@ Before uploading a any json files to CARP, run the `dryrun` command first. It wi
 [✓] Message - 2          carp/messages/2.json
  •  1 issues found!
  ```
-
-
-

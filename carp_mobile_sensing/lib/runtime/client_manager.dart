@@ -1,5 +1,5 @@
 /*
- * Copyright 2021 Copenhagen Center for Health Technology (CACHET) at the
+ * Copyright 2021-2022 Copenhagen Center for Health Technology (CACHET) at the
  * Technical University of Denmark (DTU).
  * Use of this source code is governed by a MIT-style license that can be
  * found in the LICENSE file.
@@ -7,63 +7,148 @@
 
 part of runtime;
 
-class SmartPhoneClientManager extends ClientManager {
-  SmartPhoneClientManager({
+class SmartPhoneClientManager extends ClientManager
+    with WidgetsBindingObserver {
+  static final SmartPhoneClientManager _instance = SmartPhoneClientManager._();
+  NotificationController? _notificationController;
+
+  SmartPhoneClientManager._() {
+    WidgetsFlutterBinding.ensureInitialized();
+    WidgetsBinding.instance.addObserver(this);
+    CarpMobileSensing();
+  }
+
+  /// Get the singleton [SmartPhoneClientManager].
+  ///
+  /// In CARP Mobile Sensing the [SmartPhoneClientManager] is a singleton,
+  /// which implies that only one client manager is used in an app.
+  factory SmartPhoneClientManager() => _instance;
+
+  @override
+  DeviceController get deviceController =>
+      super.deviceController as DeviceController;
+
+  /// The [NotificationController] responsible for sending notification on [AppTask]s.
+  NotificationController? get notificationController => _notificationController;
+
+  @override
+  SmartphoneDeploymentController? lookupStudyRuntime(
+    String studyDeploymentId,
+    String deviceRoleName,
+  ) =>
+      super.lookupStudyRuntime(studyDeploymentId, deviceRoleName)
+          as SmartphoneDeploymentController;
+
+  /// Configure this [SmartPhoneClientManager] by specifying:
+  ///  * [deviceId] - this device's id in study deployments.
+  ///      If not specified, the OS's device id is used.
+  ///  * [deploymentService] - where to get study deployments.
+  ///      If not specified, the [SmartphoneDeploymentService] will be used.
+  ///  * [deviceController] that handles devices connected to this client.
+  ///      If not specified, the default [DeviceController] is used.
+  ///  * [notificationController] - what [NotificationController] to use for notifications.
+  ///     Two alternatives exists; [FlutterLocalNotificationController] or [AwesomeNotificationController].
+  ///     If not specified, the [AwesomeNotificationController] is used.
+  @override
+  Future<DeviceRegistration> configure({
+    NotificationController? notificationController,
     DeploymentService? deploymentService,
-    DeviceController? deviceRegistry,
-  }) : super(
-          // if not specified, use default services
-          deploymentService: deploymentService ?? SmartphoneDeploymentService(),
-          deviceRegistry: deviceRegistry ?? DeviceController(),
-        );
-
-  @override
-  DeviceController get deviceRegistry =>
-      super.deviceRegistry as DeviceController;
-
-  @override
-  Future<DeviceRegistration> configure({String? deviceId}) async {
+    DeviceDataCollectorFactory? deviceController,
+    String? deviceId,
+  }) async {
+    // initialize device settings
     await DeviceInfo().init();
-    deviceId ??= DeviceInfo().deviceID;
+    await Settings().init();
 
-    deviceRegistry.registerAllAvailableDevices();
+    // create and register the built-in data managers
+    DataManagerRegistry().register(ConsoleDataManager());
+    DataManagerRegistry().register(FileDataManager());
+    DataManagerRegistry().register(SQLiteDataManager());
+
+    // set default values, if not specified
+    deviceId ??= DeviceInfo().deviceID;
+    // _notificationController =
+    //     notificationController ?? FlutterLocalNotificationController();
+    _notificationController =
+        notificationController ?? AwesomeNotificationController();
+    this.deploymentService = deploymentService ?? SmartphoneDeploymentService();
+    this.deviceController = deviceController ?? DeviceController();
+
+    this.deviceController.registerAllAvailableDevices();
 
     print('===========================================================');
     print('  CARP Mobile Sensing (CAMS) - $runtimeType');
     print('===========================================================');
     print('  deployment service : $deploymentService');
-    print('     device registry : $deviceRegistry');
+    print('   device controller : ${this.deviceController}');
     print('           device ID : $deviceId');
-    print('   connected devices : ${deviceRegistry.devicesToString()}}');
+    print('   available devices : ${this.deviceController.devicesToString()}');
     print('===========================================================');
 
-    return super.configure(deviceId: deviceId);
+    return super.configure(
+      deploymentService: this.deploymentService!,
+      deviceController: this.deviceController,
+      deviceId: deviceId,
+    );
   }
 
   @override
-  Future<SmartphoneDeploymentController> addStudy(
-    String studyDeploymentId,
-    String deviceRoleName,
-  ) async {
-    info(
-        'Adding study to $runtimeType - studyDeploymentId: $studyDeploymentId, deviceRoleName: $deviceRoleName');
-    await super.addStudy(studyDeploymentId, deviceRoleName);
-
-    // Create the study runtime.
-    // val deviceRegistration = repository.getDeviceRegistration()!!
+  Future<StudyStatus> addStudy(Study study) async {
+    StudyStatus status = await super.addStudy(study);
+    info('Adding study to $runtimeType - $study');
 
     SmartphoneDeploymentController controller =
-        SmartphoneDeploymentController();
+        SmartphoneDeploymentController(deploymentService!, deviceController);
+    repository[study] = controller;
 
     await controller.initialize(
-      deploymentService,
-      deviceRegistry,
-      studyDeploymentId,
-      deviceRoleName,
+      study,
       registration!,
     );
 
-    repository[StudyRuntimeId(studyDeploymentId, deviceRoleName)] = controller;
-    return controller;
+    return status;
+  }
+
+  @override
+  SmartphoneDeploymentController? getStudyRuntime(Study study) =>
+      repository[study] as SmartphoneDeploymentController;
+
+  /// Called when this client mananger is being (re-)activated by the OS
+  ///
+  /// Implementations of this method should start with a call to the inherited
+  /// method, as in `super.activate()`.
+  @protected
+  @mustCallSuper
+  void activate() {}
+
+  /// Called when this client mananger is being deactivated and potentially
+  /// stopped by the OS
+  ///
+  /// Implementations of this method should start with a call to the inherited
+  /// method, as in `super.deactivate()`.
+  @protected
+  @mustCallSuper
+  Future<void> deactivate() async {
+    // make sure to save all studies
+    for (var study in repository.keys) {
+      await getStudyRuntime(study)?.saveDeployment();
+    }
+  }
+
+  /// Called when the system puts the app in the background or returns
+  /// the app to the foreground.
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    debug('$runtimeType - App lifecycle state changed: $state');
+    switch (state) {
+      case AppLifecycleState.inactive:
+      case AppLifecycleState.paused:
+      case AppLifecycleState.detached:
+        deactivate();
+        break;
+      case AppLifecycleState.resumed:
+        activate();
+        break;
+    }
   }
 }

@@ -15,12 +15,13 @@ import 'package:permission_handler/permission_handler.dart';
 import 'package:research_package/research_package.dart';
 import 'package:flutter/material.dart';
 
+import 'package:carp_serializable/carp_serializable.dart';
 import 'package:carp_core/carp_core.dart';
 import 'package:carp_mobile_sensing/carp_mobile_sensing.dart';
 
 part 'survey.g.dart';
 part 'survey_domain.dart';
-part 'survey_runtime.dart';
+part 'survey_package.dart';
 part 'survey_ui.dart';
 part 'who5.dart';
 part 'survey_user_task.dart';

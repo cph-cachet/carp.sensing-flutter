@@ -1,14 +1,45 @@
 part of sensors;
 
 class SensorSamplingPackage extends SmartphoneSamplingPackage {
+  /// Measure type for continous collection of accelorometer data (x,y,z).
+  ///
+  /// * Event-based measure.
+  /// * Uses the [Smartphone] master device for data collection.
+  /// * No sampling configuration needed.
   static const String ACCELEROMETER = 'dk.cachet.carp.accelerometer';
+
+  /// Measure type for continous collection of gyroscope data (x,y,z).
+  ///  * Event-based measure.
+  ///  * Uses the [Smartphone] master device for data collection.
+  ///  * No sampling configuration needed.
   static const String GYROSCOPE = 'dk.cachet.carp.gyroscope';
+
+  /// Measure type for periodic collection of accelorometer data (x,y,z).
+  ///  * Periodic measure.
+  ///  * Uses the [Smartphone] master device for data collection.
+  ///  * Use [PeriodicSamplingConfiguration] for configuration.
   static const String PERIODIC_ACCELEROMETER =
       'dk.cachet.carp.periodic_accelerometer';
+
+  /// Measure type for periodic collection of gyroscope data (x,y,z).
+  ///  * Periodic measure.
+  ///  * Uses the [Smartphone] master device for data collection.
+  ///  * Use [PeriodicSamplingConfiguration] for configuration.
   static const String PERIODIC_GYROSCOPE = 'dk.cachet.carp.periodic_gyroscope';
+
+  /// Measure type for collection of step count from the phones pedometer sensor.
+  ///  * Event-based measure.
+  ///  * Uses the [Smartphone] master device for data collection.
+  ///  * No sampling configuration needed.
   static const String PEDOMETER = 'dk.cachet.carp.pedometer';
+
+  /// Measure type for collection of ambient light from the phones light sensor.
+  ///  * Periodic measure.
+  ///  * Uses the [Smartphone] master device for data collection.
+  ///  * Use [PeriodicSamplingConfiguration] for configuration.
   static const String LIGHT = 'dk.cachet.carp.light';
 
+  @override
   List<String> get dataTypes => [
         ACCELEROMETER,
         GYROSCOPE,
@@ -18,6 +49,7 @@ class SensorSamplingPackage extends SmartphoneSamplingPackage {
         LIGHT,
       ];
 
+  @override
   Probe? create(String type) {
     switch (type) {
       case ACCELEROMETER:
@@ -31,87 +63,40 @@ class SensorSamplingPackage extends SmartphoneSamplingPackage {
       case PEDOMETER:
         return PedometerProbe();
       case LIGHT:
-        return LightProbe();
+        return (Platform.isAndroid) ? LightProbe() : null;
       default:
         return null;
     }
   }
 
+  @override
   void onRegister() {}
 
+  @override
   List<Permission> get permissions => [];
 
-  SamplingSchema get common => SamplingSchema(
-        type: SamplingSchemaType.common,
-        name: 'Common (default) sensor sampling schema',
-        powerAware: true,
-      )..addMeasures([
-          CAMSMeasure(
-            type: ACCELEROMETER,
-            name: 'Accelerometer',
-            description:
-                'Collects movement data based on the onboard phone accelerometer sensor.',
-            enabled: false,
-          ),
-          CAMSMeasure(
-            type: GYROSCOPE,
-            name: 'Gyroscope',
-            description:
-                'Collects movement data based on the onboard phone gyroscope sensor.',
-            enabled: false,
-          ),
-          PeriodicMeasure(
-            type: PERIODIC_ACCELEROMETER,
-            name: 'Accelerometer',
-            description:
-                'Collects movement data based on the onboard phone accelerometer sensor.',
-            enabled: false,
-            frequency: const Duration(seconds: 5),
-            duration: const Duration(seconds: 1),
-          ),
-          PeriodicMeasure(
-            type: PERIODIC_GYROSCOPE,
-            name: 'Gyroscope',
-            description:
-                'Collects movement data based on the onboard phone gyroscope sensor.',
-            enabled: false,
-            frequency: const Duration(seconds: 5),
-            duration: const Duration(seconds: 1),
-          ),
-          CAMSMeasure(
-            type: PEDOMETER,
-            name: 'Pedometer (Step Count)',
-            description:
-                'Collects step events from the onboard phone step sensor.',
-          ),
-          PeriodicMeasure(
-            type: LIGHT,
-            name: 'Ambient Light',
-            description:
-                'Collects ambient light from the light sensor on the phone.',
-            frequency: const Duration(minutes: 1),
-            duration: const Duration(seconds: 1),
-          ),
-        ]);
-
-  SamplingSchema get light {
-    SamplingSchema light = common
-      ..type = SamplingSchemaType.light
-      ..name = 'Light sensor sampling';
-    (light.measures[DataType.fromString(LIGHT) as String] as CAMSMeasure)
-        .enabled = false;
-    return light;
-  }
-
-  SamplingSchema get minimum {
-    SamplingSchema minimum = common
-      ..type = SamplingSchemaType.light
-      ..name = 'Light sensor sampling';
-    (minimum.measures[DataType.fromString(PEDOMETER) as String] as CAMSMeasure)
-        .enabled = false;
-    return minimum;
-  }
-
-  SamplingSchema get normal => common;
-  SamplingSchema get debug => common;
+  /// Default samplings schema for:
+  ///  * [PERIODIC_ACCELEROMETER] - every 5 seconds sampling for 1 second
+  ///  * [PERIODIC_GYROSCOPE] - every 5 seconds sampling for 1 second
+  ///  * [LIGHT] - every 5 minutes sampling for 10 second
+  @override
+  SamplingSchema get samplingSchema => SamplingSchema()
+    ..addConfiguration(
+        PERIODIC_ACCELEROMETER,
+        PeriodicSamplingConfiguration(
+          interval: const Duration(seconds: 5),
+          duration: const Duration(seconds: 1),
+        ))
+    ..addConfiguration(
+        PERIODIC_GYROSCOPE,
+        PeriodicSamplingConfiguration(
+          interval: const Duration(seconds: 5),
+          duration: const Duration(seconds: 1),
+        ))
+    ..addConfiguration(
+        LIGHT,
+        PeriodicSamplingConfiguration(
+          interval: const Duration(minutes: 5),
+          duration: const Duration(seconds: 10),
+        ));
 }
