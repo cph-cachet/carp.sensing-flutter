@@ -154,7 +154,8 @@ class CarpDataManager extends AbstractDataManager {
           await CarpService()
               .collection('/${carpEndPoint.collection}')
               .document()
-              .setData(json.decode(json.encode(dataPoint)));
+              .setData(
+                  json.decode(json.encode(dataPoint)) as Map<String, dynamic>);
           return true;
       }
     }
