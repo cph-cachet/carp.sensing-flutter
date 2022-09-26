@@ -7,7 +7,7 @@ In addition, the CARP team maintain a set of [Flutter plugins](https://github.co
 about plugins, and how to use them, see the
 [Flutter Packages](https://flutter.io/platform-plugins/) description.
 
-All the CARP Flutter components including the these plugins are also available on [pub](https://pub.dev/publishers/cachet.dk/packages).
+All the CARP Flutter components including the these plugins are also available on [pub.dev](https://pub.dev/publishers/cachet.dk/packages).
 
 ## Software Components
 These are the available CARP Mobile Sensing Flutter components in this repository.
