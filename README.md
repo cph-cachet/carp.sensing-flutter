@@ -7,14 +7,15 @@ In addition, the CARP team maintain a set of [Flutter plugins](https://github.co
 about plugins, and how to use them, see the
 [Flutter Packages](https://flutter.io/platform-plugins/) description.
 
-These plugins are also available on [pub](https://pub.dev/publishers/cachet.dk/packages).
+All the CARP Flutter components including the these plugins are also available on [pub.dev](https://pub.dev/publishers/cachet.dk/packages).
 
 ## Software Components
 These are the available CARP Mobile Sensing Flutter components in this repository.
 
-| Component | Description | Pub |
-|-----------|-------------|-----|
-| **Core** | **Basic components** |  |
+| Component | Description | [pub.dev](https://pub.dev/packages?q=publisher%3Acachet.dk+) |
+|-----------|-------------|:-----------------:|
+| **Core** | **Basic components** | <img width=250/> |
+| [carp_serializable](./carp_serializable) | A package for polymorphic serialization to/from JSON build on top of [json_serializable](https://pub.dev/packages/json_serializable) | [![pub package](https://img.shields.io/pub/v/carp_serializable.svg)](https://pub.dartlang.org/packages/carp_serializable) |
 | [carp_core](./carp_core) | The CARP core domain model | [![pub package](https://img.shields.io/pub/v/carp_core.svg)](https://pub.dartlang.org/packages/carp_core) |
 | [carp_mobile_sensing](./carp_mobile_sensing) | The main CARP Mobile Sensing Framework | [![pub package](https://img.shields.io/pub/v/carp_mobile_sensing.svg)](https://pub.dartlang.org/packages/carp_mobile_sensing) |
 | **Packages** | **Data sampling packages** |  |
@@ -23,10 +24,12 @@ These are the available CARP Mobile Sensing Flutter components in this repositor
 | [carp_communication_package](./packages/carp_communication_package) | Communication sampling package (phone, sms) | [![pub package](https://img.shields.io/pub/v/carp_communication_package.svg)](https://pub.dartlang.org/packages/carp_communication_package) |
 | [carp_context_package](./packages/carp_context_package) | Context sampling package (location, activity, weather) | [![pub package](https://img.shields.io/pub/v/carp_context_package.svg)](https://pub.dartlang.org/packages/carp_context_package) |
 | [carp_audio_package](./packages/carp_audio_package) | Audio sampling package (audio, noise) | [![pub package](https://img.shields.io/pub/v/carp_audio_package.svg)](https://pub.dartlang.org/packages/carp_audio_package) |
+| [carp_survey_package](./packages/carp_survey_package) | Sampling package for collecting survey data from [Research Package](https://carp.cachet.dk/research-package/) and running cognitive test using the [Cognition Package](https://carp.cachet.dk/cognition-package/) | [![pub package](https://img.shields.io/pub/v/carp_survey_package.svg)](https://pub.dartlang.org/packages/carp_survey_package) |
+| [carp_health_package](./packages/carp_health_package) | Sampling package for collecting health data from [Apple Health](https://www.apple.com/ios/health/) and [Google Fit](https://www.google.com/fit/) | [![pub package](https://img.shields.io/pub/v/carp_health_package.svg)](https://pub.dartlang.org/packages/carp_health_package) |
+| **Wearables** | **Sampling Packages for Wearable Devices** |  |
 | [carp_movisens_package](./packages/carp_movisens_package) | Movisens Move & ECG sampling package (movement, MET-level, ECG) | [![pub package](https://img.shields.io/pub/v/carp_movisens_package.svg)](https://pub.dartlang.org/packages/carp_movisens_package) |
 | [carp_esense_package](./packages/carp_esense_package) | Sampling package for the eSense ear plug device (button pressed & movement) | [![pub package](https://img.shields.io/pub/v/carp_esense_package.svg)](https://pub.dartlang.org/packages/carp_esense_package) |
-| [carp_survey_package](./packages/carp_survey_package) | Sampling package for collecting survey data from [ResearchPackage](https://www.researchpackage.org) | [![pub package](https://img.shields.io/pub/v/carp_survey_package.svg)](https://pub.dartlang.org/packages/carp_survey_package) |
-| [carp_health_package](./packages/carp_health_package) | Sampling package for collecting health data from [Apple Health](https://www.apple.com/ios/health/) and [Google Fit](https://www.google.com/fit/) | [![pub package](https://img.shields.io/pub/v/carp_health_package.svg)](https://pub.dartlang.org/packages/carp_health_package) |
+| [carp_polar_package](./packages/carp_polar_package) | Sampling package for the [Polar heart rate monitors](https://www.polar.com/) | [![pub package](https://img.shields.io/pub/v/carp_polar_package.svg)](https://pub.dartlang.org/packages/carp_polar_package) |
 | **Backends** | **Backend data upload components** |  |
 | [carp_webservices](./backends/carp_webservices) | Flutter API for CARP web services | [![pub package](https://img.shields.io/pub/v/carp_webservices.svg)](https://pub.dartlang.org/packages/carp_webservices) |
 | [carp_backend](./backends/carp_backend) | Support for uploading data to a CARP data backend as JSON. | [![pub package](https://img.shields.io/pub/v/carp_backend.svg)](https://pub.dartlang.org/packages/carp_backend) |
@@ -34,7 +37,7 @@ These are the available CARP Mobile Sensing Flutter components in this repositor
 | **Utilities** | **Misc. CAMS utilities** |  |
 | [carp_study_generator](./utilities/carp_study_generator) | A simple command line interface (CLI) to upload study protocols, informed consent and localization files to the CARP backend.  | [![pub package](https://img.shields.io/pub/v/carp_study_generator.svg)](https://pub.dartlang.org/packages/carp_study_generator) |
 | **Apps** | **Misc. mobile sensing demo apps** |  |
-| [carp_mobile_sensing_app](./apps/carp_mobile_sensing_app) | Demonstrates how basic mobile sensing can be implemented in a Flutter app using CAMS.  |  |
+| [carp_mobile_sensing_app](./apps/carp_mobile_sensing_app) | Demonstrates how basic mobile sensing can be implemented in a Flutter app using CAMS. Also demonstrates how to integrate to wearable devices over BLE connections.  |  |
 | [pulmonary_monitor_app](https://github.com/cph-cachet/pulmonary_monitor_app) | Demonstrates how user tasks (aka. [AppTask](https://pub.dev/documentation/carp_mobile_sensing/latest/domain/AppTask-class.html)) are supported in CAMS. |  |
 
 ## Documentation

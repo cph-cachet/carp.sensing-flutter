@@ -48,8 +48,7 @@ class A extends Serializable {
   A() : super();
 
   Function get fromJsonFunction => _$AFromJson;
-  factory A.fromJson(Map<String, dynamic> json) =>
-      FromJsonFactory().fromJson(json) as A;
+  factory A.fromJson(Map<String, dynamic> json) => FromJsonFactory().fromJson(json) as A;
   Map<String, dynamic> toJson() => _$AToJson(this);
 }
 
@@ -60,8 +59,7 @@ class B extends A {
   B() : super();
 
   Function get fromJsonFunction => _$BFromJson;
-  factory B.fromJson(Map<String, dynamic> json) =>
-      FromJsonFactory().fromJson(json) as B;
+  factory B.fromJson(Map<String, dynamic> json) => FromJsonFactory().fromJson(json) as B;
   Map<String, dynamic> toJson() => _$BToJson(this);
 }
 ```
