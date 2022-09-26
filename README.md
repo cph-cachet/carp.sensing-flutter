@@ -15,7 +15,7 @@ These are the available CARP Mobile Sensing Flutter components in this repositor
 | Component | Description | [pub.dev](https://pub.dev/packages?q=publisher%3Acachet.dk+) |
 |-----------|-------------|:-----------------:|
 | **Core** | **Basic components** | <img width=250/> |
-| [carp_serializable](./carp_serializable) | The CARP core domain model | [![pub package](https://img.shields.io/pub/v/carp_serializable.svg)](https://pub.dartlang.org/packages/carp_serializable) |
+| [carp_serializable](./carp_serializable) | A package for polymorphic serialization to/from JSON build on top of [json_serializable](https://pub.dev/packages/json_serializable) | [![pub package](https://img.shields.io/pub/v/carp_serializable.svg)](https://pub.dartlang.org/packages/carp_serializable) |
 | [carp_core](./carp_core) | The CARP core domain model | [![pub package](https://img.shields.io/pub/v/carp_core.svg)](https://pub.dartlang.org/packages/carp_core) |
 | [carp_mobile_sensing](./carp_mobile_sensing) | The main CARP Mobile Sensing Framework | [![pub package](https://img.shields.io/pub/v/carp_mobile_sensing.svg)](https://pub.dartlang.org/packages/carp_mobile_sensing) |
 | **Packages** | **Data sampling packages** |  |
