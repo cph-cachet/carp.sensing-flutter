@@ -1,3 +1,7 @@
+## 0.40.1
+
+* update to `carp_core` v. 0.40.1
+
 ## 0.40.0
 
 * update to `carp_mobile_sensing` v. 0.40.0
