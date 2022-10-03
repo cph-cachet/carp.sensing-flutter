@@ -53,7 +53,7 @@ class TransformerSchemaRegistry {
 }
 
 /// An abstract class defining a transformer schema, which hold a set of
-/// [DatumTransformer]s, which that can map from the native CARP namespace
+/// [DatumTransformer]s that can map from the native CARP namespace
 /// to another namespace.
 /// A [DatumTransformerSchema] must be implemented for each supported namespace.
 abstract class DatumTransformerSchema {

@@ -24,6 +24,7 @@ class TriggeredTask {
   String? targetDeviceRoleName;
 
   /// The type of the target device.
+  @JsonKey(ignore: true)
   String? targetDeviceType;
 
   /// The time the task have been scheduled until.

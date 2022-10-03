@@ -16,7 +16,7 @@ class BatteryProbe extends StreamProbe {
     late StreamController<Datum> controller;
     late StreamSubscription<BatteryState> subscription;
 
-    void _onData(BatteryState state) async {
+    void onData(BatteryState state) async {
       try {
         int level = await battery.batteryLevel;
         Datum datum = BatteryDatum.fromBatteryState(level, state);
@@ -33,7 +33,7 @@ class BatteryProbe extends StreamProbe {
         onCancel: () => subscription.cancel());
 
     subscription = battery.onBatteryStateChanged.listen(
-      _onData,
+      onData,
       onError: (Object error) => controller.addError(error),
       onDone: () => controller.close(),
     );

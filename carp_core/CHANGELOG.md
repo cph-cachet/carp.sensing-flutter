@@ -1,3 +1,7 @@
+## 0.40.1
+
+* fix of issue [#265](https://github.com/cph-cachet/carp.sensing-flutter/issues/265).
+
 ## 0.40.0
 
 * Serialization has been moved to a separate package - [carp_serializable](https://pub.dev/packages/carp_serializable)
