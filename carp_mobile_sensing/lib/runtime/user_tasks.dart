@@ -101,7 +101,7 @@ abstract class UserTask {
   /// Callback from the app when this task is to be started.
   @mustCallSuper
   void onStart(BuildContext context) {
-    // initialize the background measure(s) as a background task
+    // initialize the background task which holds any measures added to the app task
     executor.initialize(task.backgroundTask, _executor.deployment);
     state = UserTaskState.started;
   }

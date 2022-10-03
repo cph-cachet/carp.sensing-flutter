@@ -80,7 +80,7 @@ class BackgroundTaskExecutor extends TaskExecutor<BackgroundTask> {
 class AppTaskExecutor<TConfig extends AppTask> extends TaskExecutor<TConfig> {
   /// The task executor which can be used to execute this user task once
   /// activated.
-  BackgroundTaskExecutor backgroundTaskExecutor = BackgroundTaskExecutor();
+  TaskExecutor backgroundTaskExecutor = BackgroundTaskExecutor();
 
   AppTaskExecutor() : super() {
     // add the events from the embedded executor to the overall stream of events
@@ -89,7 +89,6 @@ class AppTaskExecutor<TConfig extends AppTask> extends TaskExecutor<TConfig> {
 
   @override
   bool onInitialize() => true;
-  // backgroundTaskExecutor.initialize(configuration!, deployment);
 
   @override
   Future<bool> onResume() async {

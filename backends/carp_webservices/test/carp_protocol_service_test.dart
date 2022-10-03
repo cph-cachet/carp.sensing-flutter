@@ -22,6 +22,9 @@ void main() {
   setUpAll(() async {
     Settings().debugLevel = DebugLevel.DEBUG;
 
+    // Initialization of serialization
+    CarpMobileSensing();
+
     app = new CarpApp(
       // studyId: testStudyId,
       studyDeploymentId: testDeploymentId,
@@ -88,14 +91,7 @@ void main() {
     test(
       '- add custom',
       () async {
-        // StudyProtocol protocol =
-        //     await CANSProtocolService().createCustomProtocol(
-        //   ownerId,
-        //   name,
-        //   'Made from Dart unit test.',
-        //   '{"version":1}',
-        // );
-
+        print(toJsonString(custom!));
         await CANSProtocolService().add(custom, '1.3');
       },
     );

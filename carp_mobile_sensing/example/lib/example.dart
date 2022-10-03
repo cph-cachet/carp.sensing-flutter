@@ -92,6 +92,7 @@ void example_1() async {
       bufferSize: 500 * 1000,
       zip: true,
       encrypt: false,
+      dataFormat: NameSpace.OMH,
     ),
   );
 
@@ -261,7 +262,7 @@ void example_2() async {
       ?.lookupProbe(SensorSamplingPackage.ACCELEROMETER)
       .forEach((probe) => probe.pause());
 
-  // Adapt a measures.
+  // Adapt a measure
   //
   // Note that this will only work if the protocol is created locally on the
   // phone (as in the example above)
@@ -525,7 +526,7 @@ void study_controller_example() async {
   await client.addStudy(study);
   SmartphoneDeploymentController? controller = client.getStudyRuntime(study);
 
-  // configure the controller with the default privacy schema and resume sampling
+  // configure the controller with the default privacy schema and start sampling
   await controller?.configure(
     privacySchemaName: PrivacySchema.DEFAULT,
   );
