@@ -115,6 +115,19 @@ class SmartphoneDeployment extends MasterDeviceDeployment {
     return measures;
   }
 
+  /// Get the [DeviceDescriptor] based on the [roleName].
+  /// This includes both the master device and the connected devices.
+  /// Returns null if no device with [roleName] is found.
+  DeviceDescriptor? getDeviceFromRoleName(String roleName) {
+    if (deviceDescriptor.roleName == roleName) return deviceDescriptor;
+    try {
+      return connectedDevices
+          .firstWhere((device) => device.roleName == roleName);
+    } catch (_) {
+      return null;
+    }
+  }
+
   /// Add a [MeasureListener] to this [Measure].
   void addMeasureListener(SmartphoneDeploymentListener listener) =>
       _listeners.add(listener);

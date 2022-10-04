@@ -23,10 +23,6 @@ class TriggeredTask {
   /// when the trigger condition is met.
   String? targetDeviceRoleName;
 
-  /// The type of the target device.
-  @JsonKey(ignore: true)
-  String? targetDeviceType;
-
   /// The time the task have been scheduled until.
   /// Mainly used when scheduling a series of tasks for this trigger.
   DateTime? hasBeenScheduledUntil;
@@ -43,10 +39,7 @@ class TriggeredTask {
     this.targetDevice,
   ]) : super() {
     if (task != null) taskName = task!.name;
-    if (targetDevice != null) {
-      targetDeviceType = targetDevice!.type;
-      targetDeviceRoleName = targetDevice!.roleName;
-    }
+    if (targetDevice != null) targetDeviceRoleName = targetDevice!.roleName;
   }
 
   factory TriggeredTask.fromJson(Map<String, dynamic> json) =>

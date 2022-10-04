@@ -40,15 +40,19 @@ class StudyDeploymentExecutor extends AggregateExecutor<SmartphoneDeployment> {
         task,
       );
 
-      debug('$runtimeType - created $executor');
-
       executor.initialize(triggeredTask, deployment!);
 
       // let the device manger know about this executor
-      DeviceController()
-          .getDevice(triggeredTask.targetDeviceType!)
-          ?.executors
-          .add(executor);
+      if (triggeredTask.targetDeviceRoleName != null) {
+        DeviceDescriptor? targetDevice = configuration
+            ?.getDeviceFromRoleName(triggeredTask.targetDeviceRoleName!);
+        if (targetDevice != null) {
+          DeviceController()
+              .getDevice(targetDevice.type)
+              ?.executors
+              .add(executor);
+        }
+      }
 
       group.add(executor.data);
       executors.add(executor);
