@@ -137,8 +137,6 @@ abstract class SamplingPackage {
   /// [MasterDeviceDeployment] is deployed on the phone and executed by a
   /// [SmartphoneDeploymentController].
   ///
-  /// Default value is a smartphone. Override this if another type is supported.
-  ///
   /// Note that it is assumed that a sampling package only supports **one**
   /// type of device.
   String get deviceType;
@@ -153,6 +151,7 @@ abstract class SamplingPackage {
 /// An abstract class for all sampling packages that run on the phone itself.
 abstract class SmartphoneSamplingPackage implements SamplingPackage {
   final SmartphoneDeviceManager _deviceManager = SmartphoneDeviceManager();
+
   @override
   String get deviceType => Smartphone.DEVICE_TYPE;
 

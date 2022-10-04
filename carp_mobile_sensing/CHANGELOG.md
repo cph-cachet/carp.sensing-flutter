@@ -1,3 +1,7 @@
+## 0.40.1
+
+* fix of issue [#269](https://github.com/cph-cachet/carp.sensing-flutter/issues/269).
+
 ## 0.40.0 - BREAKING
 
 * One purpose of this release is to make CAMS more stable across app re-restart (since the OSs (Android / iOS) increasingly are killing apps). This has lead to the following changes:
