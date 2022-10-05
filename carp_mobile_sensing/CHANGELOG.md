@@ -1,5 +1,6 @@
-## 0.40.1
+## 0.40.2
 
+* upgrade to `carp_core` v. 0.40.2
 * fix of issue [#269](https://github.com/cph-cachet/carp.sensing-flutter/issues/269).
 
 ## 0.40.0 - BREAKING
