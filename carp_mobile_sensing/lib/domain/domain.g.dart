@@ -812,6 +812,46 @@ Map<String, dynamic> _$RandomRecurrentTriggerToJson(
   return val;
 }
 
+UserTaskTrigger _$UserTaskTriggerFromJson(Map<String, dynamic> json) =>
+    UserTaskTrigger(
+      taskName: json['taskName'] as String,
+      resumeCondition:
+          $enumDecode(_$UserTaskStateEnumMap, json['resumeCondition']),
+      pauseCondition:
+          $enumDecodeNullable(_$UserTaskStateEnumMap, json['pauseCondition']),
+    )
+      ..$type = json[r'$type'] as String?
+      ..sourceDeviceRoleName = json['sourceDeviceRoleName'] as String?;
+
+Map<String, dynamic> _$UserTaskTriggerToJson(UserTaskTrigger instance) {
+  final val = <String, dynamic>{};
+
+  void writeNotNull(String key, dynamic value) {
+    if (value != null) {
+      val[key] = value;
+    }
+  }
+
+  writeNotNull(r'$type', instance.$type);
+  writeNotNull('sourceDeviceRoleName', instance.sourceDeviceRoleName);
+  val['taskName'] = instance.taskName;
+  val['resumeCondition'] = _$UserTaskStateEnumMap[instance.resumeCondition]!;
+  writeNotNull(
+      'pauseCondition', _$UserTaskStateEnumMap[instance.pauseCondition]);
+  return val;
+}
+
+const _$UserTaskStateEnumMap = {
+  UserTaskState.initialized: 'initialized',
+  UserTaskState.enqueued: 'enqueued',
+  UserTaskState.dequeued: 'dequeued',
+  UserTaskState.started: 'started',
+  UserTaskState.canceled: 'canceled',
+  UserTaskState.done: 'done',
+  UserTaskState.expired: 'expired',
+  UserTaskState.undefined: 'undefined',
+};
+
 Datum _$DatumFromJson(Map<String, dynamic> json) => Datum()
   ..id = json['id'] as String?
   ..timestamp = DateTime.parse(json['timestamp'] as String);

@@ -1,3 +1,7 @@
+## 0.40.3
+
+* added the `UserTaskTrigger` trigger.
+
 ## 0.40.2
 
 * upgrade to `carp_core` v. 0.40.2

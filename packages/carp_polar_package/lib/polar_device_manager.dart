@@ -8,6 +8,9 @@ part of carp_polar_package;
 
 /// Enumeration of supported Polar devices.
 enum PolarDeviceType {
+  /// Unknown Polar type
+  UNKNOWN,
+
   /// Polar H9 Heart rate sensor
   H9,
 
@@ -15,7 +18,7 @@ enum PolarDeviceType {
   H10,
 
   /// Polar Verity Sense heart rate sensor
-  PVS,
+  SENSE,
 }
 
 /// A [DeviceDescriptor] for a Polar device used in a [StudyProtocol].
@@ -41,8 +44,7 @@ class PolarDevice extends DeviceDescriptor {
   /// This [identifier] is required for connecting to a Polar device.
   String? identifier;
 
-  /// The MAC address of the sensor.
-  /// Definitely empty on iOS. Probably empty on modern Android versions.
+  /// The Bluetooth address of the sensor.
   String? address;
 
   /// The type of Polar device, if known.
@@ -56,12 +58,11 @@ class PolarDevice extends DeviceDescriptor {
 
   /// Create a new [PolarDevice].
   PolarDevice({
-    String? roleName,
+    super.roleName = PolarDevice.DEFAULT_ROLENAME,
     this.polarDeviceType,
     this.identifier,
     this.name,
   }) : super(
-          roleName: roleName ?? DEFAULT_ROLENAME,
           isMasterDevice: false,
           supportedDataTypes: [
             PolarSamplingPackage.POLAR_ACCELEROMETER,
@@ -83,7 +84,8 @@ class PolarDevice extends DeviceDescriptor {
 }
 
 /// A Polar [DeviceManager].
-class PolarDeviceManager extends BTLEDeviceManager {
+class PolarDeviceManager
+    extends BTLEDeviceManager<DeviceRegistration, PolarDevice> {
   int? _batteryLevel;
   bool _polarFeaturesAvailable = false;
   StreamSubscription<PolarBatteryLevelEvent>? _batterySubscription;
@@ -91,18 +93,46 @@ class PolarDeviceManager extends BTLEDeviceManager {
   StreamSubscription<PolarDeviceInfo>? _connectedSubscription;
   StreamSubscription<PolarDeviceInfo>? _disconnectedSubscription;
 
-  @override
-  PolarDevice get deviceDescriptor => super.deviceDescriptor as PolarDevice;
-
   /// The [Polar] device handler.
   final Polar polar = Polar();
 
-  /// List of [DeviceStreamingFeature]s that are ready. Only available **after**
-  /// a Polar device is successfully connected.
+  /// List of [DeviceStreamingFeature]s that are ready.
+  /// Only available **after** a Polar device is successfully connected.
   List<DeviceStreamingFeature> features = [];
 
   @override
-  String get id => deviceDescriptor.identifier ?? PolarDevice.DEVICE_TYPE;
+  String get id => deviceDescriptor?.identifier ?? '?????';
+
+  @override
+  String get btleName => deviceDescriptor?.name ?? '';
+
+  @override
+  set btleName(String btleName) {
+    deviceDescriptor?.name = btleName;
+
+    // the polar BTLE name is typically of the form
+    //  *  Polar Sense B34B4B56
+    //  *  Polar H10 B36KB56
+    // I.e., on the form "Polar <type> <identifier>
+    if (btleName.split(' ').first.toUpperCase() == 'POLAR') {
+      deviceDescriptor?.identifier = btleName.split(' ').last;
+
+      switch (btleName.split(' ').elementAt(1).toUpperCase()) {
+        case 'H9':
+          deviceDescriptor?.polarDeviceType = PolarDeviceType.H9;
+          break;
+        case 'H10':
+          deviceDescriptor?.polarDeviceType = PolarDeviceType.H10;
+          break;
+        case 'SENSE':
+          deviceDescriptor?.polarDeviceType = PolarDeviceType.SENSE;
+          break;
+        default:
+          deviceDescriptor?.polarDeviceType = PolarDeviceType.UNKNOWN;
+          break;
+      }
+    }
+  }
 
   /// Are the [features] available (i.e., received from the device)?
   bool get polarFeaturesAvailable => _polarFeaturesAvailable;
@@ -119,14 +149,18 @@ class PolarDeviceManager extends BTLEDeviceManager {
   int? get batteryLevel => _batteryLevel;
 
   @override
-  String? get btleAddress => deviceDescriptor.address;
+  String get btleAddress => deviceDescriptor?.address ?? '';
 
   @override
-  Future<bool> canConnect() async => deviceDescriptor.identifier != null;
+  set btleAddress(String btleAddress) =>
+      deviceDescriptor?.address = btleAddress;
+
+  @override
+  Future<bool> canConnect() async => deviceDescriptor?.identifier != null;
 
   @override
   Future<DeviceStatus> onConnect() async {
-    if (deviceDescriptor.identifier == null) {
+    if (deviceDescriptor?.identifier == null) {
       warning('$runtimeType - cannot connect to device, identifier is null.');
       return DeviceStatus.error;
     } else {
@@ -149,18 +183,18 @@ class PolarDeviceManager extends BTLEDeviceManager {
         _connectingSubscription = polar.deviceConnectingStream.listen((event) {
           debug('$runtimeType - Polar event : $event');
           status = DeviceStatus.connecting;
-          deviceDescriptor.address = event.address;
-          deviceDescriptor.name = event.name;
-          deviceDescriptor.rssi = event.rssi;
+          deviceDescriptor?.address = event.address;
+          deviceDescriptor?.name = event.name;
+          deviceDescriptor?.rssi = event.rssi;
         });
 
         _connectedSubscription = polar.deviceConnectedStream.listen((event) {
           debug('$runtimeType - Polar event : $event');
           // we do not mark the device as fully connected before the features are available
           status = DeviceStatus.connecting;
-          deviceDescriptor.address = event.address;
-          deviceDescriptor.name = event.name;
-          deviceDescriptor.rssi = event.rssi;
+          deviceDescriptor?.address = event.address;
+          deviceDescriptor?.name = event.name;
+          deviceDescriptor?.rssi = event.rssi;
         });
 
         _disconnectedSubscription =
@@ -168,9 +202,9 @@ class PolarDeviceManager extends BTLEDeviceManager {
           debug('$runtimeType - Polar event : $event');
           status = DeviceStatus.disconnected;
           _batteryLevel = null;
-          deviceDescriptor.address = event.address;
-          deviceDescriptor.name = event.name;
-          deviceDescriptor.rssi = event.rssi;
+          deviceDescriptor?.address = event.address;
+          deviceDescriptor?.name = event.name;
+          deviceDescriptor?.rssi = event.rssi;
         });
 
         polar.connectToDevice(id);
@@ -186,13 +220,13 @@ class PolarDeviceManager extends BTLEDeviceManager {
 
   @override
   Future<bool> onDisconnect() async {
-    if (deviceDescriptor.identifier == null) {
+    if (deviceDescriptor?.identifier == null) {
       warning(
           '$runtimeType - cannot disconnect from device, identifier is null.');
       return false;
     }
 
-    polar.disconnectFromDevice(deviceDescriptor.identifier!);
+    polar.disconnectFromDevice(deviceDescriptor!.identifier!);
 
     _batterySubscription?.cancel();
     _connectingSubscription?.cancel();

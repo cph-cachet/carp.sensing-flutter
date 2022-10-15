@@ -1,3 +1,5 @@
+// ignore_for_file: unnecessary_getters_setters
+
 /*
  * Copyright 2021-2022 Copenhagen Center for Health Technology (CACHET) at the
  * Technical University of Denmark (DTU).
@@ -74,7 +76,15 @@ abstract class DeviceManager<TDeviceRegistration extends DeviceRegistration,
 
     info(
         '$runtimeType - Trying to connect to device of type: $type and id: $id');
-    return status = await onConnect();
+
+    try {
+      status = await onConnect();
+    } catch (error) {
+      warning(
+          '$runtimeType - cannot connect to device, descriptor: $deviceDescriptor - error: $error');
+    }
+
+    return status;
   }
 
   /// Callback on [connect]. Returns the [DeviceStatus] of the device.
@@ -88,6 +98,8 @@ abstract class DeviceManager<TDeviceRegistration extends DeviceRegistration,
   /// type is restarted. This method is useful after the device is connected.
   @nonVirtual
   void restart() {
+    info('$runtimeType - restarting sampling...');
+
     for (var executor in executors) {
       executor.restart();
       if (executor.state == ExecutorState.resumed) {
@@ -189,9 +201,17 @@ class SmartphoneDeviceManager
 abstract class BTLEDeviceManager<TDeviceRegistration extends DeviceRegistration,
         TDeviceDescriptor extends DeviceDescriptor>
     extends HardwareDeviceManager<TDeviceRegistration, TDeviceDescriptor> {
-  /// The Bluetooth address of this BTLE device in the form `00:04:79:00:0F:4D`.
-  /// Returns null if unknown.
-  String? get btleAddress;
+  String _btleAddress = '', _btleName = '';
+
+  /// The Bluetooth address of this device in the form `00:04:79:00:0F:4D`.
+  /// Returns empty string if unknown.
+  String get btleAddress => _btleAddress;
+  set btleAddress(String btleAddress) => _btleAddress = btleAddress;
+
+  /// The Bluetooth name of this device.
+  /// Returns empty string if unknown.
+  String get btleName => _btleName;
+  set btleName(String btleName) => _btleName = btleName;
 
   @override
   @mustCallSuper

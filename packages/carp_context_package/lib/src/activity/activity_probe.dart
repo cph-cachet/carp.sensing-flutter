@@ -24,7 +24,12 @@ class ActivityProbe extends StreamProbe {
     if (!status.isGranted) {
       warning(
           '$runtimeType - permission not granted to use to activity recognition: $status - trying to request it');
-      await Permission.activityRecognition.request();
+      try {
+        await Permission.activityRecognition.request();
+      } catch (error) {
+        warning(
+            '$runtimeType - error trying to request access to activity recognition, error: $error');
+      }
     }
 
     return super.onResume();

@@ -249,7 +249,7 @@ Map<String, dynamic> _$PolarHRDatumToJson(PolarHRDatum instance) {
 }
 
 PolarDevice _$PolarDeviceFromJson(Map<String, dynamic> json) => PolarDevice(
-      roleName: json['roleName'] as String?,
+      roleName: json['roleName'] as String? ?? PolarDevice.DEFAULT_ROLENAME,
       polarDeviceType: $enumDecodeNullable(
           _$PolarDeviceTypeEnumMap, json['polarDeviceType']),
       identifier: json['identifier'] as String?,
@@ -297,7 +297,8 @@ Map<String, dynamic> _$PolarDeviceToJson(PolarDevice instance) {
 }
 
 const _$PolarDeviceTypeEnumMap = {
+  PolarDeviceType.UNKNOWN: 'UNKNOWN',
   PolarDeviceType.H9: 'H9',
   PolarDeviceType.H10: 'H10',
-  PolarDeviceType.PVS: 'PVS',
+  PolarDeviceType.SENSE: 'SENSE',
 };

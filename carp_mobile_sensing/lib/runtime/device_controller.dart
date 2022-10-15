@@ -93,7 +93,9 @@ class DeviceController implements DeviceDataCollectorFactory {
       _devices[descriptor.type]?.initialize(descriptor);
     } else {
       warning(
-          "A device of type '${descriptor.type}' is not available on this device.");
+          "A device of type '${descriptor.type}' is not available on this device. "
+          "This may be because this device is not available on this operating system. "
+          "Or it may be because the sampling package containing this device has not been registered in the SamplingPackageRegistry.");
     }
   }
 

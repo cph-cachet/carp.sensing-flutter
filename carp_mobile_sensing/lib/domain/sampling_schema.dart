@@ -41,7 +41,7 @@ class SamplingSchema {
 
     // since we're using json serialization below, make sure that the json
     // functions have been registred
-    _registerFromJsonFunctions();
+    CarpMobileSensing();
 
     for (var type in types) {
       if (configurations.containsKey(type)) {

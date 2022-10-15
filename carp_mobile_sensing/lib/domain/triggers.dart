@@ -676,3 +676,33 @@ class RandomRecurrentTrigger extends Trigger implements Scheduleable {
   @override
   Map<String, dynamic> toJson() => _$RandomRecurrentTriggerToJson(this);
 }
+
+/// A trigger that triggers based on the state of a [UserTask].
+@JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
+class UserTaskTrigger extends Trigger {
+  /// The name of the task to look for, matching [TaskDescriptor.name].
+  String taskName;
+
+  /// The state of the user task for resuming this trigger
+  UserTaskState resumeCondition;
+
+  /// The state of the user task for pausing this trigger.
+  ///
+  /// If not specified (null), the the trigger is automatically paused after resume.
+  /// This is useful for resuming another AppTask.
+  UserTaskState? pauseCondition;
+
+  /// Create a [UserTaskTrigger].
+  UserTaskTrigger({
+    required this.taskName,
+    required this.resumeCondition,
+    this.pauseCondition,
+  }) : super();
+
+  @override
+  Function get fromJsonFunction => _$UserTaskTriggerFromJson;
+  factory UserTaskTrigger.fromJson(Map<String, dynamic> json) =>
+      FromJsonFactory().fromJson(json) as UserTaskTrigger;
+  @override
+  Map<String, dynamic> toJson() => _$UserTaskTriggerToJson(this);
+}

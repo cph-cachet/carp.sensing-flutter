@@ -6,12 +6,12 @@
  */
 
 // Identifiers for CACHET test devices:
-//  * PVS : B36B5B21 [03813-21-03667]
-//  * H10 : B5FC172F [00634-17-03667]
+//  * SENSE : B36B5B21 [03813-21-03667]
+//  * H10   : B5FC172F [00634-17-03667]
 
 /// A [CARP Mobile Sensing](https://pub.dev/packages/carp_mobile_sensing)
 /// sampling package for collecting data from the Polar H10, H9, and Polar Verity
-/// Sense (PVS) optical heart rate sensors as follows.
+/// Sense optical heart rate sensors as follows.
 ///
 /// **H10 Heart rate sensor**
 ///
@@ -20,7 +20,7 @@
 ///  * Accelerometer data with sample rates of 25Hz, 50Hz, 100Hz and 200Hz and range of 2G, 4G and 8G. Axis specific acceleration data in mG. Default epoch for timestamp is 1.1.2000
 ///  * Start and stop of internal recording and request for internal recording status. Recording supports RR, HR with one second sampletime or HR with five second sampletime.
 ///
-/// **Polar Verity Sense (PVS) optical heart rate sensor**
+/// **Polar Verity Sense optical heart rate sensor**
 ///
 ///  * Heart rate as beats per minute.
 ///  * Photoplethysmograpy (PPG) values.
