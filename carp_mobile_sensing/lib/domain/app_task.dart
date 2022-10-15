@@ -41,8 +41,14 @@ class AppTask extends TaskDescriptor {
   BackgroundTask get backgroundTask =>
       BackgroundTask(name: name, measures: measures);
 
+  /// Create an app task that notifies the app when it is triggered.
+  ///
+  /// [name] is a unique name of the taks.
+  /// [measures] is the list of measures to be collected in the background when
+  /// this app task is resumed.
   AppTask({
     super.name,
+    super.measures,
     required this.type,
     this.title = '',
     this.description = '',

@@ -24,6 +24,7 @@ class Trigger extends Serializable {
   @JsonKey(ignore: true)
   bool? requiresMasterDevice;
 
+  /// Create a trigger.
   @mustCallSuper
   Trigger({
     this.sourceDeviceRoleName,
@@ -54,6 +55,8 @@ abstract class Scheduleable {}
 class ElapsedTimeTrigger extends Trigger implements Scheduleable {
   Duration elapsedTime;
 
+  /// Create a trigger that starts after [elapsedTime] has elabsed since the start
+  /// of the study deployment.
   ElapsedTimeTrigger({
     super.sourceDeviceRoleName,
     super.requiresMasterDevice = true,
@@ -111,6 +114,8 @@ class ScheduledTrigger extends Trigger implements Scheduleable {
   /// [iCalendar RFC 5545 standard](https://tools.ietf.org/html/rfc5545#section-3.3.10).
   RecurrenceRule recurrenceRule;
 
+  /// Create a trigger that is scheduled at [time] and repeats according to the
+  /// [recurrenceRule].
   ScheduledTrigger({
     super.sourceDeviceRoleName,
     super.requiresMasterDevice = false,

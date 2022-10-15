@@ -401,6 +401,9 @@ Map<String, dynamic> _$SmartphoneDeploymentToJson(
 
 AppTask _$AppTaskFromJson(Map<String, dynamic> json) => AppTask(
       name: json['name'] as String?,
+      measures: (json['measures'] as List<dynamic>?)
+          ?.map((e) => Measure.fromJson(e as Map<String, dynamic>))
+          .toList(),
       type: json['type'] as String,
       title: json['title'] as String? ?? '',
       description: json['description'] as String? ?? '',
@@ -410,11 +413,7 @@ AppTask _$AppTaskFromJson(Map<String, dynamic> json) => AppTask(
           ? null
           : Duration(microseconds: json['expire'] as int),
       notification: json['notification'] as bool? ?? false,
-    )
-      ..$type = json[r'$type'] as String?
-      ..measures = (json['measures'] as List<dynamic>)
-          .map((e) => Measure.fromJson(e as Map<String, dynamic>))
-          .toList();
+    )..$type = json[r'$type'] as String?;
 
 Map<String, dynamic> _$AppTaskToJson(AppTask instance) {
   final val = <String, dynamic>{};

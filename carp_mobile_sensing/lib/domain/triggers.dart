@@ -9,6 +9,7 @@ part of domain;
 /// A trigger that starts sampling immediately and never stops.
 @JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
 class ImmediateTrigger extends Trigger {
+  /// Create a trigger that starts sampling immediately and never stops.
   ImmediateTrigger() : super();
 
   @override
@@ -33,6 +34,7 @@ class OneTimeTrigger extends Trigger {
   /// Has this trigger been triggered?
   bool get hasBeenTriggered => triggerTimestamp != null;
 
+  /// Create a trigger that triggers once during a deployment.
   OneTimeTrigger() : super();
 
   @override
@@ -49,6 +51,8 @@ class OneTimeTrigger extends Trigger {
 /// Note that sampling continues until it is explicitly paused.
 @JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
 class PassiveTrigger extends Trigger {
+  /// Create a trigger that waits to be started until the [resume] method is
+  /// called.
   PassiveTrigger() : super();
 
   @JsonKey(ignore: true)
@@ -85,6 +89,7 @@ class DelayedTrigger extends Trigger {
   /// Delay before this trigger is executed.
   Duration delay;
 
+  /// Create a trigger that delays sampling for [delay] and then starts sampling.
   DelayedTrigger({required this.delay}) : super();
 
   @override
@@ -104,6 +109,7 @@ class IntervalTrigger extends Trigger implements Scheduleable {
   /// The period (reciprocal of frequency) of sampling.
   Duration period;
 
+  /// Create a trigger that resume sampling every [period] and then pauses.
   IntervalTrigger({required this.period}) : super();
 
   @override
@@ -123,6 +129,8 @@ class PeriodicTrigger extends IntervalTrigger {
   /// The duration (until paused) of the the sampling.
   Duration duration;
 
+  /// Create a trigger that resumes sampling every [period] for a
+  /// specific [duration].
   PeriodicTrigger({
     required super.period,
     required this.duration,
@@ -147,6 +155,7 @@ class DateTimeTrigger extends Trigger implements Scheduleable {
   /// If `null`, the sampling is never stopped (i.e., runs forever).
   Duration? duration;
 
+  /// Create a trigger that starts sampling based on a [schedule].
   DateTimeTrigger({
     required this.schedule,
     this.duration,
@@ -245,7 +254,8 @@ class RecurrentScheduledTrigger extends PeriodicTrigger {
   /// say the 25th. Possible numbers are 1..31 counting from the start of a month.
   int? dayOfMonth;
 
-  /// Creates a [RecurrentScheduledTrigger].
+  /// Create a trigger that resume sampling based on a recurrent scheduled date
+  /// and time.
   RecurrentScheduledTrigger({
     required this.type,
     required this.time,
@@ -490,6 +500,9 @@ class SamplingEventTrigger extends Trigger {
   /// forever (unless paused manually).
   ConditionalEvent? pauseCondition;
 
+  /// Create a trigger that triggers when a measure of [measureType] is collected,
+  /// and checks the [resumeCondition] and [pauseCondition] to determine if the
+  /// task should be resumed or paused, respectively.
   SamplingEventTrigger({
     required this.measureType,
     this.resumeCondition,
@@ -513,6 +526,8 @@ class SamplingEventTrigger extends Trigger {
 @JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
 class ConditionalEvent extends Serializable {
   Map<String, dynamic> condition;
+
+  /// Create a conditional event.
   ConditionalEvent(this.condition) : super();
 
   dynamic operator [](String index) => condition[index];
@@ -561,7 +576,9 @@ class ConditionalSamplingEventTrigger extends Trigger {
   @JsonKey(ignore: true)
   ConditionalEventEvaluator? pauseCondition;
 
-  /// Create a [ConditionalSamplingEventTrigger].
+  /// Create a trigger that triggers when a measure of [measureType] is collected,
+  /// and checks the [resumeCondition] and [pauseCondition] to determine if the
+  /// task should be resumed or paused, respectively.
   ConditionalSamplingEventTrigger({
     required this.measureType,
     this.resumeCondition,

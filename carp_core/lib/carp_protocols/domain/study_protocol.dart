@@ -61,7 +61,7 @@ class StudyProtocol {
 
   List<Map<String, dynamic>>? expectedParticipantData = [];
 
-  /// Create a new [StudyProtocol].
+  /// Create a new protocol. [ownerId] and [name] must be specified.
   StudyProtocol({
     required this.ownerId,
     required this.name,

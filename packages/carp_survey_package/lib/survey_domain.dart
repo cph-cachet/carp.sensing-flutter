@@ -23,8 +23,9 @@ class RPAppTask extends AppTask {
   RPTask rpTask;
 
   RPAppTask({
-    required super.type,
     super.name,
+    super.measures,
+    required super.type,
     super.title,
     super.description,
     super.instructions,
