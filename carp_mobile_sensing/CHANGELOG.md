@@ -1,6 +1,7 @@
 ## 0.40.3
 
-* added the `UserTaskTrigger` trigger.
+* Added the `UserTaskTrigger` trigger.
+* Added the `magnetometer` measure type.
 
 ## 0.40.2
 

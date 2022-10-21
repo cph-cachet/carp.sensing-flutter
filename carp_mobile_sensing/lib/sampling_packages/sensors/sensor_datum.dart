@@ -6,7 +6,11 @@
  */
 part of sensors;
 
-/// A [Datum] that holds acceleration data collected from the native accelerometer on the phone.
+/// A [Datum] that holds acceleration data collected from the native accelerometer
+/// on the phone.
+/// Accelerometers measure the velocity of the device. Note that these readings
+/// include the effects of gravity. Put simply, you can use accelerometer
+/// readings to tell if the device is moving in a particular direction.
 @JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)
 class AccelerometerDatum extends Datum {
   @override
@@ -40,7 +44,9 @@ class AccelerometerDatum extends Datum {
   String toString() => '${super.toString()}, x: $x, y: $y, z: $z';
 }
 
-/// A [Datum] that holds rotation data collected from the native gyroscope on the phone.
+/// A [Datum] that holds rotation data collected from the native gyroscope on
+/// the phone.
+/// Gyroscopes measure the rate or rotation of the device in 3D space.
 @JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)
 class GyroscopeDatum extends Datum {
   @override
@@ -69,6 +75,50 @@ class GyroscopeDatum extends Datum {
       _$GyroscopeDatumFromJson(json);
   @override
   Map<String, dynamic> toJson() => _$GyroscopeDatumToJson(this);
+
+  @override
+  String toString() => '${super.toString()}, x: $x, y: $y, z: $z';
+}
+
+/// A [Datum] that holds magnetometer data collected from the native magnetometer
+/// on the phone.
+///
+/// Magnetometers measure the ambient magnetic field surrounding the sensor,
+/// returning values in microteslas μT for each three-dimensional axis.
+///
+/// Consider that these samples may bear effects of Earth's magnetic field as
+/// well as local factors such as the metal of the device itself or nearby magnets,
+/// though most devices compensate for these factors.
+///
+/// A compass is an example of a general utility for magnetometer data.
+@JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)
+class MagnetometerDatum extends Datum {
+  @override
+  DataFormat get format =>
+      DataFormat.fromString(SensorSamplingPackage.GYROSCOPE);
+
+  /// The ambient magnetic field in the x axis surrounding the sensor in microteslas μT.
+  double? x;
+
+  /// The ambient magnetic field in the y axis surrounding the sensor in microteslas μT.
+  double? y;
+
+  /// The ambient magnetic field in the z axis surrounding the sensor in microteslas μT.
+  double? z;
+
+  MagnetometerDatum({super.multiDatum = false, this.x, this.y, this.z});
+
+  factory MagnetometerDatum.fromMagnetometerEvent(MagnetometerEvent event,
+          {bool multiDatum = false}) =>
+      MagnetometerDatum(multiDatum: multiDatum)
+        ..x = event.x
+        ..y = event.y
+        ..z = event.z;
+
+  factory MagnetometerDatum.fromJson(Map<String, dynamic> json) =>
+      _$MagnetometerDatumFromJson(json);
+  @override
+  Map<String, dynamic> toJson() => _$MagnetometerDatumToJson(this);
 
   @override
   String toString() => '${super.toString()}, x: $x, y: $y, z: $z';

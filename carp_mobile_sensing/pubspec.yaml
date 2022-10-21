@@ -23,18 +23,18 @@ dependencies:
   archive: ^3.1.2
   permission_handler: ^10.0.0  
   shared_preferences: ^2.0.0
-  package_info_plus: ^1.0.0
-  flutter_local_notifications: ^11.0.0 # For sending notification on AppTask
-  awesome_notifications: ^0.6.21       # For sending notification on AppTask
+  package_info_plus: ^3.0.0
+  flutter_local_notifications: ^12.0.0 # For sending notification on AppTask
+  awesome_notifications: ^0.7.0       # For sending notification on AppTask
   cron: ^0.5.0                         # For scheduling / triggering cron jobs
   timezone: ^0.9.0
   stats: ^2.0.0                        # For calculating statistics, ex LightProbe
   flutter_native_timezone: ^2.0.0      # For getting local time zone for scheduling notifications
 
   # probe-dependent plugins
-  device_info_plus: ^4.0.0
-  sensors_plus: ^1.2.1
-  battery_plus: ^2.0.0
+  device_info_plus: ^7.0.0
+  sensors_plus: ^2.0.0
+  battery_plus: ^3.0.0
 
   # the CACHET plugins
   pedometer: ^3.0.0       # Step count from local OS
@@ -50,8 +50,8 @@ dependency_overrides:
     path: ../carp_core/
 
 dev_dependencies:
-  build_runner: ^2.0.4    # For building json serialization
-  json_serializable: ^6.0.0
+  build_runner: any
+  json_serializable: any
   test: any
   flutter_lints: any
 
