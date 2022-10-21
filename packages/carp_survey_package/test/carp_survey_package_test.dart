@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
+import 'package:research_package/research_package.dart';
 import 'package:test/test.dart';
 
 import 'package:carp_serializable/carp_serializable.dart';
@@ -14,6 +15,7 @@ void main() {
   setUp(() {
     // Initialization of serialization
     CarpMobileSensing();
+    ResearchPackage();
 
     // register the survey sampling package
     SamplingPackageRegistry().register(SurveySamplingPackage());
