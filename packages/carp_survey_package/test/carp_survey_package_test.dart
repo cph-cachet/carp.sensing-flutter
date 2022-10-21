@@ -47,7 +47,7 @@ void main() {
     protocol.addTriggeredTask(
         DelayedTrigger(delay: Duration(seconds: 30)),
         RPAppTask(
-            type: SurveyUserTask.WHO5_SURVEY_TYPE,
+            type: SurveyUserTask.SURVEY_TYPE,
             name: 'WHO-5 Survey',
             rpTask: who5Task)
           ..measures.add(Measure(type: DeviceSamplingPackage.DEVICE))
@@ -80,8 +80,7 @@ void main() {
 
     expect(protocol.ownerId, 'alex@uni.dk');
     expect(protocol.masterDevices.first.roleName, Smartphone.DEFAULT_ROLENAME);
-    expect((protocol.tasks.last as RPAppTask).type,
-        SurveyUserTask.WHO5_SURVEY_TYPE);
+    expect((protocol.tasks.last as RPAppTask).type, SurveyUserTask.SURVEY_TYPE);
     print(toJsonString(protocol));
   });
 }
