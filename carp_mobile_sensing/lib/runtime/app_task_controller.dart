@@ -28,7 +28,8 @@ class AppTaskController {
       .where((task) => task.triggerTime.isBefore(DateTime.now()))
       .toList();
 
-  /// A stream of [UserTask]s as they are generated.
+  /// A stream of [UserTask] events generate whenever a user task change state,
+  /// like enqueued, dequeued, done, and expire.
   ///
   /// This stream is usefull in a [StreamBuilder] to listen on
   /// changes to the [userTaskQueue].
@@ -179,7 +180,6 @@ class AppTaskController {
     if (userTask == null) {
       warning("Could not find AppTask - id is not valid: '$id'");
     } else {
-      // only expire tasks which are not already done
       userTask.state = UserTaskState.done;
       _controller.add(userTask);
       info('Marked $userTask as done');
