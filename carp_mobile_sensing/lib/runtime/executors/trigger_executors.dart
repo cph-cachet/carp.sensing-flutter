@@ -605,8 +605,7 @@ class RandomRecurrentTriggerExecutor
     }
     // cancel the daily cron job
     await _scheduledTask.cancel();
-    await super.onPause();
-    return true;
+    return await super.onPause();
   }
 }
 
@@ -627,13 +626,13 @@ class UserTaskTriggerExecutor extends TriggerExecutor<UserTaskTrigger> {
             userTask.state == configuration!.pauseCondition!) super.onPause();
       }
     });
+    // print('>> listening to user task events - $_subscription');
     return true;
   }
 
   @override
   Future<bool> onPause() async {
     await _subscription?.cancel();
-    await super.onPause();
-    return true;
+    return await super.onPause();
   }
 }

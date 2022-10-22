@@ -120,7 +120,7 @@ class AppTaskController {
     AppTaskExecutor executor, {
     DateTime? triggerTime,
     bool sendNotification = true,
-    bool userTaskEvent = true,
+    // bool userTaskEvent = true,
   }) async {
     if (_userTaskFactories[executor.task.type] == null) {
       warning(
@@ -134,7 +134,8 @@ class AppTaskController {
       userTask.enqueued = DateTime.now();
       userTask.triggerTime = triggerTime ?? DateTime.now();
       _userTaskMap[userTask.id] = userTask;
-      if (userTaskEvent) _controller.add(userTask);
+      // if (userTaskEvent)
+      _controller.add(userTask);
       debug('$runtimeType - Enqueued $userTask');
 
       if (notificationsEnabled && sendNotification) {
@@ -272,17 +273,35 @@ class AppTaskController {
 
         executor.initialize(snapshot.task, deployment);
 
-        // enqueue the task (again), but avoid notifications and app events
-        UserTask? userTask = await enqueue(
-          executor,
-          triggerTime: snapshot.triggerTime,
-          sendNotification: false,
-          userTaskEvent: false,
-        );
-        if (userTask != null) {
+        // // enqueue the task (again), but avoid notifications and app events
+        // UserTask? userTask = await enqueue(
+        //   executor,
+        //   triggerTime: snapshot.triggerTime,
+        //   sendNotification: false,
+        //   userTaskEvent: false,
+        // );
+        // if (userTask != null) {
+        //   userTask.id = snapshot.id;
+        //   userTask.enqueued = snapshot.enqueued;
+        //   userTask.state = snapshot.state;
+        // }
+
+        // now put the task on the queue
+        if (_userTaskFactories[executor.task.type] == null) {
+          warning(
+              'Could not enqueue AppTask. Could not find a factory for creating '
+              "a UserTask for type '${executor.task.type}'");
+        } else {
+          UserTask userTask =
+              _userTaskFactories[executor.task.type]!.create(executor);
           userTask.id = snapshot.id;
-          userTask.enqueued = snapshot.enqueued;
           userTask.state = snapshot.state;
+          userTask.enqueued = snapshot.enqueued;
+          userTask.triggerTime = snapshot.triggerTime;
+
+          _userTaskMap[userTask.id] = userTask;
+          debug(
+              '$runtimeType - Enqueued UserTask from loaded task queue: $userTask');
         }
       }
     } catch (exception) {
