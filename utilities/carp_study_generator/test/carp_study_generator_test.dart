@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'dart:convert';
+import 'package:cognition_package/cognition_package.dart';
 import 'package:test/test.dart';
 import 'package:carp_core/carp_core.dart';
 import 'package:carp_mobile_sensing/carp_mobile_sensing.dart';
@@ -17,6 +18,7 @@ void main() {
     // Initialization of serialization
     CarpMobileSensing();
     ResearchPackage();
+    CognitionPackage();
 
     // register the sampling packages
     // this is used to be able to deserialize the json protocol
