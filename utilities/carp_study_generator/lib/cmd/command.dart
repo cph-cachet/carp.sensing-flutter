@@ -39,6 +39,7 @@ abstract class AbstractCommand implements Command {
     CarpMobileSensing();
     CarpDataManager();
     ResearchPackage();
+    CognitionPackage();
 
     // make sure not to mess with CAMS
     Settings().saveAppTaskQueue = false;
