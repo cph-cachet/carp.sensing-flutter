@@ -33,6 +33,8 @@ abstract class AbstractCommand implements Command {
 
   @mustCallSuper
   AbstractCommand() {
+    WidgetsFlutterBinding.ensureInitialized();
+
     // Settings().debugLevel = DebugLevel.DEBUG;
 
     // Initialization of serialization
