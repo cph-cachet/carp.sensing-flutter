@@ -35,13 +35,13 @@ abstract class AbstractCommand implements Command {
   AbstractCommand() {
     // Settings().debugLevel = DebugLevel.DEBUG;
 
-    // make sure not to mess with CAMS
-    Settings().saveAppTaskQueue = false;
-
     // Initialization of serialization
     CarpMobileSensing();
     CarpDataManager();
     ResearchPackage();
+
+    // make sure not to mess with CAMS
+    Settings().saveAppTaskQueue = false;
 
     if (_yaml == null) {
       _yaml = loadYaml(File('carp/carpspec.yaml').readAsStringSync());
