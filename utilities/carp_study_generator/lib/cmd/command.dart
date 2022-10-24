@@ -41,7 +41,7 @@ abstract class AbstractCommand implements Command {
     // Initialization of serialization
     CarpMobileSensing();
     CarpDataManager();
-    RPTask(identifier: 'ignored');
+    ResearchPackage();
 
     if (_yaml == null) {
       _yaml = loadYaml(File('carp/carpspec.yaml').readAsStringSync());

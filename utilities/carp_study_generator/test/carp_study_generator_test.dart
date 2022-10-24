@@ -16,9 +16,7 @@ void main() {
   setUp(() {
     // Initialization of serialization
     CarpMobileSensing();
-
-    // create two dummy RPTask to register json deserialization functions for RP
-    RPTask(identifier: 'ignored');
+    ResearchPackage();
 
     // register the sampling packages
     // this is used to be able to deserialize the json protocol
