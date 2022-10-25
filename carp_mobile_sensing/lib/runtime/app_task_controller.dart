@@ -252,7 +252,6 @@ class AppTaskController {
 
       // now create new AppTaskExecutors, initialize them, and add them to the queue
       for (var snapshot in queue.snapshots) {
-        debug('$runtimeType - Restoring snapshot: $snapshot');
         AppTaskExecutor executor = AppTaskExecutor();
 
         // find the deployment
@@ -272,19 +271,6 @@ class AppTaskController {
         }
 
         executor.initialize(snapshot.task, deployment);
-
-        // // enqueue the task (again), but avoid notifications and app events
-        // UserTask? userTask = await enqueue(
-        //   executor,
-        //   triggerTime: snapshot.triggerTime,
-        //   sendNotification: false,
-        //   userTaskEvent: false,
-        // );
-        // if (userTask != null) {
-        //   userTask.id = snapshot.id;
-        //   userTask.enqueued = snapshot.enqueued;
-        //   userTask.state = snapshot.state;
-        // }
 
         // now put the task on the queue
         if (_userTaskFactories[executor.task.type] == null) {
