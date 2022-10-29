@@ -60,10 +60,11 @@ flutter:
 
 
 # Useful pubspec commands:
-#
-# dart pub outdated --no-dev-dependencies --up-to-date --no-dependency-overrides
-# flutter pub cache repair
-# ./gradlew clean
+#   flutter pub upgrade 
+#   flutter pub outdated 
+#   flutter pub outdated --no-dev-dependencies --up-to-date --no-dependency-overrides
+#   flutter pub cache repair
+#   ./gradlew clean
 # 
 # Auto generate json code (.g files) with:
 #   flutter pub run build_runner build --delete-conflicting-outputs
