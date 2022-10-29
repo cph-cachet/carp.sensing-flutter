@@ -16,7 +16,7 @@ class CarpStudyProtocolManager implements StudyProtocolManager {
   Future initialize() async {
     // Initialization of serialization
     CarpMobileSensing();
-    RPTask(identifier: '');
+    ResearchPackage();
   }
 
   /// Get a [SmartphoneStudyProtocol] from the CARP backend.

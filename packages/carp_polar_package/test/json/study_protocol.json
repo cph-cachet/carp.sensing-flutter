@@ -1,65 +1,46 @@
 {
-    "ownerId": "user@dtu.dk",
-    "name": "patient_tracking",
-    "creationDate": "2022-10-12T19:39:05.490884Z",
+    "ownerId": "alex@uni.dk",
+    "name": "Context package test",
+    "description": "",
+    "creationDate": "2022-10-29T10:26:33.097524Z",
     "masterDevices": [
         {
             "$type": "dk.cachet.carp.protocols.domain.devices.Smartphone",
             "isMasterDevice": true,
-            "roleName": "masterphone",
+            "roleName": "SM-A320FL",
             "samplingConfiguration": {}
         }
     ],
     "connectedDevices": [
         {
-            "$type": "dk.cachet.carp.protocols.domain.devices.DeviceDescriptor",
+            "$type": "dk.cachet.carp.protocols.domain.devices.PolarDevice",
             "isMasterDevice": false,
-            "roleName": "esense",
-            "samplingConfiguration": {}
+            "roleName": "eSense earplug",
+            "supportedDataTypes": [
+                "dk.cachet.carp.polar.accelerometer",
+                "dk.cachet.carp.polar.gyroscope",
+                "dk.cachet.carp.polar.magnetometer",
+                "dk.cachet.carp.polar.ppg",
+                "dk.cachet.carp.polar.ppi",
+                "dk.cachet.carp.polar.ecg",
+                "dk.cachet.carp.polar.hr"
+            ],
+            "samplingConfiguration": {},
+            "identifier": "G24R",
+            "polarDeviceType": "H10",
+            "name": "H10"
         }
     ],
     "connections": [],
     "triggers": {
         "0": {
-            "$type": "dk.cachet.carp.protocols.domain.triggers.Trigger"
+            "$type": "dk.cachet.carp.protocols.domain.triggers.ImmediateTrigger"
         },
         "1": {
-            "$type": "dk.cachet.carp.protocols.domain.triggers.ImmediateTrigger"
-        },
-        "2": {
-            "$type": "dk.cachet.carp.protocols.domain.triggers.OneTimeTrigger"
-        },
-        "3": {
-            "$type": "dk.cachet.carp.protocols.domain.triggers.ImmediateTrigger"
-        },
-        "4": {
-            "$type": "dk.cachet.carp.protocols.domain.triggers.UserTaskTrigger",
-            "taskName": "Task #7",
-            "resumeCondition": "done"
-        },
-        "5": {
             "$type": "dk.cachet.carp.protocols.domain.triggers.ImmediateTrigger"
         }
     },
     "tasks": [
-        {
-            "$type": "dk.cachet.carp.protocols.domain.tasks.BackgroundTask",
-            "name": "Start measures",
-            "measures": [
-                {
-                    "$type": "dk.cachet.carp.protocols.domain.tasks.measures.Measure",
-                    "type": "dk.cachet.carp.light"
-                },
-                {
-                    "$type": "dk.cachet.carp.protocols.domain.tasks.measures.Measure",
-                    "type": "dk.cachet.carp.gps"
-                },
-                {
-                    "$type": "dk.cachet.carp.protocols.domain.tasks.measures.Measure",
-                    "type": "dk.cachet.carp.steps"
-                }
-            ]
-        },
         {
             "$type": "dk.cachet.carp.protocols.domain.tasks.BackgroundTask",
             "name": "Task #5",
@@ -103,6 +84,34 @@
                 {
                     "$type": "dk.cachet.carp.protocols.domain.tasks.measures.Measure",
                     "type": "dk.cachet.carp.light"
+                },
+                {
+                    "$type": "dk.cachet.carp.protocols.domain.tasks.measures.Measure",
+                    "type": "dk.cachet.carp.polar.accelerometer"
+                },
+                {
+                    "$type": "dk.cachet.carp.protocols.domain.tasks.measures.Measure",
+                    "type": "dk.cachet.carp.polar.gyroscope"
+                },
+                {
+                    "$type": "dk.cachet.carp.protocols.domain.tasks.measures.Measure",
+                    "type": "dk.cachet.carp.polar.magnetometer"
+                },
+                {
+                    "$type": "dk.cachet.carp.protocols.domain.tasks.measures.Measure",
+                    "type": "dk.cachet.carp.polar.ecg"
+                },
+                {
+                    "$type": "dk.cachet.carp.protocols.domain.tasks.measures.Measure",
+                    "type": "dk.cachet.carp.polar.ppi"
+                },
+                {
+                    "$type": "dk.cachet.carp.protocols.domain.tasks.measures.Measure",
+                    "type": "dk.cachet.carp.polar.ppg"
+                },
+                {
+                    "$type": "dk.cachet.carp.protocols.domain.tasks.measures.Measure",
+                    "type": "dk.cachet.carp.polar.hr"
                 }
             ]
         },
@@ -112,40 +121,31 @@
             "measures": [
                 {
                     "$type": "dk.cachet.carp.protocols.domain.tasks.measures.Measure",
-                    "type": "dk.cachet.carp.device"
-                }
-            ]
-        },
-        {
-            "$type": "dk.cachet.carp.protocols.domain.tasks.AppTask",
-            "name": "Task #7",
-            "measures": [
-                {
-                    "$type": "dk.cachet.carp.protocols.domain.tasks.measures.Measure",
-                    "type": "dk.cachet.carp.light"
+                    "type": "dk.cachet.carp.polar.accelerometer"
                 },
                 {
                     "$type": "dk.cachet.carp.protocols.domain.tasks.measures.Measure",
-                    "type": "dk.cachet.carp.pedometer"
-                }
-            ],
-            "type": "one_time_sensing",
-            "title": "Location, Weather & Air Quality",
-            "description": "Collect location, weather and air quality",
-            "instructions": "",
-            "notification": false
-        },
-        {
-            "$type": "dk.cachet.carp.protocols.domain.tasks.BackgroundTask",
-            "name": "Task #8",
-            "measures": [
-                {
-                    "$type": "dk.cachet.carp.protocols.domain.tasks.measures.Measure",
-                    "type": "dk.cachet.carp.memory"
+                    "type": "dk.cachet.carp.polar.gyroscope"
                 },
                 {
                     "$type": "dk.cachet.carp.protocols.domain.tasks.measures.Measure",
-                    "type": "dk.cachet.carp.light"
+                    "type": "dk.cachet.carp.polar.magnetometer"
+                },
+                {
+                    "$type": "dk.cachet.carp.protocols.domain.tasks.measures.Measure",
+                    "type": "dk.cachet.carp.polar.ecg"
+                },
+                {
+                    "$type": "dk.cachet.carp.protocols.domain.tasks.measures.Measure",
+                    "type": "dk.cachet.carp.polar.hr"
+                },
+                {
+                    "$type": "dk.cachet.carp.protocols.domain.tasks.measures.Measure",
+                    "type": "dk.cachet.carp.polar.ppg"
+                },
+                {
+                    "$type": "dk.cachet.carp.protocols.domain.tasks.measures.Measure",
+                    "type": "dk.cachet.carp.polar.ppi"
                 }
             ]
         }
@@ -153,35 +153,14 @@
     "triggeredTasks": [
         {
             "triggerId": 0,
-            "taskName": "Start measures",
-            "targetDeviceRoleName": "masterphone"
+            "taskName": "Task #5",
+            "targetDeviceRoleName": "SM-A320FL"
         },
         {
             "triggerId": 1,
-            "taskName": "Task #5",
-            "targetDeviceRoleName": "masterphone"
-        },
-        {
-            "triggerId": 2,
             "taskName": "Task #6",
-            "targetDeviceRoleName": "masterphone"
-        },
-        {
-            "triggerId": 3,
-            "taskName": "Task #7",
-            "targetDeviceRoleName": "masterphone"
-        },
-        {
-            "triggerId": 4,
-            "taskName": "Task #7",
-            "targetDeviceRoleName": "masterphone"
-        },
-        {
-            "triggerId": 5,
-            "taskName": "Task #8",
-            "targetDeviceRoleName": "esense"
+            "targetDeviceRoleName": "eSense earplug"
         }
     ],
-    "expectedParticipantData": [],
-    "description": ""
+    "expectedParticipantData": []
 }

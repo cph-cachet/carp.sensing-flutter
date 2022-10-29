@@ -51,6 +51,10 @@ void _registerFromJsonFunctions() {
     startTime: TimeOfDay(hour: 1),
     endTime: TimeOfDay(hour: 2),
   ));
+  FromJsonFactory().register(UserTaskTrigger(
+    taskName: 'ignored',
+    resumeCondition: UserTaskState.done,
+  ));
 
   // Sampling Configuration classes
   FromJsonFactory().register(PersistentSamplingConfiguration());

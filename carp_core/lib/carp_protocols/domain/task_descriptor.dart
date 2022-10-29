@@ -9,8 +9,8 @@ part of carp_core_protocols;
 
 /// A [TaskDescriptor] holds information about each task to be triggered by
 /// a [Trigger] as part of a [StudyProtocol].
-/// Each [TaskDescriptor] holds a list of [Measure]s to be done as part of this task.
-/// A [TaskDescriptor] is hence merely an aggregation of [Measure]s.
+/// Each task holds a list of [Measure]s to be done as part of this task.
+/// A [TaskDescriptor] is hence an aggregation of [Measure]s.
 @JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
 class TaskDescriptor extends Serializable {
   static int _counter = 0;
@@ -30,6 +30,7 @@ class TaskDescriptor extends Serializable {
   /// Remove a [Measure] from this task.
   void removeMeasure(Measure measure) => measures.remove(measure);
 
+  /// Create a task. If [name] is not specified, a name is generated.
   @mustCallSuper
   TaskDescriptor({
     String? name,
@@ -63,6 +64,7 @@ class BackgroundTask extends TaskDescriptor {
   /// be sampled. `null` implies infinite by default.
   Duration? duration;
 
+  /// Create a new task which can run in the background.
   BackgroundTask({
     super.name,
     super.measures,
@@ -77,18 +79,20 @@ class BackgroundTask extends TaskDescriptor {
   Map<String, dynamic> toJson() => _$BackgroundTaskToJson(this);
 }
 
-/// A task which contains a definition on how to run tasks, measures,
-/// and triggers which differs from the CARP domain model.
+/// A task which contains a definition of a custom protocol which differs from
+/// the CARP domain model.
 @JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
 class CustomProtocolTask extends TaskDescriptor {
   /// A definition on how to run a study on a master device, serialized as a string.
   String studyProtocol;
 
-  // The measures list is empty, since measures are defined in [studyProtocol]
-  // in a different format.
+  /// Create a task which is used in a custon protocol, specified as a
+  /// string in [studyProtocol].
   CustomProtocolTask({
     super.name,
     required this.studyProtocol,
+    // The measures list is empty, since measures are defined in [studyProtocol]
+    // in a different format.
   }) : super(measures: []);
 
   @override

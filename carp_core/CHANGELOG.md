@@ -1,3 +1,7 @@
+## 0.40.3
+
+* fix of non-null `id` in `DeviceDataCollector`.
+
 ## 0.40.2
 
 * fix of issue [#269](https://github.com/cph-cachet/carp.sensing-flutter/issues/269).

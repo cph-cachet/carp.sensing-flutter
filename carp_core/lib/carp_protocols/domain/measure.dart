@@ -6,7 +6,7 @@
  */
 part of carp_core_protocols;
 
-/// Defines data that needs to be measured/collected passively as part of a task
+/// Defines data that needs to be collected passively as part of a task
 /// defined by [TaskConfiguration].
 @JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
 class Measure extends Serializable {
@@ -21,6 +21,7 @@ class Measure extends Serializable {
   /// of the data [type] on the device.
   SamplingConfiguration? overrideSamplingConfiguration;
 
+  /// Create a measure by specifying its [type].
   Measure({required this.type}) : super();
 
   @override

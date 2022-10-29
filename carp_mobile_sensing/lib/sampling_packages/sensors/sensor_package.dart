@@ -14,6 +14,12 @@ class SensorSamplingPackage extends SmartphoneSamplingPackage {
   ///  * No sampling configuration needed.
   static const String GYROSCOPE = 'dk.cachet.carp.gyroscope';
 
+  /// Measure type for continous collection of magnetometer data (x,y,z).
+  ///  * Event-based measure.
+  ///  * Uses the [Smartphone] master device for data collection.
+  ///  * No sampling configuration needed.
+  static const String MAGNETOMETER = 'dk.cachet.carp.magnetometer';
+
   /// Measure type for periodic collection of accelorometer data (x,y,z).
   ///  * Periodic measure.
   ///  * Uses the [Smartphone] master device for data collection.
@@ -26,6 +32,13 @@ class SensorSamplingPackage extends SmartphoneSamplingPackage {
   ///  * Uses the [Smartphone] master device for data collection.
   ///  * Use [PeriodicSamplingConfiguration] for configuration.
   static const String PERIODIC_GYROSCOPE = 'dk.cachet.carp.periodic_gyroscope';
+
+  /// Measure type for periodic collection of magnetometer data (x,y,z).
+  ///  * Periodic measure.
+  ///  * Uses the [Smartphone] master device for data collection.
+  ///  * Use [PeriodicSamplingConfiguration] for configuration.
+  static const String PERIODIC_MAGNETOMETER =
+      'dk.cachet.carp.periodic_magnetometer';
 
   /// Measure type for collection of step count from the phones pedometer sensor.
   ///  * Event-based measure.

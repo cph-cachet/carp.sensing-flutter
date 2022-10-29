@@ -5,13 +5,11 @@
 [![github stars](https://img.shields.io/github/stars/cph-cachet/carp.sensing-flutter.svg?style=flat&logo=github&colorB=deeppink&label=stars)](https://github.com/cph-cachet/carp.sensing-flutter)
 [![MIT License](https://img.shields.io/badge/license-MIT-purple.svg)](https://opensource.org/licenses/MIT)
 
-
-This package integrates the [CARP Mobile Sensing](https://github.com/cph-cachet/carp.sensing) 
+This package integrates the [CARP Mobile Sensing](https://github.com/cph-cachet/carp.sensing)
 Framework with the [CARP web service backend](https://carp.cachet.dk).
 It support downloading a study configuration and uploading collected data.
 
 For Flutter plugins for other CARP products, see [CARP Mobile Sensing in Flutter](https://github.com/cph-cachet/carp.sensing-flutter/blob/master/README.md).
-
 
 ## Using the Plugin
 
@@ -27,7 +25,7 @@ import 'package:carp_backend/carp_backend.dart';
 ## Downloading a study configuration from CARP
 
 Getting a study configuration from CARP is done using a `CARPStudyProtocolManager`.
-But in order to authenticate to CARP and get the available studies for the user, 
+But in order to authenticate to CARP and get the available studies for the user,
 we make use of the [`carp_webservices`](https://pub.dev/packages/carp_webservices) API.
 
 To get a study, you basically go through the following steps:
@@ -122,9 +120,9 @@ First you should register the data manager in the [`DataManagerRegistry`](https:
   DataManagerRegistry().register(CarpDataManager());
 ````
 
-### 2. Create a CARP Data Endpoint 
+### 2. Create a CARP Data Endpoint
 
-Create a `CarpDataEndPoint` that specify which method to use for uploading data, and the details. 
+Create a `CarpDataEndPoint` that specify which method to use for uploading data, and the details.
 Upload methods are defined in the `CarpUploadMethod` class.
 
 For example, a `CarpDataEndPoint` that upload data points directly looks like this:
@@ -180,7 +178,7 @@ You can now use a CARP Data Endpoint to the study protocol.
     name: 'Track patient movement',
     dataEndPoint: cdep,
   );
-````` 
+`````
 
 ## Authentication to CARP
 
@@ -203,4 +201,3 @@ Please file feature requests and bug reports at the [issue tracker][tracker].
 
 This software is copyright (c) [Copenhagen Center for Health Technology (CACHET)](https://www.cachet.dk/) at the [Technical University of Denmark (DTU)](https://www.dtu.dk).
 This software is made available 'as-is' in a MIT [license](/LICENSE).
-

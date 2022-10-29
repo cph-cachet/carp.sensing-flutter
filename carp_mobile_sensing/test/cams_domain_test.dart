@@ -36,8 +36,7 @@ void main() {
       Measure(type: DataType(NameSpace.CARP, 'steps').toString()),
     ];
 
-    BackgroundTask task = BackgroundTask(name: 'Start measures')
-      ..addMeasures(measures);
+    var task = BackgroundTask(name: 'Start measures')..addMeasures(measures);
     masterProtocol.addTriggeredTask(Trigger(), task, masterPhone);
 
     // adding all measure from the sampling packages to one one trigger and one task
@@ -56,6 +55,29 @@ void main() {
         OneTimeTrigger(),
         BackgroundTask()
           ..addMeasure(Measure(type: DeviceSamplingPackage.DEVICE)),
+        masterPhone);
+
+    var sensingAppTask = AppTask(
+      type: BackgroundSensingUserTask.ONE_TIME_SENSING_TYPE,
+      title: "Location, Weather & Air Quality",
+      description: "Collect location, weather and air quality",
+    )..addMeasures([
+        Measure(type: SensorSamplingPackage.LIGHT),
+        Measure(type: SensorSamplingPackage.PEDOMETER),
+      ]);
+
+    masterProtocol.addTriggeredTask(
+      ImmediateTrigger(),
+      sensingAppTask,
+      masterPhone,
+    );
+
+    masterProtocol.addTriggeredTask(
+        UserTaskTrigger(
+          taskName: sensingAppTask.name,
+          resumeCondition: UserTaskState.done,
+        ),
+        sensingAppTask,
         masterPhone);
 
     // adding two measures to another device
@@ -78,10 +100,10 @@ void main() {
     expect(masterProtocol.ownerId, 'user@dtu.dk');
     expect(masterProtocol.masterDevices.length, 1);
     expect(masterProtocol.connectedDevices.length, 1);
-    expect(masterProtocol.triggers.length, 4);
+    expect(masterProtocol.triggers.length, 6);
     expect(masterProtocol.triggers.keys.first, '0');
-    expect(masterProtocol.tasks.length, 4);
-    expect(masterProtocol.triggeredTasks.length, 4);
+    expect(masterProtocol.tasks.length, 5);
+    expect(masterProtocol.triggeredTasks.length, 6);
   });
 
   test(

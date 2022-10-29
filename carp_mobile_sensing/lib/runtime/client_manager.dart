@@ -129,7 +129,9 @@ class SmartPhoneClientManager extends ClientManager
   @protected
   @mustCallSuper
   Future<void> deactivate() async {
-    // make sure to save all studies
+    // first save the task queue
+    AppTaskController().saveQueue();
+    // then save all studies
     for (var study in repository.keys) {
       await getStudyRuntime(study)?.saveDeployment();
     }

@@ -401,6 +401,9 @@ Map<String, dynamic> _$SmartphoneDeploymentToJson(
 
 AppTask _$AppTaskFromJson(Map<String, dynamic> json) => AppTask(
       name: json['name'] as String?,
+      measures: (json['measures'] as List<dynamic>?)
+          ?.map((e) => Measure.fromJson(e as Map<String, dynamic>))
+          .toList(),
       type: json['type'] as String,
       title: json['title'] as String? ?? '',
       description: json['description'] as String? ?? '',
@@ -410,11 +413,7 @@ AppTask _$AppTaskFromJson(Map<String, dynamic> json) => AppTask(
           ? null
           : Duration(microseconds: json['expire'] as int),
       notification: json['notification'] as bool? ?? false,
-    )
-      ..$type = json[r'$type'] as String?
-      ..measures = (json['measures'] as List<dynamic>)
-          .map((e) => Measure.fromJson(e as Map<String, dynamic>))
-          .toList();
+    )..$type = json[r'$type'] as String?;
 
 Map<String, dynamic> _$AppTaskToJson(AppTask instance) {
   final val = <String, dynamic>{};
@@ -811,6 +810,46 @@ Map<String, dynamic> _$RandomRecurrentTriggerToJson(
       'lastTriggerTimestamp', instance.lastTriggerTimestamp?.toIso8601String());
   return val;
 }
+
+UserTaskTrigger _$UserTaskTriggerFromJson(Map<String, dynamic> json) =>
+    UserTaskTrigger(
+      taskName: json['taskName'] as String,
+      resumeCondition:
+          $enumDecode(_$UserTaskStateEnumMap, json['resumeCondition']),
+      pauseCondition:
+          $enumDecodeNullable(_$UserTaskStateEnumMap, json['pauseCondition']),
+    )
+      ..$type = json[r'$type'] as String?
+      ..sourceDeviceRoleName = json['sourceDeviceRoleName'] as String?;
+
+Map<String, dynamic> _$UserTaskTriggerToJson(UserTaskTrigger instance) {
+  final val = <String, dynamic>{};
+
+  void writeNotNull(String key, dynamic value) {
+    if (value != null) {
+      val[key] = value;
+    }
+  }
+
+  writeNotNull(r'$type', instance.$type);
+  writeNotNull('sourceDeviceRoleName', instance.sourceDeviceRoleName);
+  val['taskName'] = instance.taskName;
+  val['resumeCondition'] = _$UserTaskStateEnumMap[instance.resumeCondition]!;
+  writeNotNull(
+      'pauseCondition', _$UserTaskStateEnumMap[instance.pauseCondition]);
+  return val;
+}
+
+const _$UserTaskStateEnumMap = {
+  UserTaskState.initialized: 'initialized',
+  UserTaskState.enqueued: 'enqueued',
+  UserTaskState.dequeued: 'dequeued',
+  UserTaskState.started: 'started',
+  UserTaskState.canceled: 'canceled',
+  UserTaskState.done: 'done',
+  UserTaskState.expired: 'expired',
+  UserTaskState.undefined: 'undefined',
+};
 
 Datum _$DatumFromJson(Map<String, dynamic> json) => Datum()
   ..id = json['id'] as String?

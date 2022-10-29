@@ -28,4 +28,3 @@ part 'device_info.dart';
 part 'transformers.dart';
 
 part 'domain.g.dart';
-part 'domain.json.dart';

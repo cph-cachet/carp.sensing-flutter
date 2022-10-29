@@ -30,9 +30,7 @@ class CarpResourceManager
   CarpResourceManager._() {
     // Initialization of serialization
     CarpMobileSensing();
-
-    // to initialize json serialization for RP classes
-    RPOrderedTask(identifier: '', steps: []);
+    ResearchPackage();
   }
 
   // --------------------------------------------------------------------------
@@ -157,7 +155,7 @@ class CarpResourceManager
   @override
   Future<RPOrderedTask?> getInformedConsent({bool refresh = false}) async {
     // initialize json serialization for RP classes
-    RPOrderedTask(identifier: '', steps: []);
+    ResearchPackage();
     Map<String, dynamic>? json =
         await _getResource(RPOrderedTask, refresh: refresh);
 

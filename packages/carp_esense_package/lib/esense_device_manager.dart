@@ -19,9 +19,35 @@ part of esense;
 //   "it would be better to use the right earbud to record only sound samples
 //    and the left earbud to record only IMU data."
 //
-// Hence, connect the right earbud (eSense-0917) to the phone.
+// Hence, connect the RIGHT earbud to the phone using classic Bluetooth (for
+// audio streaming), and use the LEFT earbud for IMU data collection using BLE
+// as part of a mobile sensing study.
 
 /// A [DeviceDescriptor] for an eSense device used in a [StudyProtocol].
+///
+/// **From the eSense User Documentation:**
+///
+/// Both the left and right earbud have a microphone onboard. The microphone can
+/// be used to record audio samples as well as input source for phone or VoIP calls.
+///
+/// There is no need for special configuration to use the microphone on the earbud.
+/// Once the earbud is paired (Bluetooth Classic interface), the host device will
+/// recognise the earbud as a new input source. The audio recorded is mono, only
+/// from the earbud paired with the host device. The same happens for calls, only
+/// the speaker and microphone on the earbud paired with the host will be used
+/// during an active call.
+///
+/// Either the right or left earbud (but not both) can be paired
+/// with a host device. If the left earbud is paired, the same host device can
+/// also connect to the BLE interface of the earbud to collect IMU data at the
+/// same time as audio is recorded from its microphone. The earbuds are limited
+/// devices and the achievable data rate of the sensors (microphone and IMU)
+/// might be affected by the number of operations performed. For example, if
+/// the IMU and the microphone are enabled on the same earbud while the user is
+/// also listening to music, it might not be possible to achieve the desired data
+/// rate and the music might be interrupted. In this situation it would be better
+/// to use the right earbud to record only sound samples and the left earbud to
+/// record only IMU data.
 @JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
 class ESenseDevice extends DeviceDescriptor {
   /// The type of a eSense device.
@@ -43,10 +69,10 @@ class ESenseDevice extends DeviceDescriptor {
     super.roleName = ESenseDevice.DEFAULT_ROLENAME,
     this.deviceName,
     this.samplingRate,
-    super.supportedDataTypes,
-  }) : super(
-          isMasterDevice: false,
-        );
+  }) : super(isMasterDevice: false, supportedDataTypes: [
+          ESenseSamplingPackage.ESENSE_BUTTON,
+          ESenseSamplingPackage.ESENSE_SENSOR,
+        ]);
 
   @override
   Function get fromJsonFunction => _$ESenseDeviceFromJson;
@@ -58,7 +84,7 @@ class ESenseDevice extends DeviceDescriptor {
 
 /// A [DeviceManager] for the eSense device.
 class ESenseDeviceManager
-    extends HardwareDeviceManager<DeviceRegistration, ESenseDevice> {
+    extends BTLEDeviceManager<DeviceRegistration, ESenseDevice> {
   // the last known voltage level of the eSense device
   double? _voltageLevel;
 
@@ -67,6 +93,14 @@ class ESenseDeviceManager
 
   @override
   String get id => deviceDescriptor?.deviceName ?? 'eSense-????';
+
+  @override
+  String get btleName => deviceDescriptor?.deviceName ?? 'eSense-????';
+
+  /// Set the name of this device based on the Bluetooth name.
+  /// This name is used for connection.
+  @override
+  set btleName(String btleName) => deviceDescriptor?.deviceName = btleName;
 
   /// A estimate of the battery level of the eSense device.
   ///
@@ -91,16 +125,6 @@ class ESenseDeviceManager
   int? get batteryLevel => (_voltageLevel != null)
       ? ((1.19 * _voltageLevel! - 3.91) * 100).toInt()
       : null;
-
-  @override
-  void onInitialize(DeviceDescriptor descriptor) {
-    if (deviceDescriptor?.deviceName == null ||
-        deviceDescriptor!.deviceName!.isEmpty) {
-      warning(
-          'Cannot initialize an $runtimeType with a null or empty device name. '
-          "Please specify a valid device name, typically on the form 'eSense-1234'");
-    }
-  }
 
   @override
   Future<bool> canConnect() async => (deviceDescriptor?.deviceName != null &&
@@ -143,7 +167,7 @@ class ESenseDeviceManager
           status = DeviceStatus.unknown;
           break;
         case ConnectionType.device_found:
-          status = DeviceStatus.paired;
+          status = DeviceStatus.connecting;
           break;
         case ConnectionType.device_not_found:
         case ConnectionType.disconnected:

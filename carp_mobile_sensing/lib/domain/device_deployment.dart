@@ -62,7 +62,6 @@ class SmartphoneDeployment extends MasterDeviceDeployment {
     this.protocolDescription,
     this.dataEndPoint,
   }) {
-    _registerFromJsonFunctions();
     _studyDeploymentId = studyDeploymentId ?? Uuid().v1();
   }
 

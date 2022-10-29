@@ -63,12 +63,12 @@ ESenseDevice _$ESenseDeviceFromJson(Map<String, dynamic> json) => ESenseDevice(
       roleName: json['roleName'] as String? ?? ESenseDevice.DEFAULT_ROLENAME,
       deviceName: json['deviceName'] as String?,
       samplingRate: json['samplingRate'] as int?,
-      supportedDataTypes: (json['supportedDataTypes'] as List<dynamic>?)
-          ?.map((e) => e as String)
-          .toList(),
     )
       ..$type = json[r'$type'] as String?
       ..isMasterDevice = json['isMasterDevice'] as bool?
+      ..supportedDataTypes = (json['supportedDataTypes'] as List<dynamic>?)
+          ?.map((e) => e as String)
+          .toList()
       ..samplingConfiguration =
           (json['samplingConfiguration'] as Map<String, dynamic>).map(
         (k, e) => MapEntry(

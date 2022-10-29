@@ -28,7 +28,8 @@ class AppTaskController {
       .where((task) => task.triggerTime.isBefore(DateTime.now()))
       .toList();
 
-  /// A stream of [UserTask]s as they are generated.
+  /// A stream of [UserTask] events generate whenever a user task change state,
+  /// like enqueued, dequeued, done, and expire.
   ///
   /// This stream is usefull in a [StreamBuilder] to listen on
   /// changes to the [userTaskQueue].
@@ -119,7 +120,7 @@ class AppTaskController {
     AppTaskExecutor executor, {
     DateTime? triggerTime,
     bool sendNotification = true,
-    bool userTaskEvent = true,
+    // bool userTaskEvent = true,
   }) async {
     if (_userTaskFactories[executor.task.type] == null) {
       warning(
@@ -133,7 +134,8 @@ class AppTaskController {
       userTask.enqueued = DateTime.now();
       userTask.triggerTime = triggerTime ?? DateTime.now();
       _userTaskMap[userTask.id] = userTask;
-      if (userTaskEvent) _controller.add(userTask);
+      // if (userTaskEvent)
+      _controller.add(userTask);
       debug('$runtimeType - Enqueued $userTask');
 
       if (notificationsEnabled && sendNotification) {
@@ -179,7 +181,6 @@ class AppTaskController {
     if (userTask == null) {
       warning("Could not find AppTask - id is not valid: '$id'");
     } else {
-      // only expire tasks which are not already done
       userTask.state = UserTaskState.done;
       _controller.add(userTask);
       info('Marked $userTask as done');
@@ -251,7 +252,6 @@ class AppTaskController {
 
       // now create new AppTaskExecutors, initialize them, and add them to the queue
       for (var snapshot in queue.snapshots) {
-        debug('$runtimeType - Restoring snapshot: $snapshot');
         AppTaskExecutor executor = AppTaskExecutor();
 
         // find the deployment
@@ -272,17 +272,22 @@ class AppTaskController {
 
         executor.initialize(snapshot.task, deployment);
 
-        // enqueue the task (again), but avoid notifications and app events
-        UserTask? userTask = await enqueue(
-          executor,
-          triggerTime: snapshot.triggerTime,
-          sendNotification: false,
-          userTaskEvent: false,
-        );
-        if (userTask != null) {
+        // now put the task on the queue
+        if (_userTaskFactories[executor.task.type] == null) {
+          warning(
+              'Could not enqueue AppTask. Could not find a factory for creating '
+              "a UserTask for type '${executor.task.type}'");
+        } else {
+          UserTask userTask =
+              _userTaskFactories[executor.task.type]!.create(executor);
           userTask.id = snapshot.id;
-          userTask.enqueued = snapshot.enqueued;
           userTask.state = snapshot.state;
+          userTask.enqueued = snapshot.enqueued;
+          userTask.triggerTime = snapshot.triggerTime;
+
+          _userTaskMap[userTask.id] = userTask;
+          debug(
+              '$runtimeType - Enqueued UserTask from loaded task queue: $userTask');
         }
       }
     } catch (exception) {

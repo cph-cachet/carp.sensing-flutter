@@ -152,7 +152,6 @@ class TriggeredTaskExecutor extends AggregateExecutor<TriggeredTask> {
 
     // get the task executor and add it to the trigger executor's stream
     taskExecutor = getTaskExecutor(task);
-    debug('$runtimeType - taskExecutor: $taskExecutor');
     triggerExecutor?.group.add(taskExecutor!.data);
     triggerExecutor?.executors.add(taskExecutor!);
     taskExecutor?.initialize(task, deployment!);
