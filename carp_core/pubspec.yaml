@@ -22,9 +22,7 @@ dependency_overrides:
   #   path: ../carp_serializable/
 
 dev_dependencies:
-  flutter_test:
-    sdk: flutter
-  build_runner: any   # For building json serialization
+  build_runner: any
   json_serializable: any
-  flutter_lints: any
   test: any
+  flutter_lints: any

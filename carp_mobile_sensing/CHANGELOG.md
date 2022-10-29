@@ -2,6 +2,7 @@
 
 * Added the `UserTaskTrigger` trigger.
 * Added the `magnetometer` measure type.
+* Upgrade of `device_info_plus` v. ^8.0.0
 
 ## 0.40.2
 
