@@ -13,12 +13,12 @@ dependencies:
     sdk: flutter
 
   carp_serializable: ^1.0.0
-  carp_core:
-    path: ../../../carp_core
-  carp_mobile_sensing:
-    path: ../../../carp_mobile_sensing
-  carp_webservices:
-    path: ../../carp_webservices
+  # carp_core:
+  #   path: ../../../carp_core
+  # carp_mobile_sensing:
+  #   path: ../../../carp_mobile_sensing
+  # carp_webservices:
+  #   path: ../../carp_webservices
   # research_package:
   #   path: ../../../../../research.package/
   carp_backend:
