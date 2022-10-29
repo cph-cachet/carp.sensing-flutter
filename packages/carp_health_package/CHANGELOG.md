@@ -1,3 +1,8 @@
+## 2.5.0
+
+* update to `carp_mobile_sensing` v. 0.40.0
+* update to `health` v. 4.3.0
+
 ## 2.4.0
 
 * update to `carp_mobile_sensing` v. 0.40.0
