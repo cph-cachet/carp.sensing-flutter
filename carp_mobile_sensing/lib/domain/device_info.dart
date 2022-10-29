@@ -33,7 +33,7 @@ class DeviceInfo {
 
   /// Initialize the device info using the [DeviceInfoPlugin].
   Future<void> init() async {
-    // early out
+    // early out if already initialized
     if (deviceData.isNotEmpty) return;
 
     try {
@@ -90,7 +90,7 @@ class DeviceInfo {
   }
 
   Map<String, dynamic> _readIosDeviceInfo(IosDeviceInfo info) {
-    platform = 'IOS';
+    platform = 'iOS';
     hardware = info.utsname.machine;
     deviceID = info.identifierForVendor;
     deviceName = info.name;
@@ -101,7 +101,7 @@ class DeviceInfo {
     release = info.utsname.version;
 
     return <String, dynamic>{
-      'platform': 'IOS',
+      'platform': 'iOS',
       'name': info.name,
       'systemName': info.systemName,
       'systemVersion': info.systemVersion,
