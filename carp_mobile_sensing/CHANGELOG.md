@@ -3,11 +3,12 @@
 * Added the `UserTaskTrigger` trigger.
 * Added the `magnetometer` measure type.
 * Upgrade of `device_info_plus` v. ^8.0.0
+* Upgrade to `carp_core` v. 0.40.3
 
 ## 0.40.2
 
-* upgrade to `carp_core` v. 0.40.2
-* fix of issue [#269](https://github.com/cph-cachet/carp.sensing-flutter/issues/269).
+* Upgrade to `carp_core` v. 0.40.2
+* Fix of issue [#269](https://github.com/cph-cachet/carp.sensing-flutter/issues/269).
 
 ## 0.40.0 - BREAKING
 
