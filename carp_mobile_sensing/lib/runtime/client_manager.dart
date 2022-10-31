@@ -79,7 +79,7 @@ class SmartPhoneClientManager extends ClientManager
     print('===========================================================');
     print('  CARP Mobile Sensing (CAMS) - $runtimeType');
     print('===========================================================');
-    print('  deployment service : $deploymentService');
+    print('  deployment service : ${this.deploymentService}');
     print('   device controller : ${this.deviceController}');
     print('           device ID : $deviceId');
     print('   available devices : ${this.deviceController.devicesToString()}');

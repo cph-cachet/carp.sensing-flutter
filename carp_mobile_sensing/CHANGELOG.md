@@ -1,4 +1,4 @@
-## 0.40.4
+## 0.40.4+1
 
 * Added convenience method `addStudyProtocol` to `SmartPhoneClientManager` and updated examples accordingly.
 
