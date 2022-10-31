@@ -16,19 +16,19 @@ import 'package:carp_mobile_sensing/carp_mobile_sensing.dart';
 Future<void> example_0() async {
   // STEP I -- DEFINE PROTOCOL
 
-  // create a study protocol
+  // Create a study protocol
   SmartphoneStudyProtocol protocol = SmartphoneStudyProtocol(
     ownerId: 'AB',
     name: 'Track patient movement',
   );
 
-  // define which devices are used for data collection
-  // in this case, its only this smartphone
+  // Define which devices are used for data collection.
+  // In this case, its only this smartphone
   var phone = Smartphone();
   protocol.addMasterDevice(phone);
 
-  // automatically collect step count, ambient light, screen activity, and
-  // battery level, while delaying the sampling by 10 seconds
+  // Automatically collect step count, ambient light, screen activity, and
+  // battery level. Sampling is delaying by 10 seconds.
   protocol.addTriggeredTask(
       DelayedTrigger(delay: Duration(seconds: 10)),
       BackgroundTask(name: 'Sensor Task')
@@ -40,42 +40,28 @@ Future<void> example_0() async {
         ]),
       phone);
 
-  // STEP II -- CREATE A STUDY
+  // STEP II -- DEPLOY STUDY ON A CLIENT
 
-  // use the on-phone deployment service
-  DeploymentService deploymentService = SmartphoneDeploymentService();
-
-  // create a study deployment using the protocol
-  StudyDeploymentStatus status =
-      await deploymentService.createStudyDeployment(protocol);
-
-  // STEP III -- DEPLOY STUDY ON A CLIENT
-
-  // create and configure a client manager for this phone
+  // Create and configure a client manager for this phone, and
+  // create a study based on the protocol.
   SmartPhoneClientManager client = SmartPhoneClientManager();
-  await client.configure(deploymentService: deploymentService);
+  await client.configure();
+  Study study = await client.addStudyProtocol(protocol);
 
-  // define the study to run based on id and role name
-  // normally this is achieved from a study invitation
-  // but here we just re-use the information in the [status] above
-  Study study = Study(
-    status.studyDeploymentId,
-    status.masterDeviceStatus!.device.roleName,
-  );
-
-  // add the study and get the study runtime (controller)
-  await client.addStudy(study);
+  // Get the study controller and try to deploy the study.
   SmartphoneDeploymentController? controller = client.getStudyRuntime(study);
+  await controller?.tryDeployment(useCached: false);
 
-  // deploy the study on this phone
-  await controller?.tryDeployment();
+  // Configure the controller.
+  await controller!.configure();
 
-  // configure the controller and start the study
-  await controller?.configure();
-  controller?.start();
+  // STEP III -- RUN THE STUDY
 
-  // listening and print all data events from the study
-  controller?.data.forEach(print);
+  // Start the study
+  controller.start();
+
+  // Listening and print all data events from the study
+  controller.data.forEach(print);
 }
 
 /// This is an example of how to set up a study.

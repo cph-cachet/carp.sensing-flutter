@@ -109,11 +109,31 @@ class SmartPhoneClientManager extends ClientManager
     return status;
   }
 
+  /// Create and add a study based on the [protocol] which needs to be executed on
+  /// this client. This is similar to the [addStudy] method, but deploying the
+  /// [protocol] immediately.
+  ///
+  /// Returns the newly added study.
+  Future<Study> addStudyProtocol(StudyProtocol protocol) async {
+    assert(deploymentService != null,
+        'Deployment Service has not been configured. Call configure() first.');
+
+    StudyDeploymentStatus status =
+        await deploymentService!.createStudyDeployment(protocol);
+    Study study = Study(
+      status.studyDeploymentId,
+      status.masterDeviceStatus!.device.roleName,
+    );
+
+    await addStudy(study);
+    return study;
+  }
+
   @override
   SmartphoneDeploymentController? getStudyRuntime(Study study) =>
       repository[study] as SmartphoneDeploymentController;
 
-  /// Called when this client mananger is being (re-)activated by the OS
+  /// Called when this client manager is being (re-)activated by the OS
   ///
   /// Implementations of this method should start with a call to the inherited
   /// method, as in `super.activate()`.

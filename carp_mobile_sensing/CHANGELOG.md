@@ -1,3 +1,7 @@
+## 0.40.4
+
+* Added convenience method `addStudyProtocol` to `SmartPhoneClientManager` and updated examples accordingly.
+
 ## 0.40.3
 
 * Added the `UserTaskTrigger` trigger.
