@@ -121,7 +121,7 @@ class SmartPhoneClientManager extends ClientManager
   @mustCallSuper
   void activate() {}
 
-  /// Called when this client mananger is being deactivated and potentially
+  /// Called when this client manager is being deactivated and potentially
   /// stopped by the OS
   ///
   /// Implementations of this method should start with a call to the inherited
