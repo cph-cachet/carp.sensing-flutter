@@ -98,25 +98,11 @@ class Console extends State<ConsolePage> {
   }
 }
 
-/// This class handles sensing with the following business logic flow:
-///
-///  * create a [StudyProtocol]
-///  * deploy the protocol
-///  * register devices
-///  * get the deployment configuration
-///  * mark the deployment successful
-///  * create and initialize a [SmartphoneDeploymentController]
-///  * start/pause/resume/stop sensing via this study controller
+/// This class handles sensing logic.
 ///
 /// This example is useful for creating a Business Logical Object (BLOC) in a
 /// Flutter app. See e.g. the CARP Mobile Sensing App.
 class Sensing {
-  // Specify the deployment id for this study.
-  // In a real app, the user would somehow specify this.
-  String studyDeploymentId = '83ec1e70-c647-11ec-8b84-214a8597ae84';
-
-  StudyProtocol? protocol;
-  DeploymentService service = SmartphoneDeploymentService();
   SmartphoneDeploymentController? controller;
   Study? study;
 
@@ -124,22 +110,15 @@ class Sensing {
   Future<void> init() async {
     Settings().debugLevel = DebugLevel.DEBUG;
 
-    // Configure the on-phone deployment service with a protocol.
-    protocol =
-        await LocalStudyProtocolManager().getStudyProtocol(studyDeploymentId);
-    StudyDeploymentStatus status =
-        await service.createStudyDeployment(protocol!, studyDeploymentId);
+    // Get the local protocol.
+    StudyProtocol protocol =
+        await LocalStudyProtocolManager().getStudyProtocol('ignored');
 
-    // Create and configure a client manager for this phone.
+    // Create and configure a client manager for this phone, and
+    // add a study based on the protocol.
     SmartPhoneClientManager client = SmartPhoneClientManager();
-    await client.configure(deploymentService: service);
-
-    // Define the study and add it to the client.
-    study = Study(
-      status.studyDeploymentId,
-      status.masterDeviceStatus!.device.roleName,
-    );
-    await client.addStudy(study!);
+    await client.configure();
+    study = await client.addStudyProtocol(protocol);
 
     // Get the study controller and try to deploy the study.
     //
@@ -186,13 +165,14 @@ class Sensing {
 
 /// This is a simple local [StudyProtocolManager].
 ///
-/// This class shows how to configure a [StudyProtocol] with [Tigger]s,
-/// [TaskDescriptor]s and [Measure]s.
+/// This class shows how to configure a [StudyProtocol] with Triggers,
+/// Tasks and Measures.
 class LocalStudyProtocolManager implements StudyProtocolManager {
   Future<void> initialize() async {}
 
   /// Create a new CAMS study protocol.
   Future<SmartphoneStudyProtocol> getStudyProtocol(String id) async {
+    // Create a protocol. Note that the [id] is not used for anything.
     SmartphoneStudyProtocol protocol = SmartphoneStudyProtocol(
         ownerId: 'AB',
         name: 'Track patient movement',
