@@ -50,18 +50,18 @@ Future<void> example_0() async {
 
   // Get the study controller and try to deploy the study.
   SmartphoneDeploymentController? controller = client.getStudyRuntime(study);
-  await controller?.tryDeployment(useCached: false);
+  await controller?.tryDeployment();
 
   // Configure the controller.
-  await controller!.configure();
+  await controller?.configure();
 
   // STEP III -- RUN THE STUDY
 
   // Start the study
-  controller.start();
+  controller?.start();
 
   // Listening and print all data events from the study
-  controller.data.forEach(print);
+  controller?.data.forEach(print);
 }
 
 /// This is an example of how to set up a study.
