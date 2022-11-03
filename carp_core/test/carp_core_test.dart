@@ -16,9 +16,8 @@ void main() {
       description: 'For testing purposes.',
     );
 
-    // Define which devices are used for data collection.
     Smartphone phone = Smartphone(roleName: 'masterphone');
-    DeviceDescriptor connectedDevice = DeviceDescriptor(
+    DeviceConfiguration connectedDevice = DeviceConfiguration(
       roleName: 'connected_device',
     );
 
@@ -35,8 +34,8 @@ void main() {
 
     BackgroundTask task = BackgroundTask(name: 'Start measures')
       ..addMeasures(measures);
-    protocol.addTriggeredTask(
-      Trigger(sourceDeviceRoleName: phone.roleName),
+    protocol.addTaskControl(
+      TriggerConfiguration(sourceDeviceRoleName: phone.roleName),
       task,
       phone,
     );
@@ -47,7 +46,7 @@ void main() {
         low: GranularitySamplingConfiguration(Granularity.Balanced),
         critical: GranularitySamplingConfiguration(Granularity.Coarse));
 
-    protocol.addTriggeredTask(
+    protocol.addTaskControl(
       ManualTrigger(),
       BackgroundTask()..addMeasure(measure),
       phone,
@@ -61,7 +60,7 @@ void main() {
     expect(protocol.triggers.length, 2);
     expect(protocol.triggers.keys.first, '0');
     expect(protocol.tasks.length, 2);
-    expect(protocol.triggeredTasks.length, 2);
+    expect(protocol.taskControls.length, 2);
   });
 
   test('JSON -> StudyProtocol', () async {
@@ -72,7 +71,7 @@ void main() {
         StudyProtocol.fromJson(json.decode(plainJson) as Map<String, dynamic>);
 
     expect(protocol.ownerId, 'xyz@dtu.dk');
-    expect(protocol.masterDevices.first.roleName, 'masterphone');
+    expect(protocol.primaryDevices.first.roleName, 'masterphone');
     print(toJsonString(protocol));
   });
 
@@ -85,7 +84,7 @@ void main() {
         StudyProtocol.fromJson(json.decode(plainJson) as Map<String, dynamic>);
 
     expect(protocol.ownerId, '979b408d-784e-4b1b-bb1e-ff9204e072f3');
-    expect(protocol.masterDevices.first.roleName, 'Custom device');
+    expect(protocol.primaryDevices.first.roleName, 'Custom device');
     print(toJsonString(protocol));
   });
 

@@ -32,12 +32,12 @@ void carpCoreProtocolExample() async {
     Measure(type: 'dk.cachet.stepcount'),
   ];
 
-  TaskDescriptor startMeasures = BackgroundTask(
+  TaskConfiguration startMeasures = BackgroundTask(
     name: "Start measures",
     measures: measures,
   );
-  protocol.addTriggeredTask(
-    Trigger(sourceDeviceRoleName: phone.roleName),
+  protocol.addTaskControl(
+    TriggerConfiguration(sourceDeviceRoleName: phone.roleName),
     startMeasures,
     phone,
   );
@@ -54,7 +54,8 @@ void carpCoreDeploymentExample() async {
     ownerId: 'abc@dtu.dk',
     name: 'Tracking',
   );
-  Smartphone patientPhone = trackPatientStudy.masterDevices.first as Smartphone;
+  Smartphone patientPhone =
+      trackPatientStudy.primaryDevices.first as Smartphone;
 
   // This is called by `StudyService` when deploying a participant group.
   StudyDeploymentStatus? status =

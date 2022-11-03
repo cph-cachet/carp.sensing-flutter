@@ -1,3 +1,7 @@
+## 1.1.0 - BREAKING
+
+* The first stable release of CARP cores which follows the [carp.core-kotlin](https://github.com/imotions/carp.core-kotlin) v. 1.1.0 domain model.
+
 ## 0.40.3
 
 * fix of non-null `id` in `DeviceDataCollector`.
@@ -73,7 +77,7 @@
 ## 0.21.2
 
 * removal of the overall `carp_core` library - now only using the sub-system libraries. This make the API documentation much more readable.
-* update and improval of API documentation
+* update of API documentation
 
 ## 0.21.1
 

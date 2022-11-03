@@ -3,14 +3,15 @@
 library carp_core;
 
 import 'package:carp_serializable/carp_serializable.dart';
-import 'package:carp_core/carp_protocols/carp_core_protocols.dart';
-import 'package:carp_core/carp_deployment/carp_core_deployment.dart';
+import 'package:carp_core/protocols/carp_core_protocols.dart';
+import 'package:carp_core/deployment/carp_core_deployment.dart';
+import 'package:carp_core/common/carp_core_common.dart';
 
-export 'carp_client/carp_core_client.dart';
-export 'carp_common/carp_core_common.dart';
-export 'carp_data/carp_core_data.dart';
-export 'carp_deployment/carp_core_deployment.dart';
-export 'carp_protocols/carp_core_protocols.dart';
+export 'client/carp_core_client.dart';
+export 'common/carp_core_common.dart';
+export 'data/carp_core_data.dart';
+export 'deployment/carp_core_deployment.dart';
+export 'protocols/carp_core_protocols.dart';
 
 part 'carp_core.json.dart';
 

@@ -53,9 +53,9 @@ void main() {
     String plainJson =
         File('test/json/master_device_deployment.json').readAsStringSync();
 
-    MasterDeviceDeployment deployment = MasterDeviceDeployment.fromJson(
+    PrimaryDeviceDeployment deployment = PrimaryDeviceDeployment.fromJson(
         json.decode(plainJson) as Map<String, dynamic>);
-    expect(deployment.deviceDescriptor.roleName, 'phone');
+    expect(deployment.deviceConfiguration.roleName, 'phone');
     print(toJsonString(deployment));
   });
   test('JSON -> ParticipantData', () async {

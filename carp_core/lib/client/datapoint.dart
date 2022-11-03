@@ -1,0 +1,206 @@
+/*
+ * Copyright 2021 Copenhagen Center for Health Technology (CACHET) at the
+ * Technical University of Denmark (DTU).
+ * Use of this source code is governed by a MIT-style license that can be
+ * found in the LICENSE file.
+ */
+
+part of carp_core_client;
+
+// CARP DEFINITION AS ACCEPTED BY THE SERVER
+//
+// VERSION 1.2 -- EXAMPLE
+//
+// {
+//  "id": 224038,                                   # set by the server, not used in upload
+//  "created_by_user_id": 1,                        # set by the server, not used in upload
+//  "study_id": "c9d341ae",                         # set by the server, not used in upload
+//  "carp_header": {
+//   "study_id": "01cf04a7",                        # required - should be the study_deployment_id
+//   "device_role_name": "phone",                   # optional
+//   "trigger_id": "1",                             # optional
+//   "user_id": "1e828ea0-78f7-11eb-a4c1",          # required - use a UUID and avoid usernames like 'user@dtu.dk'
+//   "upload_time": "2021-02-27T12:27:14.933672Z",  # set by the server, not used in upload
+//   "start_time": "2021-02-27T12:27:12.902614Z",   # optional
+//   "end_time": "2021-02-27T12:27:14.933672Z",     # optional
+//   "data_format": {                               # required
+//    "namespace": "dk.cachet.carp",
+//    "name": "light"
+//   }
+//  },
+//  "carp_body": {                                  # required
+//   "id": "1e828ea0-78f7-11eb-a4c1-8518ece21966",
+//   "timestamp": "2021-02-27T12:27:12.902614Z"
+//   "max_lux": 12,
+//   "mean_lux": 23,
+//   "min_lux": 0.3,
+//   "std_lux": 0.4,
+//  }
+// }
+//
+
+/// A data point storing meta-information and the data.
+@JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)
+class DataPoint {
+  /// A unique, server-side generated ID for this data point.
+  /// `null` if this data point is not yet stored.
+  int? id;
+
+  /// The unique id of the user who created / uploaded this data point.
+  /// `null` if this data point is not yet stored.
+  ///
+  /// This user id is the server-side generated user id (an integer), and **NOT**
+  /// the user id that this data point belongs to, which is stored in the
+  /// [DataPointHeader] as the [userId] (a string, typically the email).
+  ///
+  /// This [createdByUserId] id may, or may not, be identical to the id of the
+  /// user who this data point belongs to.
+  /// By being able to separate who uploads a data point and who the data point
+  /// belongs to, allows for one user to upload data on behalf of another user.
+  /// For example, a parent on behalf of a child.
+  int? createdByUserId;
+
+  /// The unique study deployment id that this data point belongs to / is uploaded
+  /// as part of. Set by the server. `null` if this data point is not yet stored.
+  String? studyId;
+
+  /// The data point header.
+  DataPointHeader carpHeader;
+
+  /// The CARP data point body. Can be any payload modelled as a [Data].
+  @JsonKey(ignore: true)
+  Data? data;
+
+  Map<String, dynamic>? _carpBody;
+
+  /// The CARP data point body. Can be any JSON payload.
+  ///
+  /// When this data point is created locally on the phone, the [carpBody] is
+  /// a json serialization of [data].
+  /// If this data point is deserialized from json, the [carpBody] is the raw
+  /// json.
+  ///
+  /// Note that we do *not* support type/schema checking in this data pay load.
+  /// CARP allow for any json formatted data to be uploaded and stored.
+  Map<String, dynamic>? get carpBody =>
+      (data != null) ? data!.toJson() : _carpBody;
+
+  set carpBody(Map<String, dynamic>? data) => _carpBody = data;
+
+  /// Create a new [DataPoint].
+  DataPoint(this.carpHeader, [this.data]);
+
+  /// Create a [DataPoint] from a [Data] object.
+  factory DataPoint.fromData(Data data) => DataPoint(
+      DataPointHeader(
+        dataFormat: data.format,
+        startTime: DateTime.now().toUtc(),
+      ),
+      data);
+
+  /// Create a [DataPoint] from a JSON map.
+  factory DataPoint.fromJson(Map<String, dynamic> json) =>
+      _$DataPointFromJson(json);
+
+  /// Serialize this [DataPoint] as a JSON map.
+  Map<String, dynamic> toJson() => _$DataPointToJson(this);
+}
+
+/// The header (meta-data) attached to all [DataPoint]s.
+@JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)
+class DataPointHeader {
+  /// An ID of this study.
+  ///
+  /// This is the [studyId] from the [CAMSStudyProtocol], if specified.
+  /// If not specified in the [CAMSStudyProtocol], it is the study deployment
+  /// id of the [StudyDeployment] from which this data point was generated.
+  String? studyId;
+
+  /// The role of the device that collected this data point.
+  String? deviceRoleName;
+
+  /// The id of the [Trigger] in the study deployment that generated this data point.
+  String? triggerId;
+
+  /// The ID of the user (if known).
+  String? userId;
+
+  /// The UTC time stamp of when this data point was uploaded to the server.
+  /// Set by the server.
+  DateTime? uploadTime;
+
+  /// The UTC start timestamp for this data point.
+  DateTime? startTime;
+
+  /// The UTC end timestamp for this data point.
+  /// If this data point does not cover a period, [endTime] will be `null`.
+  DateTime? endTime;
+
+  /// The data format. See [DataFormat] and [NameSpace].
+  DataType dataFormat;
+
+  /// Create a new [DataPointHeader].
+  DataPointHeader({
+    this.studyId,
+    this.userId,
+    this.dataFormat = DataType.UNKNOWN,
+    this.deviceRoleName,
+    this.triggerId,
+    this.startTime,
+    this.endTime,
+  }) {
+    // make sure that timestamps are in UTC
+    if (startTime != null) startTime!.toUtc();
+    if (endTime != null) endTime!.toUtc();
+  }
+
+  /// Create a [DataPointHeader] from a JSON map.
+  factory DataPointHeader.fromJson(Map<String, dynamic> json) =>
+      _$DataPointHeaderFromJson(json);
+
+  /// Return a JSON encoding of this object.
+  Map<String, dynamic> toJson() => _$DataPointHeaderToJson(this);
+}
+
+// /// Specifies the format of the [data] in a [DataPoint].
+// ///
+// /// Note that the only reason why we have both a [DataType] and a [DataFormat]
+// /// class definition is because the JSON serialization is different in data
+// /// upload versus download from CANS.... :-?
+// /// Upload is `FieldRename.snake` while download is `FieldRename.none`.
+// @JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)
+// class DataFormat {
+//   static const DataFormat UNKNOWN = DataFormat(NameSpace.CARP, 'unknown');
+
+//   /// The data type namespace. See [NameSpace].
+//   ///
+//   /// Uniquely identifies the organization/person who determines how to
+//   /// interpret [name].
+//   /// To prevent conflicts, a reverse domain namespace is suggested:
+//   /// e.g., "org.openmhealth" or "dk.cachet.carp".
+//   final String namespace;
+
+//   /// The name of this data format. See [String].
+//   ///
+//   /// Uniquely identifies something within the [namespace].
+//   /// The name may not contain any periods. Periods are reserved for namespaces.
+//   final String name;
+
+//   /// Create a [DataFormat].
+//   const DataFormat(this.namespace, this.name) : super();
+
+//   factory DataFormat.fromString(String type) {
+//     assert(type.contains('.'),
+//         "A data type must contain both a namespace and a name separated with a '.'");
+//     final String name = type.split('.').last;
+//     final String namespace = type.substring(0, type.indexOf(name) - 1);
+//     return DataFormat(namespace, name);
+//   }
+
+//   @override
+//   String toString() => '$namespace.$name';
+
+//   factory DataFormat.fromJson(Map<String, dynamic> json) =>
+//       _$DataFormatFromJson(json);
+//   Map<String, dynamic> toJson() => _$DataFormatToJson(this);
+// }

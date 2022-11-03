@@ -7,7 +7,7 @@ void _registerFromJsonFunctions() {
   if (_fromJsonFunctionsRegistrered) return;
 
   // DEPLOYMENT
-  final DeviceDescriptor device = DeviceDescriptor(roleName: '');
+  final DeviceConfiguration device = DeviceConfiguration(roleName: '');
 
   FromJsonFactory().register(DeviceRegistration());
   FromJsonFactory().register(DeviceRegistration(),
@@ -47,7 +47,7 @@ void _registerFromJsonFunctions() {
 
   // PROTOCOL
   // register(StudyProtocol());
-  FromJsonFactory().register(Trigger());
+  FromJsonFactory().register(TriggerConfiguration());
   FromJsonFactory().register(ElapsedTimeTrigger(elapsedTime: const Duration()));
   FromJsonFactory().register(ManualTrigger());
   FromJsonFactory().register(ScheduledTrigger(
@@ -55,7 +55,7 @@ void _registerFromJsonFunctions() {
       sourceDeviceRoleName: 'ignored',
       time: const TimeOfDay()));
 
-  FromJsonFactory().register(TaskDescriptor());
+  FromJsonFactory().register(TaskConfiguration());
   FromJsonFactory().register(BackgroundTask());
   FromJsonFactory().register(CustomProtocolTask(studyProtocol: 'ignored'));
   FromJsonFactory().register(Measure(type: 'ignored'));
@@ -66,16 +66,16 @@ void _registerFromJsonFunctions() {
   FromJsonFactory()
       .register(GranularitySamplingConfiguration(Granularity.Balanced));
 
-  FromJsonFactory().register(DeviceDescriptor(roleName: ''));
-  FromJsonFactory().register(DeviceConnection());
-  FromJsonFactory().register(MasterDeviceDescriptor(roleName: ''));
+  FromJsonFactory().register(DeviceConfiguration(roleName: ''));
+  // FromJsonFactory().register(DeviceConnection());
+  FromJsonFactory().register(PrimaryDeviceConfiguration(roleName: ''));
   FromJsonFactory().register(CustomProtocolDevice());
   FromJsonFactory().register(Smartphone());
   FromJsonFactory().register(AltBeacon());
-  FromJsonFactory().register(DeviceDescriptor(roleName: ''),
+  FromJsonFactory().register(DeviceConfiguration(roleName: ''),
       type:
           'dk.cachet.carp.protocols.infrastructure.test.StubMasterDeviceDescriptor');
-  FromJsonFactory().register(DeviceDescriptor(roleName: ''),
+  FromJsonFactory().register(DeviceConfiguration(roleName: ''),
       type:
           'dk.cachet.carp.protocols.infrastructure.test.StubDeviceDescriptor');
 
