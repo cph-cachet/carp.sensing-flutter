@@ -249,7 +249,7 @@ class StudyDeploymentStatus extends Serializable {
   /// Returns `null` if there is no master device in the list of [devicesStatus].
   DeviceDeploymentStatus? get masterDeviceStatus {
     for (DeviceDeploymentStatus status in devicesStatus) {
-      if (status.device.isMasterDevice!) return status;
+      if (status.device.isOptional!) return status;
     }
     return null;
   }

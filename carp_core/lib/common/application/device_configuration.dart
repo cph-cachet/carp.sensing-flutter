@@ -19,12 +19,14 @@ class DeviceConfiguration extends Serializable {
   @JsonKey(ignore: true)
   String get type => jsonType;
 
-  /// Is this the master device?
-  bool? isMasterDevice;
-
-  /// The role name of this device in a specific [StudyProtocol].
+  /// A name which describes how the device participates within the study protocol;
+  /// it's 'role'.
   /// For example, 'Parent's phone' or 'Child phone'.
   String roleName;
+
+  /// Determines whether device registration for this device is optional prior to
+  /// starting a study, i.e., whether the study can run without this device or not.
+  bool isOptional = true;
 
   /// The set of data types which can be collected on this device.
   List<String>? supportedDataTypes;
@@ -35,13 +37,13 @@ class DeviceConfiguration extends Serializable {
 
   DeviceConfiguration({
     required this.roleName,
-    this.isMasterDevice = false,
+    this.isOptional = false,
     this.supportedDataTypes,
   }) : super();
 
   @override
   String toString() =>
-      '$runtimeType - roleName: $roleName, isMasterDevice: $isMasterDevice';
+      '$runtimeType - roleName: $roleName, isMasterDevice: $isOptional';
 
   @override
   Function get fromJsonFunction => _$DeviceConfigurationFromJson;
@@ -60,7 +62,7 @@ class PrimaryDeviceConfiguration extends DeviceConfiguration {
   PrimaryDeviceConfiguration({
     required super.roleName,
     super.supportedDataTypes,
-  }) : super(isMasterDevice: true);
+  }) : super(isOptional: true);
 
   @override
   Function get fromJsonFunction => _$PrimaryDeviceConfigurationFromJson;
@@ -124,7 +126,7 @@ class AltBeacon extends DeviceConfiguration {
   AltBeacon({
     super.roleName = 'AltBeacon',
     super.supportedDataTypes,
-  }) : super(isMasterDevice: false);
+  }) : super(isOptional: false);
 
   @override
   Function get fromJsonFunction => _$AltBeaconFromJson;

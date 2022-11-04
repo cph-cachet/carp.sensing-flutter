@@ -74,17 +74,17 @@ The `fromJsonFunction` must be registered on app startup (before use of de-seria
 
 For this purpose it is helpful to have an empty constructor, but any constructur will work, since only the `fromJsonFunction` function is used.
 
-Polymorphic serialization is handled by setting the `$type` property in the `Serializable` class. Per default, an object's `runtimeType` is used as the
- `$type` for an object. Hence, the json of object of type `A` and `B` would
+Polymorphic serialization is handled by setting the `__type` property in the `Serializable` class. Per default, an object's `runtimeType` is used as the
+ `__type` for an object. Hence, the json of object of type `A` and `B` would
  look like this:
 
  ```json
   {
-   "$type": "A",
+   "__type": "A",
    "index": 1
   }
   {
-   "$type": "B",
+   "__type": "B",
    "index": 2
    "str": "abc"
   }
@@ -92,7 +92,7 @@ Polymorphic serialization is handled by setting the `$type` property in the `Ser
 
 However, if you want to specify your own class type (e.g., if you get json serialized from another language which uses a package structure like Java, C# or Kotlin), you can specify the json type in the `jsonType` property of the class.
 
-For example, if the class `B` above should use a different `$type` annotation, using the following:
+For example, if the class `B` above should use a different `__type` annotation, using the following:
 
 ```dart
  @JsonSerializable()
@@ -108,7 +108,7 @@ For example, if the class `B` above should use a different `$type` annotation, u
 
  ```json
   {
-   "$type": "dk.cachet.B",
+   "__type": "dk.cachet.B",
    "index": 2
    "str": "abc"
   }

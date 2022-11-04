@@ -16,7 +16,7 @@ void main() {
       description: 'For testing purposes.',
     );
 
-    Smartphone phone = Smartphone(roleName: 'masterphone');
+    Smartphone phone = Smartphone(roleName: 'phone');
     DeviceConfiguration connectedDevice = DeviceConfiguration(
       roleName: 'connected_device',
     );
@@ -38,6 +38,7 @@ void main() {
       TriggerConfiguration(sourceDeviceRoleName: phone.roleName),
       task,
       phone,
+      Control.Start,
     );
 
     Measure measure = Measure(type: 'dk.cachet.carp.steps');
@@ -50,6 +51,7 @@ void main() {
       ManualTrigger(),
       BackgroundTask()..addMeasure(measure),
       phone,
+      Control.Start,
     );
   });
 
@@ -65,20 +67,21 @@ void main() {
 
   test('JSON -> StudyProtocol', () async {
     // Read the study protocol from json file
-    String plainJson = File('test/json/study_protocol.json').readAsStringSync();
+    String plainJson =
+        File('test/json/dart_study_protocol.json').readAsStringSync();
 
     StudyProtocol protocol =
         StudyProtocol.fromJson(json.decode(plainJson) as Map<String, dynamic>);
 
     expect(protocol.ownerId, 'xyz@dtu.dk');
-    expect(protocol.primaryDevices.first.roleName, 'masterphone');
+    expect(protocol.primaryDevices.first.roleName, 'phone');
     print(toJsonString(protocol));
   });
 
   test('JSON -> Custom StudyProtocol', () async {
     // Read the study protocol from json file
     String plainJson =
-        File('test/json/custom_study_protocol.json').readAsStringSync();
+        File('test/json/kotlin_custom_study_protocol.json').readAsStringSync();
 
     StudyProtocol protocol =
         StudyProtocol.fromJson(json.decode(plainJson) as Map<String, dynamic>);
@@ -92,7 +95,7 @@ void main() {
     DataPoint dataPoint = DataPoint(
       DataPointHeader(
         studyId: '1234',
-        dataFormat: const DataFormat(NameSpace.CARP, 'light'),
+        dataFormat: const DataType(NameSpace.CARP, 'light'),
       ),
       Data(),
     );

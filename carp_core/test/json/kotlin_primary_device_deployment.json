@@ -1,0 +1,130 @@
+{
+    "deviceConfiguration": {
+        "__type": "dk.cachet.carp.common.application.devices.Smartphone",
+        "isPrimaryDevice": true,
+        "roleName": "Participant's phone",
+        "defaultSamplingConfiguration": {
+            "dk.cachet.carp.geolocation": {
+                "__type": "dk.cachet.carp.common.application.sampling.BatteryAwareSamplingConfiguration",
+                "normal": {
+                    "__type": "dk.cachet.carp.common.application.sampling.GranularitySamplingConfiguration",
+                    "granularity": "Detailed"
+                },
+                "low": {
+                    "__type": "dk.cachet.carp.common.application.sampling.GranularitySamplingConfiguration",
+                    "granularity": "Coarse"
+                }
+            }
+        }
+    },
+    "registration": {
+        "__type": "dk.cachet.carp.common.application.devices.DefaultDeviceRegistration",
+        "registrationCreatedOn": "2022-01-18T13:55:10Z",
+        "deviceDisplayName": null,
+        "deviceId": "fc7b41b0-e9e2-4b5d-8c3d-5119b556a3f0"
+    },
+    "connectedDevices": [
+        {
+            "__type": "dk.cachet.carp.common.application.devices.AltBeacon",
+            "roleName": "Participant's bike",
+            "isOptional": true
+        }
+    ],
+    "connectedDeviceRegistrations": {
+        "Participant's bike": {
+            "__type": "dk.cachet.carp.common.application.devices.AltBeaconDeviceRegistration",
+            "registrationCreatedOn": "2022-01-18T11:06:40Z",
+            "manufacturerId": 280,
+            "organizationId": "4e990957-0838-414c-bf25-2d391e2990b5",
+            "majorId": 42,
+            "minorId": 42,
+            "referenceRssi": 0,
+            "deviceDisplayName": null,
+            "deviceId": "280:4e990957-0838-414c-bf25-2d391e2990b5:42:42"
+        }
+    },
+    "tasks": [
+        {
+            "__type": "dk.cachet.carp.common.application.tasks.BackgroundTask",
+            "name": "Monitor movement",
+            "measures": [
+                {
+                    "__type": "dk.cachet.carp.common.application.tasks.Measure.DataStream",
+                    "type": "dk.cachet.carp.geolocation",
+                    "overrideSamplingConfiguration": {
+                        "__type": "dk.cachet.carp.common.application.sampling.BatteryAwareSamplingConfiguration",
+                        "normal": {
+                            "__type": "dk.cachet.carp.common.application.sampling.GranularitySamplingConfiguration",
+                            "granularity": "Balanced"
+                        },
+                        "low": {
+                            "__type": "dk.cachet.carp.common.application.sampling.GranularitySamplingConfiguration",
+                            "granularity": "Coarse"
+                        }
+                    }
+                },
+                {
+                    "__type": "dk.cachet.carp.common.application.tasks.Measure.DataStream",
+                    "type": "dk.cachet.carp.stepcount",
+                    "overrideSamplingConfiguration": {
+                        "__type": "dk.cachet.carp.common.application.sampling.NoOptionsSamplingConfiguration"
+                    }
+                }
+            ],
+            "description": "Track step count and geolocation for one week.",
+            "duration": "PT168H"
+        },
+        {
+            "__type": "dk.cachet.carp.common.application.tasks.BackgroundTask",
+            "name": "Monitor proximity to bike",
+            "measures": [
+                {
+                    "__type": "dk.cachet.carp.common.application.tasks.Measure.DataStream",
+                    "type": "dk.cachet.carp.signalstrength",
+                    "overrideSamplingConfiguration": {
+                        "__type": "dk.cachet.carp.common.application.sampling.NoOptionsSamplingConfiguration"
+                    }
+                }
+            ],
+            "duration": "PT168H"
+        }
+    ],
+    "triggers": {
+        "0": {
+            "__type": "dk.cachet.carp.common.application.triggers.ElapsedTimeTrigger",
+            "sourceDeviceRoleName": "Participant's phone",
+            "elapsedTime": "PT0S"
+        }
+    },
+    "taskControls": [
+        {
+            "triggerId": 0,
+            "taskName": "Monitor movement",
+            "destinationDeviceRoleName": "Participant's phone",
+            "control": "Start"
+        },
+        {
+            "triggerId": 0,
+            "taskName": "Monitor proximity to bike",
+            "destinationDeviceRoleName": "Participant's bike",
+            "control": "Start"
+        }
+    ],
+    "expectedParticipantData": [
+        {
+            "attribute": {
+                "__type": "dk.cachet.carp.common.application.users.ParticipantAttribute.DefaultParticipantAttribute",
+                "inputDataType": "dk.cachet.carp.input.sex"
+            },
+            "assignedTo": {
+                "__type": "dk.cachet.carp.common.application.users.AssignedTo.Roles",
+                "roleNames": [
+                    "Participant"
+                ]
+            }
+        }
+    ],
+    "applicationData": {
+        "uiTheme": "black"
+    }
+}

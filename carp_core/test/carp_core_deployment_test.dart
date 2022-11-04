@@ -49,9 +49,9 @@ void main() {
         '294a5748-d8fa-4617-b475-99c6980032c8');
     print(toJsonString(invitation));
   });
-  test('JSON -> MasterDeviceDeployment', () async {
-    String plainJson =
-        File('test/json/master_device_deployment.json').readAsStringSync();
+  test('JSON -> PrimaryDeviceDeployment', () async {
+    String plainJson = File('test/json/core_primary_device_deployment.json')
+        .readAsStringSync();
 
     PrimaryDeviceDeployment deployment = PrimaryDeviceDeployment.fromJson(
         json.decode(plainJson) as Map<String, dynamic>);

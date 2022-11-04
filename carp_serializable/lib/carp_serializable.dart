@@ -2,6 +2,7 @@ library carp_serializable;
 
 import 'package:meta/meta.dart';
 import 'dart:convert';
+import 'package:json_annotation/json_annotation.dart';
 
 /*
  * Copyright 2022 Copenhagen Center for Health Technology (CACHET) at the
@@ -71,18 +72,18 @@ import 'dart:convert';
 /// For this purpose it is helpful to have an empty constructor, but any constructur
 /// will work, since only the `fromJsonFunction` function is used.
 ///
-/// Polymorphic serialization is handled by setting the `$type` property in the
+/// Polymorphic serialization is handled by setting the `__type` property in the
 /// [Serializable] class. Per default, an object's `runtimeType` is used as the
-/// `$type` for an object. Hence, the json of object of type `A` and `B` would
+/// `__type` for an object. Hence, the json of object of type `A` and `B` would
 /// look like this:
 ///
 /// ```json
 ///  {
-///   "$type": "A",
+///   "__type": "A",
 ///   "index": 1
 ///  }
 ///  {
-///   "$type": "B",
+///   "__type": "B",
 ///   "index": 2
 ///   "str": "abc"
 ///  }
@@ -93,7 +94,7 @@ import 'dart:convert';
 /// Java, C# or Kotlin), you can specify the json type in the [jsonType] property
 /// of the class.
 ///
-/// For example, if the class `B` above should use a different `$type` annotation,
+/// For example, if the class `B` above should use a different `__type` annotation,
 /// using the following:
 ///
 /// ```dart
@@ -110,7 +111,7 @@ import 'dart:convert';
 ///
 /// ```json
 ///  {
-///   "$type": "dk.cachet.B",
+///   "__type": "dk.cachet.B",
 ///   "index": 2
 ///   "str": "abc"
 ///  }
@@ -118,18 +119,15 @@ import 'dart:convert';
 ///
 abstract class Serializable {
   /// The identifier of the class type in JSON serialization.
-  static const String CLASS_IDENTIFIER = '\$type';
+  static const String CLASS_IDENTIFIER = '\__type';
 
-  // to be used in carp_core v. 1.0.0
-  // static const String CLASS_IDENTIFIER = '\__type';
+  // was used in carp_core v. < 1.0.0
+  // static const String CLASS_IDENTIFIER = '\$type';
 
   /// The runtime class name (type) of this object.
   /// Used for deserialization from JSON objects.
+  @JsonKey(name: '__type')
   String? $type;
-
-  // to be used in carp_core v. 1.0.0
-  // @JsonKey(name: '__type')
-  // String? $type;
 
   /// Create an object that can be serialized to JSON.
   @mustCallSuper
@@ -143,7 +141,7 @@ abstract class Serializable {
   /// Return a JSON encoding of this object.
   Map<String, dynamic> toJson();
 
-  /// Return the [$type] to be used for JSON serialization of this class.
+  /// Return the `__type` to be used for JSON serialization of this class.
   /// Default is [runtimeType]. Only specify this if you need another type.
   String get jsonType => runtimeType.toString();
 }
@@ -160,9 +158,9 @@ class FromJsonFactory {
 
   /// Register a [Serializable] class which can be deserialized from JSON.
   ///
-  /// If [type] is specified, then this is used as the type indentifier as
+  /// If [type] is specified, then this is used as the type identifier as
   /// specified in [CLASS_IDENTIFIER].
-  /// Othervise the [Serializable] class [jsonType] is used.
+  /// Otherwise the [Serializable] class [jsonType] is used.
   ///
   /// A type needs to be registered **before** a class can be deserialized from
   /// JSON to a Flutter class.

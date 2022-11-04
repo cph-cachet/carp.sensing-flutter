@@ -82,48 +82,6 @@ class PrimaryDeviceDeployment {
   String toString() => '$runtimeType - device: ${deviceConfiguration.roleName}';
 }
 
-/// A [DeviceRegistration] configures a [DeviceConfiguration] as part of the
-/// deployment of a [StudyProtocol].
-@JsonSerializable(fieldRename: FieldRename.none, includeIfNull: true)
-class DeviceRegistration extends Serializable {
-  /// The registration time in zulu time.
-  late DateTime registrationCreationDate;
-
-  /// An ID for the device, used to disambiguate between devices of the same type,
-  /// as provided by the device itself.
-  /// It is up to specific types of devices to guarantee uniqueness across all
-  /// devices of the same type.
-  late String deviceId;
-
-  /// Create a new [DeviceRegistration]
-  ///  * [deviceId] - a unique id for this device.
-  ///    If not specified, a unique id will be generated.
-  ///  * [registrationCreationDate] - the timestamp in zulu when this registration was created.
-  ///    If not specified, the time of creation will be used.
-  DeviceRegistration([
-    String? deviceId,
-    DateTime? registrationCreationDate,
-  ]) : super() {
-    this.registrationCreationDate =
-        registrationCreationDate ?? DateTime.now().toUtc();
-    this.deviceId = deviceId ?? const Uuid().v1();
-  }
-
-  @override
-  Function get fromJsonFunction => _$DeviceRegistrationFromJson;
-  factory DeviceRegistration.fromJson(Map<String, dynamic> json) =>
-      FromJsonFactory().fromJson(json) as DeviceRegistration;
-  @override
-  Map<String, dynamic> toJson() => _$DeviceRegistrationToJson(this);
-  @override
-  String get jsonType =>
-      'dk.cachet.carp.protocols.domain.devices.DefaultDeviceRegistration';
-
-  @override
-  String toString() =>
-      '$runtimeType - deviceId: $deviceId, registrationCreationDate: $registrationCreationDate';
-}
-
 /// A [DeviceDeploymentStatus] represents the status of a device in a deployment.
 ///
 /// See [DeviceDeploymentStatus.kt](https://github.com/cph-cachet/carp.core-kotlin/blob/develop/carp.deployment.core/src/commonMain/kotlin/dk/cachet/carp/deployment/domain/DeviceDeploymentStatus.kt).

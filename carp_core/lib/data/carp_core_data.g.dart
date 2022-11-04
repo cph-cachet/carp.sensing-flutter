@@ -88,7 +88,7 @@ Map<String, dynamic> _$MeasurementToJson(Measurement instance) {
 }
 
 Data _$DataFromJson(Map<String, dynamic> json) =>
-    Data()..$type = json[r'$type'] as String?;
+    Data()..$type = json['__type'] as String?;
 
 Map<String, dynamic> _$DataToJson(Data instance) {
   final val = <String, dynamic>{};
@@ -99,6 +99,6 @@ Map<String, dynamic> _$DataToJson(Data instance) {
     }
   }
 
-  writeNotNull(r'$type', instance.$type);
+  writeNotNull('__type', instance.$type);
   return val;
 }

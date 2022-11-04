@@ -14,9 +14,7 @@ library carp_core_deployment;
 
 import 'package:meta/meta.dart';
 import 'package:json_annotation/json_annotation.dart';
-// import 'package:meta/meta.dart';
 import 'package:uuid/uuid.dart';
-
 import 'package:carp_serializable/carp_serializable.dart';
 
 import '../protocols/carp_core_protocols.dart';
@@ -26,7 +24,7 @@ export 'carp_core_deployment.dart';
 
 part 'application/deployment_service.dart';
 part 'application/participation_service.dart';
-part 'domain/device_deployment.dart';
+part 'application/device_deployment.dart';
 part 'domain/study_deployment.dart';
 part 'domain/participation.dart';
 part 'domain/users.dart';

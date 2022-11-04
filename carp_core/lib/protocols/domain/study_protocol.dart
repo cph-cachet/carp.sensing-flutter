@@ -47,13 +47,6 @@ class StudyProtocol extends Snapshot {
   /// The devices this device needs to connect to.
   Set<DeviceConfiguration> connectedDevices = {};
 
-  /// The combined list of devices of [primaryDevices] and [connectedDevices].
-  Set<DeviceConfiguration> get _devices {
-    Set<DeviceConfiguration> devices = primaryDevices;
-    devices.addAll(connectedDevices);
-    return devices;
-  }
-
   List<DeviceConnection> connections = [];
 
   /// The tasks which measure data and/or present output on a device.
@@ -175,7 +168,9 @@ class StudyProtocol extends Snapshot {
     DeviceConfiguration destinationDevice,
     Control control,
   ) {
-    assert(_devices.contains(destinationDevice),
+    assert(
+        primaryDevices.contains(destinationDevice) ||
+            connectedDevices.contains(destinationDevice),
         'The passed device to which the task needs to be sent is not included in this study protocol.');
 
     // add trigger and task to ensure they are included in the protocol

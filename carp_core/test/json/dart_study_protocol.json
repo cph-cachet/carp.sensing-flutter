@@ -1,0 +1,96 @@
+{
+    "id": "b371ea80-5c5b-11ed-8078-371cca170c64",
+    "createdOn": "2022-11-04T16:14:04.072999Z",
+    "version": 0,
+    "ownerId": "xyz@dtu.dk",
+    "name": "Test Study Protocol",
+    "description": "For testing purposes.",
+    "primaryDevices": [
+        {
+            "__type": "dk.cachet.carp.common.application.devices.Smartphone",
+            "roleName": "phone",
+            "isOptional": true,
+            "defaultSamplingConfiguration": {}
+        }
+    ],
+    "connectedDevices": [
+        {
+            "__type": "dk.cachet.carp.common.application.devices.DeviceConfiguration",
+            "roleName": "connected_device",
+            "isOptional": false,
+            "defaultSamplingConfiguration": {}
+        }
+    ],
+    "connections": [],
+    "tasks": [
+        {
+            "__type": "dk.cachet.carp.common.application.tasks.BackgroundTask",
+            "name": "Start measures",
+            "measures": [
+                {
+                    "__type": "dk.cachet.carp.common.application.tasks.Measure.DataStream",
+                    "type": "dk.cachet.carp.light"
+                },
+                {
+                    "__type": "dk.cachet.carp.common.application.tasks.Measure.DataStream",
+                    "type": "dk.cachet.carp.gps"
+                },
+                {
+                    "__type": "dk.cachet.carp.common.application.tasks.Measure.DataStream",
+                    "type": "dk.cachet.carp.steps"
+                }
+            ]
+        },
+        {
+            "__type": "dk.cachet.carp.common.application.tasks.BackgroundTask",
+            "name": "Task #3",
+            "measures": [
+                {
+                    "__type": "dk.cachet.carp.common.application.tasks.Measure.DataStream",
+                    "type": "dk.cachet.carp.steps",
+                    "overrideSamplingConfiguration": {
+                        "__type": "dk.cachet.carp.protocols.domain.sampling.BatteryAwareSamplingConfiguration",
+                        "normal": {
+                            "__type": "dk.cachet.carp.protocols.domain.sampling.GranularitySamplingConfiguration",
+                            "granularity": "Detailed"
+                        },
+                        "low": {
+                            "__type": "dk.cachet.carp.protocols.domain.sampling.GranularitySamplingConfiguration",
+                            "granularity": "Balanced"
+                        },
+                        "critical": {
+                            "__type": "dk.cachet.carp.protocols.domain.sampling.GranularitySamplingConfiguration",
+                            "granularity": "Coarse"
+                        }
+                    }
+                }
+            ]
+        }
+    ],
+    "triggers": {
+        "0": {
+            "__type": "dk.cachet.carp.protocols.domain.triggers.TriggerConfiguration",
+            "sourceDeviceRoleName": "phone"
+        },
+        "1": {
+            "__type": "dk.cachet.carp.protocols.domain.triggers.ManualTrigger"
+        }
+    },
+    "taskControls": [
+        {
+            "triggerId": 0,
+            "taskName": "Start measures",
+            "destinationDeviceRoleName": "phone",
+            "control": "Start"
+        },
+        {
+            "triggerId": 1,
+            "taskName": "Task #3",
+            "destinationDeviceRoleName": "phone",
+            "control": "Start"
+        }
+    ],
+    "participantRoles": [],
+    "assignedDevices": {},
+    "expectedParticipantData": []
+}
