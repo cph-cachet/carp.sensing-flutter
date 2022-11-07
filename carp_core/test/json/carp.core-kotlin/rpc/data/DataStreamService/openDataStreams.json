@@ -1,0 +1,17 @@
+{
+    "__type": "dk.cachet.carp.data.infrastructure.DataStreamServiceRequest.OpenDataStreams",
+    "apiVersion": "1.1",
+    "configuration": {
+        "studyDeploymentId": "c9cc5317-48da-45f2-958e-58bc07f34681",
+        "expectedDataStreams": [
+            {
+                "deviceRoleName": "Participant's phone",
+                "dataType": "dk.cachet.carp.geolocation"
+            },
+            {
+                "deviceRoleName": "Participant's phone",
+                "dataType": "dk.cachet.carp.stepcount"
+            }
+        ]
+    }
+}

@@ -1,0 +1,8 @@
+{
+    "__type": "dk.cachet.carp.protocols.infrastructure.ProtocolFactoryServiceRequest.CreateCustomProtocol",
+    "apiVersion": "1.1",
+    "ownerId": "491f03fc-964b-4783-86a6-a528bbfe4e94",
+    "name": "Fictional Company study",
+    "customProtocol": "{\"collect-data\": \"heartrate, gps\"}",
+    "description": "Collect heartrate and GPS using Fictional Company's software."
+}

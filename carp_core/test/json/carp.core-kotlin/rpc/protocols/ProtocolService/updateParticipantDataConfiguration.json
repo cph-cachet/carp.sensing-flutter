@@ -1,0 +1,20 @@
+{
+    "__type": "dk.cachet.carp.protocols.infrastructure.ProtocolServiceRequest.UpdateParticipantDataConfiguration",
+    "apiVersion": "1.1",
+    "protocolId": "25fe92a5-0d52-4e37-8d05-31f347d72d3d",
+    "versionTag": "Version 3: ask participant data",
+    "expectedParticipantData": [
+        {
+            "attribute": {
+                "__type": "dk.cachet.carp.common.application.users.ParticipantAttribute.DefaultParticipantAttribute",
+                "inputDataType": "dk.cachet.carp.input.sex"
+            },
+            "assignedTo": {
+                "__type": "dk.cachet.carp.common.application.users.AssignedTo.Roles",
+                "roleNames": [
+                    "Participant"
+                ]
+            }
+        }
+    ]
+}

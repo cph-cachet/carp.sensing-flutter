@@ -194,7 +194,7 @@ DeviceConfiguration _$DeviceConfigurationFromJson(Map<String, dynamic> json) =>
     )
       ..$type = json['__type'] as String?
       ..defaultSamplingConfiguration =
-          (json['defaultSamplingConfiguration'] as Map<String, dynamic>).map(
+          (json['defaultSamplingConfiguration'] as Map<String, dynamic>?)?.map(
         (k, e) => MapEntry(
             k, SamplingConfiguration.fromJson(e as Map<String, dynamic>)),
       );
@@ -210,9 +210,10 @@ Map<String, dynamic> _$DeviceConfigurationToJson(DeviceConfiguration instance) {
 
   writeNotNull('__type', instance.$type);
   val['roleName'] = instance.roleName;
-  val['isOptional'] = instance.isOptional;
+  writeNotNull('isOptional', instance.isOptional);
   writeNotNull('supportedDataTypes', instance.supportedDataTypes);
-  val['defaultSamplingConfiguration'] = instance.defaultSamplingConfiguration;
+  writeNotNull(
+      'defaultSamplingConfiguration', instance.defaultSamplingConfiguration);
   return val;
 }
 
@@ -225,12 +226,13 @@ PrimaryDeviceConfiguration _$PrimaryDeviceConfigurationFromJson(
           .toList(),
     )
       ..$type = json['__type'] as String?
-      ..isOptional = json['isOptional'] as bool
+      ..isOptional = json['isOptional'] as bool?
       ..defaultSamplingConfiguration =
-          (json['defaultSamplingConfiguration'] as Map<String, dynamic>).map(
+          (json['defaultSamplingConfiguration'] as Map<String, dynamic>?)?.map(
         (k, e) => MapEntry(
             k, SamplingConfiguration.fromJson(e as Map<String, dynamic>)),
-      );
+      )
+      ..isPrimaryDevice = json['isPrimaryDevice'] as bool;
 
 Map<String, dynamic> _$PrimaryDeviceConfigurationToJson(
     PrimaryDeviceConfiguration instance) {
@@ -244,9 +246,11 @@ Map<String, dynamic> _$PrimaryDeviceConfigurationToJson(
 
   writeNotNull('__type', instance.$type);
   val['roleName'] = instance.roleName;
-  val['isOptional'] = instance.isOptional;
+  writeNotNull('isOptional', instance.isOptional);
   writeNotNull('supportedDataTypes', instance.supportedDataTypes);
-  val['defaultSamplingConfiguration'] = instance.defaultSamplingConfiguration;
+  writeNotNull(
+      'defaultSamplingConfiguration', instance.defaultSamplingConfiguration);
+  val['isPrimaryDevice'] = instance.isPrimaryDevice;
   return val;
 }
 
@@ -260,12 +264,13 @@ CustomProtocolDevice _$CustomProtocolDeviceFromJson(
           .toList(),
     )
       ..$type = json['__type'] as String?
-      ..isOptional = json['isOptional'] as bool
+      ..isOptional = json['isOptional'] as bool?
       ..defaultSamplingConfiguration =
-          (json['defaultSamplingConfiguration'] as Map<String, dynamic>).map(
+          (json['defaultSamplingConfiguration'] as Map<String, dynamic>?)?.map(
         (k, e) => MapEntry(
             k, SamplingConfiguration.fromJson(e as Map<String, dynamic>)),
-      );
+      )
+      ..isPrimaryDevice = json['isPrimaryDevice'] as bool;
 
 Map<String, dynamic> _$CustomProtocolDeviceToJson(
     CustomProtocolDevice instance) {
@@ -279,9 +284,11 @@ Map<String, dynamic> _$CustomProtocolDeviceToJson(
 
   writeNotNull('__type', instance.$type);
   val['roleName'] = instance.roleName;
-  val['isOptional'] = instance.isOptional;
+  writeNotNull('isOptional', instance.isOptional);
   writeNotNull('supportedDataTypes', instance.supportedDataTypes);
-  val['defaultSamplingConfiguration'] = instance.defaultSamplingConfiguration;
+  writeNotNull(
+      'defaultSamplingConfiguration', instance.defaultSamplingConfiguration);
+  val['isPrimaryDevice'] = instance.isPrimaryDevice;
   return val;
 }
 
@@ -292,12 +299,13 @@ Smartphone _$SmartphoneFromJson(Map<String, dynamic> json) => Smartphone(
           .toList(),
     )
       ..$type = json['__type'] as String?
-      ..isOptional = json['isOptional'] as bool
+      ..isOptional = json['isOptional'] as bool?
       ..defaultSamplingConfiguration =
-          (json['defaultSamplingConfiguration'] as Map<String, dynamic>).map(
+          (json['defaultSamplingConfiguration'] as Map<String, dynamic>?)?.map(
         (k, e) => MapEntry(
             k, SamplingConfiguration.fromJson(e as Map<String, dynamic>)),
-      );
+      )
+      ..isPrimaryDevice = json['isPrimaryDevice'] as bool;
 
 Map<String, dynamic> _$SmartphoneToJson(Smartphone instance) {
   final val = <String, dynamic>{};
@@ -310,9 +318,11 @@ Map<String, dynamic> _$SmartphoneToJson(Smartphone instance) {
 
   writeNotNull('__type', instance.$type);
   val['roleName'] = instance.roleName;
-  val['isOptional'] = instance.isOptional;
+  writeNotNull('isOptional', instance.isOptional);
   writeNotNull('supportedDataTypes', instance.supportedDataTypes);
-  val['defaultSamplingConfiguration'] = instance.defaultSamplingConfiguration;
+  writeNotNull(
+      'defaultSamplingConfiguration', instance.defaultSamplingConfiguration);
+  val['isPrimaryDevice'] = instance.isPrimaryDevice;
   return val;
 }
 
@@ -323,9 +333,9 @@ AltBeacon _$AltBeaconFromJson(Map<String, dynamic> json) => AltBeacon(
           .toList(),
     )
       ..$type = json['__type'] as String?
-      ..isOptional = json['isOptional'] as bool
+      ..isOptional = json['isOptional'] as bool?
       ..defaultSamplingConfiguration =
-          (json['defaultSamplingConfiguration'] as Map<String, dynamic>).map(
+          (json['defaultSamplingConfiguration'] as Map<String, dynamic>?)?.map(
         (k, e) => MapEntry(
             k, SamplingConfiguration.fromJson(e as Map<String, dynamic>)),
       );
@@ -341,9 +351,10 @@ Map<String, dynamic> _$AltBeaconToJson(AltBeacon instance) {
 
   writeNotNull('__type', instance.$type);
   val['roleName'] = instance.roleName;
-  val['isOptional'] = instance.isOptional;
+  writeNotNull('isOptional', instance.isOptional);
   writeNotNull('supportedDataTypes', instance.supportedDataTypes);
-  val['defaultSamplingConfiguration'] = instance.defaultSamplingConfiguration;
+  writeNotNull(
+      'defaultSamplingConfiguration', instance.defaultSamplingConfiguration);
   return val;
 }
 

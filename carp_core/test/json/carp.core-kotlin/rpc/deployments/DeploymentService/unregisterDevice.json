@@ -1,0 +1,6 @@
+{
+    "__type": "dk.cachet.carp.deployments.infrastructure.DeploymentServiceRequest.UnregisterDevice",
+    "apiVersion": "1.1",
+    "studyDeploymentId": "c9cc5317-48da-45f2-958e-58bc07f34681",
+    "deviceRoleName": "Participant's phone"
+}

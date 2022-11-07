@@ -77,7 +77,7 @@ class StudyDeployment {
     for (var deviceDescriptor in protocol.primaryDevices) {
       _status.devicesStatus.add(getDeviceStatus(deviceDescriptor));
     }
-    for (var deviceDescriptor in protocol.connectedDevices) {
+    for (var deviceDescriptor in protocol.connectedDevices!) {
       _status.devicesStatus.add(getDeviceStatus(deviceDescriptor));
     }
 
@@ -146,7 +146,7 @@ class StudyDeployment {
 
     // determine which devices this device needs to connect to
     // TODO - only retrieve configuration for preregistered devices
-    Set<DeviceConfiguration> connectedDevices = _protocol.connectedDevices;
+    Set<DeviceConfiguration> connectedDevices = _protocol.connectedDevices!;
 
     // create a map of device registration for the connected devices
     Map<String, DeviceRegistration?> connectedDeviceConfigurations = {};

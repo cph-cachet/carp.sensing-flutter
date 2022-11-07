@@ -45,9 +45,9 @@ class StudyProtocol extends Snapshot {
   Set<PrimaryDeviceConfiguration> primaryDevices = {};
 
   /// The devices this device needs to connect to.
-  Set<DeviceConfiguration> connectedDevices = {};
+  Set<DeviceConfiguration>? connectedDevices = {};
 
-  List<DeviceConnection> connections = [];
+  List<DeviceConnection>? connections = [];
 
   /// The tasks which measure data and/or present output on a device.
   Set<TaskConfiguration> tasks = {};
@@ -64,11 +64,11 @@ class StudyProtocol extends Snapshot {
   /// can be linked to.
   /// If a [ParticipantAttribute] is not linked to any specific participant role,
   /// the participant data can be filled out by all participants in the study deployment.
-  Set<ParticipantRole> participantRoles = {};
+  Set<ParticipantRole>? participantRoles = {};
 
   /// Per device role, the participant roles to which the device is assigned.
   /// Unassigned device are assigned to "anyone".
-  Map<String, Set<String>> assignedDevices = {};
+  Map<String, Set<String>>? assignedDevices = {};
 
   Set<ExpectedParticipantData> expectedParticipantData = {};
 
@@ -119,7 +119,7 @@ class StudyProtocol extends Snapshot {
   /// Returns true if the [device] has been added; false if it is already connected
   /// to the specified [primaryDevice].
   bool addConnectedDevice(DeviceConfiguration device) =>
-      connectedDevices.add(device);
+      connectedDevices!.add(device);
 
   /// Add the [trigger] to this protocol.
   void addTrigger(TriggerConfiguration trigger) {
@@ -170,7 +170,7 @@ class StudyProtocol extends Snapshot {
   ) {
     assert(
         primaryDevices.contains(destinationDevice) ||
-            connectedDevices.contains(destinationDevice),
+            connectedDevices!.contains(destinationDevice),
         'The passed device to which the task needs to be sent is not included in this study protocol.');
 
     // add trigger and task to ensure they are included in the protocol
@@ -293,7 +293,7 @@ class StudyProtocol extends Snapshot {
   ///
   /// Returns true if the [role] has been added; false in case the same [role]
   /// has already been added before.
-  bool addParticipantRole(ParticipantRole role) => participantRoles.add(role);
+  bool addParticipantRole(ParticipantRole role) => participantRoles!.add(role);
 
   /// Add expected participant data to be input by users.
   ///

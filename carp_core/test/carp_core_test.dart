@@ -68,7 +68,7 @@ void main() {
   test('JSON -> StudyProtocol', () async {
     // Read the study protocol from json file
     String plainJson =
-        File('test/json/dart_study_protocol.json').readAsStringSync();
+        File('test/json/carp.core-dart/study_protocol.json').readAsStringSync();
 
     StudyProtocol protocol =
         StudyProtocol.fromJson(json.decode(plainJson) as Map<String, dynamic>);
@@ -81,7 +81,8 @@ void main() {
   test('JSON -> Custom StudyProtocol', () async {
     // Read the study protocol from json file
     String plainJson =
-        File('test/json/kotlin_custom_study_protocol.json').readAsStringSync();
+        File('test/json/carp.core-kotlin/protocols/custom_study_protocol.json')
+            .readAsStringSync();
 
     StudyProtocol protocol =
         StudyProtocol.fromJson(json.decode(plainJson) as Map<String, dynamic>);

@@ -8,7 +8,7 @@ part of carp_core_protocols;
 
 TaskControl _$TaskControlFromJson(Map<String, dynamic> json) => TaskControl(
       json['triggerId'] as int,
-      $enumDecodeNullable(_$ControlEnumMap, json['control']),
+      $enumDecodeNullable(_$ControlEnumMap, json['control']) ?? Control.Start,
     )
       ..taskName = json['taskName'] as String
       ..destinationDeviceRoleName = json['destinationDeviceRoleName'] as String?
@@ -29,7 +29,7 @@ Map<String, dynamic> _$TaskControlToJson(TaskControl instance) {
   }
 
   writeNotNull('destinationDeviceRoleName', instance.destinationDeviceRoleName);
-  writeNotNull('control', _$ControlEnumMap[instance.control]);
+  val['control'] = _$ControlEnumMap[instance.control]!;
   writeNotNull('hasBeenScheduledUntil',
       instance.hasBeenScheduledUntil?.toIso8601String());
   return val;
@@ -53,11 +53,11 @@ StudyProtocol _$StudyProtocolFromJson(Map<String, dynamic> json) =>
           .map((e) =>
               PrimaryDeviceConfiguration.fromJson(e as Map<String, dynamic>))
           .toSet()
-      ..connectedDevices = (json['connectedDevices'] as List<dynamic>)
-          .map((e) => DeviceConfiguration.fromJson(e as Map<String, dynamic>))
+      ..connectedDevices = (json['connectedDevices'] as List<dynamic>?)
+          ?.map((e) => DeviceConfiguration.fromJson(e as Map<String, dynamic>))
           .toSet()
-      ..connections = (json['connections'] as List<dynamic>)
-          .map((e) => DeviceConnection.fromJson(e as Map<String, dynamic>))
+      ..connections = (json['connections'] as List<dynamic>?)
+          ?.map((e) => DeviceConnection.fromJson(e as Map<String, dynamic>))
           .toList()
       ..tasks = (json['tasks'] as List<dynamic>)
           .map((e) => TaskConfiguration.fromJson(e as Map<String, dynamic>))
@@ -69,10 +69,11 @@ StudyProtocol _$StudyProtocolFromJson(Map<String, dynamic> json) =>
       ..taskControls = (json['taskControls'] as List<dynamic>)
           .map((e) => TaskControl.fromJson(e as Map<String, dynamic>))
           .toSet()
-      ..participantRoles = (json['participantRoles'] as List<dynamic>)
-          .map((e) => ParticipantRole.fromJson(e as Map<String, dynamic>))
+      ..participantRoles = (json['participantRoles'] as List<dynamic>?)
+          ?.map((e) => ParticipantRole.fromJson(e as Map<String, dynamic>))
           .toSet()
-      ..assignedDevices = (json['assignedDevices'] as Map<String, dynamic>).map(
+      ..assignedDevices =
+          (json['assignedDevices'] as Map<String, dynamic>?)?.map(
         (k, e) =>
             MapEntry(k, (e as List<dynamic>).map((e) => e as String).toSet()),
       )
@@ -100,14 +101,14 @@ Map<String, dynamic> _$StudyProtocolToJson(StudyProtocol instance) {
 
   writeNotNull('description', instance.description);
   val['primaryDevices'] = instance.primaryDevices.toList();
-  val['connectedDevices'] = instance.connectedDevices.toList();
-  val['connections'] = instance.connections;
+  writeNotNull('connectedDevices', instance.connectedDevices?.toList());
+  writeNotNull('connections', instance.connections);
   val['tasks'] = instance.tasks.toList();
   val['triggers'] = instance.triggers;
   val['taskControls'] = instance.taskControls.toList();
-  val['participantRoles'] = instance.participantRoles.toList();
-  val['assignedDevices'] =
-      instance.assignedDevices.map((k, e) => MapEntry(k, e.toList()));
+  writeNotNull('participantRoles', instance.participantRoles?.toList());
+  writeNotNull('assignedDevices',
+      instance.assignedDevices?.map((k, e) => MapEntry(k, e.toList())));
   val['expectedParticipantData'] = instance.expectedParticipantData.toList();
   writeNotNull('applicationData', instance.applicationData);
   return val;

@@ -23,7 +23,7 @@ class TaskControl {
   String? destinationDeviceRoleName;
 
   /// What to do with a task once the condition of a trigger is met.
-  Control? control;
+  Control control;
 
   /// The time the task have been scheduled until.
   /// Mainly used when scheduling a series of tasks for this trigger.
@@ -35,9 +35,10 @@ class TaskControl {
   @JsonKey(ignore: true)
   DeviceConfiguration? targetDevice;
 
+  /// Create a [TaskControl].
   TaskControl(
-    this.triggerId,
-    this.control, [
+    this.triggerId, [
+    this.control = Control.Start,
     this.task,
     this.targetDevice,
   ]) : super() {

@@ -1,0 +1,5 @@
+{
+    "__type": "dk.cachet.carp.deployments.infrastructure.ParticipationServiceRequest.GetActiveParticipationInvitations",
+    "apiVersion": "1.0",
+    "accountId": "ca60cb7f-de18-44b6-baf9-3c8e6a73005a"
+}

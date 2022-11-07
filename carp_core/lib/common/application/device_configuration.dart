@@ -26,14 +26,14 @@ class DeviceConfiguration extends Serializable {
 
   /// Determines whether device registration for this device is optional prior to
   /// starting a study, i.e., whether the study can run without this device or not.
-  bool isOptional = true;
+  bool? isOptional;
 
   /// The set of data types which can be collected on this device.
   List<String>? supportedDataTypes;
 
   /// Sampling configurations which override the default configurations for
   /// data types available on this device.
-  Map<String, SamplingConfiguration> defaultSamplingConfiguration = {};
+  Map<String, SamplingConfiguration>? defaultSamplingConfiguration = {};
 
   DeviceConfiguration({
     required this.roleName,
@@ -63,6 +63,11 @@ class PrimaryDeviceConfiguration extends DeviceConfiguration {
     required super.roleName,
     super.supportedDataTypes,
   }) : super(isOptional: true);
+
+  // This property is only here for (de)serialization purposes.
+  // For unknown types we need to know whether to treat them as primary
+  // devices or not (in the case of 'DeviceConfiguration' collections).
+  bool isPrimaryDevice = true;
 
   @override
   Function get fromJsonFunction => _$PrimaryDeviceConfigurationFromJson;

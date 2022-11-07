@@ -1,6 +1,6 @@
 {
-    "id": "b371ea80-5c5b-11ed-8078-371cca170c64",
-    "createdOn": "2022-11-04T16:14:04.072999Z",
+    "id": "440e1af0-5df1-11ed-93a4-b347c327f210",
+    "createdOn": "2022-11-06T16:37:12.863139Z",
     "version": 0,
     "ownerId": "xyz@dtu.dk",
     "name": "Test Study Protocol",
@@ -10,7 +10,8 @@
             "__type": "dk.cachet.carp.common.application.devices.Smartphone",
             "roleName": "phone",
             "isOptional": true,
-            "defaultSamplingConfiguration": {}
+            "defaultSamplingConfiguration": {},
+            "isPrimaryDevice": true
         }
     ],
     "connectedDevices": [

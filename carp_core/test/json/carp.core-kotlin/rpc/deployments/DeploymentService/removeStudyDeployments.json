@@ -1,0 +1,8 @@
+{
+    "__type": "dk.cachet.carp.deployments.infrastructure.DeploymentServiceRequest.RemoveStudyDeployments",
+    "apiVersion": "1.1",
+    "studyDeploymentIds": [
+        "c9cc5317-48da-45f2-958e-58bc07f34681",
+        "d4a9bba4-860e-4c58-a356-8a91605dc1ee"
+    ]
+}

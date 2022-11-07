@@ -1,6 +1,4 @@
-import 'package:carp_core/carp_protocols/carp_core_protocols.dart';
-import 'package:carp_core/carp_deployment/carp_core_deployment.dart';
-import 'package:carp_core/carp_client/carp_core_client.dart';
+import 'package:carp_core/carp_core.dart';
 import 'package:carp_serializable/carp_serializable.dart';
 
 // These examples tries to mimic the example from the carp_core Kotlin
@@ -40,6 +38,7 @@ void carpCoreProtocolExample() async {
     TriggerConfiguration(sourceDeviceRoleName: phone.roleName),
     startMeasures,
     phone,
+    Control.Start,
   );
 
   // JSON output of the study protocol, compatible with the rest of the CARP infrastructure.
@@ -74,7 +73,7 @@ void carpCoreDeploymentExample() async {
   if (patientPhoneStatus!.remainingDevicesToRegisterBeforeDeployment!
       .isEmpty) // True since there are no dependent devices.
   {
-    MasterDeviceDeployment? deploymentInformation = await deploymentService
+    PrimaryDeviceDeployment? deploymentInformation = await deploymentService
         ?.getDeviceDeploymentFor(studyDeploymentId, patientPhone.roleName);
     DateTime deploymentDate =
         deploymentInformation!.lastUpdateDate; // To verify correct deployment.
