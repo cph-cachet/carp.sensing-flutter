@@ -42,10 +42,10 @@ class PrimaryDeviceDeployment {
   /// This can be used by infrastructures or concrete applications which require
   /// exchanging additional data between the protocols and clients subsystems,
   /// outside of scope or not yet supported by CARP core.
-  String? applicationData;
+  Map<String, dynamic>? applicationData;
 
   /// The time when this device deployment was last updated.
-  late DateTime lastUpdateDate;
+  DateTime? lastUpdateDate;
 
   PrimaryDeviceDeployment({
     required this.deviceConfiguration,

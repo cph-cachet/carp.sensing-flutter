@@ -10,9 +10,11 @@ void _registerFromJsonFunctions() {
   final DeviceConfiguration device = DeviceConfiguration(roleName: '');
 
   FromJsonFactory().register(DeviceRegistration());
+  // FromJsonFactory().register(DefaultDeviceRegistration());
   FromJsonFactory().register(DeviceRegistration(),
       type:
-          'dk.cachet.carp.protocols.domain.devices.DefaultDeviceRegistration');
+          'dk.cachet.carp.common.application.devices.DefaultDeviceRegistration');
+  FromJsonFactory().register(AltBeaconDeviceRegistration());
 
   FromJsonFactory().register(DeviceDeploymentStatus(device: device));
   FromJsonFactory().register(
@@ -79,6 +81,8 @@ void _registerFromJsonFunctions() {
   FromJsonFactory().register(DeviceConfiguration(roleName: ''),
       type:
           'dk.cachet.carp.protocols.infrastructure.test.StubDeviceDescriptor');
+  FromJsonFactory().register(ParticipantAttribute(inputDataType: 'ignored'));
+  FromJsonFactory().register(AssignedTo());
 
   _fromJsonFunctionsRegistrered = true;
 }

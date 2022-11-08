@@ -41,28 +41,41 @@ class ExpectedParticipantData {
 /// Describes expected data to be input by users related to one or multiple
 /// participants in a study.
 @JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
-class ParticipantAttribute {
+class ParticipantAttribute extends Serializable {
   /// Uniquely identifies the type of data represented by this participant
   /// attribute.
-  DataType? inputDataType;
+  String inputDataType;
 
-  ParticipantAttribute(this.inputDataType);
+  ParticipantAttribute({required this.inputDataType}) : super();
 
+  @override
+  Function get fromJsonFunction => _$ParticipantAttributeFromJson;
   factory ParticipantAttribute.fromJson(Map<String, dynamic> json) =>
-      _$ParticipantAttributeFromJson(json);
+      FromJsonFactory().fromJson(json) as ParticipantAttribute;
+  @override
   Map<String, dynamic> toJson() => _$ParticipantAttributeToJson(this);
+  @override
+  String get jsonType =>
+      'dk.cachet.carp.common.application.users.ParticipantAttribute.DefaultParticipantAttribute';
 }
 
 /// Determines which participant roles to assign to something.
 @JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
-class AssignedTo {
+class AssignedTo extends Serializable {
   /// Assign this to the specified [roleNames] in the study protocol.
   /// If empty,  assign this to all participants in the study protocol.
   Set<String> roleNames = {};
 
-  AssignedTo();
+  AssignedTo({this.roleNames = const {}}) : super();
 
+  @override
+  Function get fromJsonFunction => _$AssignedToFromJson;
   factory AssignedTo.fromJson(Map<String, dynamic> json) =>
-      _$AssignedToFromJson(json);
+      FromJsonFactory().fromJson(json) as AssignedTo;
+  @override
   Map<String, dynamic> toJson() => _$AssignedToToJson(this);
+
+  @override
+  String get jsonType =>
+      'dk.cachet.carp.common.application.users.AssignedTo.Roles';
 }

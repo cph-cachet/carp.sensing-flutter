@@ -46,10 +46,8 @@ Map<String, dynamic> _$ExpectedParticipantDataToJson(
 ParticipantAttribute _$ParticipantAttributeFromJson(
         Map<String, dynamic> json) =>
     ParticipantAttribute(
-      json['inputDataType'] == null
-          ? null
-          : DataType.fromJson(json['inputDataType'] as Map<String, dynamic>),
-    );
+      inputDataType: json['inputDataType'] as String,
+    )..$type = json['__type'] as String?;
 
 Map<String, dynamic> _$ParticipantAttributeToJson(
     ParticipantAttribute instance) {
@@ -61,18 +59,31 @@ Map<String, dynamic> _$ParticipantAttributeToJson(
     }
   }
 
-  writeNotNull('inputDataType', instance.inputDataType);
+  writeNotNull('__type', instance.$type);
+  val['inputDataType'] = instance.inputDataType;
   return val;
 }
 
-AssignedTo _$AssignedToFromJson(Map<String, dynamic> json) => AssignedTo()
-  ..roleNames =
-      (json['roleNames'] as List<dynamic>).map((e) => e as String).toSet();
+AssignedTo _$AssignedToFromJson(Map<String, dynamic> json) => AssignedTo(
+      roleNames: (json['roleNames'] as List<dynamic>?)
+              ?.map((e) => e as String)
+              .toSet() ??
+          const {},
+    )..$type = json['__type'] as String?;
 
-Map<String, dynamic> _$AssignedToToJson(AssignedTo instance) =>
-    <String, dynamic>{
-      'roleNames': instance.roleNames.toList(),
-    };
+Map<String, dynamic> _$AssignedToToJson(AssignedTo instance) {
+  final val = <String, dynamic>{};
+
+  void writeNotNull(String key, dynamic value) {
+    if (value != null) {
+      val[key] = value;
+    }
+  }
+
+  writeNotNull('__type', instance.$type);
+  val['roleNames'] = instance.roleNames.toList();
+  return val;
+}
 
 Measure _$MeasureFromJson(Map<String, dynamic> json) => Measure(
       type: json['type'] as String,
@@ -360,9 +371,9 @@ Map<String, dynamic> _$AltBeaconToJson(AltBeacon instance) {
 
 DeviceRegistration _$DeviceRegistrationFromJson(Map<String, dynamic> json) =>
     DeviceRegistration(
-      json['deviceId'] as String?,
-      json['deviceDisplayName'] as String?,
-      json['registrationCreatedOn'] == null
+      deviceId: json['deviceId'] as String?,
+      deviceDisplayName: json['deviceDisplayName'] as String?,
+      registrationCreatedOn: json['registrationCreatedOn'] == null
           ? null
           : DateTime.parse(json['registrationCreatedOn'] as String),
     )..$type = json['__type'] as String?;
@@ -373,6 +384,35 @@ Map<String, dynamic> _$DeviceRegistrationToJson(DeviceRegistration instance) =>
       'deviceId': instance.deviceId,
       'deviceDisplayName': instance.deviceDisplayName,
       'registrationCreatedOn': instance.registrationCreatedOn.toIso8601String(),
+    };
+
+AltBeaconDeviceRegistration _$AltBeaconDeviceRegistrationFromJson(
+        Map<String, dynamic> json) =>
+    AltBeaconDeviceRegistration(
+      deviceId: json['deviceId'] as String?,
+      deviceDisplayName: json['deviceDisplayName'] as String?,
+      registrationCreatedOn: json['registrationCreatedOn'] == null
+          ? null
+          : DateTime.parse(json['registrationCreatedOn'] as String),
+      manufacturerId: json['manufacturerId'] as int?,
+      organizationId: json['organizationId'] as String?,
+      majorId: json['majorId'] as int?,
+      minorId: json['minorId'] as int?,
+      referenceRssi: json['referenceRssi'] as int?,
+    )..$type = json['__type'] as String?;
+
+Map<String, dynamic> _$AltBeaconDeviceRegistrationToJson(
+        AltBeaconDeviceRegistration instance) =>
+    <String, dynamic>{
+      '__type': instance.$type,
+      'deviceId': instance.deviceId,
+      'deviceDisplayName': instance.deviceDisplayName,
+      'registrationCreatedOn': instance.registrationCreatedOn.toIso8601String(),
+      'manufacturerId': instance.manufacturerId,
+      'organizationId': instance.organizationId,
+      'majorId': instance.majorId,
+      'minorId': instance.minorId,
+      'referenceRssi': instance.referenceRssi,
     };
 
 TriggerConfiguration _$TriggerConfigurationFromJson(

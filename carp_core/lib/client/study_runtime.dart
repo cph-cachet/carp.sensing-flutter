@@ -136,7 +136,7 @@ class StudyRuntime {
       await deploymentService.deploymentSuccessfulFor(
         study!.studyDeploymentId,
         device!.roleName,
-        deployment!.lastUpdateDate,
+        deployment?.lastUpdateDate ?? DateTime.now(),
       );
     } catch (error) {
       // we only print a warning
@@ -170,7 +170,9 @@ class StudyRuntime {
     if (deviceRegistry.hasDevice(deviceType)) {
       DeviceDataCollector deviceManager = deviceRegistry.getDevice(deviceType)!;
       // ask the device manager for a unique id of the device
-      DeviceRegistration registration = DeviceRegistration(deviceManager.id);
+      DeviceRegistration registration = DeviceRegistration(
+        deviceId: deviceManager.id,
+      );
       deviceManager.deviceRegistration = registration;
       deploymentStatus = (await deploymentService.registerDevice(
         study!.studyDeploymentId,

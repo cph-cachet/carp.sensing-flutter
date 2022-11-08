@@ -12,7 +12,6 @@ void main() {
   });
 
   test('StudyProtocol', () async {
-    // Read the study protocol from json file
     String plainJson =
         File('test/json/carp.core-kotlin/protocols/study_protocol.json')
             .readAsStringSync();
@@ -26,7 +25,6 @@ void main() {
   });
 
   test('Custom StudyProtocol', () async {
-    // Read the study protocol from json file
     String plainJson =
         File('test/json/carp.core-kotlin/protocols/custom_study_protocol.json')
             .readAsStringSync();
@@ -37,5 +35,18 @@ void main() {
     expect(protocol.ownerId, '491f03fc-964b-4783-86a6-a528bbfe4e94');
     expect(protocol.primaryDevices.first.roleName, 'Custom device');
     print(toJsonString(protocol));
+  });
+
+  test('Primary Device Deployment', () async {
+    String plainJson = File(
+            'test/json/carp.core-kotlin/deployments/primary_device_deployment.json')
+        .readAsStringSync();
+
+    PrimaryDeviceDeployment deployment = PrimaryDeviceDeployment.fromJson(
+        json.decode(plainJson) as Map<String, dynamic>);
+
+    expect(deployment.deviceConfiguration.isPrimaryDevice, true);
+    expect(deployment.deviceConfiguration.roleName, "Participant's phone");
+    print(toJsonString(deployment));
   });
 }

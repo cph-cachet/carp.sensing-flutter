@@ -45,7 +45,7 @@ class ClientManager {
   }) async {
     this.deploymentService = deploymentService;
     this.deviceController = deviceController;
-    return registration = DeviceRegistration(deviceId);
+    return registration = DeviceRegistration(deviceId: deviceId);
   }
 
   /// Get the status for the studies which run on this client device.
