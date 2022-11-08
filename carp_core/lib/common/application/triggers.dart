@@ -12,7 +12,7 @@ part of carp_core_common;
 /// initiated by a user of the platform, or a combination of these.
 @JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
 class TriggerConfiguration extends Serializable {
-  final String _triggerNamespace = 'dk.cachet.carp.protocols.domain.triggers';
+  final String _triggerNamespace = 'dk.cachet.carp.common.application.triggers';
 
   /// The device role name from which the trigger originates.
   String? sourceDeviceRoleName;
@@ -22,13 +22,13 @@ class TriggerConfiguration extends Serializable {
   /// For example, this is the case when the trigger is time bound and needs
   /// to be evaluated by a task scheduler running on a master device.
   @JsonKey(ignore: true)
-  bool? requiresMasterDevice;
+  bool? requiresPrimaryDevice;
 
   /// Create a trigger.
   @mustCallSuper
   TriggerConfiguration({
     this.sourceDeviceRoleName,
-    this.requiresMasterDevice,
+    this.requiresPrimaryDevice,
   }) : super();
 
   @override
@@ -44,7 +44,7 @@ class TriggerConfiguration extends Serializable {
 /// An interface marking that a [TriggerConfiguration] can be scheduled.
 ///
 /// Used when scheduling user tasks persistently on a phone.
-abstract class Scheduleable {}
+abstract class Schedulable {}
 
 /// A trigger which starts a task after [elapsedTime] has elapsed since the start
 /// of a study deployment, i.e. when a protocol is deployed on the phone for
@@ -52,14 +52,14 @@ abstract class Scheduleable {}
 ///
 /// Never stops sampling once started.
 @JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
-class ElapsedTimeTrigger extends TriggerConfiguration implements Scheduleable {
+class ElapsedTimeTrigger extends TriggerConfiguration implements Schedulable {
   Duration elapsedTime;
 
-  /// Create a trigger that starts after [elapsedTime] has elabsed since the start
+  /// Create a trigger that starts after [elapsedTime] has elapsed since the start
   /// of the study deployment.
   ElapsedTimeTrigger({
     super.sourceDeviceRoleName,
-    super.requiresMasterDevice = true,
+    super.requiresPrimaryDevice = true,
     required this.elapsedTime,
   });
 
@@ -84,7 +84,7 @@ class ManualTrigger extends TriggerConfiguration {
 
   ManualTrigger({
     super.sourceDeviceRoleName,
-    super.requiresMasterDevice = false,
+    super.requiresPrimaryDevice = false,
     this.label,
     this.description,
   });
@@ -106,7 +106,7 @@ class ManualTrigger extends TriggerConfiguration {
 /// This trigger needs to be evaluated on a master device since it is time bound
 /// and therefore requires a task scheduler.
 @JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
-class ScheduledTrigger extends TriggerConfiguration implements Scheduleable {
+class ScheduledTrigger extends TriggerConfiguration implements Schedulable {
   /// The time of the day to trigger.
   TimeOfDay time;
 
@@ -118,7 +118,7 @@ class ScheduledTrigger extends TriggerConfiguration implements Scheduleable {
   /// [recurrenceRule].
   ScheduledTrigger({
     super.sourceDeviceRoleName,
-    super.requiresMasterDevice = false,
+    super.requiresPrimaryDevice = false,
     required this.time,
     required this.recurrenceRule,
   });

@@ -127,9 +127,9 @@ class StudyProtocol extends Snapshot {
     if (triggers.values.contains(trigger)) return;
 
     // so much for null-safety "#%"&?
-    if (trigger.requiresMasterDevice != null &&
+    if (trigger.requiresPrimaryDevice != null &&
         trigger.sourceDeviceRoleName != null &&
-        trigger.requiresMasterDevice!) {
+        trigger.requiresPrimaryDevice!) {
       assert(
           hasMasterDevice(trigger.sourceDeviceRoleName!),
           'The passed trigger cannot be initiated by its specified source device '

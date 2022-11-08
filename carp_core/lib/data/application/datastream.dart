@@ -22,7 +22,7 @@ class DataStreamsConfiguration {
 @JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
 class ExpectedDataStream {
   String deviceRoleName;
-  DataType dataType;
+  String dataType;
 
   ExpectedDataStream(this.deviceRoleName, this.dataType);
   factory ExpectedDataStream.fromJson(Map<String, dynamic> json) =>
@@ -74,12 +74,12 @@ class Measurement {
   // DataType dataType;
   Data data;
 
-  Measurement(
-    this.sensorStartTime,
+  Measurement({
+    required this.sensorStartTime,
     this.sensorEndTime,
     // this.dataType,
-    this.data,
-  );
+    required this.data,
+  });
   factory Measurement.fromJson(Map<String, dynamic> json) =>
       _$MeasurementFromJson(json);
   Map<String, dynamic> toJson() => _$MeasurementToJson(this);

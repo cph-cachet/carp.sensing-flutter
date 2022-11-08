@@ -41,6 +41,16 @@ void main() {
       Control.Start,
     );
 
+    protocol.addTaskControl(
+      ElapsedTimeTrigger(
+        sourceDeviceRoleName: phone.roleName,
+        elapsedTime: const Duration(hours: 1),
+      ),
+      task,
+      phone,
+      Control.Start,
+    );
+
     Measure measure = Measure(type: 'dk.cachet.carp.steps');
     measure.overrideSamplingConfiguration = BatteryAwareSamplingConfiguration(
         normal: GranularitySamplingConfiguration(Granularity.Detailed),
@@ -59,10 +69,10 @@ void main() {
     print(protocol);
     print(toJsonString(protocol));
     expect(protocol.ownerId, 'xyz@dtu.dk');
-    expect(protocol.triggers.length, 2);
+    expect(protocol.triggers.length, 3);
     expect(protocol.triggers.keys.first, '0');
     expect(protocol.tasks.length, 2);
-    expect(protocol.taskControls.length, 2);
+    expect(protocol.taskControls.length, 3);
   });
 
   test('JSON -> StudyProtocol', () async {
@@ -76,35 +86,6 @@ void main() {
     expect(protocol.ownerId, 'xyz@dtu.dk');
     expect(protocol.primaryDevices.first.roleName, 'phone');
     print(toJsonString(protocol));
-  });
-
-  test('JSON -> Custom StudyProtocol', () async {
-    // Read the study protocol from json file
-    String plainJson =
-        File('test/json/carp.core-kotlin/protocols/custom_study_protocol.json')
-            .readAsStringSync();
-
-    StudyProtocol protocol =
-        StudyProtocol.fromJson(json.decode(plainJson) as Map<String, dynamic>);
-
-    expect(protocol.ownerId, '979b408d-784e-4b1b-bb1e-ff9204e072f3');
-    expect(protocol.primaryDevices.first.roleName, 'Custom device');
-    print(toJsonString(protocol));
-  });
-
-  test('DataPoint -> JSON', () async {
-    DataPoint dataPoint = DataPoint(
-      DataPointHeader(
-        studyId: '1234',
-        dataFormat: const DataType(NameSpace.CARP, 'light'),
-      ),
-      Data(),
-    );
-
-    print(dataPoint);
-    print(jsonEncode(dataPoint));
-    print(toJsonString(dataPoint));
-    assert(dataPoint.carpBody != null);
   });
 
   test('ScheduledTrigger', () async {
@@ -135,5 +116,66 @@ void main() {
                 'RRULE:FREQ=DAILY;INTERVAL=2;UNTIL=2592000000')
             .toString());
     print(st);
+  });
+
+  test('DataPoint -> JSON', () async {
+    DataPoint dataPoint = DataPoint(
+      DataPointHeader(
+        studyId: '1234',
+        dataFormat: const DataType(NameSpace.CARP, 'light'),
+      ),
+      Data(),
+    );
+
+    print(dataPoint);
+    print(jsonEncode(dataPoint));
+    print(toJsonString(dataPoint));
+    assert(dataPoint.carpBody != null);
+  });
+
+  test('DataStreamsConfiguration -> JSON', () async {
+    String studyDeploymentId = "c9cc5317-48da-45f2-958e-58bc07f34681";
+    DataStreamsConfiguration configuration =
+        DataStreamsConfiguration(studyDeploymentId, {
+      ExpectedDataStream(
+        'phone',
+        'dk.cachet.carp.geolocation',
+      ),
+      ExpectedDataStream(
+        'phone',
+        'dk.cachet.carp.stepcount',
+      ),
+    });
+
+    print(toJsonString(configuration));
+    expect(configuration.expectedDataStreams, isNotEmpty);
+  });
+
+  test('DataStreamBatch -> JSON', () async {
+    String studyDeploymentId = "c9cc5317-48da-45f2-958e-58bc07f34681";
+    DataStreamBatch batch = DataStreamBatch(
+      DataStreamId(studyDeploymentId, 'phone', 'dk.cachet.carp.geolocation'),
+      0,
+      [
+        Measurement(
+          sensorStartTime: DateTime.now().millisecondsSinceEpoch,
+          data: Geolocation(
+            latitude: 55.68061908805645,
+            longitude: 12.582050313435703,
+          )..sensorSpecificData = SignalStrength(rssi: 23),
+        ),
+        Measurement(
+          sensorStartTime: DateTime.now().millisecondsSinceEpoch,
+          data: Geolocation(
+            latitude: 55.680802203873114,
+            longitude: 12.581802212861367,
+          ),
+        ),
+      ],
+      [0],
+    );
+
+    print(toJsonString(batch));
+    expect(batch.measurements, isNotEmpty);
   });
 }

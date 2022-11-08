@@ -25,7 +25,7 @@ Map<String, dynamic> _$DataStreamsConfigurationToJson(
 ExpectedDataStream _$ExpectedDataStreamFromJson(Map<String, dynamic> json) =>
     ExpectedDataStream(
       json['deviceRoleName'] as String,
-      DataType.fromJson(json['dataType'] as Map<String, dynamic>),
+      json['dataType'] as String,
     );
 
 Map<String, dynamic> _$ExpectedDataStreamToJson(ExpectedDataStream instance) =>
@@ -66,9 +66,9 @@ Map<String, dynamic> _$DataStreamBatchToJson(DataStreamBatch instance) =>
     };
 
 Measurement _$MeasurementFromJson(Map<String, dynamic> json) => Measurement(
-      json['sensorStartTime'] as int,
-      json['sensorEndTime'] as int?,
-      Data.fromJson(json['data'] as Map<String, dynamic>),
+      sensorStartTime: json['sensorStartTime'] as int,
+      sensorEndTime: json['sensorEndTime'] as int?,
+      data: Data.fromJson(json['data'] as Map<String, dynamic>),
     );
 
 Map<String, dynamic> _$MeasurementToJson(Measurement instance) {
@@ -100,5 +100,54 @@ Map<String, dynamic> _$DataToJson(Data instance) {
   }
 
   writeNotNull('__type', instance.$type);
+  return val;
+}
+
+Geolocation _$GeolocationFromJson(Map<String, dynamic> json) => Geolocation(
+      latitude: (json['latitude'] as num).toDouble(),
+      longitude: (json['longitude'] as num).toDouble(),
+    )
+      ..$type = json['__type'] as String?
+      ..sensorSpecificData = json['sensor_specific_data'] == null
+          ? null
+          : Data.fromJson(json['sensor_specific_data'] as Map<String, dynamic>);
+
+Map<String, dynamic> _$GeolocationToJson(Geolocation instance) {
+  final val = <String, dynamic>{};
+
+  void writeNotNull(String key, dynamic value) {
+    if (value != null) {
+      val[key] = value;
+    }
+  }
+
+  writeNotNull('__type', instance.$type);
+  writeNotNull('sensor_specific_data', instance.sensorSpecificData);
+  val['latitude'] = instance.latitude;
+  val['longitude'] = instance.longitude;
+  return val;
+}
+
+SignalStrength _$SignalStrengthFromJson(Map<String, dynamic> json) =>
+    SignalStrength(
+      rssi: json['rssi'] as int,
+    )
+      ..$type = json['__type'] as String?
+      ..sensorSpecificData = json['sensor_specific_data'] == null
+          ? null
+          : Data.fromJson(json['sensor_specific_data'] as Map<String, dynamic>);
+
+Map<String, dynamic> _$SignalStrengthToJson(SignalStrength instance) {
+  final val = <String, dynamic>{};
+
+  void writeNotNull(String key, dynamic value) {
+    if (value != null) {
+      val[key] = value;
+    }
+  }
+
+  writeNotNull('__type', instance.$type);
+  writeNotNull('sensor_specific_data', instance.sensorSpecificData);
+  val['rssi'] = instance.rssi;
   return val;
 }

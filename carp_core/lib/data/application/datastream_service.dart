@@ -16,15 +16,23 @@ abstract class DataStreamService {
   /// deployment have already been configured.
   void openDataStreams(DataStreamsConfiguration configuration);
 
-  /// Append a [batch] of data point sequences to corresponding data streams in [studyDeploymentId].
+  /// Append a [batch] of data point sequences to corresponding data streams
+  /// in [studyDeploymentId].
   ///
   /// Throws IllegalArgumentException when:
-  ///  - the `studyDeploymentId` of one or more sequences in [batch] does not match [studyDeploymentId]
+  ///  - the `studyDeploymentId` of one or more sequences in [batch] does not
+  ///    match [studyDeploymentId]
   ///  - the start of one or more of the sequences contained in [batch]
-  ///  precede the end of a previously appended sequence to the same data stream
-  ///  - [batch] contains a sequence with [DataStreamId] which wasn't configured for [studyDeploymentId]
-  /// Throws IllegalStateException when data streams for [studyDeploymentId] have been closed.
-  void appendToDataStreams(String studyDeploymentId, DataStreamBatch batch);
+  ///    precede the end of a previously appended sequence to the same data stream
+  ///  - [batch] contains a sequence with [DataStreamId] which wasn't configured
+  ///    for [studyDeploymentId]
+  ///
+  /// Throws IllegalStateException when data streams for [studyDeploymentId]
+  /// have been closed.
+  void appendToDataStreams(
+    String studyDeploymentId,
+    List<DataStreamBatch> batch,
+  );
 
   /// Retrieve all data points in [dataStream] that fall within the inclusive range
   /// defined by [fromSequenceId] and [toSequenceIdInclusive].
@@ -32,12 +40,13 @@ abstract class DataStreamService {
   /// are returned.
   ///
   /// In case no data for [dataStream] is stored in this repository, or is
-  /// available for the specified range, an empty [DataStreamBatch] is returned.
+  /// available for the specified range, an empty list is returned.
   ///
   /// Throws IllegalArgumentException if:
   ///  - [dataStream] has never been opened
-  ///  - [fromSequenceId] is negative or [toSequenceIdInclusive] is smaller than [fromSequenceId]
-  DataStreamBatch getDataStream(
+  ///  - [fromSequenceId] is negative or [toSequenceIdInclusive] is smaller
+  ///    than [fromSequenceId]
+  List<DataStreamBatch> getDataStream(
     DataStreamId dataStream,
     int fromSequenceId, [
     int? toSequenceIdInclusive,

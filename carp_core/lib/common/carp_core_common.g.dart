@@ -122,7 +122,7 @@ Map<String, dynamic> _$TaskConfigurationToJson(TaskConfiguration instance) {
   writeNotNull('__type', instance.$type);
   val['name'] = instance.name;
   writeNotNull('description', instance.description);
-  val['measures'] = instance.measures;
+  writeNotNull('measures', instance.measures);
   return val;
 }
 
@@ -151,7 +151,7 @@ Map<String, dynamic> _$BackgroundTaskToJson(BackgroundTask instance) {
   writeNotNull('__type', instance.$type);
   val['name'] = instance.name;
   writeNotNull('description', instance.description);
-  val['measures'] = instance.measures;
+  writeNotNull('measures', instance.measures);
   writeNotNull('duration', instance.duration?.inMicroseconds);
   return val;
 }
@@ -163,8 +163,8 @@ CustomProtocolTask _$CustomProtocolTaskFromJson(Map<String, dynamic> json) =>
     )
       ..$type = json['__type'] as String?
       ..description = json['description'] as String?
-      ..measures = (json['measures'] as List<dynamic>)
-          .map((e) => Measure.fromJson(e as Map<String, dynamic>))
+      ..measures = (json['measures'] as List<dynamic>?)
+          ?.map((e) => Measure.fromJson(e as Map<String, dynamic>))
           .toList();
 
 Map<String, dynamic> _$CustomProtocolTaskToJson(CustomProtocolTask instance) {
@@ -179,7 +179,7 @@ Map<String, dynamic> _$CustomProtocolTaskToJson(CustomProtocolTask instance) {
   writeNotNull('__type', instance.$type);
   val['name'] = instance.name;
   writeNotNull('description', instance.description);
-  val['measures'] = instance.measures;
+  writeNotNull('measures', instance.measures);
   val['studyProtocol'] = instance.studyProtocol;
   return val;
 }

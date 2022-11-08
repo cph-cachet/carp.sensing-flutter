@@ -24,16 +24,16 @@ class TaskConfiguration extends Serializable {
   String? description;
 
   /// The data which needs to be collected/measured passively as part of this task.
-  List<Measure> measures = [];
+  List<Measure>? measures = [];
 
   /// Add [measure] to this task.
-  void addMeasure(Measure measure) => measures.add(measure);
+  void addMeasure(Measure measure) => measures!.add(measure);
 
   /// Add a [list] of measures to this task.
-  void addMeasures(Iterable<Measure> list) => measures.addAll(list);
+  void addMeasures(Iterable<Measure> list) => measures!.addAll(list);
 
   /// Remove [measure] from this task.
-  void removeMeasure(Measure measure) => measures.remove(measure);
+  void removeMeasure(Measure measure) => measures!.remove(measure);
 
   /// Create a task. If [name] is not specified, a name is generated.
   @mustCallSuper
@@ -56,7 +56,7 @@ class TaskConfiguration extends Serializable {
 
   @override
   String toString() =>
-      '$runtimeType - name: $name, measures size: ${measures.length}';
+      '$runtimeType - name: $name, measures size: ${measures?.length}';
 }
 
 /// A task which specifies that all containing measures and/or
