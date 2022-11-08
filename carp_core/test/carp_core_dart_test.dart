@@ -32,8 +32,10 @@ void main() {
       Measure(type: const DataType(NameSpace.CARP, 'steps').toString()),
     ];
 
-    BackgroundTask task = BackgroundTask(name: 'Start measures')
-      ..addMeasures(measures);
+    BackgroundTask task = BackgroundTask(
+        name: 'Start measures',
+        duration: const Duration(hours: 1),
+        measures: measures);
     protocol.addTaskControl(
       TriggerConfiguration(sourceDeviceRoleName: phone.roleName),
       task,
@@ -135,17 +137,18 @@ void main() {
 
   test('DataStreamsConfiguration -> JSON', () async {
     String studyDeploymentId = "c9cc5317-48da-45f2-958e-58bc07f34681";
-    DataStreamsConfiguration configuration =
-        DataStreamsConfiguration(studyDeploymentId, {
-      ExpectedDataStream(
-        'phone',
-        'dk.cachet.carp.geolocation',
-      ),
-      ExpectedDataStream(
-        'phone',
-        'dk.cachet.carp.stepcount',
-      ),
-    });
+    DataStreamsConfiguration configuration = DataStreamsConfiguration(
+        studyDeploymentId: studyDeploymentId,
+        expectedDataStreams: {
+          ExpectedDataStream(
+            deviceRoleName: 'phone',
+            dataType: 'dk.cachet.carp.geolocation',
+          ),
+          ExpectedDataStream(
+            deviceRoleName: 'phone',
+            dataType: 'dk.cachet.carp.stepcount',
+          ),
+        });
 
     print(toJsonString(configuration));
     expect(configuration.expectedDataStreams, isNotEmpty);
@@ -154,9 +157,12 @@ void main() {
   test('DataStreamBatch -> JSON', () async {
     String studyDeploymentId = "c9cc5317-48da-45f2-958e-58bc07f34681";
     DataStreamBatch batch = DataStreamBatch(
-      DataStreamId(studyDeploymentId, 'phone', 'dk.cachet.carp.geolocation'),
-      0,
-      [
+      dataStream: DataStreamId(
+          studyDeploymentId: studyDeploymentId,
+          deviceRoleName: 'phone',
+          dataType: 'dk.cachet.carp.geolocation'),
+      firstSequenceId: 0,
+      measurements: [
         Measurement(
           sensorStartTime: DateTime.now().millisecondsSinceEpoch,
           data: Geolocation(
@@ -172,7 +178,7 @@ void main() {
           ),
         ),
       ],
-      [0],
+      triggerIds: [0],
     );
 
     print(toJsonString(batch));

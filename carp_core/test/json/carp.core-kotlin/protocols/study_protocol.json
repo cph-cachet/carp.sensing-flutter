@@ -67,7 +67,7 @@
                 }
             ],
             "description": "Track step count and geolocation for one week.",
-            "duration": "PT168H"
+            "duration": 3600000000
         },
         {
             "__type": "dk.cachet.carp.common.application.tasks.BackgroundTask",
@@ -81,14 +81,14 @@
                     }
                 }
             ],
-            "duration": "PT168H"
+            "duration": 3600000000
         }
     ],
     "triggers": {
         "0": {
             "__type": "dk.cachet.carp.common.application.triggers.ElapsedTimeTrigger",
             "sourceDeviceRoleName": "Participant's phone",
-            "elapsedTime": "PT0S"
+            "elapsedTime": 3600000000
         }
     },
     "taskControls": [

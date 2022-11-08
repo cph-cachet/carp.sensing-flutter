@@ -15,13 +15,25 @@ class SamplingConfiguration extends Serializable {
   Function get fromJsonFunction => _$SamplingConfigurationFromJson;
   factory SamplingConfiguration.fromJson(Map<String, dynamic> json) =>
       FromJsonFactory().fromJson(json) as SamplingConfiguration;
-
   @override
   Map<String, dynamic> toJson() => _$SamplingConfigurationToJson(this);
 
   @override
   String get jsonType =>
-      'dk.cachet.carp.common.application.sampling.SamplingConfiguration';
+      'dk.cachet.carp.common.application.sampling.$runtimeType';
+}
+
+/// A sampling configuration which does not provide any configuration options.
+@JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
+class NoOptionsSamplingConfiguration extends SamplingConfiguration {
+  NoOptionsSamplingConfiguration() : super();
+
+  @override
+  Function get fromJsonFunction => _$NoOptionsSamplingConfigurationFromJson;
+  factory NoOptionsSamplingConfiguration.fromJson(Map<String, dynamic> json) =>
+      FromJsonFactory().fromJson(json) as NoOptionsSamplingConfiguration;
+  @override
+  Map<String, dynamic> toJson() => _$NoOptionsSamplingConfigurationToJson(this);
 }
 
 /// A sampling configuration which changes based on how much battery the device has left.
@@ -34,17 +46,18 @@ class BatteryAwareSamplingConfiguration extends SamplingConfiguration {
   SamplingConfiguration low;
 
   /// The sampling configuration to use when the battery is critically low.
-  SamplingConfiguration critical;
+  /// By default, sampling should be disabled at this point.
+  SamplingConfiguration? critical;
 
   BatteryAwareSamplingConfiguration({
     required this.normal,
     required this.low,
-    required this.critical,
+    this.critical,
   }) : super();
 
-  @override
-  String get jsonType =>
-      'dk.cachet.carp.protocols.domain.sampling.BatteryAwareSamplingConfiguration';
+  // @override
+  // String get jsonType =>
+  //     'dk.cachet.carp.protocols.domain.sampling.BatteryAwareSamplingConfiguration';
 
   @override
   Function get fromJsonFunction => _$BatteryAwareSamplingConfigurationFromJson;
@@ -79,9 +92,9 @@ class GranularitySamplingConfiguration extends SamplingConfiguration {
   Granularity granularity;
   GranularitySamplingConfiguration(this.granularity);
 
-  @override
-  String get jsonType =>
-      'dk.cachet.carp.protocols.domain.sampling.GranularitySamplingConfiguration';
+  // @override
+  // String get jsonType =>
+  //     'dk.cachet.carp.protocols.domain.sampling.GranularitySamplingConfiguration';
 
   @override
   Function get fromJsonFunction => _$GranularitySamplingConfigurationFromJson;

@@ -70,7 +70,7 @@ class StudyProtocol extends Snapshot {
   /// Unassigned device are assigned to "anyone".
   Map<String, Set<String>>? assignedDevices = {};
 
-  Set<ExpectedParticipantData> expectedParticipantData = {};
+  Set<ExpectedParticipantData>? expectedParticipantData = {};
 
   /// Application-specific data to be stored as part of the study protocol
   /// which will be included in all deployments of this study protocol.
@@ -78,7 +78,7 @@ class StudyProtocol extends Snapshot {
   /// This can be used by infrastructures or concrete applications which require
   /// exchanging additional data between the protocols and clients subsystems,
   /// outside of scope or not yet supported by CARP core.
-  String? applicationData;
+  Map<String, dynamic>? applicationData;
 
   /// Create a new protocol. [ownerId] and [name] must be specified.
   StudyProtocol({
@@ -300,14 +300,14 @@ class StudyProtocol extends Snapshot {
   /// Returns true if the [expectedData] has been added; false in case the same
   /// [expectedData] has already been added before.
   bool addExpectedParticipantData(ExpectedParticipantData expectedData) =>
-      expectedParticipantData.add(expectedData);
+      expectedParticipantData!.add(expectedData);
 
   /// Remove expected participant data to be input by users.
   ///
   /// Returns true if the [expectedData] has been removed;
   /// false if it is not included in this configuration.
   bool removeExpectedParticipantData(ExpectedParticipantData expectedData) =>
-      expectedParticipantData.remove(expectedData);
+      expectedParticipantData!.remove(expectedData);
 
   Map<String, dynamic> toJson() => _$StudyProtocolToJson(this);
   factory StudyProtocol.fromJson(Map<String, dynamic> json) =>

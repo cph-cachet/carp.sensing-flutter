@@ -550,14 +550,34 @@ Map<String, dynamic> _$SamplingConfigurationToJson(
   return val;
 }
 
+NoOptionsSamplingConfiguration _$NoOptionsSamplingConfigurationFromJson(
+        Map<String, dynamic> json) =>
+    NoOptionsSamplingConfiguration()..$type = json['__type'] as String?;
+
+Map<String, dynamic> _$NoOptionsSamplingConfigurationToJson(
+    NoOptionsSamplingConfiguration instance) {
+  final val = <String, dynamic>{};
+
+  void writeNotNull(String key, dynamic value) {
+    if (value != null) {
+      val[key] = value;
+    }
+  }
+
+  writeNotNull('__type', instance.$type);
+  return val;
+}
+
 BatteryAwareSamplingConfiguration _$BatteryAwareSamplingConfigurationFromJson(
         Map<String, dynamic> json) =>
     BatteryAwareSamplingConfiguration(
       normal: SamplingConfiguration.fromJson(
           json['normal'] as Map<String, dynamic>),
       low: SamplingConfiguration.fromJson(json['low'] as Map<String, dynamic>),
-      critical: SamplingConfiguration.fromJson(
-          json['critical'] as Map<String, dynamic>),
+      critical: json['critical'] == null
+          ? null
+          : SamplingConfiguration.fromJson(
+              json['critical'] as Map<String, dynamic>),
     )..$type = json['__type'] as String?;
 
 Map<String, dynamic> _$BatteryAwareSamplingConfigurationToJson(
@@ -573,7 +593,7 @@ Map<String, dynamic> _$BatteryAwareSamplingConfigurationToJson(
   writeNotNull('__type', instance.$type);
   val['normal'] = instance.normal;
   val['low'] = instance.low;
-  val['critical'] = instance.critical;
+  writeNotNull('critical', instance.critical);
   return val;
 }
 

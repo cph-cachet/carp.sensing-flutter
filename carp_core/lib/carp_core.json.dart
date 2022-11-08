@@ -61,6 +61,7 @@ void _registerFromJsonFunctions() {
   FromJsonFactory().register(Measure(type: 'ignored'));
   final config = SamplingConfiguration();
   FromJsonFactory().register(config);
+  FromJsonFactory().register(NoOptionsSamplingConfiguration());
   FromJsonFactory().register(BatteryAwareSamplingConfiguration(
       critical: config, low: config, normal: config));
   FromJsonFactory()

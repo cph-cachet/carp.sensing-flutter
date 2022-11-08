@@ -1,6 +1,6 @@
 {
-    "id": "834e73d0-5ee2-11ed-a929-49a10b181196",
-    "createdOn": "2022-11-07T21:24:07.694004Z",
+    "id": "0ef09c00-5f52-11ed-9f8d-75e5c686cd9d",
+    "createdOn": "2022-11-08T10:42:36.096584Z",
     "version": 0,
     "ownerId": "xyz@dtu.dk",
     "name": "Test Study Protocol",
@@ -40,7 +40,8 @@
                     "__type": "dk.cachet.carp.common.application.tasks.Measure.DataStream",
                     "type": "dk.cachet.carp.steps"
                 }
-            ]
+            ],
+            "duration": 3600000000
         },
         {
             "__type": "dk.cachet.carp.common.application.tasks.BackgroundTask",
@@ -50,17 +51,17 @@
                     "__type": "dk.cachet.carp.common.application.tasks.Measure.DataStream",
                     "type": "dk.cachet.carp.steps",
                     "overrideSamplingConfiguration": {
-                        "__type": "dk.cachet.carp.protocols.domain.sampling.BatteryAwareSamplingConfiguration",
+                        "__type": "dk.cachet.carp.common.application.sampling.BatteryAwareSamplingConfiguration",
                         "normal": {
-                            "__type": "dk.cachet.carp.protocols.domain.sampling.GranularitySamplingConfiguration",
+                            "__type": "dk.cachet.carp.common.application.sampling.GranularitySamplingConfiguration",
                             "granularity": "Detailed"
                         },
                         "low": {
-                            "__type": "dk.cachet.carp.protocols.domain.sampling.GranularitySamplingConfiguration",
+                            "__type": "dk.cachet.carp.common.application.sampling.GranularitySamplingConfiguration",
                             "granularity": "Balanced"
                         },
                         "critical": {
-                            "__type": "dk.cachet.carp.protocols.domain.sampling.GranularitySamplingConfiguration",
+                            "__type": "dk.cachet.carp.common.application.sampling.GranularitySamplingConfiguration",
                             "granularity": "Coarse"
                         }
                     }

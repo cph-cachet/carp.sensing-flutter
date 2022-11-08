@@ -13,7 +13,10 @@ class DataStreamsConfiguration {
   String studyDeploymentId;
   Set<ExpectedDataStream> expectedDataStreams;
 
-  DataStreamsConfiguration(this.studyDeploymentId, this.expectedDataStreams);
+  DataStreamsConfiguration({
+    required this.studyDeploymentId,
+    required this.expectedDataStreams,
+  });
   factory DataStreamsConfiguration.fromJson(Map<String, dynamic> json) =>
       _$DataStreamsConfigurationFromJson(json);
   Map<String, dynamic> toJson() => _$DataStreamsConfigurationToJson(this);
@@ -24,7 +27,10 @@ class ExpectedDataStream {
   String deviceRoleName;
   String dataType;
 
-  ExpectedDataStream(this.deviceRoleName, this.dataType);
+  ExpectedDataStream({
+    required this.deviceRoleName,
+    required this.dataType,
+  });
   factory ExpectedDataStream.fromJson(Map<String, dynamic> json) =>
       _$ExpectedDataStreamFromJson(json);
   Map<String, dynamic> toJson() => _$ExpectedDataStreamToJson(this);
@@ -38,7 +44,11 @@ class DataStreamId {
   String deviceRoleName;
   String dataType;
 
-  DataStreamId(this.studyDeploymentId, this.deviceRoleName, this.dataType);
+  DataStreamId({
+    required this.studyDeploymentId,
+    required this.deviceRoleName,
+    required this.dataType,
+  });
   factory DataStreamId.fromJson(Map<String, dynamic> json) =>
       _$DataStreamIdFromJson(json);
   Map<String, dynamic> toJson() => _$DataStreamIdToJson(this);
@@ -52,8 +62,12 @@ class DataStreamBatch {
   List<Measurement> measurements;
   List<int> triggerIds;
 
-  DataStreamBatch(this.dataStream, this.firstSequenceId, this.measurements,
-      this.triggerIds);
+  DataStreamBatch({
+    required this.dataStream,
+    required this.firstSequenceId,
+    required this.measurements,
+    required this.triggerIds,
+  });
   factory DataStreamBatch.fromJson(Map<String, dynamic> json) =>
       _$DataStreamBatchFromJson(json);
   Map<String, dynamic> toJson() => _$DataStreamBatchToJson(this);

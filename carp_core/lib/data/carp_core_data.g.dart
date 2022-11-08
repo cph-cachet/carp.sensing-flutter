@@ -9,8 +9,8 @@ part of carp_core_data;
 DataStreamsConfiguration _$DataStreamsConfigurationFromJson(
         Map<String, dynamic> json) =>
     DataStreamsConfiguration(
-      json['studyDeploymentId'] as String,
-      (json['expectedDataStreams'] as List<dynamic>)
+      studyDeploymentId: json['studyDeploymentId'] as String,
+      expectedDataStreams: (json['expectedDataStreams'] as List<dynamic>)
           .map((e) => ExpectedDataStream.fromJson(e as Map<String, dynamic>))
           .toSet(),
     );
@@ -24,8 +24,8 @@ Map<String, dynamic> _$DataStreamsConfigurationToJson(
 
 ExpectedDataStream _$ExpectedDataStreamFromJson(Map<String, dynamic> json) =>
     ExpectedDataStream(
-      json['deviceRoleName'] as String,
-      json['dataType'] as String,
+      deviceRoleName: json['deviceRoleName'] as String,
+      dataType: json['dataType'] as String,
     );
 
 Map<String, dynamic> _$ExpectedDataStreamToJson(ExpectedDataStream instance) =>
@@ -35,9 +35,9 @@ Map<String, dynamic> _$ExpectedDataStreamToJson(ExpectedDataStream instance) =>
     };
 
 DataStreamId _$DataStreamIdFromJson(Map<String, dynamic> json) => DataStreamId(
-      json['studyDeploymentId'] as String,
-      json['deviceRoleName'] as String,
-      json['dataType'] as String,
+      studyDeploymentId: json['studyDeploymentId'] as String,
+      deviceRoleName: json['deviceRoleName'] as String,
+      dataType: json['dataType'] as String,
     );
 
 Map<String, dynamic> _$DataStreamIdToJson(DataStreamId instance) =>
@@ -49,12 +49,14 @@ Map<String, dynamic> _$DataStreamIdToJson(DataStreamId instance) =>
 
 DataStreamBatch _$DataStreamBatchFromJson(Map<String, dynamic> json) =>
     DataStreamBatch(
-      DataStreamId.fromJson(json['dataStream'] as Map<String, dynamic>),
-      json['firstSequenceId'] as int,
-      (json['measurements'] as List<dynamic>)
+      dataStream:
+          DataStreamId.fromJson(json['dataStream'] as Map<String, dynamic>),
+      firstSequenceId: json['firstSequenceId'] as int,
+      measurements: (json['measurements'] as List<dynamic>)
           .map((e) => Measurement.fromJson(e as Map<String, dynamic>))
           .toList(),
-      (json['triggerIds'] as List<dynamic>).map((e) => e as int).toList(),
+      triggerIds:
+          (json['triggerIds'] as List<dynamic>).map((e) => e as int).toList(),
     );
 
 Map<String, dynamic> _$DataStreamBatchToJson(DataStreamBatch instance) =>

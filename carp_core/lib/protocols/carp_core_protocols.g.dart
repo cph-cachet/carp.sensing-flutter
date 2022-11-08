@@ -78,11 +78,11 @@ StudyProtocol _$StudyProtocolFromJson(Map<String, dynamic> json) =>
             MapEntry(k, (e as List<dynamic>).map((e) => e as String).toSet()),
       )
       ..expectedParticipantData =
-          (json['expectedParticipantData'] as List<dynamic>)
-              .map((e) =>
+          (json['expectedParticipantData'] as List<dynamic>?)
+              ?.map((e) =>
                   ExpectedParticipantData.fromJson(e as Map<String, dynamic>))
               .toSet()
-      ..applicationData = json['applicationData'] as String?;
+      ..applicationData = json['applicationData'] as Map<String, dynamic>?;
 
 Map<String, dynamic> _$StudyProtocolToJson(StudyProtocol instance) {
   final val = <String, dynamic>{
@@ -109,7 +109,8 @@ Map<String, dynamic> _$StudyProtocolToJson(StudyProtocol instance) {
   writeNotNull('participantRoles', instance.participantRoles?.toList());
   writeNotNull('assignedDevices',
       instance.assignedDevices?.map((k, e) => MapEntry(k, e.toList())));
-  val['expectedParticipantData'] = instance.expectedParticipantData.toList();
+  writeNotNull(
+      'expectedParticipantData', instance.expectedParticipantData?.toList());
   writeNotNull('applicationData', instance.applicationData);
   return val;
 }
