@@ -49,4 +49,15 @@ void main() {
     expect(deployment.deviceConfiguration.roleName, "Participant's phone");
     print(toJsonString(deployment));
   });
+
+  test('Data Stream', () async {
+    String plainJson = File('test/json/carp.core-kotlin/data/datastream.json')
+        .readAsStringSync();
+
+    List<dynamic> stream = json.decode(plainJson) as List<dynamic>;
+
+    expect(stream.length, 1);
+    // expect(stream.first, isA<DataStreamBatch>);
+    print(toJsonString(stream));
+  });
 }
