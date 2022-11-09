@@ -17,7 +17,6 @@ import 'package:carp_core/common/carp_core_common.dart';
 
 export 'carp_core_protocols.dart';
 
-part 'domain/task_control.dart';
 part 'domain/study_protocol.dart';
 part 'application/protocol_classes.dart';
 part 'application/protocol_service.dart';

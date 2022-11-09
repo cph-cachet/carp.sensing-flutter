@@ -85,13 +85,16 @@ class DataStreamBatch {
 class Measurement {
   int sensorStartTime;
   int? sensorEndTime;
-  // DataType dataType;
+
+  @JsonKey(ignore: true)
+  DataType? dataType;
+
   Data data;
 
   Measurement({
     required this.sensorStartTime,
     this.sensorEndTime,
-    // this.dataType,
+    this.dataType,
     required this.data,
   });
   factory Measurement.fromJson(Map<String, dynamic> json) =>

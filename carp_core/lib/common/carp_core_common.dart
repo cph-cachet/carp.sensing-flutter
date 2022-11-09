@@ -12,11 +12,12 @@ part 'infrastructure/service_request.dart';
 part 'application/users.dart';
 part 'application/measure.dart';
 part 'application/tasks.dart';
+part 'application/task_control.dart';
 part 'application/device_configuration.dart';
 part 'application/device_registration.dart';
 part 'application/triggers.dart';
 part 'application/sampling.dart';
-part 'application/data.dart';
+part 'application/data_type.dart';
 
 part 'carp_core_common.g.dart';
 

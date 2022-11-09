@@ -6,40 +6,6 @@ part of carp_core_protocols;
 // JsonSerializableGenerator
 // **************************************************************************
 
-TaskControl _$TaskControlFromJson(Map<String, dynamic> json) => TaskControl(
-      json['triggerId'] as int,
-      $enumDecodeNullable(_$ControlEnumMap, json['control']) ?? Control.Start,
-    )
-      ..taskName = json['taskName'] as String
-      ..destinationDeviceRoleName = json['destinationDeviceRoleName'] as String?
-      ..hasBeenScheduledUntil = json['hasBeenScheduledUntil'] == null
-          ? null
-          : DateTime.parse(json['hasBeenScheduledUntil'] as String);
-
-Map<String, dynamic> _$TaskControlToJson(TaskControl instance) {
-  final val = <String, dynamic>{
-    'triggerId': instance.triggerId,
-    'taskName': instance.taskName,
-  };
-
-  void writeNotNull(String key, dynamic value) {
-    if (value != null) {
-      val[key] = value;
-    }
-  }
-
-  writeNotNull('destinationDeviceRoleName', instance.destinationDeviceRoleName);
-  val['control'] = _$ControlEnumMap[instance.control]!;
-  writeNotNull('hasBeenScheduledUntil',
-      instance.hasBeenScheduledUntil?.toIso8601String());
-  return val;
-}
-
-const _$ControlEnumMap = {
-  Control.Start: 'Start',
-  Control.Stop: 'Stop',
-};
-
 StudyProtocol _$StudyProtocolFromJson(Map<String, dynamic> json) =>
     StudyProtocol(
       ownerId: json['ownerId'] as String,

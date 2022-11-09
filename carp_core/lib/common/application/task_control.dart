@@ -4,7 +4,7 @@
  * Use of this source code is governed by a MIT-style license that can be
  * found in the LICENSE file.
  */
-part of carp_core_protocols;
+part of carp_core_common;
 
 /// Specifies that once a condition of the trigger with [triggerId] applies,
 /// the task with [taskName] on [destinationDeviceRoleName] should be started or stopped.
