@@ -3,6 +3,7 @@
 library carp_core;
 
 import 'package:carp_serializable/carp_serializable.dart';
+import 'package:iso_duration_parser/iso_duration_parser.dart';
 import 'package:carp_core/deployment/carp_core_deployment.dart';
 import 'package:carp_core/common/carp_core_common.dart';
 

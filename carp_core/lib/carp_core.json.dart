@@ -50,7 +50,8 @@ void _registerFromJsonFunctions() {
   // PROTOCOL
   // register(StudyProtocol());
   FromJsonFactory().register(TriggerConfiguration());
-  FromJsonFactory().register(ElapsedTimeTrigger(elapsedTime: const Duration()));
+  FromJsonFactory()
+      .register(ElapsedTimeTrigger(elapsedTime: const IsoDuration()));
   FromJsonFactory().register(ManualTrigger());
   FromJsonFactory().register(ScheduledTrigger(
       recurrenceRule: RecurrenceRule(Frequency.DAILY),

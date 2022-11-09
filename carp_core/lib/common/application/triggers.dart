@@ -53,7 +53,10 @@ abstract class Schedulable {}
 /// Never stops sampling once started.
 @JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
 class ElapsedTimeTrigger extends TriggerConfiguration implements Schedulable {
-  Duration elapsedTime;
+  /// Elapsed time since start of the study deployment.
+  /// Specified in the ISO 8061 standard.
+  @JsonKey(toJson: _$IsoDurationToJson, fromJson: _$IsoDurationFromJson)
+  IsoDuration? elapsedTime;
 
   /// Create a trigger that starts after [elapsedTime] has elapsed since the start
   /// of the study deployment.

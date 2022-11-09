@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:test/test.dart';
 import 'package:carp_core/carp_core.dart';
 import 'package:carp_serializable/carp_serializable.dart';
+import 'package:iso_duration_parser/iso_duration_parser.dart';
 
 void main() {
   late StudyProtocol protocol;
@@ -34,7 +35,7 @@ void main() {
 
     BackgroundTask task = BackgroundTask(
         name: 'Start measures',
-        duration: const Duration(hours: 1),
+        duration: const IsoDuration(hours: 1),
         measures: measures);
     protocol.addTaskControl(
       TriggerConfiguration(sourceDeviceRoleName: phone.roleName),
@@ -46,7 +47,7 @@ void main() {
     protocol.addTaskControl(
       ElapsedTimeTrigger(
         sourceDeviceRoleName: phone.roleName,
-        elapsedTime: const Duration(hours: 1),
+        elapsedTime: const IsoDuration(hours: 1),
       ),
       task,
       phone,

@@ -1,7 +1,10 @@
 /// Contains common CARP domain classes which are used across the libraries.
 library carp_core_common;
 
+import 'dart:convert';
+
 import 'package:meta/meta.dart';
+import 'package:iso_duration_parser/iso_duration_parser.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:carp_serializable/carp_serializable.dart';
 import 'package:uuid/uuid.dart';
@@ -39,3 +42,10 @@ abstract class Snapshot {
     createdOn = DateTime.now().toUtc();
   }
 }
+
+/// Deserialization of [isoString] to [IsoDuration] according to the ISO 8061 standard.
+IsoDuration? _$IsoDurationFromJson(String? isoString) =>
+    (isoString != null) ? IsoDuration.tryParse(isoString) : null;
+
+/// Serialization of [IsoDuration] to a ISO 8061 string.
+String? _$IsoDurationToJson(IsoDuration? duration) => duration?.toIso();

@@ -1,6 +1,6 @@
 {
-    "id": "0ef09c00-5f52-11ed-9f8d-75e5c686cd9d",
-    "createdOn": "2022-11-08T10:42:36.096584Z",
+    "id": "123505a0-6023-11ed-a303-1d530a630ff7",
+    "createdOn": "2022-11-09T11:38:46.394435Z",
     "version": 0,
     "ownerId": "xyz@dtu.dk",
     "name": "Test Study Protocol",
@@ -41,7 +41,7 @@
                     "type": "dk.cachet.carp.steps"
                 }
             ],
-            "duration": 3600000000
+            "duration": "PT1H"
         },
         {
             "__type": "dk.cachet.carp.common.application.tasks.BackgroundTask",
@@ -77,7 +77,7 @@
         "1": {
             "__type": "dk.cachet.carp.common.application.triggers.ElapsedTimeTrigger",
             "sourceDeviceRoleName": "phone",
-            "elapsedTime": 3600000000
+            "elapsedTime": "PT1H"
         },
         "2": {
             "__type": "dk.cachet.carp.common.application.triggers.ManualTrigger"

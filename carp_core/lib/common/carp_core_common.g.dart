@@ -143,9 +143,7 @@ BackgroundTask _$BackgroundTaskFromJson(Map<String, dynamic> json) =>
       measures: (json['measures'] as List<dynamic>?)
           ?.map((e) => Measure.fromJson(e as Map<String, dynamic>))
           .toList(),
-      duration: json['duration'] == null
-          ? null
-          : Duration(microseconds: json['duration'] as int),
+      duration: _$IsoDurationFromJson(json['duration'] as String?),
     )
       ..$type = json['__type'] as String?
       ..description = json['description'] as String?;
@@ -163,7 +161,7 @@ Map<String, dynamic> _$BackgroundTaskToJson(BackgroundTask instance) {
   val['name'] = instance.name;
   writeNotNull('description', instance.description);
   writeNotNull('measures', instance.measures);
-  writeNotNull('duration', instance.duration?.inMicroseconds);
+  writeNotNull('duration', _$IsoDurationToJson(instance.duration));
   return val;
 }
 
@@ -473,7 +471,7 @@ Map<String, dynamic> _$TriggerConfigurationToJson(
 ElapsedTimeTrigger _$ElapsedTimeTriggerFromJson(Map<String, dynamic> json) =>
     ElapsedTimeTrigger(
       sourceDeviceRoleName: json['sourceDeviceRoleName'] as String?,
-      elapsedTime: Duration(microseconds: json['elapsedTime'] as int),
+      elapsedTime: _$IsoDurationFromJson(json['elapsedTime'] as String?),
     )..$type = json['__type'] as String?;
 
 Map<String, dynamic> _$ElapsedTimeTriggerToJson(ElapsedTimeTrigger instance) {
@@ -487,7 +485,7 @@ Map<String, dynamic> _$ElapsedTimeTriggerToJson(ElapsedTimeTrigger instance) {
 
   writeNotNull('__type', instance.$type);
   writeNotNull('sourceDeviceRoleName', instance.sourceDeviceRoleName);
-  val['elapsedTime'] = instance.elapsedTime.inMicroseconds;
+  writeNotNull('elapsedTime', _$IsoDurationToJson(instance.elapsedTime));
   return val;
 }
 
