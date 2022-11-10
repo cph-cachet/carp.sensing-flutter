@@ -9,6 +9,8 @@ part of carp_core_data;
 
 /// Store and retrieve data streams for study deployments.
 abstract class DataStreamService {
+  static const String API_VERSION = "1.1";
+
   /// Start accepting data for a study deployment for data streams configured
   /// in [configuration].
   ///

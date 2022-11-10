@@ -7,12 +7,14 @@ import 'package:iso_duration_parser/iso_duration_parser.dart';
 import 'package:carp_core/deployment/carp_core_deployment.dart';
 import 'package:carp_core/common/carp_core_common.dart';
 import 'package:carp_core/protocols/carp_core_protocols.dart';
+import 'package:carp_core/data/carp_core_data.dart';
 
 export 'client/carp_core_client.dart';
 export 'common/carp_core_common.dart';
 export 'data/carp_core_data.dart';
 export 'deployment/carp_core_deployment.dart';
 export 'protocols/carp_core_protocols.dart';
+export 'data/carp_core_data.dart';
 
 part 'carp_core.json.dart';
 

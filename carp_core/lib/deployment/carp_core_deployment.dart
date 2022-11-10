@@ -17,8 +17,8 @@ import 'package:json_annotation/json_annotation.dart';
 import 'package:uuid/uuid.dart';
 import 'package:carp_serializable/carp_serializable.dart';
 
-import '../protocols/carp_core_protocols.dart';
-import '../common/carp_core_common.dart';
+import 'package:carp_core/common/carp_core_common.dart';
+import 'package:carp_core/protocols/carp_core_protocols.dart';
 
 export 'carp_core_deployment.dart';
 
@@ -29,7 +29,7 @@ part 'domain/study_deployment.dart';
 part 'domain/participation.dart';
 part 'application/users.dart';
 part 'domain/data_endpoint.dart';
-part 'infrastructure/deployment_request.dart';
-part 'infrastructure/participation_request.dart';
+part 'infrastructure/deployment_requests.dart';
+part 'infrastructure/participation_requests.dart';
 
 part 'carp_core_deployment.g.dart';

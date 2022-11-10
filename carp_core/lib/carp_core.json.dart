@@ -111,6 +111,7 @@ void _registerFromJsonFunctions() {
   FromJsonFactory().register(GetBy('', null));
   FromJsonFactory().register(GetAllForOwner(null));
   FromJsonFactory().register(GetVersionHistoryFor(''));
+  FromJsonFactory().register(CreateCustomProtocol('', '', '', ''));
 
   // INPUT DATA TYPES
   FromJsonFactory().register(CustomInput('ignored'),

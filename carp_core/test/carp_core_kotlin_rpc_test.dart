@@ -103,31 +103,155 @@ void main() {
       expect(protocol.name, 'Nonmotorized transport study');
     });
 
-    test('StudyProtocol', () async {
-      String plainJson =
-          File('$path/protocols/study_protocol.json').readAsStringSync();
+    test('GetBy - Request', () async {
+      String rpcString =
+          File('$path/protocols/ProtocolService/getBy.json').readAsStringSync();
 
-      StudyProtocol protocol = StudyProtocol.fromJson(
-          json.decode(plainJson) as Map<String, dynamic>);
+      var expected =
+          GetBy.fromJson(json.decode(rpcString) as Map<String, dynamic>);
 
-      expect(protocol.id, '25fe92a5-0d52-4e37-8d05-31f347d72d3d');
-      expect(protocol.primaryDevices.first.roleName, "Participant's phone");
-      print(toJsonString(protocol));
+      var request = GetBy(
+        '25fe92a5-0d52-4e37-8d05-31f347d72d3d',
+        'Version 1',
+      );
+
+      print(toJsonString(request));
+      expect(toJsonString(expected), toJsonString(request));
     });
 
-    test('Custom StudyProtocol', () async {
+    test('GetBy - Response', () async {
       String plainJson =
-          File('$path/protocols/custom_study_protocol.json').readAsStringSync();
+          File('$path/protocols/ProtocolService/getBy-response.json')
+              .readAsStringSync();
 
       StudyProtocol protocol = StudyProtocol.fromJson(
           json.decode(plainJson) as Map<String, dynamic>);
 
-      expect(protocol.ownerId, '491f03fc-964b-4783-86a6-a528bbfe4e94');
-      expect(protocol.primaryDevices.first.roleName, 'Custom device');
       print(toJsonString(protocol));
+      expect(protocol.id, '25fe92a5-0d52-4e37-8d05-31f347d72d3d');
+      expect(protocol.name, 'Nonmotorized transport study');
+    });
+
+    test('GetAllForOwner - Request', () async {
+      String rpcString =
+          File('$path/protocols/ProtocolService/getAllForOwner.json')
+              .readAsStringSync();
+
+      var expected = GetAllForOwner.fromJson(
+          json.decode(rpcString) as Map<String, dynamic>);
+
+      var request = GetAllForOwner('491f03fc-964b-4783-86a6-a528bbfe4e94');
+
+      print(toJsonString(request));
+      expect(toJsonString(expected), toJsonString(request));
+    });
+
+    test('GetAllForOwner - Response', () async {
+      String plainJson =
+          File('$path/protocols/ProtocolService/getAllForOwner-response.json')
+              .readAsStringSync();
+
+      var list = json.decode(plainJson) as List<dynamic>;
+      var protocol = StudyProtocol.fromJson(list[0] as Map<String, dynamic>);
+
+      print(toJsonString(protocol));
+      expect(protocol.id, '25fe92a5-0d52-4e37-8d05-31f347d72d3d');
+      expect(protocol.name, 'Nonmotorized transport study');
+    });
+
+    test('GetVersionHistoryFor - Request', () async {
+      String rpcString =
+          File('$path/protocols/ProtocolService/getVersionHistoryFor.json')
+              .readAsStringSync();
+
+      var expected = GetVersionHistoryFor.fromJson(
+          json.decode(rpcString) as Map<String, dynamic>);
+
+      var request =
+          GetVersionHistoryFor('25fe92a5-0d52-4e37-8d05-31f347d72d3d');
+
+      print(toJsonString(request));
+      expect(toJsonString(expected), toJsonString(request));
+    });
+
+    test('GetVersionHistoryFor - Response', () async {
+      String plainJson = File(
+              '$path/protocols/ProtocolService/getVersionHistoryFor-response.json')
+          .readAsStringSync();
+
+      var list = json.decode(plainJson) as List<dynamic>;
+      print(toJsonString(list));
+
+      var version = ProtocolVersion.fromJson(list[0] as Map<String, dynamic>);
+      expect(version.tag, 'Version 1');
+      expect(version.date, DateTime.tryParse('2022-01-18T10:56:59Z'));
+    });
+  });
+
+  group('ProtocolFactory Service', () {
+    test('CreateCustomProtocol - Request', () async {
+      String rpcString = File(
+              '$path/protocols/ProtocolFactoryService/createCustomProtocol.json')
+          .readAsStringSync();
+
+      var expected = CreateCustomProtocol.fromJson(
+          json.decode(rpcString) as Map<String, dynamic>);
+
+      var request = CreateCustomProtocol(
+        '491f03fc-964b-4783-86a6-a528bbfe4e94',
+        'Fictional Company study',
+        "Collect heartrate and GPS using Fictional Company's software.",
+        '{\"collect-data\": \"heartrate, gps\"}',
+      );
+
+      print(toJsonString(request));
+      expect(toJsonString(expected), toJsonString(request));
+    });
+
+    test('CreateCustomProtocol - Response', () async {
+      String plainJson = File(
+              '$path/protocols/ProtocolFactoryService/createCustomProtocol-response.json')
+          .readAsStringSync();
+
+      StudyProtocol protocol = StudyProtocol.fromJson(
+          json.decode(plainJson) as Map<String, dynamic>);
+
+      print(toJsonString(protocol));
+      expect(protocol.id, '4d8c75c7-9604-48fa-8f9b-5ed3e4bd5df8');
+      expect(protocol.name, 'Fictional Company study');
     });
   });
   group('DataStream Service', () {
+    test('AppendToDataStreams - Request', () async {
+      String rpcString =
+          File('$path/protocols/DataStreamService/appendToDataStreams.json')
+              .readAsStringSync();
+
+      var expected = AppendToDataStreams.fromJson(
+          json.decode(rpcString) as Map<String, dynamic>);
+
+      var request = AppendToDataStreams(
+        'c9cc5317-48da-45f2-958e-58bc07f34681',
+        [],
+      );
+
+      print(toJsonString(request));
+      expect(toJsonString(expected), toJsonString(request));
+    });
+
+    test('AppendToDataStreams - Response', () async {
+      String plainJson = File(
+              '$path/protocols/DataStreamService/appendToDataStreams-response.json')
+          .readAsStringSync();
+
+      StudyProtocol protocol = StudyProtocol.fromJson(
+          json.decode(plainJson) as Map<String, dynamic>);
+
+      print(toJsonString(protocol));
+      expect(protocol.id, '4d8c75c7-9604-48fa-8f9b-5ed3e4bd5df8');
+      expect(protocol.name, 'Fictional Company study');
+    });
+
     test('Data Stream', () async {
       String plainJson = File('$path/data/datastream.json').readAsStringSync();
 

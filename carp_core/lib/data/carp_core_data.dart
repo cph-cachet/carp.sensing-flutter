@@ -13,5 +13,6 @@ export 'carp_core_data.dart';
 
 part 'application/datastream.dart';
 part 'application/datastream_service.dart';
+part 'infrastructure/data_stream_requests.dart';
 
 part 'carp_core_data.g.dart';
