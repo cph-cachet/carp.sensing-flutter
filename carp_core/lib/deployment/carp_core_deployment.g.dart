@@ -85,7 +85,7 @@ DeviceDeploymentStatus _$DeviceDeploymentStatusFromJson(
           DeviceConfiguration.fromJson(json['device'] as Map<String, dynamic>),
     )
       ..$type = json['__type'] as String?
-      ..requiresDeployment = json['requiresDeployment'] as bool
+      ..canBeDeployed = json['canBeDeployed'] as bool?
       ..remainingDevicesToRegisterToObtainDeployment =
           (json['remainingDevicesToRegisterToObtainDeployment']
                   as List<dynamic>?)
@@ -108,7 +108,7 @@ Map<String, dynamic> _$DeviceDeploymentStatusToJson(
 
   writeNotNull('__type', instance.$type);
   val['device'] = instance.device;
-  val['requiresDeployment'] = instance.requiresDeployment;
+  writeNotNull('canBeDeployed', instance.canBeDeployed);
   writeNotNull('remainingDevicesToRegisterToObtainDeployment',
       instance.remainingDevicesToRegisterToObtainDeployment);
   writeNotNull('remainingDevicesToRegisterBeforeDeployment',
@@ -116,31 +116,51 @@ Map<String, dynamic> _$DeviceDeploymentStatusToJson(
   return val;
 }
 
-DeviceInvitation _$DeviceInvitationFromJson(Map<String, dynamic> json) =>
-    DeviceInvitation()
-      ..deviceRoleName = json['deviceRoleName'] as String
-      ..isRegistered = json['isRegistered'] as bool;
+AssignedPrimaryDevice _$AssignedPrimaryDeviceFromJson(
+        Map<String, dynamic> json) =>
+    AssignedPrimaryDevice(
+      device: PrimaryDeviceConfiguration.fromJson(
+          json['device'] as Map<String, dynamic>),
+      registration: json['registration'] == null
+          ? null
+          : DeviceRegistration.fromJson(
+              json['registration'] as Map<String, dynamic>),
+    );
 
-Map<String, dynamic> _$DeviceInvitationToJson(DeviceInvitation instance) =>
-    <String, dynamic>{
-      'deviceRoleName': instance.deviceRoleName,
-      'isRegistered': instance.isRegistered,
-    };
+Map<String, dynamic> _$AssignedPrimaryDeviceToJson(
+    AssignedPrimaryDevice instance) {
+  final val = <String, dynamic>{
+    'device': instance.device,
+  };
+
+  void writeNotNull(String key, dynamic value) {
+    if (value != null) {
+      val[key] = value;
+    }
+  }
+
+  writeNotNull('registration', instance.registration);
+  return val;
+}
 
 StudyDeploymentStatus _$StudyDeploymentStatusFromJson(
         Map<String, dynamic> json) =>
     StudyDeploymentStatus(
       studyDeploymentId: json['studyDeploymentId'] as String,
-      devicesStatus: (json['devicesStatus'] as List<dynamic>?)
+      deviceStatusList: (json['deviceStatusList'] as List<dynamic>?)
               ?.map((e) =>
                   DeviceDeploymentStatus.fromJson(e as Map<String, dynamic>))
               .toList() ??
           const [],
     )
       ..$type = json['__type'] as String?
-      ..startTime = json['startTime'] == null
+      ..createdOn = DateTime.parse(json['createdOn'] as String)
+      ..participantStatusList = (json['participantStatusList'] as List<dynamic>)
+          .map((e) => ParticipantStatus.fromJson(e as Map<String, dynamic>))
+          .toList()
+      ..startedOn = json['startedOn'] == null
           ? null
-          : DateTime.parse(json['startTime'] as String);
+          : DateTime.parse(json['startedOn'] as String);
 
 Map<String, dynamic> _$StudyDeploymentStatusToJson(
     StudyDeploymentStatus instance) {
@@ -153,9 +173,11 @@ Map<String, dynamic> _$StudyDeploymentStatusToJson(
   }
 
   writeNotNull('__type', instance.$type);
+  val['createdOn'] = instance.createdOn.toIso8601String();
   val['studyDeploymentId'] = instance.studyDeploymentId;
-  val['devicesStatus'] = instance.devicesStatus;
-  writeNotNull('startTime', instance.startTime?.toIso8601String());
+  val['deviceStatusList'] = instance.deviceStatusList;
+  val['participantStatusList'] = instance.participantStatusList;
+  writeNotNull('startedOn', instance.startedOn?.toIso8601String());
   return val;
 }
 
@@ -216,24 +238,16 @@ Map<String, dynamic> _$EmailAccountIdentityToJson(
 Participation _$ParticipationFromJson(Map<String, dynamic> json) =>
     Participation(
       json['studyDeploymentId'] as String,
-      json['id'] as String,
-    )..isRegistered = json['isRegistered'] as bool?;
+      json['participantId'] as String,
+      AssignedTo.fromJson(json['assignedRoles'] as Map<String, dynamic>),
+    );
 
-Map<String, dynamic> _$ParticipationToJson(Participation instance) {
-  final val = <String, dynamic>{
-    'studyDeploymentId': instance.studyDeploymentId,
-    'id': instance.id,
-  };
-
-  void writeNotNull(String key, dynamic value) {
-    if (value != null) {
-      val[key] = value;
-    }
-  }
-
-  writeNotNull('isRegistered', instance.isRegistered);
-  return val;
-}
+Map<String, dynamic> _$ParticipationToJson(Participation instance) =>
+    <String, dynamic>{
+      'studyDeploymentId': instance.studyDeploymentId,
+      'participantId': instance.participantId,
+      'assignedRoles': instance.assignedRoles,
+    };
 
 StudyInvitation _$StudyInvitationFromJson(Map<String, dynamic> json) =>
     StudyInvitation(
@@ -262,8 +276,8 @@ ActiveParticipationInvitation _$ActiveParticipationInvitationFromJson(
     ActiveParticipationInvitation(
       Participation.fromJson(json['participation'] as Map<String, dynamic>),
       StudyInvitation.fromJson(json['invitation'] as Map<String, dynamic>),
-    )..devices = (json['devices'] as List<dynamic>?)
-        ?.map((e) => DeviceInvitation.fromJson(e as Map<String, dynamic>))
+    )..assignedDevices = (json['assignedDevices'] as List<dynamic>?)
+        ?.map((e) => AssignedPrimaryDevice.fromJson(e as Map<String, dynamic>))
         .toList();
 
 Map<String, dynamic> _$ActiveParticipationInvitationToJson(
@@ -279,9 +293,27 @@ Map<String, dynamic> _$ActiveParticipationInvitationToJson(
     }
   }
 
-  writeNotNull('devices', instance.devices);
+  writeNotNull('assignedDevices', instance.assignedDevices);
   return val;
 }
+
+ParticipantStatus _$ParticipantStatusFromJson(Map<String, dynamic> json) =>
+    ParticipantStatus(
+      json['participantId'] as String,
+      AssignedTo.fromJson(
+          json['assignedParticipantRoles'] as Map<String, dynamic>),
+      (json['assignedPrimaryDeviceRoleNames'] as List<dynamic>)
+          .map((e) => e as String)
+          .toSet(),
+    );
+
+Map<String, dynamic> _$ParticipantStatusToJson(ParticipantStatus instance) =>
+    <String, dynamic>{
+      'participantId': instance.participantId,
+      'assignedParticipantRoles': instance.assignedParticipantRoles,
+      'assignedPrimaryDeviceRoleNames':
+          instance.assignedPrimaryDeviceRoleNames.toList(),
+    };
 
 DataEndPoint _$DataEndPointFromJson(Map<String, dynamic> json) => DataEndPoint(
       type: json['type'] as String,
@@ -393,7 +425,7 @@ GetDeviceDeploymentFor _$GetDeviceDeploymentForFromJson(
         Map<String, dynamic> json) =>
     GetDeviceDeploymentFor(
       json['studyDeploymentId'] as String?,
-      json['masterDeviceRoleName'] as String,
+      json['primaryDeviceRoleName'] as String,
     )
       ..$type = json['__type'] as String?
       ..apiVersion = json['apiVersion'] as String;
@@ -404,28 +436,28 @@ Map<String, dynamic> _$GetDeviceDeploymentForToJson(
       '__type': instance.$type,
       'apiVersion': instance.apiVersion,
       'studyDeploymentId': instance.studyDeploymentId,
-      'masterDeviceRoleName': instance.masterDeviceRoleName,
+      'primaryDeviceRoleName': instance.primaryDeviceRoleName,
     };
 
-DeploymentSuccessful _$DeploymentSuccessfulFromJson(
-        Map<String, dynamic> json) =>
-    DeploymentSuccessful(
-      json['studyDeploymentId'] as String,
-      json['masterDeviceRoleName'] as String,
-      DateTime.parse(json['deviceDeploymentLastUpdateDate'] as String),
+DeviceDeployed _$DeviceDeployedFromJson(Map<String, dynamic> json) =>
+    DeviceDeployed(
+      json['studyDeploymentId'] as String?,
+      json['primaryDeviceRoleName'] as String,
+      json['deviceDeploymentLastUpdatedOn'] == null
+          ? null
+          : DateTime.parse(json['deviceDeploymentLastUpdatedOn'] as String),
     )
       ..$type = json['__type'] as String?
       ..apiVersion = json['apiVersion'] as String;
 
-Map<String, dynamic> _$DeploymentSuccessfulToJson(
-        DeploymentSuccessful instance) =>
+Map<String, dynamic> _$DeviceDeployedToJson(DeviceDeployed instance) =>
     <String, dynamic>{
       '__type': instance.$type,
       'apiVersion': instance.apiVersion,
       'studyDeploymentId': instance.studyDeploymentId,
-      'masterDeviceRoleName': instance.masterDeviceRoleName,
-      'deviceDeploymentLastUpdateDate':
-          instance.deviceDeploymentLastUpdateDate?.toIso8601String(),
+      'primaryDeviceRoleName': instance.primaryDeviceRoleName,
+      'deviceDeploymentLastUpdatedOn':
+          instance.deviceDeploymentLastUpdatedOn?.toIso8601String(),
     };
 
 Stop _$StopFromJson(Map<String, dynamic> json) => Stop(

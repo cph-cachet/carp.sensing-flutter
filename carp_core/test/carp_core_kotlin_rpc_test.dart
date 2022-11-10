@@ -11,8 +11,136 @@ void main() {
     Core();
   });
 
-  group('ParticipationService', () {
-    test('GetActiveParticipationInvitations', () async {
+  group('Protocol Service', () {
+    test('Add - Request', () async {
+      String rpcString =
+          File('$path/protocols/ProtocolService/add.json').readAsStringSync();
+
+      var expected =
+          Add.fromJson(json.decode(rpcString) as Map<String, dynamic>);
+
+      String plainJson =
+          File('test/json/carp.core-kotlin/protocols/study_protocol.json')
+              .readAsStringSync();
+      StudyProtocol protocol = StudyProtocol.fromJson(
+          json.decode(plainJson) as Map<String, dynamic>);
+      var request = Add(protocol, 'Version 1');
+
+      print(toJsonString(request));
+      expect(toJsonString(expected), toJsonString(request));
+    });
+
+    test('Add - Response', () async {
+      String plainJson =
+          File('$path/protocols/ProtocolService/add-response.json')
+              .readAsStringSync();
+      // the response is empty
+      print(toJsonString(plainJson));
+    });
+
+    test('AddVersion - Request', () async {
+      String rpcString = File('$path/protocols/ProtocolService/addVersion.json')
+          .readAsStringSync();
+
+      var expected =
+          AddVersion.fromJson(json.decode(rpcString) as Map<String, dynamic>);
+
+      String plainJson =
+          File('test/json/carp.core-kotlin/protocols/study_protocol.json')
+              .readAsStringSync();
+      StudyProtocol protocol = StudyProtocol.fromJson(
+          json.decode(plainJson) as Map<String, dynamic>);
+
+      // the name and the version number is updated
+      protocol.name = 'Walking/biking study';
+      var request = AddVersion(protocol, 'Version 2: new name');
+
+      print(toJsonString(request));
+      expect(toJsonString(expected), toJsonString(request));
+    });
+
+    test('AddVersion - Response', () async {
+      String plainJson =
+          File('$path/protocols/ProtocolService/addVersion-response.json')
+              .readAsStringSync();
+      // the response is empty
+      print(toJsonString(plainJson));
+    });
+
+    test('UpdateParticipantDataConfiguration - Request', () async {
+      String rpcString = File(
+              '$path/protocols/ProtocolService/updateParticipantDataConfiguration.json')
+          .readAsStringSync();
+
+      var expected = UpdateParticipantDataConfiguration.fromJson(
+          json.decode(rpcString) as Map<String, dynamic>);
+
+      var request = UpdateParticipantDataConfiguration(
+        '25fe92a5-0d52-4e37-8d05-31f347d72d3d',
+        'Version 3: ask participant data',
+        [
+          ExpectedParticipantData(
+            ParticipantAttribute(inputDataType: 'dk.cachet.carp.input.sex'),
+            AssignedTo(roleNames: {'Participant'}),
+          ),
+        ],
+      );
+
+      print(toJsonString(request));
+      expect(toJsonString(expected), toJsonString(request));
+    });
+
+    test('UpdateParticipantDataConfiguration - Response', () async {
+      String plainJson = File(
+              '$path/protocols/ProtocolService/updateParticipantDataConfiguration-response.json')
+          .readAsStringSync();
+
+      StudyProtocol protocol = StudyProtocol.fromJson(
+          json.decode(plainJson) as Map<String, dynamic>);
+
+      print(toJsonString(protocol));
+      expect(protocol.id, '25fe92a5-0d52-4e37-8d05-31f347d72d3d');
+      expect(protocol.name, 'Nonmotorized transport study');
+    });
+
+    test('StudyProtocol', () async {
+      String plainJson =
+          File('$path/protocols/study_protocol.json').readAsStringSync();
+
+      StudyProtocol protocol = StudyProtocol.fromJson(
+          json.decode(plainJson) as Map<String, dynamic>);
+
+      expect(protocol.id, '25fe92a5-0d52-4e37-8d05-31f347d72d3d');
+      expect(protocol.primaryDevices.first.roleName, "Participant's phone");
+      print(toJsonString(protocol));
+    });
+
+    test('Custom StudyProtocol', () async {
+      String plainJson =
+          File('$path/protocols/custom_study_protocol.json').readAsStringSync();
+
+      StudyProtocol protocol = StudyProtocol.fromJson(
+          json.decode(plainJson) as Map<String, dynamic>);
+
+      expect(protocol.ownerId, '491f03fc-964b-4783-86a6-a528bbfe4e94');
+      expect(protocol.primaryDevices.first.roleName, 'Custom device');
+      print(toJsonString(protocol));
+    });
+  });
+  group('DataStream Service', () {
+    test('Data Stream', () async {
+      String plainJson = File('$path/data/datastream.json').readAsStringSync();
+
+      List<dynamic> stream = json.decode(plainJson) as List<dynamic>;
+
+      expect(stream.length, 1);
+      // expect(stream.first, isA<DataStreamBatch>);
+      print(toJsonString(stream));
+    });
+  });
+
+  group('Participation Service', () {
+    test('GetActiveParticipationInvitations - Request', () async {
       String rpcString = File(
               '$path/deployments/ParticipationService/getActiveParticipationInvitations.json')
           .readAsStringSync();
@@ -26,26 +154,50 @@ void main() {
       print(toJsonString(request));
     });
 
-    test('GetParticipantData', () async {
-      String rpcString =
+    test('GetActiveParticipationInvitations - Response', () async {
+      String plainJson = File(
+              '$path/deployments/ParticipationService/getActiveParticipationInvitations-response.json')
+          .readAsStringSync();
+
+      ActiveParticipationInvitation invitation =
+          ActiveParticipationInvitation.fromJson(
+              json.decode(plainJson) as Map<String, dynamic>);
+      expect(invitation.participation.participantId,
+          '32880e82-01c9-40cf-a6ed-17ff3348f251');
+      print(toJsonString(invitation));
+    });
+
+    test('GetParticipantData - Request', () async {
+      String rpc =
           File('$path/deployments/ParticipationService/getParticipantData.json')
               .readAsStringSync();
 
-      var expected = GetParticipantData.fromJson(
-          json.decode(rpcString) as Map<String, dynamic>);
+      var expected =
+          GetParticipantData.fromJson(json.decode(rpc) as Map<String, dynamic>);
       var request = GetParticipantData('c9cc5317-48da-45f2-958e-58bc07f34681');
 
       expect(expected.toJson(), request.toJson());
       print(toJsonString(request));
     });
 
-    test('GetParticipantDataList', () async {
-      String rpcString = File(
+    test('GetParticipantData - Response', () async {
+      String response = File(
+              '$path/deployments/ParticipationService/getParticipantData-response.json')
+          .readAsStringSync();
+
+      ParticipantData data = ParticipantData.fromJson(
+          json.decode(response) as Map<String, dynamic>);
+      expect(data.roles.first.roleName, "Participant");
+      print(toJsonString(data));
+    });
+
+    test('GetParticipantDataList - Request', () async {
+      String rpc = File(
               '$path/deployments/ParticipationService/getParticipantDataList.json')
           .readAsStringSync();
 
       var expected = GetParticipantDataList.fromJson(
-          json.decode(rpcString) as Map<String, dynamic>);
+          json.decode(rpc) as Map<String, dynamic>);
       var request =
           GetParticipantDataList(['c9cc5317-48da-45f2-958e-58bc07f34681']);
 
@@ -53,7 +205,17 @@ void main() {
       print(toJsonString(request));
     });
 
-    test('SetParticipantData', () async {
+    test('GetParticipantDataList - Response', () async {
+      String response = File(
+              '$path/deployments/ParticipationService/getParticipantDataList-response.json')
+          .readAsStringSync();
+      var list = json.decode(response) as List<dynamic>;
+
+      expect(list.length, 1);
+      print(toJsonString(list));
+    });
+
+    test('SetParticipantData - Request', () async {
       String rpcString =
           File('$path/deployments/ParticipationService/setParticipantData.json')
               .readAsStringSync();
@@ -63,7 +225,6 @@ void main() {
         'Participant',
         {SexCustomInput.SEX_INPUT_TYPE_NAME: SexCustomInput(Sex.Male)},
       );
-      print(toJsonString(request));
 
       var expected = SetParticipantData.fromJson(
           json.decode(rpcString) as Map<String, dynamic>);
@@ -73,101 +234,167 @@ void main() {
       // expect(expected.toJson(), request.toJson());
       expect(toJsonString(expected), toJsonString(request));
     });
+
+    test('SetParticipantData - Response', () async {
+      String response = File(
+              '$path/deployments/ParticipationService/setParticipantData-response.json')
+          .readAsStringSync();
+
+      ParticipantData data = ParticipantData.fromJson(
+          json.decode(response) as Map<String, dynamic>);
+      expect(data.roles.first.roleName, "Participant");
+      print(toJsonString(data));
+    });
   });
 
-  test('GetStudyDeploymentStatus -> JSON', () async {
-    print(toJsonString(GetStudyDeploymentStatus('1234')));
-  });
-  test('RegisterDevice -> JSON', () async {
-    print(toJsonString(RegisterDevice('1234', 'phone', DeviceRegistration())));
-  });
-  test('UnregisterDevice -> JSON', () async {
-    print(toJsonString(UnregisterDevice('1234', 'phone')));
-  });
-  test('GetDeviceDeploymentFor -> JSON', () async {
-    print(toJsonString(GetDeviceDeploymentFor('1234', 'phone')));
-  });
-  test('DeploymentSuccessful -> JSON', () async {
-    print(toJsonString(DeploymentSuccessful('1234', 'phone', DateTime.now())));
-  });
-  test('JSON -> ActiveParticipationInvitation', () async {
-    String plainJson = File('test/json/active_participation_invitation.json')
-        .readAsStringSync();
+  group('Deployment Service', () {
+    test('GetStudyDeploymentStatus - Request', () async {
+      String rpcString = File(
+              '$path/deployments/DeploymentService/getStudyDeploymentStatus.json')
+          .readAsStringSync();
 
-    ActiveParticipationInvitation invitation =
-        ActiveParticipationInvitation.fromJson(
-            json.decode(plainJson) as Map<String, dynamic>);
-    expect(invitation.participation.id, '3cf97adf-4cdf-4211-b344-67946934b657');
-    print(toJsonString(invitation));
+      var expected = GetStudyDeploymentStatus.fromJson(
+          json.decode(rpcString) as Map<String, dynamic>);
+      var request =
+          GetStudyDeploymentStatus('c9cc5317-48da-45f2-958e-58bc07f34681');
+
+      expect(expected.toJson(), request.toJson());
+      print(toJsonString(request));
+    });
+
+    test('GetStudyDeploymentStatus - Response', () async {
+      String plainJson = File(
+              '$path/deployments/DeploymentService/getStudyDeploymentStatus-response.json')
+          .readAsStringSync();
+
+      StudyDeploymentStatus status = StudyDeploymentStatus.fromJson(
+          json.decode(plainJson) as Map<String, dynamic>);
+      expect(status.studyDeploymentId, 'c9cc5317-48da-45f2-958e-58bc07f34681');
+      expect(status.status, StudyDeploymentStatusTypes.Invited);
+      print(toJsonString(status));
+    });
+    test('RegisterDevice - Request', () async {
+      String rpcString =
+          File('$path/deployments/DeploymentService/registerDevice.json')
+              .readAsStringSync();
+
+      var expected = RegisterDevice.fromJson(
+          json.decode(rpcString) as Map<String, dynamic>);
+
+      var request = RegisterDevice(
+          'c9cc5317-48da-45f2-958e-58bc07f34681',
+          "Participant's phone",
+          DefaultDeviceRegistration(
+            deviceId: 'fc7b41b0-e9e2-4b5d-8c3d-5119b556a3f0',
+            registrationCreatedOn: DateTime.tryParse('2022-01-18T13:55:10Z'),
+          ));
+      print(toJsonString(request));
+
+      // expect(expected.toJson(), request.toJson());
+      expect(toJsonString(expected), toJsonString(request));
+    });
+
+    test('RegisterDevice - Response', () async {
+      String plainJson = File(
+              '$path/deployments/DeploymentService/registerDevice-response.json')
+          .readAsStringSync();
+
+      StudyDeploymentStatus status = StudyDeploymentStatus.fromJson(
+          json.decode(plainJson) as Map<String, dynamic>);
+      expect(status.studyDeploymentId, 'c9cc5317-48da-45f2-958e-58bc07f34681');
+      expect(status.status, StudyDeploymentStatusTypes.DeployingDevices);
+      print(toJsonString(status));
+    });
+
+    test('UnregisterDevice - Request', () async {
+      String rpcString =
+          File('$path/deployments/DeploymentService/unregisterDevice.json')
+              .readAsStringSync();
+
+      var expected = UnregisterDevice.fromJson(
+          json.decode(rpcString) as Map<String, dynamic>);
+
+      var request = UnregisterDevice(
+        'c9cc5317-48da-45f2-958e-58bc07f34681',
+        "Participant's phone",
+      );
+      print(toJsonString(request));
+
+      // expect(expected.toJson(), request.toJson());
+      expect(toJsonString(expected), toJsonString(request));
+    });
+
+    test('UnregisterDevice - Response', () async {
+      String plainJson = File(
+              '$path/deployments/DeploymentService/unregisterDevice-response.json')
+          .readAsStringSync();
+
+      StudyDeploymentStatus status = StudyDeploymentStatus.fromJson(
+          json.decode(plainJson) as Map<String, dynamic>);
+      expect(status.studyDeploymentId, 'c9cc5317-48da-45f2-958e-58bc07f34681');
+      expect(status.status, StudyDeploymentStatusTypes.Invited);
+      print(toJsonString(status));
+    });
+
+    test('GetDeviceDeploymentFor - Request', () async {
+      String rpcString = File(
+              '$path/deployments/DeploymentService/getDeviceDeploymentFor.json')
+          .readAsStringSync();
+
+      var expected = GetDeviceDeploymentFor.fromJson(
+          json.decode(rpcString) as Map<String, dynamic>);
+
+      var request = GetDeviceDeploymentFor(
+        'c9cc5317-48da-45f2-958e-58bc07f34681',
+        "Participant's phone",
+      );
+      print(toJsonString(request));
+
+      // expect(expected.toJson(), request.toJson());
+      expect(toJsonString(expected), toJsonString(request));
+    });
+
+    test('GetDeviceDeploymentFor - Response', () async {
+      String plainJson = File(
+              '$path/deployments/DeploymentService/getDeviceDeploymentFor-response.json')
+          .readAsStringSync();
+
+      PrimaryDeviceDeployment deployment = PrimaryDeviceDeployment.fromJson(
+          json.decode(plainJson) as Map<String, dynamic>);
+
+      expect(deployment.deviceConfiguration.isPrimaryDevice, true);
+      expect(deployment.deviceConfiguration.roleName, "Participant's phone");
+      print(toJsonString(deployment));
+    });
+    test('DeviceDeployed - Request', () async {
+      String rpcString =
+          File('$path/deployments/DeploymentService/deviceDeployed.json')
+              .readAsStringSync();
+
+      var expected = DeviceDeployed.fromJson(
+          json.decode(rpcString) as Map<String, dynamic>);
+
+      var request = DeviceDeployed(
+        'c9cc5317-48da-45f2-958e-58bc07f34681',
+        "Participant's phone",
+        DateTime.tryParse('2022-01-18T13:55:10Z')!,
+      );
+      print(toJsonString(request));
+
+      // expect(expected.toJson(), request.toJson());
+      expect(toJsonString(expected), toJsonString(request));
+    });
+
+    test('DeviceDeployed - Response', () async {
+      String plainJson = File(
+              '$path/deployments/DeploymentService/deviceDeployed-response.json')
+          .readAsStringSync();
+
+      StudyDeploymentStatus status = StudyDeploymentStatus.fromJson(
+          json.decode(plainJson) as Map<String, dynamic>);
+      expect(status.studyDeploymentId, 'c9cc5317-48da-45f2-958e-58bc07f34681');
+      expect(status.status, StudyDeploymentStatusTypes.Invited);
+      print(toJsonString(status));
+    });
   });
-  test('JSON -> ActiveParticipationInvitation CANS', () async {
-    String plainJson =
-        File('test/json/active_participation_invitation_cans.json')
-            .readAsStringSync();
-
-    ActiveParticipationInvitation invitation =
-        ActiveParticipationInvitation.fromJson(
-            json.decode(plainJson) as Map<String, dynamic>);
-    expect(invitation.invitation.applicationData,
-        '294a5748-d8fa-4617-b475-99c6980032c8');
-    print(toJsonString(invitation));
-  });
-  test('JSON -> PrimaryDeviceDeployment', () async {
-    String plainJson = File('test/json/core_primary_device_deployment.json')
-        .readAsStringSync();
-
-    PrimaryDeviceDeployment deployment = PrimaryDeviceDeployment.fromJson(
-        json.decode(plainJson) as Map<String, dynamic>);
-    expect(deployment.deviceConfiguration.roleName, 'phone');
-    print(toJsonString(deployment));
-  });
-  test('JSON -> ParticipantData', () async {
-    String plainJson =
-        File('test/json/participant_data.json').readAsStringSync();
-
-    ParticipantData data = ParticipantData.fromJson(
-        json.decode(plainJson) as Map<String, dynamic>);
-    // expect(data.data['dk.cachet.carp.input.sex'], 'Male');
-    print(toJsonString(data));
-  });
-  test('JSON -> StudyDeploymentStatus', () async {
-    String plainJson =
-        File('test/json/study_deployment_status.json').readAsStringSync();
-
-    StudyDeploymentStatus status = StudyDeploymentStatus.fromJson(
-        json.decode(plainJson) as Map<String, dynamic>);
-    expect(status.studyDeploymentId, 'b1575ac0-1289-4eeb-9048-a3681ad93ff8');
-    expect(status.status, StudyDeploymentStatusTypes.Invited);
-    print(toJsonString(status));
-  });
-
-  test('JSON -> StudyDeploymentStatus CANS', () async {
-    String plainJson =
-        File('test/json/study_deployment_status_cans.json').readAsStringSync();
-
-    StudyDeploymentStatus status = StudyDeploymentStatus.fromJson(
-        json.decode(plainJson) as Map<String, dynamic>);
-    print(toJsonString(status));
-
-    expect(status.studyDeploymentId, 'ae8076a3-7170-4bcf-b66c-64639a7a9eee');
-    expect(status.status, StudyDeploymentStatusTypes.DeployingDevices);
-    expect(status.devicesStatus[0].device.roleName, 'Stub master device');
-    expect(status.devicesStatus[0].status,
-        DeviceDeploymentStatusTypes.Unregistered);
-    expect(status.devicesStatus[1].device.roleName, 'Stub device');
-    expect(status.devicesStatus[1].status,
-        DeviceDeploymentStatusTypes.Unregistered);
-  });
-
-  test('JSON -> StudyDeploymentStatus Successful', () async {
-    String plainJson = File('test/json/study_deployment_status_successful.json')
-        .readAsStringSync();
-
-    StudyDeploymentStatus status = StudyDeploymentStatus.fromJson(
-        json.decode(plainJson) as Map<String, dynamic>);
-    expect(status.studyDeploymentId, 'd396c31b-dabc-4fc7-b5fd-97031fc1de4c');
-    expect(status.status, StudyDeploymentStatusTypes.DeploymentReady);
-    print(toJsonString(status));
-  });
-  test('JSON -> ', () async {});
 }

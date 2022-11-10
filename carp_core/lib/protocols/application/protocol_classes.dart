@@ -6,31 +6,31 @@
  */
 part of carp_core_protocols;
 
-/// Uniquely identifies a study protocol by the [ownerId] and it's [name].
-@JsonSerializable(fieldRename: FieldRename.none, includeIfNull: true)
-class StudyProtocolId {
-  String ownerId;
-  String name;
-  StudyProtocolId(this.ownerId, this.name);
+// /// Uniquely identifies a study protocol by the [ownerId] and it's [name].
+// @JsonSerializable(fieldRename: FieldRename.none, includeIfNull: true)
+// class StudyProtocolId {
+//   String ownerId;
+//   String name;
+//   StudyProtocolId(this.ownerId, this.name);
 
-  @override
-  bool operator ==(Object other) =>
-      identical(this, other) ||
-      other is StudyProtocolId &&
-          runtimeType == other.runtimeType &&
-          ownerId == other.ownerId &&
-          name == other.name;
+//   @override
+//   bool operator ==(Object other) =>
+//       identical(this, other) ||
+//       other is StudyProtocolId &&
+//           runtimeType == other.runtimeType &&
+//           ownerId == other.ownerId &&
+//           name == other.name;
 
-  @override
-  int get hashCode => (ownerId + name).hashCode;
+//   @override
+//   int get hashCode => (ownerId + name).hashCode;
 
-  factory StudyProtocolId.fromJson(Map<String, dynamic> json) =>
-      _$StudyProtocolIdFromJson(json);
-  Map<String, dynamic> toJson() => _$StudyProtocolIdToJson(this);
+//   factory StudyProtocolId.fromJson(Map<String, dynamic> json) =>
+//       _$StudyProtocolIdFromJson(json);
+//   Map<String, dynamic> toJson() => _$StudyProtocolIdToJson(this);
 
-  @override
-  String toString() => '$runtimeType - ownerId: $ownerId, name: $name';
-}
+//   @override
+//   String toString() => '$runtimeType - ownerId: $ownerId, name: $name';
+// }
 
 /// Specifies a specific version for a [StudyProtocol], identified by a [tag].
 ///

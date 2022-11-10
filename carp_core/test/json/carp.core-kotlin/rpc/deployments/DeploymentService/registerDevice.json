@@ -5,7 +5,7 @@
     "deviceRoleName": "Participant's phone",
     "registration": {
         "__type": "dk.cachet.carp.common.application.devices.DefaultDeviceRegistration",
-        "registrationCreatedOn": "2022-01-18T13:55:10Z",
+        "registrationCreatedOn": "2022-01-18T13:55:10.000Z",
         "deviceDisplayName": null,
         "deviceId": "fc7b41b0-e9e2-4b5d-8c3d-5119b556a3f0"
     }

@@ -20,32 +20,39 @@ void _registerFromJsonFunctions() {
   FromJsonFactory().register(
     DeviceDeploymentStatus(device: device),
     type:
-        'dk.cachet.carp.deployment.domain.DeviceDeploymentStatus.Unregistered',
+        'dk.cachet.carp.deployments.application.DeviceDeploymentStatus.Unregistered',
   );
   FromJsonFactory().register(
     DeviceDeploymentStatus(device: device),
-    type: 'dk.cachet.carp.deployment.domain.DeviceDeploymentStatus.Registered',
+    type:
+        'dk.cachet.carp.deployments.application.DeviceDeploymentStatus.Registered',
   );
   FromJsonFactory().register(
     DeviceDeploymentStatus(device: device),
-    type: 'dk.cachet.carp.deployment.domain.DeviceDeploymentStatus.Deployed',
+    type:
+        'dk.cachet.carp.deployments.application.DeviceDeploymentStatus.Deployed',
   );
   FromJsonFactory().register(DeviceDeploymentStatus(device: device),
       type:
-          'dk.cachet.carp.deployment.domain.DeviceDeploymentStatus.NeedsRedeployment');
+          'dk.cachet.carp.deployments.application.DeviceDeploymentStatus.NeedsRedeployment');
 
   // StudyDeploymentStatus
   FromJsonFactory().register(StudyDeploymentStatus(studyDeploymentId: ''));
   FromJsonFactory().register(StudyDeploymentStatus(studyDeploymentId: ''),
-      type: 'dk.cachet.carp.deployment.domain.StudyDeploymentStatus.Invited');
+      type:
+          'dk.cachet.carp.deployments.application.StudyDeploymentStatus.Invited');
   FromJsonFactory().register(StudyDeploymentStatus(studyDeploymentId: ''),
       type:
-          'dk.cachet.carp.deployment.domain.StudyDeploymentStatus.DeployingDevices');
+          'dk.cachet.carp.deployments.application.StudyDeploymentStatus.DeployingDevices');
   FromJsonFactory().register(StudyDeploymentStatus(studyDeploymentId: ''),
       type:
-          'dk.cachet.carp.deployment.domain.StudyDeploymentStatus.DeploymentReady');
+          'dk.cachet.carp.deployments.application.StudyDeploymentStatus.DeploymentReady');
   FromJsonFactory().register(StudyDeploymentStatus(studyDeploymentId: ''),
-      type: 'dk.cachet.carp.deployment.domain.StudyDeploymentStatus.Stopped');
+      type:
+          'dk.cachet.carp.deployments.application.StudyDeploymentStatus.Running');
+  FromJsonFactory().register(StudyDeploymentStatus(studyDeploymentId: ''),
+      type:
+          'dk.cachet.carp.deployments.application.StudyDeploymentStatus.Stopped');
 
   // PROTOCOL
   // register(StudyProtocol());
@@ -86,11 +93,26 @@ void _registerFromJsonFunctions() {
   FromJsonFactory().register(AssignedTo());
 
   // REQUESTS
-  FromJsonFactory().register(GetActiveParticipationInvitations('ignored'));
-  FromJsonFactory().register(GetParticipantData('ignored'));
-  FromJsonFactory().register(GetParticipantDataList(['ignored']));
-  FromJsonFactory().register(SetParticipantData('ignored'));
+  FromJsonFactory().register(GetActiveParticipationInvitations(''));
+  FromJsonFactory().register(GetParticipantData(''));
+  FromJsonFactory().register(GetParticipantDataList(['']));
+  FromJsonFactory().register(SetParticipantData(''));
+  FromJsonFactory().register(GetStudyDeploymentStatus(''));
+  FromJsonFactory().register(GetStudyDeploymentStatusList(['']));
+  FromJsonFactory().register(RegisterDevice('', '', DeviceRegistration()));
+  FromJsonFactory().register(UnregisterDevice('', ''));
+  FromJsonFactory().register(GetDeviceDeploymentFor('', ''));
+  FromJsonFactory().register(DeviceDeployed('', '', DateTime.now()));
+  FromJsonFactory().register(Stop(''));
+  FromJsonFactory().register(Add(null, null));
+  FromJsonFactory().register(AddVersion(null, null));
+  FromJsonFactory()
+      .register(UpdateParticipantDataConfiguration('', null, null));
+  FromJsonFactory().register(GetBy('', null));
+  FromJsonFactory().register(GetAllForOwner(null));
+  FromJsonFactory().register(GetVersionHistoryFor(''));
 
+  // INPUT DATA TYPES
   FromJsonFactory().register(CustomInput('ignored'),
       type: CustomInput.CUSTOM_INPUT_TYPE_NAME);
   FromJsonFactory().register(SexCustomInput(Sex.Female),

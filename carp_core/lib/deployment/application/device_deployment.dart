@@ -92,10 +92,9 @@ class DeviceDeploymentStatus extends Serializable {
   /// The description of the device.
   DeviceConfiguration device;
 
-  /// Determines whether the device requires a device deployment by
-  /// retrieving [PrimaryDeviceDeployment]. Not all master devices necessarily
-  /// need deployment; chained master devices do not.
-  bool requiresDeployment = false;
+  /// Determines whether the device can be deployed by retrieving [PrimaryDeviceDeployment].
+  /// Not all primary devices necessarily need deployment; chained primary devices do not.
+  bool? canBeDeployed = false;
 
   /// The role names of devices which need to be registered before the deployment
   /// information for this device can be obtained.
@@ -124,6 +123,8 @@ class DeviceDeploymentStatus extends Serializable {
         return DeviceDeploymentStatusTypes.Registered;
       case 'Deployed':
         return DeviceDeploymentStatusTypes.Deployed;
+      case 'Running':
+        return DeviceDeploymentStatusTypes.Running;
       case 'NeedsRedeployment':
         return DeviceDeploymentStatusTypes.NeedsRedeployment;
       default:
@@ -164,29 +165,47 @@ enum DeviceDeploymentStatusTypes {
   /// plugins to execute the study.
   Deployed,
 
+  /// All primary devices have been successfully deployed and data collection
+  /// has started on the time specified by [startedOn].
+  Running,
+
   /// Device deployment status when the device has previously been deployed
   /// correctly, but due to changes in device registrations needs to be redeployed.
   NeedsRedeployment,
 }
 
-/// Holds device invitation details.
+// /// Holds device invitation details.
+// @JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
+// class DeviceInvitation {
+//   DeviceInvitation() : super();
+
+//   /// The role name of the device in this invitation.
+//   late String deviceRoleName;
+
+//   /// True when the device is already registered in the study deployment,
+//   /// false otherwise.
+//   /// In case a device is registered, it needs to be unregistered first
+//   /// before a new device can be registered.
+//   late bool isRegistered;
+
+//   factory DeviceInvitation.fromJson(Map<String, dynamic> json) =>
+//       _$DeviceInvitationFromJson(json);
+//   Map<String, dynamic> toJson() => _$DeviceInvitationToJson(this);
+
+//   @override
+//   String toString() => '$runtimeType - deviceRoleName: $deviceRoleName';
+// }
+
+/// Primary [device] and its current [registration] assigned to participants as
+/// part of a participant group.
 @JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
-class DeviceInvitation {
-  DeviceInvitation() : super();
+class AssignedPrimaryDevice {
+  PrimaryDeviceConfiguration device;
+  DeviceRegistration? registration;
 
-  /// The role name of the device in this invitation.
-  late String deviceRoleName;
+  AssignedPrimaryDevice({required this.device, this.registration}) : super();
 
-  /// True when the device is already registered in the study deployment,
-  /// false otherwise.
-  /// In case a device is registered, it needs to be unregistered first
-  /// before a new device can be registered.
-  late bool isRegistered;
-
-  factory DeviceInvitation.fromJson(Map<String, dynamic> json) =>
-      _$DeviceInvitationFromJson(json);
-  Map<String, dynamic> toJson() => _$DeviceInvitationToJson(this);
-
-  @override
-  String toString() => '$runtimeType - deviceRoleName: $deviceRoleName';
+  factory AssignedPrimaryDevice.fromJson(Map<String, dynamic> json) =>
+      _$AssignedPrimaryDeviceFromJson(json);
+  Map<String, dynamic> toJson() => _$AssignedPrimaryDeviceToJson(this);
 }

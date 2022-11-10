@@ -73,12 +73,12 @@ class StudyDeployment {
   /// Get the status of this [StudyDeployment].
   StudyDeploymentStatus get status {
     // set the status of each device - both master and connected devices
-    _status.devicesStatus = [];
+    _status.deviceStatusList = [];
     for (var deviceDescriptor in protocol.primaryDevices) {
-      _status.devicesStatus.add(getDeviceStatus(deviceDescriptor));
+      _status.deviceStatusList.add(getDeviceStatus(deviceDescriptor));
     }
     for (var deviceDescriptor in protocol.connectedDevices!) {
-      _status.devicesStatus.add(getDeviceStatus(deviceDescriptor));
+      _status.deviceStatusList.add(getDeviceStatus(deviceDescriptor));
     }
 
     // TODO - check that all devices are ready, before setting the overall status
@@ -233,22 +233,28 @@ class StudyDeploymentStatus extends Serializable {
   @JsonKey(ignore: true)
   StudyDeploymentStatusTypes status = StudyDeploymentStatusTypes.Invited;
 
+  /// The time when the deployment was created.
+  late DateTime createdOn;
+
   /// The CARP study deployment ID.
   String studyDeploymentId;
 
   /// The list of all devices part of this study deployment and their status.
-  List<DeviceDeploymentStatus> devicesStatus;
+  List<DeviceDeploymentStatus> deviceStatusList;
+
+  /// The list of all participants and their status in this study deployment.
+  List<ParticipantStatus> participantStatusList = [];
 
   /// The time when the study deployment was ready for the first
   /// time (all devices deployed); null otherwise.
-  DateTime? startTime;
+  DateTime? startedOn;
 
   /// The [DeviceDeploymentStatus] for the master device of this deployment,
   /// which is typically this phone.
   ///
-  /// Returns `null` if there is no master device in the list of [devicesStatus].
+  /// Returns `null` if there is no master device in the list of [deviceStatusList].
   DeviceDeploymentStatus? get masterDeviceStatus {
-    for (DeviceDeploymentStatus status in devicesStatus) {
+    for (DeviceDeploymentStatus status in deviceStatusList) {
       if (status.device.isOptional!) return status;
     }
     return null;
@@ -256,8 +262,10 @@ class StudyDeploymentStatus extends Serializable {
 
   StudyDeploymentStatus({
     required this.studyDeploymentId,
-    this.devicesStatus = const [],
-  }) : super();
+    this.deviceStatusList = const [],
+  }) : super() {
+    createdOn = DateTime.now();
+  }
 
   @override
   Function get fromJsonFunction => _$StudyDeploymentStatusFromJson;

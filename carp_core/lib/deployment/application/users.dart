@@ -14,13 +14,12 @@ class Participation {
   String studyDeploymentId;
 
   /// Unique id for this participation.
-  String id;
+  String participantId;
 
-  /// True when the device is already registered in the study deployment; false otherwise.
-  /// In case a device is registered, it needs to be unregistered first before a new device can be registered.
-  bool? isRegistered;
+  AssignedTo assignedRoles;
 
-  Participation(this.studyDeploymentId, this.id) : super();
+  Participation(this.studyDeploymentId, this.participantId, this.assignedRoles)
+      : super();
 
   factory Participation.fromJson(Map<String, dynamic> json) =>
       _$ParticipationFromJson(json);
@@ -28,7 +27,7 @@ class Participation {
 
   @override
   String toString() =>
-      '${super.toString()}, id: $id, studyDeploymentId: $studyDeploymentId, isRegistered: $isRegistered';
+      '${super.toString()}, id: $participantId, studyDeploymentId: $studyDeploymentId';
 }
 
 /// A description of a study, shared with participants once they are invited to a study.
@@ -60,7 +59,7 @@ class StudyInvitation {
 }
 
 /// An [invitation] to participate in an active study deployment using the
-/// specified master [devices].
+/// [assignedDevices].
 /// Some of the devices which the participant is invited to might already be
 /// registered. If the participant wants to use a different device, they will
 /// need to unregister the existing device first.
@@ -68,7 +67,7 @@ class StudyInvitation {
 class ActiveParticipationInvitation {
   Participation participation;
   StudyInvitation invitation;
-  List<DeviceInvitation>? devices;
+  List<AssignedPrimaryDevice>? assignedDevices;
 
   /// The CARP study ID.
   String? get studyId => invitation.applicationData;
@@ -84,5 +83,20 @@ class ActiveParticipationInvitation {
 
   @override
   String toString() =>
-      '$runtimeType - participation: $participation, invitation: $invitation, devices size: ${devices!.length}';
+      '$runtimeType - participation: $participation, invitation: $invitation, devices size: ${assignedDevices!.length}';
+}
+
+/// Provides information on the status of a participant in a study deployment.
+@JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
+class ParticipantStatus {
+  String participantId;
+  AssignedTo assignedParticipantRoles;
+  Set<String> assignedPrimaryDeviceRoleNames;
+
+  ParticipantStatus(this.participantId, this.assignedParticipantRoles,
+      this.assignedPrimaryDeviceRoleNames)
+      : super();
+  factory ParticipantStatus.fromJson(Map<String, dynamic> json) =>
+      _$ParticipantStatusFromJson(json);
+  Map<String, dynamic> toJson() => _$ParticipantStatusToJson(this);
 }

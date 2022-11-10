@@ -190,7 +190,7 @@ class StudyRuntime {
   /// This is a convinient method for synchronizing the devices neeeded for a
   /// deployment and the available devices on this phone.
   Future<void> tryRegisterConnectedDevices() async {
-    for (var deviceStatus in deploymentStatus.devicesStatus) {
+    for (var deviceStatus in deploymentStatus.deviceStatusList) {
       await tryRegisterConnectedDevice(deviceStatus.device);
     }
   }

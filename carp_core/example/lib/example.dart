@@ -87,7 +87,41 @@ void carpCoreDeploymentExample() async {
   assert(isReady, true);
 }
 
-/// Example of how to use the **client** sub-system domain models
+/// Example of how to use the **data** sub-system domain models.
+///
+/// Calls to this subsystem are abstracted away by the 'deployments' subsystem
+/// and are planned to be abstracted away by the 'clients' subsystem.
+/// Example code which is called once a deployment is running and data is subsequently
+/// uploaded by the client.
+void carpCoreDataExample() async {
+  DataStreamService? dataStreamService;
+  String studyDeploymentId = '...'; // Provided by the 'deployments' subsystem.
+
+// This is called by the `DeploymentsService` once the deployment starts running.
+  String device = "Patient's phone";
+// val geolocation = DataStreamsConfiguration.ExpectedDataStream( device, CarpDataTypes.GEOLOCATION.type )
+// val stepCount = DataStreamsConfiguration.ExpectedDataStream( device, CarpDataTypes.STEP_COUNT.type )
+// val configuration = DataStreamsConfiguration( studyDeploymentId, setOf( geolocation, stepCount ) )
+// dataStreamService.openDataStreams( configuration )
+
+// // Upload data from the client.
+// val geolocationData = MutableDataStreamSequence<Geolocation>(
+//     dataStream = dataStreamId<Geolocation>( studyDeploymentId, device ),
+//     firstSequenceId = 0,
+//     triggerIds = listOf( 0 ) // Provided by device deployment; maps to the `atStartOfStudy()` trigger.
+// )
+// DataStreamBatch uploadData  = DataStreamBatch(dataStream: , firstSequenceId: , measurements: , triggerIds: );
+
+// ).apply {
+//     appendSequence( geolocationData )
+
+// dataStreamService?.appendToDataStreams( studyDeploymentId, [uploadData] );
+}
+
+/// Example of how to use the **client** sub-system domain models.
+///
+/// Example initialization of a smartphone client for the participant that got
+/// invited to the study in the 'studies' code sample above:
 void carpCoreClientExample() async {
   ParticipationService? participationService;
   DeploymentService? deploymentService;
@@ -98,11 +132,11 @@ void carpCoreClientExample() async {
           ?.getActiveParticipationInvitations('accountId'))
       ?.first;
   String? studyDeploymentId = invitation?.studyDeploymentId;
-  String? deviceToUse = invitation?.devices?.first.deviceRoleName;
+  String? deviceToUse = invitation?.assignedDevices?.first.device.roleName;
 
   // Create a study runtime for the study.
   var client = ClientManager();
-  // Configure the client by specifying the deployment servie, the device controller,
+  // Configure the client by specifying the deployment service, the device controller,
   // and a unique device id.
   client.configure(
     deploymentService: deploymentService!,

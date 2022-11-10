@@ -57,23 +57,23 @@ class DeviceRegistration extends Serializable {
       '$runtimeType - deviceId: $deviceId, deviceDisplayName: $deviceDisplayName, registrationCreatedOn: $registrationCreatedOn';
 }
 
-// /// A concrete [DeviceRegistration] which solely implements the base properties
-// /// and nothing else.
-// @JsonSerializable(fieldRename: FieldRename.none, includeIfNull: true)
-// class DefaultDeviceRegistration extends DeviceRegistration {
-//   DefaultDeviceRegistration({
-//     super.deviceId,
-//     super.deviceDisplayName,
-//     super.registrationCreatedOn,
-//   });
+/// A concrete [DeviceRegistration] which solely implements the base properties
+/// and nothing else.
+@JsonSerializable(fieldRename: FieldRename.none, includeIfNull: true)
+class DefaultDeviceRegistration extends DeviceRegistration {
+  DefaultDeviceRegistration({
+    super.deviceId,
+    super.deviceDisplayName,
+    super.registrationCreatedOn,
+  });
 
-//   @override
-//   Function get fromJsonFunction => _$DefaultDeviceRegistrationFromJson;
-//   factory DefaultDeviceRegistration.fromJson(Map<String, dynamic> json) =>
-//       FromJsonFactory().fromJson(json) as DefaultDeviceRegistration;
-//   @override
-//   Map<String, dynamic> toJson() => _$DefaultDeviceRegistrationToJson(this);
-// }
+  @override
+  Function get fromJsonFunction => _$DefaultDeviceRegistrationFromJson;
+  factory DefaultDeviceRegistration.fromJson(Map<String, dynamic> json) =>
+      FromJsonFactory().fromJson(json) as DefaultDeviceRegistration;
+  @override
+  Map<String, dynamic> toJson() => _$DefaultDeviceRegistrationToJson(this);
+}
 
 /// A [DeviceRegistration] for [AltBeacon] specifying which beacon to listen to.
 ///

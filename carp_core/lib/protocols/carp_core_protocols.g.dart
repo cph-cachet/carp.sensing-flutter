@@ -101,18 +101,6 @@ Map<String, dynamic> _$DeviceConnectionToJson(DeviceConnection instance) {
   return val;
 }
 
-StudyProtocolId _$StudyProtocolIdFromJson(Map<String, dynamic> json) =>
-    StudyProtocolId(
-      json['ownerId'] as String,
-      json['name'] as String,
-    );
-
-Map<String, dynamic> _$StudyProtocolIdToJson(StudyProtocolId instance) =>
-    <String, dynamic>{
-      'ownerId': instance.ownerId,
-      'name': instance.name,
-    };
-
 ProtocolVersion _$ProtocolVersionFromJson(Map<String, dynamic> json) =>
     ProtocolVersion(
       json['tag'] as String,
@@ -160,13 +148,11 @@ Map<String, dynamic> _$AddVersionToJson(AddVersion instance) =>
 UpdateParticipantDataConfiguration _$UpdateParticipantDataConfigurationFromJson(
         Map<String, dynamic> json) =>
     UpdateParticipantDataConfiguration(
-      json['protocolId'] == null
-          ? null
-          : StudyProtocolId.fromJson(
-              json['protocolId'] as Map<String, dynamic>),
+      json['protocolId'] as String,
       json['versionTag'] as String?,
       (json['expectedParticipantData'] as List<dynamic>?)
-          ?.map((e) => ParticipantAttribute.fromJson(e as Map<String, dynamic>))
+          ?.map((e) =>
+              ExpectedParticipantData.fromJson(e as Map<String, dynamic>))
           .toList(),
     )
       ..$type = json['__type'] as String?
@@ -183,10 +169,7 @@ Map<String, dynamic> _$UpdateParticipantDataConfigurationToJson(
     };
 
 GetBy _$GetByFromJson(Map<String, dynamic> json) => GetBy(
-      json['protocolId'] == null
-          ? null
-          : StudyProtocolId.fromJson(
-              json['protocolId'] as Map<String, dynamic>),
+      json['protocolId'] as String,
       json['versionTag'] as String?,
     )
       ..$type = json['__type'] as String?
@@ -209,13 +192,15 @@ Map<String, dynamic> _$GetByToJson(GetBy instance) {
   return val;
 }
 
-GetAllFor _$GetAllForFromJson(Map<String, dynamic> json) => GetAllFor(
+GetAllForOwner _$GetAllForOwnerFromJson(Map<String, dynamic> json) =>
+    GetAllForOwner(
       json['ownerId'] as String?,
     )
       ..$type = json['__type'] as String?
       ..apiVersion = json['apiVersion'] as String;
 
-Map<String, dynamic> _$GetAllForToJson(GetAllFor instance) => <String, dynamic>{
+Map<String, dynamic> _$GetAllForOwnerToJson(GetAllForOwner instance) =>
+    <String, dynamic>{
       '__type': instance.$type,
       'apiVersion': instance.apiVersion,
       'ownerId': instance.ownerId,
@@ -224,10 +209,7 @@ Map<String, dynamic> _$GetAllForToJson(GetAllFor instance) => <String, dynamic>{
 GetVersionHistoryFor _$GetVersionHistoryForFromJson(
         Map<String, dynamic> json) =>
     GetVersionHistoryFor(
-      json['protocolId'] == null
-          ? null
-          : StudyProtocolId.fromJson(
-              json['protocolId'] as Map<String, dynamic>),
+      json['protocolId'] as String,
     )
       ..$type = json['__type'] as String?
       ..apiVersion = json['apiVersion'] as String;

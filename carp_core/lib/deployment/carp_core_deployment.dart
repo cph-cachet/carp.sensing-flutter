@@ -27,7 +27,7 @@ part 'application/participation_service.dart';
 part 'application/device_deployment.dart';
 part 'domain/study_deployment.dart';
 part 'domain/participation.dart';
-part 'domain/users.dart';
+part 'application/users.dart';
 part 'domain/data_endpoint.dart';
 part 'infrastructure/deployment_request.dart';
 part 'infrastructure/participation_request.dart';

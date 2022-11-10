@@ -50,9 +50,9 @@ class AddVersion extends Add {
 
 @JsonSerializable(fieldRename: FieldRename.none, includeIfNull: true)
 class UpdateParticipantDataConfiguration extends ProtocolServiceRequest {
-  final StudyProtocolId? protocolId;
+  final String protocolId;
   final String? versionTag;
-  final List<ParticipantAttribute>? expectedParticipantData;
+  final List<ExpectedParticipantData>? expectedParticipantData;
 
   UpdateParticipantDataConfiguration(
     this.protocolId,
@@ -72,7 +72,7 @@ class UpdateParticipantDataConfiguration extends ProtocolServiceRequest {
 
 @JsonSerializable(fieldRename: FieldRename.none, includeIfNull: true)
 class GetBy extends ProtocolServiceRequest {
-  final StudyProtocolId? protocolId;
+  final String protocolId;
 
   @JsonKey(includeIfNull: false)
   final String? versionTag;
@@ -88,22 +88,22 @@ class GetBy extends ProtocolServiceRequest {
 }
 
 @JsonSerializable(fieldRename: FieldRename.none, includeIfNull: true)
-class GetAllFor extends ProtocolServiceRequest {
+class GetAllForOwner extends ProtocolServiceRequest {
   final String? ownerId;
 
-  GetAllFor(this.ownerId) : super();
+  GetAllForOwner(this.ownerId) : super();
 
   @override
-  Function get fromJsonFunction => _$GetAllForFromJson;
-  factory GetAllFor.fromJson(Map<String, dynamic> json) =>
-      FromJsonFactory().fromJson(json) as GetAllFor;
+  Function get fromJsonFunction => _$GetAllForOwnerFromJson;
+  factory GetAllForOwner.fromJson(Map<String, dynamic> json) =>
+      FromJsonFactory().fromJson(json) as GetAllForOwner;
   @override
-  Map<String, dynamic> toJson() => _$GetAllForToJson(this);
+  Map<String, dynamic> toJson() => _$GetAllForOwnerToJson(this);
 }
 
 @JsonSerializable(fieldRename: FieldRename.none, includeIfNull: true)
 class GetVersionHistoryFor extends ProtocolServiceRequest {
-  final StudyProtocolId? protocolId;
+  final String protocolId;
 
   GetVersionHistoryFor(this.protocolId) : super();
 

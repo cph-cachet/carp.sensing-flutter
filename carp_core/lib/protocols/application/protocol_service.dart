@@ -27,26 +27,25 @@ abstract class ProtocolService {
   ///
   /// Returns the updated [StudyProtocol].
   Future<StudyProtocol> updateParticipantDataConfiguration(
-    StudyProtocolId protocolId,
+    String protocolId,
     String versionTag,
-    List<ParticipantAttribute> expectedParticipantData,
+    List<ExpectedParticipantData> expectedParticipantData,
   );
 
   /// Return the [StudyProtocol] with the specified [protocolId],
   ///
   /// [versionTag] is the tag of the specific version of the protocol to return.
   /// The latest version is returned when not specified.
-  Future<StudyProtocol> getBy(StudyProtocolId protocolId, [String? versionTag]);
+  Future<StudyProtocol> getBy(String protocolId, [String? versionTag]);
 
   /// Find all [StudyProtocol]'s owned by the owner with [ownerId].
   ///
   /// Returns the last version of each [StudyProtocol] owned by the requested owner,
   /// or an empty list when none are found.
-  Future<List<StudyProtocol>> getAllFor(String ownerId);
+  Future<List<StudyProtocol>> getAllForOwner(String ownerId);
 
   /// Returns all stored versions for the protocol with the specified [protocolId].
-  Future<List<ProtocolVersion>> getVersionHistoryFor(
-      StudyProtocolId protocolId);
+  Future<List<ProtocolVersion>> getVersionHistoryFor(String protocolId);
 }
 
 /// Factory methods to create a [StudyProtocol] according to predefined templates.

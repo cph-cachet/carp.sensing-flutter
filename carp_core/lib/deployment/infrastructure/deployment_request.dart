@@ -128,10 +128,10 @@ class UnregisterDevice extends DeploymentServiceRequest {
 /// A request for getting the deployment for this master device.
 @JsonSerializable(fieldRename: FieldRename.none, includeIfNull: true)
 class GetDeviceDeploymentFor extends DeploymentServiceRequest {
-  GetDeviceDeploymentFor(super.studyDeploymentId, this.masterDeviceRoleName);
+  GetDeviceDeploymentFor(super.studyDeploymentId, this.primaryDeviceRoleName);
 
   /// The role name of this master device.
-  String masterDeviceRoleName;
+  String primaryDeviceRoleName;
 
   @override
   Function get fromJsonFunction => _$GetDeviceDeploymentForFromJson;
@@ -142,31 +142,31 @@ class GetDeviceDeploymentFor extends DeploymentServiceRequest {
 
   @override
   String toString() =>
-      '${super.toString()}, masterDeviceRoleName: $masterDeviceRoleName';
+      '${super.toString()}, primaryDeviceRoleName: $primaryDeviceRoleName';
 }
 
 /// A request for reporting this deployment as successful.
 @JsonSerializable(fieldRename: FieldRename.none, includeIfNull: true)
-class DeploymentSuccessful extends GetDeviceDeploymentFor {
+class DeviceDeployed extends GetDeviceDeploymentFor {
   /// Timestamp when this was last updated in UTC
-  DateTime? deviceDeploymentLastUpdateDate;
+  DateTime? deviceDeploymentLastUpdatedOn;
 
-  DeploymentSuccessful(
-    String studyDeploymentId,
-    String masterDeviceRoleName,
-    DateTime deviceDeploymentLastUpdateDate,
-  ) : super(studyDeploymentId, masterDeviceRoleName);
+  DeviceDeployed(
+    super.studyDeploymentId,
+    super.primaryDeviceRoleName,
+    this.deviceDeploymentLastUpdatedOn,
+  );
 
   @override
-  Function get fromJsonFunction => _$DeploymentSuccessfulFromJson;
-  factory DeploymentSuccessful.fromJson(Map<String, dynamic> json) =>
-      FromJsonFactory().fromJson(json) as DeploymentSuccessful;
+  Function get fromJsonFunction => _$DeviceDeployedFromJson;
+  factory DeviceDeployed.fromJson(Map<String, dynamic> json) =>
+      FromJsonFactory().fromJson(json) as DeviceDeployed;
   @override
-  Map<String, dynamic> toJson() => _$DeploymentSuccessfulToJson(this);
+  Map<String, dynamic> toJson() => _$DeviceDeployedToJson(this);
 
   @override
   String toString() =>
-      '${super.toString()}, masterDeviceRoleName: $masterDeviceRoleName';
+      '${super.toString()}, masterDeviceRoleName: $primaryDeviceRoleName';
 }
 
 /// A request for permanently stopping a study deployment.

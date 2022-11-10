@@ -418,6 +418,25 @@ Map<String, dynamic> _$DeviceRegistrationToJson(DeviceRegistration instance) =>
       'registrationCreatedOn': instance.registrationCreatedOn.toIso8601String(),
     };
 
+DefaultDeviceRegistration _$DefaultDeviceRegistrationFromJson(
+        Map<String, dynamic> json) =>
+    DefaultDeviceRegistration(
+      deviceId: json['deviceId'] as String?,
+      deviceDisplayName: json['deviceDisplayName'] as String?,
+      registrationCreatedOn: json['registrationCreatedOn'] == null
+          ? null
+          : DateTime.parse(json['registrationCreatedOn'] as String),
+    )..$type = json['__type'] as String?;
+
+Map<String, dynamic> _$DefaultDeviceRegistrationToJson(
+        DefaultDeviceRegistration instance) =>
+    <String, dynamic>{
+      '__type': instance.$type,
+      'deviceId': instance.deviceId,
+      'deviceDisplayName': instance.deviceDisplayName,
+      'registrationCreatedOn': instance.registrationCreatedOn.toIso8601String(),
+    };
+
 AltBeaconDeviceRegistration _$AltBeaconDeviceRegistrationFromJson(
         Map<String, dynamic> json) =>
     AltBeaconDeviceRegistration(
