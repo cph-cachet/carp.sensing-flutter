@@ -1,3 +1,7 @@
+## 0.40.1
+
+* Upgrade to `research_package: ^1.2.0`
+
 ## 0.40.0
 
 * update to `carp_mobile_sensing` v. 0.40.0
