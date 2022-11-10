@@ -21,6 +21,8 @@ part 'application/device_registration.dart';
 part 'application/triggers.dart';
 part 'application/sampling.dart';
 part 'application/data_type.dart';
+part 'application/data.dart';
+part 'application/input_data.dart';
 
 part 'carp_core_common.g.dart';
 

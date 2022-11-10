@@ -12,7 +12,6 @@ import 'package:carp_serializable/carp_serializable.dart';
 export 'carp_core_data.dart';
 
 part 'application/datastream.dart';
-part 'application/data.dart';
 part 'application/datastream_service.dart';
 
 part 'carp_core_data.g.dart';

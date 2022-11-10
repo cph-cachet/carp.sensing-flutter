@@ -50,6 +50,21 @@ void main() {
     print(toJsonString(deployment));
   });
 
+  test('Participant Data', () async {
+    String plainJson =
+        File('test/json/carp.core-kotlin/deployments/participant_data.json')
+            .readAsStringSync();
+
+    ParticipantData deployment = ParticipantData.fromJson(
+        json.decode(plainJson) as Map<String, dynamic>);
+
+    expect(
+        deployment.studyDeploymentId, 'c9cc5317-48da-45f2-958e-58bc07f34681');
+    expect(deployment.common.length, 0);
+    expect(deployment.roles.length, 1);
+    print(toJsonString(deployment));
+  });
+
   test('Data Stream', () async {
     String plainJson = File('test/json/carp.core-kotlin/data/datastream.json')
         .readAsStringSync();

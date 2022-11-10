@@ -18,7 +18,11 @@ part of carp_core_deployment;
 /// [carp.core-kotlin](https://github.com/cph-cachet/carp.core-kotlin/blob/develop/carp.deployment.core/src/commonMain/kotlin/dk/cachet/carp/deployment/infrastructure/ParticipationServiceRequest.kt)
 abstract class ParticipationServiceRequest extends DeploymentServiceRequest {
   final String _serviceRequestPackageNamespace =
-      'dk.cachet.carp.deployment.infrastructure.ParticipationServiceRequest';
+      'dk.cachet.carp.deployments.infrastructure.ParticipationServiceRequest';
+
+  @override
+  String apiVersion = "1.0";
+
   ParticipationServiceRequest([super.studyDeploymentId]);
 
   @override
@@ -83,34 +87,36 @@ class GetParticipantDataList extends ParticipationServiceRequest {
 @JsonSerializable(fieldRename: FieldRename.none, includeIfNull: true)
 class SetParticipantData extends ParticipationServiceRequest {
   SetParticipantData(
-    super.studyDeploymentId,
-    this.inputDataType, [
-    this.participantData,
+    super.studyDeploymentId, [
+    this.inputByParticipantRole,
+    this.data,
   ]);
 
-  /// The input data type.
-  String inputDataType;
+  /// The participant role who filled out [data]; null if all roles can set it.
+  String? inputByParticipantRole;
 
-  /// The data to be set.
-  @JsonKey(ignore: true)
-  ParticipantData? participantData;
+  Map<String, Data>? data;
 
-  set data(Map<String, dynamic> data) {
-    participantData = ParticipantData(
-      studyDeploymentId: studyDeploymentId!,
-      data: data,
-    );
-  }
+  // /// The data to be set.
+  // @JsonKey(ignore: true)
+  // InputData? inputData;
 
-  Map<String, dynamic> get data {
-    Map<String, dynamic> data = {};
-    participantData?.data.forEach((key, value) {
-      data['\$type'] = key;
-      data['value'] = value;
-    });
+  // set data(Map<String, dynamic> data) {
+  //   inputData = ParticipantData(
+  //     studyDeploymentId: studyDeploymentId!,
+  //     data: data,
+  //   );
+  // }
 
-    return data;
-  }
+  // Map<String, dynamic> get data {
+  //   Map<String, dynamic> data = {};
+  //   inputData?.data.forEach((key, value) {
+  //     data['\$type'] = key;
+  //     data['value'] = value;
+  //   });
+
+  //   return data;
+  // }
 
   @override
   Function get fromJsonFunction => _$SetParticipantDataFromJson;
@@ -120,5 +126,6 @@ class SetParticipantData extends ParticipationServiceRequest {
   Map<String, dynamic> toJson() => _$SetParticipantDataToJson(this);
 
   @override
-  String toString() => '${super.toString()}, inputDataType: $inputDataType';
+  String toString() =>
+      '${super.toString()}, inputByParticipantRole: $inputByParticipantRole';
 }

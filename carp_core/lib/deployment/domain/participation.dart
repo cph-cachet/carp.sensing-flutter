@@ -12,22 +12,41 @@ part of carp_core_deployment;
 @JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
 class ParticipantData {
   String studyDeploymentId;
-  Map<String, dynamic> data;
+
+  /// Data that is related to everyone in the study deployment.
+  Map<String, Data> common;
+
+  /// Data that is related to specific roles in the study deployment.
+  List<RoleData> roles;
 
   ParticipantData({
     required this.studyDeploymentId,
-    required this.data,
+    this.common = const {},
+    this.roles = const [],
   }) : super();
-
-  dynamic operator [](String key) => data[key];
-  void operator []=(String key, dynamic value) => data[key] = value;
 
   factory ParticipantData.fromJson(Map<String, dynamic> json) =>
       _$ParticipantDataFromJson(json);
   Map<String, dynamic> toJson() => _$ParticipantDataToJson(this);
+}
 
-  @override
-  String toString() => '$runtimeType - studyDeploymentId: $studyDeploymentId';
+/// Expected participant [data] for all participants in a study deployment
+/// with [studyDeploymentId].
+@JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
+class RoleData {
+  String roleName;
+
+  /// Data that is related to everyone in the study deployment.
+  Map<String, Data> data;
+
+  RoleData({
+    required this.roleName,
+    this.data = const {},
+  }) : super();
+
+  factory RoleData.fromJson(Map<String, dynamic> json) =>
+      _$RoleDataFromJson(json);
+  Map<String, dynamic> toJson() => _$RoleDataToJson(this);
 }
 
 /// Identifies an [Account].

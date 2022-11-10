@@ -85,5 +85,16 @@ void _registerFromJsonFunctions() {
   FromJsonFactory().register(ParticipantAttribute(inputDataType: 'ignored'));
   FromJsonFactory().register(AssignedTo());
 
+  // REQUESTS
+  FromJsonFactory().register(GetActiveParticipationInvitations('ignored'));
+  FromJsonFactory().register(GetParticipantData('ignored'));
+  FromJsonFactory().register(GetParticipantDataList(['ignored']));
+  FromJsonFactory().register(SetParticipantData('ignored'));
+
+  FromJsonFactory().register(CustomInput('ignored'),
+      type: CustomInput.CUSTOM_INPUT_TYPE_NAME);
+  FromJsonFactory().register(SexCustomInput(Sex.Female),
+      type: SexCustomInput.SEX_INPUT_TYPE_NAME);
+
   _fromJsonFunctionsRegistrered = true;
 }

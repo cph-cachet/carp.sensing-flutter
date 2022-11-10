@@ -18,7 +18,7 @@ part of carp_core_deployment;
 /// [carp.core-kotlin](https://github.com/cph-cachet/carp.core-kotlin/blob/develop/carp.deployment.core/src/commonMain/kotlin/dk/cachet/carp/deployment/infrastructure/DeploymentServiceRequest.kt)
 abstract class DeploymentServiceRequest extends ServiceRequest {
   final String _infrastructurePackageNamespace =
-      'dk.cachet.carp.deployment.infrastructure';
+      'dk.cachet.carp.deployments.infrastructure';
   DeploymentServiceRequest([this.studyDeploymentId]) : super();
 
   /// The CARP study deployment ID.

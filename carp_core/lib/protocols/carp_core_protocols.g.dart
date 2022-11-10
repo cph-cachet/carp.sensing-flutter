@@ -129,10 +129,13 @@ Add _$AddFromJson(Map<String, dynamic> json) => Add(
           ? null
           : StudyProtocol.fromJson(json['protocol'] as Map<String, dynamic>),
       json['versionTag'] as String?,
-    )..$type = json['__type'] as String?;
+    )
+      ..$type = json['__type'] as String?
+      ..apiVersion = json['apiVersion'] as String;
 
 Map<String, dynamic> _$AddToJson(Add instance) => <String, dynamic>{
       '__type': instance.$type,
+      'apiVersion': instance.apiVersion,
       'protocol': instance.protocol,
       'versionTag': instance.versionTag,
     };
@@ -142,11 +145,14 @@ AddVersion _$AddVersionFromJson(Map<String, dynamic> json) => AddVersion(
           ? null
           : StudyProtocol.fromJson(json['protocol'] as Map<String, dynamic>),
       json['versionTag'] as String?,
-    )..$type = json['__type'] as String?;
+    )
+      ..$type = json['__type'] as String?
+      ..apiVersion = json['apiVersion'] as String;
 
 Map<String, dynamic> _$AddVersionToJson(AddVersion instance) =>
     <String, dynamic>{
       '__type': instance.$type,
+      'apiVersion': instance.apiVersion,
       'protocol': instance.protocol,
       'versionTag': instance.versionTag,
     };
@@ -162,12 +168,15 @@ UpdateParticipantDataConfiguration _$UpdateParticipantDataConfigurationFromJson(
       (json['expectedParticipantData'] as List<dynamic>?)
           ?.map((e) => ParticipantAttribute.fromJson(e as Map<String, dynamic>))
           .toList(),
-    )..$type = json['__type'] as String?;
+    )
+      ..$type = json['__type'] as String?
+      ..apiVersion = json['apiVersion'] as String;
 
 Map<String, dynamic> _$UpdateParticipantDataConfigurationToJson(
         UpdateParticipantDataConfiguration instance) =>
     <String, dynamic>{
       '__type': instance.$type,
+      'apiVersion': instance.apiVersion,
       'protocolId': instance.protocolId,
       'versionTag': instance.versionTag,
       'expectedParticipantData': instance.expectedParticipantData,
@@ -179,11 +188,14 @@ GetBy _$GetByFromJson(Map<String, dynamic> json) => GetBy(
           : StudyProtocolId.fromJson(
               json['protocolId'] as Map<String, dynamic>),
       json['versionTag'] as String?,
-    )..$type = json['__type'] as String?;
+    )
+      ..$type = json['__type'] as String?
+      ..apiVersion = json['apiVersion'] as String;
 
 Map<String, dynamic> _$GetByToJson(GetBy instance) {
   final val = <String, dynamic>{
     '__type': instance.$type,
+    'apiVersion': instance.apiVersion,
     'protocolId': instance.protocolId,
   };
 
@@ -199,10 +211,13 @@ Map<String, dynamic> _$GetByToJson(GetBy instance) {
 
 GetAllFor _$GetAllForFromJson(Map<String, dynamic> json) => GetAllFor(
       json['ownerId'] as String?,
-    )..$type = json['__type'] as String?;
+    )
+      ..$type = json['__type'] as String?
+      ..apiVersion = json['apiVersion'] as String;
 
 Map<String, dynamic> _$GetAllForToJson(GetAllFor instance) => <String, dynamic>{
       '__type': instance.$type,
+      'apiVersion': instance.apiVersion,
       'ownerId': instance.ownerId,
     };
 
@@ -213,12 +228,15 @@ GetVersionHistoryFor _$GetVersionHistoryForFromJson(
           ? null
           : StudyProtocolId.fromJson(
               json['protocolId'] as Map<String, dynamic>),
-    )..$type = json['__type'] as String?;
+    )
+      ..$type = json['__type'] as String?
+      ..apiVersion = json['apiVersion'] as String;
 
 Map<String, dynamic> _$GetVersionHistoryForToJson(
         GetVersionHistoryFor instance) =>
     <String, dynamic>{
       '__type': instance.$type,
+      'apiVersion': instance.apiVersion,
       'protocolId': instance.protocolId,
     };
 
@@ -229,12 +247,15 @@ CreateCustomProtocol _$CreateCustomProtocolFromJson(
       json['name'] as String?,
       json['description'] as String?,
       json['customProtocol'] as String?,
-    )..$type = json['__type'] as String?;
+    )
+      ..$type = json['__type'] as String?
+      ..apiVersion = json['apiVersion'] as String;
 
 Map<String, dynamic> _$CreateCustomProtocolToJson(
         CreateCustomProtocol instance) =>
     <String, dynamic>{
       '__type': instance.$type,
+      'apiVersion': instance.apiVersion,
       'ownerId': instance.ownerId,
       'name': instance.name,
       'description': instance.description,
