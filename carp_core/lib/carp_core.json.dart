@@ -112,6 +112,29 @@ void _registerFromJsonFunctions() {
   FromJsonFactory().register(GetAllForOwner(null));
   FromJsonFactory().register(GetVersionHistoryFor(''));
   FromJsonFactory().register(CreateCustomProtocol('', '', '', ''));
+  FromJsonFactory().register(OpenDataStreams(DataStreamsConfiguration(
+      studyDeploymentId: '', expectedDataStreams: {})));
+  FromJsonFactory().register(AppendToDataStreams('', []));
+  FromJsonFactory().register(GetDataStream(
+      DataStreamId(studyDeploymentId: '', deviceRoleName: '', dataType: ''),
+      0));
+  FromJsonFactory().register(CloseDataStreams([]));
+  FromJsonFactory().register(RemoveDataStreams([]));
+
+  // DATA TYPES
+  FromJsonFactory().register(Acceleration());
+  FromJsonFactory().register(Geolocation());
+  FromJsonFactory().register(SignalStrength());
+  FromJsonFactory().register(StepCount());
+  FromJsonFactory().register(HeartRate());
+  FromJsonFactory().register(ECG());
+  FromJsonFactory().register(EDA());
+  FromJsonFactory().register(CompletedTask(taskName: ''));
+  FromJsonFactory().register(TriggeredTask(
+      triggerId: 0,
+      taskName: '',
+      destinationDeviceRoleName: '',
+      control: TaskControl(0)));
 
   // INPUT DATA TYPES
   FromJsonFactory().register(CustomInput('ignored'),

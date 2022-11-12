@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
+import 'package:flutter/material.dart';
 import 'package:test/test.dart';
 import 'package:carp_core/carp_core.dart';
 import 'package:carp_serializable/carp_serializable.dart';
@@ -222,17 +223,90 @@ void main() {
     });
   });
   group('DataStream Service', () {
+    test('OpenDataStreams - Request', () async {
+      String rpcString =
+          File('$path/data/DataStreamService/openDataStreams.json')
+              .readAsStringSync();
+
+      var expected = OpenDataStreams.fromJson(
+          json.decode(rpcString) as Map<String, dynamic>);
+
+      var request = OpenDataStreams(
+        DataStreamsConfiguration(
+          studyDeploymentId: 'c9cc5317-48da-45f2-958e-58bc07f34681',
+          expectedDataStreams: {
+            ExpectedDataStream(
+              dataType: 'dk.cachet.carp.geolocation',
+              deviceRoleName: "Participant's phone",
+            ),
+            ExpectedDataStream(
+              dataType: 'dk.cachet.carp.stepcount',
+              deviceRoleName: "Participant's phone",
+            )
+          },
+        ),
+      );
+
+      print(toJsonString(request));
+      expect(toJsonString(expected), toJsonString(request));
+    });
+
+    test('OpenDataStreams - Response', () async {
+      String plainJson =
+          File('$path/data/DataStreamService/openDataStreams-response.json')
+              .readAsStringSync();
+
+      // the response is empty
+      print(toJsonString(plainJson));
+    });
+
     test('AppendToDataStreams - Request', () async {
       String rpcString =
-          File('$path/protocols/DataStreamService/appendToDataStreams.json')
+          File('$path/data/DataStreamService/appendToDataStreams.json')
               .readAsStringSync();
 
       var expected = AppendToDataStreams.fromJson(
           json.decode(rpcString) as Map<String, dynamic>);
+      print(toJsonString(expected));
+
+      var m1 = Measurement(
+          sensorStartTime: 1642505045000000,
+          data: Geolocation(
+              latitude: 55.68061908805645, longitude: 12.582050313435703)
+            ..sensorSpecificData = SignalStrength(rssi: 0));
+      var m2 = Measurement(
+          sensorStartTime: 1642505144000000,
+          data: Geolocation(
+              latitude: 55.680802203873114, longitude: 12.581802212861367));
+      var m3 = Measurement(
+        sensorStartTime: 1642505045000000,
+        data: StepCount(steps: 0),
+      );
+      var m4 = Measurement(
+        sensorStartTime: 1642505144000000,
+        data: StepCount(steps: 30),
+      );
 
       var request = AppendToDataStreams(
         'c9cc5317-48da-45f2-958e-58bc07f34681',
-        [],
+        [
+          DataStreamBatch(
+              dataStream: DataStreamId(
+                  studyDeploymentId: 'c9cc5317-48da-45f2-958e-58bc07f34681',
+                  deviceRoleName: "Participant's phone",
+                  dataType: "dk.cachet.carp.geolocation"),
+              firstSequenceId: 0,
+              measurements: [m1, m2],
+              triggerIds: [0]),
+          DataStreamBatch(
+              dataStream: DataStreamId(
+                  studyDeploymentId: 'c9cc5317-48da-45f2-958e-58bc07f34681',
+                  deviceRoleName: "Participant's phone",
+                  dataType: "dk.cachet.carp.stepcount"),
+              firstSequenceId: 0,
+              measurements: [m3, m4],
+              triggerIds: [0]),
+        ],
       );
 
       print(toJsonString(request));
@@ -240,26 +314,100 @@ void main() {
     });
 
     test('AppendToDataStreams - Response', () async {
-      String plainJson = File(
-              '$path/protocols/DataStreamService/appendToDataStreams-response.json')
-          .readAsStringSync();
+      String plainJson =
+          File('$path/data/DataStreamService/appendToDataStreams-response.json')
+              .readAsStringSync();
 
-      StudyProtocol protocol = StudyProtocol.fromJson(
-          json.decode(plainJson) as Map<String, dynamic>);
-
-      print(toJsonString(protocol));
-      expect(protocol.id, '4d8c75c7-9604-48fa-8f9b-5ed3e4bd5df8');
-      expect(protocol.name, 'Fictional Company study');
+      // the response is empty
+      print(toJsonString(plainJson));
     });
 
-    test('Data Stream', () async {
-      String plainJson = File('$path/data/datastream.json').readAsStringSync();
+    test('GetDataStream - Request', () async {
+      String rpcString = File('$path/data/DataStreamService/getDataStream.json')
+          .readAsStringSync();
 
-      List<dynamic> stream = json.decode(plainJson) as List<dynamic>;
+      var expected = GetDataStream.fromJson(
+          json.decode(rpcString) as Map<String, dynamic>);
 
-      expect(stream.length, 1);
-      // expect(stream.first, isA<DataStreamBatch>);
-      print(toJsonString(stream));
+      var request = GetDataStream(
+        DataStreamId(
+          studyDeploymentId: 'c9cc5317-48da-45f2-958e-58bc07f34681',
+          deviceRoleName: "Participant's phone",
+          dataType: 'dk.cachet.carp.geolocation',
+        ),
+        0,
+        100,
+      );
+
+      print(toJsonString(request));
+      expect(toJsonString(expected), toJsonString(request));
+    });
+
+    test('GetDataStream - Response', () async {
+      String plainJson =
+          File('$path/data/DataStreamService/getDataStream-response.json')
+              .readAsStringSync();
+
+      var list = json.decode(plainJson) as List<dynamic>;
+      var data = DataStreamBatch.fromJson(list[0] as Map<String, dynamic>);
+
+      print(toJsonString(data));
+      expect(data.dataStream.studyDeploymentId,
+          'c9cc5317-48da-45f2-958e-58bc07f34681');
+      expect(data.measurements.length, 2);
+    });
+
+    test('CloseDataStreams - Request', () async {
+      String rpcString =
+          File('$path/data/DataStreamService/closeDataStreams.json')
+              .readAsStringSync();
+
+      var expected = CloseDataStreams.fromJson(
+          json.decode(rpcString) as Map<String, dynamic>);
+
+      var request = CloseDataStreams([
+        "c9cc5317-48da-45f2-958e-58bc07f34681",
+        "d4a9bba4-860e-4c58-a356-8a91605dc1ee",
+      ]);
+      print(toJsonString(request));
+      expect(toJsonString(expected), toJsonString(request));
+    });
+
+    test('CloseDataStreams - Response', () async {
+      String plainJson =
+          File('$path/data/DataStreamService/closeDataStreams-response.json')
+              .readAsStringSync();
+
+      // the response is empty
+      print(toJsonString(plainJson));
+    });
+
+    test('RemoveDataStreams - Request', () async {
+      String rpcString =
+          File('$path/data/DataStreamService/removeDataStreams.json')
+              .readAsStringSync();
+
+      var expected = RemoveDataStreams.fromJson(
+          json.decode(rpcString) as Map<String, dynamic>);
+
+      var request = RemoveDataStreams([
+        "c9cc5317-48da-45f2-958e-58bc07f34681",
+        "d4a9bba4-860e-4c58-a356-8a91605dc1ee",
+      ]);
+      print(toJsonString(request));
+      expect(toJsonString(expected), toJsonString(request));
+    });
+
+    test('RemoveDataStreams - Response', () async {
+      String plainJson =
+          File('$path/data/DataStreamService/removeDataStreams-response.json')
+              .readAsStringSync();
+
+      var list = json.decode(plainJson) as List<dynamic>;
+
+      print(toJsonString(list));
+      expect(list[0], 'c9cc5317-48da-45f2-958e-58bc07f34681');
+      expect(list[1], 'd4a9bba4-860e-4c58-a356-8a91605dc1ee');
     });
   });
 

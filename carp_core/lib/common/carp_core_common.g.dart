@@ -510,7 +510,7 @@ Map<String, dynamic> _$ElapsedTimeTriggerToJson(ElapsedTimeTrigger instance) {
 
 ManualTrigger _$ManualTriggerFromJson(Map<String, dynamic> json) =>
     ManualTrigger(
-      sourceDeviceRoleName: json['source_device_role_name'] as String?,
+      sourceDeviceRoleName: json['sourceDeviceRoleName'] as String?,
       label: json['label'] as String?,
       description: json['description'] as String?,
     )..$type = json['__type'] as String?;
@@ -525,7 +525,7 @@ Map<String, dynamic> _$ManualTriggerToJson(ManualTrigger instance) {
   }
 
   writeNotNull('__type', instance.$type);
-  writeNotNull('source_device_role_name', instance.sourceDeviceRoleName);
+  writeNotNull('sourceDeviceRoleName', instance.sourceDeviceRoleName);
   writeNotNull('label', instance.label);
   writeNotNull('description', instance.description);
   return val;
@@ -734,14 +734,14 @@ Map<String, dynamic> _$DataToJson(Data instance) {
 }
 
 Acceleration _$AccelerationFromJson(Map<String, dynamic> json) => Acceleration(
-      (json['x'] as num).toDouble(),
-      (json['y'] as num).toDouble(),
-      (json['z'] as num).toDouble(),
+      x: (json['x'] as num?)?.toDouble() ?? 0,
+      y: (json['y'] as num?)?.toDouble() ?? 0,
+      z: (json['z'] as num?)?.toDouble() ?? 0,
     )
       ..$type = json['__type'] as String?
-      ..sensorSpecificData = json['sensor_specific_data'] == null
+      ..sensorSpecificData = json['sensorSpecificData'] == null
           ? null
-          : Data.fromJson(json['sensor_specific_data'] as Map<String, dynamic>);
+          : Data.fromJson(json['sensorSpecificData'] as Map<String, dynamic>);
 
 Map<String, dynamic> _$AccelerationToJson(Acceleration instance) {
   final val = <String, dynamic>{};
@@ -753,7 +753,7 @@ Map<String, dynamic> _$AccelerationToJson(Acceleration instance) {
   }
 
   writeNotNull('__type', instance.$type);
-  writeNotNull('sensor_specific_data', instance.sensorSpecificData);
+  writeNotNull('sensorSpecificData', instance.sensorSpecificData);
   val['x'] = instance.x;
   val['y'] = instance.y;
   val['z'] = instance.z;
@@ -761,13 +761,13 @@ Map<String, dynamic> _$AccelerationToJson(Acceleration instance) {
 }
 
 Geolocation _$GeolocationFromJson(Map<String, dynamic> json) => Geolocation(
-      latitude: (json['latitude'] as num).toDouble(),
-      longitude: (json['longitude'] as num).toDouble(),
+      latitude: (json['latitude'] as num?)?.toDouble() ?? 0,
+      longitude: (json['longitude'] as num?)?.toDouble() ?? 0,
     )
       ..$type = json['__type'] as String?
-      ..sensorSpecificData = json['sensor_specific_data'] == null
+      ..sensorSpecificData = json['sensorSpecificData'] == null
           ? null
-          : Data.fromJson(json['sensor_specific_data'] as Map<String, dynamic>);
+          : Data.fromJson(json['sensorSpecificData'] as Map<String, dynamic>);
 
 Map<String, dynamic> _$GeolocationToJson(Geolocation instance) {
   final val = <String, dynamic>{};
@@ -779,7 +779,7 @@ Map<String, dynamic> _$GeolocationToJson(Geolocation instance) {
   }
 
   writeNotNull('__type', instance.$type);
-  writeNotNull('sensor_specific_data', instance.sensorSpecificData);
+  writeNotNull('sensorSpecificData', instance.sensorSpecificData);
   val['latitude'] = instance.latitude;
   val['longitude'] = instance.longitude;
   return val;
@@ -787,12 +787,12 @@ Map<String, dynamic> _$GeolocationToJson(Geolocation instance) {
 
 SignalStrength _$SignalStrengthFromJson(Map<String, dynamic> json) =>
     SignalStrength(
-      rssi: json['rssi'] as int,
+      rssi: json['rssi'] as int? ?? 0,
     )
       ..$type = json['__type'] as String?
-      ..sensorSpecificData = json['sensor_specific_data'] == null
+      ..sensorSpecificData = json['sensorSpecificData'] == null
           ? null
-          : Data.fromJson(json['sensor_specific_data'] as Map<String, dynamic>);
+          : Data.fromJson(json['sensorSpecificData'] as Map<String, dynamic>);
 
 Map<String, dynamic> _$SignalStrengthToJson(SignalStrength instance) {
   final val = <String, dynamic>{};
@@ -804,18 +804,18 @@ Map<String, dynamic> _$SignalStrengthToJson(SignalStrength instance) {
   }
 
   writeNotNull('__type', instance.$type);
-  writeNotNull('sensor_specific_data', instance.sensorSpecificData);
+  writeNotNull('sensorSpecificData', instance.sensorSpecificData);
   val['rssi'] = instance.rssi;
   return val;
 }
 
 StepCount _$StepCountFromJson(Map<String, dynamic> json) => StepCount(
-      json['steps'] as int,
+      steps: json['steps'] as int? ?? 0,
     )
       ..$type = json['__type'] as String?
-      ..sensorSpecificData = json['sensor_specific_data'] == null
+      ..sensorSpecificData = json['sensorSpecificData'] == null
           ? null
-          : Data.fromJson(json['sensor_specific_data'] as Map<String, dynamic>);
+          : Data.fromJson(json['sensorSpecificData'] as Map<String, dynamic>);
 
 Map<String, dynamic> _$StepCountToJson(StepCount instance) {
   final val = <String, dynamic>{};
@@ -827,18 +827,18 @@ Map<String, dynamic> _$StepCountToJson(StepCount instance) {
   }
 
   writeNotNull('__type', instance.$type);
-  writeNotNull('sensor_specific_data', instance.sensorSpecificData);
+  writeNotNull('sensorSpecificData', instance.sensorSpecificData);
   val['steps'] = instance.steps;
   return val;
 }
 
 HeartRate _$HeartRateFromJson(Map<String, dynamic> json) => HeartRate(
-      bpm: json['bpm'] as int,
+      bpm: json['bpm'] as int? ?? 0,
     )
       ..$type = json['__type'] as String?
-      ..sensorSpecificData = json['sensor_specific_data'] == null
+      ..sensorSpecificData = json['sensorSpecificData'] == null
           ? null
-          : Data.fromJson(json['sensor_specific_data'] as Map<String, dynamic>);
+          : Data.fromJson(json['sensorSpecificData'] as Map<String, dynamic>);
 
 Map<String, dynamic> _$HeartRateToJson(HeartRate instance) {
   final val = <String, dynamic>{};
@@ -850,18 +850,18 @@ Map<String, dynamic> _$HeartRateToJson(HeartRate instance) {
   }
 
   writeNotNull('__type', instance.$type);
-  writeNotNull('sensor_specific_data', instance.sensorSpecificData);
+  writeNotNull('sensorSpecificData', instance.sensorSpecificData);
   val['bpm'] = instance.bpm;
   return val;
 }
 
 ECG _$ECGFromJson(Map<String, dynamic> json) => ECG(
-      milliVolt: (json['milli_volt'] as num).toDouble(),
+      milliVolt: (json['milliVolt'] as num?)?.toDouble() ?? 0,
     )
       ..$type = json['__type'] as String?
-      ..sensorSpecificData = json['sensor_specific_data'] == null
+      ..sensorSpecificData = json['sensorSpecificData'] == null
           ? null
-          : Data.fromJson(json['sensor_specific_data'] as Map<String, dynamic>);
+          : Data.fromJson(json['sensorSpecificData'] as Map<String, dynamic>);
 
 Map<String, dynamic> _$ECGToJson(ECG instance) {
   final val = <String, dynamic>{};
@@ -873,18 +873,18 @@ Map<String, dynamic> _$ECGToJson(ECG instance) {
   }
 
   writeNotNull('__type', instance.$type);
-  writeNotNull('sensor_specific_data', instance.sensorSpecificData);
-  val['milli_volt'] = instance.milliVolt;
+  writeNotNull('sensorSpecificData', instance.sensorSpecificData);
+  val['milliVolt'] = instance.milliVolt;
   return val;
 }
 
 EDA _$EDAFromJson(Map<String, dynamic> json) => EDA(
-      microSiemens: (json['micro_siemens'] as num).toDouble(),
+      microSiemens: (json['microSiemens'] as num?)?.toDouble() ?? 0,
     )
       ..$type = json['__type'] as String?
-      ..sensorSpecificData = json['sensor_specific_data'] == null
+      ..sensorSpecificData = json['sensorSpecificData'] == null
           ? null
-          : Data.fromJson(json['sensor_specific_data'] as Map<String, dynamic>);
+          : Data.fromJson(json['sensorSpecificData'] as Map<String, dynamic>);
 
 Map<String, dynamic> _$EDAToJson(EDA instance) {
   final val = <String, dynamic>{};
@@ -896,17 +896,17 @@ Map<String, dynamic> _$EDAToJson(EDA instance) {
   }
 
   writeNotNull('__type', instance.$type);
-  writeNotNull('sensor_specific_data', instance.sensorSpecificData);
-  val['micro_siemens'] = instance.microSiemens;
+  writeNotNull('sensorSpecificData', instance.sensorSpecificData);
+  val['microSiemens'] = instance.microSiemens;
   return val;
 }
 
 CompletedTask _$CompletedTaskFromJson(Map<String, dynamic> json) =>
     CompletedTask(
-      taskName: json['task_name'] as String,
-      taskData: json['task_data'] == null
+      taskName: json['taskName'] as String,
+      taskData: json['taskData'] == null
           ? null
-          : Data.fromJson(json['task_data'] as Map<String, dynamic>),
+          : Data.fromJson(json['taskData'] as Map<String, dynamic>),
     )..$type = json['__type'] as String?;
 
 Map<String, dynamic> _$CompletedTaskToJson(CompletedTask instance) {
@@ -919,20 +919,20 @@ Map<String, dynamic> _$CompletedTaskToJson(CompletedTask instance) {
   }
 
   writeNotNull('__type', instance.$type);
-  val['task_name'] = instance.taskName;
-  writeNotNull('task_data', instance.taskData);
+  val['taskName'] = instance.taskName;
+  writeNotNull('taskData', instance.taskData);
   return val;
 }
 
 TriggeredTask _$TriggeredTaskFromJson(Map<String, dynamic> json) =>
     TriggeredTask(
-      triggerId: json['trigger_id'] as int,
-      taskName: json['task_name'] as String,
-      destinationDeviceRoleName: json['destination_device_role_name'] as String,
+      triggerId: json['triggerId'] as int,
+      taskName: json['taskName'] as String,
+      destinationDeviceRoleName: json['destinationDeviceRoleName'] as String,
       control: TaskControl.fromJson(json['control'] as Map<String, dynamic>),
-      triggerData: json['trigger_data'] == null
+      triggerData: json['triggerData'] == null
           ? null
-          : Data.fromJson(json['trigger_data'] as Map<String, dynamic>),
+          : Data.fromJson(json['triggerData'] as Map<String, dynamic>),
     )..$type = json['__type'] as String?;
 
 Map<String, dynamic> _$TriggeredTaskToJson(TriggeredTask instance) {
@@ -945,11 +945,11 @@ Map<String, dynamic> _$TriggeredTaskToJson(TriggeredTask instance) {
   }
 
   writeNotNull('__type', instance.$type);
-  val['trigger_id'] = instance.triggerId;
-  val['task_name'] = instance.taskName;
-  val['destination_device_role_name'] = instance.destinationDeviceRoleName;
+  val['triggerId'] = instance.triggerId;
+  val['taskName'] = instance.taskName;
+  val['destinationDeviceRoleName'] = instance.destinationDeviceRoleName;
   val['control'] = instance.control;
-  writeNotNull('trigger_data', instance.triggerData);
+  writeNotNull('triggerData', instance.triggerData);
   return val;
 }
 

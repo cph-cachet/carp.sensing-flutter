@@ -75,7 +75,7 @@ class ElapsedTimeTrigger extends TriggerConfiguration implements Schedulable {
 }
 
 /// A trigger initiated by a user, i.e., the user decides when to start a task.
-@JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)
+@JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
 class ManualTrigger extends TriggerConfiguration {
   /// A short label to describe the action performed once the user chooses
   /// to initiate this trigger.

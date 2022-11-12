@@ -8,7 +8,7 @@
 part of carp_core_common;
 
 /// Custom input data as requested by a researcher.
-@JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)
+@JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
 class CustomInput extends Data {
   static const INPUT_TYPE_NAME = '${NameSpace.CARP}.input';
   static const CUSTOM_INPUT_TYPE_NAME = '${CustomInput.INPUT_TYPE_NAME}.custom';
@@ -31,7 +31,7 @@ class CustomInput extends Data {
 enum Sex { Male, Female, Intersex }
 
 /// The biological sex assigned at birth of a participant.
-@JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)
+@JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
 class SexCustomInput extends Data {
   static const SEX_INPUT_TYPE_NAME = '${CustomInput.INPUT_TYPE_NAME}.sex';
 

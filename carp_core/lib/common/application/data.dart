@@ -12,7 +12,7 @@ part of carp_core_common;
 
 /// Holds data for a [DataType].
 /// This is an abstract class and contains no data as such.
-@JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)
+@JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
 class Data extends Serializable {
   @JsonKey(ignore: true)
   DataType get format => DataType.fromString(jsonType);
@@ -40,10 +40,10 @@ abstract class SensorData extends Data {
 
 /// Holds rate of change in velocity, including gravity, along perpendicular
 /// [x], [y], and [z] axes in meters per second squared (m/s^2).
-@JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)
+@JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
 class Acceleration extends SensorData {
   double x, y, z;
-  Acceleration(this.x, this.y, this.z) : super();
+  Acceleration({this.x = 0, this.y = 0, this.z = 0}) : super();
 
   @override
   Function get fromJsonFunction => _$AccelerationFromJson;
@@ -55,15 +55,12 @@ class Acceleration extends SensorData {
 
 /// Holds geolocation data as latitude and longitude in decimal degrees within
 /// the World Geodetic System 1984.
-@JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)
+@JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
 class Geolocation extends SensorData {
   double latitude;
   double longitude;
 
-  Geolocation({
-    required this.latitude,
-    required this.longitude,
-  }) : super();
+  Geolocation({this.latitude = 0, this.longitude = 0}) : super();
 
   @override
   Function get fromJsonFunction => _$GeolocationFromJson;
@@ -77,10 +74,10 @@ class Geolocation extends SensorData {
 /// The unit of the received signal strength indicator ([rssi]) is arbitrary
 /// and determined by the chip manufacturer, but the greater the value,
 /// the stronger the signal.
-@JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)
+@JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
 class SignalStrength extends SensorData {
   int rssi;
-  SignalStrength({required this.rssi}) : super();
+  SignalStrength({this.rssi = 0}) : super();
 
   @override
   Function get fromJsonFunction => _$SignalStrengthFromJson;
@@ -91,10 +88,10 @@ class SignalStrength extends SensorData {
 }
 
 /// Step count data as number of steps taken in a corresponding time interval.
-@JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)
+@JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
 class StepCount extends SensorData {
   int steps;
-  StepCount(this.steps) : super();
+  StepCount({this.steps = 0}) : super();
 
   @override
   Function get fromJsonFunction => _$StepCountFromJson;
@@ -105,10 +102,10 @@ class StepCount extends SensorData {
 }
 
 /// Heart rate data in beats per minute ([bpm]).
-@JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)
+@JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
 class HeartRate extends SensorData {
   int bpm;
-  HeartRate({required this.bpm}) : super();
+  HeartRate({this.bpm = 0}) : super();
 
   @override
   Function get fromJsonFunction => _$HeartRateFromJson;
@@ -119,10 +116,10 @@ class HeartRate extends SensorData {
 }
 
 /// Electrocardiogram data of a single lead.
-@JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)
+@JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
 class ECG extends SensorData {
   double milliVolt;
-  ECG({required this.milliVolt}) : super();
+  ECG({this.milliVolt = 0}) : super();
 
   @override
   Function get fromJsonFunction => _$ECGFromJson;
@@ -134,10 +131,10 @@ class ECG extends SensorData {
 
 /// Single-channel electrodermal activity (EDA) data, represented as skin conductance.
 /// Among others, also known as galvanic skin response (GSR) or skin conductance response/level.
-@JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)
+@JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
 class EDA extends SensorData {
   double microSiemens;
-  EDA({required this.microSiemens}) : super();
+  EDA({this.microSiemens = 0}) : super();
 
   @override
   Function get fromJsonFunction => _$EDAFromJson;
@@ -150,7 +147,7 @@ class EDA extends SensorData {
 /// Indicates the task with [taskName] was completed.
 /// [taskData] holds the result of a completed interactive task, or null if
 /// no result is collected.
-@JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)
+@JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
 class CompletedTask extends Data {
   String taskName;
   Data? taskData;
@@ -173,7 +170,7 @@ class CompletedTask extends Data {
 /// referring to identifiers in the study protocol.
 /// [triggerData] may contain additional information related to the circumstances
 /// which caused the trigger to fire.
-@JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)
+@JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
 class TriggeredTask extends Data {
   int triggerId;
   String taskName;
