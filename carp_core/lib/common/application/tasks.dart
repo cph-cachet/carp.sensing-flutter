@@ -39,6 +39,7 @@ class TaskConfiguration extends Serializable {
   @mustCallSuper
   TaskConfiguration({
     String? name,
+    this.description,
     List<Measure>? measures,
   }) : super() {
     this.name = name ?? 'Task #${_counter++}';

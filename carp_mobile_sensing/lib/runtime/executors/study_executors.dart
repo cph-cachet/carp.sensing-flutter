@@ -29,9 +29,10 @@ class StudyDeploymentExecutor extends AggregateExecutor<SmartphoneDeployment> {
 
     for (var triggeredTask in configuration!.triggeredTasks) {
       // get the trigger based on the trigger id
-      Trigger trigger = configuration!.triggers['${triggeredTask.triggerId}']!;
+      TriggerConfiguration trigger =
+          configuration!.triggers['${triggeredTask.triggerId}']!;
       // get the task based on the task name
-      TaskDescriptor task =
+      TaskConfiguration task =
           configuration!.getTaskByName(triggeredTask.taskName)!;
 
       TriggeredTaskExecutor executor = getTriggeredTaskExecutor(
@@ -44,7 +45,7 @@ class StudyDeploymentExecutor extends AggregateExecutor<SmartphoneDeployment> {
 
       // let the device manger know about this executor
       if (triggeredTask.targetDeviceRoleName != null) {
-        DeviceDescriptor? targetDevice = configuration
+        DeviceConfiguration? targetDevice = configuration
             ?.getDeviceFromRoleName(triggeredTask.targetDeviceRoleName!);
         if (targetDevice != null) {
           DeviceController()
@@ -102,12 +103,12 @@ class StudyDeploymentExecutor extends AggregateExecutor<SmartphoneDeployment> {
 /// and [task].
 TriggeredTaskExecutor getTriggeredTaskExecutor(
   TriggeredTask triggeredTask,
-  Trigger trigger,
-  TaskDescriptor task,
+  TriggerConfiguration trigger,
+  TaskConfiguration task,
 ) {
-  // a TriggeredAppTaskExecutor need BOTH a Scheduleable trigger and an AppTask
+  // a TriggeredAppTaskExecutor need BOTH a Schedulable trigger and an AppTask
   // to schedule
-  if (trigger is Scheduleable && task is AppTask) {
+  if (trigger is Schedulable && task is AppTask) {
     return TriggeredAppTaskExecutor(triggeredTask, trigger, task);
   }
 
@@ -122,20 +123,20 @@ TriggeredTaskExecutor getTriggeredTaskExecutor(
 /// entails that tasks are only triggered if the app is actively running, either
 /// in the foreground or in a background process.
 class TriggeredTaskExecutor extends AggregateExecutor<TriggeredTask> {
-  late Trigger _trigger;
-  late TaskDescriptor _task;
+  late TriggerConfiguration _trigger;
+  late TaskConfiguration _task;
   late TriggeredTask _triggeredTask;
   TriggerExecutor? triggerExecutor;
   TaskExecutor? taskExecutor;
 
-  Trigger get trigger => _trigger;
-  TaskDescriptor get task => _task;
+  TriggerConfiguration get trigger => _trigger;
+  TaskConfiguration get task => _task;
   TriggeredTask get triggeredTask => _triggeredTask;
 
   TriggeredTaskExecutor(
     TriggeredTask triggeredTask,
-    Trigger trigger,
-    TaskDescriptor task,
+    TriggerConfiguration trigger,
+    TaskConfiguration task,
   ) : super() {
     _triggeredTask = triggeredTask;
     _trigger = trigger;
@@ -180,7 +181,7 @@ class TriggeredTaskExecutor extends AggregateExecutor<TriggeredTask> {
 ///
 /// In contrast to the [TriggeredTaskExecutor] (which runs in the background),
 /// this [TriggeredAppTaskExecutor] will try to schedule the [AppTask] using
-/// the [AppTaskController]. This means that triggeres also has to be [Scheduleable].
+/// the [AppTaskController]. This means that triggeres also has to be [Schedulable].
 class TriggeredAppTaskExecutor extends TriggeredTaskExecutor {
   TriggeredAppTaskExecutor(
     super.triggeredTask,
@@ -192,8 +193,8 @@ class TriggeredAppTaskExecutor extends TriggeredTaskExecutor {
   AppTaskExecutor get taskExecutor => super.taskExecutor as AppTaskExecutor;
 
   @override
-  ScheduleableTriggerExecutor get triggerExecutor =>
-      super.triggerExecutor as ScheduleableTriggerExecutor;
+  SchedulableTriggerExecutor get triggerExecutor =>
+      super.triggerExecutor as SchedulableTriggerExecutor;
 
   @override
   Future<bool> onResume() async {

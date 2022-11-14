@@ -9,16 +9,12 @@ part of domain;
 
 /// An online service which works as a "software device" in a protocol.
 @JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
-class OnlineService extends DeviceDescriptor {
+class OnlineService extends DeviceConfiguration {
   OnlineService({
-    required String roleName,
-    List<String>? supportedDataTypes,
-  }) : super(
-          roleName: roleName,
-          isMasterDevice: false,
-          supportedDataTypes: supportedDataTypes,
-        );
-
+    required super.roleName,
+    super.isOptional,
+    super.supportedDataTypes,
+  });
   @override
   Function get fromJsonFunction => _$OnlineServiceFromJson;
 

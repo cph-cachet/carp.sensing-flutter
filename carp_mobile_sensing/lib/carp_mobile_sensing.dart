@@ -20,6 +20,7 @@ class CarpMobileSensing {
   factory CarpMobileSensing() => _instance;
   CarpMobileSensing._() {
     Core();
+    CAMSDataType();
     _registerFromJsonFunctions();
   }
 }

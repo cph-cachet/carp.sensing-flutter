@@ -9,7 +9,7 @@ import 'package:test/test.dart';
 void main() {
   late StudyProtocol masterProtocol;
   late Smartphone masterPhone;
-  DeviceDescriptor eSense;
+  DeviceConfiguration eSense;
 
   setUp(() {
     // Initialization of serialization
@@ -23,7 +23,7 @@ void main() {
 
     // Define which devices are used for data collection.
     masterPhone = Smartphone();
-    eSense = DeviceDescriptor(roleName: 'esense');
+    eSense = DeviceConfiguration(roleName: 'esense');
 
     masterProtocol
       ..addMasterDevice(masterPhone)

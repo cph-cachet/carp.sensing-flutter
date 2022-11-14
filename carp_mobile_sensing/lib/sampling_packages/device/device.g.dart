@@ -15,8 +15,6 @@ DeviceDatum _$DeviceDatumFromJson(Map<String, dynamic> json) => DeviceDatum(
       operatingSystem: json['operating_system'] as String?,
       hardware: json['hardware'] as String?,
     )
-      ..id = json['id'] as String?
-      ..timestamp = DateTime.parse(json['timestamp'] as String)
       ..sdk = json['sdk'] as String?
       ..release = json['release'] as String?;
 
@@ -29,8 +27,6 @@ Map<String, dynamic> _$DeviceDatumToJson(DeviceDatum instance) {
     }
   }
 
-  writeNotNull('id', instance.id);
-  val['timestamp'] = instance.timestamp.toIso8601String();
   writeNotNull('platform', instance.platform);
   writeNotNull('device_id', instance.deviceId);
   writeNotNull('hardware', instance.hardware);
@@ -46,9 +42,7 @@ Map<String, dynamic> _$DeviceDatumToJson(DeviceDatum instance) {
 BatteryDatum _$BatteryDatumFromJson(Map<String, dynamic> json) => BatteryDatum(
       json['battery_level'] as int?,
       json['battery_status'] as String?,
-    )
-      ..id = json['id'] as String?
-      ..timestamp = DateTime.parse(json['timestamp'] as String);
+    );
 
 Map<String, dynamic> _$BatteryDatumToJson(BatteryDatum instance) {
   final val = <String, dynamic>{};
@@ -59,8 +53,6 @@ Map<String, dynamic> _$BatteryDatumToJson(BatteryDatum instance) {
     }
   }
 
-  writeNotNull('id', instance.id);
-  val['timestamp'] = instance.timestamp.toIso8601String();
   writeNotNull('battery_level', instance.batteryLevel);
   writeNotNull('battery_status', instance.batteryStatus);
   return val;
@@ -70,9 +62,7 @@ FreeMemoryDatum _$FreeMemoryDatumFromJson(Map<String, dynamic> json) =>
     FreeMemoryDatum(
       json['free_physical_memory'] as int?,
       json['free_virtual_memory'] as int?,
-    )
-      ..id = json['id'] as String?
-      ..timestamp = DateTime.parse(json['timestamp'] as String);
+    );
 
 Map<String, dynamic> _$FreeMemoryDatumToJson(FreeMemoryDatum instance) {
   final val = <String, dynamic>{};
@@ -83,8 +73,6 @@ Map<String, dynamic> _$FreeMemoryDatumToJson(FreeMemoryDatum instance) {
     }
   }
 
-  writeNotNull('id', instance.id);
-  val['timestamp'] = instance.timestamp.toIso8601String();
   writeNotNull('free_physical_memory', instance.freePhysicalMemory);
   writeNotNull('free_virtual_memory', instance.freeVirtualMemory);
   return val;
@@ -92,9 +80,7 @@ Map<String, dynamic> _$FreeMemoryDatumToJson(FreeMemoryDatum instance) {
 
 ScreenDatum _$ScreenDatumFromJson(Map<String, dynamic> json) => ScreenDatum(
       json['screen_event'] as String?,
-    )
-      ..id = json['id'] as String?
-      ..timestamp = DateTime.parse(json['timestamp'] as String);
+    );
 
 Map<String, dynamic> _$ScreenDatumToJson(ScreenDatum instance) {
   final val = <String, dynamic>{};
@@ -105,8 +91,6 @@ Map<String, dynamic> _$ScreenDatumToJson(ScreenDatum instance) {
     }
   }
 
-  writeNotNull('id', instance.id);
-  val['timestamp'] = instance.timestamp.toIso8601String();
   writeNotNull('screen_event', instance.screenEvent);
   return val;
 }

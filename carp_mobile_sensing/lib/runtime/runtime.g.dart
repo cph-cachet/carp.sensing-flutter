@@ -9,7 +9,7 @@ part of runtime;
 UserTaskSnapshotList _$UserTaskSnapshotListFromJson(
         Map<String, dynamic> json) =>
     UserTaskSnapshotList()
-      ..$type = json[r'$type'] as String?
+      ..$type = json['__type'] as String?
       ..snapshots = (json['snapshots'] as List<dynamic>)
           .map((e) => UserTaskSnapshot.fromJson(e as Map<String, dynamic>))
           .toList();
@@ -24,7 +24,7 @@ Map<String, dynamic> _$UserTaskSnapshotListToJson(
     }
   }
 
-  writeNotNull(r'$type', instance.$type);
+  writeNotNull('__type', instance.$type);
   val['snapshots'] = instance.snapshots;
   return val;
 }
@@ -39,7 +39,7 @@ UserTaskSnapshot _$UserTaskSnapshotFromJson(Map<String, dynamic> json) =>
       json['hasNotificationBeenCreated'] as bool,
       json['studyDeploymentId'] as String?,
       json['deviceRoleName'] as String?,
-    )..$type = json[r'$type'] as String?;
+    )..$type = json['__type'] as String?;
 
 Map<String, dynamic> _$UserTaskSnapshotToJson(UserTaskSnapshot instance) {
   final val = <String, dynamic>{};
@@ -50,7 +50,7 @@ Map<String, dynamic> _$UserTaskSnapshotToJson(UserTaskSnapshot instance) {
     }
   }
 
-  writeNotNull(r'$type', instance.$type);
+  writeNotNull('__type', instance.$type);
   val['id'] = instance.id;
   val['task'] = instance.task;
   val['state'] = _$UserTaskStateEnumMap[instance.state]!;

@@ -10,7 +10,7 @@ part of domain;
 /// Contains the entire description and configuration for how a smartphone master
 /// device participates in the deployment of a study on a smartphone.
 @JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
-class SmartphoneDeployment extends MasterDeviceDeployment {
+class SmartphoneDeployment extends PrimaryDeviceDeployment {
   late String _studyDeploymentId;
   final List<SmartphoneDeploymentListener> _listeners = [];
 
@@ -33,54 +33,73 @@ class SmartphoneDeployment extends MasterDeviceDeployment {
   /// This user id is stored in the [DataPointHeader] as the [userId].
   String? userId;
 
-  /// The [StudyDescription] containing the title, description,
-  /// purpose, and the responsible researcher for this study.
-  StudyDescription? protocolDescription;
+  SmartphoneApplicationData _data = SmartphoneApplicationData();
 
-  /// The PI responsible for this study.
+  @override
+  Map<String, dynamic> get applicationData => _data.toJson();
+
+  @override
+  set applicationData(Map<String, dynamic>? data) => _data = (data != null)
+      ? SmartphoneApplicationData.fromJson(data)
+      : SmartphoneApplicationData();
+
+  /// The description of this study protocol containing the title, description,
+  /// purpose, and the responsible researcher for this study.
+  StudyDescription? get protocolDescription => _data.protocolDescription;
+  set protocolDescription(StudyDescription? description) =>
+      _data.protocolDescription = description;
+
+  @override
+  String get description => protocolDescription?.description ?? '';
+
+  /// The PI responsible for this protocol.
   StudyResponsible? get responsible => protocolDescription?.responsible;
 
   /// Specifies where and how to stored or upload the data collected from this
   /// deployment. If `null`, the sensed data is not stored, but may still be
-  /// used in the app somehow.
-  DataEndPoint? dataEndPoint;
+  /// used in the app.
+  DataEndPoint? get dataEndPoint => _data.dataEndPoint;
+  set dataEndPoint(DataEndPoint? dataEndPoint) =>
+      _data.dataEndPoint = dataEndPoint;
 
   /// Create a new [SmartphoneDeployment].
   ///
   /// [studyDeploymentId] is a unique id for this deployment. If not specified,
   /// a unique id will be generated.
-  ///
   SmartphoneDeployment({
     String? studyDeploymentId,
-    required super.deviceDescriptor,
-    required super.configuration,
-    super.connectedDevices = const [],
-    super.connectedDeviceConfigurations = const {},
-    super.tasks = const [],
-    super.triggers = const {},
-    super.triggeredTasks = const [],
-    this.protocolDescription,
-    this.dataEndPoint,
+    required super.deviceConfiguration,
+    required super.registration,
+    super.connectedDevices,
+    super.connectedDeviceRegistrations,
+    super.tasks,
+    super.triggers,
+    super.taskControls,
+    super.expectedParticipantData,
+    StudyDescription? protocolDescription,
+    DataEndPoint? dataEndPoint,
   }) {
     _studyDeploymentId = studyDeploymentId ?? Uuid().v1();
+    _data = SmartphoneApplicationData(
+        protocolDescription: protocolDescription, dataEndPoint: dataEndPoint);
   }
 
-  /// Create a [SmartphoneDeployment] that combines a [MasterDeviceDeployment] and
+  /// Create a [SmartphoneDeployment] that combines a [PrimaryDeviceDeployment] and
   /// a [SmartphoneStudyProtocol].
-  SmartphoneDeployment.fromMasterDeviceDeployment({
+  SmartphoneDeployment.fromPrimaryDeviceDeployment({
     String? studyDeploymentId,
-    required MasterDeviceDeployment masterDeviceDeployment,
+    required PrimaryDeviceDeployment primaryDeviceDeployment,
     required SmartphoneStudyProtocol protocol,
   }) : this(
           studyDeploymentId: studyDeploymentId,
-          deviceDescriptor: masterDeviceDeployment.deviceDescriptor,
-          configuration: masterDeviceDeployment.configuration,
-          connectedDevices: masterDeviceDeployment.connectedDevices,
-          connectedDeviceConfigurations:
-              masterDeviceDeployment.connectedDeviceConfigurations,
-          tasks: masterDeviceDeployment.tasks,
-          triggers: masterDeviceDeployment.triggers,
-          triggeredTasks: masterDeviceDeployment.triggeredTasks,
+          deviceConfiguration: primaryDeviceDeployment.deviceConfiguration,
+          registration: primaryDeviceDeployment.registration,
+          connectedDevices: primaryDeviceDeployment.connectedDevices,
+          connectedDeviceRegistrations:
+              primaryDeviceDeployment.connectedDeviceRegistrations,
+          tasks: primaryDeviceDeployment.tasks,
+          triggers: primaryDeviceDeployment.triggers,
+          taskControls: primaryDeviceDeployment.taskControls,
           protocolDescription: protocol.protocolDescription,
           dataEndPoint: protocol.dataEndPoint,
         );
@@ -90,35 +109,35 @@ class SmartphoneDeployment extends MasterDeviceDeployment {
   /// a deployment.
   SmartphoneDeployment.fromSmartphoneStudyProtocol({
     String? studyDeploymentId,
-    required String masterDeviceRoleName,
+    required String primaryDeviceRoleName,
     required SmartphoneStudyProtocol protocol,
   }) : this(
           studyDeploymentId: studyDeploymentId,
-          deviceDescriptor: Smartphone(roleName: masterDeviceRoleName),
-          configuration: DeviceRegistration(),
-          connectedDevices: protocol.connectedDevices,
-          connectedDeviceConfigurations: {},
-          tasks: protocol.tasks.toList(),
+          deviceConfiguration: Smartphone(roleName: primaryDeviceRoleName),
+          registration: DeviceRegistration(),
+          connectedDevices: protocol.connectedDevices ?? {},
+          connectedDeviceRegistrations: {},
+          tasks: protocol.tasks,
           triggers: protocol.triggers,
-          triggeredTasks: protocol.triggeredTasks,
+          taskControls: protocol.taskControls,
           protocolDescription: protocol.protocolDescription,
           dataEndPoint: protocol.dataEndPoint,
         );
 
-  /// Get the list of all mesures in this study deployment.
+  /// Get the list of all measures in this study deployment.
   List<Measure> get measures {
     final List<Measure> measures = [];
     for (var task in tasks) {
-      measures.addAll(task.measures);
+      if (task.measures != null) measures.addAll(task.measures!);
     }
     return measures;
   }
 
-  /// Get the [DeviceDescriptor] based on the [roleName].
-  /// This includes both the master device and the connected devices.
+  /// Get the [DeviceConfiguration] based on the [roleName].
+  /// This includes both the primary device and the connected devices.
   /// Returns null if no device with [roleName] is found.
-  DeviceDescriptor? getDeviceFromRoleName(String roleName) {
-    if (deviceDescriptor.roleName == roleName) return deviceDescriptor;
+  DeviceConfiguration? getDeviceFromRoleName(String roleName) {
+    if (deviceConfiguration.roleName == roleName) return deviceConfiguration;
     try {
       return connectedDevices
           .firstWhere((device) => device.roleName == roleName);
@@ -156,7 +175,7 @@ class SmartphoneDeployment extends MasterDeviceDeployment {
 
   @override
   String toString() => '$runtimeType - studyDeploymentId: $studyDeploymentId, '
-      'device: ${deviceDescriptor.roleName}, '
+      'device: ${deviceConfiguration.roleName}, '
       'title: ${protocolDescription?.title}, responsible: ${responsible?.name}';
 }
 

@@ -10,8 +10,8 @@ part of runtime;
 
 /// A [DeviceManager] handles a hardware device or online service on runtime.
 abstract class DeviceManager<TDeviceRegistration extends DeviceRegistration,
-        TDeviceDescriptor extends DeviceDescriptor>
-    extends DeviceDataCollector<TDeviceRegistration, TDeviceDescriptor> {
+        TDeviceConfiguration extends DeviceConfiguration>
+    extends DeviceDataCollector<TDeviceRegistration, TDeviceConfiguration> {
   final StreamController<DeviceStatus> _eventController =
       StreamController.broadcast();
   final Set<String> _supportedDataTypes = {};
@@ -51,7 +51,7 @@ abstract class DeviceManager<TDeviceRegistration extends DeviceRegistration,
 
   /// Initialize the device manager by specifying its device [descriptor].
   @nonVirtual
-  void initialize(TDeviceDescriptor descriptor) {
+  void initialize(TDeviceConfiguration descriptor) {
     info('Initializing device manager, type: $type, descriptor.: $descriptor');
     deviceDescriptor = descriptor;
     onInitialize(descriptor);
@@ -62,7 +62,7 @@ abstract class DeviceManager<TDeviceRegistration extends DeviceRegistration,
   ///
   /// Is to be overriden in sub-classes. Note, however, that it must not be
   /// doing a lot of work on startup.
-  void onInitialize(TDeviceDescriptor descriptor);
+  void onInitialize(TDeviceConfiguration descriptor);
 
   /// Ask this [DeviceManager] to start connecting to the device.
   ///
@@ -148,14 +148,14 @@ abstract class DeviceManager<TDeviceRegistration extends DeviceRegistration,
 /// A [DeviceManager] for an online service, like a weather service.
 abstract class OnlineServiceManager<
         TDeviceRegistration extends DeviceRegistration,
-        TDeviceDescriptor extends OnlineService>
-    extends DeviceManager<TDeviceRegistration, TDeviceDescriptor> {}
+        TDeviceConfiguration extends OnlineService>
+    extends DeviceManager<TDeviceRegistration, TDeviceConfiguration> {}
 
 /// A [DeviceManager] for a hardware device.
 abstract class HardwareDeviceManager<
         TDeviceRegistration extends DeviceRegistration,
-        TDeviceDescriptor extends DeviceDescriptor>
-    extends DeviceManager<TDeviceRegistration, TDeviceDescriptor> {
+        TDeviceConfiguration extends DeviceConfiguration>
+    extends DeviceManager<TDeviceRegistration, TDeviceConfiguration> {
   /// The runtime battery level of this hardware device.
   /// Returns null if unknown.
   int? get batteryLevel;
@@ -171,7 +171,7 @@ class SmartphoneDeviceManager
   String get id => DeviceInfo().deviceID!;
 
   @override
-  void onInitialize(DeviceDescriptor descriptor) {
+  void onInitialize(DeviceConfiguration descriptor) {
     // listen to the battery
     battery.onBatteryStateChanged
         .listen((state) async => _batteryLevel = await battery.batteryLevel);
@@ -199,8 +199,8 @@ class SmartphoneDeviceManager
 
 /// A device manager for a connectable bluetooth device.
 abstract class BTLEDeviceManager<TDeviceRegistration extends DeviceRegistration,
-        TDeviceDescriptor extends DeviceDescriptor>
-    extends HardwareDeviceManager<TDeviceRegistration, TDeviceDescriptor> {
+        TDeviceConfiguration extends DeviceConfiguration>
+    extends HardwareDeviceManager<TDeviceRegistration, TDeviceConfiguration> {
   String _btleAddress = '', _btleName = '';
 
   /// The Bluetooth address of this device in the form `00:04:79:00:0F:4D`.
@@ -215,7 +215,7 @@ abstract class BTLEDeviceManager<TDeviceRegistration extends DeviceRegistration,
 
   @override
   @mustCallSuper
-  void onInitialize(DeviceDescriptor descriptor) {
+  void onInitialize(DeviceConfiguration descriptor) {
     statusEvents.listen((event) {
       // when this device is (re)connected, restart sampling
       if (event == DeviceStatus.connected) {

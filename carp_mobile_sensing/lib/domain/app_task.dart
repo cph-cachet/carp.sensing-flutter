@@ -11,7 +11,7 @@ part of domain;
 ///
 /// See [AppTaskExecutor] on how this work on runtime.
 @JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)
-class AppTask extends TaskDescriptor {
+class AppTask extends TaskConfiguration {
   /// Type of task. For example a `survey`.
   String type;
 
@@ -19,7 +19,8 @@ class AppTask extends TaskDescriptor {
   String title;
 
   /// A short description (one line) of this task. Can be used in the app.
-  String description;
+  @override
+  String get description => super.description ?? '';
 
   /// A longer instruction text explaining how a user should perform this task.
   String instructions;
@@ -51,7 +52,7 @@ class AppTask extends TaskDescriptor {
     super.measures,
     required this.type,
     this.title = '',
-    this.description = '',
+    super.description = '',
     this.instructions = '',
     this.minutesToComplete,
     this.expire,

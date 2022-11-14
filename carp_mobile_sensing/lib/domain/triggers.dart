@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 Copenhagen Center for Health Technology (CACHET) at the
+ * Copyright 2018-2022 Copenhagen Center for Health Technology (CACHET) at the
  * Technical University of Denmark (DTU).
  * Use of this source code is governed by a MIT-style license that can be
  * found in the LICENSE file.
@@ -8,7 +8,7 @@ part of domain;
 
 /// A trigger that starts sampling immediately and never stops.
 @JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
-class ImmediateTrigger extends Trigger {
+class ImmediateTrigger extends TriggerConfiguration {
   /// Create a trigger that starts sampling immediately and never stops.
   ImmediateTrigger() : super();
 
@@ -27,7 +27,7 @@ class ImmediateTrigger extends Trigger {
 /// Useful for triggering e.g., a demographic survey or collecting device
 /// information.
 @JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
-class OneTimeTrigger extends Trigger {
+class OneTimeTrigger extends TriggerConfiguration {
   /// The timestamp of when this trigger was triggered.
   DateTime? triggerTimestamp;
 
@@ -50,7 +50,7 @@ class OneTimeTrigger extends Trigger {
 ///
 /// Note that sampling continues until it is explicitly paused.
 @JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
-class PassiveTrigger extends Trigger {
+class PassiveTrigger extends TriggerConfiguration {
   /// Create a trigger that waits to be started until the [resume] method is
   /// called.
   PassiveTrigger() : super();
@@ -85,7 +85,7 @@ class PassiveTrigger extends Trigger {
 /// The delay is measured from the **start of sensing**, i.e. typically when
 /// resume() is called on a [SmartphoneDeploymentController].
 @JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
-class DelayedTrigger extends Trigger {
+class DelayedTrigger extends TriggerConfiguration {
   /// Delay before this trigger is executed.
   Duration delay;
 
@@ -105,7 +105,7 @@ class DelayedTrigger extends Trigger {
 /// Daily, weekly and montly recurrent triggers can be specified using the
 /// [RecurrentScheduledTrigger].
 @JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
-class IntervalTrigger extends Trigger implements Scheduleable {
+class IntervalTrigger extends TriggerConfiguration implements Schedulable {
   /// The period (reciprocal of frequency) of sampling.
   Duration period;
 
@@ -147,7 +147,7 @@ class PeriodicTrigger extends IntervalTrigger {
 /// A trigger that starts sampling based on a [schedule] of a date and time,
 /// and runs for a specific [duration].
 @JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
-class DateTimeTrigger extends Trigger implements Scheduleable {
+class DateTimeTrigger extends TriggerConfiguration implements Schedulable {
   /// The scheduled date and time for resuming sampling.
   DateTime schedule;
 
@@ -381,7 +381,7 @@ enum RecurrentType {
 /// Bases on the [`cron`](https://pub.dev/packages/cron) package.
 /// See [crontab guru](https://crontab.guru) for a useful tool for specifying cron jobs.
 @JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
-class CronScheduledTrigger extends Trigger implements Scheduleable {
+class CronScheduledTrigger extends TriggerConfiguration implements Schedulable {
   /// The cron job expression.
   String cronExpression;
 
@@ -474,7 +474,7 @@ class CronScheduledTrigger extends Trigger implements Scheduleable {
 ///   });
 /// ```
 @JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
-class SamplingEventTrigger extends Trigger {
+class SamplingEventTrigger extends TriggerConfiguration {
   /// The data type of the event to look for.
   ///
   /// If [resumeCondition] is null, sampling will be triggered for all events
@@ -559,7 +559,7 @@ typedef ConditionalEventEvaluator = bool Function(DataPoint dataPoint);
 /// If you need to de/serialize an event trigger, use the [SamplingEventTrigger]
 /// instead.
 @JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
-class ConditionalSamplingEventTrigger extends Trigger {
+class ConditionalSamplingEventTrigger extends TriggerConfiguration {
   /// The data type of the event to look for.
   String measureType;
 
@@ -610,7 +610,7 @@ typedef ConditionalEvaluator = bool Function();
 /// the [ConditionalEvaluator] methods. Hence, this trigger is mostly
 /// useful when creating a [StudyProtocol] directly in the app using Dart code.
 @JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
-class ConditionalPeriodicTrigger extends Trigger {
+class ConditionalPeriodicTrigger extends TriggerConfiguration {
   /// The period of when to check the [resumeCondition] and [pauseCondition].
   Duration period;
 
@@ -649,7 +649,8 @@ class ConditionalPeriodicTrigger extends Trigger {
 /// numbers specified.
 /// The time period is defined by a [startTime] and an [endTime].
 @JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
-class RandomRecurrentTrigger extends Trigger implements Scheduleable {
+class RandomRecurrentTrigger extends TriggerConfiguration
+    implements Schedulable {
   /// Start time of the day where the trigger can happen.
   TimeOfDay startTime;
 
@@ -696,8 +697,8 @@ class RandomRecurrentTrigger extends Trigger implements Scheduleable {
 
 /// A trigger that triggers based on the state of a [UserTask].
 @JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
-class UserTaskTrigger extends Trigger {
-  /// The name of the task to look for, matching [TaskDescriptor.name].
+class UserTaskTrigger extends TriggerConfiguration {
+  /// The name of the task to look for, matching [TaskConfiguration.name].
   String taskName;
 
   /// The state of the user task for resuming this trigger

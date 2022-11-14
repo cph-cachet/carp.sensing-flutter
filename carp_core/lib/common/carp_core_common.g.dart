@@ -114,12 +114,11 @@ Map<String, dynamic> _$MeasureToJson(Measure instance) {
 TaskConfiguration _$TaskConfigurationFromJson(Map<String, dynamic> json) =>
     TaskConfiguration(
       name: json['name'] as String?,
+      description: json['description'] as String?,
       measures: (json['measures'] as List<dynamic>?)
           ?.map((e) => Measure.fromJson(e as Map<String, dynamic>))
           .toList(),
-    )
-      ..$type = json['__type'] as String?
-      ..description = json['description'] as String?;
+    )..$type = json['__type'] as String?;
 
 Map<String, dynamic> _$TaskConfigurationToJson(TaskConfiguration instance) {
   final val = <String, dynamic>{};
@@ -950,6 +949,24 @@ Map<String, dynamic> _$TriggeredTaskToJson(TriggeredTask instance) {
   val['destinationDeviceRoleName'] = instance.destinationDeviceRoleName;
   val['control'] = instance.control;
   writeNotNull('triggerData', instance.triggerData);
+  return val;
+}
+
+Error _$ErrorFromJson(Map<String, dynamic> json) => Error(
+      message: json['message'] as String,
+    )..$type = json['__type'] as String?;
+
+Map<String, dynamic> _$ErrorToJson(Error instance) {
+  final val = <String, dynamic>{};
+
+  void writeNotNull(String key, dynamic value) {
+    if (value != null) {
+      val[key] = value;
+    }
+  }
+
+  writeNotNull('__type', instance.$type);
+  val['message'] = instance.message;
   return val;
 }
 

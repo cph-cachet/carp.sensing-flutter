@@ -7,10 +7,10 @@
 part of domain;
 
 /// Signature of a data transformer.
-typedef DatumTransformer = Datum Function(Datum);
+typedef DatumTransformer = Data Function(Data);
 
 /// A no-operation transformer.
-Datum noop(Datum datum) => datum;
+Data noop(Data data) => data;
 
 /// A factory which can create a [DatumTransformer].
 abstract class DatumTransformerFactory {
@@ -75,10 +75,10 @@ abstract class DatumTransformerSchema {
   void add(String type, DatumTransformer transformer) =>
       transformers[type] = transformer;
 
-  /// Transform the [datum] according to the transformer for its data type.
-  Datum transform(Datum datum) {
-    DatumTransformer? transformer = transformers[datum.format.toString()];
-    return (transformer != null) ? transformer(datum) : datum;
+  /// Transform the [data] according to the transformer for its data type.
+  Data transform(Data data) {
+    DatumTransformer? transformer = transformers[data.format.toString()];
+    return (transformer != null) ? transformer(data) : data;
   }
 }
 

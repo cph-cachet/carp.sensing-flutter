@@ -7,7 +7,7 @@
 
 part of carp_core_common;
 
-///  Describes any type of electronic device, such as a sensor, video camera,
+/// Describes any type of electronic device, such as a sensor, video camera,
 /// desktop computer, or smartphone that collects data which can be incorporated
 /// into the platform after it has been processed by a primary device (potentially itself).
 /// Optionally, a device can present output and receive user input.

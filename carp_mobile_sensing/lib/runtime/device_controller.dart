@@ -78,17 +78,18 @@ class DeviceController implements DeviceDataCollectorFactory {
   void unregisterDevice(String deviceType) => _devices.remove(deviceType);
 
   @override
-  void initializeDevices(MasterDeviceDeployment masterDeviceDeployment) {
+  void initializeDevices(
+      PrimaryDeviceConfiguration primaryDeviceConfiguration) {
     // first initialize the master device (i.e. this phone)
-    initializeDevice(masterDeviceDeployment.deviceDescriptor);
+    initializeDevice(primaryDeviceConfiguration.deviceDescriptor);
     // and then initialize all the connected devices (if any)
-    for (var descriptor in masterDeviceDeployment.connectedDevices) {
+    for (var descriptor in primaryDeviceConfiguration.connectedDevices) {
       initializeDevice(descriptor);
     }
   }
 
   @override
-  void initializeDevice(DeviceDescriptor descriptor) {
+  void initializeDevice(PrimaryDeviceConfiguration descriptor) {
     if (hasDevice(descriptor.type)) {
       _devices[descriptor.type]?.initialize(descriptor);
     } else {

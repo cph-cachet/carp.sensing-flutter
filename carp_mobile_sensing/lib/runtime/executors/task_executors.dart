@@ -8,18 +8,18 @@
 part of runtime;
 
 /// Returns the relevant [TaskExecutor] based on the type of [task].
-TaskExecutor getTaskExecutor(TaskDescriptor task) {
+TaskExecutor getTaskExecutor(TaskConfiguration task) {
   if (task is AppTask) return AppTaskExecutor();
   return BackgroundTaskExecutor();
 }
 
-/// The [TaskExecutor] is responsible for executing a [TaskDescriptor].
+/// The [TaskExecutor] is responsible for executing a [TaskConfiguration].
 /// For each measure in the task, it looks up appropriate [Probe]s to collect data.
 ///
 /// Note that a [TaskExecutor] in itself is a [Executor].
 /// This - amongst other things - imply that you can listen
 /// to [Executor.data] from a task executor.
-abstract class TaskExecutor<TConfig extends TaskDescriptor>
+abstract class TaskExecutor<TConfig extends TaskConfiguration>
     extends AggregateExecutor<TConfig> {
   TConfig get task => configuration!;
 

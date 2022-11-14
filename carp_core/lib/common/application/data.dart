@@ -203,3 +203,22 @@ class TriggeredTask extends Data {
     this.triggerData,
   }) : super();
 }
+
+/// Indicates that some error occurred during data collection. [message]
+/// holds any message about the error which might have been captured.
+@JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
+class Error extends Data {
+  static const dataType = CarpDataTypes.ERROR_TYPE_NAME;
+
+  /// The original error message returned from the probe, if available.
+  String message;
+
+  Error({required this.message}) : super();
+
+  @override
+  Function get fromJsonFunction => _$ErrorFromJson;
+  factory Error.fromJson(Map<String, dynamic> json) =>
+      FromJsonFactory().fromJson(json) as Error;
+  @override
+  Map<String, dynamic> toJson() => _$ErrorToJson(this);
+}

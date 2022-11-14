@@ -133,8 +133,8 @@ abstract class SamplingPackage {
 
   /// What device type is this package using?
   ///
-  /// This device type is matched with the [DeviceDescriptor.roleName] when a
-  /// [MasterDeviceDeployment] is deployed on the phone and executed by a
+  /// This device type is matched with the [DeviceConfiguration.roleName] when a
+  /// [PrimaryDeviceConfiguration] is deployed on the phone and executed by a
   /// [SmartphoneDeploymentController].
   ///
   /// Note that it is assumed that a sampling package only supports **one**

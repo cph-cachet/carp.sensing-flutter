@@ -1,5 +1,5 @@
 /// The CAMS implementation of the core CARP domain classes like
-/// [StudyProtocol], [TaskDescriptor], and [Measure].
+/// [StudyProtocol], [TaskConfiguration], and [Measure].
 /// Also hold JSON serialization and deseralization logic to handle seraialization
 /// of the domain objects.
 library domain;
@@ -23,7 +23,9 @@ part 'device_descriptor.dart';
 part 'device_deployment.dart';
 part 'app_task.dart';
 part 'triggers.dart';
-part 'datum.dart';
+// part 'datum.dart';
+part 'data.dart';
+part 'data_types.dart';
 part 'device_info.dart';
 part 'transformers.dart';
 
