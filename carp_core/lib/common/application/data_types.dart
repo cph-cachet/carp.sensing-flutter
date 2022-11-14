@@ -95,6 +95,9 @@ class CarpDataTypes {
   /// Rate of change in velocity, including gravity, along perpendicular x, y,
   /// and z axes in the device's coordinate system.
   static const String ACCELERATION_TYPE_NAME = "$CARP_NAMESPACE.acceleration";
+  static const String ROTATION_TYPE_NAME = "$CARP_NAMESPACE.rotation";
+  static const String MAGNETIC_FIELD_TYPE_NAME =
+      "$CARP_NAMESPACE.magneticfield";
 
   /// Rate of rotation around perpendicular x, y, and z axes.
   static const String ANGULAR_VELOCITY_TYPE_NAME =
@@ -118,75 +121,92 @@ class CarpDataTypes {
   static const String ERROR_TYPE_NAME = "$CARP_NAMESPACE.error";
 
   CarpDataTypes._() {
-    types[GEOLOCATION_TYPE_NAME] = DataTypeMetaData(
-      type: GEOLOCATION_TYPE_NAME,
-      displayName: "Geolocation",
-      timeType: DataTimeType.POINT,
-    );
-    types[STEP_COUNT_TYPE_NAME] = DataTypeMetaData(
-      type: STEP_COUNT_TYPE_NAME,
-      displayName: "Step count",
-      timeType: DataTimeType.TIME_SPAN,
-    );
-    types[ECG_TYPE_NAME] = DataTypeMetaData(
-      type: ECG_TYPE_NAME,
-      displayName: "Electrocardiography (ECG)",
-      timeType: DataTimeType.POINT,
-    );
-    types[PPG_TYPE_NAME] = DataTypeMetaData(
-      type: PPG_TYPE_NAME,
-      displayName: "Photoplethysmography (PPG)",
-      timeType: DataTimeType.POINT,
-    );
-    types[HEART_RATE_TYPE_NAME] = DataTypeMetaData(
-      type: HEART_RATE_TYPE_NAME,
-      displayName: "Heart rate",
-      timeType: DataTimeType.POINT,
-    );
-    types[INTERBEAT_INTERVAL_TYPE_NAME] = DataTypeMetaData(
-      type: INTERBEAT_INTERVAL_TYPE_NAME,
-      displayName: "Interbeat interval",
-      timeType: DataTimeType.TIME_SPAN,
-    );
-    types[SENSOR_SKIN_CONTACT_TYPE_NAME] = DataTypeMetaData(
-      type: SENSOR_SKIN_CONTACT_TYPE_NAME,
-      displayName: "Sensor skin contact",
-      timeType: DataTimeType.POINT,
-    );
-    types[NON_GRAVITATIONAL_ACCELERATION_TYPE_NAME] = DataTypeMetaData(
-      type: NON_GRAVITATIONAL_ACCELERATION_TYPE_NAME,
-      displayName: "Acceleration without gravity",
-      timeType: DataTimeType.POINT,
-    );
-    types[EDA_TYPE_NAME] = DataTypeMetaData(
-      type: EDA_TYPE_NAME,
-      displayName: "Electrodermal activity",
-      timeType: DataTimeType.POINT,
-    );
-    types[ACCELERATION_TYPE_NAME] = DataTypeMetaData(
-      type: ACCELERATION_TYPE_NAME,
-      displayName: "Acceleration including gravity",
-      timeType: DataTimeType.POINT,
-    );
-    types[ANGULAR_VELOCITY_TYPE_NAME] = DataTypeMetaData(
-      type: ANGULAR_VELOCITY_TYPE_NAME,
-      displayName: "Angular velocity",
-      timeType: DataTimeType.POINT,
-    );
-    types[SIGNAL_STRENGTH_TYPE_NAME] = DataTypeMetaData(
-      type: SIGNAL_STRENGTH_TYPE_NAME,
-      displayName: "Signal strength",
-      timeType: DataTimeType.POINT,
-    );
-    types[TRIGGERED_TASK_TYPE_NAME] = DataTypeMetaData(
-      type: TRIGGERED_TASK_TYPE_NAME,
-      displayName: "Triggered task",
-      timeType: DataTimeType.POINT,
-    );
-    types[COMPLETED_TASK_TYPE_NAME] = DataTypeMetaData(
-      type: COMPLETED_TASK_TYPE_NAME,
-      displayName: "Completed task",
-      timeType: DataTimeType.TIME_SPAN,
-    );
+    add([
+      DataTypeMetaData(
+        type: GEOLOCATION_TYPE_NAME,
+        displayName: "Geolocation",
+        timeType: DataTimeType.POINT,
+      ),
+      DataTypeMetaData(
+        type: GEOLOCATION_TYPE_NAME,
+        displayName: "Geolocation",
+        timeType: DataTimeType.POINT,
+      ),
+      DataTypeMetaData(
+        type: STEP_COUNT_TYPE_NAME,
+        displayName: "Step count",
+        timeType: DataTimeType.TIME_SPAN,
+      ),
+      DataTypeMetaData(
+        type: ECG_TYPE_NAME,
+        displayName: "Electrocardiography (ECG)",
+        timeType: DataTimeType.POINT,
+      ),
+      DataTypeMetaData(
+        type: PPG_TYPE_NAME,
+        displayName: "Photoplethysmography (PPG)",
+        timeType: DataTimeType.POINT,
+      ),
+      DataTypeMetaData(
+        type: HEART_RATE_TYPE_NAME,
+        displayName: "Heart rate",
+        timeType: DataTimeType.POINT,
+      ),
+      DataTypeMetaData(
+        type: INTERBEAT_INTERVAL_TYPE_NAME,
+        displayName: "Interbeat interval",
+        timeType: DataTimeType.TIME_SPAN,
+      ),
+      DataTypeMetaData(
+        type: SENSOR_SKIN_CONTACT_TYPE_NAME,
+        displayName: "Sensor skin contact",
+        timeType: DataTimeType.POINT,
+      ),
+      DataTypeMetaData(
+        type: NON_GRAVITATIONAL_ACCELERATION_TYPE_NAME,
+        displayName: "Acceleration without gravity",
+        timeType: DataTimeType.POINT,
+      ),
+      DataTypeMetaData(
+        type: EDA_TYPE_NAME,
+        displayName: "Electrodermal activity",
+        timeType: DataTimeType.POINT,
+      ),
+      DataTypeMetaData(
+        type: ACCELERATION_TYPE_NAME,
+        displayName: "Acceleration including gravity",
+        timeType: DataTimeType.POINT,
+      ),
+      DataTypeMetaData(
+        type: ROTATION_TYPE_NAME,
+        displayName: "Rotation",
+        timeType: DataTimeType.POINT,
+      ),
+      DataTypeMetaData(
+        type: MAGNETIC_FIELD_TYPE_NAME,
+        displayName: "Magnetic field",
+        timeType: DataTimeType.POINT,
+      ),
+      DataTypeMetaData(
+        type: ANGULAR_VELOCITY_TYPE_NAME,
+        displayName: "Angular velocity",
+        timeType: DataTimeType.POINT,
+      ),
+      DataTypeMetaData(
+        type: SIGNAL_STRENGTH_TYPE_NAME,
+        displayName: "Signal strength",
+        timeType: DataTimeType.POINT,
+      ),
+      DataTypeMetaData(
+        type: TRIGGERED_TASK_TYPE_NAME,
+        displayName: "Triggered task",
+        timeType: DataTimeType.POINT,
+      ),
+      DataTypeMetaData(
+        type: COMPLETED_TASK_TYPE_NAME,
+        displayName: "Completed task",
+        timeType: DataTimeType.TIME_SPAN,
+      ),
+    ]);
   }
 }

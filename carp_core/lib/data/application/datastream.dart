@@ -83,7 +83,10 @@ class DataStreamBatch {
 /// For example, it could be a simple clock increment since the device powered up.
 @JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
 class Measurement {
+  /// Start time in microseconds.
   int sensorStartTime;
+
+  /// End time in microseconds, if available.
   int? sensorEndTime;
 
   @JsonKey(ignore: true)
@@ -97,6 +100,14 @@ class Measurement {
     this.dataType,
     required this.data,
   });
+
+  /// Create a measurement from [data] giving it the current time
+  /// stamp as [sensorStartTime].
+  factory Measurement.fromData(Data data) => Measurement(
+      sensorStartTime: DateTime.now().microsecondsSinceEpoch,
+      dataType: data.format,
+      data: data);
+
   factory Measurement.fromJson(Map<String, dynamic> json) =>
       _$MeasurementFromJson(json);
   Map<String, dynamic> toJson() => _$MeasurementToJson(this);

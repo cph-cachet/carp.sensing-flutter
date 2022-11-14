@@ -12,7 +12,7 @@ import 'dart:io' show Platform;
 import 'package:sensors_plus/sensors_plus.dart';
 import 'package:light/light.dart';
 import 'package:json_annotation/json_annotation.dart';
-import 'package:pedometer/pedometer.dart';
+import 'package:pedometer/pedometer.dart' as pedometer;
 import 'package:stats/stats.dart';
 import 'package:permission_handler/permission_handler.dart';
 
@@ -22,6 +22,6 @@ import 'package:carp_mobile_sensing/carp_mobile_sensing.dart';
 part 'sensor_probes.dart';
 part 'light_probe.dart';
 part 'pedometer_probe.dart';
-part 'sensor_datum.dart';
+part 'sensor_data.dart';
 part 'sensor_package.dart';
 part 'sensors.g.dart';

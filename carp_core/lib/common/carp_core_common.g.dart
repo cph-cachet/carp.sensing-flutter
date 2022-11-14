@@ -759,6 +759,61 @@ Map<String, dynamic> _$AccelerationToJson(Acceleration instance) {
   return val;
 }
 
+Rotation _$RotationFromJson(Map<String, dynamic> json) => Rotation(
+      x: (json['x'] as num?)?.toDouble() ?? 0,
+      y: (json['y'] as num?)?.toDouble() ?? 0,
+      z: (json['z'] as num?)?.toDouble() ?? 0,
+    )
+      ..$type = json['__type'] as String?
+      ..sensorSpecificData = json['sensorSpecificData'] == null
+          ? null
+          : Data.fromJson(json['sensorSpecificData'] as Map<String, dynamic>);
+
+Map<String, dynamic> _$RotationToJson(Rotation instance) {
+  final val = <String, dynamic>{};
+
+  void writeNotNull(String key, dynamic value) {
+    if (value != null) {
+      val[key] = value;
+    }
+  }
+
+  writeNotNull('__type', instance.$type);
+  writeNotNull('sensorSpecificData', instance.sensorSpecificData);
+  val['x'] = instance.x;
+  val['y'] = instance.y;
+  val['z'] = instance.z;
+  return val;
+}
+
+MagneticField _$MagneticFieldFromJson(Map<String, dynamic> json) =>
+    MagneticField(
+      x: (json['x'] as num?)?.toDouble() ?? 0,
+      y: (json['y'] as num?)?.toDouble() ?? 0,
+      z: (json['z'] as num?)?.toDouble() ?? 0,
+    )
+      ..$type = json['__type'] as String?
+      ..sensorSpecificData = json['sensorSpecificData'] == null
+          ? null
+          : Data.fromJson(json['sensorSpecificData'] as Map<String, dynamic>);
+
+Map<String, dynamic> _$MagneticFieldToJson(MagneticField instance) {
+  final val = <String, dynamic>{};
+
+  void writeNotNull(String key, dynamic value) {
+    if (value != null) {
+      val[key] = value;
+    }
+  }
+
+  writeNotNull('__type', instance.$type);
+  writeNotNull('sensorSpecificData', instance.sensorSpecificData);
+  val['x'] = instance.x;
+  val['y'] = instance.y;
+  val['z'] = instance.z;
+  return val;
+}
+
 Geolocation _$GeolocationFromJson(Map<String, dynamic> json) => Geolocation(
       latitude: (json['latitude'] as num?)?.toDouble() ?? 0,
       longitude: (json['longitude'] as num?)?.toDouble() ?? 0,

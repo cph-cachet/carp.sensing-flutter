@@ -913,6 +913,26 @@ const _$UserTaskStateEnumMap = {
   UserTaskState.undefined: 'undefined',
 };
 
+Datum _$DatumFromJson(Map<String, dynamic> json) => Datum()
+  ..$type = json['__type'] as String?
+  ..id = json['id'] as String?
+  ..timestamp = DateTime.parse(json['timestamp'] as String);
+
+Map<String, dynamic> _$DatumToJson(Datum instance) {
+  final val = <String, dynamic>{};
+
+  void writeNotNull(String key, dynamic value) {
+    if (value != null) {
+      val[key] = value;
+    }
+  }
+
+  writeNotNull('__type', instance.$type);
+  writeNotNull('id', instance.id);
+  val['timestamp'] = instance.timestamp.toIso8601String();
+  return val;
+}
+
 FileData _$FileDataFromJson(Map<String, dynamic> json) => FileData(
       filename: json['filename'] as String,
       upload: json['upload'] as bool? ?? true,

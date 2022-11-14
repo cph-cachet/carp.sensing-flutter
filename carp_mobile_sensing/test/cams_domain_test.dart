@@ -54,7 +54,8 @@ void main() {
     masterProtocol.addTriggeredTask(
         OneTimeTrigger(),
         BackgroundTask()
-          ..addMeasure(Measure(type: DeviceSamplingPackage.DEVICE)),
+          ..addMeasure(Measure(
+              type: DeviceSamplingPackage.DEVICE_INFORMATION_TYPE_NAME)),
         masterPhone);
 
     var sensingAppTask = AppTask(
@@ -62,7 +63,7 @@ void main() {
       title: "Location, Weather & Air Quality",
       description: "Collect location, weather and air quality",
     )..addMeasures([
-        Measure(type: SensorSamplingPackage.LIGHT),
+        Measure(type: SensorSamplingPackage.AMBIENT_LIGHT_TYPE_NAME),
         Measure(type: SensorSamplingPackage.PEDOMETER),
       ]);
 
@@ -84,13 +85,15 @@ void main() {
     masterProtocol.addTriggeredTask(
         ImmediateTrigger(),
         BackgroundTask()
-          ..addMeasure(Measure(type: DeviceSamplingPackage.MEMORY))
-          ..addMeasure(Measure(type: SensorSamplingPackage.LIGHT)),
+          ..addMeasure(
+              Measure(type: DeviceSamplingPackage.FREE_MEMORY_TYPE_NAME))
+          ..addMeasure(
+              Measure(type: SensorSamplingPackage.AMBIENT_LIGHT_TYPE_NAME)),
         eSense);
   });
 
   test('DataPoints -> JSON', () async {
-    final device = DataPoint.fromData(DeviceDatum('iOS', '1234abcd'));
+    final device = DataPoint.fromData(DeviceInformation('iOS', '1234abcd'));
     print(toJsonString(device));
   });
 
@@ -136,7 +139,8 @@ void main() {
         DelayedTrigger(delay: Duration(seconds: 10)),
         BackgroundTask()
           ..addMeasure(Measure(type: SensorSamplingPackage.PEDOMETER))
-          ..addMeasure(Measure(type: DeviceSamplingPackage.SCREEN)),
+          ..addMeasure(
+              Measure(type: DeviceSamplingPackage.SCREEN_EVENT_TYPE_NAME)),
         masterPhone);
 
     masterProtocol.addTriggeredTask(
@@ -145,8 +149,10 @@ void main() {
           duration: Duration(seconds: 1),
         ), // collect every min.
         BackgroundTask()
-          ..addMeasure(Measure(type: SensorSamplingPackage.LIGHT))
-          ..addMeasure(Measure(type: DeviceSamplingPackage.DEVICE)),
+          ..addMeasure(
+              Measure(type: SensorSamplingPackage.AMBIENT_LIGHT_TYPE_NAME))
+          ..addMeasure(Measure(
+              type: DeviceSamplingPackage.DEVICE_INFORMATION_TYPE_NAME)),
         masterPhone);
 
     RecurrentScheduledTrigger t1, t2, t3, t4;
@@ -161,7 +167,8 @@ void main() {
     masterProtocol.addTriggeredTask(
         t1,
         BackgroundTask()
-          ..addMeasure(Measure(type: DeviceSamplingPackage.MEMORY)),
+          ..addMeasure(
+              Measure(type: DeviceSamplingPackage.FREE_MEMORY_TYPE_NAME)),
         masterPhone);
 
     // collect every other day at 13:30.
@@ -175,8 +182,10 @@ void main() {
     masterProtocol.addTriggeredTask(
         t2,
         BackgroundTask()
-          ..addMeasure(Measure(type: SensorSamplingPackage.LIGHT))
-          ..addMeasure(Measure(type: DeviceSamplingPackage.MEMORY)),
+          ..addMeasure(
+              Measure(type: SensorSamplingPackage.AMBIENT_LIGHT_TYPE_NAME))
+          ..addMeasure(
+              Measure(type: DeviceSamplingPackage.FREE_MEMORY_TYPE_NAME)),
         masterPhone);
 
     // collect every wednesday at 12:23.
@@ -190,8 +199,10 @@ void main() {
     masterProtocol.addTriggeredTask(
         t3,
         BackgroundTask()
-          ..addMeasure(Measure(type: SensorSamplingPackage.LIGHT))
-          ..addMeasure(Measure(type: DeviceSamplingPackage.BATTERY)),
+          ..addMeasure(
+              Measure(type: SensorSamplingPackage.AMBIENT_LIGHT_TYPE_NAME))
+          ..addMeasure(
+              Measure(type: DeviceSamplingPackage.BATTERY_STATE_TYPE_NAME)),
         masterPhone);
 
     // collect every 2nd monday at 12:23.
@@ -206,8 +217,10 @@ void main() {
     masterProtocol.addTriggeredTask(
         t4,
         BackgroundTask()
-          ..addMeasure(Measure(type: SensorSamplingPackage.LIGHT))
-          ..addMeasure(Measure(type: DeviceSamplingPackage.SCREEN)),
+          ..addMeasure(
+              Measure(type: SensorSamplingPackage.AMBIENT_LIGHT_TYPE_NAME))
+          ..addMeasure(
+              Measure(type: DeviceSamplingPackage.SCREEN_EVENT_TYPE_NAME)),
         masterPhone);
 
     ConditionalEvent({
@@ -218,19 +231,21 @@ void main() {
     // when battery level is 10% then sample light
     masterProtocol.addTriggeredTask(
         SamplingEventTrigger(
-            measureType: DeviceSamplingPackage.BATTERY,
+            measureType: DeviceSamplingPackage.BATTERY_STATE_TYPE_NAME,
             resumeCondition: ConditionalEvent({'batteryLevel': 10})),
         BackgroundTask()
-          ..addMeasure(Measure(type: SensorSamplingPackage.LIGHT)),
+          ..addMeasure(
+              Measure(type: SensorSamplingPackage.AMBIENT_LIGHT_TYPE_NAME)),
         masterPhone);
 
     masterProtocol.addTriggeredTask(
         ConditionalSamplingEventTrigger(
-            measureType: DeviceSamplingPackage.BATTERY,
+            measureType: DeviceSamplingPackage.BATTERY_STATE_TYPE_NAME,
             resumeCondition: (dataPoint) =>
-                (dataPoint.carpBody as BatteryDatum).batteryLevel == 10),
+                (dataPoint.carpBody as BatteryState).batteryLevel == 10),
         BackgroundTask()
-          ..addMeasure(Measure(type: SensorSamplingPackage.LIGHT)),
+          ..addMeasure(
+              Measure(type: SensorSamplingPackage.AMBIENT_LIGHT_TYPE_NAME)),
         masterPhone);
 
     final studyJson = toJsonString(masterProtocol);

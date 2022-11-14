@@ -59,7 +59,7 @@ enum ExecutorState {
 /// If an error occurs the state of a probe becomes [undefined]. This is, for example,
 /// used when an exception occur.
 ///
-/// The executor returns collected data in the [data] stream. This is the main
+/// The executor returns collected data in the [measurements] stream. This is the main
 /// usage of an executor. For example, to listens to events and print them;
 ///
 ///     executor.data.forEach(print);
@@ -77,8 +77,8 @@ abstract class Executor<TConfig> {
   /// The runtime state changes of this executor.
   Stream<ExecutorState> get stateEvents;
 
-  /// The stream of [DataPoint] generated from this executor.
-  Stream<DataPoint> get data;
+  /// The stream of [Measurement] collected by this executor.
+  Stream<Measurement> get measurements;
 
   /// Configure and initialize the executor before resuming it.
   void initialize(TConfig configuration, [SmartphoneDeployment? deployment]);
@@ -210,11 +210,11 @@ abstract class AbstractExecutor<TConfig> implements Executor<TConfig> {
 /// See [StudyDeploymentExecutor] and [TaskExecutor] for examples.
 abstract class AggregateExecutor<TConfig> extends AbstractExecutor<TConfig> {
   static final DeviceInfo deviceInfo = DeviceInfo();
-  final StreamGroup<DataPoint> group = StreamGroup.broadcast();
+  final StreamGroup<Measurement> group = StreamGroup.broadcast();
   final List<Executor> executors = [];
 
   @override
-  Stream<DataPoint> get data => group.stream;
+  Stream<Measurement> get measurements => group.stream;
 
   @override
   Future<bool> onResume() async {

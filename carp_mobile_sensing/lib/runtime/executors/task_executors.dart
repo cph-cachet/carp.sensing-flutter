@@ -18,7 +18,7 @@ TaskExecutor getTaskExecutor(TaskConfiguration task) {
 ///
 /// Note that a [TaskExecutor] in itself is a [Executor].
 /// This - amongst other things - imply that you can listen
-/// to [Executor.data] from a task executor.
+/// to [Executor.measurements] from a task executor.
 abstract class TaskExecutor<TConfig extends TaskConfiguration>
     extends AggregateExecutor<TConfig> {
   TConfig get task => configuration!;
@@ -35,7 +35,7 @@ abstract class TaskExecutor<TConfig extends TaskConfiguration>
       Probe? probe = SamplingPackageRegistry().create(measure.type);
       if (probe != null) {
         executors.add(probe);
-        group.add(probe.data);
+        group.add(probe.measurements);
         probe.initialize(measure, deployment!);
       } else {
         warning(
@@ -84,7 +84,7 @@ class AppTaskExecutor<TConfig extends AppTask> extends TaskExecutor<TConfig> {
 
   AppTaskExecutor() : super() {
     // add the events from the embedded executor to the overall stream of events
-    group.add(backgroundTaskExecutor.data);
+    group.add(backgroundTaskExecutor.measurements);
   }
 
   @override

@@ -9,11 +9,13 @@ part of sensors;
 
 /// The [LightProbe] listens to the phone's light sensor typically located
 /// near the front camera.
-/// Every value is in the SI unit Lux and is stored in a [LightDatum] object.
+/// Every value is in the SI unit Lux and is stored in a [AmbientLight] object.
 ///
 /// This probe is only available on Android.
 class LightProbe extends BufferingPeriodicStreamProbe {
   List<num> luxValues = [];
+  int sensorStartTime = 0;
+  int? sensorEndTime;
 
   late Stream<dynamic> _bufferingStream;
 
@@ -27,22 +29,33 @@ class LightProbe extends BufferingPeriodicStreamProbe {
   }
 
   @override
-  Future<Datum?> getDatum() async {
+  Future<Measurement?> getMeasurement() async {
     if (luxValues.isEmpty) return null;
 
-    Stats stats = Stats.fromData(luxValues);
-    return LightDatum(
+    var stats = Stats.fromData(luxValues);
+    var data = AmbientLight(
         meanLux: stats.average,
         stdLux: stats.standardDeviation,
         minLux: stats.min,
         maxLux: stats.max);
+
+    return Measurement(
+        sensorStartTime: sensorStartTime,
+        sensorEndTime: sensorEndTime,
+        dataType: data.format,
+        data: data);
   }
 
   @override
-  void onSamplingStart() => luxValues.clear();
+  void onSamplingStart() {
+    sensorStartTime = DateTime.now().microsecondsSinceEpoch;
+    luxValues.clear();
+  }
 
   @override
-  void onSamplingEnd() {}
+  void onSamplingEnd() {
+    sensorEndTime = DateTime.now().microsecondsSinceEpoch;
+  }
 
   @override
   void onSamplingData(event) {

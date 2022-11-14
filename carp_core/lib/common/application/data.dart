@@ -38,8 +38,9 @@ abstract class SensorData extends Data {
   Data? sensorSpecificData;
 }
 
-/// Holds rate of change in velocity, including gravity, along perpendicular
+/// Change in velocity, including gravity, along perpendicular
 /// [x], [y], and [z] axes in meters per second squared (m/s^2).
+/// Typically captured by an accelerometer.
 @JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
 class Acceleration extends SensorData {
   static const dataType = CarpDataTypes.ACCELERATION_TYPE_NAME;
@@ -54,7 +55,40 @@ class Acceleration extends SensorData {
   Map<String, dynamic> toJson() => _$AccelerationToJson(this);
 }
 
-/// Holds geolocation data as latitude and longitude in decimal degrees within
+/// Rate of rotation of the device in 3D space.
+/// Typically captured by a gyroscope.
+@JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
+class Rotation extends SensorData {
+  static const dataType = CarpDataTypes.ROTATION_TYPE_NAME;
+  double x, y, z;
+  Rotation({this.x = 0, this.y = 0, this.z = 0}) : super();
+
+  @override
+  Function get fromJsonFunction => _$RotationFromJson;
+  factory Rotation.fromJson(Map<String, dynamic> json) =>
+      FromJsonFactory().fromJson(json) as Rotation;
+  @override
+  Map<String, dynamic> toJson() => _$RotationToJson(this);
+}
+
+/// Magnetic field of the device in 3D space, measured in microteslas μT
+/// for each three-dimensional axis.
+/// Typically captured by a magnetometer sensor.
+@JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
+class MagneticField extends SensorData {
+  static const dataType = CarpDataTypes.MAGNETIC_FIELD_TYPE_NAME;
+  double x, y, z;
+  MagneticField({this.x = 0, this.y = 0, this.z = 0}) : super();
+
+  @override
+  Function get fromJsonFunction => _$MagneticFieldFromJson;
+  factory MagneticField.fromJson(Map<String, dynamic> json) =>
+      FromJsonFactory().fromJson(json) as MagneticField;
+  @override
+  Map<String, dynamic> toJson() => _$MagneticFieldToJson(this);
+}
+
+/// Geolocation data as latitude and longitude in decimal degrees within
 /// the World Geodetic System 1984.
 @JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
 class Geolocation extends SensorData {
@@ -202,6 +236,13 @@ class TriggeredTask extends Data {
     required this.control,
     this.triggerData,
   }) : super();
+
+  @override
+  Function get fromJsonFunction => _$TriggeredTaskFromJson;
+  factory TriggeredTask.fromJson(Map<String, dynamic> json) =>
+      FromJsonFactory().fromJson(json) as TriggeredTask;
+  @override
+  Map<String, dynamic> toJson() => _$TriggeredTaskToJson(this);
 }
 
 /// Indicates that some error occurred during data collection. [message]

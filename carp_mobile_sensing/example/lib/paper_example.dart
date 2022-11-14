@@ -23,11 +23,14 @@ void sensing() async {
       BackgroundTask()
         // ..addMeasure(Measure(type: SensorSamplingPackage.ACCELEROMETER))
         // ..addMeasure(Measure(type: SensorSamplingPackage.GYROSCOPE))
-        ..addMeasure(Measure(type: DeviceSamplingPackage.MEMORY))
-        ..addMeasure(Measure(type: DeviceSamplingPackage.BATTERY))
-        ..addMeasure(Measure(type: DeviceSamplingPackage.SCREEN))
+        ..addMeasure(Measure(type: DeviceSamplingPackage.FREE_MEMORY_TYPE_NAME))
+        ..addMeasure(
+            Measure(type: DeviceSamplingPackage.BATTERY_STATE_TYPE_NAME))
+        ..addMeasure(
+            Measure(type: DeviceSamplingPackage.SCREEN_EVENT_TYPE_NAME))
         ..addMeasure(Measure(type: SensorSamplingPackage.PEDOMETER))
-        ..addMeasure(Measure(type: SensorSamplingPackage.LIGHT)),
+        ..addMeasure(
+            Measure(type: SensorSamplingPackage.AMBIENT_LIGHT_TYPE_NAME)),
       phone);
 
   // deploy this protocol using the on-phone deployment service
@@ -63,5 +66,7 @@ void sensing() async {
   });
 
   // listening on events of a specific type
-  controller?.dataByType(DeviceSamplingPackage.SCREEN).forEach(print);
+  controller
+      ?.dataByType(DeviceSamplingPackage.SCREEN_EVENT_TYPE_NAME)
+      .forEach(print);
 }

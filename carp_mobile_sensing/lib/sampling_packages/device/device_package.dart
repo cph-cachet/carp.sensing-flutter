@@ -6,44 +6,48 @@ class DeviceSamplingPackage extends SmartphoneSamplingPackage {
   ///  * One-time measure.
   ///  * Uses the [Smartphone] master device for data collection.
   ///  * No sampling configuration needed.
-  static const String DEVICE = 'dk.cachet.carp.device';
+  static const String DEVICE_INFORMATION_TYPE_NAME =
+      '${CarpDataTypes.CARP_NAMESPACE}.deviceinformation';
 
   /// Measure type for collection of free physical and virtual memory.
   ///  * Interval-based measure.
   ///  * Uses the [Smartphone] master device for data collection.
   ///  * Use [IntervalSamplingConfiguration] for configuration.
-  static const String MEMORY = 'dk.cachet.carp.memory';
+  static const String FREE_MEMORY_TYPE_NAME =
+      '${CarpDataTypes.CARP_NAMESPACE}.freememory';
 
   /// Measure type for collection of battery level and charging status.
   ///  * Event-based measure.
   ///  * Uses the [Smartphone] master device for data collection.
   ///  * No sampling configuration needed.
-  static const String BATTERY = 'dk.cachet.carp.battery';
+  static const String BATTERY_STATE_TYPE_NAME =
+      '${CarpDataTypes.CARP_NAMESPACE}.batterystate';
 
   /// Measure type for collection of screen events (on/off/unlocked).
   ///  * Event-based measure.
   ///  * Uses the [Smartphone] master device for data collection.
   ///  * No sampling configuration needed.
-  static const String SCREEN = 'dk.cachet.carp.screen';
+  static const String SCREEN_EVENT_TYPE_NAME =
+      '${CarpDataTypes.CARP_NAMESPACE}.screenevent';
 
   @override
   List<String> get dataTypes => [
-        DEVICE,
-        MEMORY,
-        BATTERY,
-        SCREEN,
+        DEVICE_INFORMATION_TYPE_NAME,
+        FREE_MEMORY_TYPE_NAME,
+        BATTERY_STATE_TYPE_NAME,
+        SCREEN_EVENT_TYPE_NAME,
       ];
 
   @override
   Probe? create(String type) {
     switch (type) {
-      case DEVICE:
+      case DEVICE_INFORMATION_TYPE_NAME:
         return DeviceProbe();
-      case MEMORY:
+      case FREE_MEMORY_TYPE_NAME:
         return MemoryProbe();
-      case BATTERY:
+      case BATTERY_STATE_TYPE_NAME:
         return BatteryProbe();
-      case SCREEN:
+      case SCREEN_EVENT_TYPE_NAME:
         return (Platform.isAndroid) ? ScreenProbe() : null;
       default:
         return null;
@@ -57,9 +61,9 @@ class DeviceSamplingPackage extends SmartphoneSamplingPackage {
   List<Permission> get permissions => [];
 
   /// Default samplings schema for:
-  ///  * [MEMORY] - once pr. minute.
+  ///  * [FREE_MEMORY_TYPE_NAME] - once pr. minute.
   @override
   SamplingSchema get samplingSchema => SamplingSchema()
-    ..addConfiguration(MEMORY,
+    ..addConfiguration(FREE_MEMORY_TYPE_NAME,
         IntervalSamplingConfiguration(interval: const Duration(minutes: 1)));
 }

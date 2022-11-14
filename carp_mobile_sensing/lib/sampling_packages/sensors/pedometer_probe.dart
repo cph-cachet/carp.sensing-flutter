@@ -15,6 +15,7 @@ part of sensors;
 /// Note that the [Pedometer] plugin returns the steps taken since last system boot.
 class PedometerProbe extends StreamProbe {
   @override
-  Stream<Datum> get stream => Pedometer.stepCountStream
-      .map((StepCount count) => PedometerDatum(count.steps));
+  Stream<Measurement> get stream =>
+      pedometer.Pedometer.stepCountStream.map((pedometer.StepCount count) =>
+          Measurement.fromData(StepCount(steps: count.steps)));
 }

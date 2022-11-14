@@ -115,7 +115,7 @@ class OneTimeTriggerExecutor extends TriggerExecutor<OneTimeTrigger> {
 class PassiveTriggerExecutor extends TriggerExecutor<PassiveTrigger> {
   PassiveTriggerExecutor() : super() {
     configuration!.executor = ImmediateTriggerExecutor();
-    group.add(configuration!.executor.data);
+    group.add(configuration!.executor.measurements);
   }
 
   // Forward to the embedded trigger executor

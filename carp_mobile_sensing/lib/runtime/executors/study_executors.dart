@@ -12,7 +12,7 @@ part of runtime;
 ///
 /// Note that the [StudyDeploymentExecutor] in itself is an [Executor] and hence work
 /// as a 'super executor'. This - amongst other things - imply that you can listen
-/// to data point from the [data] stream.
+/// to data point from the [measurements] stream.
 class StudyDeploymentExecutor extends AggregateExecutor<SmartphoneDeployment> {
   final StreamController<DataPoint> _manualDataPointController =
       StreamController.broadcast();
@@ -55,7 +55,7 @@ class StudyDeploymentExecutor extends AggregateExecutor<SmartphoneDeployment> {
         }
       }
 
-      group.add(executor.data);
+      group.add(executor.measurements);
       executors.add(executor);
     }
     return true;
@@ -67,9 +67,10 @@ class StudyDeploymentExecutor extends AggregateExecutor<SmartphoneDeployment> {
   /// Ensures that the `userId` and `studyId` is correctly set in the
   /// [DataPointHeader] based on the [deployment] configuration.
   @override
-  Stream<DataPoint> get data => group.stream.map((dataPoint) => dataPoint
-    ..carpHeader.studyId = deployment?.studyDeploymentId
-    ..carpHeader.userId = deployment?.userId);
+  Stream<DataPoint> get measurements =>
+      group.stream.map((dataPoint) => dataPoint
+        ..carpHeader.studyId = deployment?.studyDeploymentId
+        ..carpHeader.userId = deployment?.userId);
 
   /// Add a [DataPoint] object to the stream of events.
   void addDataPoint(DataPoint dataPoint) =>
@@ -147,13 +148,13 @@ class TriggeredTaskExecutor extends AggregateExecutor<TriggeredTask> {
   bool onInitialize() {
     // get the trigger executor and add it to this stream
     triggerExecutor = getTriggerExecutor(trigger);
-    group.add(triggerExecutor!.data);
+    group.add(triggerExecutor!.measurements);
     executors.add(triggerExecutor!);
     triggerExecutor?.initialize(trigger, deployment!);
 
     // get the task executor and add it to the trigger executor's stream
     taskExecutor = getTaskExecutor(task);
-    triggerExecutor?.group.add(taskExecutor!.data);
+    triggerExecutor?.group.add(taskExecutor!.measurements);
     triggerExecutor?.executors.add(taskExecutor!);
     taskExecutor?.initialize(task, deployment!);
 
@@ -165,9 +166,10 @@ class TriggeredTaskExecutor extends AggregateExecutor<TriggeredTask> {
   ///
   /// Makes sure to set the trigger id and device role name.
   @override
-  Stream<DataPoint> get data => group.stream.map((dataPoint) => dataPoint
-    ..carpHeader.triggerId = '${triggeredTask.triggerId}'
-    ..carpHeader.deviceRoleName = triggeredTask.targetDeviceRoleName);
+  Stream<DataPoint> get measurements =>
+      group.stream.map((dataPoint) => dataPoint
+        ..carpHeader.triggerId = '${triggeredTask.triggerId}'
+        ..carpHeader.deviceRoleName = triggeredTask.targetDeviceRoleName);
 
   /// Returns a list of the running probes in this [TriggeredTaskExecutor].
   List<Probe> get probes => taskExecutor?.probes ?? [];

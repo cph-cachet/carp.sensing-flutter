@@ -195,11 +195,11 @@ class LocalStudyProtocolManager implements StudyProtocolManager {
           ..addMeasures([
             // Measure(type: SensorSamplingPackage.ACCELEROMETER),
             // Measure(type: SensorSamplingPackage.GYROSCOPE),
-            Measure(type: DeviceSamplingPackage.MEMORY),
-            Measure(type: DeviceSamplingPackage.BATTERY),
-            Measure(type: DeviceSamplingPackage.SCREEN),
+            Measure(type: DeviceSamplingPackage.FREE_MEMORY_TYPE_NAME),
+            Measure(type: DeviceSamplingPackage.BATTERY_STATE_TYPE_NAME),
+            Measure(type: DeviceSamplingPackage.SCREEN_EVENT_TYPE_NAME),
             Measure(type: SensorSamplingPackage.PEDOMETER),
-            Measure(type: SensorSamplingPackage.LIGHT)
+            Measure(type: SensorSamplingPackage.AMBIENT_LIGHT_TYPE_NAME)
           ]),
         phone);
 
@@ -207,7 +207,8 @@ class LocalStudyProtocolManager implements StudyProtocolManager {
     protocol.addTriggeredTask(
         OneTimeTrigger(),
         BackgroundTask()
-          ..addMeasure(Measure(type: DeviceSamplingPackage.DEVICE)),
+          ..addMeasure(Measure(
+              type: DeviceSamplingPackage.DEVICE_INFORMATION_TYPE_NAME)),
         phone);
 
     // add a random trigger to collect device info at random times
@@ -219,7 +220,8 @@ class LocalStudyProtocolManager implements StudyProtocolManager {
           maxNumberOfTriggers: 8,
         ),
         BackgroundTask()
-          ..addMeasure(Measure(type: DeviceSamplingPackage.DEVICE)),
+          ..addMeasure(Measure(
+              type: DeviceSamplingPackage.DEVICE_INFORMATION_TYPE_NAME)),
         phone);
 
     // add a ConditionalPeriodicTrigger to check periodically
@@ -233,7 +235,8 @@ class LocalStudyProtocolManager implements StudyProtocolManager {
           pauseCondition: () => true,
         ),
         BackgroundTask()
-          ..addMeasure(Measure(type: DeviceSamplingPackage.DEVICE)),
+          ..addMeasure(Measure(
+              type: DeviceSamplingPackage.DEVICE_INFORMATION_TYPE_NAME)),
         phone);
 
     // Add an app task 2 minutes after deployment and make a notification.
@@ -250,7 +253,8 @@ class LocalStudyProtocolManager implements StudyProtocolManager {
           type: BackgroundSensingUserTask.ONE_TIME_SENSING_TYPE,
           title: "Elapsed Time - 2 minutes",
           notification: true,
-        )..addMeasure(Measure(type: DeviceSamplingPackage.DEVICE)),
+        )..addMeasure(
+            Measure(type: DeviceSamplingPackage.DEVICE_INFORMATION_TYPE_NAME)),
         phone);
 
     // // add an app task at exact date & time
