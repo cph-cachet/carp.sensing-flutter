@@ -26,8 +26,8 @@ void carpCoreProtocolExample() async {
 
   // Define what needs to be measured, on which device, when.
   List<Measure> measures = [
-    Measure(type: 'dk.cachet.geolocation'),
-    Measure(type: 'dk.cachet.stepcount'),
+    Measure(type: Geolocation.dataType),
+    Measure(type: StepCount.dataType),
   ];
 
   TaskConfiguration startMeasures = BackgroundTask(
@@ -97,25 +97,38 @@ void carpCoreDataExample() async {
   DataStreamService? dataStreamService;
   String studyDeploymentId = '...'; // Provided by the 'deployments' subsystem.
 
-// This is called by the `DeploymentsService` once the deployment starts running.
+  // This is called by the `DeploymentsService` once the deployment starts running.
   String device = "Patient's phone";
-// val geolocation = DataStreamsConfiguration.ExpectedDataStream( device, CarpDataTypes.GEOLOCATION.type )
-// val stepCount = DataStreamsConfiguration.ExpectedDataStream( device, CarpDataTypes.STEP_COUNT.type )
-// val configuration = DataStreamsConfiguration( studyDeploymentId, setOf( geolocation, stepCount ) )
-// dataStreamService.openDataStreams( configuration )
 
-// // Upload data from the client.
-// val geolocationData = MutableDataStreamSequence<Geolocation>(
-//     dataStream = dataStreamId<Geolocation>( studyDeploymentId, device ),
-//     firstSequenceId = 0,
-//     triggerIds = listOf( 0 ) // Provided by device deployment; maps to the `atStartOfStudy()` trigger.
-// )
-// DataStreamBatch uploadData  = DataStreamBatch(dataStream: , firstSequenceId: , measurements: , triggerIds: );
+  var geolocation = ExpectedDataStream(
+    deviceRoleName: device,
+    dataType: Geolocation.dataType,
+  );
 
-// ).apply {
-//     appendSequence( geolocationData )
+  var stepCount = ExpectedDataStream(
+    deviceRoleName: device,
+    dataType: StepCount.dataType,
+  );
 
-// dataStreamService?.appendToDataStreams( studyDeploymentId, [uploadData] );
+  var configuration = DataStreamsConfiguration(
+      studyDeploymentId: studyDeploymentId,
+      expectedDataStreams: {geolocation, stepCount});
+  dataStreamService?.openDataStreams(configuration);
+
+  var measurement = Measurement(
+      sensorStartTime: DateTime.now().microsecondsSinceEpoch,
+      data: Geolocation(latitude: 12, longitude: 23));
+
+  var uploadData = DataStreamBatch(
+      dataStream: DataStreamId(
+          studyDeploymentId: studyDeploymentId,
+          deviceRoleName: device,
+          dataType: Geolocation.dataType),
+      firstSequenceId: 0,
+      measurements: [measurement],
+      triggerIds: [0]);
+
+  dataStreamService?.appendToDataStreams(studyDeploymentId, [uploadData]);
 }
 
 /// Example of how to use the **client** sub-system domain models.

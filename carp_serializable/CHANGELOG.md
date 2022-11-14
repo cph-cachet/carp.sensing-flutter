@@ -1,4 +1,4 @@
-## 2.0.0
+## 1.1.0
 
 * Dart type annotation in json is changed from `$type` to `__type` since there were conflict in the Javascript world. This also follows the [CARP Core](https://github.com/imotions/carp.core-kotlin) serialization approach.
 
