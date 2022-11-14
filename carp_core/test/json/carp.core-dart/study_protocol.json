@@ -1,6 +1,6 @@
 {
-    "id": "123505a0-6023-11ed-a303-1d530a630ff7",
-    "createdOn": "2022-11-09T11:38:46.394435Z",
+    "id": "95b63820-6403-11ed-8165-b3f2e573f9ef",
+    "createdOn": "2022-11-14T10:03:27.778167Z",
     "version": 0,
     "ownerId": "xyz@dtu.dk",
     "name": "Test Study Protocol",
@@ -20,6 +20,12 @@
             "roleName": "connected_device",
             "isOptional": false,
             "defaultSamplingConfiguration": {}
+        },
+        {
+            "__type": "dk.cachet.carp.common.application.devices.DeviceConfiguration",
+            "roleName": "connected_device",
+            "isOptional": false,
+            "defaultSamplingConfiguration": {}
         }
     ],
     "connections": [],
@@ -30,15 +36,31 @@
             "measures": [
                 {
                     "__type": "dk.cachet.carp.common.application.tasks.Measure.DataStream",
-                    "type": "dk.cachet.carp.light"
+                    "type": "dk.cachet.carp.acceleration"
                 },
                 {
                     "__type": "dk.cachet.carp.common.application.tasks.Measure.DataStream",
-                    "type": "dk.cachet.carp.gps"
+                    "type": "dk.cachet.carp.geolocation"
                 },
                 {
                     "__type": "dk.cachet.carp.common.application.tasks.Measure.DataStream",
-                    "type": "dk.cachet.carp.steps"
+                    "type": "dk.cachet.carp.ecg"
+                },
+                {
+                    "__type": "dk.cachet.carp.common.application.tasks.Measure.DataStream",
+                    "type": "dk.cachet.carp.eda"
+                },
+                {
+                    "__type": "dk.cachet.carp.common.application.tasks.Measure.DataStream",
+                    "type": "dk.cachet.carp.stepcount"
+                },
+                {
+                    "__type": "dk.cachet.carp.common.application.tasks.Measure.DataStream",
+                    "type": "dk.cachet.carp.heartrate"
+                },
+                {
+                    "__type": "dk.cachet.carp.common.application.tasks.Measure.DataStream",
+                    "type": "dk.cachet.carp.signalstrength"
                 }
             ],
             "duration": "PT1H"

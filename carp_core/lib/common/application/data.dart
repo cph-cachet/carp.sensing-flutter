@@ -42,6 +42,7 @@ abstract class SensorData extends Data {
 /// [x], [y], and [z] axes in meters per second squared (m/s^2).
 @JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
 class Acceleration extends SensorData {
+  static const dataType = CarpDataTypes.ACCELERATION_TYPE_NAME;
   double x, y, z;
   Acceleration({this.x = 0, this.y = 0, this.z = 0}) : super();
 
@@ -57,6 +58,8 @@ class Acceleration extends SensorData {
 /// the World Geodetic System 1984.
 @JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
 class Geolocation extends SensorData {
+  static const dataType = CarpDataTypes.GEOLOCATION_TYPE_NAME;
+
   double latitude;
   double longitude;
 
@@ -76,6 +79,8 @@ class Geolocation extends SensorData {
 /// the stronger the signal.
 @JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
 class SignalStrength extends SensorData {
+  static const dataType = CarpDataTypes.SIGNAL_STRENGTH_TYPE_NAME;
+
   int rssi;
   SignalStrength({this.rssi = 0}) : super();
 
@@ -90,6 +95,8 @@ class SignalStrength extends SensorData {
 /// Step count data as number of steps taken in a corresponding time interval.
 @JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
 class StepCount extends SensorData {
+  static const dataType = CarpDataTypes.STEP_COUNT_TYPE_NAME;
+
   int steps;
   StepCount({this.steps = 0}) : super();
 
@@ -104,6 +111,8 @@ class StepCount extends SensorData {
 /// Heart rate data in beats per minute ([bpm]).
 @JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
 class HeartRate extends SensorData {
+  static const dataType = CarpDataTypes.HEART_RATE_TYPE_NAME;
+
   int bpm;
   HeartRate({this.bpm = 0}) : super();
 
@@ -118,6 +127,8 @@ class HeartRate extends SensorData {
 /// Electrocardiogram data of a single lead.
 @JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
 class ECG extends SensorData {
+  static const dataType = CarpDataTypes.ECG_TYPE_NAME;
+
   double milliVolt;
   ECG({this.milliVolt = 0}) : super();
 
@@ -133,6 +144,8 @@ class ECG extends SensorData {
 /// Among others, also known as galvanic skin response (GSR) or skin conductance response/level.
 @JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
 class EDA extends SensorData {
+  static const dataType = CarpDataTypes.EDA_TYPE_NAME;
+
   double microSiemens;
   EDA({this.microSiemens = 0}) : super();
 
@@ -149,6 +162,8 @@ class EDA extends SensorData {
 /// no result is collected.
 @JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
 class CompletedTask extends Data {
+  static const dataType = CarpDataTypes.COMPLETED_TASK_TYPE_NAME;
+
   String taskName;
   Data? taskData;
 
@@ -172,6 +187,8 @@ class CompletedTask extends Data {
 /// which caused the trigger to fire.
 @JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
 class TriggeredTask extends Data {
+  static const dataType = CarpDataTypes.TRIGGERED_TASK_TYPE_NAME;
+
   int triggerId;
   String taskName;
   String destinationDeviceRoleName;

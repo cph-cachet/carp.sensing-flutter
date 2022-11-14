@@ -18,19 +18,27 @@ void main() {
     );
 
     Smartphone phone = Smartphone(roleName: 'phone');
-    DeviceConfiguration connectedDevice = DeviceConfiguration(
+    DeviceConfiguration d1 = DeviceConfiguration(
+      roleName: 'connected_device',
+    );
+    DeviceConfiguration d2 = DeviceConfiguration(
       roleName: 'connected_device',
     );
 
     protocol
       ..addMasterDevice(phone)
-      ..addConnectedDevice(connectedDevice);
+      ..addConnectedDevice(d1)
+      ..addConnectedDevice(d2);
 
     // Define what needs to be measured, on which device, when.
     List<Measure> measures = [
-      Measure(type: const DataType(NameSpace.CARP, 'light').toString()),
-      Measure(type: const DataType(NameSpace.CARP, 'gps').toString()),
-      Measure(type: const DataType(NameSpace.CARP, 'steps').toString()),
+      Measure(type: Acceleration.dataType),
+      Measure(type: Geolocation.dataType),
+      Measure(type: ECG.dataType),
+      Measure(type: EDA.dataType),
+      Measure(type: StepCount.dataType),
+      Measure(type: HeartRate.dataType),
+      Measure(type: SignalStrength.dataType),
     ];
 
     BackgroundTask task = BackgroundTask(
