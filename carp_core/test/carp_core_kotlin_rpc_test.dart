@@ -6,7 +6,7 @@ import 'package:carp_core/carp_core.dart';
 import 'package:carp_serializable/carp_serializable.dart';
 
 void main() {
-  const String path = 'test/json/carp.core-kotlin/rpc';
+  const String path = 'test/json/carp.core-kotlin';
 
   setUp(() {
     Core();
@@ -20,9 +20,8 @@ void main() {
       var expected =
           Add.fromJson(json.decode(rpcString) as Map<String, dynamic>);
 
-      String plainJson =
-          File('test/json/carp.core-kotlin/protocols/study_protocol.json')
-              .readAsStringSync();
+      String plainJson = File('test/json/carp.core-kotlin/study_protocol.json')
+          .readAsStringSync();
       StudyProtocol protocol = StudyProtocol.fromJson(
           json.decode(plainJson) as Map<String, dynamic>);
       var request = Add(protocol, 'Version 1');
@@ -46,9 +45,8 @@ void main() {
       var expected =
           AddVersion.fromJson(json.decode(rpcString) as Map<String, dynamic>);
 
-      String plainJson =
-          File('test/json/carp.core-kotlin/protocols/study_protocol.json')
-              .readAsStringSync();
+      String plainJson = File('test/json/carp.core-kotlin/study_protocol.json')
+          .readAsStringSync();
       StudyProtocol protocol = StudyProtocol.fromJson(
           json.decode(plainJson) as Map<String, dynamic>);
 
