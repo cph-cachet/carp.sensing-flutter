@@ -11,7 +11,7 @@ class CAMSDataType {
   static const String FILE_TYPE_NAME = '${CarpDataTypes.CARP_NAMESPACE}.file';
 
   CAMSDataType() {
-    CarpDataTypes.add([
+    CarpDataTypes().add([
       DataTypeMetaData(
         type: FILE_TYPE_NAME,
         displayName: "File",

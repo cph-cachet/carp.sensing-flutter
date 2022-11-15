@@ -16,6 +16,7 @@ import 'package:pedometer/pedometer.dart' as pedometer;
 import 'package:stats/stats.dart';
 import 'package:permission_handler/permission_handler.dart';
 
+import 'package:carp_serializable/carp_serializable.dart';
 import 'package:carp_core/carp_core.dart';
 import 'package:carp_mobile_sensing/carp_mobile_sensing.dart';
 

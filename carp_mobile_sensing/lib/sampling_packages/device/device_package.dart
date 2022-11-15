@@ -71,7 +71,12 @@ class DeviceSamplingPackage extends SmartphoneSamplingPackage {
   }
 
   @override
-  void onRegister() {} // does nothing for this device sampling package
+  void onRegister() {
+    FromJsonFactory().register(DeviceInformation());
+    FromJsonFactory().register(BatteryState());
+    FromJsonFactory().register(FreeMemory());
+    FromJsonFactory().register(ScreenEvent());
+  }
 
   @override
   List<Permission> get permissions => [];

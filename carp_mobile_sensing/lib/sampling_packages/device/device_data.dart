@@ -46,8 +46,10 @@ class DeviceInformation extends Data {
   /// The OS release.
   String? release;
 
-  DeviceInformation(this.platform, this.deviceId,
-      {this.deviceName,
+  DeviceInformation(
+      {this.platform,
+      this.deviceId,
+      this.deviceName,
       this.deviceModel,
       this.deviceManufacturer,
       this.operatingSystem,
@@ -59,8 +61,10 @@ class DeviceInformation extends Data {
   bool equivalentTo(Data other) =>
       (other is DeviceInformation) ? deviceId == other.deviceId : false;
 
+  @override
+  Function get fromJsonFunction => _$DeviceInformationFromJson;
   factory DeviceInformation.fromJson(Map<String, dynamic> json) =>
-      _$DeviceInformationFromJson(json);
+      FromJsonFactory().fromJson(json) as DeviceInformation;
   @override
   Map<String, dynamic> toJson() => _$DeviceInformationToJson(this);
 
@@ -114,8 +118,10 @@ class BatteryState extends Data {
   bool equivalentTo(Data other) =>
       (other is BatteryState) ? batteryLevel == other.batteryLevel : false;
 
+  @override
+  Function get fromJsonFunction => _$BatteryStateFromJson;
   factory BatteryState.fromJson(Map<String, dynamic> json) =>
-      _$BatteryStateFromJson(json);
+      FromJsonFactory().fromJson(json) as BatteryState;
   @override
   Map<String, dynamic> toJson() => _$BatteryStateToJson(this);
 
@@ -137,8 +143,10 @@ class FreeMemory extends Data {
 
   FreeMemory([this.freePhysicalMemory, this.freeVirtualMemory]) : super();
 
+  @override
+  Function get fromJsonFunction => _$FreeMemoryFromJson;
   factory FreeMemory.fromJson(Map<String, dynamic> json) =>
-      _$FreeMemoryFromJson(json);
+      FromJsonFactory().fromJson(json) as FreeMemory;
   @override
   Map<String, dynamic> toJson() => _$FreeMemoryToJson(this);
 
@@ -182,8 +190,10 @@ class ScreenEvent extends Data {
   bool equivalentTo(Data other) =>
       (other is ScreenEvent) ? screenEvent == other.screenEvent : false;
 
+  @override
+  Function get fromJsonFunction => _$ScreenEventFromJson;
   factory ScreenEvent.fromJson(Map<String, dynamic> json) =>
-      _$ScreenEventFromJson(json);
+      FromJsonFactory().fromJson(json) as ScreenEvent;
   @override
   Map<String, dynamic> toJson() => _$ScreenEventToJson(this);
 

@@ -42,7 +42,6 @@ void _registerFromJsonFunctions() {
     time: TimeOfDay(),
   ));
   FromJsonFactory().register(SamplingEventTrigger(measureType: ''));
-  // FromJsonFactory().register(ConditionalEvent({}));
   FromJsonFactory().register(ConditionalPeriodicTrigger(period: Duration()));
   FromJsonFactory().register(ConditionalSamplingEventTrigger(measureType: ''));
   FromJsonFactory().register(CronScheduledTrigger());
@@ -54,6 +53,9 @@ void _registerFromJsonFunctions() {
     taskName: 'ignored',
     resumeCondition: UserTaskState.done,
   ));
+
+  // Data classes
+  FromJsonFactory().register(Acceleration());
 
   // Sampling Configuration classes
   FromJsonFactory().register(PersistentSamplingConfiguration());

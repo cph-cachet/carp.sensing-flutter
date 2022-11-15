@@ -84,8 +84,8 @@ class DeviceProbe extends DatumProbe {
   @override
   Future<Measurement?> getMeasurement() async =>
       Measurement.fromData(DeviceInformation(
-        DeviceInfo().platform,
-        DeviceInfo().deviceID,
+        platform: DeviceInfo().platform,
+        deviceId: DeviceInfo().deviceID,
         deviceName: DeviceInfo().deviceName,
         deviceModel: DeviceInfo().deviceModel,
         deviceManufacturer: DeviceInfo().deviceManufacturer,

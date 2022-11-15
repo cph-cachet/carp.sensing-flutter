@@ -8,8 +8,8 @@ part of device;
 
 DeviceInformation _$DeviceInformationFromJson(Map<String, dynamic> json) =>
     DeviceInformation(
-      json['platform'] as String?,
-      json['deviceId'] as String?,
+      platform: json['platform'] as String?,
+      deviceId: json['deviceId'] as String?,
       deviceName: json['deviceName'] as String?,
       deviceModel: json['deviceModel'] as String?,
       deviceManufacturer: json['deviceManufacturer'] as String?,

@@ -7,9 +7,9 @@ class SensorSamplingPackage extends SmartphoneSamplingPackage {
 
   @override
   List<DataTypeMetaData> get dataTypes => [
-        CarpDataTypes.types[CarpDataTypes.ACCELERATION_TYPE_NAME]!,
-        CarpDataTypes.types[CarpDataTypes.ROTATION_TYPE_NAME]!,
-        CarpDataTypes.types[CarpDataTypes.STEP_COUNT_TYPE_NAME]!,
+        CarpDataTypes().types[CarpDataTypes.ACCELERATION_TYPE_NAME]!,
+        CarpDataTypes().types[CarpDataTypes.ROTATION_TYPE_NAME]!,
+        CarpDataTypes().types[CarpDataTypes.STEP_COUNT_TYPE_NAME]!,
         DataTypeMetaData(
           type: AMBIENT_LIGHT_TYPE_NAME,
           displayName: "Ambient light",
@@ -34,7 +34,9 @@ class SensorSamplingPackage extends SmartphoneSamplingPackage {
   }
 
   @override
-  void onRegister() {}
+  void onRegister() {
+    FromJsonFactory().register(AmbientLight());
+  }
 
   @override
   List<Permission> get permissions => [];

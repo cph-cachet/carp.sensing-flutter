@@ -30,7 +30,7 @@ class SamplingPackageRegistry {
     for (var permission in package.permissions) {
       if (!_permissions.contains(permission)) _permissions.add(permission);
     }
-    CarpDataTypes.add(package.dataTypes);
+    CarpDataTypes().add(package.dataTypes);
 
     // register the package's device in the device registry
     DeviceController()

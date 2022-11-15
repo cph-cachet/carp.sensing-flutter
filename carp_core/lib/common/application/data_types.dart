@@ -40,19 +40,6 @@ class CarpDataTypes {
   static final CarpDataTypes _instance = CarpDataTypes._();
   factory CarpDataTypes() => _instance;
 
-  /// A map of all CARP data types.
-  static const Map<String, DataTypeMetaData> types = {};
-
-  /// Add a list of data types to the list of available data types.
-  static void add(List<DataTypeMetaData> newTypes) {
-    for (var type in newTypes) {
-      types[type.type] = type;
-    }
-  }
-
-  /// Get a list of all available data types.
-  static List<String> get all => types.keys.toList();
-
   /// The [DataType] namespace of all CARP data type definitions.
   static const String CARP_NAMESPACE = "dk.cachet.carp";
 
@@ -119,6 +106,19 @@ class CarpDataTypes {
 
   /// Any error that may have occurred during data collection.
   static const String ERROR_TYPE_NAME = "$CARP_NAMESPACE.error";
+
+  /// A map of all CARP data types.
+  Map<String, DataTypeMetaData> types = {};
+
+  /// Add a list of data types to the list of available data types.
+  void add(List<DataTypeMetaData> newTypes) {
+    for (var type in newTypes) {
+      types[type.type] = type;
+    }
+  }
+
+  /// Get a list of all available data types.
+  List<String> get all => types.keys.toList();
 
   CarpDataTypes._() {
     add([
