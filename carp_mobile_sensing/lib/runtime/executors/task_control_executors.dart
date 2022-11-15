@@ -57,32 +57,19 @@ class TaskControlExecutor extends AggregateExecutor<TaskControl> {
     triggerExecutor = getTriggerExecutor(trigger);
     group.add(triggerExecutor!.measurements);
     executors.add(triggerExecutor!);
-    triggerExecutor?.initialize(trigger, deployment!);
+    triggerExecutor?.initialize(trigger, deployment);
 
     // get the task executor and add it to the trigger executor's stream
     taskExecutor = getTaskExecutor(task);
     triggerExecutor?.group.add(taskExecutor!.measurements);
     triggerExecutor?.executors.add(taskExecutor!);
-    taskExecutor?.initialize(task, deployment!);
+    taskExecutor?.initialize(task, deployment);
 
     return true;
   }
 
-  // /// Get the aggregated stream of [DataPoint] data sampled by all executors
-  // /// and probes in this triggered task executor.
-  // ///
-  // /// Makes sure to set the trigger id and device role name.
-  // @override
-  // Stream<DataPoint> get measurements =>
-  //     group.stream.map((dataPoint) => dataPoint
-  //       ..carpHeader.triggerId = '${triggeredTask.triggerId}'
-  //       ..carpHeader.deviceRoleName = triggeredTask.targetDeviceRoleName);
-
   /// Returns a list of the running probes in this [TaskControlExecutor].
   List<Probe> get probes => taskExecutor?.probes ?? [];
-
-  // @override
-  // String toString() => '$runtimeType - triggeredTask: $triggeredTask';
 }
 
 /// Responsible for handling the execution of a [TriggeredTask] which contains
@@ -90,7 +77,7 @@ class TaskControlExecutor extends AggregateExecutor<TaskControl> {
 ///
 /// In contrast to the [TaskControlExecutor] (which runs in the background),
 /// this [AppTaskControlExecutor] will try to schedule the [AppTask] using
-/// the [AppTaskController]. This means that triggeres also has to be [Schedulable].
+/// the [AppTaskController]. This means that triggers also has to be [Schedulable].
 class AppTaskControlExecutor extends TaskControlExecutor {
   AppTaskControlExecutor(
     super.taskControl,

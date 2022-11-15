@@ -5,7 +5,7 @@
  * found in the LICENSE file.
  */
 
-part of managers;
+part of data_managers;
 
 /// Retrieve and store [StudyProtocol] json definitions on the device's local
 /// file system.

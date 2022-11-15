@@ -5,7 +5,7 @@
  * found in the LICENSE file.
  */
 
-part of managers;
+part of data_managers;
 
 /// Stores [DataPoint] json objects in an SQLite database on the device's
 /// local storage media. The name of the table is 'data_points'.

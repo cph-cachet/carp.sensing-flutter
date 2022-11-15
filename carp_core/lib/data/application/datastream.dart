@@ -54,7 +54,7 @@ class DataStreamId {
   Map<String, dynamic> toJson() => _$DataStreamIdToJson(this);
 }
 
-/// A collection of non-overlapping, ordered, data stream [sequences].
+/// A collection of non-overlapping, ordered, data [measurements].
 @JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
 class DataStreamBatch {
   DataStreamId dataStream;

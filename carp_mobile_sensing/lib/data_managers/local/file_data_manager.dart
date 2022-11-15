@@ -5,7 +5,7 @@
  * found in the LICENSE file.
  */
 
-part of managers;
+part of data_managers;
 
 /// Stores [DataPoint] json objects on the device's local storage media.
 /// Supports compression (zip) and encryption.

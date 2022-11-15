@@ -9,7 +9,7 @@
 ///
 ///  * [DataManager] interface
 ///  * [StudyProtocolManager] interface
-library managers;
+library data_managers;
 
 import 'dart:async';
 import 'dart:convert';
