@@ -50,15 +50,15 @@ abstract class DeploymentService {
     String deviceRoleName,
   );
 
-  /// Get the deployment configuration for the master device with
-  /// [masterDeviceRoleName] in the study deployment with [studyDeploymentId].
+  /// Get the deployment configuration for the primary device with
+  /// [primaryDeviceRoleName] in the study deployment with [studyDeploymentId].
   Future<PrimaryDeviceDeployment> getDeviceDeploymentFor(
     String studyDeploymentId,
-    String masterDeviceRoleName,
+    String primaryDeviceRoleName,
   );
 
   /// Indicate to stakeholders in the study deployment with [studyDeploymentId]
-  /// that the device with [masterDeviceRoleName] was deployed successfully,
+  /// that the device with [primaryDeviceRoleName] was deployed successfully,
   /// using the deployment with the specified [deviceDeploymentLastUpdateDate],
   /// i.e., that the study deployment was loaded on the device and that the
   /// necessary runtime is available to run it.
@@ -66,14 +66,14 @@ abstract class DeploymentService {
   /// Throws an error when:
   ///
   ///  - a deployment with [studyDeploymentId] does not exist
-  ///  - [masterDeviceRoleName] is not present in the deployment
+  ///  - [primaryDeviceRoleName] is not present in the deployment
   ///  - the [deviceDeploymentLastUpdateDate] does not match the expected date.
   ///    The deployment might be outdated.
   ///  - the deployment cannot be deployed yet, or the deployment has stopped.
   ///
   Future<StudyDeploymentStatus> deploymentSuccessfulFor(
     String studyDeploymentId,
-    String masterDeviceRoleName,
+    String primaryDeviceRoleName,
     DateTime deviceDeploymentLastUpdateDate,
   );
 

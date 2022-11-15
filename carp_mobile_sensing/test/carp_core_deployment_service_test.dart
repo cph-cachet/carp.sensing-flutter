@@ -19,7 +19,7 @@ void main() {
         json.decode(plainJson) as Map<String, dynamic>);
 
     expect(protocol.ownerId, 'user@dtu.dk');
-    expect(protocol.masterDevices.first.roleName,
+    expect(protocol.primaryDevices.first.roleName,
         SmartphoneDeploymentService().thisPhone.roleName);
     print(toJsonString(protocol));
   });
@@ -32,7 +32,7 @@ void main() {
         json.decode(plainJson) as Map<String, dynamic>);
 
     expect(protocol.ownerId, 'user@dtu.dk');
-    expect(protocol.masterDevices.first.roleName,
+    expect(protocol.primaryDevices.first.roleName,
         SmartphoneDeploymentService().thisPhone.roleName);
 
     StudyDeploymentStatus status =

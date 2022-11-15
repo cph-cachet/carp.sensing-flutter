@@ -78,30 +78,29 @@ class DeviceController implements DeviceDataCollectorFactory {
   void unregisterDevice(String deviceType) => _devices.remove(deviceType);
 
   @override
-  void initializeDevices(
-      PrimaryDeviceConfiguration primaryDeviceConfiguration) {
-    // first initialize the master device (i.e. this phone)
-    initializeDevice(primaryDeviceConfiguration.deviceDescriptor);
+  void initializeDevices(PrimaryDeviceDeployment primaryDeviceDeployment) {
+    //  first initialize the master device (i.e. this phone)
+    initializeDevice(primaryDeviceDeployment.deviceConfiguration);
     // and then initialize all the connected devices (if any)
-    for (var descriptor in primaryDeviceConfiguration.connectedDevices) {
+    for (var descriptor in primaryDeviceDeployment.connectedDevices) {
       initializeDevice(descriptor);
     }
   }
 
   @override
-  void initializeDevice(PrimaryDeviceConfiguration descriptor) {
-    if (hasDevice(descriptor.type)) {
-      _devices[descriptor.type]?.initialize(descriptor);
+  void initializeDevice(DeviceConfiguration configuration) {
+    if (hasDevice(configuration.type)) {
+      _devices[configuration.type]?.initialize(configuration);
     } else {
       warning(
-          "A device of type '${descriptor.type}' is not available on this device. "
+          "A device of type '${configuration.type}' is not available on this device. "
           "This may be because this device is not available on this operating system. "
           "Or it may be because the sampling package containing this device has not been registered in the SamplingPackageRegistry.");
     }
   }
 
-  /// A convinient method for connecting all connectable devices available
-  /// in each [SamplingPackage] that has been registred in the
+  /// A convenient method for connecting all connectable devices available
+  /// in each [SamplingPackage] that has been registered in the
   /// [SamplingPackageRegistry].
   Future<void> connectAllConnectableDevices() async {
     for (var package in SamplingPackageRegistry().packages) {

@@ -20,7 +20,7 @@ class ClientManager {
   DeploymentService? deploymentService;
 
   /// The controller of connected devices used to collect data locally on
-  /// this master device. Also works as a factory which is used to create
+  /// this primary device. Also works as a factory which is used to create
   /// [DeviceDataCollector] instances for connected devices.
   DeviceDataCollectorFactory? deviceController;
 

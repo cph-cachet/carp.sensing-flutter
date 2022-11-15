@@ -6,7 +6,7 @@
  */
 part of domain;
 
-/// Enumeration of data types used in [DataType] and [DataFormat].
+/// Contains CAMS data type definitions similar to CARP Core [CarpDataTypes].
 class CAMSDataType {
   static const String FILE_TYPE_NAME = '${CarpDataTypes.CARP_NAMESPACE}.file';
 

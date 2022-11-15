@@ -6,44 +6,44 @@
  */
 part of domain;
 
-/// A base (abstract) class for a single unit of sensed information.
-@JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)
-class Datum extends Data {
-  /// The [DataFormat] of this type of [Datum].
-  @override
-  @JsonKey(ignore: true)
-  DataType get format => DataType.fromString(CAMSDataType.DATUM);
+// /// A base (abstract) class for a single unit of sensed information.
+// @JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)
+// class Datum extends Data {
+//   /// The [DataFormat] of this type of [Datum].
+//   @override
+//   @JsonKey(ignore: true)
+//   DataType get format => DataType.fromString(CAMSDataType.DATUM);
 
-  /// An identifier for this [Datum], unique across all data generated.
-  /// If this datum is part of a [MultiDatum], then this id is null.
-  String? id;
+//   /// An identifier for this [Datum], unique across all data generated.
+//   /// If this datum is part of a [MultiDatum], then this id is null.
+//   String? id;
 
-  /// The UTC timestamp when this data was generated on the device.
-  late DateTime timestamp;
+//   /// The UTC timestamp when this data was generated on the device.
+//   late DateTime timestamp;
 
-  /// Create a datum.
-  ///
-  /// If [multiDatum] is true, then multiple [Datum] objects are stored in a
-  /// list with the same [id] and header.
-  Datum({bool multiDatum = false}) : super() {
-    timestamp = DateTime.now().toUtc();
-    // only add an id to single datums - not to each multi-datum
-    id = (!multiDatum) ? Uuid().v1() : null;
-  }
+//   /// Create a datum.
+//   ///
+//   /// If [multiDatum] is true, then multiple [Datum] objects are stored in a
+//   /// list with the same [id] and header.
+//   Datum({bool multiDatum = false}) : super() {
+//     timestamp = DateTime.now().toUtc();
+//     // only add an id to single datums - not to each multi-datum
+//     id = (!multiDatum) ? Uuid().v1() : null;
+//   }
 
-  bool equivalentTo(ConditionalEvent? event) => false;
+//   bool equivalentTo(ConditionalEvent? event) => false;
 
-  /// Create a [Datum] from a JSON map.
-  factory Datum.fromJson(Map<String, dynamic> json) => _$DatumFromJson(json);
+//   /// Create a [Datum] from a JSON map.
+//   factory Datum.fromJson(Map<String, dynamic> json) => _$DatumFromJson(json);
 
-  /// Return a JSON encoding of this datum.
-  @override
-  Map<String, dynamic> toJson() => _$DatumToJson(this);
+//   /// Return a JSON encoding of this datum.
+//   @override
+//   Map<String, dynamic> toJson() => _$DatumToJson(this);
 
-  @override
-  String toString() =>
-      '$runtimeType - format: $format, id: $id, timestamp: $timestamp';
-}
+//   @override
+//   String toString() =>
+//       '$runtimeType - format: $format, id: $id, timestamp: $timestamp';
+// }
 
 // /// A simple [Datum] that only holds a string datum object.
 // @JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)

@@ -43,8 +43,8 @@ Map<String, dynamic> _$DeviceInformationToJson(DeviceInformation instance) {
 }
 
 BatteryState _$BatteryStateFromJson(Map<String, dynamic> json) => BatteryState(
-      json['battery_level'] as int?,
-      json['battery_status'] as String?,
+      json['batteryLevel'] as int?,
+      json['batteryStatus'] as String?,
     )..$type = json['__type'] as String?;
 
 Map<String, dynamic> _$BatteryStateToJson(BatteryState instance) {
@@ -57,14 +57,14 @@ Map<String, dynamic> _$BatteryStateToJson(BatteryState instance) {
   }
 
   writeNotNull('__type', instance.$type);
-  writeNotNull('battery_level', instance.batteryLevel);
-  writeNotNull('battery_status', instance.batteryStatus);
+  writeNotNull('batteryLevel', instance.batteryLevel);
+  writeNotNull('batteryStatus', instance.batteryStatus);
   return val;
 }
 
 FreeMemory _$FreeMemoryFromJson(Map<String, dynamic> json) => FreeMemory(
-      json['free_physical_memory'] as int?,
-      json['free_virtual_memory'] as int?,
+      json['freePhysicalMemory'] as int?,
+      json['freeVirtualMemory'] as int?,
     )..$type = json['__type'] as String?;
 
 Map<String, dynamic> _$FreeMemoryToJson(FreeMemory instance) {
@@ -77,13 +77,13 @@ Map<String, dynamic> _$FreeMemoryToJson(FreeMemory instance) {
   }
 
   writeNotNull('__type', instance.$type);
-  writeNotNull('free_physical_memory', instance.freePhysicalMemory);
-  writeNotNull('free_virtual_memory', instance.freeVirtualMemory);
+  writeNotNull('freePhysicalMemory', instance.freePhysicalMemory);
+  writeNotNull('freeVirtualMemory', instance.freeVirtualMemory);
   return val;
 }
 
 ScreenEvent _$ScreenEventFromJson(Map<String, dynamic> json) => ScreenEvent(
-      json['screen_event'] as String?,
+      json['screenEvent'] as String?,
     )..$type = json['__type'] as String?;
 
 Map<String, dynamic> _$ScreenEventToJson(ScreenEvent instance) {
@@ -96,6 +96,6 @@ Map<String, dynamic> _$ScreenEventToJson(ScreenEvent instance) {
   }
 
   writeNotNull('__type', instance.$type);
-  writeNotNull('screen_event', instance.screenEvent);
+  writeNotNull('screenEvent', instance.screenEvent);
   return val;
 }

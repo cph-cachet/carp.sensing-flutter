@@ -19,6 +19,11 @@ class Data extends Serializable {
 
   Data() : super();
 
+  /// Is this data equivalent to [other]?
+  /// This is a custom 'soft' equal (==) operator used to compare two data objects.
+  /// Used in triggering something when a piece of data is collected.
+  bool equivalentTo(Data other) => false;
+
   @override
   Function get fromJsonFunction => _$DataFromJson;
   factory Data.fromJson(Map<String, dynamic> json) =>

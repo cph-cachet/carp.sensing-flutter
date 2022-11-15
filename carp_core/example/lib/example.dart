@@ -69,7 +69,7 @@ void carpCoreDeploymentExample() async {
 
   // - Retrieve information on what to run and indicate the device is ready to
   //   collect the requested data.
-  DeviceDeploymentStatus? patientPhoneStatus = status?.masterDeviceStatus;
+  DeviceDeploymentStatus? patientPhoneStatus = status?.primaryDeviceStatus;
   if (patientPhoneStatus!.remainingDevicesToRegisterBeforeDeployment!
       .isEmpty) // True since there are no dependent devices.
   {

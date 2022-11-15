@@ -483,22 +483,27 @@ class SamplingEventTrigger extends TriggerConfiguration {
 
   /// The specific sampling value to compare with for resuming this trigger.
   ///
-  /// When comparing, the [Datum.equivalentTo] method. is used. Hence, the
-  /// sampled datum must be "equivalent" to this resumeCondition in order to
+  /// When comparing, the [Data.equivalentTo] method. is used. Hence, the
+  /// sampled data must be "equivalent" to this resumeCondition in order to
   /// start sampling based on an event.
   /// Note that the `equivalentTo` method must be overwritten in
-  /// application-specific [Datum] classes to support this.
+  /// application-specific [Data] classes to support this.
   ///
   /// If [resumeCondition] is null, sampling will be triggered / resumed on
   /// every sampling event that matches the specified [measureType].
-  ConditionalEvent? resumeCondition;
+  Data? resumeCondition;
 
-  /// The [ConditionalEvent] specifying a specific sampling value to compare
-  /// with for pausing this trigger.
+  /// The specific sampling value to compare with for pausing this trigger.
+  ///
+  /// When comparing, the [Data.equivalentTo] method. is used. Hence, the
+  /// sampled data must be "equivalent" to this resumeCondition in order to
+  /// start sampling based on an event.
+  /// Note that the `equivalentTo` method must be overwritten in
+  /// application-specific [Data] classes to support this.
   ///
   /// If [pauseCondition] is null, sampling is never paused and hence runs
   /// forever (unless paused manually).
-  ConditionalEvent? pauseCondition;
+  Data? pauseCondition;
 
   /// Create a trigger that triggers when a measure of [measureType] is collected,
   /// and checks the [resumeCondition] and [pauseCondition] to determine if the
@@ -517,32 +522,32 @@ class SamplingEventTrigger extends TriggerConfiguration {
   Map<String, dynamic> toJson() => _$SamplingEventTriggerToJson(this);
 }
 
-/// Specified the configuration of an event in a [SamplingEventTrigger].
-///
-/// The [condition] is a key-value map of values that can be checked in
-/// the [Datum.equivalentTo] method.
-/// This `equivalentTo` method must be implemented for each [Datum] used
-/// in a [SamplingEventTrigger].
-@JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
-class ConditionalEvent extends Serializable {
-  Map<String, dynamic> condition;
+// /// Specified the configuration of an event in a [SamplingEventTrigger].
+// ///
+// /// The [condition] is a key-value map of values that can be checked in
+// /// the [Datum.equivalentTo] method.
+// /// This `equivalentTo` method must be implemented for each [Datum] used
+// /// in a [SamplingEventTrigger].
+// @JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
+// class ConditionalEvent extends Serializable {
+//   Map<String, dynamic> condition;
 
-  /// Create a conditional event.
-  ConditionalEvent(this.condition) : super();
+//   /// Create a conditional event.
+//   ConditionalEvent(this.condition) : super();
 
-  dynamic operator [](String index) => condition[index];
+//   dynamic operator [](String index) => condition[index];
 
-  @override
-  Function get fromJsonFunction => _$ConditionalEventFromJson;
-  factory ConditionalEvent.fromJson(Map<String, dynamic> json) =>
-      FromJsonFactory().fromJson(json) as ConditionalEvent;
-  @override
-  Map<String, dynamic> toJson() => _$ConditionalEventToJson(this);
-}
+//   @override
+//   Function get fromJsonFunction => _$ConditionalEventFromJson;
+//   factory ConditionalEvent.fromJson(Map<String, dynamic> json) =>
+//       FromJsonFactory().fromJson(json) as ConditionalEvent;
+//   @override
+//   Map<String, dynamic> toJson() => _$ConditionalEventToJson(this);
+// }
 
-/// Takes a [DataPoint] from a sampling stream and evaluates if an event has
+/// Takes a [Measurement] from a sampling stream and evaluates if an event has
 /// occurred. Returns [true] if the event has occurred, [false] otherwise.
-typedef ConditionalEventEvaluator = bool Function(DataPoint dataPoint);
+typedef ConditionalEventEvaluator = bool Function(Measurement measurement);
 
 /// A trigger that resume and pause sampling when some (other) sampling event
 /// occurs and a application-specific condition is meet.

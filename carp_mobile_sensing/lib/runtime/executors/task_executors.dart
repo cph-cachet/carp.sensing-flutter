@@ -29,20 +29,22 @@ abstract class TaskExecutor<TConfig extends TaskConfiguration>
 
   @override
   bool onInitialize() {
-    for (Measure measure in task.measures) {
-      // create a new probe for each measure - this ensures that we can have
-      // multiple measures of the same type, each using its own probe instance
-      Probe? probe = SamplingPackageRegistry().create(measure.type);
-      if (probe != null) {
-        executors.add(probe);
-        group.add(probe.measurements);
-        probe.initialize(measure, deployment!);
-      } else {
-        warning(
-            'A probe for measure type ${measure.type} could not be created. '
-            'This may be because this probe is not available on this operating system. '
-            'Or it may be because the sampling package containing this probe has not '
-            'been registered in the SamplingPackageRegistry.');
+    if (task.measures != null) {
+      for (Measure measure in task.measures!) {
+        // create a new probe for each measure - this ensures that we can have
+        // multiple measures of the same type, each using its own probe instance
+        Probe? probe = SamplingPackageRegistry().create(measure.type);
+        if (probe != null) {
+          executors.add(probe);
+          group.add(probe.measurements);
+          probe.initialize(measure, deployment!);
+        } else {
+          warning(
+              'A probe for measure type ${measure.type} could not be created. '
+              'This may be because this probe is not available on this operating system. '
+              'Or it may be because the sampling package containing this probe has not '
+              'been registered in the SamplingPackageRegistry.');
+        }
       }
     }
     return true;
@@ -54,7 +56,8 @@ class BackgroundTaskExecutor extends TaskExecutor<BackgroundTask> {
   @override
   Future<bool> onResume() async {
     if (configuration?.duration != null) {
-      Timer(configuration!.duration!, () => pause());
+      Timer(Duration(seconds: configuration!.duration!.toSeconds().truncate()),
+          () => pause());
     }
     return await super.onResume();
   }

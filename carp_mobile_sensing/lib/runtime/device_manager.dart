@@ -179,7 +179,7 @@ class SmartphoneDeviceManager
     // find the supported datatypes
     for (var package in SamplingPackageRegistry().packages) {
       if (package is SmartphoneSamplingPackage) {
-        _supportedDataTypes.addAll(package.dataTypes);
+        _supportedDataTypes.addAll(package.dataTypes.map((e) => e.type));
       }
     }
   }

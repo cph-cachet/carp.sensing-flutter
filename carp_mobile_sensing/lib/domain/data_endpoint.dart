@@ -7,7 +7,7 @@
 
 part of domain;
 
-/// Specify an endpoint where a file-based [DataManager] can store JSON
+/// Specify an endpoint where a file-based data manager can store JSON
 /// data as files on the local device.
 @JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
 class FileDataEndPoint extends DataEndPoint {

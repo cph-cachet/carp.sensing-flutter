@@ -66,6 +66,6 @@ abstract class DeviceDataCollectorFactory {
   /// Initialize all devices in a [primaryDeviceDeployment].
   void initializeDevices(PrimaryDeviceDeployment primaryDeviceDeployment);
 
-  /// Initialize the device specified in the [descriptor].
-  void initializeDevice(DeviceRegistration descriptor);
+  /// Initialize the device specified in the [configuration].
+  void initializeDevice(DeviceConfiguration configuration);
 }

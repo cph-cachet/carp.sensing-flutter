@@ -7,7 +7,7 @@
 part of domain;
 
 /// A [Data] object holding a link to a file.
-@JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)
+@JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
 class FileData extends Data {
   static const dataType = CAMSDataType.FILE_TYPE_NAME;
 

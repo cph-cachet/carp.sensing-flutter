@@ -7,7 +7,7 @@
 
 part of carp_core_client;
 
-/// Manage data collection for a specific master device [deployment] on a client device.
+/// Manage data collection for a specific primary device [deployment] on a client device.
 class StudyRuntime {
   final List<DeviceConfiguration> _remainingDevicesToRegister = [];
   Study? _study;
@@ -90,7 +90,7 @@ class StudyRuntime {
     _study = study;
     _status = StudyStatus.DeploymentReceived;
 
-    // Register the master device this study runs on for the given study deployment.
+    // Register the primary device this study runs on for the given study deployment.
     deploymentStatus = await deploymentService.registerDevice(
       study.studyDeploymentId,
       study.deviceRoleName,
@@ -99,11 +99,11 @@ class StudyRuntime {
 
     // Initialize runtime.
     // this.studyDeploymentId = studyDeploymentId;
-    device = deploymentStatus.masterDeviceStatus!.device
+    device = deploymentStatus.primaryDeviceStatus!.device
         as PrimaryDeviceConfiguration?;
   }
 
-  /// Verifies whether the master device is ready for deployment and in case
+  /// Verifies whether the primary device is ready for deployment and in case
   /// it is, deploy the study previously added.
   /// Deployment entails trying to retrieve the [deployment] from the [deploymentService],
   /// based on the [studyDeploymentId].

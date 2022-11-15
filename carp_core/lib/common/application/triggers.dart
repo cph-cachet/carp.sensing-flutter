@@ -17,10 +17,10 @@ class TriggerConfiguration extends Serializable {
   /// The device role name from which the trigger originates.
   String? sourceDeviceRoleName;
 
-  /// Determines whether the trigger needs to be evaluated on a master
+  /// Determines whether the trigger needs to be evaluated on a primary
   /// device ([PrimaryDeviceConfiguration]).
   /// For example, this is the case when the trigger is time bound and needs
-  /// to be evaluated by a task scheduler running on a master device.
+  /// to be evaluated by a task scheduler running on a primary device.
   @JsonKey(ignore: true)
   bool? requiresPrimaryDevice;
 
@@ -55,8 +55,15 @@ abstract class Schedulable {}
 class ElapsedTimeTrigger extends TriggerConfiguration implements Schedulable {
   /// Elapsed time since start of the study deployment.
   /// Specified in the ISO 8061 standard.
+  /// If null, sampling starts immediately.
   @JsonKey(toJson: _$IsoDurationToJson, fromJson: _$IsoDurationFromJson)
   IsoDuration? elapsedTime;
+
+  /// Elapsed time since start of the study deployment.
+  /// Specified in the Dart [Duration] format.
+  Duration get elapsedTimeAsDuration => elapsedTime != null
+      ? Duration(seconds: elapsedTime!.toSeconds().round())
+      : const Duration();
 
   /// Create a trigger that starts after [elapsedTime] has elapsed since the start
   /// of the study deployment.
@@ -106,7 +113,7 @@ class ManualTrigger extends TriggerConfiguration {
 /// The iCalendar RFC 5545 standard is used to specify the recurrence
 /// rule: https://tools.ietf.org/html/rfc5545#section-3.3.10
 ///
-/// This trigger needs to be evaluated on a master device since it is time bound
+/// This trigger needs to be evaluated on a primary device since it is time bound
 /// and therefore requires a task scheduler.
 @JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
 class ScheduledTrigger extends TriggerConfiguration implements Schedulable {

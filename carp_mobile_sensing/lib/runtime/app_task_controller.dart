@@ -17,7 +17,7 @@ class AppTaskController {
 
   final Map<String, UserTask> _userTaskMap = {};
 
-  /// The etire list of all [UserTask]s.
+  /// The entire list of all [UserTask]s.
   ///
   /// Note that this list contains all tasks which has already triggered
   /// and which are planned to trigger in the future.
@@ -352,7 +352,7 @@ class UserTaskSnapshot extends Serializable {
     hasNotificationBeenCreated = userTask.hasNotificationBeenCreated;
     studyDeploymentId = userTask.appTaskExecutor.deployment?.studyDeploymentId;
     deviceRoleName =
-        userTask.appTaskExecutor.deployment?.deviceDescriptor.roleName;
+        userTask.appTaskExecutor.deployment?.deviceConfiguration.roleName;
   }
 
   @override

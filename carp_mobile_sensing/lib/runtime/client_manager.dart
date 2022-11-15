@@ -122,7 +122,7 @@ class SmartPhoneClientManager extends ClientManager
         await deploymentService!.createStudyDeployment(protocol);
     Study study = Study(
       status.studyDeploymentId,
-      status.masterDeviceStatus!.device.roleName,
+      status.primaryDeviceStatus!.device.roleName,
     );
 
     await addStudy(study);

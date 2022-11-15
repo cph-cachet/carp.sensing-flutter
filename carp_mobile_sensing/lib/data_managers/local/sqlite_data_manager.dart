@@ -38,13 +38,13 @@ class SQLiteDataManager extends AbstractDataManager {
 
   @override
   Future<void> initialize(
-    MasterDeviceDeployment deployment,
+    PrimaryDeviceDeployment deployment,
     DataEndPoint dataEndPoint,
-    Stream<DataPoint> data,
+    Stream<Measurement> measurements,
   ) async {
     assert(dataEndPoint is SQLiteDataEndPoint);
     info('Initializing $runtimeType...');
-    await super.initialize(deployment, dataEndPoint, data);
+    await super.initialize(deployment, dataEndPoint, measurements);
 
     // note that a new db (with timestamp in its name) is created on each app (re)start.
     String path = await databasePath;
@@ -83,18 +83,20 @@ class SQLiteDataManager extends AbstractDataManager {
   }
 
   @override
-  Future<void> onDataPoint(DataPoint dataPoint) async {
+  Future<void> onMeasurement(Measurement measurement) async {
     int createdAt = DateTime.now().millisecondsSinceEpoch;
-    String createdBy = dataPoint.carpHeader.userId.toString();
-    String carpHeader = jsonEncode(dataPoint.carpHeader);
-    String carpBody = jsonEncode(dataPoint.carpBody);
+    // TODO - the following is old stuff - replace with a real SQLDataStreamService
+    // String createdBy = measurement.carpHeader.userId.toString();
+    String createdBy = 'unknown';
+    String carpHeader = jsonEncode(measurement.dataType);
+    String carpBody = jsonEncode(measurement.data);
     String deploymentId = deployment.studyDeploymentId;
     String sql =
         "INSERT INTO $TABLENAME(created_at, created_by, deployment_id, carp_header, carp_body) VALUES('$createdAt', '$createdBy', '$deploymentId', '$carpHeader', '$carpBody')";
 
     int? id = await database?.rawInsert(sql);
     debug(
-        '$runtimeType - writing data point to SQLite - id: $id, type: ${dataPoint.carpHeader.dataFormat}');
+        '$runtimeType - writing data point to SQLite - id: $id, type: ${measurement.data.format}');
   }
 
   @override
@@ -104,9 +106,6 @@ class SQLiteDataManager extends AbstractDataManager {
   }
 
   @override
-  Future<void> onError(Object? error) async =>
-      await onDataPoint(DataPoint.fromData(ErrorDatum(error.toString()))
-        ..carpHeader.dataFormat = DataFormat.fromString(CAMSDataType.ERROR)
-        ..carpHeader.studyId = deployment.studyDeploymentId
-        ..carpHeader.userId = deployment.userId);
+  Future<void> onError(Object? error) async => await onMeasurement(
+      Measurement.fromData(Error(message: error.toString())));
 }

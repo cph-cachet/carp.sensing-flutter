@@ -56,7 +56,8 @@ class DeviceInformation extends Data {
 
   /// Returns `true` if the [deviceId] is equal.
   @override
-  bool equivalentTo(ConditionalEvent? event) => deviceId == event!['deviceId'];
+  bool equivalentTo(Data other) =>
+      (other is DeviceInformation) ? deviceId == other.deviceId : false;
 
   factory DeviceInformation.fromJson(Map<String, dynamic> json) =>
       _$DeviceInformationFromJson(json);
@@ -69,7 +70,7 @@ class DeviceInformation extends Data {
 }
 
 /// A [Datum] that holds battery level collected from the phone.
-@JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)
+@JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
 class BatteryState extends Data {
   static const dataType = DeviceSamplingPackage.BATTERY_STATE_TYPE_NAME;
 
@@ -110,8 +111,8 @@ class BatteryState extends Data {
 
   /// Returns `true` if the [batteryLevel] is equal.
   @override
-  bool equivalentTo(ConditionalEvent? event) =>
-      batteryLevel == event!['batteryLevel'];
+  bool equivalentTo(Data other) =>
+      (other is BatteryState) ? batteryLevel == other.batteryLevel : false;
 
   factory BatteryState.fromJson(Map<String, dynamic> json) =>
       _$BatteryStateFromJson(json);
@@ -124,7 +125,7 @@ class BatteryState extends Data {
 }
 
 /// Holds information about free memory on the phone.
-@JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)
+@JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
 class FreeMemory extends Data {
   static const dataType = DeviceSamplingPackage.FREE_MEMORY_TYPE_NAME;
 
@@ -147,7 +148,7 @@ class FreeMemory extends Data {
 }
 
 /// Holds a screen event collected from the phone.
-@JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)
+@JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
 class ScreenEvent extends Data {
   static const dataType = DeviceSamplingPackage.SCREEN_EVENT_TYPE_NAME;
 
@@ -178,8 +179,8 @@ class ScreenEvent extends Data {
 
   /// Returns `true` if the [screenEvent] is equal.
   @override
-  bool equivalentTo(ConditionalEvent? event) =>
-      screenEvent == event!['screenEvent'];
+  bool equivalentTo(Data other) =>
+      (other is ScreenEvent) ? screenEvent == other.screenEvent : false;
 
   factory ScreenEvent.fromJson(Map<String, dynamic> json) =>
       _$ScreenEventFromJson(json);

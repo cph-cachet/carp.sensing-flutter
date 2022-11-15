@@ -37,26 +37,33 @@ void main() {
     ];
 
     var task = BackgroundTask(name: 'Start measures')..addMeasures(measures);
-    masterProtocol.addTriggeredTask(Trigger(), task, masterPhone);
+    masterProtocol.addTaskControl(
+      TriggerConfiguration(),
+      task,
+      masterPhone,
+      Control.Start,
+    );
 
     // adding all measure from the sampling packages to one one trigger and one task
-    masterProtocol.addTriggeredTask(
+    masterProtocol.addTaskControl(
       ImmediateTrigger(), // a simple trigger that starts immediately
       BackgroundTask()
         ..measures = SamplingPackageRegistry()
             .dataTypes
-            .map((type) => Measure(type: type))
+            .map((type) => Measure(type: type.type))
             .toList(),
-      masterPhone,
+      masterPhone, Control.Start,
     );
 
     // collect device info only once
-    masterProtocol.addTriggeredTask(
-        OneTimeTrigger(),
-        BackgroundTask()
-          ..addMeasure(Measure(
-              type: DeviceSamplingPackage.DEVICE_INFORMATION_TYPE_NAME)),
-        masterPhone);
+    masterProtocol.addTaskControl(
+      OneTimeTrigger(),
+      BackgroundTask()
+        ..addMeasure(
+            Measure(type: DeviceSamplingPackage.DEVICE_INFORMATION_TYPE_NAME)),
+      masterPhone,
+      Control.Start,
+    );
 
     var sensingAppTask = AppTask(
       type: BackgroundSensingUserTask.ONE_TIME_SENSING_TYPE,
@@ -64,32 +71,36 @@ void main() {
       description: "Collect location, weather and air quality",
     )..addMeasures([
         Measure(type: SensorSamplingPackage.AMBIENT_LIGHT_TYPE_NAME),
-        Measure(type: SensorSamplingPackage.PEDOMETER),
+        Measure(type: CarpDataTypes.STEP_COUNT_TYPE_NAME),
       ]);
 
-    masterProtocol.addTriggeredTask(
+    masterProtocol.addTaskControl(
       ImmediateTrigger(),
       sensingAppTask,
       masterPhone,
+      Control.Start,
     );
 
-    masterProtocol.addTriggeredTask(
-        UserTaskTrigger(
-          taskName: sensingAppTask.name,
-          resumeCondition: UserTaskState.done,
-        ),
-        sensingAppTask,
-        masterPhone);
+    masterProtocol.addTaskControl(
+      UserTaskTrigger(
+        taskName: sensingAppTask.name,
+        resumeCondition: UserTaskState.done,
+      ),
+      sensingAppTask,
+      masterPhone,
+      Control.Start,
+    );
 
     // adding two measures to another device
-    masterProtocol.addTriggeredTask(
-        ImmediateTrigger(),
-        BackgroundTask()
-          ..addMeasure(
-              Measure(type: DeviceSamplingPackage.FREE_MEMORY_TYPE_NAME))
-          ..addMeasure(
-              Measure(type: SensorSamplingPackage.AMBIENT_LIGHT_TYPE_NAME)),
-        eSense);
+    masterProtocol.addTaskControl(
+      ImmediateTrigger(),
+      BackgroundTask()
+        ..addMeasure(Measure(type: DeviceSamplingPackage.FREE_MEMORY_TYPE_NAME))
+        ..addMeasure(
+            Measure(type: SensorSamplingPackage.AMBIENT_LIGHT_TYPE_NAME)),
+      eSense,
+      Control.Start,
+    );
   });
 
   test('DataPoints -> JSON', () async {
@@ -101,12 +112,12 @@ void main() {
     print(masterProtocol);
     print(toJsonString(masterProtocol));
     expect(masterProtocol.ownerId, 'user@dtu.dk');
-    expect(masterProtocol.masterDevices.length, 1);
-    expect(masterProtocol.connectedDevices.length, 1);
+    expect(masterProtocol.primaryDevices.length, 1);
+    expect(masterProtocol.connectedDevices?.length, 1);
     expect(masterProtocol.triggers.length, 6);
     expect(masterProtocol.triggers.keys.first, '0');
     expect(masterProtocol.tasks.length, 5);
-    expect(masterProtocol.triggeredTasks.length, 6);
+    expect(masterProtocol.taskControls.length, 6);
   });
 
   test(
@@ -129,31 +140,35 @@ void main() {
         json.decode(plainJson) as Map<String, dynamic>);
 
     expect(protocol.ownerId, masterProtocol.ownerId);
-    expect(protocol.masterDevices.first.roleName,
+    expect(protocol.primaryDevices.first.roleName,
         SmartphoneDeploymentService().thisPhone.roleName);
     print(toJsonString(protocol));
   });
 
   test('Triggers -> JSON -> Triggers', () async {
-    masterProtocol.addTriggeredTask(
-        DelayedTrigger(delay: Duration(seconds: 10)),
-        BackgroundTask()
-          ..addMeasure(Measure(type: SensorSamplingPackage.PEDOMETER))
-          ..addMeasure(
-              Measure(type: DeviceSamplingPackage.SCREEN_EVENT_TYPE_NAME)),
-        masterPhone);
+    masterProtocol.addTaskControl(
+      DelayedTrigger(delay: Duration(seconds: 10)),
+      BackgroundTask()
+        ..addMeasure(Measure(type: CarpDataTypes.STEP_COUNT_TYPE_NAME))
+        ..addMeasure(
+            Measure(type: DeviceSamplingPackage.SCREEN_EVENT_TYPE_NAME)),
+      masterPhone,
+      Control.Start,
+    );
 
-    masterProtocol.addTriggeredTask(
-        PeriodicTrigger(
-          period: const Duration(minutes: 1),
-          duration: Duration(seconds: 1),
-        ), // collect every min.
-        BackgroundTask()
-          ..addMeasure(
-              Measure(type: SensorSamplingPackage.AMBIENT_LIGHT_TYPE_NAME))
-          ..addMeasure(Measure(
-              type: DeviceSamplingPackage.DEVICE_INFORMATION_TYPE_NAME)),
-        masterPhone);
+    masterProtocol.addTaskControl(
+      PeriodicTrigger(
+        period: const Duration(minutes: 1),
+        duration: Duration(seconds: 1),
+      ), // collect every min.
+      BackgroundTask()
+        ..addMeasure(
+            Measure(type: SensorSamplingPackage.AMBIENT_LIGHT_TYPE_NAME))
+        ..addMeasure(
+            Measure(type: DeviceSamplingPackage.DEVICE_INFORMATION_TYPE_NAME)),
+      masterPhone,
+      Control.Start,
+    );
 
     RecurrentScheduledTrigger t1, t2, t3, t4;
 
@@ -164,12 +179,14 @@ void main() {
       duration: Duration(seconds: 1),
     );
     print('$t1');
-    masterProtocol.addTriggeredTask(
-        t1,
-        BackgroundTask()
-          ..addMeasure(
-              Measure(type: DeviceSamplingPackage.FREE_MEMORY_TYPE_NAME)),
-        masterPhone);
+    masterProtocol.addTaskControl(
+      t1,
+      BackgroundTask()
+        ..addMeasure(
+            Measure(type: DeviceSamplingPackage.FREE_MEMORY_TYPE_NAME)),
+      masterPhone,
+      Control.Start,
+    );
 
     // collect every other day at 13:30.
     t2 = RecurrentScheduledTrigger(
@@ -179,14 +196,16 @@ void main() {
       duration: Duration(seconds: 1),
     );
     print('$t2');
-    masterProtocol.addTriggeredTask(
-        t2,
-        BackgroundTask()
-          ..addMeasure(
-              Measure(type: SensorSamplingPackage.AMBIENT_LIGHT_TYPE_NAME))
-          ..addMeasure(
-              Measure(type: DeviceSamplingPackage.FREE_MEMORY_TYPE_NAME)),
-        masterPhone);
+    masterProtocol.addTaskControl(
+      t2,
+      BackgroundTask()
+        ..addMeasure(
+            Measure(type: SensorSamplingPackage.AMBIENT_LIGHT_TYPE_NAME))
+        ..addMeasure(
+            Measure(type: DeviceSamplingPackage.FREE_MEMORY_TYPE_NAME)),
+      masterPhone,
+      Control.Start,
+    );
 
     // collect every wednesday at 12:23.
     t3 = RecurrentScheduledTrigger(
@@ -196,14 +215,16 @@ void main() {
       duration: Duration(seconds: 1),
     );
     print('$t3');
-    masterProtocol.addTriggeredTask(
-        t3,
-        BackgroundTask()
-          ..addMeasure(
-              Measure(type: SensorSamplingPackage.AMBIENT_LIGHT_TYPE_NAME))
-          ..addMeasure(
-              Measure(type: DeviceSamplingPackage.BATTERY_STATE_TYPE_NAME)),
-        masterPhone);
+    masterProtocol.addTaskControl(
+      t3,
+      BackgroundTask()
+        ..addMeasure(
+            Measure(type: SensorSamplingPackage.AMBIENT_LIGHT_TYPE_NAME))
+        ..addMeasure(
+            Measure(type: DeviceSamplingPackage.BATTERY_STATE_TYPE_NAME)),
+      masterPhone,
+      Control.Start,
+    );
 
     // collect every 2nd monday at 12:23.
     t4 = RecurrentScheduledTrigger(
@@ -214,39 +235,40 @@ void main() {
       duration: Duration(seconds: 1),
     );
     print('$t4');
-    masterProtocol.addTriggeredTask(
-        t4,
-        BackgroundTask()
-          ..addMeasure(
-              Measure(type: SensorSamplingPackage.AMBIENT_LIGHT_TYPE_NAME))
-          ..addMeasure(
-              Measure(type: DeviceSamplingPackage.SCREEN_EVENT_TYPE_NAME)),
-        masterPhone);
-
-    ConditionalEvent({
-      'name': 'DTU',
-      'type': 'ENTER',
-    });
+    masterProtocol.addTaskControl(
+      t4,
+      BackgroundTask()
+        ..addMeasure(
+            Measure(type: SensorSamplingPackage.AMBIENT_LIGHT_TYPE_NAME))
+        ..addMeasure(
+            Measure(type: DeviceSamplingPackage.SCREEN_EVENT_TYPE_NAME)),
+      masterPhone,
+      Control.Start,
+    );
 
     // when battery level is 10% then sample light
-    masterProtocol.addTriggeredTask(
-        SamplingEventTrigger(
-            measureType: DeviceSamplingPackage.BATTERY_STATE_TYPE_NAME,
-            resumeCondition: ConditionalEvent({'batteryLevel': 10})),
-        BackgroundTask()
-          ..addMeasure(
-              Measure(type: SensorSamplingPackage.AMBIENT_LIGHT_TYPE_NAME)),
-        masterPhone);
+    masterProtocol.addTaskControl(
+      SamplingEventTrigger(
+          measureType: DeviceSamplingPackage.BATTERY_STATE_TYPE_NAME,
+          resumeCondition: BatteryState(10)),
+      BackgroundTask()
+        ..addMeasure(
+            Measure(type: SensorSamplingPackage.AMBIENT_LIGHT_TYPE_NAME)),
+      masterPhone,
+      Control.Start,
+    );
 
-    masterProtocol.addTriggeredTask(
-        ConditionalSamplingEventTrigger(
-            measureType: DeviceSamplingPackage.BATTERY_STATE_TYPE_NAME,
-            resumeCondition: (dataPoint) =>
-                (dataPoint.carpBody as BatteryState).batteryLevel == 10),
-        BackgroundTask()
-          ..addMeasure(
-              Measure(type: SensorSamplingPackage.AMBIENT_LIGHT_TYPE_NAME)),
-        masterPhone);
+    masterProtocol.addTaskControl(
+      ConditionalSamplingEventTrigger(
+          measureType: DeviceSamplingPackage.BATTERY_STATE_TYPE_NAME,
+          resumeCondition: (measurement) =>
+              (measurement.data as BatteryState).batteryLevel == 10),
+      BackgroundTask()
+        ..addMeasure(
+            Measure(type: SensorSamplingPackage.AMBIENT_LIGHT_TYPE_NAME)),
+      masterPhone,
+      Control.Start,
+    );
 
     final studyJson = toJsonString(masterProtocol);
 
@@ -272,18 +294,18 @@ void main() {
 
     Smartphone phone = Smartphone();
 
-    phone.samplingConfiguration
+    phone.defaultSamplingConfiguration!
       ..addAll(DeviceSamplingPackage().samplingSchema.configurations)
       ..addAll(SensorSamplingPackage().samplingSchema.configurations);
 
     protocol.addMasterDevice(phone);
 
     expect(
-        protocol.masterDevice.samplingConfiguration.keys.contains(
+        protocol.primaryDevice.defaultSamplingConfiguration?.keys.contains(
             DeviceSamplingPackage().samplingSchema.configurations.keys.first),
         true);
     expect(
-        protocol.masterDevice.samplingConfiguration.keys.contains(
+        protocol.primaryDevice.defaultSamplingConfiguration?.keys.contains(
             SensorSamplingPackage().samplingSchema.configurations.keys.first),
         true);
     print(toJsonString(protocol));
@@ -318,16 +340,16 @@ void main() {
     print(status_1);
     print(toJsonString(status_1));
     // we expect the phone and esense devices
-    expect(status_1.devicesStatus.length, 2);
+    expect(status_1.deviceStatusList.length, 2);
     expect(status_1.status, StudyDeploymentStatusTypes.Invited);
-    expect(
-        status_1.devicesStatus[0].device.roleName, Smartphone.DEFAULT_ROLENAME);
+    expect(status_1.deviceStatusList[0].device.roleName,
+        Smartphone.DEFAULT_ROLENAME);
     // the phone as a master device is always registred by the CAMSDeploymentService
-    expect(status_1.devicesStatus[0].status,
+    expect(status_1.deviceStatusList[0].status,
         DeviceDeploymentStatusTypes.Registered);
     // but we do not expect the esense device to be registrered (yet)
-    expect(status_1.devicesStatus[1].device.roleName, 'esense');
-    expect(status_1.devicesStatus[1].status,
+    expect(status_1.deviceStatusList[1].device.roleName, 'esense');
+    expect(status_1.deviceStatusList[1].status,
         DeviceDeploymentStatusTypes.Unregistered);
 
     StudyDeploymentStatus status_2 = await SmartphoneDeploymentService()
@@ -337,9 +359,9 @@ void main() {
     print(status_2);
     print(toJsonString(status_2));
     expect(status_2.studyDeploymentId, status_1.studyDeploymentId);
-    expect(status_1.devicesStatus[1].device.roleName, 'esense');
+    expect(status_1.deviceStatusList[1].device.roleName, 'esense');
     // now we expect the esense device to be registred
-    expect(status_1.devicesStatus[1].status,
+    expect(status_1.deviceStatusList[1].status,
         DeviceDeploymentStatusTypes.Registered);
 
     SmartphoneDeployment deployment = await SmartphoneDeploymentService()
@@ -349,8 +371,7 @@ void main() {
     expect(deployment.studyDeploymentId, status_1.studyDeploymentId);
     expect(deployment.tasks.length, masterProtocol.tasks.length);
     expect(deployment.triggers.length, masterProtocol.triggers.length);
-    expect(
-        deployment.triggeredTasks.length, masterProtocol.triggeredTasks.length);
+    expect(deployment.taskControls.length, masterProtocol.taskControls.length);
 
     StudyDeploymentStatus status_3 = await SmartphoneDeploymentService()
         .deploymentSuccessful(status_1.studyDeploymentId);
@@ -359,11 +380,11 @@ void main() {
     print(status_3);
     print(toJsonString(status_3));
     expect(
-      status_3.devicesStatus[0].status,
+      status_3.deviceStatusList[0].status,
       DeviceDeploymentStatusTypes.Deployed,
     );
     expect(
-      status_3.devicesStatus[1].status,
+      status_3.deviceStatusList[1].status,
       DeviceDeploymentStatusTypes.Deployed,
     );
   });

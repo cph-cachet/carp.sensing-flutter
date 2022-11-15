@@ -42,27 +42,28 @@ class SmartphoneDeploymentController extends StudyRuntime {
   /// The permissions granted to this study from the OS.
   Map<Permission, PermissionStatus>? permissions;
 
-  /// The stream of all sampled data points.
+  /// The stream of all sampled measurements.
   ///
-  /// Data points in the [data] stream are transformed in the following order:
+  /// Measures in the [measurements] stream are transformed in the following order:
   ///   1. privacy schema as specified in the [privacySchemaName]
   ///   2. preferred data format as specified by [dataFormat] in the [SmartphoneDeployment.dataEndPoint]
   ///   3. any custom [transformer] provided
   ///
   /// This is a broadcast stream and supports multiple subscribers.
-  Stream<DataPoint> get data => _executor!.measurements
-      .map((dataPoint) => dataPoint
+  Stream<Measurement> get measurements =>
+      _executor!.measurements.map((measurement) => measurement
         ..data = _transformer(TransformerSchemaRegistry()
             .lookup(deployment?.dataEndPoint?.dataFormat ?? NameSpace.CARP)!
             .transform(TransformerSchemaRegistry()
                 .lookup(privacySchemaName)!
-                .transform(dataPoint.data as Datum))))
-      .map((dataPoint) =>
-          dataPoint..carpHeader.dataFormat = dataPoint.data!.format);
+                .transform(measurement.data))));
 
-  /// A stream of all [data] of a specific data [type].
-  Stream<DataPoint> dataByType(String type) => data
-      .where((dataPoint) => dataPoint.carpHeader.dataFormat.toString() == type);
+  // .map((dataPoint) =>
+  //     dataPoint..carpHeader.dataFormat = dataPoint.data!.format);
+
+  /// A stream of all [measurements] of a specific data [type].
+  Stream<Measurement> measurementsByType(String type) => measurements
+      .where((measurement) => measurement.data.format.toString() == type);
 
   // PowerAwarenessState powerAwarenessState = NormalSamplingState.instance;
 
@@ -243,7 +244,7 @@ class SmartphoneDeploymentController extends StudyRuntime {
     await _dataManager?.initialize(
       deployment!,
       deployment!.dataEndPoint!,
-      data,
+      measurements,
     );
 
     // connect to all connectable devices, incl. this phone
@@ -251,7 +252,7 @@ class SmartphoneDeploymentController extends StudyRuntime {
 
     _executor!.initialize(deployment!, deployment!);
     // await enablePowerAwareness();
-    data.listen((dataPoint) => _samplingSize++);
+    measurements.listen((dataPoint) => _samplingSize++);
 
     status = StudyStatus.Deployed;
 

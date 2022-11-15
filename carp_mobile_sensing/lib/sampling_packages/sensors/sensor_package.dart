@@ -6,11 +6,15 @@ class SensorSamplingPackage extends SmartphoneSamplingPackage {
       '${CarpDataTypes.CARP_NAMESPACE}.ambientlight';
 
   @override
-  List<String> get dataTypes => [
-        CarpDataTypes.ACCELERATION_TYPE_NAME,
-        CarpDataTypes.ROTATION_TYPE_NAME,
-        CarpDataTypes.STEP_COUNT_TYPE_NAME,
-        AMBIENT_LIGHT_TYPE_NAME,
+  List<DataTypeMetaData> get dataTypes => [
+        CarpDataTypes.types[CarpDataTypes.ACCELERATION_TYPE_NAME]!,
+        CarpDataTypes.types[CarpDataTypes.ROTATION_TYPE_NAME]!,
+        CarpDataTypes.types[CarpDataTypes.STEP_COUNT_TYPE_NAME]!,
+        DataTypeMetaData(
+          type: AMBIENT_LIGHT_TYPE_NAME,
+          displayName: "Ambient light",
+          timeType: DataTimeType.TIME_SPAN,
+        ),
       ];
 
   @override

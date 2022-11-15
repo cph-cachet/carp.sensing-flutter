@@ -10,7 +10,7 @@ part of domain;
 /// A task that notifies the app when it is triggered.
 ///
 /// See [AppTaskExecutor] on how this work on runtime.
-@JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)
+@JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
 class AppTask extends TaskConfiguration {
   /// Type of task. For example a `survey`.
   String type;

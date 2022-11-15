@@ -37,12 +37,12 @@ class FileDataManager extends AbstractDataManager {
 
   @override
   Future<void> initialize(
-    MasterDeviceDeployment deployment,
+    PrimaryDeviceDeployment deployment,
     DataEndPoint dataEndPoint,
-    Stream<DataPoint> data,
+    Stream<Measurement> measurements,
   ) async {
     assert(dataEndPoint is FileDataEndPoint);
-    await super.initialize(deployment, dataEndPoint, data);
+    await super.initialize(deployment, dataEndPoint, measurements);
 
     _fileDataEndPoint = dataEndPoint as FileDataEndPoint;
     await Settings().getDeploymentBasePath(studyDeploymentId);
@@ -65,14 +65,12 @@ class FileDataManager extends AbstractDataManager {
   }
 
   @override
-  Future<void> onDataPoint(DataPoint dataPoint) async => await write(dataPoint);
+  Future<void> onMeasurement(Measurement measurement) async =>
+      await write(measurement);
 
   @override
   Future<void> onError(Object? error) async =>
-      await write(DataPoint.fromData(ErrorDatum(error.toString()))
-        ..carpHeader.dataFormat = DataFormat.fromString(CAMSDataType.ERROR)
-        ..carpHeader.studyId = deployment.studyDeploymentId
-        ..carpHeader.userId = deployment.userId);
+      await write(Measurement.fromData(Error(message: error.toString())));
 
   @override
   Future<void> onDone() async => await close();
@@ -132,21 +130,22 @@ class FileDataManager extends AbstractDataManager {
     return _sink!;
   }
 
-  /// Writes a JSON encoded [dataPoint] to the file.
-  Future<bool> write(DataPoint dataPoint) async {
+  /// Writes a JSON encoded [measurement] to the file.
+  Future<bool> write(Measurement measurement) async {
     // Check if the sink is ready for writing...
     if (!_initialized) {
       info('File sink not ready -- delaying for 2 sec...');
-      return Future.delayed(const Duration(seconds: 2), () => write(dataPoint));
+      return Future.delayed(
+          const Duration(seconds: 2), () => write(measurement));
     }
 
-    final json = jsonEncode(dataPoint);
+    final json = jsonEncode(measurement);
 
     await sink.then((activeSink) async {
       try {
         activeSink.write(json);
         debug(
-            'Writing data point to file - type: ${dataPoint.carpHeader.dataFormat}');
+            'Writing data point to file - type: ${measurement.dataType.toString()}');
 
         await file.then((activeFile) async {
           await activeFile.length().then((len) {
@@ -160,7 +159,7 @@ class FileDataManager extends AbstractDataManager {
       } catch (err) {
         warning('Error writing to file - $err');
         _initialized = false;
-        return write(dataPoint);
+        return write(measurement);
       }
     });
 

@@ -31,11 +31,27 @@ class DeviceSamplingPackage extends SmartphoneSamplingPackage {
       '${CarpDataTypes.CARP_NAMESPACE}.screenevent';
 
   @override
-  List<String> get dataTypes => [
-        DEVICE_INFORMATION_TYPE_NAME,
-        FREE_MEMORY_TYPE_NAME,
-        BATTERY_STATE_TYPE_NAME,
-        SCREEN_EVENT_TYPE_NAME,
+  List<DataTypeMetaData> get dataTypes => [
+        DataTypeMetaData(
+          type: DEVICE_INFORMATION_TYPE_NAME,
+          displayName: "Device Information",
+          timeType: DataTimeType.POINT,
+        ),
+        DataTypeMetaData(
+          type: FREE_MEMORY_TYPE_NAME,
+          displayName: "Free Memory",
+          timeType: DataTimeType.POINT,
+        ),
+        DataTypeMetaData(
+          type: BATTERY_STATE_TYPE_NAME,
+          displayName: "Battery State",
+          timeType: DataTimeType.POINT,
+        ),
+        DataTypeMetaData(
+          type: SCREEN_EVENT_TYPE_NAME,
+          displayName: "Screen Events",
+          timeType: DataTimeType.POINT,
+        ),
       ];
 
   @override

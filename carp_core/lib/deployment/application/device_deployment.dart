@@ -14,7 +14,7 @@ class PrimaryDeviceDeployment {
   // The configuration for the primary device this deployment is intended for.
   PrimaryDeviceConfiguration deviceConfiguration;
 
-  /// Registration for this master device.
+  /// Registration for this primary device.
   DeviceRegistration registration;
 
   /// The devices this device needs to connect to.

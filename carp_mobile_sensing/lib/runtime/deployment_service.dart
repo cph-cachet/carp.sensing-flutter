@@ -73,9 +73,9 @@ class SmartphoneDeploymentService implements DeploymentService {
     StudyDeployment deployment = _repository[studyDeploymentId]!;
 
     // check if already registered - if not register device
-    PrimaryDeviceConfiguration device = deployment.registeredDevices.keys
-        .firstWhere((descriptor) => descriptor.roleName == deviceRoleName,
-            orElse: () => PrimaryDeviceConfiguration(roleName: deviceRoleName));
+    DeviceConfiguration device = deployment.registeredDevices.keys.firstWhere(
+        (configuration) => configuration.roleName == deviceRoleName,
+        orElse: () => DeviceConfiguration(roleName: deviceRoleName));
 
     deployment.registerDevice(device, registration);
 
@@ -88,7 +88,7 @@ class SmartphoneDeploymentService implements DeploymentService {
     String deviceRoleName,
   ) async {
     StudyDeployment deployment = _repository[studyDeploymentId]!;
-    PrimaryDeviceConfiguration device = deployment.registeredDevices.keys
+    DeviceConfiguration device = deployment.registeredDevices.keys
         .firstWhere((descriptor) => descriptor.roleName == deviceRoleName);
 
     deployment.unregisterDevice(device);
@@ -102,19 +102,18 @@ class SmartphoneDeploymentService implements DeploymentService {
     String masterDeviceRoleName,
   ) async {
     StudyDeployment deployment = _repository[studyDeploymentId]!;
-    PrimaryDeviceConfiguration device = deployment.registeredDevices.keys
-        .firstWhere(
-            (descriptor) => descriptor.roleName == masterDeviceRoleName);
+    DeviceConfiguration device = deployment.registeredDevices.keys.firstWhere(
+        (descriptor) => descriptor.roleName == masterDeviceRoleName);
 
-    assert(device.isMasterDevice!,
+    assert(device is PrimaryDeviceConfiguration,
         "The specified '$masterDeviceRoleName' device is not registered as a master device");
 
-    PrimaryDeviceConfiguration deviceDeployment =
+    PrimaryDeviceDeployment deviceDeployment =
         deployment.getDeviceDeploymentFor(device as PrimaryDeviceConfiguration);
 
     return SmartphoneDeployment.fromPrimaryDeviceDeployment(
       studyDeploymentId: studyDeploymentId,
-      masterDeviceDeployment: deviceDeployment,
+      primaryDeviceDeployment: deviceDeployment,
       protocol: deployment.protocol as SmartphoneStudyProtocol,
     );
   }
@@ -140,8 +139,8 @@ class SmartphoneDeploymentService implements DeploymentService {
     DeviceConfiguration device = deployment.registeredDevices.keys.firstWhere(
         (descriptor) => descriptor.roleName == masterDeviceRoleName);
 
-    assert(device.isMasterDevice!,
-        "The specified device with rolename '$masterDeviceRoleName' is not a master device.");
+    assert(device is PrimaryDeviceConfiguration,
+        "The specified device with rolename '$masterDeviceRoleName' is not a primary device.");
 
     deployment.deviceDeployed(
         (device as PrimaryDeviceConfiguration), deviceDeploymentLastUpdateDate);

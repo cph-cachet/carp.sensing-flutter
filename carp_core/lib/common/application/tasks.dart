@@ -91,10 +91,10 @@ class BackgroundTask extends TaskConfiguration {
 /// the CARP domain model.
 @JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
 class CustomProtocolTask extends TaskConfiguration {
-  /// A definition on how to run a study on a master device, serialized as a string.
+  /// A definition on how to run a study on a primary device, serialized as a string.
   String studyProtocol;
 
-  /// Create a task which is used in a custon protocol, specified as a
+  /// Create a task which is used in a custom protocol, specified as a
   /// string in [studyProtocol].
   CustomProtocolTask({
     super.name,

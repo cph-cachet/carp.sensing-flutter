@@ -72,7 +72,7 @@ class StudyDeployment {
 
   /// Get the status of this [StudyDeployment].
   StudyDeploymentStatus get status {
-    // set the status of each device - both master and connected devices
+    // set the status of each device - both primary and connected devices
     _status.deviceStatusList = [];
     for (var deviceDescriptor in protocol.primaryDevices) {
       _status.deviceStatusList.add(getDeviceStatus(deviceDescriptor));
@@ -126,16 +126,17 @@ class StudyDeployment {
     _registeredDevices.remove(device.roleName);
   }
 
-  /// Get the deployment configuration for the specified master [device] in
+  /// Get the deployment configuration for the specified primary [device] in
   /// this study deployment.
   PrimaryDeviceDeployment getDeviceDeploymentFor(
-      PrimaryDeviceConfiguration device) {
+    PrimaryDeviceConfiguration device,
+  ) {
     // Verify whether the specified device is part of the protocol of this
     // deployment and has been registrered.
     assert(_protocol.hasMasterDevice(device.roleName),
-        "The specified master device with rolename '${device.roleName}' is not part of the protocol of this deployment.");
+        "The specified primary device with rolename '${device.roleName}' is not part of the protocol of this deployment.");
     assert(_registeredDevices.containsKey(device.roleName),
-        "The specified master device with rolename '${device.roleName}' has not been registrered to this deployment.");
+        "The specified primary device with rolename '${device.roleName}' has not been registrered to this deployment.");
 
     // TODO - Verify whether the specified device is ready to be deployed.
 
@@ -156,7 +157,7 @@ class StudyDeployment {
     }
 
     Set<TaskConfiguration> tasks = {};
-    // get all tasks which need to be executed on this master device
+    // get all tasks which need to be executed on this primary device
     tasks.addAll(protocol.getTasksForDeviceRoleName(device.roleName));
 
     // .. and connected devices
@@ -183,14 +184,14 @@ class StudyDeployment {
         taskControls: triggeredTasks);
   }
 
-  /// Indicate that the specified master [device] was deployed successfully using
+  /// Indicate that the specified primary [device] was deployed successfully using
   /// the deployment with the specified [deviceDeploymentLastUpdateDate].
   void deviceDeployed(
     PrimaryDeviceConfiguration device,
     DateTime deviceDeploymentLastUpdateDate,
   ) {
-    // assert(_protocol.masterDevices.contains(device),
-    //     'The specified master device is not part of the protocol of this deployment.');
+    // assert(_protocol.primaryDevices.contains(device),
+    //     'The specified primary device is not part of the protocol of this deployment.');
     _status.status = StudyDeploymentStatusTypes.DeploymentReady;
     _startTime = deviceDeploymentLastUpdateDate;
   }
@@ -209,7 +210,8 @@ enum StudyDeploymentStatusTypes {
   /// have not yet acted on the invitation.
   Invited,
 
-  /// Participants have started registering devices, but remaining master devices still need to be deployed.
+  /// Participants have started registering devices, but remaining primary
+  /// devices still need to be deployed.
   DeployingDevices,
 
   /// The study deployment is ready to be used.
@@ -249,13 +251,13 @@ class StudyDeploymentStatus extends Serializable {
   /// time (all devices deployed); null otherwise.
   DateTime? startedOn;
 
-  /// The [DeviceDeploymentStatus] for the master device of this deployment,
+  /// The [DeviceDeploymentStatus] for the primary device of this deployment,
   /// which is typically this phone.
   ///
-  /// Returns `null` if there is no master device in the list of [deviceStatusList].
-  DeviceDeploymentStatus? get masterDeviceStatus {
+  /// Returns `null` if there is no primary device in the list of [deviceStatusList].
+  DeviceDeploymentStatus? get primaryDeviceStatus {
     for (DeviceDeploymentStatus status in deviceStatusList) {
-      if (status.device.isOptional!) return status;
+      if (status.device is PrimaryDeviceConfiguration) return status;
     }
     return null;
   }

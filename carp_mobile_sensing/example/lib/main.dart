@@ -8,6 +8,7 @@ import 'package:carp_serializable/carp_serializable.dart';
 import 'package:carp_core/carp_core.dart';
 import 'package:carp_mobile_sensing/carp_mobile_sensing.dart';
 import 'package:flutter/material.dart' hide TimeOfDay;
+import 'package:iso_duration_parser/iso_duration_parser.dart';
 
 void main() => runApp(CARPMobileSensingApp());
 
@@ -58,8 +59,8 @@ class Console extends State<ConsolePage> {
       ),
       body: SingleChildScrollView(
         child: StreamBuilder(
-          stream: sensing?.controller?.data,
-          builder: (context, AsyncSnapshot<DataPoint> snapshot) {
+          stream: sensing?.controller?.measurements,
+          builder: (context, AsyncSnapshot<Measurement> snapshot) {
             if (snapshot.hasData) _log += '${toJsonString(snapshot.data!)}\n';
             return Text(_log);
           },
@@ -142,7 +143,7 @@ class Sensing {
     );
 
     // Listening on the data stream and print them as json.
-    controller?.data.listen((data) => print(toJsonString(data)));
+    controller?.measurements.listen((data) => print(toJsonString(data)));
   }
 
   /// Is sensing running, i.e. has the study executor been resumed?
@@ -189,43 +190,49 @@ class LocalStudyProtocolManager implements StudyProtocolManager {
 
     // Add measures from the [DeviceSamplingPackage] and [SensorSamplingPackage]
     // sampling packages.
-    protocol.addTriggeredTask(
-        ImmediateTrigger(),
-        BackgroundTask()
-          ..addMeasures([
-            // Measure(type: SensorSamplingPackage.ACCELEROMETER),
-            // Measure(type: SensorSamplingPackage.GYROSCOPE),
-            Measure(type: DeviceSamplingPackage.FREE_MEMORY_TYPE_NAME),
-            Measure(type: DeviceSamplingPackage.BATTERY_STATE_TYPE_NAME),
-            Measure(type: DeviceSamplingPackage.SCREEN_EVENT_TYPE_NAME),
-            Measure(type: SensorSamplingPackage.PEDOMETER),
-            Measure(type: SensorSamplingPackage.AMBIENT_LIGHT_TYPE_NAME)
-          ]),
-        phone);
+    protocol.addTaskControl(
+      ImmediateTrigger(),
+      BackgroundTask()
+        ..addMeasures([
+          // Measure(type: SensorSamplingPackage.ACCELEROMETER),
+          // Measure(type: SensorSamplingPackage.GYROSCOPE),
+          Measure(type: DeviceSamplingPackage.FREE_MEMORY_TYPE_NAME),
+          Measure(type: DeviceSamplingPackage.BATTERY_STATE_TYPE_NAME),
+          Measure(type: DeviceSamplingPackage.SCREEN_EVENT_TYPE_NAME),
+          Measure(type: CarpDataTypes.STEP_COUNT_TYPE_NAME),
+          Measure(type: SensorSamplingPackage.AMBIENT_LIGHT_TYPE_NAME)
+        ]),
+      phone,
+      Control.Start,
+    );
 
     // Collect device info only once
-    protocol.addTriggeredTask(
-        OneTimeTrigger(),
-        BackgroundTask()
-          ..addMeasure(Measure(
-              type: DeviceSamplingPackage.DEVICE_INFORMATION_TYPE_NAME)),
-        phone);
+    protocol.addTaskControl(
+      OneTimeTrigger(),
+      BackgroundTask()
+        ..addMeasure(
+            Measure(type: DeviceSamplingPackage.DEVICE_INFORMATION_TYPE_NAME)),
+      phone,
+      Control.Start,
+    );
 
     // add a random trigger to collect device info at random times
-    protocol.addTriggeredTask(
-        RandomRecurrentTrigger(
-          startTime: TimeOfDay(hour: 07, minute: 45),
-          endTime: TimeOfDay(hour: 22, minute: 30),
-          minNumberOfTriggers: 2,
-          maxNumberOfTriggers: 8,
-        ),
-        BackgroundTask()
-          ..addMeasure(Measure(
-              type: DeviceSamplingPackage.DEVICE_INFORMATION_TYPE_NAME)),
-        phone);
+    protocol.addTaskControl(
+      RandomRecurrentTrigger(
+        startTime: TimeOfDay(hour: 07, minute: 45),
+        endTime: TimeOfDay(hour: 22, minute: 30),
+        minNumberOfTriggers: 2,
+        maxNumberOfTriggers: 8,
+      ),
+      BackgroundTask()
+        ..addMeasure(
+            Measure(type: DeviceSamplingPackage.DEVICE_INFORMATION_TYPE_NAME)),
+      phone,
+      Control.Start,
+    );
 
     // add a ConditionalPeriodicTrigger to check periodically
-    protocol.addTriggeredTask(
+    protocol.addTaskControl(
         ConditionalPeriodicTrigger(
           period: Duration(seconds: 10),
           resumeCondition: () {
@@ -237,7 +244,8 @@ class LocalStudyProtocolManager implements StudyProtocolManager {
         BackgroundTask()
           ..addMeasure(Measure(
               type: DeviceSamplingPackage.DEVICE_INFORMATION_TYPE_NAME)),
-        phone);
+        phone,
+        Control.Start);
 
     // Add an app task 2 minutes after deployment and make a notification.
     //
@@ -245,17 +253,19 @@ class LocalStudyProtocolManager implements StudyProtocolManager {
     // on the phone. However, nothing will happen when you click on it.
     // See the PulmonaryMonitor demo app for a full-scale example of how to use
     // the App Task model.
-    protocol.addTriggeredTask(
-        ElapsedTimeTrigger(
-          elapsedTime: const Duration(minutes: 2),
-        ),
-        AppTask(
-          type: BackgroundSensingUserTask.ONE_TIME_SENSING_TYPE,
-          title: "Elapsed Time - 2 minutes",
-          notification: true,
-        )..addMeasure(
-            Measure(type: DeviceSamplingPackage.DEVICE_INFORMATION_TYPE_NAME)),
-        phone);
+    protocol.addTaskControl(
+      ElapsedTimeTrigger(
+        elapsedTime: IsoDuration(minutes: 2),
+      ),
+      AppTask(
+        type: BackgroundSensingUserTask.ONE_TIME_SENSING_TYPE,
+        title: "Elapsed Time - 2 minutes",
+        notification: true,
+      )..addMeasure(
+          Measure(type: DeviceSamplingPackage.DEVICE_INFORMATION_TYPE_NAME)),
+      phone,
+      Control.Start,
+    );
 
     // // add an app task at exact date & time
     // protocol.addTriggeredTask(

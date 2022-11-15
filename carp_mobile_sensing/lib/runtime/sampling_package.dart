@@ -30,7 +30,7 @@ class SamplingPackageRegistry {
     for (var permission in package.permissions) {
       if (!_permissions.contains(permission)) _permissions.add(permission);
     }
-    CAMSDataType.add(package.dataTypes);
+    CarpDataTypes.add(package.dataTypes);
 
     // register the package's device in the device registry
     DeviceController()
@@ -42,22 +42,24 @@ class SamplingPackageRegistry {
 
   /// Lookup the [SamplingPackage]s that support the [type] of data.
   ///
-  /// Typically, only one package supports a specific type. Howerver, if
+  /// Typically, only one package supports a specific type. However, if
   /// more than one package does, all packages are returned.
   /// Can be an empty list.
   Set<SamplingPackage> lookup(String type) {
     final Set<SamplingPackage> supportedPackages = {};
 
     for (var package in packages) {
-      if (package.dataTypes.contains(type)) supportedPackages.add(package);
+      if (package.dataTypes.map((e) => e.type).contains(type)) {
+        supportedPackages.add(package);
+      }
     }
 
     return supportedPackages;
   }
 
   /// The combined list of all measure types in all packages.
-  List<String> get dataTypes {
-    List<String> dataTypes = [];
+  List<DataTypeMetaData> get dataTypes {
+    List<DataTypeMetaData> dataTypes = [];
     for (var package in packages) {
       dataTypes.addAll(package.dataTypes);
     }
@@ -113,7 +115,7 @@ class SamplingPackageRegistry {
 ///  * creating a [DeviceManager] based on a device type
 abstract class SamplingPackage {
   /// The list of data type this package supports.
-  List<String> get dataTypes;
+  List<DataTypeMetaData> get dataTypes;
 
   /// The default sampling schema for all [dataTypes] in this package.
   SamplingSchema get samplingSchema;

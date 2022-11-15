@@ -77,7 +77,7 @@ class PrimaryDeviceConfiguration extends DeviceConfiguration {
   Map<String, dynamic> toJson() => _$PrimaryDeviceConfigurationToJson(this);
 }
 
-/// A general-purpose master device for custom protols.
+/// A general-purpose primary device for custom protocols.
 /// Only used when downloading custom protocols from the CARP web service.
 @JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
 class CustomProtocolDevice extends PrimaryDeviceConfiguration {
@@ -103,12 +103,12 @@ class CustomProtocolDevice extends PrimaryDeviceConfiguration {
 /// Typically this phone for a [StudyProtocol] running on this phone.
 @JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
 class Smartphone extends PrimaryDeviceConfiguration {
-  /// The type of a smartphone master device.
+  /// The type of a smartphone primary device.
   static const String DEVICE_TYPE =
       '${DeviceConfiguration.DEVICE_NAMESPACE}.Smartphone';
 
-  /// The default rolename for a smartphone master device.
-  static const String DEFAULT_ROLENAME = 'masterphone';
+  /// The default role name for a smartphone primary device.
+  static const String DEFAULT_ROLENAME = 'primaryphone';
 
   /// Create a new Smartphone device descriptor.
   /// If [roleName] is not specified, then the [DEFAULT_ROLENAME] is used.

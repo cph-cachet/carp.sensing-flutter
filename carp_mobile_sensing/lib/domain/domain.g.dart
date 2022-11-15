@@ -470,7 +470,7 @@ AppTask _$AppTaskFromJson(Map<String, dynamic> json) => AppTask(
       title: json['title'] as String? ?? '',
       description: json['description'] as String? ?? '',
       instructions: json['instructions'] as String? ?? '',
-      minutesToComplete: json['minutes_to_complete'] as int?,
+      minutesToComplete: json['minutesToComplete'] as int?,
       expire: json['expire'] == null
           ? null
           : Duration(microseconds: json['expire'] as int),
@@ -493,7 +493,7 @@ Map<String, dynamic> _$AppTaskToJson(AppTask instance) {
   val['title'] = instance.title;
   val['description'] = instance.description;
   val['instructions'] = instance.instructions;
-  writeNotNull('minutes_to_complete', instance.minutesToComplete);
+  writeNotNull('minutesToComplete', instance.minutesToComplete);
   writeNotNull('expire', instance.expire?.inMicroseconds);
   val['notification'] = instance.notification;
   return val;
@@ -739,12 +739,10 @@ SamplingEventTrigger _$SamplingEventTriggerFromJson(
       measureType: json['measureType'] as String,
       resumeCondition: json['resumeCondition'] == null
           ? null
-          : ConditionalEvent.fromJson(
-              json['resumeCondition'] as Map<String, dynamic>),
+          : Data.fromJson(json['resumeCondition'] as Map<String, dynamic>),
       pauseCondition: json['pauseCondition'] == null
           ? null
-          : ConditionalEvent.fromJson(
-              json['pauseCondition'] as Map<String, dynamic>),
+          : Data.fromJson(json['pauseCondition'] as Map<String, dynamic>),
     )
       ..$type = json['__type'] as String?
       ..sourceDeviceRoleName = json['sourceDeviceRoleName'] as String?;
@@ -764,25 +762,6 @@ Map<String, dynamic> _$SamplingEventTriggerToJson(
   val['measureType'] = instance.measureType;
   writeNotNull('resumeCondition', instance.resumeCondition);
   writeNotNull('pauseCondition', instance.pauseCondition);
-  return val;
-}
-
-ConditionalEvent _$ConditionalEventFromJson(Map<String, dynamic> json) =>
-    ConditionalEvent(
-      json['condition'] as Map<String, dynamic>,
-    )..$type = json['__type'] as String?;
-
-Map<String, dynamic> _$ConditionalEventToJson(ConditionalEvent instance) {
-  final val = <String, dynamic>{};
-
-  void writeNotNull(String key, dynamic value) {
-    if (value != null) {
-      val[key] = value;
-    }
-  }
-
-  writeNotNull('__type', instance.$type);
-  val['condition'] = instance.condition;
   return val;
 }
 
@@ -912,26 +891,6 @@ const _$UserTaskStateEnumMap = {
   UserTaskState.expired: 'expired',
   UserTaskState.undefined: 'undefined',
 };
-
-Datum _$DatumFromJson(Map<String, dynamic> json) => Datum()
-  ..$type = json['__type'] as String?
-  ..id = json['id'] as String?
-  ..timestamp = DateTime.parse(json['timestamp'] as String);
-
-Map<String, dynamic> _$DatumToJson(Datum instance) {
-  final val = <String, dynamic>{};
-
-  void writeNotNull(String key, dynamic value) {
-    if (value != null) {
-      val[key] = value;
-    }
-  }
-
-  writeNotNull('__type', instance.$type);
-  writeNotNull('id', instance.id);
-  val['timestamp'] = instance.timestamp.toIso8601String();
-  return val;
-}
 
 FileData _$FileDataFromJson(Map<String, dynamic> json) => FileData(
       filename: json['filename'] as String,

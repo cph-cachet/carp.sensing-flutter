@@ -133,7 +133,7 @@ class StudyProtocol extends Snapshot {
       assert(
           hasMasterDevice(trigger.sourceDeviceRoleName!),
           'The passed trigger cannot be initiated by its specified source device '
-          'since it is not a master device which is part of this protocol.');
+          'since it is not a primary device which is part of this protocol.');
     }
 
     triggers['${triggers.length}'] = trigger;

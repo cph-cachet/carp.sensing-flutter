@@ -18,20 +18,20 @@ void sensing() async {
   protocol.addMasterDevice(phone);
 
   // add selected measures from the sampling packages
-  protocol.addTriggeredTask(
-      ImmediateTrigger(),
-      BackgroundTask()
-        // ..addMeasure(Measure(type: SensorSamplingPackage.ACCELEROMETER))
-        // ..addMeasure(Measure(type: SensorSamplingPackage.GYROSCOPE))
-        ..addMeasure(Measure(type: DeviceSamplingPackage.FREE_MEMORY_TYPE_NAME))
-        ..addMeasure(
-            Measure(type: DeviceSamplingPackage.BATTERY_STATE_TYPE_NAME))
-        ..addMeasure(
-            Measure(type: DeviceSamplingPackage.SCREEN_EVENT_TYPE_NAME))
-        ..addMeasure(Measure(type: SensorSamplingPackage.PEDOMETER))
-        ..addMeasure(
-            Measure(type: SensorSamplingPackage.AMBIENT_LIGHT_TYPE_NAME)),
-      phone);
+  protocol.addTaskControl(
+    ImmediateTrigger(),
+    BackgroundTask()
+      ..addMeasure(Measure(type: CarpDataTypes.ACCELERATION_TYPE_NAME))
+      ..addMeasure(Measure(type: CarpDataTypes.ROTATION_TYPE_NAME))
+      ..addMeasure(Measure(type: DeviceSamplingPackage.FREE_MEMORY_TYPE_NAME))
+      ..addMeasure(Measure(type: DeviceSamplingPackage.BATTERY_STATE_TYPE_NAME))
+      ..addMeasure(Measure(type: DeviceSamplingPackage.SCREEN_EVENT_TYPE_NAME))
+      ..addMeasure(Measure(type: CarpDataTypes.STEP_COUNT_TYPE_NAME))
+      ..addMeasure(
+          Measure(type: SensorSamplingPackage.AMBIENT_LIGHT_TYPE_NAME)),
+    phone,
+    Control.Start,
+  );
 
   // deploy this protocol using the on-phone deployment service
   StudyDeploymentStatus status =
@@ -43,7 +43,7 @@ void sensing() async {
 
   Study study = Study(
     status.studyDeploymentId,
-    status.masterDeviceStatus!.device.roleName,
+    status.primaryDeviceStatus!.device.roleName,
   );
 
   // add the study and get the study runtime (controller)
@@ -57,16 +57,16 @@ void sensing() async {
   controller?.start();
 
   // listening on the data stream and print them as json to the debug console
-  controller?.data.listen((data) => print(toJsonString(data)));
+  controller?.measurements.listen((data) => print(toJsonString(data)));
 
   // subscribe to events
-  controller?.data.listen((DataPoint dataPoint) {
+  controller?.measurements.listen((Measurement measurement) {
     // do something w. the data, e.g. print the json
-    print(JsonEncoder.withIndent(' ').convert(dataPoint));
+    print(JsonEncoder.withIndent(' ').convert(measurement));
   });
 
   // listening on events of a specific type
   controller
-      ?.dataByType(DeviceSamplingPackage.SCREEN_EVENT_TYPE_NAME)
+      ?.measurementsByType(DeviceSamplingPackage.SCREEN_EVENT_TYPE_NAME)
       .forEach(print);
 }

@@ -30,7 +30,6 @@ part 'client_manager.dart';
 part 'study_runtime.dart';
 part 'study.dart';
 part 'device_manager.dart';
-part 'data_manager.dart';
 part 'datapoint.dart';
 
 part 'carp_core_client.g.dart';

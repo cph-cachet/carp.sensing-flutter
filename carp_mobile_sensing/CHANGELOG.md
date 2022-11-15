@@ -5,7 +5,7 @@
 * This entails a set of **breaking** changes to the domain model:
   * CARP cores comes with a range of pre-defined Measure Types (e.g., `geolocation`, `stepcount`, etc.).
   * An important new measure type is the `TriggeredTask` and `CompletedTask` which now automatically collected data on when and how a trigger and task is resumed.
-  * In the protocol, triggering is now controlled by the `Control` class, which basically states if sampling should be started or stopped.
+  * In the protocol, triggering is now controlled by the `Control` class, which basically states if sampling should be started or stopped. So, instead of adding a `TriggeredTask` to a protocol you now add a `TaskControl` instead.
 
 * The new [`data`](https://github.com/imotions/carp.core-kotlin/blob/develop/docs/carp-data.md) sub-system has been implemented in CAMS. This entails:
 

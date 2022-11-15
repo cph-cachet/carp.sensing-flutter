@@ -29,16 +29,18 @@ Future<void> example_0() async {
 
   // Automatically collect step count, ambient light, screen activity, and
   // battery level. Sampling is delaying by 10 seconds.
-  protocol.addTriggeredTask(
-      DelayedTrigger(delay: Duration(seconds: 10)),
-      BackgroundTask(name: 'Sensor Task')
-        ..addMeasures([
-          Measure(type: SensorSamplingPackage.PEDOMETER),
-          Measure(type: SensorSamplingPackage.AMBIENT_LIGHT_TYPE_NAME),
-          Measure(type: DeviceSamplingPackage.SCREEN_EVENT_TYPE_NAME),
-          Measure(type: DeviceSamplingPackage.BATTERY_STATE_TYPE_NAME),
-        ]),
-      phone);
+  protocol.addTaskControl(
+    DelayedTrigger(delay: Duration(seconds: 10)),
+    BackgroundTask(name: 'Sensor Task')
+      ..addMeasures([
+        Measure(type: CarpDataTypes.STEP_COUNT_TYPE_NAME),
+        Measure(type: SensorSamplingPackage.AMBIENT_LIGHT_TYPE_NAME),
+        Measure(type: DeviceSamplingPackage.SCREEN_EVENT_TYPE_NAME),
+        Measure(type: DeviceSamplingPackage.BATTERY_STATE_TYPE_NAME),
+      ]),
+    phone,
+    Control.Start,
+  );
 
   // STEP II -- DEPLOY STUDY ON A CLIENT
 
@@ -61,7 +63,7 @@ Future<void> example_0() async {
   controller?.start();
 
   // Listening and print all data events from the study
-  controller?.data.forEach(print);
+  controller?.measurements.forEach(print);
 }
 
 /// This is an example of how to set up a study.
@@ -89,16 +91,18 @@ void example_1() async {
 
   // Add a background task that immediately starts collecting step counts,
   // ambient light, screen activity, and battery level.
-  protocol.addTriggeredTask(
-      ImmediateTrigger(),
-      BackgroundTask()
-        ..addMeasures([
-          Measure(type: SensorSamplingPackage.PEDOMETER),
-          Measure(type: SensorSamplingPackage.AMBIENT_LIGHT_TYPE_NAME),
-          Measure(type: DeviceSamplingPackage.SCREEN_EVENT_TYPE_NAME),
-          Measure(type: DeviceSamplingPackage.BATTERY_STATE_TYPE_NAME),
-        ]),
-      phone);
+  protocol.addTaskControl(
+    ImmediateTrigger(),
+    BackgroundTask()
+      ..addMeasures([
+        Measure(type: CarpDataTypes.STEP_COUNT_TYPE_NAME),
+        Measure(type: SensorSamplingPackage.AMBIENT_LIGHT_TYPE_NAME),
+        Measure(type: DeviceSamplingPackage.SCREEN_EVENT_TYPE_NAME),
+        Measure(type: DeviceSamplingPackage.BATTERY_STATE_TYPE_NAME),
+      ]),
+    phone,
+    Control.Start,
+  );
 
   // Use the on-phone deployment service.
   DeploymentService deploymentService = SmartphoneDeploymentService();
@@ -114,7 +118,7 @@ void example_1() async {
   // Create a study object based on the deployment id and the rolename
   Study study = Study(
     status.studyDeploymentId,
-    status.masterDeviceStatus!.device.roleName,
+    status.primaryDeviceStatus!.device.roleName,
   );
 
   // Add the study to the client manager and get a study runtime to control this deployment
@@ -129,7 +133,7 @@ void example_1() async {
   controller?.start();
 
   // Print all data events from the study
-  controller?.data.forEach(print);
+  controller?.measurements.forEach(print);
 }
 
 /// This is a more elaborate example used in the README.md file.
@@ -165,12 +169,14 @@ void example_2() async {
 
   // automatically collect accelerometer and gyroscope data
   // but delay the sampling by 10 seconds
-  protocol.addTriggeredTask(
-      DelayedTrigger(delay: Duration(seconds: 10)),
-      BackgroundTask(name: 'Sensor Task')
-        ..addMeasure(Measure(type: SensorSamplingPackage.ACCELEROMETER))
-        ..addMeasure(Measure(type: SensorSamplingPackage.GYROSCOPE)),
-      phone);
+  protocol.addTaskControl(
+    DelayedTrigger(delay: Duration(seconds: 10)),
+    BackgroundTask(name: 'Sensor Task')
+      ..addMeasure(Measure(type: CarpDataTypes.ACCELERATION_TYPE_NAME))
+      ..addMeasure(Measure(type: CarpDataTypes.ROTATION_TYPE_NAME)),
+    phone,
+    Control.Start,
+  );
 
   // specify details of a light measure
   Measure lightMeasure = Measure(
@@ -181,10 +187,11 @@ void example_2() async {
     );
 
   // add it to the study to start immediately
-  protocol.addTriggeredTask(
+  protocol.addTaskControl(
     ImmediateTrigger(),
     BackgroundTask(name: 'Light')..addMeasure(lightMeasure),
     phone,
+    Control.Start,
   );
 
   // use the on-phone deployment service
@@ -200,7 +207,7 @@ void example_2() async {
 
   Study study = Study(
     status.studyDeploymentId,
-    status.masterDeviceStatus!.device.roleName,
+    status.primaryDeviceStatus!.device.roleName,
   );
 
   // create a study runtime to control this deployment
@@ -214,31 +221,31 @@ void example_2() async {
   controller?.start();
 
   // listening to the stream of all data events from the controller
-  controller?.data.listen((dataPoint) => print(dataPoint));
+  controller?.measurements.listen((dataPoint) => print(dataPoint));
 
   // listen only on CARP events
-  controller?.data
-      .where((dataPoint) =>
-          dataPoint.measurements!.format.namespace == NameSpace.CARP)
+  controller?.measurements
+      .where(
+          (measurement) => measurement.data.format.namespace == NameSpace.CARP)
       .listen((event) => print(event));
 
   // listen on LIGHT events only
-  controller?.data
-      .where((dataPoint) =>
-          dataPoint.measurements!.format.toString() ==
+  controller?.measurements
+      .where((measurement) =>
+          measurement.data.format.toString() ==
           SensorSamplingPackage.AMBIENT_LIGHT_TYPE_NAME)
       .listen((event) => print(event));
 
   // map events to JSON and then print
-  controller?.data
+  controller?.measurements
       .map((dataPoint) => dataPoint.toJson())
       .listen((event) => print(event));
 
-  // subscribe to the stream of data
-  StreamSubscription<DataPoint> subscription =
-      controller!.data.listen((DataPoint dataPoint) {
+  // subscribe to the stream of measurements
+  StreamSubscription<Measurement> subscription =
+      controller!.measurements.listen((Measurement measurement) {
     // do something w. the datum, e.g. print the json
-    print(JsonEncoder.withIndent(' ').convert(dataPoint));
+    print(JsonEncoder.withIndent(' ').convert(measurement));
   });
 
   // Sampling can be paused and resumed
@@ -247,7 +254,7 @@ void example_2() async {
 
   // Pause specific probe(s)
   controller.executor
-      ?.lookupProbe(SensorSamplingPackage.ACCELEROMETER)
+      ?.lookupProbe(CarpDataTypes.ACCELERATION_TYPE_NAME)
       .forEach((probe) => probe.pause());
 
   // Adapt a measure
@@ -298,7 +305,7 @@ void example_3() async {
       .getStudyDeploymentStatus(studyDeploymentId);
 
   // register the needed devices - listed in the deployment status
-  status.devicesStatus.forEach((deviceStatus) async {
+  status.deviceStatusList.forEach((deviceStatus) async {
     String type = deviceStatus.device.type;
     String deviceRoleName = deviceStatus.device.roleName;
 
@@ -309,7 +316,7 @@ void example_3() async {
     if (DeviceController().hasDevice(type)) {
       // ask the device manager for a unique id of the device
       String deviceId = DeviceController().getDevice(type)!.id;
-      DeviceRegistration registration = DeviceRegistration(deviceId);
+      DeviceRegistration registration = DeviceRegistration(deviceId: deviceId);
       // (all of the above can actually be handled directly by the SmartphoneDeploymentService.registerDevice() method)
 
       // register the device in the deployment service
@@ -531,25 +538,29 @@ void app_task_example() async {
     name: 'Tracking',
   )
     // collect device info as an app task
-    ..addTriggeredTask(
-        ImmediateTrigger(),
-        AppTask(
-          type: BackgroundSensingUserTask.ONE_TIME_SENSING_TYPE,
-          title: 'Device',
-          description: 'Collect device info',
-        )..addMeasure(
-            Measure(type: DeviceSamplingPackage.DEVICE_INFORMATION_TYPE_NAME)),
-        phone)
+    ..addTaskControl(
+      ImmediateTrigger(),
+      AppTask(
+        type: BackgroundSensingUserTask.ONE_TIME_SENSING_TYPE,
+        title: 'Device',
+        description: 'Collect device info',
+      )..addMeasure(
+          Measure(type: DeviceSamplingPackage.DEVICE_INFORMATION_TYPE_NAME)),
+      phone,
+      Control.Start,
+    )
     // start collecting screen events as an app task
-    ..addTriggeredTask(
-        ImmediateTrigger(),
-        AppTask(
-          type: BackgroundSensingUserTask.SENSING_TYPE,
-          title: 'Screen',
-          description: 'Collect screen events',
-        )..addMeasure(
-            Measure(type: DeviceSamplingPackage.SCREEN_EVENT_TYPE_NAME)),
-        phone);
+    ..addTaskControl(
+      ImmediateTrigger(),
+      AppTask(
+        type: BackgroundSensingUserTask.SENSING_TYPE,
+        title: 'Screen',
+        description: 'Collect screen events',
+      )..addMeasure(
+          Measure(type: DeviceSamplingPackage.SCREEN_EVENT_TYPE_NAME)),
+      phone,
+      Control.Start,
+    );
 
   print(protocol);
 }

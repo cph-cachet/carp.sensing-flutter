@@ -11,8 +11,8 @@ part of carp_core_deployment;
 /// input by users.
 abstract class ParticipationService {
   /// Let the person with the specified [identity] participate in the study
-  /// deployment with [studyDeploymentId], using the master devices with the
-  /// specified [assignedMasterDeviceRoleNames].
+  /// deployment with [studyDeploymentId], using the primary devices with the
+  /// specified [assignedPrimaryDeviceRoleNames].
   ///
   /// In case no account is associated to the specified [identity], a new account
   /// is created.
@@ -22,7 +22,7 @@ abstract class ParticipationService {
   /// by the person managing the specified [identity].
   Future<Participation> addParticipation(
     String studyDeploymentId,
-    Set<String> assignedMasterDeviceRoleNames,
+    Set<String> assignedPrimaryDeviceRoleNames,
     AccountIdentity identity,
     StudyInvitation invitation,
   );

@@ -125,12 +125,12 @@ class UnregisterDevice extends DeploymentServiceRequest {
   String toString() => '${super.toString()}, deviceRoleName: $deviceRoleName';
 }
 
-/// A request for getting the deployment for this master device.
+/// A request for getting the deployment for this primary device.
 @JsonSerializable(fieldRename: FieldRename.none, includeIfNull: true)
 class GetDeviceDeploymentFor extends DeploymentServiceRequest {
   GetDeviceDeploymentFor(super.studyDeploymentId, this.primaryDeviceRoleName);
 
-  /// The role name of this master device.
+  /// The role name of this primary device.
   String primaryDeviceRoleName;
 
   @override
@@ -166,7 +166,7 @@ class DeviceDeployed extends GetDeviceDeploymentFor {
 
   @override
   String toString() =>
-      '${super.toString()}, masterDeviceRoleName: $primaryDeviceRoleName';
+      '${super.toString()}, primaryDeviceRoleName: $primaryDeviceRoleName';
 }
 
 /// A request for permanently stopping a study deployment.
