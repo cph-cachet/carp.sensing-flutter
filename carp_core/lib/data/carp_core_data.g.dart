@@ -93,14 +93,11 @@ OpenDataStreams _$OpenDataStreamsFromJson(Map<String, dynamic> json) =>
     OpenDataStreams(
       DataStreamsConfiguration.fromJson(
           json['configuration'] as Map<String, dynamic>),
-    )
-      ..$type = json['__type'] as String?
-      ..apiVersion = json['apiVersion'] as String;
+    )..$type = json['__type'] as String?;
 
 Map<String, dynamic> _$OpenDataStreamsToJson(OpenDataStreams instance) =>
     <String, dynamic>{
       '__type': instance.$type,
-      'apiVersion': instance.apiVersion,
       'configuration': instance.configuration,
     };
 
@@ -110,15 +107,12 @@ AppendToDataStreams _$AppendToDataStreamsFromJson(Map<String, dynamic> json) =>
       (json['batch'] as List<dynamic>)
           .map((e) => DataStreamBatch.fromJson(e as Map<String, dynamic>))
           .toList(),
-    )
-      ..$type = json['__type'] as String?
-      ..apiVersion = json['apiVersion'] as String;
+    )..$type = json['__type'] as String?;
 
 Map<String, dynamic> _$AppendToDataStreamsToJson(
         AppendToDataStreams instance) =>
     <String, dynamic>{
       '__type': instance.$type,
-      'apiVersion': instance.apiVersion,
       'studyDeploymentId': instance.studyDeploymentId,
       'batch': instance.batch,
     };
@@ -128,14 +122,11 @@ GetDataStream _$GetDataStreamFromJson(Map<String, dynamic> json) =>
       DataStreamId.fromJson(json['dataStream'] as Map<String, dynamic>),
       json['fromSequenceId'] as int,
       json['toSequenceIdInclusive'] as int?,
-    )
-      ..$type = json['__type'] as String?
-      ..apiVersion = json['apiVersion'] as String;
+    )..$type = json['__type'] as String?;
 
 Map<String, dynamic> _$GetDataStreamToJson(GetDataStream instance) =>
     <String, dynamic>{
       '__type': instance.$type,
-      'apiVersion': instance.apiVersion,
       'dataStream': instance.dataStream,
       'fromSequenceId': instance.fromSequenceId,
       'toSequenceIdInclusive': instance.toSequenceIdInclusive,
@@ -146,14 +137,11 @@ CloseDataStreams _$CloseDataStreamsFromJson(Map<String, dynamic> json) =>
       (json['studyDeploymentIds'] as List<dynamic>)
           .map((e) => e as String)
           .toList(),
-    )
-      ..$type = json['__type'] as String?
-      ..apiVersion = json['apiVersion'] as String;
+    )..$type = json['__type'] as String?;
 
 Map<String, dynamic> _$CloseDataStreamsToJson(CloseDataStreams instance) =>
     <String, dynamic>{
       '__type': instance.$type,
-      'apiVersion': instance.apiVersion,
       'studyDeploymentIds': instance.studyDeploymentIds,
     };
 
@@ -162,13 +150,10 @@ RemoveDataStreams _$RemoveDataStreamsFromJson(Map<String, dynamic> json) =>
       (json['studyDeploymentIds'] as List<dynamic>)
           .map((e) => e as String)
           .toList(),
-    )
-      ..$type = json['__type'] as String?
-      ..apiVersion = json['apiVersion'] as String;
+    )..$type = json['__type'] as String?;
 
 Map<String, dynamic> _$RemoveDataStreamsToJson(RemoveDataStreams instance) =>
     <String, dynamic>{
       '__type': instance.$type,
-      'apiVersion': instance.apiVersion,
       'studyDeploymentIds': instance.studyDeploymentIds,
     };

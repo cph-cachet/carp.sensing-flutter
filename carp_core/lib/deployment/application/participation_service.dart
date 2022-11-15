@@ -10,6 +10,8 @@ part of carp_core_deployment;
 /// for study deployments, and managing data related to participants which is
 /// input by users.
 abstract class ParticipationService {
+  static const String API_VERSION = "1.0";
+
   /// Let the person with the specified [identity] participate in the study
   /// deployment with [studyDeploymentId], using the primary devices with the
   /// specified [assignedPrimaryDeviceRoleNames].

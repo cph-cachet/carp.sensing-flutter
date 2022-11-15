@@ -19,7 +19,11 @@ part of carp_core_deployment;
 abstract class DeploymentServiceRequest extends ServiceRequest {
   final String _infrastructurePackageNamespace =
       'dk.cachet.carp.deployments.infrastructure';
+
   DeploymentServiceRequest([this.studyDeploymentId]) : super();
+
+  @override
+  String get apiVersion => DeploymentService.API_VERSION;
 
   /// The CARP study deployment ID.
   String? studyDeploymentId;

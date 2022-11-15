@@ -13,6 +13,9 @@ abstract class ProtocolServiceRequest extends ServiceRequest {
   ProtocolServiceRequest() : super();
 
   @override
+  String get apiVersion => ProtocolService.API_VERSION;
+
+  @override
   String get jsonType =>
       '$_infrastructurePackageNamespace.ProtocolServiceRequest.$runtimeType';
 }

@@ -18,7 +18,7 @@ abstract class DataStreamService {
   /// deployment have already been configured.
   void openDataStreams(DataStreamsConfiguration configuration);
 
-  /// Append a [batch] of data point sequences to corresponding data streams
+  /// Append a [batch] of data measures to corresponding data streams
   /// in [studyDeploymentId].
   ///
   /// Throws IllegalArgumentException when:

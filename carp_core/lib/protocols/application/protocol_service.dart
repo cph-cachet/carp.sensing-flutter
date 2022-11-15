@@ -9,6 +9,8 @@ part of carp_core_protocols;
 /// Application service which allows managing (multiple versions of)
 /// [StudyProtocol]s.
 abstract class ProtocolService {
+  static const String API_VERSION = "1.1";
+
   /// Add the specified study [protocol].
   ///
   /// [versionTag] is an optional label used to identify this first version of
@@ -50,6 +52,8 @@ abstract class ProtocolService {
 
 /// Factory methods to create a [StudyProtocol] according to predefined templates.
 abstract class ProtocolFactoryService {
+  static const String API_VERSION = "1.1";
+
   /// Create a study protocol to be deployed to a single device which has its
   /// own way of describing study protocols that deviates from the CARP core
   /// study protocol model.

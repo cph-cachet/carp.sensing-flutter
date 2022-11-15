@@ -339,15 +339,12 @@ CreateStudyDeployment _$CreateStudyDeploymentFromJson(
         Map<String, dynamic> json) =>
     CreateStudyDeployment(
       StudyProtocol.fromJson(json['protocol'] as Map<String, dynamic>),
-    )
-      ..$type = json['__type'] as String?
-      ..apiVersion = json['apiVersion'] as String;
+    )..$type = json['__type'] as String?;
 
 Map<String, dynamic> _$CreateStudyDeploymentToJson(
         CreateStudyDeployment instance) =>
     <String, dynamic>{
       '__type': instance.$type,
-      'apiVersion': instance.apiVersion,
       'protocol': instance.protocol,
     };
 
@@ -355,15 +352,12 @@ GetStudyDeploymentStatus _$GetStudyDeploymentStatusFromJson(
         Map<String, dynamic> json) =>
     GetStudyDeploymentStatus(
       json['studyDeploymentId'] as String?,
-    )
-      ..$type = json['__type'] as String?
-      ..apiVersion = json['apiVersion'] as String;
+    )..$type = json['__type'] as String?;
 
 Map<String, dynamic> _$GetStudyDeploymentStatusToJson(
         GetStudyDeploymentStatus instance) =>
     <String, dynamic>{
       '__type': instance.$type,
-      'apiVersion': instance.apiVersion,
       'studyDeploymentId': instance.studyDeploymentId,
     };
 
@@ -375,14 +369,12 @@ GetStudyDeploymentStatusList _$GetStudyDeploymentStatusListFromJson(
           .toList(),
     )
       ..$type = json['__type'] as String?
-      ..apiVersion = json['apiVersion'] as String
       ..studyDeploymentId = json['studyDeploymentId'] as String?;
 
 Map<String, dynamic> _$GetStudyDeploymentStatusListToJson(
         GetStudyDeploymentStatusList instance) =>
     <String, dynamic>{
       '__type': instance.$type,
-      'apiVersion': instance.apiVersion,
       'studyDeploymentId': instance.studyDeploymentId,
       'studyDeploymentIds': instance.studyDeploymentIds,
     };
@@ -392,14 +384,11 @@ RegisterDevice _$RegisterDeviceFromJson(Map<String, dynamic> json) =>
       json['studyDeploymentId'] as String?,
       json['deviceRoleName'] as String,
       DeviceRegistration.fromJson(json['registration'] as Map<String, dynamic>),
-    )
-      ..$type = json['__type'] as String?
-      ..apiVersion = json['apiVersion'] as String;
+    )..$type = json['__type'] as String?;
 
 Map<String, dynamic> _$RegisterDeviceToJson(RegisterDevice instance) =>
     <String, dynamic>{
       '__type': instance.$type,
-      'apiVersion': instance.apiVersion,
       'studyDeploymentId': instance.studyDeploymentId,
       'deviceRoleName': instance.deviceRoleName,
       'registration': instance.registration,
@@ -409,14 +398,11 @@ UnregisterDevice _$UnregisterDeviceFromJson(Map<String, dynamic> json) =>
     UnregisterDevice(
       json['studyDeploymentId'] as String?,
       json['deviceRoleName'] as String,
-    )
-      ..$type = json['__type'] as String?
-      ..apiVersion = json['apiVersion'] as String;
+    )..$type = json['__type'] as String?;
 
 Map<String, dynamic> _$UnregisterDeviceToJson(UnregisterDevice instance) =>
     <String, dynamic>{
       '__type': instance.$type,
-      'apiVersion': instance.apiVersion,
       'studyDeploymentId': instance.studyDeploymentId,
       'deviceRoleName': instance.deviceRoleName,
     };
@@ -426,15 +412,12 @@ GetDeviceDeploymentFor _$GetDeviceDeploymentForFromJson(
     GetDeviceDeploymentFor(
       json['studyDeploymentId'] as String?,
       json['primaryDeviceRoleName'] as String,
-    )
-      ..$type = json['__type'] as String?
-      ..apiVersion = json['apiVersion'] as String;
+    )..$type = json['__type'] as String?;
 
 Map<String, dynamic> _$GetDeviceDeploymentForToJson(
         GetDeviceDeploymentFor instance) =>
     <String, dynamic>{
       '__type': instance.$type,
-      'apiVersion': instance.apiVersion,
       'studyDeploymentId': instance.studyDeploymentId,
       'primaryDeviceRoleName': instance.primaryDeviceRoleName,
     };
@@ -446,14 +429,11 @@ DeviceDeployed _$DeviceDeployedFromJson(Map<String, dynamic> json) =>
       json['deviceDeploymentLastUpdatedOn'] == null
           ? null
           : DateTime.parse(json['deviceDeploymentLastUpdatedOn'] as String),
-    )
-      ..$type = json['__type'] as String?
-      ..apiVersion = json['apiVersion'] as String;
+    )..$type = json['__type'] as String?;
 
 Map<String, dynamic> _$DeviceDeployedToJson(DeviceDeployed instance) =>
     <String, dynamic>{
       '__type': instance.$type,
-      'apiVersion': instance.apiVersion,
       'studyDeploymentId': instance.studyDeploymentId,
       'primaryDeviceRoleName': instance.primaryDeviceRoleName,
       'deviceDeploymentLastUpdatedOn':
@@ -462,13 +442,10 @@ Map<String, dynamic> _$DeviceDeployedToJson(DeviceDeployed instance) =>
 
 Stop _$StopFromJson(Map<String, dynamic> json) => Stop(
       json['studyDeploymentId'] as String?,
-    )
-      ..$type = json['__type'] as String?
-      ..apiVersion = json['apiVersion'] as String;
+    )..$type = json['__type'] as String?;
 
 Map<String, dynamic> _$StopToJson(Stop instance) => <String, dynamic>{
       '__type': instance.$type,
-      'apiVersion': instance.apiVersion,
       'studyDeploymentId': instance.studyDeploymentId,
     };
 
