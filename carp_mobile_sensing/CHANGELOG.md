@@ -1,3 +1,7 @@
+## 0.40.5
+
+* Fix of issue [#280](https://github.com/cph-cachet/carp.sensing-flutter/issues/280).
+
 ## 0.40.4+1
 
 * Added convenience method `addStudyProtocol` to `SmartPhoneClientManager` and updated examples accordingly.
