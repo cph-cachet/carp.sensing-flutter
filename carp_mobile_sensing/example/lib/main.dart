@@ -187,8 +187,8 @@ class LocalStudyProtocolManager implements StudyProtocolManager {
     var phone = Smartphone();
     protocol.addMasterDevice(phone);
 
-    // Add measures from the [DeviceSamplingPackage] and [SensorSamplingPackage]
-    // sampling packages.
+    // // Add measures from the [DeviceSamplingPackage] and [SensorSamplingPackage]
+    // // sampling packages.
     protocol.addTriggeredTask(
         ImmediateTrigger(),
         BackgroundTask()
@@ -203,38 +203,50 @@ class LocalStudyProtocolManager implements StudyProtocolManager {
           ]),
         phone);
 
-    // Collect device info only once
+    // // Collect device info only once
+    // protocol.addTriggeredTask(
+    //     OneTimeTrigger(),
+    //     BackgroundTask()
+    //       ..addMeasure(Measure(type: DeviceSamplingPackage.DEVICE)),
+    //     phone);
+
     protocol.addTriggeredTask(
-        OneTimeTrigger(),
-        BackgroundTask()
-          ..addMeasure(Measure(type: DeviceSamplingPackage.DEVICE)),
+        IntervalTrigger(period: Duration(seconds: 5)),
+        BackgroundTask(measures: [Measure(type: DeviceSamplingPackage.DEVICE)]),
         phone);
 
-    // add a random trigger to collect device info at random times
     protocol.addTriggeredTask(
-        RandomRecurrentTrigger(
-          startTime: TimeOfDay(hour: 07, minute: 45),
-          endTime: TimeOfDay(hour: 22, minute: 30),
-          minNumberOfTriggers: 2,
-          maxNumberOfTriggers: 8,
-        ),
-        BackgroundTask()
-          ..addMeasure(Measure(type: DeviceSamplingPackage.DEVICE)),
+        PeriodicTrigger(
+            period: Duration(seconds: 6), duration: Duration(seconds: 2)),
+        BackgroundTask(
+            measures: [Measure(type: SensorSamplingPackage.ACCELEROMETER)]),
         phone);
 
-    // add a ConditionalPeriodicTrigger to check periodically
-    protocol.addTriggeredTask(
-        ConditionalPeriodicTrigger(
-          period: Duration(seconds: 10),
-          resumeCondition: () {
-            //
-            return ('jakob'.length == 5);
-          },
-          pauseCondition: () => true,
-        ),
-        BackgroundTask()
-          ..addMeasure(Measure(type: DeviceSamplingPackage.DEVICE)),
-        phone);
+    // // add a random trigger to collect device info at random times
+    // protocol.addTriggeredTask(
+    //     RandomRecurrentTrigger(
+    //       startTime: TimeOfDay(hour: 07, minute: 45),
+    //       endTime: TimeOfDay(hour: 22, minute: 30),
+    //       minNumberOfTriggers: 2,
+    //       maxNumberOfTriggers: 8,
+    //     ),
+    //     BackgroundTask()
+    //       ..addMeasure(Measure(type: DeviceSamplingPackage.DEVICE)),
+    //     phone);
+
+    // // add a ConditionalPeriodicTrigger to check periodically
+    // protocol.addTriggeredTask(
+    //     ConditionalPeriodicTrigger(
+    //       period: Duration(seconds: 10),
+    //       resumeCondition: () {
+    //         //
+    //         return ('jakob'.length == 5);
+    //       },
+    //       pauseCondition: () => true,
+    //     ),
+    //     BackgroundTask()
+    //       ..addMeasure(Measure(type: DeviceSamplingPackage.DEVICE)),
+    //     phone);
 
     // Add an app task 2 minutes after deployment and make a notification.
     //
