@@ -7,60 +7,142 @@
 
 part of domain;
 
-/// A description of how a study is to be executed on a smartphone.
-///
-/// A [SmartphoneStudyProtocol] defining the primary device ([PrimaryDeviceConfiguration])
-/// responsible for aggregating data (typically this phone), the optional
-/// devices ([DeviceConfiguration]) connected to the master device,
-/// and the [Trigger]'s which lead to data collection on said devices.
-@JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
-class SmartphoneStudyProtocol extends StudyProtocol {
+// /// A description of how a study is to be executed on a smartphone.
+// ///
+// /// A [SmartphoneStudyProtocol] defining the primary device ([PrimaryDeviceConfiguration])
+// /// responsible for aggregating data (typically this phone), the optional
+// /// devices ([DeviceConfiguration]) connected to the master device,
+// /// and the [Trigger]'s which lead to data collection on said devices.
+// @JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
+// class SmartphoneStudyProtocol extends StudyProtocol {
+//   SmartphoneApplicationData _data = SmartphoneApplicationData();
+
+//   @override
+//   Map<String, dynamic> get applicationData => _data.toJson();
+
+//   @override
+//   set applicationData(Map<String, dynamic>? data) => _data = (data != null)
+//       ? SmartphoneApplicationData.fromJson(data)
+//       : SmartphoneApplicationData();
+
+//   /// The description of this study protocol containing the title, description,
+//   /// purpose, and the responsible researcher for this study.
+//   @JsonKey(ignore: true)
+//   StudyDescription? get studyDescription => _data.studyDescription;
+//   set studyDescription(StudyDescription? description) =>
+//       _data.studyDescription = description;
+
+//   @override
+//   String get description => studyDescription?.description ?? '';
+
+//   /// The PI responsible for this protocol.
+//   @JsonKey(ignore: true)
+//   StudyResponsible? get responsible => studyDescription?.responsible;
+
+//   /// Specifies where and how to stored or upload the data collected from this
+//   /// deployment. If `null`, the sensed data is not stored, but may still be
+//   /// used in the app.
+//   @JsonKey(ignore: true)
+//   DataEndPoint? get dataEndPoint => _data.dataEndPoint;
+//   set dataEndPoint(DataEndPoint? dataEndPoint) =>
+//       _data.dataEndPoint = dataEndPoint;
+
+//   @override
+//   void addApplicationData(String key, dynamic value) =>
+//       _data.applicationData[key] = value;
+
+//   @override
+//   dynamic getApplicationData(String key) => _data.applicationData[key];
+
+//   @override
+//   void removeApplicationData(String key) => _data.applicationData.remove(key);
+
+//   /// Create a new [SmartphoneStudyProtocol].
+//   SmartphoneStudyProtocol({
+//     required super.ownerId,
+//     required super.name,
+//     StudyDescription? studyDescription,
+//     DataEndPoint? dataEndPoint,
+//   }) : super(
+//           description: studyDescription?.description ?? '',
+//         ) {
+//     _data = SmartphoneApplicationData(
+//       studyDescription: studyDescription,
+//       dataEndPoint: dataEndPoint,
+//     );
+//   }
+
+//   factory SmartphoneStudyProtocol.fromJson(Map<String, dynamic> json) =>
+//       _$SmartphoneStudyProtocolFromJson(json);
+//   @override
+//   Map<String, dynamic> toJson() => _$SmartphoneStudyProtocolToJson(this);
+// }
+
+// /// Holds application-specific data for a [SmartphoneStudyProtocol].
+// @JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
+// class SmartphoneApplicationData {
+//   /// The description of this study protocol containing the title, description,
+//   /// purpose, and the responsible researcher for this study.
+//   StudyDescription? studyDescription;
+
+//   /// Specifies where and how to stored or upload the data collected from this
+//   /// deployment. If `null`, the sensed data is not stored, but may still be
+//   /// used in the app.
+//   DataEndPoint? dataEndPoint;
+
+//   /// Application-specific data to be stored as part of the study protocol
+//   /// which will be included in all deployments of this study protocol.
+//   Map<String, dynamic> applicationData = {};
+
+//   SmartphoneApplicationData({
+//     this.studyDescription,
+//     this.dataEndPoint,
+//     Map<String, dynamic>? applicationData,
+//   }) : super() {
+//     this.applicationData = applicationData ?? {};
+//   }
+
+//   factory SmartphoneApplicationData.fromJson(Map<String, dynamic> json) =>
+//       _$SmartphoneApplicationDataFromJson(json);
+//   Map<String, dynamic> toJson() => _$SmartphoneApplicationDataToJson(this);
+// }
+
+mixin SmartphoneProtocolExtension {
   SmartphoneApplicationData _data = SmartphoneApplicationData();
 
-  @override
   Map<String, dynamic> get applicationData => _data.toJson();
 
-  @override
   set applicationData(Map<String, dynamic>? data) => _data = (data != null)
       ? SmartphoneApplicationData.fromJson(data)
       : SmartphoneApplicationData();
 
   /// The description of this study protocol containing the title, description,
   /// purpose, and the responsible researcher for this study.
-  StudyDescription? get protocolDescription => _data.protocolDescription;
-  set protocolDescription(StudyDescription? description) =>
-      _data.protocolDescription = description;
+  @JsonKey(ignore: true)
+  StudyDescription? get studyDescription => _data.studyDescription;
+  set studyDescription(StudyDescription? description) =>
+      _data.studyDescription = description;
 
-  @override
-  String get description => protocolDescription?.description ?? '';
+  String get description => studyDescription?.description ?? '';
 
   /// The PI responsible for this protocol.
-  StudyResponsible? get responsible => protocolDescription?.responsible;
+  @JsonKey(ignore: true)
+  StudyResponsible? get responsible => studyDescription?.responsible;
 
   /// Specifies where and how to stored or upload the data collected from this
   /// deployment. If `null`, the sensed data is not stored, but may still be
   /// used in the app.
+  @JsonKey(ignore: true)
   DataEndPoint? get dataEndPoint => _data.dataEndPoint;
   set dataEndPoint(DataEndPoint? dataEndPoint) =>
       _data.dataEndPoint = dataEndPoint;
 
-  /// Create a new [SmartphoneStudyProtocol].
-  SmartphoneStudyProtocol({
-    required super.ownerId,
-    required super.name,
-    StudyDescription? protocolDescription,
-    DataEndPoint? dataEndPoint,
-  }) : super(
-          description: protocolDescription?.description ?? '',
-        ) {
-    _data = SmartphoneApplicationData(
-        protocolDescription: protocolDescription, dataEndPoint: dataEndPoint);
-  }
+  void addApplicationData(String key, dynamic value) =>
+      _data.applicationData[key] = value;
 
-  factory SmartphoneStudyProtocol.fromJson(Map<String, dynamic> json) =>
-      _$SmartphoneStudyProtocolFromJson(json);
-  @override
-  Map<String, dynamic> toJson() => _$SmartphoneStudyProtocolToJson(this);
+  dynamic getApplicationData(String key) => _data.applicationData[key];
+
+  void removeApplicationData(String key) => _data.applicationData.remove(key);
 }
 
 /// Holds application-specific data for a [SmartphoneStudyProtocol].
@@ -68,17 +150,56 @@ class SmartphoneStudyProtocol extends StudyProtocol {
 class SmartphoneApplicationData {
   /// The description of this study protocol containing the title, description,
   /// purpose, and the responsible researcher for this study.
-  StudyDescription? protocolDescription;
+  StudyDescription? studyDescription;
 
   /// Specifies where and how to stored or upload the data collected from this
   /// deployment. If `null`, the sensed data is not stored, but may still be
   /// used in the app.
   DataEndPoint? dataEndPoint;
 
-  SmartphoneApplicationData({this.protocolDescription, this.dataEndPoint})
-      : super();
+  /// Application-specific data to be stored as part of the study protocol
+  /// which will be included in all deployments of this study protocol.
+  Map<String, dynamic> applicationData = {};
+
+  SmartphoneApplicationData({
+    this.studyDescription,
+    this.dataEndPoint,
+    Map<String, dynamic>? applicationData,
+  }) : super() {
+    this.applicationData = applicationData ?? {};
+  }
 
   factory SmartphoneApplicationData.fromJson(Map<String, dynamic> json) =>
       _$SmartphoneApplicationDataFromJson(json);
   Map<String, dynamic> toJson() => _$SmartphoneApplicationDataToJson(this);
+}
+
+/// A description of how a study is to be executed on a smartphone.
+///
+/// A [SmartphoneStudyProtocol] defining the primary device ([PrimaryDeviceConfiguration])
+/// responsible for aggregating data (typically this phone), the optional
+/// devices ([DeviceConfiguration]) connected to the master device,
+/// and the [Trigger]'s which lead to data collection on said devices.
+@JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
+class SmartphoneStudyProtocol extends StudyProtocol
+    with SmartphoneProtocolExtension {
+  /// Create a new [SmartphoneStudyProtocol].
+  SmartphoneStudyProtocol({
+    required super.ownerId,
+    required super.name,
+    StudyDescription? studyDescription,
+    DataEndPoint? dataEndPoint,
+  }) : super(
+          description: studyDescription?.description ?? '',
+        ) {
+    _data = SmartphoneApplicationData(
+      studyDescription: studyDescription,
+      dataEndPoint: dataEndPoint,
+    );
+  }
+
+  factory SmartphoneStudyProtocol.fromJson(Map<String, dynamic> json) =>
+      _$SmartphoneStudyProtocolFromJson(json);
+  @override
+  Map<String, dynamic> toJson() => _$SmartphoneStudyProtocolToJson(this);
 }

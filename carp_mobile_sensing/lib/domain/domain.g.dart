@@ -6,18 +6,40 @@ part of domain;
 // JsonSerializableGenerator
 // **************************************************************************
 
+SmartphoneApplicationData _$SmartphoneApplicationDataFromJson(
+        Map<String, dynamic> json) =>
+    SmartphoneApplicationData(
+      studyDescription: json['studyDescription'] == null
+          ? null
+          : StudyDescription.fromJson(
+              json['studyDescription'] as Map<String, dynamic>),
+      dataEndPoint: json['dataEndPoint'] == null
+          ? null
+          : DataEndPoint.fromJson(json['dataEndPoint'] as Map<String, dynamic>),
+      applicationData: json['applicationData'] as Map<String, dynamic>?,
+    );
+
+Map<String, dynamic> _$SmartphoneApplicationDataToJson(
+    SmartphoneApplicationData instance) {
+  final val = <String, dynamic>{};
+
+  void writeNotNull(String key, dynamic value) {
+    if (value != null) {
+      val[key] = value;
+    }
+  }
+
+  writeNotNull('studyDescription', instance.studyDescription);
+  writeNotNull('dataEndPoint', instance.dataEndPoint);
+  val['applicationData'] = instance.applicationData;
+  return val;
+}
+
 SmartphoneStudyProtocol _$SmartphoneStudyProtocolFromJson(
         Map<String, dynamic> json) =>
     SmartphoneStudyProtocol(
       ownerId: json['ownerId'] as String,
       name: json['name'] as String,
-      protocolDescription: json['protocolDescription'] == null
-          ? null
-          : StudyDescription.fromJson(
-              json['protocolDescription'] as Map<String, dynamic>),
-      dataEndPoint: json['dataEndPoint'] == null
-          ? null
-          : DataEndPoint.fromJson(json['dataEndPoint'] as Map<String, dynamic>),
     )
       ..id = json['id'] as String
       ..createdOn = DateTime.parse(json['createdOn'] as String)
@@ -86,36 +108,7 @@ Map<String, dynamic> _$SmartphoneStudyProtocolToJson(
   writeNotNull(
       'expectedParticipantData', instance.expectedParticipantData?.toList());
   val['applicationData'] = instance.applicationData;
-  writeNotNull('protocolDescription', instance.protocolDescription);
   val['description'] = instance.description;
-  writeNotNull('dataEndPoint', instance.dataEndPoint);
-  return val;
-}
-
-SmartphoneApplicationData _$SmartphoneApplicationDataFromJson(
-        Map<String, dynamic> json) =>
-    SmartphoneApplicationData(
-      protocolDescription: json['protocolDescription'] == null
-          ? null
-          : StudyDescription.fromJson(
-              json['protocolDescription'] as Map<String, dynamic>),
-      dataEndPoint: json['dataEndPoint'] == null
-          ? null
-          : DataEndPoint.fromJson(json['dataEndPoint'] as Map<String, dynamic>),
-    );
-
-Map<String, dynamic> _$SmartphoneApplicationDataToJson(
-    SmartphoneApplicationData instance) {
-  final val = <String, dynamic>{};
-
-  void writeNotNull(String key, dynamic value) {
-    if (value != null) {
-      val[key] = value;
-    }
-  }
-
-  writeNotNull('protocolDescription', instance.protocolDescription);
-  writeNotNull('dataEndPoint', instance.dataEndPoint);
   return val;
 }
 
@@ -415,22 +408,15 @@ SmartphoneDeployment _$SmartphoneDeploymentFromJson(
                   ExpectedParticipantData.fromJson(e as Map<String, dynamic>))
               .toSet() ??
           const {},
-      protocolDescription: json['protocolDescription'] == null
-          ? null
-          : StudyDescription.fromJson(
-              json['protocolDescription'] as Map<String, dynamic>),
-      dataEndPoint: json['dataEndPoint'] == null
-          ? null
-          : DataEndPoint.fromJson(json['dataEndPoint'] as Map<String, dynamic>),
     )
       ..lastUpdateDate = json['lastUpdateDate'] == null
           ? null
           : DateTime.parse(json['lastUpdateDate'] as String)
+      ..applicationData = json['applicationData'] as Map<String, dynamic>
       ..deployed = json['deployed'] == null
           ? null
           : DateTime.parse(json['deployed'] as String)
-      ..userId = json['userId'] as String?
-      ..applicationData = json['applicationData'] as Map<String, dynamic>;
+      ..userId = json['userId'] as String?;
 
 Map<String, dynamic> _$SmartphoneDeploymentToJson(
     SmartphoneDeployment instance) {
@@ -452,12 +438,10 @@ Map<String, dynamic> _$SmartphoneDeploymentToJson(
   }
 
   writeNotNull('lastUpdateDate', instance.lastUpdateDate?.toIso8601String());
+  val['applicationData'] = instance.applicationData;
   val['studyDeploymentId'] = instance.studyDeploymentId;
   writeNotNull('deployed', instance.deployed?.toIso8601String());
   writeNotNull('userId', instance.userId);
-  val['applicationData'] = instance.applicationData;
-  writeNotNull('protocolDescription', instance.protocolDescription);
-  writeNotNull('dataEndPoint', instance.dataEndPoint);
   return val;
 }
 

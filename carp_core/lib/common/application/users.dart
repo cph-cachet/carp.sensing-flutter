@@ -13,7 +13,7 @@ part of carp_core_common;
 class ParticipantRole {
   String role;
   bool isOptional;
-  ParticipantRole(this.role, this.isOptional);
+  ParticipantRole(this.role, [this.isOptional = false]);
 
   factory ParticipantRole.fromJson(Map<String, dynamic> json) =>
       _$ParticipantRoleFromJson(json);

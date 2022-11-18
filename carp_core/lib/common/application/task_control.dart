@@ -7,11 +7,11 @@
 part of carp_core_common;
 
 /// Specifies that once a condition of the trigger with [triggerId] applies,
-/// the task with [taskName] on [destinationDeviceRoleName] should be started or stopped.
+/// the task with [taskName] on [destinationDeviceRoleName] should be started
+/// or stopped (as specified by the [control] parameter).
 @JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
 class TaskControl {
-  /// The id of the [TriggerConfiguration] which describes the condition which when met
-  /// sends the task with [taskName] to the device with [destinationDeviceRoleName].
+  /// The id of the [TriggerConfiguration].
   int triggerId;
 
   /// The name of the task to send to [destinationDeviceRoleName] when the

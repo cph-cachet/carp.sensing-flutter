@@ -9,7 +9,7 @@ part of carp_core_common;
 ParticipantRole _$ParticipantRoleFromJson(Map<String, dynamic> json) =>
     ParticipantRole(
       json['role'] as String,
-      json['isOptional'] as bool,
+      json['isOptional'] as bool? ?? false,
     );
 
 Map<String, dynamic> _$ParticipantRoleToJson(ParticipantRole instance) =>

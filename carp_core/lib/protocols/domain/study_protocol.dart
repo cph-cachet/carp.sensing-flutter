@@ -309,6 +309,18 @@ class StudyProtocol extends Snapshot {
   bool removeExpectedParticipantData(ExpectedParticipantData expectedData) =>
       expectedParticipantData!.remove(expectedData);
 
+  /// Add any application-specific [value] with a [key] to this protocol.
+  void addApplicationData(String key, dynamic value) {
+    applicationData ??= {};
+    applicationData![key] = value;
+  }
+
+  /// Get any application-specific data with a [key].
+  dynamic getApplicationData(String key) => applicationData![key];
+
+  /// Remove any application-specific data with a [key].
+  dynamic removeApplicationData(String key) => applicationData!.remove(key);
+
   Map<String, dynamic> toJson() => _$StudyProtocolToJson(this);
   factory StudyProtocol.fromJson(Map<String, dynamic> json) =>
       _$StudyProtocolFromJson(json);

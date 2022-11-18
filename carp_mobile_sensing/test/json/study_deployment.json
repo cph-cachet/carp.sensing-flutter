@@ -1,18 +1,17 @@
 {
-    "id": "3e0648f0-674f-11ed-b729-71133b1e57ac",
-    "createdOn": "2022-11-18T14:42:35.903219Z",
-    "version": 0,
-    "ownerId": "user@dtu.dk",
-    "name": "patient_tracking",
-    "primaryDevices": [
-        {
-            "__type": "dk.cachet.carp.common.application.devices.Smartphone",
-            "roleName": "primaryphone",
-            "isOptional": true,
-            "defaultSamplingConfiguration": {},
-            "isPrimaryDevice": true
-        }
-    ],
+    "deviceConfiguration": {
+        "__type": "dk.cachet.carp.common.application.devices.Smartphone",
+        "roleName": "phone",
+        "isOptional": true,
+        "defaultSamplingConfiguration": {},
+        "isPrimaryDevice": true
+    },
+    "registration": {
+        "__type": "dk.cachet.carp.common.application.devices.DeviceRegistration",
+        "deviceId": "8e9e97c0-6756-11ed-a6ca-ab4e22dcb912",
+        "deviceDisplayName": null,
+        "registrationCreatedOn": "2022-11-18T15:34:57.596983Z"
+    },
     "connectedDevices": [
         {
             "__type": "dk.cachet.carp.common.application.devices.DeviceConfiguration",
@@ -21,7 +20,7 @@
             "defaultSamplingConfiguration": {}
         }
     ],
-    "connections": [],
+    "connectedDeviceRegistrations": {},
     "tasks": [
         {
             "__type": "dk.cachet.carp.common.application.tasks.BackgroundTask",
@@ -183,13 +182,6 @@
             "control": "Start"
         }
     ],
-    "participantRoles": [
-        {
-            "role": "Participant",
-            "isOptional": false
-        }
-    ],
-    "assignedDevices": {},
     "expectedParticipantData": [
         {
             "attribute": {
@@ -204,6 +196,7 @@
             }
         }
     ],
+    "lastUpdateDate": "2022-11-18T16:34:57.598519",
     "applicationData": {
         "studyDescription": {
             "__type": "StudyDescription",
@@ -220,5 +213,5 @@
             "uiTheme": "black"
         }
     },
-    "description": "A testing protocol"
+    "studyDeploymentId": "1234"
 }

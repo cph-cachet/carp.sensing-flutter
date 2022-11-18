@@ -7,7 +7,7 @@ import 'package:carp_serializable/carp_serializable.dart';
 import 'package:test/test.dart';
 
 void main() {
-  late StudyProtocol primaryProtocol;
+  late SmartphoneStudyProtocol primaryProtocol;
   late Smartphone primaryPhone;
   DeviceConfiguration eSense;
 
@@ -19,6 +19,12 @@ void main() {
     primaryProtocol = SmartphoneStudyProtocol(
       ownerId: 'user@dtu.dk',
       name: 'patient_tracking',
+      studyDescription: StudyDescription(
+        title: 'A Test',
+        purpose: 'Testing',
+        description: 'A testing protocol',
+      ),
+      dataEndPoint: SQLiteDataEndPoint(),
     );
 
     // Define which devices are used for data collection.
@@ -101,6 +107,13 @@ void main() {
       eSense,
       Control.Start,
     );
+    primaryProtocol.addParticipantRole(ParticipantRole('Participant'));
+
+    primaryProtocol.addExpectedParticipantData(ExpectedParticipantData(
+        ParticipantAttribute(inputDataType: 'dk.cachet.carp.sex'),
+        AssignedTo(roleNames: {'Participant'})));
+
+    primaryProtocol.addApplicationData('uiTheme', 'black');
   });
 
   test('DataPoints -> JSON', () async {
@@ -109,8 +122,14 @@ void main() {
     print(toJsonString(device));
   });
 
+  test('Measurement -> JSON', () async {
+    final device = Measurement.fromData(
+        DeviceInformation(platform: 'iOS', deviceId: '1234abcd'));
+    print(toJsonString(device));
+  });
+
   test('SmartphoneStudyProtocol -> JSON', () async {
-    print(primaryProtocol);
+    print(primaryProtocol.applicationData);
     print(toJsonString(primaryProtocol));
     expect(primaryProtocol.ownerId, 'user@dtu.dk');
     expect(primaryProtocol.primaryDevices.length, 1);
@@ -119,18 +138,21 @@ void main() {
     expect(primaryProtocol.triggers.keys.first, '0');
     expect(primaryProtocol.tasks.length, 5);
     expect(primaryProtocol.taskControls.length, 6);
+    expect(primaryProtocol.expectedParticipantData?.length, 1);
   });
 
   test(
       'SmartphoneStudyProtocol -> JSON -> SmartphoneStudyProtocol :: deep assert',
       () async {
-    print('#1 : $primaryProtocol');
+    // print('#1 : $primaryProtocol');
+    print(toJsonString(primaryProtocol));
     final studyJson = toJsonString(primaryProtocol);
 
     SmartphoneStudyProtocol protocolFromJson = SmartphoneStudyProtocol.fromJson(
         json.decode(studyJson) as Map<String, dynamic>);
+    print(toJsonString(protocolFromJson));
     expect(toJsonString(protocolFromJson), equals(studyJson));
-    print('#2 : $protocolFromJson');
+    // print('#2 : $protocolFromJson');
   });
 
   test('JSON File -> SmartphoneStudyProtocol', () async {
@@ -144,6 +166,62 @@ void main() {
     expect(protocol.primaryDevices.first.roleName,
         SmartphoneDeploymentService().thisPhone.roleName);
     print(toJsonString(protocol));
+  });
+
+  test('SmartphoneDeployment -> JSON', () async {
+    var deployment = SmartphoneDeployment.fromSmartphoneStudyProtocol(
+      studyDeploymentId: '1234',
+      primaryDeviceRoleName: 'phone',
+      protocol: primaryProtocol,
+    );
+
+    print(toJsonString(deployment));
+    expect(deployment.deviceConfiguration.roleName, 'phone');
+    expect(deployment.connectedDevices.length, 1);
+    expect(deployment.triggers.length, 6);
+    expect(deployment.triggers.keys.first, '0');
+    expect(deployment.tasks.length, 5);
+    expect(deployment.taskControls.length, 6);
+    expect(deployment.dataEndPoint?.type, DataEndPointTypes.SQLITE);
+    expect(deployment.expectedParticipantData.length, 1);
+    expect(deployment.getApplicationData('uiTheme'), 'black');
+  });
+
+  test('SmartphoneDeployment -> JSON -> SmartphoneDeployment :: deep assert',
+      () async {
+    var deployment = SmartphoneDeployment.fromSmartphoneStudyProtocol(
+      studyDeploymentId: '1234',
+      primaryDeviceRoleName: 'phone',
+      protocol: primaryProtocol,
+    );
+    print(toJsonString(deployment));
+
+    final studyJson = toJsonString(deployment);
+    SmartphoneDeployment deploymentFromJson = SmartphoneDeployment.fromJson(
+        json.decode(studyJson) as Map<String, dynamic>);
+    print(toJsonString(deploymentFromJson));
+    expect(toJsonString(deploymentFromJson), equals(studyJson));
+    // print('#2 : $protocolFromJson');
+  });
+
+  test('JSON File -> SmartphoneDeployment', () async {
+    // Read the deployment protocol from json file
+    String plainJson =
+        File('test/json/study_deployment.json').readAsStringSync();
+
+    SmartphoneDeployment deployment = SmartphoneDeployment.fromJson(
+        json.decode(plainJson) as Map<String, dynamic>);
+
+    print(toJsonString(deployment));
+    expect(deployment.deviceConfiguration.roleName, 'phone');
+    expect(deployment.connectedDevices.length, 1);
+    expect(deployment.triggers.length, 6);
+    expect(deployment.triggers.keys.first, '0');
+    expect(deployment.tasks.length, 5);
+    expect(deployment.taskControls.length, 6);
+    expect(deployment.dataEndPoint?.type, DataEndPointTypes.SQLITE);
+    expect(deployment.expectedParticipantData.length, 1);
+    expect(deployment.getApplicationData('uiTheme'), 'black');
   });
 
   test('Triggers -> JSON -> Triggers', () async {

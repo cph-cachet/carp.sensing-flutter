@@ -142,7 +142,7 @@ void example_2() async {
   SmartphoneStudyProtocol protocol = SmartphoneStudyProtocol(
     ownerId: 'abc@dtu.dk',
     name: 'Tracking',
-    protocolDescription: StudyDescription(
+    studyDescription: StudyDescription(
         title: 'CAMS App - Sensing Coverage Study',
         description:
             'The default study testing coverage of most measures. Used in the coverage tests.',
