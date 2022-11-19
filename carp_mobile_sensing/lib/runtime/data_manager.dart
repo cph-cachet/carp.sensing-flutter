@@ -21,7 +21,7 @@ abstract class DataManager {
   /// Initialize the data manager by specifying the study [deployment], the
   /// [dataEndPoint], and the stream of [measurements] events to handle.
   Future<void> initialize(
-    PrimaryDeviceDeployment deployment,
+    SmartphoneDeployment deployment,
     DataEndPoint dataEndPoint,
     Stream<Measurement> measurements,
   );
@@ -90,13 +90,11 @@ abstract class AbstractDataManager implements DataManager {
   @override
   @mustCallSuper
   Future<void> initialize(
-    PrimaryDeviceDeployment deployment,
+    SmartphoneDeployment deployment,
     DataEndPoint dataEndPoint,
     Stream<Measurement> measurements,
   ) async {
-    assert(deployment is SmartphoneDeployment,
-        'Deployment must be a SmartphoneDeployment');
-    _deployment = deployment as SmartphoneDeployment;
+    _deployment = deployment;
     _dataEndPoint = dataEndPoint;
     measurements.listen(
       (dataPoint) => onMeasurement(dataPoint),

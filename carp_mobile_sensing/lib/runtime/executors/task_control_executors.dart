@@ -68,6 +68,10 @@ class TaskControlExecutor extends AggregateExecutor<TaskControl> {
     return true;
   }
 
+  @override
+  Stream<Measurement> get measurements =>
+      group.stream.map((measurement) => measurement..taskControl = taskControl);
+
   /// Returns a list of the running probes in this [TaskControlExecutor].
   List<Probe> get probes => taskExecutor?.probes ?? [];
 }

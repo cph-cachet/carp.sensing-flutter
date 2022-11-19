@@ -42,7 +42,6 @@ class LightProbe extends BufferingPeriodicStreamProbe {
     return Measurement(
         sensorStartTime: sensorStartTime,
         sensorEndTime: sensorEndTime,
-        dataType: data.format,
         data: data);
   }
 

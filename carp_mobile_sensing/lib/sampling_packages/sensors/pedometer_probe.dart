@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 Copenhagen Center for Health Technology (CACHET) at the
+ * Copyright 2018-2022 Copenhagen Center for Health Technology (CACHET) at the
  * Technical University of Denmark (DTU).
  * Use of this source code is governed by a MIT-style license that can be
  * found in the LICENSE file.
@@ -15,7 +15,8 @@ part of sensors;
 /// Note that the [Pedometer] plugin returns the steps taken since last system boot.
 class PedometerProbe extends StreamProbe {
   @override
-  Stream<Measurement> get stream =>
-      pedometer.Pedometer.stepCountStream.map((pedometer.StepCount count) =>
-          Measurement.fromData(StepCount(steps: count.steps)));
+  Stream<Measurement> get stream => pedometer.Pedometer.stepCountStream.map(
+      (pedometer.StepCount count) => Measurement.fromData(
+          StepCount(steps: count.steps),
+          count.timeStamp.microsecondsSinceEpoch));
 }

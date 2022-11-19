@@ -7,8 +7,12 @@
 
 part of data_managers;
 
-/// Stores [DataPoint] json objects in an SQLite database on the device's
-/// local storage media. The name of the table is 'data_points'.
+/// Stores meta data about the running [SmartphoneDeployment] and all
+/// collected [Measurement] json objects in an SQLite database on the device's
+/// local storage media.
+///
+/// Meta data is stored in the `deployment` table and measurements are stored
+/// in the `measurements` table.
 ///
 /// The path and filename format is
 ///
@@ -28,7 +32,8 @@ part of data_managers;
 /// not corrupted when an app is forced to close and to keep the size of db files
 /// down.
 class SQLiteDataManager extends AbstractDataManager {
-  static const String TABLENAME = 'data_points';
+  static const String META_DATA_TABLENAME = 'deployment';
+  static const String MEASUREMENT_TABLENAME = 'measurements';
 
   String? _databasePath;
   Database? database;
@@ -38,7 +43,7 @@ class SQLiteDataManager extends AbstractDataManager {
 
   @override
   Future<void> initialize(
-    PrimaryDeviceDeployment deployment,
+    SmartphoneDeployment deployment,
     DataEndPoint dataEndPoint,
     Stream<Measurement> measurements,
   ) async {
@@ -51,13 +56,25 @@ class SQLiteDataManager extends AbstractDataManager {
     // open the database
     database = await openDatabase(path, version: 1,
         onCreate: (Database db, int version) async {
-      // when creating the db, create the table
+      // when creating the db, create the tables and add meta data about the deployment
       await db.execute(
-          'CREATE TABLE $TABLENAME (id INTEGER PRIMARY KEY, created_at INTEGER, created_by TEXT, deployment_id TEXT, carp_header TEXT, carp_body TEXT)');
+          'CREATE TABLE $META_DATA_TABLENAME (created_at TEXT, deployment_id TEXT PRIMARY KEY, deployed_at TEXT, user_id TEXT, deployment TEXT)');
+
+      String createdAt = DateTime.now().toUtc().toIso8601String();
+      String deploymentId = deployment.studyDeploymentId;
+      String? deployedAt = deployment.deployed?.toUtc().toIso8601String();
+      String? userId = deployment.userId;
+      String deploymentJson = jsonEncode(deployment);
+      String sql =
+          "INSERT INTO $META_DATA_TABLENAME(created_at, deployment_id, deployed_at, user_id, deployment) VALUES('$createdAt', '$deploymentId', '$deployedAt', '$userId', '$deploymentJson')";
+      await db.execute(sql);
+
+      await db.execute(
+          'CREATE TABLE $MEASUREMENT_TABLENAME (id INTEGER PRIMARY KEY, deployment_id TEXT, trigger_id INTEGER, device_rolename TEXT, data_type TEXT, measurement TEXT)');
       debug('$runtimeType - SQLite DB created');
     });
 
-    info('SQLite DB file path : $path');
+    info('SQLite DB created - path: $path');
   }
 
   /// Full path and name of the DB according to this format:
@@ -87,12 +104,14 @@ class SQLiteDataManager extends AbstractDataManager {
     int createdAt = DateTime.now().millisecondsSinceEpoch;
     // TODO - the following is old stuff - replace with a real SQLDataStreamService
     // String createdBy = measurement.carpHeader.userId.toString();
-    String createdBy = 'unknown';
-    String carpHeader = jsonEncode(measurement.dataType);
-    String carpBody = jsonEncode(measurement.data);
     String deploymentId = deployment.studyDeploymentId;
+    int triggerId = measurement.taskControl?.triggerId ?? 0;
+    String rolename = measurement.taskControl?.targetDevice?.roleName ??
+        deployment.deviceConfiguration.roleName;
+    String datatype = measurement.dataType.toString();
+    String measurementJson = jsonEncode(measurement);
     String sql =
-        "INSERT INTO $TABLENAME(created_at, created_by, deployment_id, carp_header, carp_body) VALUES('$createdAt', '$createdBy', '$deploymentId', '$carpHeader', '$carpBody')";
+        "INSERT INTO $MEASUREMENT_TABLENAME(deployment_id, trigger_id, device_rolename, data_type, measurement) VALUES('$deploymentId', '$triggerId', '$rolename', '$datatype', '$measurementJson')";
 
     int? id = await database?.rawInsert(sql);
     debug(

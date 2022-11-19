@@ -37,7 +37,7 @@ class FileDataManager extends AbstractDataManager {
 
   @override
   Future<void> initialize(
-    PrimaryDeviceDeployment deployment,
+    SmartphoneDeployment deployment,
     DataEndPoint dataEndPoint,
     Stream<Measurement> measurements,
   ) async {

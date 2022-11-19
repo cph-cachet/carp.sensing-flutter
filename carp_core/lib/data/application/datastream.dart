@@ -110,8 +110,11 @@ class Measurement {
 
   /// Create a measurement from [data] giving it the current time
   /// stamp as [sensorStartTime].
-  factory Measurement.fromData(Data data) => Measurement(
-      sensorStartTime: DateTime.now().microsecondsSinceEpoch, data: data);
+  factory Measurement.fromData(Data data, [int? sensorStartTime]) =>
+      Measurement(
+          sensorStartTime:
+              sensorStartTime ?? DateTime.now().microsecondsSinceEpoch,
+          data: data);
 
   factory Measurement.fromJson(Map<String, dynamic> json) =>
       _$MeasurementFromJson(json);
