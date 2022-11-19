@@ -81,32 +81,37 @@ class DataStreamBatch {
 /// The unit of [sensorStartTime] and [sensorEndTime] is fully determined by the
 /// sensor that collected the data.
 /// For example, it could be a simple clock increment since the device powered up.
+/// However, in CARP we prefer microseconds over milliseconds for higher precision.
 @JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
 class Measurement {
-  /// Start time in microseconds.
+  /// Start time as set by the sensor.
+  /// The unit is determined by the sensor.
   int sensorStartTime;
 
-  /// End time in microseconds, if available.
+  /// End time as set by the sensor, if available.
   int? sensorEndTime;
 
+  /// The type of the [data].
   @JsonKey(ignore: true)
-  DataType? dataType;
+  DataType get dataType => data.format;
 
+  /// The [TaskControl] which triggered the collection of this measurement.
+  @JsonKey(ignore: true)
+  TaskControl? taskControl;
+
+  /// The [Data] collected in this measurement.
   Data data;
 
   Measurement({
     required this.sensorStartTime,
     this.sensorEndTime,
-    this.dataType,
     required this.data,
   });
 
   /// Create a measurement from [data] giving it the current time
   /// stamp as [sensorStartTime].
   factory Measurement.fromData(Data data) => Measurement(
-      sensorStartTime: DateTime.now().microsecondsSinceEpoch,
-      dataType: data.format,
-      data: data);
+      sensorStartTime: DateTime.now().microsecondsSinceEpoch, data: data);
 
   factory Measurement.fromJson(Map<String, dynamic> json) =>
       _$MeasurementFromJson(json);

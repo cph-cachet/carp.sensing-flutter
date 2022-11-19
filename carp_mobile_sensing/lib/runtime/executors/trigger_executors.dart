@@ -197,20 +197,9 @@ class ElapsedTimeTriggerExecutor
   }
 }
 
-abstract class TimerTriggerExecutor<TConfig extends TriggerConfiguration>
-    extends SchedulableTriggerExecutor<TConfig> {
-  Timer? timer;
-
-  @override
-  Future<bool> onPause() async {
-    timer?.cancel();
-    await super.onPause();
-    return true;
-  }
-}
-
 /// Executes a [IntervalTrigger], i.e. resumes sampling on a regular basis.
-class IntervalTriggerExecutor extends TimerTriggerExecutor<IntervalTrigger> {
+class IntervalTriggerExecutor
+    extends SchedulableTriggerExecutor<IntervalTrigger> {
   @override
   List<DateTime> getSchedule(DateTime from, DateTime to, [int max = 100]) {
     final List<DateTime> schedule = [];
@@ -224,6 +213,15 @@ class IntervalTriggerExecutor extends TimerTriggerExecutor<IntervalTrigger> {
     }
 
     return schedule;
+  }
+
+  Timer? timer;
+
+  @override
+  Future<bool> onPause() async {
+    timer?.cancel();
+    await super.onPause();
+    return true;
   }
 
   @override
@@ -242,7 +240,8 @@ class IntervalTriggerExecutor extends TimerTriggerExecutor<IntervalTrigger> {
 /// It is required that both the [period] and the [duration] of the
 /// [PeriodicTrigger] is specified to make sure that this executor is properly
 /// resumed and paused again.
-class PeriodicTriggerExecutor extends TimerTriggerExecutor<PeriodicTrigger> {
+class PeriodicTriggerExecutor
+    extends SchedulableTriggerExecutor<PeriodicTrigger> {
   @override
   List<DateTime> getSchedule(DateTime from, DateTime to, [int max = 100]) {
     final List<DateTime> schedule = [];
@@ -256,6 +255,15 @@ class PeriodicTriggerExecutor extends TimerTriggerExecutor<PeriodicTrigger> {
     }
 
     return schedule;
+  }
+
+  Timer? timer;
+
+  @override
+  Future<bool> onPause() async {
+    timer?.cancel();
+    await super.onPause();
+    return true;
   }
 
   @override
@@ -273,13 +281,23 @@ class PeriodicTriggerExecutor extends TimerTriggerExecutor<PeriodicTrigger> {
 }
 
 /// Executes a [DateTimeTrigger] on the specified date and time.
-class DateTimeTriggerExecutor extends TimerTriggerExecutor<DateTimeTrigger> {
+class DateTimeTriggerExecutor
+    extends SchedulableTriggerExecutor<DateTimeTrigger> {
   @override
   List<DateTime> getSchedule(DateTime from, DateTime to, [int? max]) =>
       (configuration!.schedule.isAfter(from) &&
               configuration!.schedule.isBefore(to))
           ? [configuration!.schedule]
           : [];
+
+  Timer? timer;
+
+  @override
+  Future<bool> onPause() async {
+    timer?.cancel();
+    await super.onPause();
+    return true;
+  }
 
   @override
   Future<bool> onResume() async {
@@ -307,7 +325,7 @@ class DateTimeTriggerExecutor extends TimerTriggerExecutor<DateTimeTrigger> {
 
 /// Executes a [RecurrentScheduledTrigger].
 class RecurrentScheduledTriggerExecutor
-    extends TimerTriggerExecutor<RecurrentScheduledTrigger> {
+    extends SchedulableTriggerExecutor<RecurrentScheduledTrigger> {
   @override
   List<DateTime> getSchedule(DateTime from, DateTime to, [int max = 100]) {
     List<DateTime> schedule = [];
@@ -323,12 +341,21 @@ class RecurrentScheduledTriggerExecutor
     return schedule;
   }
 
+  Timer? timer;
+
+  @override
+  Future<bool> onPause() async {
+    timer?.cancel();
+    await super.onPause();
+    return true;
+  }
+
   @override
   Future<bool> onResume() async {
     Duration delay = configuration!.firstOccurrence.difference(DateTime.now());
     if (configuration!.end == null ||
         configuration!.end!.isAfter(DateTime.now())) {
-      Timer(delay, () async {
+      timer = Timer(delay, () async {
         await super.onResume();
       });
     }
