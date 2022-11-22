@@ -249,13 +249,13 @@ void example_2() async {
   });
 
   // Sampling can be paused and resumed
-  controller.executor?.pause();
-  controller.executor?.resume();
+  controller.executor?.stop();
+  controller.executor?.start();
 
   // Pause specific probe(s)
   controller.executor
       ?.lookupProbe(CarpDataTypes.ACCELERATION_TYPE_NAME)
-      .forEach((probe) => probe.pause());
+      .forEach((probe) => probe.stop());
 
   // Adapt a measure
   //
@@ -584,13 +584,13 @@ void app_task_controller_example() async {
         //
         break;
       case UserTaskState.started:
-        userTask.executor.resume();
+        userTask.executor.start();
         break;
       case UserTaskState.canceled:
         //
         break;
       case UserTaskState.done:
-        userTask.executor.pause();
+        userTask.executor.stop();
         break;
       default:
         //

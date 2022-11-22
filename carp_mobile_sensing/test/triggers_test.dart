@@ -228,7 +228,6 @@ void main() {
       t = CronScheduledTrigger(
         minute: 0,
         hour: 12,
-        duration: Duration(seconds: 1),
       );
       print(t);
 
@@ -265,7 +264,6 @@ void main() {
         // endTime: Time(hour: 8, minute: 30),
         minNumberOfTriggers: 2,
         maxNumberOfTriggers: 8,
-        duration: Duration(seconds: 1),
       );
       print(toJsonString(t));
 
@@ -291,7 +289,7 @@ void main() {
     test(' - ConditionalPeriodicTrigger', () {
       ConditionalPeriodicTrigger t = ConditionalPeriodicTrigger(
         period: Duration(minutes: 1),
-        resumeCondition: () {
+        triggerCondition: () {
           return ('jakob'.length == 5);
         },
       );

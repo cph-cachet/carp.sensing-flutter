@@ -197,13 +197,13 @@ class BackgroundSensingUserTask extends UserTask {
   @override
   void onStart(BuildContext context) {
     super.onStart(context);
-    executor.resume();
+    executor.start();
   }
 
   @override
   void onDone(BuildContext context, {dequeue = false}) {
     super.onDone(context, dequeue: dequeue);
-    executor.pause();
+    executor.stop();
   }
 }
 

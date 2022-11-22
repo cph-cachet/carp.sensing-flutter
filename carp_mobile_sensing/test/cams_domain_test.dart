@@ -90,7 +90,7 @@ void main() {
     primaryProtocol.addTaskControl(
       UserTaskTrigger(
         taskName: sensingAppTask.name,
-        resumeCondition: UserTaskState.done,
+        triggerCondition: UserTaskState.done,
       ),
       sensingAppTask,
       primaryPhone,
@@ -236,10 +236,7 @@ void main() {
     );
 
     primaryProtocol.addTaskControl(
-      PeriodicTrigger(
-        period: const Duration(minutes: 1),
-        duration: Duration(seconds: 1),
-      ), // collect every min.
+      PeriodicTrigger(period: const Duration(minutes: 1)), // collect every min.
       BackgroundTask()
         ..addMeasure(
             Measure(type: SensorSamplingPackage.AMBIENT_LIGHT_TYPE_NAME))
@@ -329,7 +326,7 @@ void main() {
     primaryProtocol.addTaskControl(
       SamplingEventTrigger(
           measureType: DeviceSamplingPackage.BATTERY_STATE_TYPE_NAME,
-          resumeCondition: BatteryState(10)),
+          triggerCondition: BatteryState(10)),
       BackgroundTask()
         ..addMeasure(
             Measure(type: SensorSamplingPackage.AMBIENT_LIGHT_TYPE_NAME)),
@@ -341,7 +338,7 @@ void main() {
     primaryProtocol.addTaskControl(
       SamplingEventTrigger(
           measureType: DeviceSamplingPackage.SCREEN_EVENT_TYPE_NAME,
-          resumeCondition: ScreenEvent('SCREEN_OFF')),
+          triggerCondition: ScreenEvent('SCREEN_OFF')),
       BackgroundTask()
         ..addMeasure(
             Measure(type: DeviceSamplingPackage.DEVICE_INFORMATION_TYPE_NAME)),
@@ -352,7 +349,7 @@ void main() {
     primaryProtocol.addTaskControl(
       ConditionalSamplingEventTrigger(
           measureType: DeviceSamplingPackage.BATTERY_STATE_TYPE_NAME,
-          resumeCondition: (measurement) =>
+          triggerCondition: (measurement) =>
               (measurement.data as BatteryState).batteryLevel == 10),
       BackgroundTask()
         ..addMeasure(

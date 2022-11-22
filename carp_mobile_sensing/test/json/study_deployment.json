@@ -8,9 +8,9 @@
     },
     "registration": {
         "__type": "dk.cachet.carp.common.application.devices.DeviceRegistration",
-        "deviceId": "8e9e97c0-6756-11ed-a6ca-ab4e22dcb912",
+        "deviceId": "55e35080-6a97-11ed-805c-31218c1d93e6",
         "deviceDisplayName": null,
-        "registrationCreatedOn": "2022-11-18T15:34:57.596983Z"
+        "registrationCreatedOn": "2022-11-22T18:56:13.192910Z"
     },
     "connectedDevices": [
         {
@@ -138,7 +138,7 @@
         "4": {
             "__type": "dk.cachet.carp.common.application.triggers.UserTaskTrigger",
             "taskName": "Task #7",
-            "resumeCondition": "done"
+            "triggerCondition": "done"
         },
         "5": {
             "__type": "dk.cachet.carp.common.application.triggers.ImmediateTrigger"
@@ -196,7 +196,7 @@
             }
         }
     ],
-    "lastUpdateDate": "2022-11-18T16:34:57.598519",
+    "lastUpdateDate": "2022-11-22T19:56:13.193911",
     "applicationData": {
         "studyDescription": {
             "__type": "StudyDescription",

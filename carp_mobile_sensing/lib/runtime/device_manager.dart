@@ -102,8 +102,8 @@ abstract class DeviceManager<TDeviceRegistration extends DeviceRegistration,
 
     for (var executor in executors) {
       executor.restart();
-      if (executor.state == ExecutorState.resumed) {
-        executor.resume();
+      if (executor.state == ExecutorState.started) {
+        executor.start();
       }
     }
   }
@@ -115,7 +115,7 @@ abstract class DeviceManager<TDeviceRegistration extends DeviceRegistration,
   @nonVirtual
   void pause() {
     for (var executor in executors) {
-      executor.pause();
+      executor.stop();
     }
   }
 

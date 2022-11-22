@@ -1,6 +1,6 @@
 {
-    "id": "3e0648f0-674f-11ed-b729-71133b1e57ac",
-    "createdOn": "2022-11-18T14:42:35.903219Z",
+    "id": "431e7970-6a97-11ed-9eeb-079380bfd060",
+    "createdOn": "2022-11-22T18:55:41.703971Z",
     "version": 0,
     "ownerId": "user@dtu.dk",
     "name": "patient_tracking",
@@ -139,7 +139,7 @@
         "4": {
             "__type": "dk.cachet.carp.common.application.triggers.UserTaskTrigger",
             "taskName": "Task #7",
-            "resumeCondition": "done"
+            "triggerCondition": "done"
         },
         "5": {
             "__type": "dk.cachet.carp.common.application.triggers.ImmediateTrigger"

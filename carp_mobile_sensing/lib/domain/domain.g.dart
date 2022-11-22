@@ -567,32 +567,9 @@ Map<String, dynamic> _$DelayedTriggerToJson(DelayedTrigger instance) {
   return val;
 }
 
-IntervalTrigger _$IntervalTriggerFromJson(Map<String, dynamic> json) =>
-    IntervalTrigger(
-      period: Duration(microseconds: json['period'] as int),
-    )
-      ..$type = json['__type'] as String?
-      ..sourceDeviceRoleName = json['sourceDeviceRoleName'] as String?;
-
-Map<String, dynamic> _$IntervalTriggerToJson(IntervalTrigger instance) {
-  final val = <String, dynamic>{};
-
-  void writeNotNull(String key, dynamic value) {
-    if (value != null) {
-      val[key] = value;
-    }
-  }
-
-  writeNotNull('__type', instance.$type);
-  writeNotNull('sourceDeviceRoleName', instance.sourceDeviceRoleName);
-  val['period'] = instance.period.inMicroseconds;
-  return val;
-}
-
 PeriodicTrigger _$PeriodicTriggerFromJson(Map<String, dynamic> json) =>
     PeriodicTrigger(
       period: Duration(microseconds: json['period'] as int),
-      duration: Duration(microseconds: json['duration'] as int),
     )
       ..$type = json['__type'] as String?
       ..sourceDeviceRoleName = json['sourceDeviceRoleName'] as String?;
@@ -609,16 +586,12 @@ Map<String, dynamic> _$PeriodicTriggerToJson(PeriodicTrigger instance) {
   writeNotNull('__type', instance.$type);
   writeNotNull('sourceDeviceRoleName', instance.sourceDeviceRoleName);
   val['period'] = instance.period.inMicroseconds;
-  val['duration'] = instance.duration.inMicroseconds;
   return val;
 }
 
 DateTimeTrigger _$DateTimeTriggerFromJson(Map<String, dynamic> json) =>
     DateTimeTrigger(
       schedule: DateTime.parse(json['schedule'] as String),
-      duration: json['duration'] == null
-          ? null
-          : Duration(microseconds: json['duration'] as int),
     )
       ..$type = json['__type'] as String?
       ..sourceDeviceRoleName = json['sourceDeviceRoleName'] as String?;
@@ -635,7 +608,6 @@ Map<String, dynamic> _$DateTimeTriggerToJson(DateTimeTrigger instance) {
   writeNotNull('__type', instance.$type);
   writeNotNull('sourceDeviceRoleName', instance.sourceDeviceRoleName);
   val['schedule'] = instance.schedule.toIso8601String();
-  writeNotNull('duration', instance.duration?.inMicroseconds);
   return val;
 }
 
@@ -650,9 +622,6 @@ RecurrentScheduledTrigger _$RecurrentScheduledTriggerFromJson(
       dayOfWeek: json['dayOfWeek'] as int?,
       weekOfMonth: json['weekOfMonth'] as int?,
       dayOfMonth: json['dayOfMonth'] as int?,
-      duration: json['duration'] == null
-          ? null
-          : Duration(microseconds: json['duration'] as int),
     )
       ..$type = json['__type'] as String?
       ..sourceDeviceRoleName = json['sourceDeviceRoleName'] as String?
@@ -670,7 +639,6 @@ Map<String, dynamic> _$RecurrentScheduledTriggerToJson(
 
   writeNotNull('__type', instance.$type);
   writeNotNull('sourceDeviceRoleName', instance.sourceDeviceRoleName);
-  val['duration'] = instance.duration.inMicroseconds;
   val['type'] = _$RecurrentTypeEnumMap[instance.type]!;
   val['time'] = instance.time;
   writeNotNull('end', instance.end?.toIso8601String());
@@ -691,11 +659,7 @@ const _$RecurrentTypeEnumMap = {
 
 CronScheduledTrigger _$CronScheduledTriggerFromJson(
         Map<String, dynamic> json) =>
-    CronScheduledTrigger(
-      duration: json['duration'] == null
-          ? null
-          : Duration(microseconds: json['duration'] as int),
-    )
+    CronScheduledTrigger()
       ..$type = json['__type'] as String?
       ..sourceDeviceRoleName = json['sourceDeviceRoleName'] as String?
       ..cronExpression = json['cronExpression'] as String;
@@ -713,7 +677,6 @@ Map<String, dynamic> _$CronScheduledTriggerToJson(
   writeNotNull('__type', instance.$type);
   writeNotNull('sourceDeviceRoleName', instance.sourceDeviceRoleName);
   val['cronExpression'] = instance.cronExpression;
-  val['duration'] = instance.duration.inMicroseconds;
   return val;
 }
 
@@ -721,12 +684,9 @@ SamplingEventTrigger _$SamplingEventTriggerFromJson(
         Map<String, dynamic> json) =>
     SamplingEventTrigger(
       measureType: json['measureType'] as String,
-      resumeCondition: json['resumeCondition'] == null
+      triggerCondition: json['triggerCondition'] == null
           ? null
-          : Data.fromJson(json['resumeCondition'] as Map<String, dynamic>),
-      pauseCondition: json['pauseCondition'] == null
-          ? null
-          : Data.fromJson(json['pauseCondition'] as Map<String, dynamic>),
+          : Data.fromJson(json['triggerCondition'] as Map<String, dynamic>),
     )
       ..$type = json['__type'] as String?
       ..sourceDeviceRoleName = json['sourceDeviceRoleName'] as String?;
@@ -744,8 +704,7 @@ Map<String, dynamic> _$SamplingEventTriggerToJson(
   writeNotNull('__type', instance.$type);
   writeNotNull('sourceDeviceRoleName', instance.sourceDeviceRoleName);
   val['measureType'] = instance.measureType;
-  writeNotNull('resumeCondition', instance.resumeCondition);
-  writeNotNull('pauseCondition', instance.pauseCondition);
+  writeNotNull('triggerCondition', instance.triggerCondition);
   return val;
 }
 
@@ -804,9 +763,6 @@ RandomRecurrentTrigger _$RandomRecurrentTriggerFromJson(
       maxNumberOfTriggers: json['maxNumberOfTriggers'] as int? ?? 1,
       startTime: TimeOfDay.fromJson(json['startTime'] as Map<String, dynamic>),
       endTime: TimeOfDay.fromJson(json['endTime'] as Map<String, dynamic>),
-      duration: json['duration'] == null
-          ? null
-          : Duration(microseconds: json['duration'] as int),
     )
       ..$type = json['__type'] as String?
       ..sourceDeviceRoleName = json['sourceDeviceRoleName'] as String?
@@ -830,7 +786,6 @@ Map<String, dynamic> _$RandomRecurrentTriggerToJson(
   val['endTime'] = instance.endTime;
   val['minNumberOfTriggers'] = instance.minNumberOfTriggers;
   val['maxNumberOfTriggers'] = instance.maxNumberOfTriggers;
-  val['duration'] = instance.duration.inMicroseconds;
   writeNotNull(
       'lastTriggerTimestamp', instance.lastTriggerTimestamp?.toIso8601String());
   return val;
@@ -839,10 +794,8 @@ Map<String, dynamic> _$RandomRecurrentTriggerToJson(
 UserTaskTrigger _$UserTaskTriggerFromJson(Map<String, dynamic> json) =>
     UserTaskTrigger(
       taskName: json['taskName'] as String,
-      resumeCondition:
-          $enumDecode(_$UserTaskStateEnumMap, json['resumeCondition']),
-      pauseCondition:
-          $enumDecodeNullable(_$UserTaskStateEnumMap, json['pauseCondition']),
+      triggerCondition:
+          $enumDecode(_$UserTaskStateEnumMap, json['triggerCondition']),
     )
       ..$type = json['__type'] as String?
       ..sourceDeviceRoleName = json['sourceDeviceRoleName'] as String?;
@@ -859,9 +812,7 @@ Map<String, dynamic> _$UserTaskTriggerToJson(UserTaskTrigger instance) {
   writeNotNull('__type', instance.$type);
   writeNotNull('sourceDeviceRoleName', instance.sourceDeviceRoleName);
   val['taskName'] = instance.taskName;
-  val['resumeCondition'] = _$UserTaskStateEnumMap[instance.resumeCondition]!;
-  writeNotNull(
-      'pauseCondition', _$UserTaskStateEnumMap[instance.pauseCondition]);
+  val['triggerCondition'] = _$UserTaskStateEnumMap[instance.triggerCondition]!;
   return val;
 }
 

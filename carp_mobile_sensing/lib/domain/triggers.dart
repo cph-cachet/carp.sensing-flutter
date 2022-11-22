@@ -45,31 +45,21 @@ class OneTimeTrigger extends TriggerConfiguration {
   Map<String, dynamic> toJson() => _$OneTimeTriggerToJson(this);
 }
 
-/// A trigger that waits to be started until the [resume] method is called.
-/// Is paused by calling the [pause] method.
-///
-/// Note that sampling continues until it is explicitly paused.
+/// A trigger that trigger when the [trigger] method is called from Dart code.
 @JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
 class PassiveTrigger extends TriggerConfiguration {
-  /// Create a trigger that waits to be started until the [resume] method is
-  /// called.
+  /// Create a trigger that triggers when the [trigger] method is called.
   PassiveTrigger() : super();
 
   @JsonKey(ignore: true)
   late TriggerExecutor executor;
 
-  /// Called when data sampling in this trigger is to be resumed.
+  /// Called when this trigger is to be triggered.
   ///
-  /// Starting a trigger implies that all tasks in this trigger is started,
-  /// which again implies that all [Measure]s in these tasks are started.
+  /// Triggering implies that all tasks in this trigger is started,
+  /// which again implies that all [Measure]s in these tasks are collected.
   /// Therefore, all measures to be started should be 'bundled' into this trigger.
-  void resume() => executor.resume();
-
-  /// Called when data sampling in this trigger is to paused.
-  ///
-  /// Stopping a trigger implies that all tasks in this trigger is paused,
-  /// which again implies that all [Measure]s in these tasks are paused.
-  void pause() => executor.pause();
+  void trigger() => executor.trigger();
 
   @override
   Function get fromJsonFunction => _$PassiveTriggerFromJson;
@@ -100,41 +90,17 @@ class DelayedTrigger extends TriggerConfiguration {
   Map<String, dynamic> toJson() => _$DelayedTriggerToJson(this);
 }
 
-/// A trigger that resume sampling every [period] and then pauses.
+/// A trigger that triggers every [period].
 ///
 /// Daily, weekly and montly recurrent triggers can be specified using the
 /// [RecurrentScheduledTrigger].
 @JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
-class IntervalTrigger extends TriggerConfiguration implements Schedulable {
+class PeriodicTrigger extends TriggerConfiguration implements Schedulable {
   /// The period (reciprocal of frequency) of sampling.
   Duration period;
 
   /// Create a trigger that resume sampling every [period] and then pauses.
-  IntervalTrigger({required this.period}) : super();
-
-  @override
-  Function get fromJsonFunction => _$IntervalTriggerFromJson;
-  factory IntervalTrigger.fromJson(Map<String, dynamic> json) =>
-      FromJsonFactory().fromJson(json) as IntervalTrigger;
-  @override
-  Map<String, dynamic> toJson() => _$IntervalTriggerToJson(this);
-}
-
-/// A trigger that resumes sampling every [period] for a specific [duration].
-///
-/// It is important to specify **both** the [period] and the [duration] in order
-/// to specify the timing of resuming and pausing sampling.
-@JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
-class PeriodicTrigger extends IntervalTrigger {
-  /// The duration (until paused) of the the sampling.
-  Duration duration;
-
-  /// Create a trigger that resumes sampling every [period] for a
-  /// specific [duration].
-  PeriodicTrigger({
-    required super.period,
-    required this.duration,
-  });
+  PeriodicTrigger({required this.period}) : super();
 
   @override
   Function get fromJsonFunction => _$PeriodicTriggerFromJson;
@@ -151,15 +117,8 @@ class DateTimeTrigger extends TriggerConfiguration implements Schedulable {
   /// The scheduled date and time for resuming sampling.
   DateTime schedule;
 
-  /// The duration (until stopped) of the the sampling.
-  /// If `null`, the sampling is never stopped (i.e., runs forever).
-  Duration? duration;
-
   /// Create a trigger that starts sampling based on a [schedule].
-  DateTimeTrigger({
-    required this.schedule,
-    this.duration,
-  }) : super();
+  DateTimeTrigger({required this.schedule}) : super();
 
   @override
   Function get fromJsonFunction => _$DateTimeTriggerFromJson;
@@ -266,10 +225,7 @@ class RecurrentScheduledTrigger extends PeriodicTrigger {
     this.weekOfMonth,
     this.dayOfMonth,
     Duration? duration,
-  }) : super(
-          period: const Duration(seconds: 1),
-          duration: duration ?? const Duration(seconds: 2),
-        ) {
+  }) : super(period: const Duration(seconds: 1)) {
     assert(separationCount >= 0, 'Separation count must be zero or positive.');
     if (type == RecurrentType.weekly) {
       assert(dayOfWeek != null,
@@ -385,10 +341,6 @@ class CronScheduledTrigger extends TriggerConfiguration implements Schedulable {
   /// The cron job expression.
   String cronExpression;
 
-  /// The duration (until stopped) of the the sampling.
-  /// Defaults to 1 second, mostly useful for one-time sampling.
-  late Duration duration;
-
   /// Create a cron scheduled trigger based on specifying:
   ///   * [minute] - The minute to trigger. `int` [0-59] or `null` (= match all).
   ///   * [hour] - The hour to trigger. `int` [0-23] or `null` (= match all).
@@ -402,7 +354,6 @@ class CronScheduledTrigger extends TriggerConfiguration implements Schedulable {
     int? day,
     int? month,
     int? weekday,
-    Duration? duration,
   }) {
     assert(minute == null || (minute >= 0 && minute <= 59),
         'minute must be in the range of [0-59] or null (=match all).');
@@ -416,7 +367,6 @@ class CronScheduledTrigger extends TriggerConfiguration implements Schedulable {
         'weekday must be in the range of [0-6] or null (=match all).');
     return CronScheduledTrigger._(
       cronExpression: _cronToString(minute, hour, day, month, weekday),
-      duration: duration ?? const Duration(seconds: 1),
     );
   }
 
@@ -436,15 +386,9 @@ class CronScheduledTrigger extends TriggerConfiguration implements Schedulable {
     required String cronExpression,
     Duration? duration,
   }) =>
-      CronScheduledTrigger._(
-        cronExpression: cronExpression,
-        duration: duration ?? const Duration(seconds: 1),
-      );
+      CronScheduledTrigger._(cronExpression: cronExpression);
 
-  CronScheduledTrigger._({
-    required this.cronExpression,
-    this.duration = const Duration(seconds: 1),
-  }) : super();
+  CronScheduledTrigger._({required this.cronExpression}) : super();
 
   static String _cronToString(
           int? minute, int? hour, int? day, int? month, int? weekday) =>
@@ -462,56 +406,36 @@ class CronScheduledTrigger extends TriggerConfiguration implements Schedulable {
   String toString() => "$runtimeType - cron expression: '$cronExpression'";
 }
 
-/// A trigger that resume and pause sampling when some (other) sampling event
-/// occurs.
+/// A trigger that triggers when some sampling event occurs.
 ///
-/// For example, if [measureType] is `dk.cachet.carp.geofence` the [resumeCondition]
-/// can be;
-/// ```
-///   ConditionalEvent({
-///     'name': 'DTU',
-///     'type': 'ENTER',
-///   });
-/// ```
+/// For example, if [measureType] is `dk.cachet.carp.completedtask` the [triggerCondition]
+/// can be a [CompletedTask] with a specific [taskName].
 @JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
 class SamplingEventTrigger extends TriggerConfiguration {
   /// The data type of the event to look for.
   ///
-  /// If [resumeCondition] is null, sampling will be triggered for all events
+  /// If [triggerCondition] is null, sampling will be triggered for all events
   /// of this type.
   String measureType;
 
-  /// The specific sampling value to compare with for resuming this trigger.
+  /// The specific sampling value to compare with for triggering this trigger.
   ///
   /// When comparing, the [Data.equivalentTo] method. is used. Hence, the
-  /// sampled data must be "equivalent" to this resumeCondition in order to
-  /// start sampling based on an event.
+  /// sampled data must be "equivalent" to this [triggerCondition] in order to
+  /// trigger based on an event.
   /// Note that the `equivalentTo` method must be overwritten in
   /// application-specific [Data] classes to support this.
   ///
-  /// If [resumeCondition] is null, sampling will be triggered / resumed on
+  /// If [triggerCondition] is null, sampling will be triggered on
   /// every sampling event that matches the specified [measureType].
-  Data? resumeCondition;
-
-  /// The specific sampling value to compare with for pausing this trigger.
-  ///
-  /// When comparing, the [Data.equivalentTo] method. is used. Hence, the
-  /// sampled data must be "equivalent" to this resumeCondition in order to
-  /// start sampling based on an event.
-  /// Note that the `equivalentTo` method must be overwritten in
-  /// application-specific [Data] classes to support this.
-  ///
-  /// If [pauseCondition] is null, sampling is never paused and hence runs
-  /// forever (unless paused manually).
-  Data? pauseCondition;
+  Data? triggerCondition;
 
   /// Create a trigger that triggers when a measure of [measureType] is collected,
-  /// and checks the [resumeCondition] and [pauseCondition] to determine if the
+  /// and checks the [triggerCondition] and [pauseCondition] to determine if the
   /// task should be resumed or paused, respectively.
   SamplingEventTrigger({
     required this.measureType,
-    this.resumeCondition,
-    this.pauseCondition,
+    this.triggerCondition,
   }) : super();
 
   @override
@@ -549,14 +473,14 @@ class SamplingEventTrigger extends TriggerConfiguration {
 /// occurred. Returns [true] if the event has occurred, [false] otherwise.
 typedef ConditionalEventEvaluator = bool Function(Measurement measurement);
 
-/// A trigger that resume and pause sampling when some (other) sampling event
+/// A trigger that triggers when some (other) sampling event
 /// occurs and a application-specific condition is meet.
 ///
-/// Note that the [resumeCondition] and [pauseCondition] are
-/// [ConditionalEvaluator] functions which cannot be serialized to/from JSON.
+/// Note that the [triggerCondition] is a [ConditionalEvaluator] function,
+/// which cannot be serialized to/from JSON.
 /// Thus, even though this trigger can be de/serialized from/to JSON, its
-/// [resumeCondition] and [pauseCondition] cannot.
-/// This implies that these functions cannot be retrieved as part of a [StudyProtocol]
+/// [triggerCondition] cannot.
+/// This implies that this function cannot be retrieved as part of a [StudyProtocol]
 /// from a [DeploymentService] since it relies on specifying a Dart-specific function as
 /// the [ConditionalEvaluator] methods. Hence, this trigger is mostly
 /// useful when creating a [StudyProtocol] directly in the app using Dart code.
@@ -569,25 +493,16 @@ class ConditionalSamplingEventTrigger extends TriggerConfiguration {
   String measureType;
 
   /// The [ConditionalEventEvaluator] function evaluating if the event
-  /// condition is meet for resuming this trigger
+  /// condition is meet for triggering this trigger
   @JsonKey(ignore: true)
-  ConditionalEventEvaluator? resumeCondition;
-
-  /// The [ConditionalEventEvaluator] function evaluating if the event
-  /// condition is meet for pausing this trigger.
-  ///
-  /// If [pauseCondition] is not specified (`null`), sampling is never paused
-  /// and hence runs forever (unless paused manually).
-  @JsonKey(ignore: true)
-  ConditionalEventEvaluator? pauseCondition;
+  ConditionalEventEvaluator? triggerCondition;
 
   /// Create a trigger that triggers when a measure of [measureType] is collected,
-  /// and checks the [resumeCondition] and [pauseCondition] to determine if the
-  /// task should be resumed or paused, respectively.
+  /// and checks the [triggerCondition] to determine if the
+  /// task should be triggered.
   ConditionalSamplingEventTrigger({
     required this.measureType,
-    this.resumeCondition,
-    this.pauseCondition,
+    this.triggerCondition,
   }) : super();
 
   @override
@@ -599,44 +514,35 @@ class ConditionalSamplingEventTrigger extends TriggerConfiguration {
       _$ConditionalSamplingEventTriggerToJson(this);
 }
 
-/// Evaluates if a [ConditionalPeriodicTrigger] should resume or pause.
-/// Returns [true] if resume or pause should happen, [false] otherwise.
+/// Evaluates if a [ConditionalPeriodicTrigger] should trigger.
+/// Returns [true] if triggering should happen, [false] otherwise.
 typedef ConditionalEvaluator = bool Function();
 
-/// A trigger that periodically checks if application-specific resume and pause
-/// conditions are meet.
+/// A trigger that periodically checks if application-specific  triggering
+/// condition is meet.
 ///
-/// Note that the [resumeCondition] and [pauseCondition] are
-/// [ConditionalEvaluator] functions which cannot be serialized to/from JSON.
+/// Note that the [triggerCondition] is a [ConditionalEvaluator] function,
+/// which cannot be serialized to/from JSON.
 /// Thus, even though this trigger can be de/serialized from/to JSON, its
-/// [resumeCondition] and [pauseCondition] cannot.
-/// This implies that these functions cannot be retrieved as part of a [StudyProtocol]
+/// [triggerCondition] cannot.
+/// This implies that this function cannot be retrieved as part of a [StudyProtocol]
 /// from a [DeploymentService] since it relies on specifying a Dart-specific function as
 /// the [ConditionalEvaluator] methods. Hence, this trigger is mostly
 /// useful when creating a [StudyProtocol] directly in the app using Dart code.
 @JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
 class ConditionalPeriodicTrigger extends TriggerConfiguration {
-  /// The period of when to check the [resumeCondition] and [pauseCondition].
+  /// The period of when to check the [triggerCondition] and [pauseCondition].
   Duration period;
 
   /// The [ConditionalEventEvaluator] function evaluating if the event
-  /// condition is meet for resuming this trigger
+  /// condition is meet for triggering this trigger
   @JsonKey(ignore: true)
-  ConditionalEvaluator? resumeCondition;
-
-  /// The [ConditionalEventEvaluator] function evaluating if the event
-  /// condition is meet for pausing this trigger.
-  ///
-  /// If [pauseCondition] is not specified (`null`), sampling is never paused
-  /// and hence runs forever (unless paused manually).
-  @JsonKey(ignore: true)
-  ConditionalEvaluator? pauseCondition;
+  ConditionalEvaluator? triggerCondition;
 
   /// Create a [ConditionalSamplingEventTrigger].
   ConditionalPeriodicTrigger({
     required this.period,
-    this.resumeCondition,
-    this.pauseCondition,
+    this.triggerCondition,
   }) : super();
 
   @override
@@ -668,9 +574,6 @@ class RandomRecurrentTrigger extends TriggerConfiguration
   /// Maximum number of trigger per day.
   int maxNumberOfTriggers;
 
-  /// The duration (until paused) of the the sampling.
-  late Duration duration;
-
   /// The timestamp of when this trigger was triggered last.
   DateTime? lastTriggerTimestamp;
 
@@ -685,11 +588,9 @@ class RandomRecurrentTrigger extends TriggerConfiguration
     this.maxNumberOfTriggers = 1,
     required this.startTime,
     required this.endTime,
-    Duration? duration,
   }) : super() {
     assert(startTime.isBefore(endTime),
         'startTime must be before endTime with a 24 hour period.');
-    this.duration = duration ?? const Duration(seconds: 1);
   }
 
   @override
@@ -707,19 +608,12 @@ class UserTaskTrigger extends TriggerConfiguration {
   String taskName;
 
   /// The state of the user task for resuming this trigger
-  UserTaskState resumeCondition;
-
-  /// The state of the user task for pausing this trigger.
-  ///
-  /// If not specified (null), the the trigger is automatically paused after resume.
-  /// This is useful for resuming another AppTask.
-  UserTaskState? pauseCondition;
+  UserTaskState triggerCondition;
 
   /// Create a [UserTaskTrigger].
   UserTaskTrigger({
     required this.taskName,
-    required this.resumeCondition,
-    this.pauseCondition,
+    required this.triggerCondition,
   }) : super();
 
   @override

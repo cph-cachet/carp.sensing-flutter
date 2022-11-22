@@ -149,16 +149,16 @@ class Sensing {
   /// Is sensing running, i.e. has the study executor been resumed?
   bool get isRunning =>
       (controller != null) &&
-      controller!.executor!.state == ExecutorState.resumed;
+      controller!.executor!.state == ExecutorState.started;
 
   /// Status of sensing.
   StudyStatus? get status => controller?.status;
 
   /// Resume sensing
-  void resume() async => controller?.executor?.resume();
+  void resume() async => controller?.executor?.start();
 
   /// Pause sensing
-  void pause() async => controller?.executor?.pause();
+  void pause() async => controller?.executor?.stop();
 
   /// Stop sensing.
   void stop() async => controller!.stop();
@@ -206,9 +206,19 @@ class LocalStudyProtocolManager implements StudyProtocolManager {
       Control.Start,
     );
 
-    // Collect device info only once
+    // // Collect device info only once
+    // protocol.addTaskControl(
+    //   OneTimeTrigger(),
+    //   BackgroundTask()
+    //     ..addMeasure(
+    //         Measure(type: DeviceSamplingPackage.DEVICE_INFORMATION_TYPE_NAME)),
+    //   phone,
+    //   Control.Start,
+    // );
+
+    // Collect device info periodically
     protocol.addTaskControl(
-      OneTimeTrigger(),
+      PeriodicTrigger(period: Duration(seconds: 20)),
       BackgroundTask()
         ..addMeasure(
             Measure(type: DeviceSamplingPackage.DEVICE_INFORMATION_TYPE_NAME)),
@@ -216,36 +226,31 @@ class LocalStudyProtocolManager implements StudyProtocolManager {
       Control.Start,
     );
 
-    // add a random trigger to collect device info at random times
-    protocol.addTaskControl(
-      RandomRecurrentTrigger(
-        startTime: TimeOfDay(hour: 07, minute: 45),
-        endTime: TimeOfDay(hour: 22, minute: 30),
-        minNumberOfTriggers: 2,
-        maxNumberOfTriggers: 8,
-      ),
-      BackgroundTask()
-        ..addMeasure(
-            Measure(type: DeviceSamplingPackage.DEVICE_INFORMATION_TYPE_NAME)),
-      phone,
-      Control.Start,
-    );
+    // // add a random trigger to collect device info at random times
+    // protocol.addTaskControl(
+    //   RandomRecurrentTrigger(
+    //     startTime: TimeOfDay(hour: 07, minute: 45),
+    //     endTime: TimeOfDay(hour: 22, minute: 30),
+    //     minNumberOfTriggers: 2,
+    //     maxNumberOfTriggers: 8,
+    //   ),
+    //   BackgroundTask()
+    //     ..addMeasure(
+    //         Measure(type: DeviceSamplingPackage.DEVICE_INFORMATION_TYPE_NAME)),
+    //   phone,
+    //   Control.Start,
+    // );
 
-    // add a ConditionalPeriodicTrigger to check periodically
-    protocol.addTaskControl(
-        ConditionalPeriodicTrigger(
-          period: Duration(seconds: 10),
-          resumeCondition: () {
-            //
-            return ('jakob'.length == 5);
-          },
-          pauseCondition: () => true,
-        ),
-        BackgroundTask()
-          ..addMeasure(Measure(
-              type: DeviceSamplingPackage.DEVICE_INFORMATION_TYPE_NAME)),
-        phone,
-        Control.Start);
+    // // add a ConditionalPeriodicTrigger to check periodically
+    // protocol.addTaskControl(
+    //     ConditionalPeriodicTrigger(
+    //         period: Duration(seconds: 20),
+    //         triggerCondition: () => ('jakob'.length == 5)),
+    //     BackgroundTask()
+    //       ..addMeasure(Measure(
+    //           type: DeviceSamplingPackage.DEVICE_INFORMATION_TYPE_NAME)),
+    //     phone,
+    //     Control.Start);
 
     // Add an app task 2 minutes after deployment and make a notification.
     //

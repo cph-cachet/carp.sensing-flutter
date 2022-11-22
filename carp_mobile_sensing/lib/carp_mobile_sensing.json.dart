@@ -31,11 +31,11 @@ void _registerFromJsonFunctions() {
   FromJsonFactory().register(ImmediateTrigger());
   FromJsonFactory().register(OneTimeTrigger());
   FromJsonFactory().register(DelayedTrigger(delay: Duration()));
-  FromJsonFactory().register(IntervalTrigger(period: Duration()));
-  FromJsonFactory().register(PeriodicTrigger(
-    period: Duration(),
-    duration: Duration(),
-  ));
+  FromJsonFactory().register(PeriodicTrigger(period: Duration()));
+  // FromJsonFactory().register(PeriodicTrigger(
+  //   period: Duration(),
+  //   duration: Duration(),
+  // ));
   FromJsonFactory().register(DateTimeTrigger(schedule: DateTime.now()));
   FromJsonFactory().register(RecurrentScheduledTrigger(
     type: RecurrentType.daily,
@@ -51,7 +51,7 @@ void _registerFromJsonFunctions() {
   ));
   FromJsonFactory().register(UserTaskTrigger(
     taskName: 'ignored',
-    resumeCondition: UserTaskState.done,
+    triggerCondition: UserTaskState.done,
   ));
 
   // Data classes

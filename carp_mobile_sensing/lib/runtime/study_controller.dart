@@ -329,7 +329,7 @@ class SmartphoneDeploymentController extends StudyRuntime {
 
     info('Starting data sampling ...');
     super.start();
-    if (resume) _executor!.resume();
+    if (resume) _executor!.start();
   }
 
   /// Stop the sampling.

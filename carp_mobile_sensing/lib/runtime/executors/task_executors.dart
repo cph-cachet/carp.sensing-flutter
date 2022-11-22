@@ -7,14 +7,9 @@
 
 part of runtime;
 
-/// Returns the relevant [TaskExecutor] based on the type of [task].
-TaskExecutor getTaskExecutor(TaskConfiguration task) {
-  if (task is AppTask) return AppTaskExecutor();
-  return BackgroundTaskExecutor();
-}
-
 /// The [TaskExecutor] is responsible for executing a [TaskConfiguration].
-/// For each measure in the task, it looks up appropriate [Probe]s to collect data.
+/// For each measure in the task, it looks up an appropriate [Probe] to
+/// collect data.
 ///
 /// Note that a [TaskExecutor] in itself is a [Executor].
 /// This - amongst other things - imply that you can listen
@@ -54,12 +49,13 @@ abstract class TaskExecutor<TConfig extends TaskConfiguration>
 /// Executes a [BackgroundTask].
 class BackgroundTaskExecutor extends TaskExecutor<BackgroundTask> {
   @override
-  Future<bool> onResume() async {
+  Future<bool> onStart() async {
     if (configuration?.duration != null) {
+      // if the task has a duration (optional), stop it again after this
       Timer(Duration(seconds: configuration!.duration!.toSeconds().truncate()),
-          () => pause());
+          () => stop());
     }
-    return await super.onResume();
+    return await super.onStart();
   }
 }
 
@@ -85,6 +81,10 @@ class AppTaskExecutor<TConfig extends AppTask> extends TaskExecutor<TConfig> {
   /// activated.
   TaskExecutor backgroundTaskExecutor = BackgroundTaskExecutor();
 
+  /// The user task enqueued when this app task executor is started.
+  /// Null if not started, or stopped again.
+  UserTask? userTask;
+
   AppTaskExecutor() : super() {
     // add the events from the embedded executor to the overall stream of events
     group.add(backgroundTaskExecutor.measurements);
@@ -94,20 +94,18 @@ class AppTaskExecutor<TConfig extends AppTask> extends TaskExecutor<TConfig> {
   bool onInitialize() => true;
 
   @override
-  Future<bool> onResume() async {
+  Future<bool> onStart() async {
     // when an app task is resumed simply put it on the queue
-    await AppTaskController().enqueue(this);
+    userTask = await AppTaskController().enqueue(this);
     return true;
   }
 
   @override
-  // TODO - don't know what to do on pause. Remove from queue?
-  Future<bool> onPause() async => true;
-
-  @override
   Future<bool> onStop() async {
     backgroundTaskExecutor.stop();
-    await super.onStop();
+    // if an app task is stopped, removed it from the queue again
+    if (userTask != null) AppTaskController().dequeue(userTask!.id);
+    userTask = null;
     return true;
   }
 }
