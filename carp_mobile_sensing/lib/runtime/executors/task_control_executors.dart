@@ -25,7 +25,7 @@ TaskControlExecutor getTriggeredTaskExecutor(
   return TaskControlExecutor(taskControl, trigger, task);
 }
 
-/// Responsible for handling the execution of a [TriggeredTask].
+/// Responsible for handling the execution of a [TaskControl].
 ///
 /// This executor runs in real-time and triggers the task using timers. This
 /// entails that tasks are only triggered if the app is actively running, either
@@ -72,11 +72,11 @@ class TaskControlExecutor extends AggregateExecutor<TaskControl> {
   Stream<Measurement> get measurements =>
       group.stream.map((measurement) => measurement..taskControl = taskControl);
 
-  /// Returns a list of the running probes in this [TaskControlExecutor].
+  /// Returns a list of the running probes in this task control executor.
   List<Probe> get probes => taskExecutor?.probes ?? [];
 }
 
-/// Responsible for handling the execution of a [TriggeredTask] which contains
+/// Responsible for handling the execution of a [TaskControl] which contains
 /// an [AppTask].
 ///
 /// In contrast to the [TaskControlExecutor] (which runs in the background),

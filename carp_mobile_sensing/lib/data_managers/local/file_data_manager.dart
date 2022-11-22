@@ -54,7 +54,7 @@ class FileDataManager extends AbstractDataManager {
           'A non-empty public key is required if files are to be encrypted.');
     }
 
-    // Initializing the the local study directory and file
+    // Initializing the the local directory and file
     await path;
     await file;
     await sink;

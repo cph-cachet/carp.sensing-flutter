@@ -165,9 +165,9 @@ class StudyProtocol extends Snapshot {
   bool addTaskControl(
     TriggerConfiguration trigger,
     TaskConfiguration task,
-    DeviceConfiguration destinationDevice,
-    Control control,
-  ) {
+    DeviceConfiguration destinationDevice, [
+    Control control = Control.Start,
+  ]) {
     assert(
         primaryDevices.contains(destinationDevice) ||
             connectedDevices!.contains(destinationDevice),
@@ -179,7 +179,6 @@ class StudyProtocol extends Snapshot {
 
     // create and add a task control
     int triggerId = indexOfTrigger(trigger);
-
     if (triggerId >= 0) {
       taskControls.add(TaskControl(
         triggerId,
