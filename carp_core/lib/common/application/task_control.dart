@@ -36,12 +36,12 @@ class TaskControl {
   DeviceConfiguration? targetDevice;
 
   /// Create a [TaskControl].
-  TaskControl(
-    this.triggerId, [
-    this.control = Control.Start,
+  TaskControl({
+    required this.triggerId,
     this.task,
     this.targetDevice,
-  ]) : super() {
+    this.control = Control.Start,
+  }) : super() {
     if (task != null) taskName = task!.name;
     if (targetDevice != null) {
       destinationDeviceRoleName = targetDevice!.roleName;

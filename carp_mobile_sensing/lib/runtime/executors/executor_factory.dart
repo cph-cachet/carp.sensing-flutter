@@ -33,9 +33,12 @@ class ExecutorFactory {
     return TaskControlExecutor(taskControl, trigger, task);
   }
 
-  /// Returns the [TriggerExecutor] for a [triggerId].
-  /// Create a trigger executor based on the [trigger] type if not already available.
-  TriggerExecutor getTriggerExecutor(
+  /// Get the [TriggerExecutor] for a [triggerId], if available.
+  TriggerExecutor? getTriggerExecutor(int triggerId) =>
+      _triggerExecutors[triggerId];
+
+  /// Create a [TriggerExecutor] based on the [trigger] type.
+  TriggerExecutor createTriggerExecutor(
     int triggerId,
     TriggerConfiguration trigger,
   ) {
@@ -104,9 +107,13 @@ class ExecutorFactory {
     return _triggerExecutors[triggerId]!;
   }
 
-  /// Returns the [TaskExecutor] for a [task].
-  /// Create a task executor based on the task type if not already available.
-  TaskExecutor getTaskExecutor(TaskConfiguration task) {
+  /// Get the [TaskExecutor] for a [task].
+  TaskExecutor? getTaskExecutor(TaskConfiguration task) =>
+      _taskExecutors[task.name];
+
+  /// Create a [TaskExecutor] for a [task] based on the task type.
+  /// If already created, returns this.
+  TaskExecutor createTaskExecutor(TaskConfiguration task) {
     if (_taskExecutors[task.name] == null) {
       TaskExecutor executor = BackgroundTaskExecutor();
       if (task is AppTask) executor = AppTaskExecutor();

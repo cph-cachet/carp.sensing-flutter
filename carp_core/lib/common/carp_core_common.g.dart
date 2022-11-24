@@ -193,8 +193,9 @@ Map<String, dynamic> _$CustomProtocolTaskToJson(CustomProtocolTask instance) {
 }
 
 TaskControl _$TaskControlFromJson(Map<String, dynamic> json) => TaskControl(
-      json['triggerId'] as int,
-      $enumDecodeNullable(_$ControlEnumMap, json['control']) ?? Control.Start,
+      triggerId: json['triggerId'] as int,
+      control: $enumDecodeNullable(_$ControlEnumMap, json['control']) ??
+          Control.Start,
     )
       ..taskName = json['taskName'] as String
       ..destinationDeviceRoleName = json['destinationDeviceRoleName'] as String?

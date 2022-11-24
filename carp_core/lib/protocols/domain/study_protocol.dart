@@ -181,32 +181,32 @@ class StudyProtocol extends Snapshot {
     int triggerId = indexOfTrigger(trigger);
     if (triggerId >= 0) {
       taskControls.add(TaskControl(
-        triggerId,
-        control,
-        task,
-        destinationDevice,
+        triggerId: triggerId,
+        task: task,
+        targetDevice: destinationDevice,
+        control: control,
       ));
       return true;
     }
     return false;
   }
 
-  // /// Add a list of [tasks] to be started or stopped (determined by [control]) on a
-  // /// [destinationDevice] once a [trigger] within this protocol is initiated.
-  // /// In case the [trigger] or [tasks] are not yet included in this study protocol,
-  // /// it will be added.
-  // /// The [destinationDevice] needs to be added prior to this call since it needs
-  // /// to be set up as either a primary device or connected device.
-  // void addTriggeredTasks(
-  //   TriggerConfiguration trigger,
-  //   List<TaskConfiguration> tasks,
-  //   DeviceConfiguration destinationDevice,
-  //   Control control,
-  // ) {
-  //   for (TaskConfiguration task in tasks) {
-  //     addTaskControl(trigger, task, destinationDevice, control);
-  //   }
-  // }
+  /// Add a list of [tasks] to be started or stopped (determined by [control]) on a
+  /// [destinationDevice] once a [trigger] within this protocol is initiated.
+  /// In case the [trigger] or [tasks] are not yet included in this study protocol,
+  /// it will be added.
+  /// The [destinationDevice] needs to be added prior to this call since it needs
+  /// to be set up as either a primary device or connected device.
+  void addTaskControls(
+    TriggerConfiguration trigger,
+    List<TaskConfiguration> tasks,
+    DeviceConfiguration destinationDevice, [
+    Control control = Control.Start,
+  ]) {
+    for (TaskConfiguration task in tasks) {
+      addTaskControl(trigger, task, destinationDevice, control);
+    }
+  }
 
   /// Gets all conditions which control that tasks get started or stopped on
   /// devices in this protocol by the specified [trigger].

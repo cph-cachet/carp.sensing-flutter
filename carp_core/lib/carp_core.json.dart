@@ -134,7 +134,7 @@ void _registerFromJsonFunctions() {
       triggerId: 0,
       taskName: '',
       destinationDeviceRoleName: '',
-      control: TaskControl(0)));
+      control: TaskControl(triggerId: 0)));
 
   // INPUT DATA TYPES
   FromJsonFactory().register(CustomInput('ignored'),

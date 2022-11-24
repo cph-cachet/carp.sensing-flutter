@@ -68,8 +68,8 @@ class Console extends State<ConsolePage> {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: restart,
-        tooltip: 'Restart study & probes',
-        child: sensing!.isRunning ? Icon(Icons.pause) : Icon(Icons.play_arrow),
+        tooltip: 'Start/Stop study',
+        child: sensing!.isRunning ? Icon(Icons.stop) : Icon(Icons.play_arrow),
       ),
     );
   }
@@ -89,11 +89,11 @@ class Console extends State<ConsolePage> {
   void restart() {
     setState(() {
       if (sensing!.isRunning) {
-        sensing!.pause();
-        log('\nSensing paused ...');
+        sensing!.stop();
+        log('\nSensing stopped ...');
       } else {
-        sensing!.resume();
-        log('\nSensing resumed ...');
+        sensing!.start();
+        log('\nSensing started ...');
       }
     });
   }
@@ -155,13 +155,10 @@ class Sensing {
   StudyStatus? get status => controller?.status;
 
   /// Resume sensing
-  void resume() async => controller?.executor?.start();
+  void start() async => controller?.executor?.start();
 
   /// Pause sensing
-  void pause() async => controller?.executor?.stop();
-
-  /// Stop sensing.
-  void stop() async => controller!.stop();
+  void stop() async => controller?.executor?.stop();
 }
 
 /// This is a simple local [StudyProtocolManager].
@@ -188,23 +185,34 @@ class LocalStudyProtocolManager implements StudyProtocolManager {
     var phone = Smartphone();
     protocol.addMasterDevice(phone);
 
-    // Add measures from the [DeviceSamplingPackage] and [SensorSamplingPackage]
-    // sampling packages.
-    protocol.addTaskControl(
-      ImmediateTrigger(),
-      BackgroundTask()
-        ..addMeasures([
-          // Measure(type: SensorSamplingPackage.ACCELEROMETER),
-          // Measure(type: SensorSamplingPackage.GYROSCOPE),
-          Measure(type: DeviceSamplingPackage.FREE_MEMORY_TYPE_NAME),
-          Measure(type: DeviceSamplingPackage.BATTERY_STATE_TYPE_NAME),
-          Measure(type: DeviceSamplingPackage.SCREEN_EVENT_TYPE_NAME),
-          Measure(type: CarpDataTypes.STEP_COUNT_TYPE_NAME),
-          Measure(type: SensorSamplingPackage.AMBIENT_LIGHT_TYPE_NAME)
-        ]),
-      phone,
-      Control.Start,
-    );
+    // // Add background measures from the [DeviceSamplingPackage] and
+    // // [SensorSamplingPackage] sampling packages.
+    // protocol.addTaskControl(
+    //   ImmediateTrigger(),
+    //   BackgroundTask(measures: [
+    //     Measure(type: DeviceSamplingPackage.FREE_MEMORY_TYPE_NAME),
+    //     Measure(type: DeviceSamplingPackage.BATTERY_STATE_TYPE_NAME),
+    //     Measure(type: DeviceSamplingPackage.SCREEN_EVENT_TYPE_NAME),
+    //     Measure(type: CarpDataTypes.STEP_COUNT_TYPE_NAME),
+    //     Measure(type: SensorSamplingPackage.AMBIENT_LIGHT_TYPE_NAME)
+    //   ]),
+    //   phone,
+    //   Control.Start,
+    // );
+
+    // // Collect IMU data every 10 secs for 1 sec.
+    // protocol.addTaskControl(
+    //   PeriodicTrigger(period: Duration(seconds: 10)),
+    //   BackgroundTask(
+    //     measures: [
+    //       Measure(type: CarpDataTypes.ACCELERATION_TYPE_NAME),
+    //       Measure(type: CarpDataTypes.ROTATION_TYPE_NAME),
+    //     ],
+    //     duration: IsoDuration(seconds: 1),
+    //   ),
+    //   phone,
+    //   Control.Start,
+    // );
 
     // // Collect device info only once
     // protocol.addTaskControl(
@@ -216,15 +224,54 @@ class LocalStudyProtocolManager implements StudyProtocolManager {
     //   Control.Start,
     // );
 
-    // Collect device info periodically
-    protocol.addTaskControl(
-      PeriodicTrigger(period: Duration(seconds: 20)),
-      BackgroundTask()
-        ..addMeasure(
-            Measure(type: DeviceSamplingPackage.DEVICE_INFORMATION_TYPE_NAME)),
+    // // Collect device info only once
+    // protocol.addTaskControl(
+    //   ImmediateTrigger(),
+    //   BackgroundTask()
+    //     ..addMeasure(
+    //         Measure(type: DeviceSamplingPackage.DEVICE_INFORMATION_TYPE_NAME)),
+    //   phone,
+    //   Control.Start,
+    // );
+
+    var task_1 = BackgroundTask(
+      measures: [
+        Measure(type: CarpDataTypes.ACCELERATION_TYPE_NAME),
+        Measure(type: CarpDataTypes.ROTATION_TYPE_NAME),
+      ],
+    );
+
+    var task_2 = BackgroundTask(
+      measures: [
+        Measure(type: DeviceSamplingPackage.BATTERY_STATE_TYPE_NAME),
+      ],
+    );
+
+    // Collect IMU data
+    protocol.addTaskControls(
+      ImmediateTrigger(),
+      [task_1, task_2],
       phone,
       Control.Start,
     );
+
+    // After a while, stop it again
+    protocol.addTaskControl(
+      DelayedTrigger(delay: Duration(seconds: 20)),
+      task_1,
+      phone,
+      Control.Stop,
+    );
+
+    // // Collect device info periodically
+    // protocol.addTaskControl(
+    //   PeriodicTrigger(period: Duration(seconds: 10)),
+    //   BackgroundTask(measures: [
+    //     Measure(type: DeviceSamplingPackage.DEVICE_INFORMATION_TYPE_NAME)
+    //   ]),
+    //   phone,
+    //   Control.Start,
+    // );
 
     // // add a random trigger to collect device info at random times
     // protocol.addTaskControl(
@@ -252,25 +299,25 @@ class LocalStudyProtocolManager implements StudyProtocolManager {
     //     phone,
     //     Control.Start);
 
-    // Add an app task 2 minutes after deployment and make a notification.
-    //
-    // This App Task is added for demo purpose and you should see notifications
-    // on the phone. However, nothing will happen when you click on it.
-    // See the PulmonaryMonitor demo app for a full-scale example of how to use
-    // the App Task model.
-    protocol.addTaskControl(
-      ElapsedTimeTrigger(
-        elapsedTime: IsoDuration(minutes: 2),
-      ),
-      AppTask(
-        type: BackgroundSensingUserTask.ONE_TIME_SENSING_TYPE,
-        title: "Elapsed Time - 2 minutes",
-        notification: true,
-      )..addMeasure(
-          Measure(type: DeviceSamplingPackage.DEVICE_INFORMATION_TYPE_NAME)),
-      phone,
-      Control.Start,
-    );
+    // // Add an app task 2 minutes after deployment and make a notification.
+    // //
+    // // This App Task is added for demo purpose and you should see notifications
+    // // on the phone. However, nothing will happen when you click on it.
+    // // See the PulmonaryMonitor demo app for a full-scale example of how to use
+    // // the App Task model.
+    // protocol.addTaskControl(
+    //   ElapsedTimeTrigger(
+    //     elapsedTime: IsoDuration(minutes: 2),
+    //   ),
+    //   AppTask(
+    //     type: BackgroundSensingUserTask.ONE_TIME_SENSING_TYPE,
+    //     title: "Elapsed Time - 2 minutes",
+    //     notification: true,
+    //   )..addMeasure(
+    //       Measure(type: DeviceSamplingPackage.DEVICE_INFORMATION_TYPE_NAME)),
+    //   phone,
+    //   Control.Start,
+    // );
 
     // // add an app task at exact date & time
     // protocol.addTriggeredTask(
