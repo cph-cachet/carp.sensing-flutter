@@ -18,6 +18,7 @@ SmartphoneStudyProtocol _$SmartphoneStudyProtocolFromJson(
       dataEndPoint: json['dataEndPoint'] == null
           ? null
           : DataEndPoint.fromJson(json['dataEndPoint'] as Map<String, dynamic>),
+      applicationData: json['applicationData'] as Map<String, dynamic>?,
     )
       ..creationDate = DateTime.parse(json['creationDate'] as String)
       ..masterDevices = (json['masterDevices'] as List<dynamic>)
@@ -69,6 +70,7 @@ Map<String, dynamic> _$SmartphoneStudyProtocolToJson(
   writeNotNull('protocolDescription', instance.protocolDescription);
   val['description'] = instance.description;
   writeNotNull('dataEndPoint', instance.dataEndPoint);
+  writeNotNull('applicationData', instance.applicationData);
   return val;
 }
 
@@ -434,6 +436,29 @@ Map<String, dynamic> _$AppTaskToJson(AppTask instance) {
   writeNotNull('minutes_to_complete', instance.minutesToComplete);
   writeNotNull('expire', instance.expire?.inMicroseconds);
   val['notification'] = instance.notification;
+  return val;
+}
+
+FunctionTask _$FunctionTaskFromJson(Map<String, dynamic> json) => FunctionTask(
+      name: json['name'] as String?,
+    )
+      ..$type = json[r'$type'] as String?
+      ..measures = (json['measures'] as List<dynamic>)
+          .map((e) => Measure.fromJson(e as Map<String, dynamic>))
+          .toList();
+
+Map<String, dynamic> _$FunctionTaskToJson(FunctionTask instance) {
+  final val = <String, dynamic>{};
+
+  void writeNotNull(String key, dynamic value) {
+    if (value != null) {
+      val[key] = value;
+    }
+  }
+
+  writeNotNull(r'$type', instance.$type);
+  val['name'] = instance.name;
+  val['measures'] = instance.measures;
   return val;
 }
 

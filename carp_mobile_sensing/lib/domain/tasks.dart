@@ -43,7 +43,7 @@ class AppTask extends TaskDescriptor {
 
   /// Create an app task that notifies the app when it is triggered.
   ///
-  /// [name] is a unique name of the taks.
+  /// [name] is a unique name of the task.
   /// [measures] is the list of measures to be collected in the background when
   /// this app task is resumed.
   AppTask({
@@ -66,4 +66,39 @@ class AppTask extends TaskDescriptor {
 
   @override
   Map<String, dynamic> toJson() => _$AppTaskToJson(this);
+}
+
+/// Signature of Dart function that have no arguments and return no data.
+typedef VoidFunction = void Function();
+
+/// A task that can run a custom Dart function.
+///
+/// Note that the [function] to be executed is specified as a Dart function,
+/// which cannot be serialized to/from JSON.
+/// Thus, even though this trigger can be de/serialized from/to JSON, its
+/// [function] cannot.
+/// This implies that this function cannot be retrieved as part of a [StudyProtocol]
+/// from a [DeploymentService] since it relies on specifying a Dart-specific function.
+/// Hence, this trigger is mostly useful when creating a [StudyProtocol] directly
+/// in the app using Dart code.
+@JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)
+class FunctionTask extends TaskDescriptor {
+  /// The function to execute when this task is resumed.
+  @JsonKey(ignore: true)
+  VoidFunction? function;
+
+  /// Create a function task that executed [function] when resumed.
+  FunctionTask({
+    super.name,
+    this.function,
+  });
+
+  @override
+  Function get fromJsonFunction => _$FunctionTaskFromJson;
+
+  factory FunctionTask.fromJson(Map<String, dynamic> json) =>
+      FromJsonFactory().fromJson(json) as FunctionTask;
+
+  @override
+  Map<String, dynamic> toJson() => _$FunctionTaskToJson(this);
 }

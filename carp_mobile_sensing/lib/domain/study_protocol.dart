@@ -30,12 +30,17 @@ class SmartphoneStudyProtocol extends StudyProtocol {
   /// used in the app.
   DataEndPoint? dataEndPoint;
 
+  /// Application-specific data to be stored as part of the study protocol
+  /// which will be included in all deployments of this study protocol.
+  Map<String, dynamic>? applicationData;
+
   /// Create a new [SmartphoneStudyProtocol].
   SmartphoneStudyProtocol({
     required super.ownerId,
     required super.name,
     this.protocolDescription,
     this.dataEndPoint,
+    this.applicationData,
   }) : super(
           description: protocolDescription?.description ?? '',
         );

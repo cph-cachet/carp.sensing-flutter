@@ -7,7 +7,7 @@ import 'package:carp_serializable/carp_serializable.dart';
 import 'package:test/test.dart';
 
 void main() {
-  late StudyProtocol masterProtocol;
+  late SmartphoneStudyProtocol masterProtocol;
   late Smartphone masterPhone;
   DeviceDescriptor eSense;
 
@@ -20,6 +20,12 @@ void main() {
       ownerId: 'user@dtu.dk',
       name: 'patient_tracking',
     );
+
+    masterProtocol.applicationData = {
+      'theme': 'dark',
+      'version': 1,
+      'question_1': "Hvor'n går det?",
+    };
 
     // Define which devices are used for data collection.
     masterPhone = Smartphone();
@@ -119,7 +125,6 @@ void main() {
   });
 
   test('JSON File -> SmartphoneStudyProtocol', () async {
-    // Read the study protocol from json file
     String plainJson = File('test/json/study_protocol.json').readAsStringSync();
 
     SmartphoneStudyProtocol protocol = SmartphoneStudyProtocol.fromJson(
@@ -128,6 +133,7 @@ void main() {
     expect(protocol.ownerId, masterProtocol.ownerId);
     expect(protocol.masterDevices.first.roleName,
         SmartphoneDeploymentService().thisPhone.roleName);
+    expect(protocol.applicationData!['version'], 1);
     print(toJsonString(protocol));
   });
 

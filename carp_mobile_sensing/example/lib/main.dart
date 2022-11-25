@@ -187,21 +187,21 @@ class LocalStudyProtocolManager implements StudyProtocolManager {
     var phone = Smartphone();
     protocol.addMasterDevice(phone);
 
-    // // Add measures from the [DeviceSamplingPackage] and [SensorSamplingPackage]
-    // // sampling packages.
-    protocol.addTriggeredTask(
-        ImmediateTrigger(),
-        BackgroundTask()
-          ..addMeasures([
-            // Measure(type: SensorSamplingPackage.ACCELEROMETER),
-            // Measure(type: SensorSamplingPackage.GYROSCOPE),
-            Measure(type: DeviceSamplingPackage.MEMORY),
-            Measure(type: DeviceSamplingPackage.BATTERY),
-            Measure(type: DeviceSamplingPackage.SCREEN),
-            Measure(type: SensorSamplingPackage.PEDOMETER),
-            Measure(type: SensorSamplingPackage.LIGHT)
-          ]),
-        phone);
+    // // // Add measures from the [DeviceSamplingPackage] and [SensorSamplingPackage]
+    // // // sampling packages.
+    // protocol.addTriggeredTask(
+    //     ImmediateTrigger(),
+    //     BackgroundTask()
+    //       ..addMeasures([
+    //         // Measure(type: SensorSamplingPackage.ACCELEROMETER),
+    //         // Measure(type: SensorSamplingPackage.GYROSCOPE),
+    //         Measure(type: DeviceSamplingPackage.MEMORY),
+    //         Measure(type: DeviceSamplingPackage.BATTERY),
+    //         Measure(type: DeviceSamplingPackage.SCREEN),
+    //         Measure(type: SensorSamplingPackage.PEDOMETER),
+    //         Measure(type: SensorSamplingPackage.LIGHT)
+    //       ]),
+    //     phone);
 
     // // Collect device info only once
     // protocol.addTriggeredTask(
@@ -210,17 +210,21 @@ class LocalStudyProtocolManager implements StudyProtocolManager {
     //       ..addMeasure(Measure(type: DeviceSamplingPackage.DEVICE)),
     //     phone);
 
-    protocol.addTriggeredTask(
-        IntervalTrigger(period: Duration(seconds: 5)),
-        BackgroundTask(measures: [Measure(type: DeviceSamplingPackage.DEVICE)]),
-        phone);
+    // protocol.addTriggeredTask(
+    //     IntervalTrigger(period: Duration(seconds: 5)),
+    //     BackgroundTask(measures: [Measure(type: DeviceSamplingPackage.DEVICE)]),
+    //     phone);
 
     protocol.addTriggeredTask(
         PeriodicTrigger(
             period: Duration(seconds: 6), duration: Duration(seconds: 2)),
-        BackgroundTask(
-            measures: [Measure(type: SensorSamplingPackage.ACCELEROMETER)]),
+        BackgroundTask(measures: [
+          Measure(type: SensorSamplingPackage.USER_ACCELEROMETER)
+        ]),
         phone);
+
+    protocol.addTriggeredTask(IntervalTrigger(period: Duration(seconds: 5)),
+        FunctionTask(function: () => print('Her går det godt....!')), phone);
 
     // // add a random trigger to collect device info at random times
     // protocol.addTriggeredTask(
