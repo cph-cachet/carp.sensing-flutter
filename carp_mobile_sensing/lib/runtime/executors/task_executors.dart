@@ -9,8 +9,16 @@ part of runtime;
 
 /// Returns the relevant [TaskExecutor] based on the type of [task].
 TaskExecutor getTaskExecutor(TaskDescriptor task) {
-  if (task is AppTask) return AppTaskExecutor();
-  return BackgroundTaskExecutor();
+  switch (task.runtimeType) {
+    case AppTask:
+      return AppTaskExecutor();
+    case FunctionTask:
+      return FunctionTaskExecutor();
+    case BackgroundTask:
+      return BackgroundTaskExecutor();
+    default:
+      return BackgroundTaskExecutor();
+  }
 }
 
 /// The [TaskExecutor] is responsible for executing a [TaskDescriptor].
@@ -57,6 +65,17 @@ class BackgroundTaskExecutor extends TaskExecutor<BackgroundTask> {
       Timer(configuration!.duration!, () => pause());
     }
     return await super.onResume();
+  }
+}
+
+/// Executes a [BackgroundTask].
+class FunctionTaskExecutor extends TaskExecutor<FunctionTask> {
+  @override
+  Future<bool> onResume() async {
+    if (configuration?.function != null) {
+      Function.apply(configuration!.function!, []);
+    }
+    return true;
   }
 }
 

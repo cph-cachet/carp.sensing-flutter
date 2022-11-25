@@ -52,6 +52,34 @@ class BufferingAccelerometerProbe extends BufferingSensorProbe {
   }
 }
 
+/// A probe collecting raw data from the accelerometer.
+///
+/// Note that this probe generates a lot of data and should be used
+/// with caution.
+class UserAccelerometerProbe extends StreamProbe {
+  @override
+  Stream<Datum> get stream => userAccelerometerEvents
+      .map((event) => UserAccelerometerDatum.fromUserAccelerometerEvent(event));
+}
+
+/// A probe that collects accelerometer events and buffers them and return
+/// a [MultiDatum] with all the buffered [AccelerometerDatum]s.
+///
+/// See [PeriodicSamplingConfiguration] on how to configure this probe, including
+/// setting the [interval] and [duration] of the sampling rate.
+class BufferingUserAccelerometerProbe extends BufferingSensorProbe {
+  @override
+  Stream<UserAccelerometerEvent> get bufferingStream => userAccelerometerEvents;
+
+  @override
+  void onSamplingData(event) {
+    if (event is AccelerometerEvent) {
+      datum.addDatum(
+          AccelerometerDatum.fromAccelerometerEvent(event, multiDatum: true));
+    }
+  }
+}
+
 /// A probe collecting raw data from the gyroscope.
 ///
 /// Note that this probe generates a lot of data and should be used

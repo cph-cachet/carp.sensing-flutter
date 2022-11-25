@@ -1,3 +1,9 @@
+## 0.40.6
+
+* Addition of `USER_ACCELEROMETER` measure (issue [#283](https://github.com/cph-cachet/carp.sensing-flutter/issues/283)).
+* Added the `FunctionTask` task type which can executed a Dart function when resumed (issue [#284](https://github.com/cph-cachet/carp.sensing-flutter/issues/284)).
+* Support for application-specific data / configuration in the `SmartphoneStudyProtocol` (issue [#285](https://github.com/cph-cachet/carp.sensing-flutter/issues/285)).
+
 ## 0.40.5
 
 * Fix of issue [#280](https://github.com/cph-cachet/carp.sensing-flutter/issues/280).
