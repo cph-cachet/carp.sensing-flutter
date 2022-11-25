@@ -32,6 +32,34 @@ Map<String, dynamic> _$AccelerometerDatumToJson(AccelerometerDatum instance) {
   return val;
 }
 
+UserAccelerometerDatum _$UserAccelerometerDatumFromJson(
+        Map<String, dynamic> json) =>
+    UserAccelerometerDatum(
+      x: (json['x'] as num?)?.toDouble(),
+      y: (json['y'] as num?)?.toDouble(),
+      z: (json['z'] as num?)?.toDouble(),
+    )
+      ..id = json['id'] as String?
+      ..timestamp = DateTime.parse(json['timestamp'] as String);
+
+Map<String, dynamic> _$UserAccelerometerDatumToJson(
+    UserAccelerometerDatum instance) {
+  final val = <String, dynamic>{};
+
+  void writeNotNull(String key, dynamic value) {
+    if (value != null) {
+      val[key] = value;
+    }
+  }
+
+  writeNotNull('id', instance.id);
+  val['timestamp'] = instance.timestamp.toIso8601String();
+  writeNotNull('x', instance.x);
+  writeNotNull('y', instance.y);
+  writeNotNull('z', instance.z);
+  return val;
+}
+
 GyroscopeDatum _$GyroscopeDatumFromJson(Map<String, dynamic> json) =>
     GyroscopeDatum(
       x: (json['x'] as num?)?.toDouble(),

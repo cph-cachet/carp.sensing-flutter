@@ -44,6 +44,43 @@ class AccelerometerDatum extends Datum {
   String toString() => '${super.toString()}, x: $x, y: $y, z: $z';
 }
 
+/// Like [AccelerometerDatum], this is a discrete reading from an accelerometer
+/// and measures the velocity of the device. However, unlike
+/// [AccelerometerDatum], this event does not include the effects of gravity.
+@JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)
+class UserAccelerometerDatum extends Datum {
+  @override
+  DataFormat get format =>
+      DataFormat.fromString(SensorSamplingPackage.ACCELEROMETER);
+
+  /// Acceleration force along the x axis (including gravity) measured in m/s^2.
+  double? x;
+
+  /// Acceleration force along the y axis (including gravity) measured in m/s^2.
+  double? y;
+
+  /// Acceleration force along the z axis (including gravity) measured in m/s^2.
+  double? z;
+
+  UserAccelerometerDatum({super.multiDatum = false, this.x, this.y, this.z});
+
+  factory UserAccelerometerDatum.fromUserAccelerometerEvent(
+          UserAccelerometerEvent event,
+          {bool multiDatum = false}) =>
+      UserAccelerometerDatum(multiDatum: multiDatum)
+        ..x = event.x
+        ..y = event.y
+        ..z = event.z;
+
+  factory UserAccelerometerDatum.fromJson(Map<String, dynamic> json) =>
+      _$UserAccelerometerDatumFromJson(json);
+  @override
+  Map<String, dynamic> toJson() => _$UserAccelerometerDatumToJson(this);
+
+  @override
+  String toString() => '${super.toString()}, x: $x, y: $y, z: $z';
+}
+
 /// A [Datum] that holds rotation data collected from the native gyroscope on
 /// the phone.
 /// Gyroscopes measure the rate or rotation of the device in 3D space.
