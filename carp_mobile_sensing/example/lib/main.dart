@@ -237,7 +237,7 @@ class LocalStudyProtocolManager implements StudyProtocolManager {
     var task_1 = BackgroundTask(
       measures: [
         Measure(type: CarpDataTypes.ACCELERATION_TYPE_NAME),
-        Measure(type: CarpDataTypes.ROTATION_TYPE_NAME),
+        // Measure(type: CarpDataTypes.ROTATION_TYPE_NAME),
       ],
     );
 

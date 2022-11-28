@@ -127,8 +127,7 @@ abstract class AbstractExecutor<TConfig> implements Executor<TConfig> {
 
   @override
   void initialize(TConfig configuration, [SmartphoneDeployment? deployment]) {
-    info(
-        'Initializing $runtimeType - configuration: $configuration, deployment: $deployment');
+    info('Initializing $runtimeType - configuration: $configuration');
     _deployment = deployment;
     _configuration = configuration;
     _stateMachine.initialize();
@@ -317,13 +316,6 @@ class _StartedState extends _AbstractExecutorState
     implements _ExecutorStateMachine {
   _StartedState(Executor executor)
       : super(executor as AbstractExecutor, ExecutorState.started);
-
-  @override
-  void start() {
-    executor.onStart().then((started) {
-      if (started) executor._setState(_StartedState(executor));
-    });
-  }
 
   @override
   void restart() {

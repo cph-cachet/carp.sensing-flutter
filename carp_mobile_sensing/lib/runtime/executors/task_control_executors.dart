@@ -45,36 +45,22 @@ class TaskControlExecutor extends AbstractExecutor<TaskControl> {
     if (ExecutorFactory().getTriggerExecutor(taskControl.triggerId) == null) {
       triggerExecutor = ExecutorFactory()
           .createTriggerExecutor(taskControl.triggerId, trigger);
-      debug('$runtimeType - creating new TriggerExecutor: $triggerExecutor');
       triggerExecutor?.initialize(trigger, deployment);
     }
     triggerExecutor =
         ExecutorFactory().getTriggerExecutor(taskControl.triggerId);
-    triggerExecutor?.addTaskControlExecutor(this);
+    triggerExecutor?.triggerEvents.listen((_) => onTrigger());
 
     // if not already created, get the task executor and add the
     // measurements it collects to the [group]
     if (ExecutorFactory().getTaskExecutor(task) == null) {
       taskExecutor = ExecutorFactory().createTaskExecutor(task);
-      debug('$runtimeType - creating new TaskExecutor: $taskExecutor');
       taskExecutor?.initialize(task, deployment);
       _controller.addStream(taskExecutor!.measurements);
     } else {
       taskExecutor = ExecutorFactory().getTaskExecutor(task);
     }
 
-    return true;
-  }
-
-  @override
-  Future<bool> onStart() async {
-    debug('$runtimeType - triggerExecutor.state: ${triggerExecutor?.state}');
-    if (triggerExecutor?.state != ExecutorState.started) {
-      debug('$runtimeType - starting triggerExecutor: $triggerExecutor');
-      triggerExecutor?.start();
-      // TODO - why the #&"#€ is the state not set to STARTED????
-      debug('$runtimeType - triggerExecutor: $triggerExecutor');
-    }
     return true;
   }
 
@@ -87,6 +73,14 @@ class TaskControlExecutor extends AbstractExecutor<TaskControl> {
     } else if (taskControl.control == Control.Stop) {
       taskExecutor?.stop();
     }
+  }
+
+  @override
+  Future<bool> onStart() async {
+    if (triggerExecutor?.state != ExecutorState.started) {
+      triggerExecutor?.start();
+    }
+    return true;
   }
 
   @override

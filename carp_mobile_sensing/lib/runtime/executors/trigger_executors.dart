@@ -7,6 +7,10 @@
 
 part of runtime;
 
+class TriggerEvent {
+  // TriggerConfiguration? trigger;
+}
+
 // ---------------------------------------------------------------------------------------------------------
 // TRIGGER EXECUTORS
 // ---------------------------------------------------------------------------------------------------------
@@ -17,9 +21,13 @@ part of runtime;
 /// a corresponding implementation of this class exists.
 abstract class TriggerExecutor<TConfig extends TriggerConfiguration>
     extends AbstractExecutor<TConfig> {
-  final Set<TaskControlExecutor> _taskControlExecutors = {};
+  final StreamController<TriggerEvent> _controller =
+      StreamController.broadcast();
 
-  // a lot of trigger executors use a timer, so we declare it here
+  /// The stream of events triggered from this trigger executor.
+  Stream<TriggerEvent> get triggerEvents => _controller.stream;
+
+  // a lot of trigger executors use a timer, so we declare one here
   Timer? _timer;
 
   @override
@@ -42,17 +50,9 @@ abstract class TriggerExecutor<TConfig extends TriggerConfiguration>
     return true;
   }
 
-  /// Set the executor
-  void addTaskControlExecutor(TaskControlExecutor executor) =>
-      _taskControlExecutors.add(executor);
-
   /// Called when this trigger executor is triggering.
   @mustCallSuper
-  void trigger() {
-    for (var executor in _taskControlExecutors) {
-      executor.onTrigger();
-    }
-  }
+  void trigger() => _controller.add(TriggerEvent());
 }
 
 /// Abstract class for executors of triggers which can be scheduled
