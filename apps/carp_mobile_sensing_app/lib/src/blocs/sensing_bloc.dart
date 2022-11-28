@@ -9,7 +9,6 @@ class SensingBLoC {
 
   /// The study deployment id for the currently running deployment.
   /// Returns the deployment id cached locally on the phone (if available).
-  /// Returns `null` if no study is deployed (yet).
   String? get studyDeploymentId => (_studyDeploymentId ??=
       Settings().preferences?.getString(STUDY_DEPLOYMENT_ID_KEY));
 
