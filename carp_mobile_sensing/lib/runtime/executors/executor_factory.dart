@@ -17,7 +17,7 @@ class ExecutorFactory {
 
   /// Returns the relevant [TaskControlExecutor] based on the type of [trigger]
   /// and [task].
-  TaskControlExecutor getTriggeredTaskExecutor(
+  TaskControlExecutor getTaskControlExecutor(
     TaskControl taskControl,
     TriggerConfiguration trigger,
     TaskConfiguration task,

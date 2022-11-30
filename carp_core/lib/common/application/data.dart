@@ -231,7 +231,7 @@ class TriggeredTask extends Data {
   int triggerId;
   String taskName;
   String destinationDeviceRoleName;
-  TaskControl control;
+  Control control;
   Data? triggerData;
 
   TriggeredTask({

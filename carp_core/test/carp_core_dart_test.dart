@@ -26,7 +26,7 @@ void main() {
     );
 
     protocol
-      ..addMasterDevice(phone)
+      ..addPrimaryDevice(phone)
       ..addConnectedDevice(d1)
       ..addConnectedDevice(d2);
 

@@ -32,7 +32,7 @@ void main() {
     eSense = DeviceConfiguration(roleName: 'esense');
 
     primaryProtocol
-      ..addMasterDevice(primaryPhone)
+      ..addPrimaryDevice(primaryPhone)
       ..addConnectedDevice(eSense);
 
     // Define what needs to be measured, on which device, when.
@@ -386,7 +386,7 @@ void main() {
       ..addAll(DeviceSamplingPackage().samplingSchema.configurations)
       ..addAll(SensorSamplingPackage().samplingSchema.configurations);
 
-    protocol.addMasterDevice(phone);
+    protocol.addPrimaryDevice(phone);
 
     expect(
         protocol.primaryDevice.defaultSamplingConfiguration?.keys.contains(

@@ -39,6 +39,10 @@ class TriggerConfiguration extends Serializable {
   Map<String, dynamic> toJson() => _$TriggerConfigurationToJson(this);
   @override
   String get jsonType => '$_triggerNamespace.$runtimeType';
+
+  @override
+  String toString() =>
+      '$runtimeType - sourceDeviceRoleName: $sourceDeviceRoleName';
 }
 
 /// An interface marking that a [TriggerConfiguration] can be scheduled.

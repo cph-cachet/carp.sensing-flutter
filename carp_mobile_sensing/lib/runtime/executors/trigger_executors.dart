@@ -52,7 +52,7 @@ abstract class TriggerExecutor<TConfig extends TriggerConfiguration>
 
   /// Called when this trigger executor is triggering.
   @mustCallSuper
-  void trigger() => _controller.add(TriggerEvent());
+  Future<void> onTrigger() async => _controller.add(TriggerEvent());
 }
 
 /// Abstract class for executors of triggers which can be scheduled
@@ -66,11 +66,11 @@ abstract class SchedulableTriggerExecutor<TConfig extends TriggerConfiguration>
   List<DateTime> getSchedule(DateTime from, DateTime to, [int max]);
 }
 
-/// Executes a [ImmediateTrigger], i.e. starts sampling immediately.
+/// Executes an [ImmediateTrigger], i.e. starts sampling immediately.
 class ImmediateTriggerExecutor extends TriggerExecutor<TriggerConfiguration> {
   @override
   Future<bool> onStart() async {
-    trigger();
+    onTrigger();
     return true;
   }
 }
@@ -82,11 +82,12 @@ class OneTimeTriggerExecutor extends TriggerExecutor<OneTimeTrigger> {
   Future<bool> onStart() async {
     if (!configuration!.hasBeenTriggered) {
       configuration!.triggerTimestamp = DateTime.now();
-      trigger();
+      onTrigger();
     } else {
       info(
           "$runtimeType - one time trigger already occurred at: ${configuration?.triggerTimestamp}. "
           'Will not trigger now.');
+      return false;
     }
     return true;
   }
@@ -111,7 +112,7 @@ class PassiveTriggerExecutor extends TriggerExecutor<PassiveTrigger> {
 class DelayedTriggerExecutor extends TriggerExecutor<DelayedTrigger> {
   @override
   Future<bool> onStart() async {
-    _timer = Timer(configuration!.delay, () => trigger());
+    _timer = Timer(configuration!.delay, () => onTrigger());
     return true;
   }
 }
@@ -138,10 +139,10 @@ class ElapsedTimeTriggerExecutor
               deployment!.deployed!.millisecondsSinceEpoch);
 
       if (delay > 0) {
-        _timer = Timer(Duration(milliseconds: delay), () => trigger());
+        _timer = Timer(Duration(milliseconds: delay), () => onTrigger());
       } else {
         warning(
-            '$runtimeType - delay is negative, i.e. the trigger time is in the past and should have happened already.');
+            '$runtimeType - the trigger time is in the past and should have happened already.');
         return false;
       }
     }
@@ -171,7 +172,7 @@ class PeriodicTriggerExecutor
   @override
   Future<bool> onStart() async {
     _timer = Timer.periodic(configuration!.period, (t) {
-      trigger();
+      onTrigger();
     });
     return true;
   }
@@ -194,7 +195,7 @@ class DateTimeTriggerExecutor
       return false;
     } else {
       var delay = configuration!.schedule.difference(DateTime.now());
-      _timer = Timer(delay, () => trigger());
+      _timer = Timer(delay, () => onTrigger());
     }
     return true;
   }
@@ -223,7 +224,7 @@ class RecurrentScheduledTriggerExecutor
     Duration delay = configuration!.firstOccurrence.difference(DateTime.now());
     if (configuration!.end == null ||
         configuration!.end!.isAfter(DateTime.now())) {
-      _timer = Timer(delay, () async => trigger());
+      _timer = Timer(delay, () async => onTrigger());
     }
     return true;
   }
@@ -261,7 +262,7 @@ class CronScheduledTriggerExecutor
     var schedule = cron.Schedule.parse(configuration!.cronExpression);
     _task = _cron.schedule(schedule, () async {
       debug('resuming cron job : ${DateTime.now().toString()}');
-      trigger();
+      onTrigger();
     });
     return true;
   }
@@ -288,7 +289,7 @@ class SamplingEventTriggerExecutor
         .listen((measurement) {
       if ((configuration!.triggerCondition != null) &&
           measurement.data.equivalentTo(configuration!.triggerCondition!)) {
-        trigger();
+        onTrigger();
       }
     });
     return true;
@@ -314,7 +315,7 @@ class ConditionalSamplingEventTriggerExecutor
         ?.measurementsByType(configuration!.measureType)
         .listen((measurement) {
       if (configuration!.triggerCondition != null &&
-          configuration!.triggerCondition!(measurement)) trigger();
+          configuration!.triggerCondition!(measurement)) onTrigger();
     });
     return true;
   }
@@ -334,7 +335,7 @@ class ConditionalPeriodicTriggerExecutor
     // create a recurrent timer that checks the conditions periodically
     _timer = Timer.periodic(configuration!.period, (_) {
       if (configuration!.triggerCondition != null &&
-          configuration!.triggerCondition!()) trigger();
+          configuration!.triggerCondition!()) onTrigger();
     });
     return true;
   }
@@ -457,7 +458,7 @@ class RandomRecurrentTriggerExecutor
       // since we are at [startTime] or after
       Duration delay = time.difference(TimeOfDay.now());
       debug('$runtimeType - setting up timer for : $time, delay: $delay');
-      Timer timer = Timer(delay, () async => trigger());
+      Timer timer = Timer(delay, () async => onTrigger());
       _timers.add(timer);
     }
 
@@ -476,7 +477,7 @@ class UserTaskTriggerExecutor extends TriggerExecutor<UserTaskTrigger> {
     _subscription = AppTaskController().userTaskEvents.listen((userTask) async {
       if (userTask.task.name == configuration!.taskName &&
           userTask.state == configuration!.triggerCondition) {
-        trigger();
+        onTrigger();
       }
     });
     return true;

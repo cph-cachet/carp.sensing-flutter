@@ -183,7 +183,7 @@ class LocalStudyProtocolManager implements StudyProtocolManager {
     // use connected devices (e.g., a Polar heart rate monitor) and online
     // services (e.g., a weather service).
     var phone = Smartphone();
-    protocol.addMasterDevice(phone);
+    protocol.addPrimaryDevice(phone);
 
     // // Add background measures from the [DeviceSamplingPackage] and
     // // [SensorSamplingPackage] sampling packages.
@@ -236,7 +236,8 @@ class LocalStudyProtocolManager implements StudyProtocolManager {
 
     var task_1 = BackgroundTask(
       measures: [
-        Measure(type: CarpDataTypes.ACCELERATION_TYPE_NAME),
+        Measure(type: CarpDataTypes.STEP_COUNT_TYPE_NAME),
+        // Measure(type: CarpDataTypes.ACCELERATION_TYPE_NAME),
         // Measure(type: CarpDataTypes.ROTATION_TYPE_NAME),
       ],
     );

@@ -35,7 +35,7 @@ class StudyDeploymentExecutor extends AggregateExecutor<SmartphoneDeployment> {
       TaskConfiguration task =
           configuration!.getTaskByName(taskControl.taskName)!;
 
-      TaskControlExecutor executor = ExecutorFactory().getTriggeredTaskExecutor(
+      TaskControlExecutor executor = ExecutorFactory().getTaskControlExecutor(
         taskControl,
         trigger,
         task,

@@ -59,7 +59,7 @@ class PassiveTrigger extends TriggerConfiguration {
   /// Triggering implies that all tasks in this trigger is started,
   /// which again implies that all [Measure]s in these tasks are collected.
   /// Therefore, all measures to be started should be 'bundled' into this trigger.
-  void trigger() => executor.trigger();
+  void trigger() => executor.onTrigger();
 
   @override
   Function get fromJsonFunction => _$PassiveTriggerFromJson;

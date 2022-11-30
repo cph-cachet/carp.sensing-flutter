@@ -71,6 +71,11 @@ abstract class Executor<TConfig> {
   /// The runtime state of this executor.
   ExecutorState get state;
 
+  /// Is this executor in the process of being started?
+  ///
+  /// This is true while the [start] method is executing.
+  bool get isStarting;
+
   /// The runtime state changes of this executor.
   Stream<ExecutorState> get stateEvents;
 
@@ -80,7 +85,7 @@ abstract class Executor<TConfig> {
   /// Configure and initialize the executor before starting it.
   void initialize(TConfig configuration, [SmartphoneDeployment? deployment]);
 
-  /// Resume the executor.
+  /// Start the executor.
   void start();
 
   /// Restart the executor.
@@ -103,6 +108,7 @@ abstract class AbstractExecutor<TConfig> implements Executor<TConfig> {
   late _ExecutorStateMachine _stateMachine;
   SmartphoneDeployment? _deployment;
   TConfig? _configuration;
+  bool _isStarting = false;
 
   @override
   SmartphoneDeployment? get deployment => _deployment;
@@ -115,6 +121,9 @@ abstract class AbstractExecutor<TConfig> implements Executor<TConfig> {
 
   @override
   ExecutorState get state => _stateMachine.state;
+
+  @override
+  bool get isStarting => _isStarting;
 
   AbstractExecutor() {
     _stateMachine = _CreatedState(this);
@@ -135,6 +144,7 @@ abstract class AbstractExecutor<TConfig> implements Executor<TConfig> {
 
   @override
   void start() {
+    _isStarting = true;
     info('Starting $runtimeType');
     _stateMachine.start();
   }
@@ -298,6 +308,7 @@ class _InitializedState extends _AbstractExecutorState
   void start() {
     executor.onStart().then((started) {
       if (started) executor._setState(_StartedState(executor));
+      executor._isStarting = false;
     });
   }
 
@@ -344,6 +355,7 @@ class _StoppedState extends _AbstractExecutorState
   void start() {
     executor.onStart().then((started) {
       if (started) executor._setState(_StartedState(executor));
+      executor._isStarting = false;
     });
   }
 

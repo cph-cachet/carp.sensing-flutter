@@ -77,6 +77,9 @@ abstract class Probe extends AbstractExecutor<Measure> {
 //                                SPECIALIZED PROBES
 //---------------------------------------------------------------------------------------
 
+/// A simple no-op probe that does nothing.
+class StubProbe extends Probe {}
+
 /// This probe collects a [Measurement] when resumed, send its to the
 /// [measurements] stream, and then automatically pauses.
 ///
@@ -86,13 +89,18 @@ abstract class Probe extends AbstractExecutor<Measure> {
 abstract class DatumProbe extends Probe {
   @override
   Future<bool> onStart() async {
-    Measurement? measurement;
-    try {
-      measurement = await getMeasurement();
-    } catch (error) {
-      addError(error);
-    }
-    if (measurement != null) addMeasurement(measurement);
+    getMeasurement()
+        .then((measurement) =>
+            {if (measurement != null) addMeasurement(measurement)})
+        .catchError((Object error) => {addError(error)});
+
+    // Measurement? measurement;
+    // try {
+    //   measurement = await getMeasurement();
+    // } catch (error) {
+    //   addError(error);
+    // }
+    // if (measurement != null) addMeasurement(measurement);
 
     return true;
   }
@@ -174,9 +182,6 @@ abstract class StreamProbe extends Probe {
     }
     return true;
   }
-
-  @override
-  bool onInitialize() => true;
 
   @override
   Future<bool> onStop() async {

@@ -22,7 +22,7 @@ void carpCoreProtocolExample() async {
 
   // Define which devices are used for data collection.
   Smartphone phone = Smartphone(roleName: 'phone');
-  protocol.addMasterDevice(phone);
+  protocol.addPrimaryDevice(phone);
 
   // Define what needs to be measured, on which device, when.
   List<Measure> measures = [

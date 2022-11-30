@@ -192,10 +192,29 @@ class SmartphoneStudyProtocol extends StudyProtocol
   }) : super(
           description: studyDescription?.description ?? '',
         ) {
+    // add the smartphone specific protocol data as application-specific data
     _data = SmartphoneApplicationData(
       studyDescription: studyDescription,
       dataEndPoint: dataEndPoint,
     );
+  }
+  @override
+  bool addPrimaryDevice(PrimaryDeviceConfiguration primaryDevice) {
+    super.addPrimaryDevice(primaryDevice);
+
+    // add the trigger and task measures to the protocol since CAMS always
+    // collects and upload this data
+    addTaskControl(
+      ImmediateTrigger(),
+      BackgroundTask(measures: [
+        Measure(type: CarpDataTypes.TRIGGERED_TASK_TYPE_NAME),
+        Measure(type: CarpDataTypes.COMPLETED_TASK_TYPE_NAME)
+      ]),
+      primaryDevice,
+      Control.Start,
+    );
+
+    return true;
   }
 
   factory SmartphoneStudyProtocol.fromJson(Map<String, dynamic> json) =>

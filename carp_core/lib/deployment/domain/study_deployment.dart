@@ -133,7 +133,7 @@ class StudyDeployment {
   ) {
     // Verify whether the specified device is part of the protocol of this
     // deployment and has been registrered.
-    assert(_protocol.hasMasterDevice(device.roleName),
+    assert(_protocol.hasPrimaryDevice(device.roleName),
         "The specified primary device with rolename '${device.roleName}' is not part of the protocol of this deployment.");
     assert(_registeredDevices.containsKey(device.roleName),
         "The specified primary device with rolename '${device.roleName}' has not been registrered to this deployment.");

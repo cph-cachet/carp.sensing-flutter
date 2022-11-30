@@ -93,11 +93,11 @@ class StudyProtocol extends Snapshot {
   ///
   /// Returns true if the [primaryDevice] has been added; false if it is already
   /// set as a primary device.
-  bool addMasterDevice(PrimaryDeviceConfiguration primaryDevice) =>
+  bool addPrimaryDevice(PrimaryDeviceConfiguration primaryDevice) =>
       primaryDevices.add(primaryDevice);
 
   /// Does this protocol have a primary device with role name [rolename]?
-  bool hasMasterDevice(String rolename) =>
+  bool hasPrimaryDevice(String rolename) =>
       primaryDevices
           .firstWhere(
             (device) => device.roleName == rolename,
@@ -131,7 +131,7 @@ class StudyProtocol extends Snapshot {
         trigger.sourceDeviceRoleName != null &&
         trigger.requiresPrimaryDevice!) {
       assert(
-          hasMasterDevice(trigger.sourceDeviceRoleName!),
+          hasPrimaryDevice(trigger.sourceDeviceRoleName!),
           'The passed trigger cannot be initiated by its specified source device '
           'since it is not a primary device which is part of this protocol.');
     }

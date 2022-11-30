@@ -25,7 +25,7 @@ Future<void> example_0() async {
   // Define which devices are used for data collection.
   // In this case, its only this smartphone
   var phone = Smartphone();
-  protocol.addMasterDevice(phone);
+  protocol.addPrimaryDevice(phone);
 
   // Automatically collect step count, ambient light, screen activity, and
   // battery level. Sampling is delaying by 10 seconds.
@@ -87,7 +87,7 @@ void example_1() async {
   // Define which devices are used for data collection.
   // In this case, its only this smartphone.
   Smartphone phone = Smartphone();
-  protocol.addMasterDevice(phone);
+  protocol.addPrimaryDevice(phone);
 
   // Add a background task that immediately starts collecting step counts,
   // ambient light, screen activity, and battery level.
@@ -165,7 +165,7 @@ void example_2() async {
   // define which devices are used for data collection
   // in this case, its only this smartphone
   Smartphone phone = Smartphone();
-  protocol.addMasterDevice(phone);
+  protocol.addPrimaryDevice(phone);
 
   // automatically collect accelerometer and gyroscope data
   // but delay the sampling by 10 seconds

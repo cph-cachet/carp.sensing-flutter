@@ -43,7 +43,7 @@ class DeviceConfiguration extends Serializable {
 
   @override
   String toString() =>
-      '$runtimeType - roleName: $roleName, isMasterDevice: $isOptional';
+      '$runtimeType - roleName: $roleName, isOptional: $isOptional';
 
   @override
   Function get fromJsonFunction => _$DeviceConfigurationFromJson;

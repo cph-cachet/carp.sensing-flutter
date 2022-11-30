@@ -15,7 +15,7 @@ void sensing() async {
   // in this case, its only this smartphone
   Smartphone phone = Smartphone();
 
-  protocol.addMasterDevice(phone);
+  protocol.addPrimaryDevice(phone);
 
   // add selected measures from the sampling packages
   protocol.addTaskControl(

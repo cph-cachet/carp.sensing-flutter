@@ -984,7 +984,7 @@ TriggeredTask _$TriggeredTaskFromJson(Map<String, dynamic> json) =>
       triggerId: json['triggerId'] as int,
       taskName: json['taskName'] as String,
       destinationDeviceRoleName: json['destinationDeviceRoleName'] as String,
-      control: TaskControl.fromJson(json['control'] as Map<String, dynamic>),
+      control: $enumDecode(_$ControlEnumMap, json['control']),
       triggerData: json['triggerData'] == null
           ? null
           : Data.fromJson(json['triggerData'] as Map<String, dynamic>),
@@ -1003,7 +1003,7 @@ Map<String, dynamic> _$TriggeredTaskToJson(TriggeredTask instance) {
   val['triggerId'] = instance.triggerId;
   val['taskName'] = instance.taskName;
   val['destinationDeviceRoleName'] = instance.destinationDeviceRoleName;
-  val['control'] = instance.control;
+  val['control'] = _$ControlEnumMap[instance.control]!;
   writeNotNull('triggerData', instance.triggerData);
   return val;
 }

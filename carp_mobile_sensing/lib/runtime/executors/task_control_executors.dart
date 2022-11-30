@@ -7,10 +7,6 @@
 
 part of runtime;
 
-abstract class Triggerable {
-  void onTrigger();
-}
-
 /// Responsible for handling the execution of a [TaskControl].
 ///
 /// This executor runs in real-time and triggers the task using timers. This
@@ -19,6 +15,8 @@ abstract class Triggerable {
 class TaskControlExecutor extends AbstractExecutor<TaskControl> {
   final StreamController<Measurement> _controller =
       StreamController<Measurement>.broadcast();
+  final StreamGroup<Measurement> _group = StreamGroup.broadcast();
+
   late TriggerConfiguration _trigger;
   late TaskConfiguration _task;
   late TaskControl _taskControl;
@@ -41,6 +39,8 @@ class TaskControlExecutor extends AbstractExecutor<TaskControl> {
 
   @override
   bool onInitialize() {
+    _group.add(_controller.stream);
+
     // get the trigger executor and initialize with this task control executor
     if (ExecutorFactory().getTriggerExecutor(taskControl.triggerId) == null) {
       triggerExecutor = ExecutorFactory()
@@ -52,11 +52,11 @@ class TaskControlExecutor extends AbstractExecutor<TaskControl> {
     triggerExecutor?.triggerEvents.listen((_) => onTrigger());
 
     // if not already created, get the task executor and add the
-    // measurements it collects to the [group]
+    // measurements it collects to the stream group
     if (ExecutorFactory().getTaskExecutor(task) == null) {
       taskExecutor = ExecutorFactory().createTaskExecutor(task);
       taskExecutor?.initialize(task, deployment);
-      _controller.addStream(taskExecutor!.measurements);
+      _group.add(taskExecutor!.measurements);
     } else {
       taskExecutor = ExecutorFactory().getTaskExecutor(task);
     }
@@ -66,8 +66,13 @@ class TaskControlExecutor extends AbstractExecutor<TaskControl> {
 
   /// Callback when the [triggerExecutor] triggers.
   void onTrigger() {
-    debug(
-        '$runtimeType - onTrigger(), control: ${taskControl.control}, taskExecutor: $taskExecutor');
+    // add the trigger task measurement
+    _controller.add(Measurement.fromData(TriggeredTask(
+        triggerId: taskControl.triggerId,
+        taskName: taskControl.taskName,
+        destinationDeviceRoleName: taskControl.destinationDeviceRoleName!,
+        control: taskControl.control)));
+
     if (taskControl.control == Control.Start) {
       taskExecutor?.start();
     } else if (taskControl.control == Control.Stop) {
@@ -77,7 +82,8 @@ class TaskControlExecutor extends AbstractExecutor<TaskControl> {
 
   @override
   Future<bool> onStart() async {
-    if (triggerExecutor?.state != ExecutorState.started) {
+    if (triggerExecutor?.state != ExecutorState.started &&
+        !triggerExecutor!.isStarting) {
       triggerExecutor?.start();
     }
     return true;
@@ -93,7 +99,6 @@ class TaskControlExecutor extends AbstractExecutor<TaskControl> {
   Future<bool> onStop() async {
     // stop the triggers so they don't trigger any more.
     triggerExecutor?.stop();
-    // await super.onStop();
 
     // stop the task executor
     taskExecutor?.stop();
@@ -102,7 +107,7 @@ class TaskControlExecutor extends AbstractExecutor<TaskControl> {
   }
 
   @override
-  Stream<Measurement> get measurements => _controller.stream
+  Stream<Measurement> get measurements => _group.stream
       .map((measurement) => measurement..taskControl = taskControl);
 
   /// Returns a list of the running probes in this task control executor.

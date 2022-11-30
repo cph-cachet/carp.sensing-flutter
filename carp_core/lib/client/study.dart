@@ -54,7 +54,7 @@ enum StudyStatus {
   RegisteringDevices,
 
   /// Study runtime status when deployment has been successfully completed.
-  /// The [MasterDeviceDeployment] has been retrieved and all necessary plugins
+  /// The [PrimaryDeviceDeployment] has been retrieved and all necessary plugins
   /// to execute the study have been loaded.
   Deployed,
 
