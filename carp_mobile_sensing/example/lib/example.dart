@@ -217,7 +217,7 @@ void example_2() async {
   // deploy the study on this phone (controller)
   await controller?.tryDeployment();
 
-  // resume sampling
+  // start sampling
   controller?.start();
 
   // listening to the stream of all data events from the controller
@@ -248,11 +248,11 @@ void example_2() async {
     print(JsonEncoder.withIndent(' ').convert(measurement));
   });
 
-  // Sampling can be paused and resumed
+  // Sampling can be stopped and started
   controller.executor?.stop();
   controller.executor?.start();
 
-  // Pause specific probe(s)
+  // Stop specific probe(s)
   controller.executor
       ?.lookupProbe(CarpDataTypes.ACCELERATION_TYPE_NAME)
       .forEach((probe) => probe.stop());
@@ -446,12 +446,12 @@ void example_3() async {
 //   // deploy the study on this phone (controller)
 //   await controller.tryDeployment();
 
-//   // configure the controller and resume sampling
+//   // configure the controller and start sampling
 //   await controller.configure(
 //     samplingSchema: SamplingPackageRegistry().common,
 //     privacySchemaName: PrivacySchema.DEFAULT,
 //   );
-//   controller.resume();
+//   controller.start();
 // }
 
 /// Examples of different [RecurrentScheduledTrigger] configurations.

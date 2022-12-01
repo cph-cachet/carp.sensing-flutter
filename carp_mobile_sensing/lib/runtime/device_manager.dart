@@ -60,7 +60,7 @@ abstract class DeviceManager<TDeviceRegistration extends DeviceRegistration,
 
   /// Callback on [initialize].
   ///
-  /// Is to be overriden in sub-classes. Note, however, that it must not be
+  /// Is to be overridden in sub-classes. Note, however, that it must not be
   /// doing a lot of work on startup.
   void onInitialize(TDeviceConfiguration descriptor);
 
@@ -89,7 +89,7 @@ abstract class DeviceManager<TDeviceRegistration extends DeviceRegistration,
 
   /// Callback on [connect]. Returns the [DeviceStatus] of the device.
   ///
-  /// Is to be overriden in sub-classes.
+  /// Is to be overridden in sub-classes.
   Future<DeviceStatus> onConnect();
 
   /// Restart sampling of the measures using this device.
@@ -108,12 +108,12 @@ abstract class DeviceManager<TDeviceRegistration extends DeviceRegistration,
     }
   }
 
-  /// Pause sampling of the measures using this device.
+  /// Stop sampling the measures using this device.
   ///
   /// This entails that all measures in the study protocol using this device's
-  /// type is paused.
+  /// type is stopped.
   @nonVirtual
-  void pause() {
+  void stop() {
     for (var executor in executors) {
       executor.stop();
     }

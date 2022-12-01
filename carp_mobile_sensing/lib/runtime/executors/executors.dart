@@ -29,7 +29,7 @@ enum ExecutorState {
   /// Initialized and ready to be started.
   initialized,
 
-  /// Resumed and active in data collection.
+  /// Started and active in data collection.
   started,
 
   /// Stopped and not collecting data.

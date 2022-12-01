@@ -196,7 +196,7 @@ class EDA extends SensorData {
   Map<String, dynamic> toJson() => _$EDAToJson(this);
 }
 
-/// Indicates the task with [taskName] was completed.
+/// Indicates the interactive task with [taskName] was completed.
 /// [taskData] holds the result of a completed interactive task, or null if
 /// no result is collected.
 @JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)

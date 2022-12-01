@@ -80,8 +80,8 @@ abstract class Probe extends AbstractExecutor<Measure> {
 /// A simple no-op probe that does nothing.
 class StubProbe extends Probe {}
 
-/// This probe collects a [Measurement] when resumed, send its to the
-/// [measurements] stream, and then automatically pauses.
+/// This probe collects a [Measurement] when started, send its to the
+/// [measurements] stream, and then automatically stops.
 ///
 /// The [Measurement] to be collected should be implemented in the [getMeasurement] method.
 ///
@@ -89,10 +89,10 @@ class StubProbe extends Probe {}
 abstract class DatumProbe extends Probe {
   @override
   Future<bool> onStart() async {
-    getMeasurement()
-        .then((measurement) =>
-            {if (measurement != null) addMeasurement(measurement)})
-        .catchError((Object error) => {addError(error)});
+    getMeasurement().then((measurement) {
+      if (measurement != null) addMeasurement(measurement);
+      stop();
+    }).catchError((Object error) => addError(error));
 
     // Measurement? measurement;
     // try {
@@ -174,7 +174,7 @@ abstract class StreamProbe extends Probe {
   Future<bool> onStart() async {
     if (stream == null) {
       warning(
-          "Trying to resume the stream probe '$runtimeType' which does not provide a Datum stream. "
+          "Trying to start the stream probe '$runtimeType' which does not provide a measurement stream. "
           'Have you initialized this probe correctly?');
       return false;
     } else {
@@ -239,9 +239,9 @@ abstract class StreamProbe extends Probe {
 ///
 /// method in order to provide the stream to collect data from.
 ///
-/// Note that this probe will finish its collection period even if it is paused.
-/// Hence, data can still be generated from this probe, even if paused.
-/// Pausing will pause the creation of new collection periods.
+/// Note that this probe will finish its collection period even if it is stopped.
+/// Hence, data can still be generated from this probe, even if stopped.
+/// Stopping this probe will stop the creation of new collection periods.
 abstract class PeriodicStreamProbe extends StreamProbe {
   Timer? timer;
 
@@ -253,18 +253,18 @@ abstract class PeriodicStreamProbe extends StreamProbe {
   Future<bool> onStart() async {
     if (stream == null) {
       warning(
-          "Trying to resume the stream probe '$runtimeType' which does not provide a Measurement stream. "
+          "Trying to start the stream probe '$runtimeType' which does not provide a measurement stream. "
           'Have you initialized this probe correctly?');
       return false;
     } else {
       Duration? interval = samplingConfiguration?.interval;
       Duration? duration = samplingConfiguration?.duration;
       if (interval != null && duration != null) {
-        // create a recurrent timer that resume sampling
+        // create a recurrent timer that starts sampling
         timer = Timer.periodic(interval, (timer) {
           final StreamSubscription<Measurement> newSubscription =
               stream!.listen(onData, onError: onError, onDone: onDone);
-          // create a timer that pause the sampling after the specified duration.
+          // create a timer that stops the sampling after the specified duration.
           Timer(duration, () async {
             await newSubscription.cancel();
           });
@@ -307,7 +307,7 @@ abstract class BufferingPeriodicProbe extends DatumProbe {
     Duration? interval = samplingConfiguration?.interval;
     Duration? duration = samplingConfiguration?.duration;
     if (interval != null && duration != null) {
-      // create a recurrent timer that every [frequency] resumes the buffering.
+      // create a recurrent timer that every [interval] starts the buffering
       timer = Timer.periodic(interval, (Timer t) {
         onSamplingStart();
         // create a timer that stops the buffering after the specified [duration].

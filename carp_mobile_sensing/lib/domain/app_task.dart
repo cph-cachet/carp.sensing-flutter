@@ -44,9 +44,9 @@ class AppTask extends TaskConfiguration {
 
   /// Create an app task that notifies the app when it is triggered.
   ///
-  /// [name] is a unique name of the taks.
+  /// [name] is a unique name of the task.
   /// [measures] is the list of measures to be collected in the background when
-  /// this app task is resumed.
+  /// this app task is started.
   AppTask({
     super.name,
     super.measures,

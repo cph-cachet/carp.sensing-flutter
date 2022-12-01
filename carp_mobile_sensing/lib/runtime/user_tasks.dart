@@ -109,7 +109,7 @@ abstract class UserTask {
   /// Callback from the app if this task is canceled.
   ///
   /// If [dequeue] is `true` the task is removed from the queue.
-  /// Othervise, it it kept on the queue for later.
+  /// Otherwise, it it kept on the queue for later.
   @mustCallSuper
   void onCancel(BuildContext context, {bool dequeue = false}) {
     state = UserTaskState.canceled;
@@ -179,16 +179,16 @@ enum UserTaskState {
   undefined,
 }
 
-/// A non-UI sensing taks that collects sensor data in the background.
+/// A non-UI sensing task that collects sensor data in the background.
 /// For example, a `noise` datum.
 ///
-/// It resumes sensing when the [onStart] methods is called and
-/// pauses sensing when the [onDone] methods is called.
+/// It starts when the [onStart] methods is called and stops when the
+/// [onDone] methods is called.
 class BackgroundSensingUserTask extends UserTask {
-  /// A type of sensing user task which can be resumed and paused.
+  /// A type of sensing user task which can be started and stopped.
   static const String SENSING_TYPE = 'sensing';
 
-  /// A type of sensing user task which can be resumed once.
+  /// A type of sensing user task which can be started once.
   /// See [OneTimeBackgroundSensingUserTask].
   static const String ONE_TIME_SENSING_TYPE = 'one_time_sensing';
 
@@ -207,15 +207,15 @@ class BackgroundSensingUserTask extends UserTask {
   }
 }
 
-/// A non-UI sensing taks that collects sensor data once.
+/// A non-UI sensing task that collects sensor data once.
 /// For example collecting a `location` datum.
 ///
-/// It resumes sensing when the [onStart] methods is called and then
-/// automatically pauses after 10 seconds.
+/// It starts sensing when the [onStart] methods is called and then
+/// automatically stops after 10 seconds.
 class OneTimeBackgroundSensingUserTask extends BackgroundSensingUserTask {
   OneTimeBackgroundSensingUserTask(super.executor);
 
-  /// Resume sensing for 10 seconds, whereafter it is paused automatically.
+  /// Start sensing for 10 seconds, whereafter it is stops automatically.
   @override
   void onStart(BuildContext context) {
     super.onStart(context);

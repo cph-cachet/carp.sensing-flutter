@@ -316,20 +316,20 @@ class SmartphoneDeploymentController extends StudyRuntime {
     }
   }
 
-  /// Start this controller and if [resume] is true, resume data collection
+  /// Start this controller and if [start] is true, start data collection
   /// according to the parameters specified in [configure].
   ///
   /// [configure] must be called before starting sampling.
   @override
-  void start([bool resume = true]) {
+  void start([bool start = true]) {
     assert(
         _executor != null,
-        '$runtimeType - Cannot resume this controller, since the the runtime is not initialized. '
+        '$runtimeType - Cannot start this controller, since the the runtime is not initialized. '
         'Call the configure() method first.');
 
     info('Starting data sampling ...');
     super.start();
-    if (resume) _executor!.start();
+    if (start) _executor!.start();
   }
 
   /// Stop the sampling.

@@ -65,12 +65,12 @@ class BackgroundTaskExecutor extends TaskExecutor<BackgroundTask> {
 /// when the app (user) wants to do this.
 ///
 /// This executor works closely with the singleton [AppTaskController].
-/// Whenever an [AppTaskExecutor] is resumed (e.g. in a [PeriodicTrigger]),
+/// Whenever an [AppTaskExecutor] is started (e.g. in a [PeriodicTrigger]),
 /// this executor is wrapped in a [UserTask] and put on a queue in
 /// the [AppTaskController].
 ///
-/// Later, the app (user) can start, pause, or finalize a [UserTask]
-/// by calling the `onStart()`, `onHold()`, and `onDone()` methods,
+/// Later, the app (user) can start, cancel, or finalize a [UserTask]
+/// by calling the `onStart()`, `onCancel()`, and `onDone()` methods,
 /// respectively.
 ///
 /// Special-purpose [UserTask]s can be created by an [UserTaskFactory]
@@ -95,7 +95,7 @@ class AppTaskExecutor<TConfig extends AppTask> extends TaskExecutor<TConfig> {
 
   @override
   Future<bool> onStart() async {
-    // when an app task is resumed simply put it on the queue
+    // when an app task is started simply put it on the queue
     userTask = await AppTaskController().enqueue(this);
     return true;
   }

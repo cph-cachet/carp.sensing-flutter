@@ -151,7 +151,7 @@ class ElapsedTimeTriggerExecutor
   }
 }
 
-/// Executes a [PeriodicTrigger], i.e. resumes sampling on a regular basis.
+/// Executes a [PeriodicTrigger].
 class PeriodicTriggerExecutor
     extends SchedulableTriggerExecutor<PeriodicTrigger> {
   @override
@@ -426,7 +426,7 @@ class RandomRecurrentTriggerExecutor
 
   @override
   Future<bool> onStart() async {
-    // sampling might be resumed after [startTime] or the app wasn't running at [startTime]
+    // sampling might be started after [startTime] or the app wasn't running at [startTime]
     // therefore, first check if the random timers have been scheduled for today
     if (TimeOfDay.now().isAfter(startTime)) {
       if (!hasBeenScheduledForToday) {
@@ -451,8 +451,8 @@ class RandomRecurrentTriggerExecutor
     // empty the list of timers.
     _timers = [];
 
-    // get a random number of trigger time for today, and for each set up a
-    // timer that triggers the super.onResume() method.
+    // get a random number of trigger times for today, and for each set up a
+    // timer that triggers the super.onTrigger() method.
     for (var time in samplingTimes) {
       // find the delay - note, that none of the delays can be negative,
       // since we are at [startTime] or after
@@ -473,7 +473,7 @@ class UserTaskTriggerExecutor extends TriggerExecutor<UserTaskTrigger> {
 
   @override
   Future<bool> onStart() async {
-    // listen for event of the specified type and resume/pause as needed
+    // listen for event of the specified type and trigger as needed
     _subscription = AppTaskController().userTaskEvents.listen((userTask) async {
       if (userTask.task.name == configuration!.taskName &&
           userTask.state == configuration!.triggerCondition) {

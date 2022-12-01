@@ -73,7 +73,7 @@ class PassiveTrigger extends TriggerConfiguration {
 /// Never stops sampling once started.
 ///
 /// The delay is measured from the **start of sensing**, i.e. typically when
-/// resume() is called on a [SmartphoneDeploymentController].
+/// the `start()` method is called on a [SmartphoneDeploymentController].
 @JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
 class DelayedTrigger extends TriggerConfiguration {
   /// Delay before this trigger is executed.
@@ -92,14 +92,14 @@ class DelayedTrigger extends TriggerConfiguration {
 
 /// A trigger that triggers every [period].
 ///
-/// Daily, weekly and montly recurrent triggers can be specified using the
+/// Daily, weekly and monthly recurrent triggers can be specified using the
 /// [RecurrentScheduledTrigger].
 @JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
 class PeriodicTrigger extends TriggerConfiguration implements Schedulable {
   /// The period (reciprocal of frequency) of sampling.
   Duration period;
 
-  /// Create a trigger that resume sampling every [period] and then pauses.
+  /// Create a trigger that triggers every [period].
   PeriodicTrigger({required this.period}) : super();
 
   @override
@@ -128,11 +128,7 @@ class DateTimeTrigger extends TriggerConfiguration implements Schedulable {
   Map<String, dynamic> toJson() => _$DateTimeTriggerToJson(this);
 }
 
-/// A trigger that resume sampling based on a recurrent scheduled date and time.
-///
-/// Pause after the specified [duration]. If [duration] is not specified it
-/// defaults to 2 second. Useful for triggering one-time samplings, like collecting
-/// location or triggering a survey.
+/// A trigger that triggers based on a recurrent scheduled date and time.
 ///
 /// Supports daily, weekly and monthly recurrences. Yearly recurrence is not
 /// supported, since data sampling is not intended to run on such long time scales.
@@ -213,8 +209,7 @@ class RecurrentScheduledTrigger extends PeriodicTrigger {
   /// say the 25th. Possible numbers are 1..31 counting from the start of a month.
   int? dayOfMonth;
 
-  /// Create a trigger that resume sampling based on a recurrent scheduled date
-  /// and time.
+  /// Create a trigger that triggers based on a recurrent scheduled date and time.
   RecurrentScheduledTrigger({
     required this.type,
     required this.time,
@@ -332,7 +327,7 @@ enum RecurrentType {
   //yearly,
 }
 
-/// A trigger that resume sampling based on a cron job specification.
+/// A trigger that triggers based on a cron job specification.
 ///
 /// Bases on the [`cron`](https://pub.dev/packages/cron) package.
 /// See [crontab guru](https://crontab.guru) for a useful tool for specifying cron jobs.
@@ -431,8 +426,7 @@ class SamplingEventTrigger extends TriggerConfiguration {
   Data? triggerCondition;
 
   /// Create a trigger that triggers when a measure of [measureType] is collected,
-  /// and checks the [triggerCondition] and [pauseCondition] to determine if the
-  /// task should be resumed or paused, respectively.
+  /// and checks the [triggerCondition] to determine if it should trigger.
   SamplingEventTrigger({
     required this.measureType,
     this.triggerCondition,
@@ -531,7 +525,7 @@ typedef ConditionalEvaluator = bool Function();
 /// useful when creating a [StudyProtocol] directly in the app using Dart code.
 @JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
 class ConditionalPeriodicTrigger extends TriggerConfiguration {
-  /// The period of when to check the [triggerCondition] and [pauseCondition].
+  /// The period of when to check the [triggerCondition].
   Duration period;
 
   /// The [ConditionalEventEvaluator] function evaluating if the event

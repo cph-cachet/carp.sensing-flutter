@@ -99,8 +99,7 @@ class CarpDataTypes {
   static const String TRIGGERED_TASK_TYPE_NAME =
       "$CARP_NAMESPACE.triggeredtask";
 
-  /// An interactive task which was completed over the course of a specified
-  /// time interval.
+  /// An interactive (i.e., involving the user) task which was completed.
   static const String COMPLETED_TASK_TYPE_NAME =
       "$CARP_NAMESPACE.completedtask";
 

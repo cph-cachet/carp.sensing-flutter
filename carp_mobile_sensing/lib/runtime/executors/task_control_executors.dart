@@ -66,7 +66,7 @@ class TaskControlExecutor extends AbstractExecutor<TaskControl> {
 
   /// Callback when the [triggerExecutor] triggers.
   void onTrigger() {
-    // add the trigger task measurement
+    // add the trigger task measurement to the measurements stream
     _controller.add(Measurement.fromData(TriggeredTask(
         triggerId: taskControl.triggerId,
         taskName: taskControl.taskName,
@@ -163,7 +163,7 @@ class AppTaskControlExecutor extends TaskControlExecutor {
       // save timestamp
       taskControl.hasBeenScheduledUntil = current;
 
-      // now pause and resume again when the time has passed
+      // now stop and start again when the time has passed
       // this in the case where the app keeps running in the background
       stop();
       var duration = current.millisecondsSinceEpoch -
@@ -175,6 +175,6 @@ class AppTaskControlExecutor extends TaskControlExecutor {
   }
 
   @override
-  Future<bool> onPause() async =>
-      true; // do nothing - this executor is never resumed
+  Future<bool> onStop() async =>
+      true; // do nothing - this executor is never stopped
 }

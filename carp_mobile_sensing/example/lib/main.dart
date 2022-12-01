@@ -146,7 +146,7 @@ class Sensing {
     controller?.measurements.listen((data) => print(toJsonString(data)));
   }
 
-  /// Is sensing running, i.e. has the study executor been resumed?
+  /// Is sensing running, i.e. has the study executor been started?
   bool get isRunning =>
       (controller != null) &&
       controller!.executor!.state == ExecutorState.started;
@@ -154,10 +154,10 @@ class Sensing {
   /// Status of sensing.
   StudyStatus? get status => controller?.status;
 
-  /// Resume sensing
+  /// Start sensing
   void start() async => controller?.executor?.start();
 
-  /// Pause sensing
+  /// Stop sensing
   void stop() async => controller?.executor?.stop();
 }
 
@@ -224,49 +224,49 @@ class LocalStudyProtocolManager implements StudyProtocolManager {
     //   Control.Start,
     // );
 
-    // // Collect device info only once
-    // protocol.addTaskControl(
-    //   ImmediateTrigger(),
-    //   BackgroundTask()
-    //     ..addMeasure(
-    //         Measure(type: DeviceSamplingPackage.DEVICE_INFORMATION_TYPE_NAME)),
-    //   phone,
-    //   Control.Start,
-    // );
-
-    var task_1 = BackgroundTask(
-      measures: [
-        Measure(type: CarpDataTypes.STEP_COUNT_TYPE_NAME),
-        // Measure(type: CarpDataTypes.ACCELERATION_TYPE_NAME),
-        // Measure(type: CarpDataTypes.ROTATION_TYPE_NAME),
-      ],
-    );
-
-    var task_2 = BackgroundTask(
-      measures: [
-        Measure(type: DeviceSamplingPackage.BATTERY_STATE_TYPE_NAME),
-      ],
-    );
-
-    // Collect IMU data
-    protocol.addTaskControls(
+    // Collect device info
+    protocol.addTaskControl(
       ImmediateTrigger(),
-      [task_1, task_2],
+      BackgroundTask(measures: [
+        Measure(type: DeviceSamplingPackage.DEVICE_INFORMATION_TYPE_NAME)
+      ]),
       phone,
       Control.Start,
     );
 
-    // After a while, stop it again
-    protocol.addTaskControl(
-      DelayedTrigger(delay: Duration(seconds: 20)),
-      task_1,
-      phone,
-      Control.Stop,
-    );
+    // var task_1 = BackgroundTask(
+    //   measures: [
+    //     Measure(type: CarpDataTypes.STEP_COUNT_TYPE_NAME),
+    //     // Measure(type: CarpDataTypes.ACCELERATION_TYPE_NAME),
+    //     // Measure(type: CarpDataTypes.ROTATION_TYPE_NAME),
+    //   ],
+    // );
+
+    // var task_2 = BackgroundTask(
+    //   measures: [
+    //     Measure(type: DeviceSamplingPackage.BATTERY_STATE_TYPE_NAME),
+    //   ],
+    // );
+
+    // // Collect IMU data
+    // protocol.addTaskControls(
+    //   ImmediateTrigger(),
+    //   [task_1, task_2],
+    //   phone,
+    //   Control.Start,
+    // );
+
+    // // After a while, stop it again
+    // protocol.addTaskControl(
+    //   DelayedTrigger(delay: Duration(seconds: 20)),
+    //   task_1,
+    //   phone,
+    //   Control.Stop,
+    // );
 
     // // Collect device info periodically
     // protocol.addTaskControl(
-    //   PeriodicTrigger(period: Duration(seconds: 10)),
+    //   PeriodicTrigger(period: Duration(seconds: 5)),
     //   BackgroundTask(measures: [
     //     Measure(type: DeviceSamplingPackage.DEVICE_INFORMATION_TYPE_NAME)
     //   ]),
@@ -300,7 +300,7 @@ class LocalStudyProtocolManager implements StudyProtocolManager {
     //     phone,
     //     Control.Start);
 
-    // // Add an app task 2 minutes after deployment and make a notification.
+    // // Add an app task 1 minute after deployment and make a notification.
     // //
     // // This App Task is added for demo purpose and you should see notifications
     // // on the phone. However, nothing will happen when you click on it.
@@ -308,11 +308,11 @@ class LocalStudyProtocolManager implements StudyProtocolManager {
     // // the App Task model.
     // protocol.addTaskControl(
     //   ElapsedTimeTrigger(
-    //     elapsedTime: IsoDuration(minutes: 2),
+    //     elapsedTime: IsoDuration(minutes: 1),
     //   ),
     //   AppTask(
     //     type: BackgroundSensingUserTask.ONE_TIME_SENSING_TYPE,
-    //     title: "Elapsed Time - 2 minutes",
+    //     title: "Elapsed Time - App Task",
     //     notification: true,
     //   )..addMeasure(
     //       Measure(type: DeviceSamplingPackage.DEVICE_INFORMATION_TYPE_NAME)),
