@@ -63,7 +63,7 @@ class ScreenProbe extends StreamProbe {
 
 /// A probe that collects free virtual memory on a regular basis
 /// as specified in [PeriodicMeasure.frequency].
-class MemoryProbe extends IntervalDatumProbe {
+class MemoryProbe extends IntervalProbe {
   @override
   bool onInitialize() {
     // check if SysInfo is available (seems not to be available on iOS)
@@ -80,7 +80,7 @@ class MemoryProbe extends IntervalDatumProbe {
 }
 
 /// A probe that collects the device info about this device.
-class DeviceProbe extends DatumProbe {
+class DeviceProbe extends MeasurementProbe {
   @override
   Future<Measurement?> getMeasurement() async =>
       Measurement.fromData(DeviceInformation(

@@ -8,6 +8,7 @@ import 'package:carp_serializable/carp_serializable.dart';
 import 'package:carp_core/carp_core.dart';
 import 'package:carp_mobile_sensing/carp_mobile_sensing.dart';
 import 'package:flutter/material.dart' hide TimeOfDay;
+import 'package:iso_duration_parser/iso_duration_parser.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -309,25 +310,25 @@ class LocalStudyProtocolManager implements StudyProtocolManager {
     //     phone,
     //     Control.Start);
 
-    // // Add an app task 1 minute after deployment and make a notification.
-    // //
-    // // This App Task is added for demo purpose and you should see notifications
-    // // on the phone. However, nothing will happen when you click on it.
-    // // See the PulmonaryMonitor demo app for a full-scale example of how to use
-    // // the App Task model.
-    // protocol.addTaskControl(
-    //   ElapsedTimeTrigger(
-    //     elapsedTime: IsoDuration(minutes: 1),
-    //   ),
-    //   AppTask(
-    //     type: BackgroundSensingUserTask.ONE_TIME_SENSING_TYPE,
-    //     title: "Elapsed Time - App Task",
-    //     notification: true,
-    //   )..addMeasure(
-    //       Measure(type: DeviceSamplingPackage.DEVICE_INFORMATION_TYPE_NAME)),
-    //   phone,
-    //   Control.Start,
-    // );
+    // Add an app task 1 minute after deployment and make a notification.
+    //
+    // This App Task is added for demo purpose and you should see notifications
+    // on the phone. However, nothing will happen when you click on it.
+    // See the PulmonaryMonitor demo app for a full-scale example of how to use
+    // the App Task model.
+    protocol.addTaskControl(
+      ElapsedTimeTrigger(
+        elapsedTime: IsoDuration(minutes: 1),
+      ),
+      AppTask(
+        type: BackgroundSensingUserTask.ONE_TIME_SENSING_TYPE,
+        title: "Elapsed Time - App Task",
+        notification: true,
+      )..addMeasure(
+          Measure(type: DeviceSamplingPackage.DEVICE_INFORMATION_TYPE_NAME)),
+      phone,
+      Control.Start,
+    );
 
     // // add an app task at exact date & time
     // protocol.addTriggeredTask(

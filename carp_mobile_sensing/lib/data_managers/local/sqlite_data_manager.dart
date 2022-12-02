@@ -16,7 +16,7 @@ part of data_managers;
 ///
 /// The path and filename format is
 ///
-///   `~/carp-data-yyyy-mm-dd-hh-mm-ss-ms.db`
+///   `~/carp-data.db`
 ///
 /// where `~` is the folder where SQLite places it database files.
 ///

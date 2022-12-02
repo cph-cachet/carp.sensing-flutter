@@ -135,6 +135,19 @@ class AppTaskControlExecutor extends TaskControlExecutor {
       super.triggerExecutor as SchedulableTriggerExecutor;
 
   @override
+  bool onInitialize() {
+    AppTaskController().userTaskEvents.listen((userTask) {
+      if (userTask.state == UserTaskState.done) {
+        // add the completed task measurement to the measurements stream
+        _controller.add(Measurement.fromData(
+            CompletedTask(taskName: userTask.name, taskData: userTask.result)));
+      }
+    });
+
+    return super.onInitialize();
+  }
+
+  @override
   Future<bool> onStart() async {
     final from = taskControl.hasBeenScheduledUntil ?? DateTime.now();
     final to = from.add(Duration(days: 10)); // look 10 days ahead

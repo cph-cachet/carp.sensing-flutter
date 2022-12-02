@@ -7,25 +7,25 @@
 part of domain;
 
 /// Signature of a data transformer.
-typedef DatumTransformer = Data Function(Data);
+typedef DataTransformer = Data Function(Data);
 
 /// A no-operation transformer.
 Data noop(Data data) => data;
 
-/// A factory which can create a [DatumTransformer].
-abstract class DatumTransformerFactory {
-  static DatumTransformer? get transformer => null;
+/// A factory which can create a [DataTransformer].
+abstract class DataTransformerFactory {
+  static DataTransformer? get transformer => null;
 }
 
-/// A registry of [DatumTransformerSchema]s which hold a set of
-/// [DatumTransformer]s.
+/// A registry of [DataTransformerSchema]s which hold a set of
+/// [DataTransformer]s.
 class TransformerSchemaRegistry {
   static final TransformerSchemaRegistry _instance =
       TransformerSchemaRegistry._();
 
   /// The map between the namespace of a transformer schema and the schema.
-  Map<String, DatumTransformerSchema> get schemas => _schemas;
-  final Map<String, DatumTransformerSchema> _schemas = {};
+  Map<String, DataTransformerSchema> get schemas => _schemas;
+  final Map<String, DataTransformerSchema> _schemas = {};
 
   /// Get the singleton instance of the [TransformerSchemaRegistry].
   factory TransformerSchemaRegistry() => _instance;
@@ -43,71 +43,71 @@ class TransformerSchemaRegistry {
   }
 
   /// Register a transformer schema.
-  void register(DatumTransformerSchema schema) {
+  void register(DataTransformerSchema schema) {
     _schemas[schema.namespace] = schema;
     schema.onRegister();
   }
 
   /// Lookup a transformer schema based on its namespace.
-  DatumTransformerSchema? lookup(String namespace) => _schemas[namespace];
+  DataTransformerSchema? lookup(String namespace) => _schemas[namespace];
 }
 
 /// An abstract class defining a transformer schema, which hold a set of
-/// [DatumTransformer]s that can map from the native CARP namespace
+/// [DataTransformer]s that can map from the native CARP namespace
 /// to another namespace.
-/// A [DatumTransformerSchema] must be implemented for each supported namespace.
-abstract class DatumTransformerSchema {
+/// A [DataTransformerSchema] must be implemented for each supported namespace.
+abstract class DataTransformerSchema {
   /// The type of namespace that this package can transform to (see e.g.
   /// [NameSpace] for pre-defined namespaces).
   String get namespace;
 
-  final Map<String, DatumTransformer> _transformers = {};
+  final Map<String, DataTransformer> _transformers = {};
 
   /// A map of transformers in this schema, indexed by the data type they
   /// can transform.
-  Map<String, DatumTransformer> get transformers => _transformers;
+  Map<String, DataTransformer> get transformers => _transformers;
 
   /// Callback method when this schema is being registered.
   void onRegister();
 
   /// Add a transformer to this schema based on its type mapped to its
   /// [String].
-  void add(String type, DatumTransformer transformer) =>
+  void add(String type, DataTransformer transformer) =>
       transformers[type] = transformer;
 
   /// Transform the [data] according to the transformer for its data type.
   Data transform(Data data) {
-    DatumTransformer? transformer = transformers[data.format.toString()];
+    DataTransformer? transformer = transformers[data.format.toString()];
     return (transformer != null) ? transformer(data) : data;
   }
 }
 
-/// A default [DatumTransformerSchema] for CARP no-operation transformers
-class CARPTransformerSchema extends DatumTransformerSchema {
+/// A default [DataTransformerSchema] for CARP no-operation transformers
+class CARPTransformerSchema extends DataTransformerSchema {
   @override
   String get namespace => NameSpace.CARP;
   @override
   void onRegister() {}
 }
 
-/// A default [DatumTransformerSchema] for Open mHealth (OMH) transformers
-class OMHTransformerSchema extends DatumTransformerSchema {
+/// A default [DataTransformerSchema] for Open mHealth (OMH) transformers
+class OMHTransformerSchema extends DataTransformerSchema {
   @override
   String get namespace => NameSpace.OMH;
   @override
   void onRegister() {}
 }
 
-/// A default [DatumTransformerSchema] for HL7 FHIR transformers
-class FHIRTransformerSchema extends DatumTransformerSchema {
+/// A default [DataTransformerSchema] for HL7 FHIR transformers
+class FHIRTransformerSchema extends DataTransformerSchema {
   @override
   String get namespace => NameSpace.FHIR;
   @override
   void onRegister() {}
 }
 
-/// A default [DatumTransformerSchema] for privacy transformers
-class PrivacySchema extends DatumTransformerSchema {
+/// A default [DataTransformerSchema] for privacy transformers
+class PrivacySchema extends DataTransformerSchema {
   static const String DEFAULT = 'default-privacy-schema';
 
   @override

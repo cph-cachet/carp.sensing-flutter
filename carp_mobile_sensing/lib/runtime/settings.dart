@@ -9,7 +9,7 @@ part of runtime;
 ///  * setting whether to save [AppTask]s across app re-start - see [saveAppTaskQueue]
 ///  * getting shared preferences - see [preferences]
 ///  * getting app info - see [packageInfo]
-///  * generating a unique and annonymous user id - see [userId]
+///  * generating a unique and anonymous user id - see [userId]
 ///
 class Settings {
   static const String USER_ID_KEY = 'user_id';
@@ -34,7 +34,7 @@ class Settings {
   String _timezone = 'Europe/Copenhagen';
   bool _initialized = false;
 
-  /// Has the setting been initializd via calling the [init] method?
+  /// Has the setting been initialized via calling the [init] method?
   bool get initialized => _initialized;
 
   /// The global debug level setting.

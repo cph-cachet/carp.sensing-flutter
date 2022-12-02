@@ -70,7 +70,7 @@ class AppTaskController {
   /// [enqueue] method.
   Future<void> initialize({bool enableNotifications = true}) async {
     if (Settings().saveAppTaskQueue) {
-      // retore the queue from persistent storage
+      // restore the queue from persistent storage
       await restoreQueue();
 
       // listen to events and save the queue every time it is modified
@@ -173,15 +173,17 @@ class AppTaskController {
     }
   }
 
-  /// Mark an [UserTask] as done.
-  /// Note that a done task remains on the queue.
-  /// If you want to remove a taks from the queue, use the [dequeue] method.
-  void done(String id) {
+  /// Mark the [UserTask] with [id] as done.
+  /// [result] may contain the result obtained from the task.
+  /// Note that a done task remains on the queue. If you want to remove a
+  /// task from the queue, use the [dequeue] method.
+  void done(String id, [Data? result]) {
     UserTask? userTask = _userTaskMap[id];
     if (userTask == null) {
       warning("Could not find AppTask - id is not valid: '$id'");
     } else {
       userTask.state = UserTaskState.done;
+      userTask.result = result;
       _controller.add(userTask);
       info('Marked $userTask as done');
 
@@ -192,8 +194,8 @@ class AppTaskController {
   }
 
   /// Expire an [UserTask].
-  /// Note that an expired task remains on the queue.
-  /// If you want to remove a taks from the queue, use the [dequeue] method.
+  /// Note that an expired task remains on the queue. If you want to remove a
+  /// task from the queue, use the [dequeue] method.
   void expire(String id) {
     UserTask? userTask = _userTaskMap[id];
     if (userTask == null) {
@@ -222,7 +224,7 @@ class AppTaskController {
     return _filename;
   }
 
-  /// Save the queue persistenly to a file.
+  /// Save the queue persistently to a file.
   /// Returns `true` if successful.
   Future<bool> saveQueue() async {
     bool success = true;

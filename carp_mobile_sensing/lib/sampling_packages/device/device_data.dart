@@ -16,16 +16,16 @@ part of device;
 class DeviceInformation extends Data {
   static const dataType = DeviceSamplingPackage.DEVICE_INFORMATION_TYPE_NAME;
 
-  ///The platform type from which this Datum was collected.
+  ///The platform type of the device.
   /// * `Android`
   /// * `IOS`
   String? platform;
 
-  /// An identifier that is unique to the particular device which this [Datum] was collected.
+  /// An identifier that is unique to the particular device.
   /// Note that this ID will change if the user performs a factory reset on their device.
   String? deviceId;
 
-  /// The hardware type from which this [Datum] was collected (e.g. 'iPhone7,1' for iPhone 6 Plus).
+  /// The hardware type of this device (e.g. 'iPhone7,1' for iPhone 6 Plus).
   String? hardware;
 
   /// Device name as specified by the OS.
@@ -73,7 +73,7 @@ class DeviceInformation extends Data {
       '${super.toString()}, platform: $platform, deviceId: $deviceId, hardware: $hardware, name: $deviceName, manufacturer: $deviceManufacturer, model: $deviceModel, OS: $operatingSystem, SDK: $sdk, release: $release';
 }
 
-/// A [Datum] that holds battery level collected from the phone.
+/// Holds battery level and charging status collected from the phone.
 @JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
 class BatteryState extends Data {
   static const dataType = DeviceSamplingPackage.BATTERY_STATE_TYPE_NAME;

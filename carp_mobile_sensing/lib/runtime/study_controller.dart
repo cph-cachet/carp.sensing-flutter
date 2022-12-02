@@ -13,7 +13,7 @@ class SmartphoneDeploymentController extends StudyRuntime {
   DataEndPoint? _dataEndPoint;
   StudyDeploymentExecutor? _executor;
   String _privacySchemaName = NameSpace.CARP;
-  late DatumTransformer _transformer;
+  late DataTransformer _transformer;
 
   /// The study deployment running in this controller.
   @override
@@ -36,8 +36,8 @@ class SmartphoneDeploymentController extends StudyRuntime {
   /// The privacy schema used to encrypt data before upload.
   String get privacySchemaName => _privacySchemaName;
 
-  /// The datum transformed used to transform data before upload.
-  DatumTransformer get transformer => _transformer;
+  /// The transformer used to transform data before upload.
+  DataTransformer get transformer => _transformer;
 
   /// The permissions granted to this study from the OS.
   Map<Permission, PermissionStatus>? permissions;
@@ -121,7 +121,7 @@ class SmartphoneDeploymentController extends StudyRuntime {
     return _filename;
   }
 
-  /// Save the [deployment] persistenly to a file cache.
+  /// Save the [deployment] persistently to a file cache.
   /// Returns `true` if successful.
   Future<bool> saveDeployment() async {
     bool success = true;
@@ -189,8 +189,8 @@ class SmartphoneDeploymentController extends StudyRuntime {
   ///    * [privacySchemaName] - the name of a [PrivacySchema].
   ///      Use [PrivacySchema.DEFAULT] for the default, built-in schema.
   ///      If  not specified, no privacy schema is used and data is saved as sensed.
-  ///    * [transformer] - a generic [DatumTransformer] function which transform
-  ///      each collected [Datum]. If not specified, a 1:1 mapping is done,
+  ///    * [transformer] - a generic [DataTransformer] function which transform
+  ///      each collected data item. If not specified, a 1:1 mapping is done,
   ///      i.e. no transformation.
   ///    * [askForPermissions] - automatically ask for permissions for all sampling
   ///      packages at once. Default to `true`. If you want the app to handle
@@ -201,7 +201,7 @@ class SmartphoneDeploymentController extends StudyRuntime {
   Future<void> configure({
     DataEndPoint? dataEndPoint,
     String privacySchemaName = NameSpace.CARP,
-    DatumTransformer? transformer,
+    DataTransformer? transformer,
     bool askForPermissions = true,
     bool enableNotifications = true,
   }) async {
@@ -223,7 +223,7 @@ class SmartphoneDeploymentController extends StudyRuntime {
     // initialize optional parameters
     _dataEndPoint = dataEndPoint ?? deployment!.dataEndPoint;
     _privacySchemaName = privacySchemaName;
-    _transformer = transformer ?? ((datum) => datum);
+    _transformer = transformer ?? ((data) => data);
 
     if (_dataEndPoint != null) {
       _dataManager = DataManagerRegistry().lookup(_dataEndPoint!.type);

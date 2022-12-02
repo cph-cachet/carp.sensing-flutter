@@ -20,7 +20,7 @@ class FileData extends Data {
   /// The name to the attached file.
   String filename;
 
-  /// Should this file be uploaded together with the [Datum] description.
+  /// Should the file also be uploaded, or only this meta data?
   /// Default is [true].
   bool upload = true;
 

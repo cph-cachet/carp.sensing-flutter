@@ -80,13 +80,13 @@ abstract class Probe extends AbstractExecutor<Measure> {
 /// A simple no-op probe that does nothing.
 class StubProbe extends Probe {}
 
-/// This probe collects a [Measurement] when started, send its to the
-/// [measurements] stream, and then automatically stops.
+/// This probe collects a single [Measurement] when started, send its to the
+/// [measurements] stream, and then stops.
 ///
 /// The [Measurement] to be collected should be implemented in the [getMeasurement] method.
 ///
 /// See [DeviceProbe] for an example.
-abstract class DatumProbe extends Probe {
+abstract class MeasurementProbe extends Probe {
   @override
   Future<bool> onStart() async {
     getMeasurement().then((measurement) {
@@ -114,10 +114,10 @@ abstract class DatumProbe extends Probe {
 
 /// A probe which is triggered at regular intervals, specified by the interval
 /// property in an [IntervalSamplingConfiguration].
-/// When triggered, the probe collect a piece of data using the [getMeasurement] method.
+/// When triggered, the probe collect a measurement using the [getMeasurement] method.
 ///
 /// See [MemoryProbe] for an example.
-abstract class IntervalDatumProbe extends DatumProbe {
+abstract class IntervalProbe extends MeasurementProbe {
   Timer? timer;
 
   @override
@@ -295,7 +295,7 @@ abstract class PeriodicStreamProbe extends StreamProbe {
 /// When the sampling window ends, the [onSamplingEnd] handle is called.
 ///
 /// See [AudioProbe] for an example.
-abstract class BufferingPeriodicProbe extends DatumProbe {
+abstract class BufferingPeriodicProbe extends MeasurementProbe {
   Timer? timer;
 
   @override
@@ -313,7 +313,7 @@ abstract class BufferingPeriodicProbe extends DatumProbe {
         // create a timer that stops the buffering after the specified [duration].
         Timer(duration, () async {
           onSamplingEnd();
-          // collect the datum
+          // collect the measurement
           try {
             Measurement? measurement = await getMeasurement();
             if (measurement != null) addMeasurement(measurement);
@@ -438,7 +438,7 @@ abstract class BufferingPeriodicStreamProbe extends PeriodicStreamProbe {
 
   /// Subclasses should implement / override this method to collect the [Measurement].
   /// This method will be called every time data has been buffered for a [duration]
-  /// and should return the final [Datum] for the buffered data.
+  /// and should return the final measurement for the buffered data.
   ///
   /// Can return `null` if no data is available.
   /// Can return an [Error] if an error occurs.
@@ -505,7 +505,7 @@ abstract class BufferingIntervalStreamProbe extends StreamProbe {
 
   /// Subclasses should implement / override this method to collect the [Measurement].
   /// This method will be called every time data has been buffered for a [duration]
-  /// and should return the final [Datum] for the buffered data.
+  /// and should return the final measurement for the buffered data.
   ///
   /// Can return `null` if no data is available.
   /// Can return an [Error] if an error occurs.

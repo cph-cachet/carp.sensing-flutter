@@ -23,7 +23,7 @@ part 'device_descriptor.dart';
 part 'device_deployment.dart';
 part 'app_task.dart';
 part 'triggers.dart';
-part 'datum.dart';
+// part 'datum.dart';
 part 'data.dart';
 part 'data_types.dart';
 part 'device_info.dart';

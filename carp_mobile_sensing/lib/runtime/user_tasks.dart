@@ -51,6 +51,7 @@ abstract class UserTask {
 
   String id = Uuid().v1();
   String get type => task.type;
+  String get name => task.name;
   String get title => task.title;
   String get description => task.description;
   String get instructions => task.instructions;
@@ -82,7 +83,7 @@ abstract class UserTask {
 
   /// A stream of state changes of this user task.
   ///
-  /// This stream is usefull in a [StreamBuilder] to listen on
+  /// This stream is useful in a [StreamBuilder] to listen on
   /// changes to a [UserTask].
   Stream<UserTaskState> get stateEvents => _stateController.stream;
 
@@ -92,6 +93,9 @@ abstract class UserTask {
 
   /// The [AppTaskExecutor] of this user task.
   AppTaskExecutor get appTaskExecutor => _executor;
+
+  /// The result of this task, once done.
+  Data? result;
 
   /// Create a new [UserTask] based on [executor].
   UserTask(AppTaskExecutor executor) {
@@ -128,13 +132,15 @@ abstract class UserTask {
     AppTaskController().dequeue(id);
   }
 
-  /// Callback from app when this task is done.
+  /// Callback from the app when this task is done.
   ///
   /// If [dequeue] is `true` the task is removed from the queue.
+  /// [result] can specify the result obtained from this task, if available.
   @mustCallSuper
-  void onDone(BuildContext context, {bool dequeue = false}) {
+  void onDone(BuildContext context, {bool dequeue = false, Data? result}) {
+    this.result = result;
     state = UserTaskState.done;
-    AppTaskController().done(id);
+    AppTaskController().done(id, result);
     if (dequeue) AppTaskController().dequeue(id);
   }
 
@@ -180,7 +186,7 @@ enum UserTaskState {
 }
 
 /// A non-UI sensing task that collects sensor data in the background.
-/// For example, a `noise` datum.
+/// For example noise.
 ///
 /// It starts when the [onStart] methods is called and stops when the
 /// [onDone] methods is called.
@@ -201,14 +207,14 @@ class BackgroundSensingUserTask extends UserTask {
   }
 
   @override
-  void onDone(BuildContext context, {dequeue = false}) {
-    super.onDone(context, dequeue: dequeue);
+  void onDone(BuildContext context, {dequeue = false, Data? result}) {
+    super.onDone(context, dequeue: dequeue, result: result);
     executor.stop();
   }
 }
 
 /// A non-UI sensing task that collects sensor data once.
-/// For example collecting a `location` datum.
+/// For example collecting location data.
 ///
 /// It starts sensing when the [onStart] methods is called and then
 /// automatically stops after 10 seconds.

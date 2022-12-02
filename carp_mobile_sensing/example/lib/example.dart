@@ -244,7 +244,7 @@ void example_2() async {
   // subscribe to the stream of measurements
   StreamSubscription<Measurement> subscription =
       controller!.measurements.listen((Measurement measurement) {
-    // do something w. the datum, e.g. print the json
+    // do something w. the measurement, e.g. print the json
     print(JsonEncoder.withIndent(' ').convert(measurement));
   });
 
