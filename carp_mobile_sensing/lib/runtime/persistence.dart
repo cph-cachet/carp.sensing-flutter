@@ -11,7 +11,6 @@ class Persistence {
   static const String DATABASE_NAME = 'carp-data';
   static const String DEPLOYMENT_TABLENAME = 'deployment';
   static const String TASK_QUEUE_TABLENAME = 'task-queue';
-  // static const String MEASUREMENT_TABLENAME = 'measurements';
 
   static final Persistence _instance = Persistence._();
   Persistence._();
@@ -43,10 +42,8 @@ class Persistence {
         // when creating the database, create the tables
         await db.execute(
             'CREATE TABLE $DEPLOYMENT_TABLENAME (updated_at TEXT, deployment_id TEXT PRIMARY KEY, deployed_at TEXT, user_id TEXT, deployment TEXT)');
-        // await db.execute(
-        //     'CREATE TABLE $TASK_QUEUE_TABLENAME (created_at TEXT, deployment_id TEXT PRIMARY KEY, deployed_at TEXT, user_id TEXT, deployment TEXT)');
-        // await db.execute(
-        //     'CREATE TABLE $MEASUREMENT_TABLENAME (id INTEGER PRIMARY KEY, deployment_id TEXT, trigger_id INTEGER, device_rolename TEXT, data_type TEXT, measurement TEXT)');
+        await db.execute(
+            'CREATE TABLE $TASK_QUEUE_TABLENAME (task_id TEXT PRIMARY KEY, user_task TEXT)');
 
         debug('$runtimeType - SQLite DB created');
       },
@@ -54,6 +51,10 @@ class Persistence {
 
     // save the deployment if specified
     if (deployment != null) (deployment);
+
+    AppTaskController()
+        .userTaskEvents
+        .listen((task) => _userTaskHasChanged(task));
 
     info(
         '$runtimeType - SQLite DB opened and initialized - name: $databaseName');
@@ -69,7 +70,7 @@ class Persistence {
     info("$runtimeType - Saving deployment to database.");
     bool success = true;
     try {
-      Map<String, dynamic> map = {
+      final Map<String, dynamic> map = {
         'updated_at': DateTime.now().toUtc().toIso8601String(),
         'deployment_id': deployment.studyDeploymentId,
         'deployed_at': deployment.deployed?.toUtc().toIso8601String(),
@@ -91,15 +92,22 @@ class Persistence {
   /// Restore the [SmartphoneDeployment] with the [deploymentId] from local cache.
   /// Returns a [SmartphoneDeployment] if successful, null otherwise.
   Future<SmartphoneDeployment?> restoreDeployment(String deploymentId) async {
-    info("$runtimeType - Restoring deployment from database.");
+    info("$runtimeType - Restoring deployment, deploymentId: $deploymentId");
     SmartphoneDeployment? deployment;
     try {
+      // var sql =
+      //     "SELECT * FROM $DEPLOYMENT_TABLENAME WHERE deployment_id = '$deploymentId'";
+      // debug('$runtimeType - sql: $sql');
+
+      // final List<Map<String, Object?>>? maps = await database?.rawQuery(sql);
+
       final List<Map<String, Object?>>? maps = await database?.query(
         DEPLOYMENT_TABLENAME,
+        columns: ['deployment'],
         where: 'deployment_id = ?',
         whereArgs: [deploymentId],
       );
-      debug('$runtimeType - $maps');
+      debug('$runtimeType - maps: $maps');
       String jsonString = maps?[0]['deployment'] as String;
       deployment = SmartphoneDeployment.fromJson(
           json.decode(jsonString) as Map<String, dynamic>);
@@ -108,5 +116,9 @@ class Persistence {
     }
 
     return deployment;
+  }
+
+  void _userTaskHasChanged(UserTask task) {
+    var snapshot = UserTaskSnapshot.fromUserTask(task);
   }
 }

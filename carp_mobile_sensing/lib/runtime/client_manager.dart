@@ -50,11 +50,11 @@ class SmartPhoneClientManager extends ClientManager
   ///     Two alternatives exists; [FlutterLocalNotificationController] or [AwesomeNotificationController].
   ///     If not specified, the [AwesomeNotificationController] is used.
   @override
-  Future<DeviceRegistration> configure({
-    NotificationController? notificationController,
+  Future<void> configure({
     DeploymentService? deploymentService,
     DeviceDataCollectorFactory? deviceController,
-    String? deviceId,
+    DeviceRegistration? registration,
+    NotificationController? notificationController,
   }) async {
     // initialize device settings
     await DeviceInfo().init();
@@ -66,8 +66,12 @@ class SmartPhoneClientManager extends ClientManager
     DataManagerRegistry().register(FileDataManager());
     DataManagerRegistry().register(SQLiteDataManager());
 
-    // set default values, if not specified
-    deviceId ??= DeviceInfo().deviceID;
+    // create the device registration using the DeviceInfo
+    var registration = DeviceRegistration(
+      deviceId: DeviceInfo().deviceID,
+      deviceDisplayName: DeviceInfo().toString(),
+    );
+
     // _notificationController =
     //     notificationController ?? FlutterLocalNotificationController();
     _notificationController =
@@ -82,7 +86,7 @@ class SmartPhoneClientManager extends ClientManager
     print('===========================================================');
     print('  deployment service : ${this.deploymentService}');
     print('   device controller : ${this.deviceController}');
-    print('           device ID : $deviceId');
+    print('           device ID : ${registration.deviceId}');
     print('   available devices : ${this.deviceController.devicesToString()}');
     print(
         '         persistence : ${Persistence().databaseName.split('/').last}');
@@ -91,7 +95,7 @@ class SmartPhoneClientManager extends ClientManager
     return super.configure(
       deploymentService: this.deploymentService!,
       deviceController: this.deviceController,
-      deviceId: deviceId,
+      registration: registration,
     );
   }
 

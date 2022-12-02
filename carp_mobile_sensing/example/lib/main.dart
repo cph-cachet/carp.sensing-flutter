@@ -127,7 +127,10 @@ class Sensing {
     // create a study based on the protocol.
     SmartPhoneClientManager client = SmartPhoneClientManager();
     await client.configure();
-    study = await client.addStudyProtocol(protocol);
+    // study = await client.addStudyProtocol(protocol);
+
+    study = Study('de52b050-724e-11ed-80a8-87203b3d8fc2', 'primaryphone');
+    await client.addStudy(study!);
 
     // Get the study controller and try to deploy the study.
     //
@@ -137,7 +140,7 @@ class Sensing {
     // If not deployed before (i.e., cached) the study deployment will be
     // fetched from the deployment service.
     controller = client.getStudyRuntime(study!);
-    await controller?.tryDeployment(useCached: false);
+    await controller?.tryDeployment(useCached: true);
 
     // Configure the controller.
     //

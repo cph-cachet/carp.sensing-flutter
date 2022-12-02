@@ -110,8 +110,7 @@ class AppTaskController {
   ///
   /// [triggerTime] specifies when the task should trigger, i.e., be available.
   /// Notify the user if [sendNotification] and [notificationsEnabled] is true.
-  /// If [triggerTime] is null, a notification is send imediately.
-  /// [userTaskEvent] specifies if an app event should be generated.
+  /// If [triggerTime] is null, a notification is send immediately.
   ///
   /// Returns the [UserTask] added to the [userTasks].
   ///
@@ -120,7 +119,6 @@ class AppTaskController {
     AppTaskExecutor executor, {
     DateTime? triggerTime,
     bool sendNotification = true,
-    // bool userTaskEvent = true,
   }) async {
     if (_userTaskFactories[executor.task.type] == null) {
       warning(
@@ -134,7 +132,6 @@ class AppTaskController {
       userTask.enqueued = DateTime.now();
       userTask.triggerTime = triggerTime ?? DateTime.now();
       _userTaskMap[userTask.id] = userTask;
-      // if (userTaskEvent)
       _controller.add(userTask);
       debug('$runtimeType - Enqueued $userTask');
 

@@ -34,18 +34,18 @@ class ClientManager {
   ClientManager();
 
   /// Configure this [ClientManager] by specifying:
-  ///  * [deviceId] - register this client device in study deployments
   ///  * [deploymentService] - where to get study deployments
   ///  * [deviceController] that handles devices connected to this client
+  ///  * [registration] - a unique device registration for this client device
   @mustCallSuper
-  Future<DeviceRegistration> configure({
+  Future<void> configure({
     required DeploymentService deploymentService,
     required DeviceDataCollectorFactory deviceController,
-    required String? deviceId,
+    DeviceRegistration? registration,
   }) async {
     this.deploymentService = deploymentService;
     this.deviceController = deviceController;
-    return registration = DeviceRegistration(deviceId: deviceId);
+    this.registration = registration;
   }
 
   /// Get the status for the studies which run on this client device.

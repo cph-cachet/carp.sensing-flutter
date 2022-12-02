@@ -48,6 +48,10 @@ class DeviceInfo {
     }
   }
 
+  @override
+  String toString() =>
+      '$deviceID - $deviceModel ${deviceManufacturer?.toUpperCase()} [SDK $sdk]';
+
   Map<String, dynamic> _readAndroidDeviceInfo(AndroidDeviceInfo info) {
     platform = 'Android';
     hardware = info.hardware;

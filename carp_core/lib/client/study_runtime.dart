@@ -11,9 +11,13 @@ part of carp_core_client;
 class StudyRuntime {
   final List<DeviceConfiguration> _remainingDevicesToRegister = [];
   Study? _study;
+  DeviceRegistration? _deviceRegistration;
   StudyStatus _status = StudyStatus.DeploymentNotStarted;
   final StreamController<StudyStatus> _statusEventsController =
       StreamController();
+
+  /// The unique device registration for this device. Set in the [initialize] method.
+  DeviceRegistration? get deviceRegistration => _deviceRegistration;
 
   /// The study for this study runtime.
   Study? get study => _study;
@@ -36,14 +40,7 @@ class StudyRuntime {
   DeploymentService deploymentService;
 
   /// The latest known deployment status.
-  late StudyDeploymentStatus deploymentStatus;
-
-  /// The description of the device this runtime is intended for within the
-  /// deployment identified by [studyDeploymentId].
-  PrimaryDeviceConfiguration? device;
-
-  /// The device role name.
-  String? get deviceRoleName => device?.roleName;
+  StudyDeploymentStatus? deploymentStatus;
 
   /// The stream of [StudyStatus] events for this controller.
   Stream<StudyStatus> get statusEvents => _statusEventsController.stream;
@@ -89,18 +86,7 @@ class StudyRuntime {
   ) async {
     _study = study;
     _status = StudyStatus.DeploymentReceived;
-
-    // Register the primary device this study runs on for the given study deployment.
-    deploymentStatus = await deploymentService.registerDevice(
-      study.studyDeploymentId,
-      study.deviceRoleName,
-      deviceRegistration,
-    );
-
-    // Initialize runtime.
-    // this.studyDeploymentId = studyDeploymentId;
-    device = deploymentStatus.primaryDeviceStatus!.device
-        as PrimaryDeviceConfiguration?;
+    _deviceRegistration = deviceRegistration;
   }
 
   /// Verifies whether the primary device is ready for deployment and in case
@@ -111,7 +97,7 @@ class StudyRuntime {
   /// In case already deployed, nothing happens.
   Future<StudyStatus> tryDeployment() async {
     assert(
-        study != null && device != null,
+        study != null,
         'Cannot deploy without a valid study deployment id and device role name. '
         "Call 'initialize()' first.");
 
@@ -119,13 +105,21 @@ class StudyRuntime {
     if (status.index >= StudyStatus.Deployed.index) return status;
 
     _status = StudyStatus.Deploying;
+
+    // Register the primary device this study runs on for the given study deployment.
+    deploymentStatus = await deploymentService.registerDevice(
+      study!.studyDeploymentId,
+      study!.deviceRoleName,
+      deviceRegistration!,
+    );
+
     deploymentStatus = await deploymentService
         .getStudyDeploymentStatus(study!.studyDeploymentId);
 
     // get the deployment from the deployment service
     deployment = await deploymentService.getDeviceDeploymentFor(
       study!.studyDeploymentId,
-      device!.roleName,
+      study!.deviceRoleName,
     );
     _status = StudyStatus.DeploymentReceived;
 
@@ -135,7 +129,7 @@ class StudyRuntime {
     try {
       await deploymentService.deploymentSuccessfulFor(
         study!.studyDeploymentId,
-        device!.roleName,
+        study!.deviceRoleName,
         deployment?.lastUpdateDate ?? DateTime.now(),
       );
     } catch (error) {
@@ -187,11 +181,13 @@ class StudyRuntime {
   ///
   /// The [deploymentStatus] lists the devices needed to be deployed on this device.
   ///
-  /// This is a convinient method for synchronizing the devices neeeded for a
+  /// This is a convenient method for synchronizing the devices needed for a
   /// deployment and the available devices on this phone.
   Future<void> tryRegisterConnectedDevices() async {
-    for (var deviceStatus in deploymentStatus.deviceStatusList) {
-      await tryRegisterConnectedDevice(deviceStatus.device);
+    if (deploymentStatus != null) {
+      for (var deviceStatus in deploymentStatus!.deviceStatusList) {
+        await tryRegisterConnectedDevice(deviceStatus.device);
+      }
     }
   }
 
