@@ -59,6 +59,7 @@ class SmartPhoneClientManager extends ClientManager
     // initialize device settings
     await DeviceInfo().init();
     await Settings().init();
+    await Persistence().init();
 
     // create and register the built-in data managers
     DataManagerRegistry().register(ConsoleDataManager());
@@ -83,6 +84,8 @@ class SmartPhoneClientManager extends ClientManager
     print('   device controller : ${this.deviceController}');
     print('           device ID : $deviceId');
     print('   available devices : ${this.deviceController.devicesToString()}');
+    print(
+        '         persistence : ${Persistence().databaseName.split('/').last}');
     print('===========================================================');
 
     return super.configure(

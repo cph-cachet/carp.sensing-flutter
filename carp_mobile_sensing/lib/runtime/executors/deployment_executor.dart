@@ -7,13 +7,14 @@
 
 part of runtime;
 
-/// The [StudyDeploymentExecutor] is responsible for executing a [SmartphoneDeployment].
-/// For each triggered task in this deployment, it starts a [TaskControlExecutor].
+/// The [SmartphoneDeploymentExecutor] is responsible for executing a [SmartphoneDeployment].
+/// For each task control in this deployment, it starts a [TaskControlExecutor].
 ///
-/// Note that the [StudyDeploymentExecutor] in itself is an [Executor] and hence work
+/// Note that the [SmartphoneDeploymentExecutor] in itself is an [Executor] and hence work
 /// as a 'super executor'. This - amongst other things - imply that you can listen
-/// to data point from the [measurements] stream.
-class StudyDeploymentExecutor extends AggregateExecutor<SmartphoneDeployment> {
+/// to all collected measurements from the [measurements] stream.
+class SmartphoneDeploymentExecutor
+    extends AggregateExecutor<SmartphoneDeployment> {
   final StreamController<Measurement> _manualMeasurementController =
       StreamController.broadcast();
 

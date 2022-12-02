@@ -6,7 +6,7 @@
  */
 
 /// Contains classes for running the sensing framework incl.
-/// the [StudyDeploymentExecutor], [TaskExecutor] and different types of
+/// the [SmartphoneDeploymentExecutor], [TaskExecutor] and different types of
 /// [Probe]s.
 library runtime;
 
@@ -38,11 +38,12 @@ import 'package:battery_plus/battery_plus.dart';
 import 'package:timezone/data/latest_all.dart' as tz;
 import 'package:timezone/timezone.dart' as tz;
 import 'package:flutter_native_timezone/flutter_native_timezone.dart';
+import 'package:sqflite/sqflite.dart';
 
 part 'data_manager.dart';
 part 'device_manager.dart';
 part 'device_controller.dart';
-part 'executors/study_executor.dart';
+part 'executors/deployment_executor.dart';
 part 'executors/executor_factory.dart';
 part 'executors/executors.dart';
 part 'executors/trigger_executors.dart';
@@ -53,7 +54,7 @@ part 'user_tasks.dart';
 part 'executors/probes.dart';
 part 'sampling_package.dart';
 part 'settings.dart';
-part 'study_controller.dart';
+part 'deployment_controller.dart';
 part 'study_manager.dart';
 part 'deployment_service.dart';
 part 'client_manager.dart';
@@ -61,6 +62,7 @@ part 'notification/notification_controller.dart';
 part 'notification/local_notification_controller.dart';
 part 'notification/awesome_notification_controller.dart';
 part 'util/cron_parser.dart';
+part 'persistence.dart';
 part 'runtime.g.dart';
 
 /// Generic sensing exception.

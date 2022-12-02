@@ -11,7 +11,7 @@ class SmartphoneDeploymentController extends StudyRuntime {
   int _samplingSize = 0;
   DataManager? _dataManager;
   DataEndPoint? _dataEndPoint;
-  StudyDeploymentExecutor? _executor;
+  SmartphoneDeploymentExecutor? _executor;
   String _privacySchemaName = NameSpace.CARP;
   late DataTransformer _transformer;
 
@@ -25,7 +25,7 @@ class SmartphoneDeploymentController extends StudyRuntime {
       super.deviceRegistry as DeviceController;
 
   /// The executor executing this [masterDeployment].
-  StudyDeploymentExecutor? get executor => _executor;
+  SmartphoneDeploymentExecutor? get executor => _executor;
 
   /// The configuration of the data endpoint, i.e. how data is saved or uploaded.
   DataEndPoint? get dataEndPoint => _dataEndPoint;
@@ -57,9 +57,6 @@ class SmartphoneDeploymentController extends StudyRuntime {
             .transform(TransformerSchemaRegistry()
                 .lookup(privacySchemaName)!
                 .transform(measurement.data))));
-
-  // .map((dataPoint) =>
-  //     dataPoint..carpHeader.dataFormat = dataPoint.data!.format);
 
   /// A stream of all [measurements] of a specific data [type].
   Stream<Measurement> measurementsByType(String type) => measurements
@@ -108,68 +105,48 @@ class SmartphoneDeploymentController extends StudyRuntime {
     return status;
   }
 
-  String? _filename;
+  // String? _filename;
 
-  /// Current path and filename of the deployment file.
-  Future<String?> get filename async {
-    assert(studyDeploymentId != null,
-        'Study Deployment ID is null -- cannot find cached file.');
-    if (_filename == null) {
-      String? path = await Settings().getDeploymentBasePath(studyDeploymentId!);
-      _filename = '$path/deployment.json';
-    }
-    return _filename;
-  }
+  // /// Current path and filename of the deployment file.
+  // Future<String?> get filename async {
+  //   assert(studyDeploymentId != null,
+  //       'Study Deployment ID is null -- cannot find cached file.');
+  //   if (_filename == null) {
+  //     String? path = await Settings().getDeploymentBasePath(studyDeploymentId!);
+  //     _filename = '$path/deployment.json';
+  //   }
+  //   return _filename;
+  // }
 
-  /// Save the [deployment] persistently to a file cache.
+  /// Save the [deployment] persistently to a cache.
   /// Returns `true` if successful.
-  Future<bool> saveDeployment() async {
-    bool success = true;
-    try {
-      String name = (await filename)!;
-      info("Saving deployment to file '$name'.");
-      final json = jsonEncode(deployment);
-      File(name).writeAsStringSync(json);
-    } catch (exception) {
-      success = false;
-      warning('Failed to save deployment - $exception');
-    }
-    return success;
-  }
+  Future<bool> saveDeployment() async => (deployment != null)
+      ? await Persistence().saveDeployment(deployment!)
+      : false;
 
   /// Restore the [deployment] from a local file cache.
   /// Returns `true` if successful.
-  Future<bool> restoreDeployment() async {
-    bool success = true;
+  Future<bool> restoreDeployment() async => (studyDeploymentId != null)
+      ? (deployment =
+              await Persistence().restoreDeployment(studyDeploymentId!)) !=
+          null
+      : false;
 
-    try {
-      String name = (await filename)!;
-      info("Restoring deployment from file '$name'.");
-      String jsonString = File(name).readAsStringSync();
-      deployment = SmartphoneDeployment.fromJson(
-          json.decode(jsonString) as Map<String, dynamic>);
-    } catch (exception) {
-      success = false;
-      warning('Failed to load deployment - $exception');
-    }
-    return success;
-  }
+  // /// Erase all study deployment information cached locally on this phone.
+  // /// Returns `true` if successful.
+  // Future<bool> eraseDeployment() async {
+  //   bool success = true;
 
-  /// Erase all study deployment information cached locally on this phone.
-  /// Returns `true` if successful.
-  Future<bool> eraseDeployment() async {
-    bool success = true;
-
-    try {
-      String name = (await filename)!;
-      info("Erasing deployment cache from file '$name'.");
-      await File(name).delete();
-    } catch (exception) {
-      success = false;
-      warning('Failed to delete deployment - $exception');
-    }
-    return success;
-  }
+  //   try {
+  //     String name = (await filename)!;
+  //     info("Erasing deployment cache from file '$name'.");
+  //     await File(name).delete();
+  //   } catch (exception) {
+  //     success = false;
+  //     warning('Failed to delete deployment - $exception');
+  //   }
+  //   return success;
+  // }
 
   /// Configure this [SmartphoneDeploymentController].
   ///
@@ -188,7 +165,7 @@ class SmartphoneDeploymentController extends StudyRuntime {
   ///      events without saving the data.
   ///    * [privacySchemaName] - the name of a [PrivacySchema].
   ///      Use [PrivacySchema.DEFAULT] for the default, built-in schema.
-  ///      If  not specified, no privacy schema is used and data is saved as sensed.
+  ///      If  not specified, no privacy schema is used and data is saved as collected.
   ///    * [transformer] - a generic [DataTransformer] function which transform
   ///      each collected data item. If not specified, a 1:1 mapping is done,
   ///      i.e. no transformation.
@@ -218,7 +195,7 @@ class SmartphoneDeploymentController extends StudyRuntime {
     await AppTaskController()
         .initialize(enableNotifications: enableNotifications);
 
-    _executor = StudyDeploymentExecutor();
+    _executor = SmartphoneDeploymentExecutor();
 
     // initialize optional parameters
     _dataEndPoint = dataEndPoint ?? deployment!.dataEndPoint;

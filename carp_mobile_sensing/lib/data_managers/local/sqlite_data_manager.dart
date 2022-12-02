@@ -32,12 +32,10 @@ part of data_managers;
 /// not corrupted when an app is forced to close and to keep the size of db files
 /// down.
 class SQLiteDataManager extends AbstractDataManager {
-  static const String DATABASE_NAME = 'carp-data';
-  static const String META_DATA_TABLENAME = 'deployment';
   static const String MEASUREMENT_TABLENAME = 'measurements';
 
-  String? _databasePath;
-  Database? database;
+  String get databaseName => Persistence().databaseName;
+  Database? get database => Persistence().database;
 
   @override
   String get type => DataEndPointTypes.SQLITE;
@@ -52,62 +50,15 @@ class SQLiteDataManager extends AbstractDataManager {
     info('Initializing $runtimeType...');
     await super.initialize(deployment, dataEndPoint, measurements);
 
-    String path = await databasePath;
-    // open the database - make sure to use the same database across app (re)start
-    database = await openDatabase(path, version: 1, singleInstance: true,
-        onCreate: (Database db, int version) async {
-      // when creating the database, create the tables and add meta data about the deployment
-      await db.execute(
-          'CREATE TABLE $META_DATA_TABLENAME (created_at TEXT, deployment_id TEXT PRIMARY KEY, deployed_at TEXT, user_id TEXT, deployment TEXT)');
-      await db.execute(
+    // check to see if the measurements table is already created
+    List<Map<String, Object?>>? tables = await database?.query('sqlite_master',
+        where: 'name = ?', whereArgs: [MEASUREMENT_TABLENAME]);
+
+    if (tables == null || tables.isEmpty) {
+      debug("$runtimeType - Creating '$MEASUREMENT_TABLENAME' table");
+      await database?.execute(
           'CREATE TABLE $MEASUREMENT_TABLENAME (id INTEGER PRIMARY KEY, deployment_id TEXT, trigger_id INTEGER, device_rolename TEXT, data_type TEXT, measurement TEXT)');
-
-      String createdAt = DateTime.now().toUtc().toIso8601String();
-      String deploymentId = deployment.studyDeploymentId;
-      String? deployedAt = deployment.deployed?.toUtc().toIso8601String();
-      String? userId = deployment.userId;
-      String deploymentJson = jsonEncode(deployment);
-      String sql =
-          "INSERT INTO $META_DATA_TABLENAME(created_at, deployment_id, deployed_at, user_id, deployment) VALUES('$createdAt', '$deploymentId', '$deployedAt', '$userId', '$deploymentJson')";
-      await db.execute(sql);
-
-      debug('$runtimeType - SQLite DB created');
-    });
-
-    info('SQLite DB opened and initialized - path: $path');
-  }
-
-  // /// Full path and name of the DB according to this format:
-  // ///
-  // ///   `~/carp-data-yyyy-mm-dd-hh-mm-ss-ms.db`
-  // ///
-  // /// where the date is in UTC format / zulu time.
-  // Future<String> get databasePath async {
-  //   if (_databasePath == null) {
-  //     // get the location of the SQLite DB
-  //     String path = await getDatabasesPath();
-  //     final created = DateTime.now()
-  //         .toUtc()
-  //         .toString()
-  //         .replaceAll(RegExp(r':'), '-')
-  //         .replaceAll(RegExp(r' '), '-')
-  //         .replaceAll(RegExp(r'\.'), '-');
-
-  //     _databasePath = '$path/$DATABASE_NAME-$created.db';
-  //   }
-
-  //   return _databasePath!;
-  // }
-
-  /// Full path and name of the database.
-  Future<String> get databasePath async {
-    if (_databasePath == null) {
-      // get the location of the SQLite DB
-      String path = await getDatabasesPath();
-      _databasePath = '$path/$DATABASE_NAME.db';
     }
-
-    return _databasePath!;
   }
 
   @override

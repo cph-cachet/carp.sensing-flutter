@@ -76,7 +76,7 @@ class StudyRuntime {
   /// [deviceRegistry] to handle the devices used in this study deployment.
   StudyRuntime(this.deploymentService, this.deviceRegistry);
 
-  /// Intialize this study runtime by specifying its [study] and [deviceRegistration].
+  /// Initialize this study runtime by specifying its [study] and [deviceRegistration].
   ///
   /// [deviceRegistration] is the device configuration for the device this study
   /// runtime runs on, identified by [deviceRoleName] in the study deployment
