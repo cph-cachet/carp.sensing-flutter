@@ -95,12 +95,6 @@ class Persistence {
     info("$runtimeType - Restoring deployment, deploymentId: $deploymentId");
     SmartphoneDeployment? deployment;
     try {
-      // var sql =
-      //     "SELECT * FROM $DEPLOYMENT_TABLENAME WHERE deployment_id = '$deploymentId'";
-      // debug('$runtimeType - sql: $sql');
-
-      // final List<Map<String, Object?>>? maps = await database?.rawQuery(sql);
-
       final List<Map<String, Object?>>? maps = await database?.query(
         DEPLOYMENT_TABLENAME,
         columns: ['deployment'],
