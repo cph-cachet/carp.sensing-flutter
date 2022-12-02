@@ -134,10 +134,10 @@ void main() {
     expect(primaryProtocol.ownerId, 'user@dtu.dk');
     expect(primaryProtocol.primaryDevices.length, 1);
     expect(primaryProtocol.connectedDevices?.length, 1);
-    expect(primaryProtocol.triggers.length, 6);
+    expect(primaryProtocol.triggers.length, 7);
     expect(primaryProtocol.triggers.keys.first, '0');
-    expect(primaryProtocol.tasks.length, 5);
-    expect(primaryProtocol.taskControls.length, 6);
+    expect(primaryProtocol.tasks.length, 6);
+    expect(primaryProtocol.taskControls.length, 7);
     expect(primaryProtocol.expectedParticipantData?.length, 1);
   });
 
@@ -178,10 +178,10 @@ void main() {
     print(toJsonString(deployment));
     expect(deployment.deviceConfiguration.roleName, 'phone');
     expect(deployment.connectedDevices.length, 1);
-    expect(deployment.triggers.length, 6);
+    expect(deployment.triggers.length, 7);
     expect(deployment.triggers.keys.first, '0');
-    expect(deployment.tasks.length, 5);
-    expect(deployment.taskControls.length, 6);
+    expect(deployment.tasks.length, 6);
+    expect(deployment.taskControls.length, 7);
     expect(deployment.dataEndPoint?.type, DataEndPointTypes.SQLITE);
     expect(deployment.expectedParticipantData.length, 1);
     expect(deployment.getApplicationData('uiTheme'), 'black');

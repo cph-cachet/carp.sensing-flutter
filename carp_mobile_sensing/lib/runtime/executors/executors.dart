@@ -329,6 +329,14 @@ class _StartedState extends _AbstractExecutorState
       : super(executor as AbstractExecutor, ExecutorState.started);
 
   @override
+  void start() {
+    executor.onStart().then((started) {
+      if (started) executor._setState(_StartedState(executor));
+      executor._isStarting = false;
+    });
+  }
+
+  @override
   void restart() {
     executor.onRestart().then((restarted) {
       if (restarted) executor._setState(_InitializedState(executor));

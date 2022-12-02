@@ -8,11 +8,15 @@ import 'package:carp_serializable/carp_serializable.dart';
 import 'package:carp_core/carp_core.dart';
 import 'package:carp_mobile_sensing/carp_mobile_sensing.dart';
 import 'package:flutter/material.dart' hide TimeOfDay;
-import 'package:iso_duration_parser/iso_duration_parser.dart';
 
-void main() => runApp(CARPMobileSensingApp());
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  CarpMobileSensing().ensureInitialized();
+  runApp(CARPMobileSensingApp());
+}
 
 class CARPMobileSensingApp extends StatelessWidget {
+  @override
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'CARP Mobile Sensing Demo',
@@ -27,31 +31,34 @@ class CARPMobileSensingApp extends StatelessWidget {
 class ConsolePage extends StatefulWidget {
   final String title;
   ConsolePage({super.key, required this.title});
+  @override
   Console createState() => Console();
 }
 
 /// A simple UI with a console that shows the sensed data in a json format.
 class Console extends State<ConsolePage> {
   String _log = '';
-  Sensing? sensing;
+  Sensing sensing = Sensing();
 
+  @override
   void initState() {
     super.initState();
     sensing = Sensing();
     Settings().init().then((_) {
-      sensing!.init().then((_) {
-        log('Setting up study : ${sensing!.study}');
-        log('Deployment status : ${sensing!.status}');
+      sensing.init().then((_) {
+        log('Setting up study : ${sensing.study}');
+        log('Deployment status : ${sensing.status}');
       });
     });
   }
 
   @override
   void dispose() {
-    sensing!.stop();
+    sensing.stop();
     super.dispose();
   }
 
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
@@ -59,7 +66,7 @@ class Console extends State<ConsolePage> {
       ),
       body: SingleChildScrollView(
         child: StreamBuilder(
-          stream: sensing?.controller?.measurements,
+          stream: sensing.controller?.measurements,
           builder: (context, AsyncSnapshot<Measurement> snapshot) {
             if (snapshot.hasData) _log += '${toJsonString(snapshot.data!)}\n';
             return Text(_log);
@@ -69,7 +76,7 @@ class Console extends State<ConsolePage> {
       floatingActionButton: FloatingActionButton(
         onPressed: restart,
         tooltip: 'Start/Stop study',
-        child: sensing!.isRunning ? Icon(Icons.stop) : Icon(Icons.play_arrow),
+        child: sensing.isRunning ? Icon(Icons.stop) : Icon(Icons.play_arrow),
       ),
     );
   }
@@ -88,11 +95,11 @@ class Console extends State<ConsolePage> {
 
   void restart() {
     setState(() {
-      if (sensing!.isRunning) {
-        sensing!.stop();
+      if (sensing.isRunning) {
+        sensing.stop();
         log('\nSensing stopped ...');
       } else {
-        sensing!.start();
+        sensing.start();
         log('\nSensing started ...');
       }
     });
@@ -166,9 +173,11 @@ class Sensing {
 /// This class shows how to configure a [StudyProtocol] with Triggers,
 /// Tasks and Measures.
 class LocalStudyProtocolManager implements StudyProtocolManager {
+  @override
   Future<void> initialize() async {}
 
   /// Create a new CAMS study protocol.
+  @override
   Future<SmartphoneStudyProtocol> getStudyProtocol(String id) async {
     // Create a protocol. Note that the [id] is not used for anything.
     SmartphoneStudyProtocol protocol = SmartphoneStudyProtocol(
@@ -224,45 +233,45 @@ class LocalStudyProtocolManager implements StudyProtocolManager {
     //   Control.Start,
     // );
 
-    // Collect device info
-    protocol.addTaskControl(
-      ImmediateTrigger(),
-      BackgroundTask(measures: [
-        Measure(type: DeviceSamplingPackage.DEVICE_INFORMATION_TYPE_NAME)
-      ]),
-      phone,
-      Control.Start,
-    );
-
-    // var task_1 = BackgroundTask(
-    //   measures: [
-    //     Measure(type: CarpDataTypes.STEP_COUNT_TYPE_NAME),
-    //     // Measure(type: CarpDataTypes.ACCELERATION_TYPE_NAME),
-    //     // Measure(type: CarpDataTypes.ROTATION_TYPE_NAME),
-    //   ],
-    // );
-
-    // var task_2 = BackgroundTask(
-    //   measures: [
-    //     Measure(type: DeviceSamplingPackage.BATTERY_STATE_TYPE_NAME),
-    //   ],
-    // );
-
-    // // Collect IMU data
-    // protocol.addTaskControls(
+    // // Collect device info
+    // protocol.addTaskControl(
     //   ImmediateTrigger(),
-    //   [task_1, task_2],
+    //   BackgroundTask(measures: [
+    //     Measure(type: DeviceSamplingPackage.DEVICE_INFORMATION_TYPE_NAME)
+    //   ]),
     //   phone,
     //   Control.Start,
     // );
 
-    // // After a while, stop it again
-    // protocol.addTaskControl(
-    //   DelayedTrigger(delay: Duration(seconds: 20)),
-    //   task_1,
-    //   phone,
-    //   Control.Stop,
-    // );
+    var task_1 = BackgroundTask(
+      measures: [
+        // Measure(type: CarpDataTypes.STEP_COUNT_TYPE_NAME),
+        Measure(type: CarpDataTypes.ACCELERATION_TYPE_NAME),
+        // Measure(type: CarpDataTypes.ROTATION_TYPE_NAME),
+      ],
+    );
+
+    var task_2 = BackgroundTask(
+      measures: [
+        Measure(type: DeviceSamplingPackage.BATTERY_STATE_TYPE_NAME),
+      ],
+    );
+
+    // Collect IMU data
+    protocol.addTaskControls(
+      ImmediateTrigger(),
+      [task_1, task_2],
+      phone,
+      Control.Start,
+    );
+
+    // After a while, stop it again
+    protocol.addTaskControl(
+      DelayedTrigger(delay: Duration(seconds: 20)),
+      task_1,
+      phone,
+      Control.Stop,
+    );
 
     // // Collect device info periodically
     // protocol.addTaskControl(
@@ -368,6 +377,7 @@ class LocalStudyProtocolManager implements StudyProtocolManager {
     return protocol;
   }
 
+  @override
   Future<bool> saveStudyProtocol(String studyId, StudyProtocol protocol) async {
     throw UnimplementedError();
   }

@@ -17,10 +17,18 @@ part 'carp_mobile_sensing.json.dart';
 
 class CarpMobileSensing {
   static final _instance = CarpMobileSensing._();
-  factory CarpMobileSensing() => _instance;
+
   CarpMobileSensing._() {
     Core();
     CAMSDataType();
     _registerFromJsonFunctions();
   }
+
+  /// The singleton [CarpMobileSensing] instance.
+  factory CarpMobileSensing() => _instance;
+
+  /// Returns a the singleton instance of [CarpMobileSensing].
+  /// If it has not yet been initialized, this call makes sure to create and
+  /// initialize it.
+  CarpMobileSensing ensureInitialized() => _instance;
 }

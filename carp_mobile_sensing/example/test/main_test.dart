@@ -10,34 +10,21 @@ import '../lib/main.dart';
 
 void main() {
   late SmartphoneStudyProtocol primaryProtocol;
-  late Smartphone primaryPhone;
-  DeviceConfiguration eSense;
 
   setUp(() async {
-    // Initialization of serialization
     CarpMobileSensing();
-
-    // Create a new study protocol.
     primaryProtocol = await LocalStudyProtocolManager().getStudyProtocol('');
   });
 
   test('SmartphoneStudyProtocol -> JSON', () async {
     print(primaryProtocol.applicationData);
     print(toJsonString(primaryProtocol));
-    expect(primaryProtocol.ownerId, 'user@dtu.dk');
-    expect(primaryProtocol.primaryDevices.length, 1);
-    expect(primaryProtocol.connectedDevices?.length, 1);
-    expect(primaryProtocol.triggers.length, 6);
-    expect(primaryProtocol.triggers.keys.first, '0');
-    expect(primaryProtocol.tasks.length, 5);
-    expect(primaryProtocol.taskControls.length, 6);
-    expect(primaryProtocol.expectedParticipantData?.length, 1);
+    expect(primaryProtocol.ownerId, 'AB');
   });
 
   test(
       'SmartphoneStudyProtocol -> JSON -> SmartphoneStudyProtocol :: deep assert',
       () async {
-    // print('#1 : $primaryProtocol');
     print(toJsonString(primaryProtocol));
     final studyJson = toJsonString(primaryProtocol);
 
@@ -45,21 +32,20 @@ void main() {
         json.decode(studyJson) as Map<String, dynamic>);
     print(toJsonString(protocolFromJson));
     expect(toJsonString(protocolFromJson), equals(studyJson));
-    // print('#2 : $protocolFromJson');
   });
 
-  test('JSON File -> SmartphoneStudyProtocol', () async {
-    // Read the study protocol from json file
-    String plainJson = File('test/json/study_protocol.json').readAsStringSync();
+  // test('JSON File -> SmartphoneStudyProtocol', () async {
+  //   // Read the study protocol from json file
+  //   String plainJson = File('test/json/study_protocol.json').readAsStringSync();
 
-    SmartphoneStudyProtocol protocol = SmartphoneStudyProtocol.fromJson(
-        json.decode(plainJson) as Map<String, dynamic>);
+  //   SmartphoneStudyProtocol protocol = SmartphoneStudyProtocol.fromJson(
+  //       json.decode(plainJson) as Map<String, dynamic>);
 
-    expect(protocol.ownerId, primaryProtocol.ownerId);
-    expect(protocol.primaryDevices.first.roleName,
-        SmartphoneDeploymentService().thisPhone.roleName);
-    print(toJsonString(protocol));
-  });
+  //   expect(protocol.ownerId, primaryProtocol.ownerId);
+  //   expect(protocol.primaryDevices.first.roleName,
+  //       SmartphoneDeploymentService().thisPhone.roleName);
+  //   print(toJsonString(protocol));
+  // });
 
   test('SmartphoneDeployment -> JSON', () async {
     var deployment = SmartphoneDeployment.fromSmartphoneStudyProtocol(
