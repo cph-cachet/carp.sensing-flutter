@@ -41,13 +41,11 @@ void sensing() async {
   SmartPhoneClientManager client = SmartPhoneClientManager();
   await client.configure();
 
-  Study study = Study(
+  // add the study and get the study runtime (controller)
+  Study study = await client.addStudy(
     status.studyDeploymentId,
     status.primaryDeviceStatus!.device.roleName,
   );
-
-  // add the study and get the study runtime (controller)
-  await client.addStudy(study);
   SmartphoneDeploymentController? controller = client.getStudyRuntime(study);
   // deploy the study on this phone
   await controller?.tryDeployment();

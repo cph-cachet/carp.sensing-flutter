@@ -405,19 +405,19 @@ void main() {
     print(status_1);
     assert(status_1.status == StudyDeploymentStatusTypes.Invited);
 
-    StudyDeploymentStatus status_2 = await (SmartphoneDeploymentService()
+    StudyDeploymentStatus? status_2 = await (SmartphoneDeploymentService()
         .registerDevice(
             status_1.studyDeploymentId, 'esense', DeviceRegistration()));
     print(status_2);
-    assert(status_2.studyDeploymentId == status_1.studyDeploymentId);
-    assert(status_2.status == StudyDeploymentStatusTypes.DeployingDevices);
+    assert(status_2?.studyDeploymentId == status_1.studyDeploymentId);
+    assert(status_2?.status == StudyDeploymentStatusTypes.DeployingDevices);
     assert(status_2 == status_1);
 
-    StudyDeploymentStatus status_3 = await SmartphoneDeploymentService()
+    StudyDeploymentStatus? status_3 = await SmartphoneDeploymentService()
         .registerDevice(
             status_1.studyDeploymentId, 'nonsense', DeviceRegistration());
-    assert(status_3.status == StudyDeploymentStatusTypes.DeployingDevices);
-    assert(status_3.studyDeploymentId == status_1.studyDeploymentId);
+    assert(status_3?.status == StudyDeploymentStatusTypes.DeployingDevices);
+    assert(status_3?.studyDeploymentId == status_1.studyDeploymentId);
     print(status_3);
   });
 
@@ -440,39 +440,40 @@ void main() {
     expect(status_1.deviceStatusList[1].status,
         DeviceDeploymentStatusTypes.Unregistered);
 
-    StudyDeploymentStatus status_2 = await SmartphoneDeploymentService()
+    StudyDeploymentStatus? status_2 = await SmartphoneDeploymentService()
         .registerDevice(
             status_1.studyDeploymentId, 'esense', DeviceRegistration());
 
     print(status_2);
     print(toJsonString(status_2));
-    expect(status_2.studyDeploymentId, status_1.studyDeploymentId);
+    expect(status_2?.studyDeploymentId, status_1.studyDeploymentId);
     expect(status_1.deviceStatusList[1].device.roleName, 'esense');
     // now we expect the esense device to be registred
     expect(status_1.deviceStatusList[1].status,
         DeviceDeploymentStatusTypes.Registered);
 
-    SmartphoneDeployment deployment = await SmartphoneDeploymentService()
+    SmartphoneDeployment? deployment = await SmartphoneDeploymentService()
         .getDeviceDeployment(status_1.studyDeploymentId);
     print(deployment);
     print(toJsonString(deployment));
-    expect(deployment.studyDeploymentId, status_1.studyDeploymentId);
-    expect(deployment.tasks.length, primaryProtocol.tasks.length);
-    expect(deployment.triggers.length, primaryProtocol.triggers.length);
-    expect(deployment.taskControls.length, primaryProtocol.taskControls.length);
+    expect(deployment?.studyDeploymentId, status_1.studyDeploymentId);
+    expect(deployment?.tasks.length, primaryProtocol.tasks.length);
+    expect(deployment?.triggers.length, primaryProtocol.triggers.length);
+    expect(
+        deployment?.taskControls.length, primaryProtocol.taskControls.length);
 
-    StudyDeploymentStatus status_3 = await SmartphoneDeploymentService()
+    StudyDeploymentStatus? status_3 = await SmartphoneDeploymentService()
         .deploymentSuccessful(status_1.studyDeploymentId);
-    expect(status_3.status, StudyDeploymentStatusTypes.DeploymentReady);
-    expect(status_3.studyDeploymentId, status_1.studyDeploymentId);
+    expect(status_3?.status, StudyDeploymentStatusTypes.DeploymentReady);
+    expect(status_3?.studyDeploymentId, status_1.studyDeploymentId);
     print(status_3);
     print(toJsonString(status_3));
     expect(
-      status_3.deviceStatusList[0].status,
+      status_3?.deviceStatusList[0].status,
       DeviceDeploymentStatusTypes.Deployed,
     );
     expect(
-      status_3.deviceStatusList[1].status,
+      status_3?.deviceStatusList[1].status,
       DeviceDeploymentStatusTypes.Deployed,
     );
   });

@@ -152,27 +152,26 @@ void carpCoreClientExample() async {
   // Configure the client by specifying the deployment service, the device controller,
   // and a unique device id.
   client.configure(
-    deploymentService: deploymentService!,
-    deviceController: deviceRegistry!,
-    deviceId: "xxxxxxxxx",
-  );
+      deploymentService: deploymentService!,
+      deviceController: deviceRegistry!,
+      registration: DeviceRegistration(
+        deviceId: 'xxxxx',
+        deviceDisplayName: "Pixel 6 Pro (Android 12)",
+      ));
 
-  Study study = Study(studyDeploymentId!, deviceToUse!);
-  StudyStatus status = await client.addStudy(study);
+  Study study = await client.addStudy(studyDeploymentId!, deviceToUse!);
 
   // Register connected devices in case needed.
-  if (status == StudyStatus.RegisteringDevices) {
-    var connectedDevice = study.deviceRoleName;
-    var connectedRegistration = client.registration;
-    deploymentService.registerDevice(
-      studyDeploymentId,
-      connectedDevice,
-      connectedRegistration!,
-    );
+  var connectedDevice = study.deviceRoleName;
+  var connectedRegistration = client.registration;
+  deploymentService.registerDevice(
+    studyDeploymentId,
+    connectedDevice,
+    connectedRegistration!,
+  );
 
-    // Try deployment now that devices have been registered.
-    StudyStatus status = await client.tryDeployment(study);
-    var isDeployed = status == StudyStatus.Deployed;
-    assert(isDeployed, true);
-  }
+  // Try deployment now that devices have been registered.
+  StudyStatus status = await client.tryDeployment(study);
+  var isDeployed = status == StudyStatus.Deployed;
+  assert(isDeployed, true);
 }

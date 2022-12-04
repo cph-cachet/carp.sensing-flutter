@@ -28,7 +28,8 @@ abstract class DeploymentService {
   Future<Set<String>> removeStudyDeployments(Set<String> studyDeploymentIds);
 
   /// Get the status for a study deployment with the given [studyDeploymentId].
-  Future<StudyDeploymentStatus> getStudyDeploymentStatus(
+  /// Returns null if [studyDeploymentId] is not found.
+  Future<StudyDeploymentStatus?> getStudyDeploymentStatus(
       String studyDeploymentId);
 
   /// Get the statuses for a set of deployments with the specified [studyDeploymentIds].
@@ -39,7 +40,8 @@ abstract class DeploymentService {
   /// deployment with [studyDeploymentId].
   ///
   /// [registration] is a matching configuration for the device with [deviceRoleName].
-  Future<StudyDeploymentStatus> registerDevice(
+  /// Returns null if [studyDeploymentId] is not found.
+  Future<StudyDeploymentStatus?> registerDevice(
     String studyDeploymentId,
     String deviceRoleName,
     DeviceRegistration registration,
@@ -47,14 +49,16 @@ abstract class DeploymentService {
 
   /// Unregister the device with the specified [deviceRoleName] for the study
   /// deployment with [studyDeploymentId].
-  Future<StudyDeploymentStatus> unregisterDevice(
+  /// Returns null if [studyDeploymentId] is not found.
+  Future<StudyDeploymentStatus?> unregisterDevice(
     String studyDeploymentId,
     String deviceRoleName,
   );
 
   /// Get the deployment configuration for the primary device with
   /// [primaryDeviceRoleName] in the study deployment with [studyDeploymentId].
-  Future<PrimaryDeviceDeployment> getDeviceDeploymentFor(
+  /// Returns null if [studyDeploymentId] is not found.
+  Future<PrimaryDeviceDeployment?> getDeviceDeploymentFor(
     String studyDeploymentId,
     String primaryDeviceRoleName,
   );
@@ -65,15 +69,14 @@ abstract class DeploymentService {
   /// i.e., that the study deployment was loaded on the device and that the
   /// necessary runtime is available to run it.
   ///
-  /// Throws an error when:
+  /// Returns null when:
   ///
   ///  - a deployment with [studyDeploymentId] does not exist
   ///  - [primaryDeviceRoleName] is not present in the deployment
   ///  - the [deviceDeploymentLastUpdateDate] does not match the expected date.
   ///    The deployment might be outdated.
   ///  - the deployment cannot be deployed yet, or the deployment has stopped.
-  ///
-  Future<StudyDeploymentStatus> deploymentSuccessfulFor(
+  Future<StudyDeploymentStatus?> deploymentSuccessfulFor(
     String studyDeploymentId,
     String primaryDeviceRoleName,
     DateTime deviceDeploymentLastUpdateDate,
@@ -81,6 +84,7 @@ abstract class DeploymentService {
 
   /// Permanently stop the study deployment with the specified [studyDeploymentId].
   /// No further changes to this deployment will be allowed and no more data
-  /// will be collected.
-  Future<StudyDeploymentStatus> stop(String studyDeploymentId);
+  /// can be collected and uploaded to a [DataStreamService].
+  /// Returns null if [studyDeploymentId] is not found.
+  Future<StudyDeploymentStatus?> stop(String studyDeploymentId);
 }

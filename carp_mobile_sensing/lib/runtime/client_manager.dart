@@ -7,7 +7,8 @@
 
 part of runtime;
 
-class SmartPhoneClientManager extends ClientManager
+class SmartPhoneClientManager
+    extends ClientManager<Smartphone, SmartphoneDeviceRegistration>
     with WidgetsBindingObserver {
   static final SmartPhoneClientManager _instance = SmartPhoneClientManager._();
   NotificationController? _notificationController;
@@ -53,10 +54,11 @@ class SmartPhoneClientManager extends ClientManager
   Future<void> configure({
     DeploymentService? deploymentService,
     DeviceDataCollectorFactory? deviceController,
-    DeviceRegistration? registration,
+    Smartphone? configuration,
+    SmartphoneDeviceRegistration? registration,
     NotificationController? notificationController,
   }) async {
-    // initialize device settings
+    // initialize misc device settings
     await DeviceInfo().init();
     await Settings().init();
     await Persistence().init();
@@ -67,41 +69,59 @@ class SmartPhoneClientManager extends ClientManager
     DataManagerRegistry().register(SQLiteDataManager());
 
     // create the device registration using the DeviceInfo
-    var registration = DeviceRegistration(
+    registration ??= SmartphoneDeviceRegistration(
       deviceId: DeviceInfo().deviceID,
       deviceDisplayName: DeviceInfo().toString(),
+      platform: DeviceInfo().platform,
+      hardware: DeviceInfo().hardware,
+      deviceName: DeviceInfo().deviceName,
+      deviceManufacturer: DeviceInfo().deviceManufacturer,
+      deviceModel: DeviceInfo().deviceModel,
+      operatingSystem: DeviceInfo().operatingSystem,
+      sdk: DeviceInfo().sdk,
+      release: DeviceInfo().release,
     );
 
+    // initialize default services, if not specified
     // _notificationController =
     //     notificationController ?? FlutterLocalNotificationController();
     _notificationController =
         notificationController ?? AwesomeNotificationController();
-    this.deploymentService = deploymentService ?? SmartphoneDeploymentService();
-    this.deviceController = deviceController ?? DeviceController();
+    deploymentService ??= SmartphoneDeploymentService();
+    deviceController ??= DeviceController();
 
+    super.configure(
+      deploymentService: deploymentService,
+      deviceController: deviceController,
+      configuration: configuration,
+      registration: registration,
+    );
+
+    // look up and register all connected devices and services on this client
     this.deviceController.registerAllAvailableDevices();
 
     print('===========================================================');
     print('  CARP Mobile Sensing (CAMS) - $runtimeType');
     print('===========================================================');
-    print('  deployment service : ${this.deploymentService}');
+    // print('           device ID : ${registration.deviceId}');
+    print('              device : ${registration.deviceDisplayName}');
     print('   device controller : ${this.deviceController}');
-    print('           device ID : ${registration.deviceId}');
     print('   available devices : ${this.deviceController.devicesToString()}');
     print(
         '         persistence : ${Persistence().databaseName.split('/').last}');
+    print('  deployment service : ${this.deploymentService}');
     print('===========================================================');
-
-    return super.configure(
-      deploymentService: this.deploymentService!,
-      deviceController: this.deviceController,
-      registration: registration,
-    );
   }
 
   @override
-  Future<StudyStatus> addStudy(Study study) async {
-    StudyStatus status = await super.addStudy(study);
+  Future<Study> addStudy(
+    String studyDeploymentId,
+    String deviceRoleName,
+  ) async {
+    Study study = await super.addStudy(
+      studyDeploymentId,
+      deviceRoleName,
+    );
     info('Adding study to $runtimeType - $study');
 
     SmartphoneDeploymentController controller =
@@ -113,12 +133,12 @@ class SmartPhoneClientManager extends ClientManager
       registration!,
     );
 
-    return status;
+    return study;
   }
 
   /// Create and add a study based on the [protocol] which needs to be executed on
-  /// this client. This is similar to the [addStudy] method, but deploying the
-  /// [protocol] immediately.
+  /// this client. This is similar to the [addStudy] method, but the [protocol]
+  /// is deployed immediately.
   ///
   /// Returns the newly added study.
   Future<Study> addStudyProtocol(StudyProtocol protocol) async {
@@ -127,12 +147,10 @@ class SmartPhoneClientManager extends ClientManager
 
     StudyDeploymentStatus status =
         await deploymentService!.createStudyDeployment(protocol);
-    Study study = Study(
+    Study study = await addStudy(
       status.studyDeploymentId,
       status.primaryDeviceStatus!.device.roleName,
     );
-
-    await addStudy(study);
     return study;
   }
 
@@ -156,9 +174,6 @@ class SmartPhoneClientManager extends ClientManager
   @protected
   @mustCallSuper
   Future<void> deactivate() async {
-    // first save the task queue
-    AppTaskController().saveQueue();
-    // then save all studies
     for (var study in repository.keys) {
       await getStudyRuntime(study)?.saveDeployment();
     }
@@ -179,5 +194,23 @@ class SmartPhoneClientManager extends ClientManager
         activate();
         break;
     }
+  }
+
+  /// Called when this client is disposed permanently.
+  ///
+  /// When this method is called, the client is never used again. It is an error
+  /// to call any of the [start] or [stop] methods at this point.
+  ///
+  /// Subclasses should override this method to release any resources retained
+  /// by this client.
+  /// Implementations of this method should end with a call to the inherited
+  /// method, as in `super.dispose()`.
+  @protected
+  @mustCallSuper
+  void dispose() {
+    for (var study in repository.keys) {
+      getStudyRuntime(study)?.dispose();
+    }
+    Persistence().close();
   }
 }

@@ -211,8 +211,6 @@ class SmartphoneDeployment extends PrimaryDeviceDeployment
   /// By being able to separate who collects (and potentially uploads) a data
   /// point from who the data point belongs to, allows for one user to collect
   /// data on behalf of another user. For example, a parent on behalf of a child.
-  ///
-  /// This user id is stored in the [DataPointHeader] as the [userId].
   String? userId;
 
   /// Create a new [SmartphoneDeployment].
@@ -229,15 +227,14 @@ class SmartphoneDeployment extends PrimaryDeviceDeployment
     super.triggers,
     super.taskControls,
     super.expectedParticipantData,
+    this.userId,
     StudyDescription? protocolDescription,
     DataEndPoint? dataEndPoint,
-    // Map<String, dynamic>? applicationData,
   }) {
     _studyDeploymentId = studyDeploymentId ?? Uuid().v1();
     _data = SmartphoneApplicationData(
       studyDescription: protocolDescription,
       dataEndPoint: dataEndPoint,
-      // applicationData: applicationData,
     );
   }
 
@@ -245,6 +242,7 @@ class SmartphoneDeployment extends PrimaryDeviceDeployment
   /// a [SmartphoneStudyProtocol].
   SmartphoneDeployment.fromPrimaryDeviceDeployment({
     String? studyDeploymentId,
+    this.userId,
     required PrimaryDeviceDeployment primaryDeviceDeployment,
     required SmartphoneStudyProtocol protocol,
   }) : super(
@@ -270,6 +268,7 @@ class SmartphoneDeployment extends PrimaryDeviceDeployment
   /// a deployment.
   SmartphoneDeployment.fromSmartphoneStudyProtocol({
     String? studyDeploymentId,
+    this.userId,
     required String primaryDeviceRoleName,
     required SmartphoneStudyProtocol protocol,
   }) : super(

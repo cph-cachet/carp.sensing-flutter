@@ -115,14 +115,11 @@ void example_1() async {
   SmartPhoneClientManager client = SmartPhoneClientManager();
   await client.configure(deploymentService: deploymentService);
 
-  // Create a study object based on the deployment id and the rolename
-  Study study = Study(
+  // Add the study to the client manager and get a study runtime to control this deployment
+  Study study = await client.addStudy(
     status.studyDeploymentId,
     status.primaryDeviceStatus!.device.roleName,
   );
-
-  // Add the study to the client manager and get a study runtime to control this deployment
-  await client.addStudy(study);
   SmartphoneDeploymentController? controller = client.getStudyRuntime(study);
 
   // Deploy the study on this phone.
@@ -205,13 +202,11 @@ void example_2() async {
   SmartPhoneClientManager client = SmartPhoneClientManager();
   await client.configure(deploymentService: deploymentService);
 
-  Study study = Study(
+  // create a study runtime to control this deployment
+  Study study = await client.addStudy(
     status.studyDeploymentId,
     status.primaryDeviceStatus!.device.roleName,
   );
-
-  // create a study runtime to control this deployment
-  await client.addStudy(study);
   SmartphoneDeploymentController? controller = client.getStudyRuntime(study);
 
   // deploy the study on this phone (controller)
@@ -301,11 +296,11 @@ void example_3() async {
   String studyDeploymentId = '2938y4h-rfhklwe98-erhui';
 
   // get the status of this deployment
-  StudyDeploymentStatus status = await SmartphoneDeploymentService()
+  StudyDeploymentStatus? status = await SmartphoneDeploymentService()
       .getStudyDeploymentStatus(studyDeploymentId);
 
   // register the needed devices - listed in the deployment status
-  status.deviceStatusList.forEach((deviceStatus) async {
+  status?.deviceStatusList.forEach((deviceStatus) async {
     String type = deviceStatus.device.type;
     String deviceRoleName = deviceStatus.device.roleName;
 
@@ -326,7 +321,7 @@ void example_3() async {
   });
 
   // now get the study deployment for this master device and its registered devices
-  SmartphoneDeployment deployment = await SmartphoneDeploymentService()
+  SmartphoneDeployment? deployment = await SmartphoneDeploymentService()
       .getDeviceDeployment(studyDeploymentId);
 
   print(deployment);
@@ -515,10 +510,8 @@ void study_controller_example() async {
 
   await client.configure();
 
-  Study study = Study('1234', 'master_phone');
-
   // add the study and get the study runtime (controller)
-  await client.addStudy(study);
+  Study study = await client.addStudy('1234', 'master_phone');
   SmartphoneDeploymentController? controller = client.getStudyRuntime(study);
 
   // configure the controller with the default privacy schema and start sampling

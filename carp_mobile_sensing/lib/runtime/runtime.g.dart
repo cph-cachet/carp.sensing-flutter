@@ -6,29 +6,6 @@ part of runtime;
 // JsonSerializableGenerator
 // **************************************************************************
 
-UserTaskSnapshotList _$UserTaskSnapshotListFromJson(
-        Map<String, dynamic> json) =>
-    UserTaskSnapshotList()
-      ..$type = json['__type'] as String?
-      ..snapshots = (json['snapshots'] as List<dynamic>)
-          .map((e) => UserTaskSnapshot.fromJson(e as Map<String, dynamic>))
-          .toList();
-
-Map<String, dynamic> _$UserTaskSnapshotListToJson(
-    UserTaskSnapshotList instance) {
-  final val = <String, dynamic>{};
-
-  void writeNotNull(String key, dynamic value) {
-    if (value != null) {
-      val[key] = value;
-    }
-  }
-
-  writeNotNull('__type', instance.$type);
-  val['snapshots'] = instance.snapshots;
-  return val;
-}
-
 UserTaskSnapshot _$UserTaskSnapshotFromJson(Map<String, dynamic> json) =>
     UserTaskSnapshot(
       json['id'] as String,

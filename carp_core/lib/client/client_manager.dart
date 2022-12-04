@@ -1,5 +1,5 @@
 /*
- * Copyright 2021 Copenhagen Center for Health Technology (CACHET) at the
+ * Copyright 2021-2022 Copenhagen Center for Health Technology (CACHET) at the
  * Technical University of Denmark (DTU).
  * Use of this source code is governed by a MIT-style license that can be
  * found in the LICENSE file.
@@ -8,12 +8,16 @@
 part of carp_core_client;
 
 /// Allows managing [StudyRuntime]s on a client device.
-class ClientManager {
-  /// Repository within which the state of this client is stored.
+class ClientManager<TPrimaryDevice extends PrimaryDeviceConfiguration,
+    TRegistration extends DeviceRegistration> {
+  /// Repository of [StudyRuntime] mapped to a [Study].
   Map<Study, StudyRuntime> repository = {};
 
-  /// The registration of this client device.
-  DeviceRegistration? registration;
+  /// The device configuration of this client.
+  TPrimaryDevice? configuration;
+
+  /// The registration of this client.
+  TRegistration? registration;
 
   /// The application service through which study deployments, to be run on
   /// this client, can be managed and retrieved.
@@ -36,15 +40,18 @@ class ClientManager {
   /// Configure this [ClientManager] by specifying:
   ///  * [deploymentService] - where to get study deployments
   ///  * [deviceController] that handles devices connected to this client
+  ///  * [configuration] - the primary device configuration for this client
   ///  * [registration] - a unique device registration for this client device
   @mustCallSuper
   Future<void> configure({
     required DeploymentService deploymentService,
     required DeviceDataCollectorFactory deviceController,
-    DeviceRegistration? registration,
+    TPrimaryDevice? configuration,
+    TRegistration? registration,
   }) async {
     this.deploymentService = deploymentService;
     this.deviceController = deviceController;
+    this.configuration = configuration;
     this.registration = registration;
   }
 
@@ -60,14 +67,18 @@ class ClientManager {
   ///  * [deviceRoleName] - The role which the client device this runtime is
   ///    intended for plays as part of the deployment identified by [studyDeploymentId].
   ///
-  /// Returns the [StudyStatus] of the newly added study.
+  /// Returns the added study.
   @mustCallSuper
-  Future<StudyStatus> addStudy(Study study) async {
+  Future<Study> addStudy(
+    String studyDeploymentId,
+    String deviceRoleName,
+  ) async {
     assert(isConfigured,
         'The client manager has not been configured yet. Call configure() first.');
+    Study study = Study(studyDeploymentId, deviceRoleName);
     assert(!repository.containsKey(study),
         'A study with the same study deployment ID and device role name has already been added.');
-    return StudyStatus.DeploymentNotStarted;
+    return study;
   }
 
   /// Verifies whether the device is ready for deployment of the study runtime
@@ -75,10 +86,12 @@ class ClientManager {
   /// In case already deployed, nothing happens.
   @mustCallSuper
   Future<StudyStatus> tryDeployment(Study study) async {
-    StudyRuntime runtime = repository[study]!;
+    StudyRuntime? runtime = repository[study];
+    assert(runtime != null,
+        'No runtime for this study found. Has this study been added using the addStudy method?');
 
     // Early out in case this runtime has already received and validated deployment information.
-    if (runtime.status.index >= StudyStatus.Deployed.index) {
+    if (runtime!.status.index >= StudyStatus.Deployed.index) {
       return runtime.status;
     }
 
@@ -95,7 +108,7 @@ class ClientManager {
   ) =>
       repository[Study(studyDeploymentId, deviceRoleName)];
 
-  /// Permanently stop collecting data for the study runtime identified by [studyRuntimeId].
+  /// Stop collecting data for the study runtime identified by [studyRuntimeId].
   @mustCallSuper
   void stopStudy(Study studyRuntimeId) async =>
       repository[studyRuntimeId]?.stop();

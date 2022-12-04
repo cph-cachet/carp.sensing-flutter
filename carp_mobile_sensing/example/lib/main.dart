@@ -55,7 +55,7 @@ class Console extends State<ConsolePage> {
 
   @override
   void dispose() {
-    sensing.stop();
+    sensing.dispose();
     super.dispose();
   }
 
@@ -113,6 +113,7 @@ class Console extends State<ConsolePage> {
 /// Flutter app. See e.g. the CARP Mobile Sensing App.
 class Sensing {
   SmartphoneDeploymentController? controller;
+  SmartPhoneClientManager? client;
   Study? study;
 
   /// Initialize sensing.
@@ -125,12 +126,12 @@ class Sensing {
 
     // Create and configure a client manager for this phone, and
     // create a study based on the protocol.
-    SmartPhoneClientManager client = SmartPhoneClientManager();
-    await client.configure();
-    // study = await client.addStudyProtocol(protocol);
+    client = SmartPhoneClientManager();
+    await client?.configure();
 
-    study = Study('de52b050-724e-11ed-80a8-87203b3d8fc2', 'primaryphone');
-    await client.addStudy(study!);
+    study = await client?.addStudyProtocol(protocol);
+    // study = Study('723bbe80-72f7-11ed-b085-d1a8db32944b', 'primaryphone');
+    // await client.addStudy(study!);
 
     // Get the study controller and try to deploy the study.
     //
@@ -139,7 +140,7 @@ class Sensing {
     // be used pr. default.
     // If not deployed before (i.e., cached) the study deployment will be
     // fetched from the deployment service.
-    controller = client.getStudyRuntime(study!);
+    controller = client?.getStudyRuntime(study!);
     await controller?.tryDeployment(useCached: true);
 
     // Configure the controller.
@@ -170,6 +171,9 @@ class Sensing {
 
   /// Stop sensing
   void stop() async => controller?.executor?.stop();
+
+  /// Dispose sensing
+  void dispose() async => client?.dispose();
 }
 
 /// This is a simple local [StudyProtocolManager].

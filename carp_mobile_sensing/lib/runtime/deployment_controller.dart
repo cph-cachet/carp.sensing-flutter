@@ -15,7 +15,6 @@ class SmartphoneDeploymentController extends StudyRuntime {
   String _privacySchemaName = NameSpace.CARP;
   late DataTransformer _transformer;
 
-  /// The study deployment running in this controller.
   @override
   SmartphoneDeployment? get deployment =>
       super.deployment as SmartphoneDeployment?;
@@ -24,7 +23,7 @@ class SmartphoneDeploymentController extends StudyRuntime {
   DeviceController get deviceRegistry =>
       super.deviceRegistry as DeviceController;
 
-  /// The executor executing this [masterDeployment].
+  /// The executor executing the [deployment].
   SmartphoneDeploymentExecutor? get executor => _executor;
 
   /// The configuration of the data endpoint, i.e. how data is saved or uploaded.
@@ -64,8 +63,8 @@ class SmartphoneDeploymentController extends StudyRuntime {
 
   // PowerAwarenessState powerAwarenessState = NormalSamplingState.instance;
 
-  /// The sampling size of this [deployment] in terms of number of [DataPoint]
-  /// objects that has been collected.
+  /// The sampling size of this [deployment] in terms of number of [Measurement]
+  /// that has been collected.
   int get samplingSize => _samplingSize;
 
   /// Create a new [SmartphoneDeploymentController] to control the runtime behavior
@@ -101,22 +100,12 @@ class SmartphoneDeploymentController extends StudyRuntime {
     // and save a local cache
     status = await super.tryDeployment();
     if (status == StudyStatus.Deployed) deployment!.deployed = DateTime.now();
+    // if no user is specified for this study, look up the local user id
+    deployment!.userId ??= await Settings().userId;
     await saveDeployment();
+
     return status;
   }
-
-  // String? _filename;
-
-  // /// Current path and filename of the deployment file.
-  // Future<String?> get filename async {
-  //   assert(studyDeploymentId != null,
-  //       'Study Deployment ID is null -- cannot find cached file.');
-  //   if (_filename == null) {
-  //     String? path = await Settings().getDeploymentBasePath(studyDeploymentId!);
-  //     _filename = '$path/deployment.json';
-  //   }
-  //   return _filename;
-  // }
 
   /// Save the [deployment] persistently to a cache.
   /// Returns `true` if successful.
@@ -131,22 +120,6 @@ class SmartphoneDeploymentController extends StudyRuntime {
               await Persistence().restoreDeployment(studyDeploymentId!)) !=
           null
       : false;
-
-  // /// Erase all study deployment information cached locally on this phone.
-  // /// Returns `true` if successful.
-  // Future<bool> eraseDeployment() async {
-  //   bool success = true;
-
-  //   try {
-  //     String name = (await filename)!;
-  //     info("Erasing deployment cache from file '$name'.");
-  //     await File(name).delete();
-  //   } catch (exception) {
-  //     success = false;
-  //     warning('Failed to delete deployment - $exception');
-  //   }
-  //   return success;
-  // }
 
   /// Configure this [SmartphoneDeploymentController].
   ///
@@ -193,7 +166,7 @@ class SmartphoneDeploymentController extends StudyRuntime {
 
     // initialize the app task controller singleton
     await AppTaskController()
-        .initialize(enableNotifications: enableNotifications);
+        .initialize(deployment!, enableNotifications: enableNotifications);
 
     _executor = SmartphoneDeploymentExecutor();
 
@@ -210,9 +183,6 @@ class SmartphoneDeploymentController extends StudyRuntime {
       warning(
           "No data manager for the specified data endpoint found: '${deployment?.dataEndPoint}'.");
     }
-
-    // if no user is specified for this study, look up the local user id
-    deployment!.userId ??= await Settings().userId;
 
     // setting up permissions
     if (askForPermissions) await askForAllPermissions();
@@ -304,21 +274,30 @@ class SmartphoneDeploymentController extends StudyRuntime {
         '$runtimeType - Cannot start this controller, since the the runtime is not initialized. '
         'Call the configure() method first.');
 
-    info('Starting data sampling ...');
+    info('$runtimeType - Starting data sampling ...');
     super.start();
     if (start) _executor!.start();
   }
 
   /// Stop the sampling.
-  ///
-  /// Once a controller is stopped it **cannot** be (re)started.
   @override
   void stop() {
-    info('Stopping data sampling ...');
-    // disablePowerAwareness();
-    _dataManager?.close();
+    info('$runtimeType - Stopping data sampling ...');
     _executor!.stop();
     super.stop();
+  }
+
+  /// Called when this controller is disposed permanently.
+  ///
+  /// When this method is called, the controller is never used again. It is an error
+  /// to call any of the [start] or [stop] methods at this point.
+  @protected
+  @mustCallSuper
+  void dispose() {
+    info('$runtimeType - Disposing ...');
+    saveDeployment();
+    stop();
+    dataManager?.close();
   }
 }
 

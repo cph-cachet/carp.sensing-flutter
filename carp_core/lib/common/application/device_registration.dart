@@ -119,3 +119,37 @@ class AltBeaconDeviceRegistration extends DeviceRegistration {
   @override
   Map<String, dynamic> toJson() => _$AltBeaconDeviceRegistrationToJson(this);
 }
+
+/// A [DeviceRegistration] for [Smartphone] specifying details of the phone.
+@JsonSerializable(fieldRename: FieldRename.none, includeIfNull: true)
+class SmartphoneDeviceRegistration extends DeviceRegistration {
+  String? platform;
+  String? hardware;
+  String? deviceName;
+  String? deviceManufacturer;
+  String? deviceModel;
+  String? operatingSystem;
+  String? sdk;
+  String? release;
+
+  SmartphoneDeviceRegistration({
+    super.deviceId,
+    super.deviceDisplayName,
+    super.registrationCreatedOn,
+    this.platform,
+    this.hardware,
+    this.deviceName,
+    this.deviceManufacturer,
+    this.deviceModel,
+    this.operatingSystem,
+    this.sdk,
+    this.release,
+  });
+
+  @override
+  Function get fromJsonFunction => _$SmartphoneDeviceRegistrationFromJson;
+  factory SmartphoneDeviceRegistration.fromJson(Map<String, dynamic> json) =>
+      FromJsonFactory().fromJson(json) as SmartphoneDeviceRegistration;
+  @override
+  Map<String, dynamic> toJson() => _$SmartphoneDeviceRegistrationToJson(this);
+}

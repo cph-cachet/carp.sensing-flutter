@@ -7,10 +7,12 @@
 
 part of runtime;
 
+/// A persistence layer that knows how to persistently store deployment and app
+/// task information across app restart.
 class Persistence {
   static const String DATABASE_NAME = 'carp-data';
   static const String DEPLOYMENT_TABLENAME = 'deployment';
-  static const String TASK_QUEUE_TABLENAME = 'task-queue';
+  static const String TASK_QUEUE_TABLENAME = 'taskqueue';
 
   static final Persistence _instance = Persistence._();
   Persistence._();
@@ -29,6 +31,7 @@ class Persistence {
     }
   }
 
+  /// Initialize the persistence layer and the database.
   Future<void> init([SmartphoneDeployment? deployment]) async {
     info('Initializing $runtimeType...');
     await _initDatabasePath();
@@ -41,25 +44,24 @@ class Persistence {
       onCreate: (Database db, int version) async {
         // when creating the database, create the tables
         await db.execute(
-            'CREATE TABLE $DEPLOYMENT_TABLENAME (updated_at TEXT, deployment_id TEXT PRIMARY KEY, deployed_at TEXT, user_id TEXT, deployment TEXT)');
+            'CREATE TABLE $DEPLOYMENT_TABLENAME (deployment_id TEXT PRIMARY KEY, updated_at TEXT, deployed_at TEXT, user_id TEXT, deployment TEXT)');
         await db.execute(
-            'CREATE TABLE $TASK_QUEUE_TABLENAME (task_id TEXT PRIMARY KEY, user_task TEXT)');
+            'CREATE TABLE $TASK_QUEUE_TABLENAME (deployment_id TEXT PRIMARY KEY, task_id TEXT, task TEXT)');
 
         debug('$runtimeType - SQLite DB created');
       },
     );
 
     // save the deployment if specified
-    if (deployment != null) (deployment);
+    if (deployment != null) saveDeployment(deployment);
 
-    AppTaskController()
-        .userTaskEvents
-        .listen((task) => _userTaskHasChanged(task));
+    // listen to changes to the app task queue so we can save them
+    AppTaskController().userTaskEvents.listen((task) => saveUserTask(task));
 
-    info(
-        '$runtimeType - SQLite DB opened and initialized - name: $databaseName');
+    info('$runtimeType - SQLite DB initialized - name: $databaseName');
   }
 
+  /// Called when the app is closing.
   Future<void> close() async {
     await database?.close();
   }
@@ -71,8 +73,8 @@ class Persistence {
     bool success = true;
     try {
       final Map<String, dynamic> map = {
-        'updated_at': DateTime.now().toUtc().toIso8601String(),
         'deployment_id': deployment.studyDeploymentId,
+        'updated_at': DateTime.now().toUtc().toIso8601String(),
         'deployed_at': deployment.deployed?.toUtc().toIso8601String(),
         'user_id': deployment.userId,
         'deployment': jsonEncode(deployment),
@@ -101,7 +103,7 @@ class Persistence {
         where: 'deployment_id = ?',
         whereArgs: [deploymentId],
       );
-      debug('$runtimeType - maps: $maps');
+      // debug('$runtimeType - maps: $maps');
       String jsonString = maps?[0]['deployment'] as String;
       deployment = SmartphoneDeployment.fromJson(
           json.decode(jsonString) as Map<String, dynamic>);
@@ -112,7 +114,63 @@ class Persistence {
     return deployment;
   }
 
-  void _userTaskHasChanged(UserTask task) {
-    var snapshot = UserTaskSnapshot.fromUserTask(task);
+  /// Update or delete a task queue entry.
+  Future<void> saveUserTask(UserTask task) async {
+    debug("$runtimeType - Saving task to database '$task'.");
+    switch (task.state) {
+      case UserTaskState.initialized:
+      case UserTaskState.enqueued:
+      case UserTaskState.started:
+      case UserTaskState.canceled:
+      case UserTaskState.done:
+      case UserTaskState.expired:
+      case UserTaskState.undefined:
+        // all these cases we need to create or update the record
+        var snapshot = UserTaskSnapshot.fromUserTask(task);
+        final Map<String, dynamic> map = {
+          'deployment_id': task.studyDeploymentId,
+          'task_id': task.id,
+          'task': jsonEncode(snapshot),
+        };
+        await database?.insert(
+          TASK_QUEUE_TABLENAME,
+          map,
+          conflictAlgorithm: ConflictAlgorithm.replace,
+        );
+        break;
+
+      case UserTaskState.dequeued:
+        await database?.delete(
+          TASK_QUEUE_TABLENAME,
+          where: 'task_id = ?',
+          whereArgs: [task.id],
+        );
+        break;
+    }
+  }
+
+  /// Get the list of [UserTaskSnapshot] for [studyDeploymentId].
+  Future<List<UserTaskSnapshot>> getUserTasks(
+    String studyDeploymentId,
+  ) async {
+    List<UserTaskSnapshot> result = [];
+    try {
+      final List<Map<String, Object?>>? list = await database?.query(
+        TASK_QUEUE_TABLENAME,
+        columns: ['user_task'],
+        where: 'deployment_id = ?',
+        whereArgs: [studyDeploymentId],
+      );
+      debug('$runtimeType - list: $list');
+      if (list != null && list.isNotEmpty) {
+        for (var element in list) {
+          result.add(UserTaskSnapshot.fromJson(element));
+        }
+      }
+    } catch (exception) {
+      warning('$runtimeType - Failed to load task queue - $exception');
+    }
+
+    return result;
   }
 }

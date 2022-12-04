@@ -33,6 +33,11 @@ part of data_managers;
 /// down.
 class SQLiteDataManager extends AbstractDataManager {
   static const String MEASUREMENT_TABLENAME = 'measurements';
+  static const String DEPLOYMENT_ID_COLUMN = 'deployment_id';
+  static const String TRIGGER_ID_COLUMN = 'trigger_id';
+  static const String ROLENAME_COLUMN = 'device_rolename';
+  static const String DTATYPE_COLUMN = 'data_type';
+  static const String MEASUREMENT_COLUMN = 'measurement';
 
   String get databaseName => Persistence().databaseName;
   Database? get database => Persistence().database;
@@ -57,22 +62,36 @@ class SQLiteDataManager extends AbstractDataManager {
     if (tables == null || tables.isEmpty) {
       debug("$runtimeType - Creating '$MEASUREMENT_TABLENAME' table");
       await database?.execute(
-          'CREATE TABLE $MEASUREMENT_TABLENAME (id INTEGER PRIMARY KEY, deployment_id TEXT, trigger_id INTEGER, device_rolename TEXT, data_type TEXT, measurement TEXT)');
+          'CREATE TABLE $MEASUREMENT_TABLENAME (id INTEGER PRIMARY KEY, $DEPLOYMENT_ID_COLUMN TEXT, $TRIGGER_ID_COLUMN INTEGER, $ROLENAME_COLUMN TEXT, $DTATYPE_COLUMN TEXT, $MEASUREMENT_COLUMN TEXT)');
     }
   }
 
   @override
   Future<void> onMeasurement(Measurement measurement) async {
-    String deploymentId = deployment.studyDeploymentId;
-    int triggerId = measurement.taskControl?.triggerId ?? 0;
-    String rolename = measurement.taskControl?.targetDevice?.roleName ??
-        deployment.deviceConfiguration.roleName;
-    String datatype = measurement.dataType.toString();
-    String measurementJson = jsonEncode(measurement);
-    String sql =
-        "INSERT INTO $MEASUREMENT_TABLENAME(deployment_id, trigger_id, device_rolename, data_type, measurement) VALUES('$deploymentId', '$triggerId', '$rolename', '$datatype', '$measurementJson')";
+    final Map<String, dynamic> map = {
+      DEPLOYMENT_ID_COLUMN: deployment.studyDeploymentId,
+      TRIGGER_ID_COLUMN: measurement.taskControl?.triggerId ?? 0,
+      ROLENAME_COLUMN: measurement.taskControl?.targetDevice?.roleName ??
+          deployment.deviceConfiguration.roleName,
+      DTATYPE_COLUMN: measurement.dataType.toString(),
+      MEASUREMENT_COLUMN: jsonEncode(measurement),
+    };
+    int? id = await database?.insert(
+      MEASUREMENT_TABLENAME,
+      map,
+      conflictAlgorithm: ConflictAlgorithm.replace,
+    );
 
-    int? id = await database?.rawInsert(sql);
+    // String deploymentId = deployment.studyDeploymentId;
+    // int triggerId = measurement.taskControl?.triggerId ?? 0;
+    // String rolename = measurement.taskControl?.targetDevice?.roleName ??
+    //     deployment.deviceConfiguration.roleName;
+    // String datatype = measurement.dataType.toString();
+    // String measurementJson = jsonEncode(measurement);
+    // String sql =
+    //     "INSERT INTO $MEASUREMENT_TABLENAME(deployment_id, trigger_id, device_rolename, data_type, measurement) VALUES('$deploymentId', '$triggerId', '$rolename', '$datatype', '$measurementJson')";
+
+    // int? id = await database?.rawInsert(sql);
     debug(
         '$runtimeType - writing data point to SQLite - id: $id, type: ${measurement.data.format}');
   }

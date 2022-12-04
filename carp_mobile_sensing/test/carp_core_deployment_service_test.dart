@@ -49,10 +49,10 @@ void main() {
 
     StudyDeploymentStatus status =
         await SmartphoneDeploymentService().createStudyDeployment(protocol);
-    SmartphoneDeployment deployment = await SmartphoneDeploymentService()
+    SmartphoneDeployment? deployment = await SmartphoneDeploymentService()
         .getDeviceDeployment(status.studyDeploymentId);
 
-    expect(status.studyDeploymentId, deployment.studyDeploymentId);
+    expect(status.studyDeploymentId, deployment?.studyDeploymentId);
     print(toJsonString(deployment));
   });
 }

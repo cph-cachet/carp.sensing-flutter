@@ -7,7 +7,8 @@
 
 part of carp_core_client;
 
-/// Manage data collection for a specific primary device [deployment] on a client device.
+/// Manage data collection for a specific primary device [deployment] on a
+/// client device.
 class StudyRuntime {
   final List<DeviceConfiguration> _remainingDevicesToRegister = [];
   Study? _study;
@@ -39,7 +40,8 @@ class StudyRuntime {
   /// Use the [initialize] method to initialize this service.
   DeploymentService deploymentService;
 
-  /// The latest known deployment status.
+  /// The latest known deployment status retrieved from the [deploymentService].
+  /// Null if not know.
   StudyDeploymentStatus? deploymentStatus;
 
   /// The stream of [StudyStatus] events for this controller.
@@ -63,8 +65,8 @@ class StudyRuntime {
   /// Has the study and data collection been stopped?
   bool get isStopped => (_status == StudyStatus.Stopped);
 
-  /// The list of devices that still remain to be registrered before all devices
-  /// in this study runtime is registrered.
+  /// The list of devices that still remain to be registered before all devices
+  /// in this study runtime is registered.
   List<DeviceConfiguration> get remainingDevicesToRegister =>
       _remainingDevicesToRegister;
 
@@ -85,7 +87,7 @@ class StudyRuntime {
     DeviceRegistration deviceRegistration,
   ) async {
     _study = study;
-    _status = StudyStatus.DeploymentReceived;
+    _status = StudyStatus.DeviceDeploymentReceived;
     _deviceRegistration = deviceRegistration;
   }
 
@@ -104,44 +106,49 @@ class StudyRuntime {
     // early out if already deployed.
     if (status.index >= StudyStatus.Deployed.index) return status;
 
-    _status = StudyStatus.Deploying;
-
-    // Register the primary device this study runs on for the given study deployment.
-    deploymentStatus = await deploymentService.registerDevice(
-      study!.studyDeploymentId,
-      study!.deviceRoleName,
-      deviceRegistration!,
-    );
-
+    // get the status of this deployment.
     deploymentStatus = await deploymentService
         .getStudyDeploymentStatus(study!.studyDeploymentId);
 
-    // get the deployment from the deployment service
-    deployment = await deploymentService.getDeviceDeploymentFor(
-      study!.studyDeploymentId,
-      study!.deviceRoleName,
-    );
-    _status = StudyStatus.DeploymentReceived;
+    if (deploymentStatus == null) {
+      print(
+          "$runtimeType - Could not get deployment with id '${study!.studyDeploymentId}' from the deployment service: $deploymentService");
+    } else {
+      _status = StudyStatus.Deploying;
 
-    // TODO - set _remainingDevicesToRegister
-
-    // mark this deployment as successful
-    try {
-      await deploymentService.deploymentSuccessfulFor(
+      // get the deployment from the deployment service
+      deployment = await deploymentService.getDeviceDeploymentFor(
         study!.studyDeploymentId,
         study!.deviceRoleName,
-        deployment?.lastUpdateDate ?? DateTime.now(),
       );
-    } catch (error) {
-      // we only print a warning
-      // see issue #50 - there is a bug in CARP
-      print(
-          "$runtimeType - Error marking deployment '${study!.studyDeploymentId}' as successful.\n$error");
-    }
-    print(
-        "$runtimeType - Study deployment '${study!.studyDeploymentId}' successfully deployed.");
+      _status = StudyStatus.DeviceDeploymentReceived;
 
-    _status = StudyStatus.Deployed;
+      // Register the primary device this study runs on for the given study deployment.
+      deploymentStatus = await deploymentService.registerDevice(
+        study!.studyDeploymentId,
+        study!.deviceRoleName,
+        deviceRegistration!,
+      );
+
+      // TODO - set _remainingDevicesToRegister
+
+      // mark this deployment as successful
+      try {
+        await deploymentService.deploymentSuccessfulFor(
+          study!.studyDeploymentId,
+          study!.deviceRoleName,
+          deployment?.lastUpdateDate ?? DateTime.now(),
+        );
+      } catch (error) {
+        // we only print a warning
+        // see issue #50 - there is a bug in CARP
+        print(
+            "$runtimeType - Error marking deployment '${study!.studyDeploymentId}' as successful.\n$error");
+      }
+      print(
+          "$runtimeType - Study deployment '${study!.studyDeploymentId}' successfully deployed.");
+      _status = StudyStatus.Deployed;
+    }
 
     return _status;
   }
@@ -192,18 +199,14 @@ class StudyRuntime {
   }
 
   /// Start collecting data for this [StudyRuntime].
+  @mustCallSuper
   void start() {
     _status = StudyStatus.Running;
   }
 
-  /// Permanently stop collecting data for this [StudyRuntime].
-  /// Once a runtime is stopped it **cannot** be (re)started.
+  /// Stop collecting data for this [StudyRuntime].
+  @mustCallSuper
   void stop() {
-    // Early out in case study has already been stopped.
-    if (status == StudyStatus.Stopped) return;
-
-    // Stop study deployment.
-    deploymentService.stop(study!.studyDeploymentId);
     _status = StudyStatus.Stopped;
   }
 }

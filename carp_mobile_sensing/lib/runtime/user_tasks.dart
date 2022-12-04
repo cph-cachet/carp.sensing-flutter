@@ -49,6 +49,8 @@ abstract class UserTask {
   /// The [AppTask] from which this user task originates from.
   AppTask get task => _executor.task;
 
+  String? get studyDeploymentId =>
+      appTaskExecutor.deployment?.studyDeploymentId;
   String id = Uuid().v1();
   String get type => task.type;
   String get name => task.name;

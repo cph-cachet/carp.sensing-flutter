@@ -205,5 +205,5 @@ class SerializationException implements Exception {
 }
 
 /// A convient function to convert a Dart object into a formatted JSON string.
-String toJsonString(Object object) =>
+String toJsonString(Object? object) =>
     const JsonEncoder.withIndent(' ').convert(object);

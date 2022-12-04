@@ -34,23 +34,26 @@ class Study {
       '$runtimeType - studyDeploymentId: $studyDeploymentId, deviceRoleName: $deviceRoleName';
 }
 
-/// Describes the possible status' of a [StudyRuntime].
+/// Describes the status of a [StudyRuntime].
 enum StudyStatus {
   /// The study deployment process hasn't been started yet.
   DeploymentNotStarted,
 
   /// The study deployment process is ongoing, but not yet completed.
-  /// The state of the deployment can be tracked using [deploymentStatus].
   Deploying,
+
+  /// Deployment information for this primary device cannot be retrieved yet since
+  /// other primary devices in the study deployment need to be registered first.
+  AwaitingOtherDeviceRegistrations,
 
   /// The study deployment is ready to deliver the deployment information to
   /// this primary device.
   AwaitingDeviceDeployment,
 
   /// Deployment information has been received.
-  DeploymentReceived,
+  DeviceDeploymentReceived,
 
-  /// Deployment can complete after [remainingDevicesToRegister] have been registered.
+  /// Deployment can complete after all devices have been registered.
   RegisteringDevices,
 
   /// Study runtime status when deployment has been successfully completed.
@@ -61,6 +64,6 @@ enum StudyStatus {
   /// The study is resumed and is sampling data.
   Running,
 
-  /// The deployment has been stopped, either by this client or researcher.
+  /// The study has been stopped, either by this client or researcher.
   Stopped,
 }
