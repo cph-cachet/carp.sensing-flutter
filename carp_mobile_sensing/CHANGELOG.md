@@ -1,3 +1,8 @@
+## 0.40.7
+
+* PR [#294](https://github.com/cph-cachet/carp.sensing-flutter/pull/294).
+* []().
+
 ## 0.40.6
 
 * Addition of `USER_ACCELEROMETER` measure (issue [#283](https://github.com/cph-cachet/carp.sensing-flutter/issues/283)).
