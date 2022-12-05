@@ -43,15 +43,13 @@ class AppUsageProbe extends DatumProbe {
   @override
   Future<Datum> getDatum() async {
     // get the last mark - if null, go back as specified in history
-
     DateTime start = samplingConfiguration.lastTime ??
         DateTime.now().subtract(samplingConfiguration.past);
     DateTime end = DateTime.now();
 
     debug(
         'Collecting app usage - start: ${start.toUtc()}, end: ${end.toUtc()}');
-    List<AppUsageInfo> infos = await AppUsage.getAppUsage(start, end);
-
+    List<AppUsageInfo> infos = await AppUsage().getAppUsage(start, end);
 
     // Create maps for several sets of information
     Map<String, int> usage = {};
@@ -67,12 +65,12 @@ class AppUsageProbe extends DatumProbe {
       lastUseForeground[inf.packageName] = inf.lastForeground;
     }
 
-    AppUsageDatum toReturn=(AppUsageDatum(start.toUtc(), end.toUtc())..usage = usage);
-    toReturn.stopRange=stopRange;
-    toReturn.startRange=startRange;
-    toReturn.lastUseForeground=lastUseForeground;
+    AppUsageDatum toReturn =
+        (AppUsageDatum(start.toUtc(), end.toUtc())..usage = usage);
+    toReturn.stopRange = stopRange;
+    toReturn.startRange = startRange;
+    toReturn.lastUseForeground = lastUseForeground;
+
     return toReturn;
   }
-
-
 }

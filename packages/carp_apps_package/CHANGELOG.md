@@ -1,3 +1,7 @@
+## 0.40.1
+
+* update to `app_usage` v. 2.1.0
+
 ## 0.40.0
 
 * update to `carp_mobile_sensing` v. 0.40.0
