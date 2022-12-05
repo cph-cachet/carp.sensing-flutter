@@ -73,9 +73,9 @@ class BufferingUserAccelerometerProbe extends BufferingSensorProbe {
 
   @override
   void onSamplingData(event) {
-    if (event is AccelerometerEvent) {
+    if (event is UserAccelerometerEvent) {
       datum.addDatum(
-          AccelerometerDatum.fromAccelerometerEvent(event, multiDatum: true));
+          UserAccelerometerDatum.fromUserAccelerometerEvent(event, multiDatum: true));
     }
   }
 }
