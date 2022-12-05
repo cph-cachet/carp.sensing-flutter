@@ -1,7 +1,6 @@
 ## 0.40.7
 
-* PR [#294](https://github.com/cph-cachet/carp.sensing-flutter/pull/294).
-* []().
+* Fix of `BufferingUserAccelerometerProbe` error.
 
 ## 0.40.6
 

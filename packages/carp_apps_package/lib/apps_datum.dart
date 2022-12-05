@@ -37,6 +37,9 @@ class AppUsageDatum extends Datum {
 
   /// A map of names of apps and their usage in seconds.
   Map<String, int> usage = {};
+  Map<String,DateTime> startRange={};
+  Map<String,DateTime>stopRange={};
+  Map<String,DateTime>lastUseForeground={};
 
   AppUsageDatum(this.start, this.end) : super();
 
@@ -48,5 +51,5 @@ class AppUsageDatum extends Datum {
 
   @override
   String toString() =>
-      '${super.toString()}, start: $start, end: $end, usage: $usage';
+      '${super.toString()}, start: $start, end: $end, stopRange: $stopRange, startRange: $startRange , usage: $usage, lastUseForeground: $lastUseForeground';
 }
