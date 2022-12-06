@@ -23,7 +23,7 @@ class ImmediateTrigger extends TriggerConfiguration {
 /// A trigger that triggers once during a deployment.
 ///
 /// In contrast to [ImmediateTrigger], which triggers every time the app is (re)started,
-/// this [OneTimeTrigger] only triggers *once* during the life-time of an app.
+/// this [OneTimeTrigger] only triggers *once* during the life-time of a deployment.
 /// Useful for triggering e.g., a demographic survey or collecting device
 /// information.
 @JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
@@ -55,10 +55,6 @@ class PassiveTrigger extends TriggerConfiguration {
   late TriggerExecutor executor;
 
   /// Called when this trigger is to be triggered.
-  ///
-  /// Triggering implies that all tasks in this trigger is started,
-  /// which again implies that all [Measure]s in these tasks are collected.
-  /// Therefore, all measures to be started should be 'bundled' into this trigger.
   void trigger() => executor.onTrigger();
 
   @override
@@ -69,8 +65,7 @@ class PassiveTrigger extends TriggerConfiguration {
   Map<String, dynamic> toJson() => _$PassiveTriggerToJson(this);
 }
 
-/// A trigger that delays sampling for [delay] and then starts sampling.
-/// Never stops sampling once started.
+/// A trigger that triggers after [delay] from the (re)start of the app.
 ///
 /// The delay is measured from the **start of sensing**, i.e. typically when
 /// the `start()` method is called on a [SmartphoneDeploymentController].
@@ -79,7 +74,7 @@ class DelayedTrigger extends TriggerConfiguration {
   /// Delay before this trigger is executed.
   Duration delay;
 
-  /// Create a trigger that delays sampling for [delay] and then starts sampling.
+  /// Create a trigger that delays for [delay] and then triggers.
   DelayedTrigger({required this.delay}) : super();
 
   @override
@@ -110,14 +105,13 @@ class PeriodicTrigger extends TriggerConfiguration implements Schedulable {
   Map<String, dynamic> toJson() => _$PeriodicTriggerToJson(this);
 }
 
-/// A trigger that starts sampling based on a [schedule] of a date and time,
-/// and runs for a specific [duration].
+/// A trigger that triggers on a specific date and time.
 @JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
 class DateTimeTrigger extends TriggerConfiguration implements Schedulable {
   /// The scheduled date and time for resuming sampling.
   DateTime schedule;
 
-  /// Create a trigger that starts sampling based on a [schedule].
+  /// Create a trigger that triggers based on a [schedule].
   DateTimeTrigger({required this.schedule}) : super();
 
   @override
@@ -342,7 +336,6 @@ class CronScheduledTrigger extends TriggerConfiguration implements Schedulable {
   ///   * [day] - The day of the month to trigger. `int` [1-31] or `null` (= match all).
   ///   * [month] - The month to trigger. `int` [1-12] or `null` (= match all).
   ///   * [weekday] - The week day to trigger. `int` [0-6] or `null` (= match all).
-  ///   * [duration] - The duration (until stopped) of the the sampling.
   factory CronScheduledTrigger({
     int? minute,
     int? hour,
@@ -365,7 +358,7 @@ class CronScheduledTrigger extends TriggerConfiguration implements Schedulable {
     );
   }
 
-  /// Create a trigger based on a cron-formatted string expression.
+  /// Create a [CronScheduledTrigger] based on a cron-formatted string expression.
   ///
   ///   * [cronExpression] - The cron expression as a `String`.
   ///   * [duration] - The duration (until stopped) of the the sampling.
