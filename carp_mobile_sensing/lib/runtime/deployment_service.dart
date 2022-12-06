@@ -37,7 +37,7 @@ class SmartphoneDeploymentService implements DeploymentService {
     StudyDeployment deployment = StudyDeployment(protocol, studyDeploymentId);
     _repository[deployment.studyDeploymentId] = deployment;
 
-    // make sure to register this phone as a master device
+    // make sure to register this phone as a primary device
     deployment.registerDevice(thisPhone, DeviceRegistration());
 
     // set the deployment status to "invited" as the initial status.
@@ -102,16 +102,16 @@ class SmartphoneDeploymentService implements DeploymentService {
   @override
   Future<SmartphoneDeployment?> getDeviceDeploymentFor(
     String studyDeploymentId,
-    String masterDeviceRoleName,
+    String primaryDeviceRoleName,
   ) async {
     if (_repository[studyDeploymentId] == null) return null;
 
     StudyDeployment deployment = _repository[studyDeploymentId]!;
     DeviceConfiguration device = deployment.registeredDevices.keys.firstWhere(
-        (descriptor) => descriptor.roleName == masterDeviceRoleName);
+        (descriptor) => descriptor.roleName == primaryDeviceRoleName);
 
     assert(device is PrimaryDeviceConfiguration,
-        "The specified '$masterDeviceRoleName' device is not registered as a master device");
+        "The specified '$primaryDeviceRoleName' device is not registered as a primary device");
 
     PrimaryDeviceDeployment deviceDeployment =
         deployment.getDeviceDeploymentFor(device as PrimaryDeviceConfiguration);
@@ -123,8 +123,7 @@ class SmartphoneDeploymentService implements DeploymentService {
     );
   }
 
-  /// Get a deployment configuration for this master device (phone)
-  /// for [studyDeploymentId].
+  /// Get a smartphone deployment configuration for [studyDeploymentId].
   ///
   /// The default data endpoint is set to a [FileDataEndPoint], i.e. storing
   /// the data locally on the phone as zipped files.
@@ -135,7 +134,7 @@ class SmartphoneDeploymentService implements DeploymentService {
   @override
   Future<StudyDeploymentStatus?> deploymentSuccessfulFor(
     String studyDeploymentId,
-    String masterDeviceRoleName,
+    String primaryDeviceRoleName,
     DateTime? deviceDeploymentLastUpdateDate,
   ) async {
     if (_repository[studyDeploymentId] == null) return null;
@@ -143,11 +142,11 @@ class SmartphoneDeploymentService implements DeploymentService {
     deviceDeploymentLastUpdateDate ??= DateTime.now();
     StudyDeployment deployment = _repository[studyDeploymentId]!;
     DeviceConfiguration device = deployment.registeredDevices.keys.firstWhere(
-        (descriptor) => descriptor.roleName == masterDeviceRoleName);
+        (descriptor) => descriptor.roleName == primaryDeviceRoleName);
 
     if (device is! PrimaryDeviceConfiguration) {
       warning(
-          "The specified device with rolename '$masterDeviceRoleName' is not a primary device.");
+          "The specified device with rolename '$primaryDeviceRoleName' is not a primary device.");
       return null;
     }
     deployment.deviceDeployed(device, deviceDeploymentLastUpdateDate);
@@ -156,7 +155,7 @@ class SmartphoneDeploymentService implements DeploymentService {
   }
 
   /// Mark the study deployment with [studyDeploymentId] as deployed successfully
-  /// to this master device (phone), i.e., that the study deployment was loaded
+  /// to this primary device (phone), i.e., that the study deployment was loaded
   /// on the device and that the necessary runtime is available to run it.
   Future<StudyDeploymentStatus?> deploymentSuccessful(
     String studyDeploymentId, {

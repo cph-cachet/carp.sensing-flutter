@@ -79,7 +79,7 @@ class DeviceController implements DeviceDataCollectorFactory {
 
   @override
   void initializeDevices(PrimaryDeviceDeployment primaryDeviceDeployment) {
-    //  first initialize the master device (i.e. this phone)
+    //  first initialize the primary device (i.e. this phone)
     initializeDevice(primaryDeviceDeployment.deviceConfiguration);
     // and then initialize all the connected devices (if any)
     for (var descriptor in primaryDeviceDeployment.connectedDevices) {

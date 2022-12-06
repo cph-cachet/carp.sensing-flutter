@@ -4,28 +4,28 @@ class DeviceSamplingPackage extends SmartphoneSamplingPackage {
   /// Measure type for collection of basic device information like device name,
   /// model, manufacturer, operating system, and hardware profile.
   ///  * One-time measure.
-  ///  * Uses the [Smartphone] master device for data collection.
+  ///  * Uses the [Smartphone] primary device for data collection.
   ///  * No sampling configuration needed.
   static const String DEVICE_INFORMATION_TYPE_NAME =
       '${CarpDataTypes.CARP_NAMESPACE}.deviceinformation';
 
   /// Measure type for collection of free physical and virtual memory.
   ///  * Interval-based measure.
-  ///  * Uses the [Smartphone] master device for data collection.
+  ///  * Uses the [Smartphone] primary device for data collection.
   ///  * Use [IntervalSamplingConfiguration] for configuration.
   static const String FREE_MEMORY_TYPE_NAME =
       '${CarpDataTypes.CARP_NAMESPACE}.freememory';
 
   /// Measure type for collection of battery level and charging status.
   ///  * Event-based measure.
-  ///  * Uses the [Smartphone] master device for data collection.
+  ///  * Uses the [Smartphone] primary device for data collection.
   ///  * No sampling configuration needed.
   static const String BATTERY_STATE_TYPE_NAME =
       '${CarpDataTypes.CARP_NAMESPACE}.batterystate';
 
   /// Measure type for collection of screen events (on/off/unlocked).
   ///  * Event-based measure.
-  ///  * Uses the [Smartphone] master device for data collection.
+  ///  * Uses the [Smartphone] primary device for data collection.
   ///  * No sampling configuration needed.
   static const String SCREEN_EVENT_TYPE_NAME =
       '${CarpDataTypes.CARP_NAMESPACE}.screenevent';

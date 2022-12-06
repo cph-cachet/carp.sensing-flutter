@@ -71,7 +71,7 @@ class SmartphoneDeploymentController extends StudyRuntime {
   /// of a study deployment.
   SmartphoneDeploymentController(super.deploymentService, super.deviceRegistry);
 
-  /// Verifies whether the master device is ready for deployment and in case
+  /// Verifies whether the primary device is ready for deployment and in case
   /// it is, deploy the [study] previously added.
   ///
   /// If [useCached] is true (default), a previously cached [deployment] will be
@@ -158,10 +158,10 @@ class SmartphoneDeploymentController extends StudyRuntime {
     assert(deployment != null,
         'Cannot configure a StudyDeploymentController without a deployment.');
     assert(deployment is SmartphoneDeployment,
-        'A StudyDeploymentController can only work with a SmartphoneDeployment master device deployment');
+        'A StudyDeploymentController can only work with a SmartphoneDeployment device deployment');
     info('Configuring $runtimeType');
 
-    // initialize all devices from the master deployment, incl. this master device
+    // initialize all devices from the primary deployment, incl. this smartphone.
     deviceRegistry.initializeDevices(deployment!);
 
     // initialize the app task controller singleton

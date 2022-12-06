@@ -288,7 +288,7 @@ void example_2() async {
 ///  * get the study deployment status
 ///  * create the devices needed in the protocol
 ///  * register the devices which are available
-///  * get the study deployment for this master device
+///  * get the study deployment for this primary device
 ///  * start the sensing
 void example_3() async {
   // we assume that we know the study deployment id
@@ -320,7 +320,7 @@ void example_3() async {
     }
   });
 
-  // now get the study deployment for this master device and its registered devices
+  // now get the study deployment for this smartphone device and its registered devices
   SmartphoneDeployment? deployment = await SmartphoneDeploymentService()
       .getDeviceDeployment(studyDeploymentId);
 
@@ -511,7 +511,7 @@ void study_controller_example() async {
   await client.configure();
 
   // add the study and get the study runtime (controller)
-  Study study = await client.addStudy('1234', 'master_phone');
+  Study study = await client.addStudy('1234', 'primary_phone');
   SmartphoneDeploymentController? controller = client.getStudyRuntime(study);
 
   // configure the controller with the default privacy schema and start sampling

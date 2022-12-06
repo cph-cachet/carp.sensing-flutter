@@ -432,7 +432,7 @@ void main() {
     expect(status_1.status, StudyDeploymentStatusTypes.Invited);
     expect(status_1.deviceStatusList[0].device.roleName,
         Smartphone.DEFAULT_ROLENAME);
-    // the phone as a master device is always registred by the CAMSDeploymentService
+    // the phone as a primary device is always registred by the CAMSDeploymentService
     expect(status_1.deviceStatusList[0].status,
         DeviceDeploymentStatusTypes.Registered);
     // but we do not expect the esense device to be registrered (yet)
