@@ -12,6 +12,7 @@ import 'package:flutter/material.dart' hide TimeOfDay;
 void main() => runApp(CARPMobileSensingApp());
 
 class CARPMobileSensingApp extends StatelessWidget {
+  @override
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'CARP Mobile Sensing Demo',
@@ -34,6 +35,7 @@ class Console extends State<ConsolePage> {
   String _log = '';
   Sensing? sensing;
 
+  @override
   void initState() {
     super.initState();
     sensing = Sensing();
@@ -51,6 +53,7 @@ class Console extends State<ConsolePage> {
     super.dispose();
   }
 
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(

@@ -254,20 +254,20 @@ void example_2() async {
   // phone (as in the example above)
   // If downloaded and deserialized from json, then we need to locate the
   // measures in the deployment
-  lightMeasure
-    ..overrideSamplingConfiguration = PeriodicSamplingConfiguration(
-      interval: const Duration(minutes: 5),
-      duration: const Duration(seconds: 10),
-    );
+  lightMeasure.overrideSamplingConfiguration = PeriodicSamplingConfiguration(
+    interval: const Duration(minutes: 5),
+    duration: const Duration(seconds: 10),
+  );
 
   // Restart the light probe(s)
   controller.executor
       ?.lookupProbe(SensorSamplingPackage.LIGHT)
       .forEach((probe) => probe.restart());
 
-  // Alternatively mark the deplyment as changed - calling hasChanged()
-  // this will force a restart of the entire sampling
+  // Alternatively mark the deployment as changed - calling hasChanged() -
+  // and force a restart of the entire sampling.
   controller.deployment?.hasChanged();
+  controller.executor?.restart();
 
   // Once the sampling has to stop, e.g. in a Flutter dispose() methods, call stop.
   // Note that once a sampling has stopped, it cannot be restarted.
