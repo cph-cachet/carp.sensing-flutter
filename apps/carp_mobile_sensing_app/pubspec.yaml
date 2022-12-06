@@ -16,7 +16,7 @@ dependencies:
   carp_serializable: ^1.0.0
   carp_core: ^0.40.0     
   carp_mobile_sensing: ^0.40.0
-  carp_connectivity_package: ^0.40.0  
+  # carp_connectivity_package: ^0.40.1 
   carp_context_package: ^0.40.0
   carp_audio_package: ^0.40.0
   # carp_communication_package: ^0.40.0
@@ -42,8 +42,8 @@ dependencies:
 #     path: ../../carp_mobile_sensing/
 #   carp_context_package:
 #     path: ../../packages/carp_context_package/
-#   carp_connectivity_package:
-#     path: ../../packages/carp_connectivity_package/
+  carp_connectivity_package:
+    path: ../../packages/carp_connectivity_package/
 #   # due to version conflict in device_calendar this cannot be included for now
 #   # carp_communication_package:
 #   #   path: ../../packages/carp_communication_package/
