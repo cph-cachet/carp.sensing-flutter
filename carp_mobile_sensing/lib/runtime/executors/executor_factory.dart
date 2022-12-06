@@ -116,7 +116,11 @@ class ExecutorFactory {
   TaskExecutor createTaskExecutor(TaskConfiguration task) {
     if (_taskExecutors[task.name] == null) {
       TaskExecutor executor = BackgroundTaskExecutor();
-      if (task is AppTask) executor = AppTaskExecutor();
+      if (task is AppTask) {
+        executor = AppTaskExecutor();
+      } else if (task is FunctionTask) {
+        executor = FunctionTaskExecutor();
+      }
       _taskExecutors[task.name] = executor;
     }
     return _taskExecutors[task.name]!;

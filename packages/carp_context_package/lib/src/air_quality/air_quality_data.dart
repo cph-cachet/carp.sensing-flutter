@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 Copenhagen Center for Health Technology (CACHET) at the
+ * Copyright 2019-2022 Copenhagen Center for Health Technology (CACHET) at the
  * Technical University of Denmark (DTU).
  * Use of this source code is governed by a MIT-style license that can be
  * found in the LICENSE file.
@@ -7,20 +7,18 @@
 
 part of carp_context_package;
 
-/// A [Datum] that holds air quality information collected via the
+/// A [Data] that holds air quality information collected via the
 /// [World's Air Quality Index (WAQI)](https://waqi.info) API.
 @JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)
-class AirQualityDatum extends Datum {
-  @override
-  DataFormat get format =>
-      DataFormat.fromString(ContextSamplingPackage.AIR_QUALITY);
+class AirQualityIndexData extends Data {
+  static const dataType = ContextSamplingPackage.AIR_QUALITY;
 
   int airQualityIndex;
   String source, place;
   double latitude, longitude;
   AirQualityLevel airQualityLevel;
 
-  AirQualityDatum(
+  AirQualityIndexData(
     this.airQualityIndex,
     this.source,
     this.place,
@@ -29,7 +27,7 @@ class AirQualityDatum extends Datum {
     this.airQualityLevel,
   ) : super();
 
-  AirQualityDatum.fromAirQualityData(AirQualityData airQualityData)
+  AirQualityIndexData.fromAirQualityData(AirQualityData airQualityData)
       : latitude = airQualityData.latitude,
         longitude = airQualityData.longitude,
         airQualityIndex = airQualityData.airQualityIndex,
@@ -38,11 +36,11 @@ class AirQualityDatum extends Datum {
         airQualityLevel = airQualityData.airQualityLevel,
         super();
 
-  factory AirQualityDatum.fromJson(Map<String, dynamic> json) =>
-      _$AirQualityDatumFromJson(json);
+  factory AirQualityIndexData.fromJson(Map<String, dynamic> json) =>
+      _$AirQualityIndexDataFromJson(json);
 
   @override
-  Map<String, dynamic> toJson() => _$AirQualityDatumToJson(this);
+  Map<String, dynamic> toJson() => _$AirQualityIndexDataToJson(this);
 
   @override
   String toString() =>

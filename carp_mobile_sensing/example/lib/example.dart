@@ -34,9 +34,9 @@ Future<void> example_0() async {
     BackgroundTask(name: 'Sensor Task')
       ..addMeasures([
         Measure(type: CarpDataTypes.STEP_COUNT_TYPE_NAME),
-        Measure(type: SensorSamplingPackage.AMBIENT_LIGHT_TYPE_NAME),
-        Measure(type: DeviceSamplingPackage.SCREEN_EVENT_TYPE_NAME),
-        Measure(type: DeviceSamplingPackage.BATTERY_STATE_TYPE_NAME),
+        Measure(type: SensorSamplingPackage.AMBIENT_LIGHT),
+        Measure(type: DeviceSamplingPackage.SCREEN_EVENT),
+        Measure(type: DeviceSamplingPackage.BATTERY_STATE),
       ]),
     phone,
     Control.Start,
@@ -96,9 +96,9 @@ void example_1() async {
     BackgroundTask()
       ..addMeasures([
         Measure(type: CarpDataTypes.STEP_COUNT_TYPE_NAME),
-        Measure(type: SensorSamplingPackage.AMBIENT_LIGHT_TYPE_NAME),
-        Measure(type: DeviceSamplingPackage.SCREEN_EVENT_TYPE_NAME),
-        Measure(type: DeviceSamplingPackage.BATTERY_STATE_TYPE_NAME),
+        Measure(type: SensorSamplingPackage.AMBIENT_LIGHT),
+        Measure(type: DeviceSamplingPackage.SCREEN_EVENT),
+        Measure(type: DeviceSamplingPackage.BATTERY_STATE),
       ]),
     phone,
     Control.Start,
@@ -177,7 +177,7 @@ void example_2() async {
 
   // specify details of a light measure
   Measure lightMeasure = Measure(
-    type: SensorSamplingPackage.AMBIENT_LIGHT_TYPE_NAME,
+    type: SensorSamplingPackage.AMBIENT_LIGHT,
   )..overrideSamplingConfiguration = PeriodicSamplingConfiguration(
       interval: const Duration(minutes: 10),
       duration: const Duration(seconds: 20),
@@ -228,7 +228,7 @@ void example_2() async {
   controller?.measurements
       .where((measurement) =>
           measurement.data.format.toString() ==
-          SensorSamplingPackage.AMBIENT_LIGHT_TYPE_NAME)
+          SensorSamplingPackage.AMBIENT_LIGHT)
       .listen((event) => print(event));
 
   // map events to JSON and then print
@@ -266,7 +266,7 @@ void example_2() async {
 
   // Restart the light probe(s)
   controller.executor
-      ?.lookupProbe(SensorSamplingPackage.AMBIENT_LIGHT_TYPE_NAME)
+      ?.lookupProbe(SensorSamplingPackage.AMBIENT_LIGHT)
       .forEach((probe) => probe.restart());
 
   // Alternatively mark the deplyment as changed - calling hasChanged()
@@ -537,8 +537,7 @@ void app_task_example() async {
         type: BackgroundSensingUserTask.ONE_TIME_SENSING_TYPE,
         title: 'Device',
         description: 'Collect device info',
-      )..addMeasure(
-          Measure(type: DeviceSamplingPackage.DEVICE_INFORMATION_TYPE_NAME)),
+      )..addMeasure(Measure(type: DeviceSamplingPackage.DEVICE_INFORMATION)),
       phone,
       Control.Start,
     )
@@ -549,8 +548,7 @@ void app_task_example() async {
         type: BackgroundSensingUserTask.SENSING_TYPE,
         title: 'Screen',
         description: 'Collect screen events',
-      )..addMeasure(
-          Measure(type: DeviceSamplingPackage.SCREEN_EVENT_TYPE_NAME)),
+      )..addMeasure(Measure(type: DeviceSamplingPackage.SCREEN_EVENT)),
       phone,
       Control.Start,
     );

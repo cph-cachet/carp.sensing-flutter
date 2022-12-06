@@ -32,10 +32,10 @@ void main() {
 
     // Define the smartphone as the master device.
     Smartphone phone = Smartphone();
-    protocol.addMasterDevice(phone);
+    protocol.addPrimaryDevice(phone);
 
     // Add a background task that collects activity data from the phone
-    protocol.addTriggeredTask(
+    protocol.addTaskControl(
         ImmediateTrigger(),
         BackgroundTask()
           ..addMeasure(Measure(type: ContextSamplingPackage.ACTIVITY)),
@@ -49,15 +49,15 @@ void main() {
     protocol.addConnectedDevice(locationService);
 
     // Add a background task that collects location on a regular basis
-    protocol.addTriggeredTask(
-        IntervalTrigger(period: Duration(minutes: 5)),
+    protocol.addTaskControl(
+        PeriodicTrigger(period: Duration(minutes: 5)),
         BackgroundTask()
           ..addMeasure(Measure(type: ContextSamplingPackage.LOCATION)),
         locationService);
 
     // Add a background task that continously collects geolocation and mobility
     // patterns. Delays sampling by 5 minutes.
-    protocol.addTriggeredTask(
+    protocol.addTaskControl(
         DelayedTrigger(delay: Duration(minutes: 5)),
         BackgroundTask()
           ..addMeasure(Measure(type: ContextSamplingPackage.GEOLOCATION))
@@ -66,7 +66,7 @@ void main() {
 
     // Add a background task that collects geofence events using DTU as the
     // center for the geofence.
-    protocol.addTriggeredTask(
+    protocol.addTaskControl(
         ImmediateTrigger(),
         BackgroundTask()
           ..addMeasure(Measure(type: ContextSamplingPackage.GEOFENCE)
@@ -82,8 +82,8 @@ void main() {
     protocol.addConnectedDevice(weatherService);
 
     // Add a background task that collects weather every 30 miutes.
-    protocol.addTriggeredTask(
-        IntervalTrigger(period: Duration(minutes: 30)),
+    protocol.addTaskControl(
+        PeriodicTrigger(period: Duration(minutes: 30)),
         BackgroundTask()
           ..addMeasure(Measure(type: ContextSamplingPackage.WEATHER)),
         weatherService);
@@ -94,8 +94,8 @@ void main() {
     protocol.addConnectedDevice(airQualityService);
 
     // Add a background task that air quality every 30 miutes.
-    protocol.addTriggeredTask(
-        IntervalTrigger(period: Duration(minutes: 30)),
+    protocol.addTaskControl(
+        PeriodicTrigger(period: Duration(minutes: 30)),
         BackgroundTask()
           ..addMeasure(Measure(type: ContextSamplingPackage.AIR_QUALITY)),
         airQualityService);
@@ -148,50 +148,50 @@ void main() {
 
     expect(protocolFromFile.ownerId, protocol.ownerId);
     expect(
-      protocolFromFile.masterDevices.first.roleName,
+      protocolFromFile.primaryDevices.first.roleName,
       Smartphone.DEFAULT_ROLENAME,
     );
     expect(
-      protocolFromFile.triggeredTasks.length,
-      protocol.triggeredTasks.length,
+      protocolFromFile.taskControls.length,
+      protocol.taskControls.length,
     );
     print(toJsonString(protocolFromFile));
   });
 
   test('CARP Location', () {
-    LocationDatum loc = LocationDatum()
+    LocationData loc = LocationData()
       ..longitude = 12.23342
       ..latitude = 3.34224
       ..altitude = 124.2134235;
-    DataPoint dp_1 = DataPoint.fromData(loc);
-    expect(dp_1.carpHeader.dataFormat.namespace, NameSpace.CARP);
-    print(_encode(dp_1));
+    Measurement m_1 = Measurement.fromData(loc);
+    expect(m_1.dataType.namespace, NameSpace.CARP);
+    print(_encode(m_1));
 
     // loc.altitude = 'encrypted value';
-    print(_encode(dp_1));
+    print(_encode(m_1));
   });
 
   test('CARP Location -> OMH Geoposition', () {
-    LocationDatum loc = LocationDatum()
+    LocationData loc = LocationData()
       ..longitude = 12.23342
       ..latitude = 3.34224;
-    DataPoint dp_1 = DataPoint.fromData(loc);
-    expect(dp_1.carpHeader.dataFormat.namespace, NameSpace.CARP);
-    print(_encode(dp_1));
+    Measurement m_1 = Measurement.fromData(loc);
+    expect(m_1.dataType.namespace, NameSpace.CARP);
+    print(_encode(m_1));
 
     OMHGeopositionDataPoint geo = TransformerSchemaRegistry()
         .lookup(NameSpace.OMH)!
         .transform(loc) as OMHGeopositionDataPoint;
-    DataPoint dp_2 = DataPoint.fromData(geo);
-    expect(dp_2.carpHeader.dataFormat.namespace, NameSpace.OMH);
+    Measurement m_2 = Measurement.fromData(geo);
+    expect(m_2.dataType.namespace, NameSpace.OMH);
     expect(geo.datapoint.body, isA<omh.Geoposition>());
     var geopos = geo.datapoint.body as omh.Geoposition;
     expect(geopos.latitude.value, loc.latitude);
-    print(_encode(dp_2));
+    print(_encode(m_2));
   });
 
   test('CARP Activity -> OMH Physical Activity', () {
-    ActivityDatum act = ActivityDatum(ActivityType.WALKING, 100);
+    ActivityData act = ActivityData(ActivityType.WALKING, 100);
     DataPoint dp_1 = DataPoint.fromData(act);
     expect(dp_1.carpHeader.dataFormat.namespace, NameSpace.CARP);
     print(_encode(dp_1));
@@ -207,7 +207,7 @@ void main() {
   });
 
   test('Geofence', () {
-    GeofenceDatum? d;
+    GeofenceData? d;
     GeoPosition home = GeoPosition(55.7946, 12.4472); // Parsbergsvej
     GeoPosition dtu = GeoPosition(55.786025, 12.524159); // DTU
     GeoPosition compute = GeoPosition(55.783499, 12.518914); // DTU Compute

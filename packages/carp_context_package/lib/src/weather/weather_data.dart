@@ -7,12 +7,10 @@
 
 part of carp_context_package;
 
-/// A [Datum] that holds weather information collected through OpenWeatherMap.
+/// A [Data] that holds weather information collected through OpenWeatherMap.
 @JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)
-class WeatherDatum extends Datum {
-  @override
-  DataFormat get format =>
-      DataFormat.fromString(ContextSamplingPackage.WEATHER);
+class WeatherData extends Data {
+  static const dataType = ContextSamplingPackage.WEATHER;
 
   String? country, areaName, weatherMain, weatherDescription;
   DateTime? date, sunrise, sunset;
@@ -31,9 +29,9 @@ class WeatherDatum extends Datum {
       tempMin,
       tempMax;
 
-  WeatherDatum() : super();
+  WeatherData() : super();
 
-  WeatherDatum.fromWeatherData(Weather weather)
+  WeatherData.fromWeatherData(Weather weather)
       : country = weather.country,
         areaName = weather.areaName,
         weatherMain = weather.weatherMain,
@@ -57,11 +55,11 @@ class WeatherDatum extends Datum {
         tempMax = weather.tempMax!.celsius,
         super();
 
-  factory WeatherDatum.fromJson(Map<String, dynamic> json) =>
-      _$WeatherDatumFromJson(json);
+  factory WeatherData.fromJson(Map<String, dynamic> json) =>
+      _$WeatherDataFromJson(json);
 
   @override
-  Map<String, dynamic> toJson() => _$WeatherDatumToJson(this);
+  Map<String, dynamic> toJson() => _$WeatherDataToJson(this);
 
   @override
   String toString() =>

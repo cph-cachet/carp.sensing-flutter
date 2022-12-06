@@ -12,7 +12,7 @@ part of carp_context_package;
 class AirQualityService extends OnlineService {
   /// The type of a air quality service.
   static const String DEVICE_TYPE =
-      '${DeviceDescriptor.DEVICE_NAMESPACE}.AirQualityService';
+      '${DeviceConfiguration.DEVICE_NAMESPACE}.AirQualityService';
 
   /// The default rolename for a air quality service.
   static const String DEFAULT_ROLENAME = 'air_quality_service';

@@ -71,18 +71,22 @@ class CarpDataTypes {
   static const String SENSOR_SKIN_CONTACT_TYPE_NAME =
       "$CARP_NAMESPACE.sensorskincontact";
 
-  /// Rate of change in velocity, excluding gravity, along perpendicular x, y,
-  /// and z axes in the device's coordinate system.
-  static const String NON_GRAVITATIONAL_ACCELERATION_TYPE_NAME =
-      "$CARP_NAMESPACE.nongravitationalacceleration";
-
   /// Single-channel electrodermal activity, represented as skin conductance.
   static const String EDA_TYPE_NAME = "$CARP_NAMESPACE.eda";
 
   /// Rate of change in velocity, including gravity, along perpendicular x, y,
   /// and z axes in the device's coordinate system.
   static const String ACCELERATION_TYPE_NAME = "$CARP_NAMESPACE.acceleration";
+
+  /// Rate of change in velocity, excluding gravity, along perpendicular x, y,
+  /// and z axes in the device's coordinate system.
+  static const String NON_GRAVITATIONAL_ACCELERATION_TYPE_NAME =
+      "$CARP_NAMESPACE.nongravitationalacceleration";
+
+  /// Rotation of the device in x,y,z (typically measured by a gyroscope).
   static const String ROTATION_TYPE_NAME = "$CARP_NAMESPACE.rotation";
+
+  /// Magnetic field around the device in x,y,z (typically measured by a magnetometer).
   static const String MAGNETIC_FIELD_TYPE_NAME =
       "$CARP_NAMESPACE.magneticfield";
 

@@ -1,11 +1,12 @@
 part of carp_context_package;
 
-/// A [Datum] that holds mobility features information.
+/// A [Data] that holds mobility features information.
 @JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)
-class MobilityDatum extends Datum {
-  @override
-  DataFormat get format =>
-      DataFormat.fromString(ContextSamplingPackage.MOBILITY);
+class MobilityData extends Data {
+  static const dataType = ContextSamplingPackage.MOBILITY;
+
+  /// The time this data was collected.
+  DateTime? timestamp;
 
   /// The day of this mobility features.
   DateTime? date;
@@ -30,10 +31,10 @@ class MobilityDatum extends Datum {
   /// Distance travelled on [date], in meters.
   double? distanceTravelled;
 
-  MobilityDatum() : super();
+  MobilityData() : super();
 
-  factory MobilityDatum.fromMobilityContext(MobilityContext context) =>
-      MobilityDatum()
+  factory MobilityData.fromMobilityContext(MobilityContext context) =>
+      MobilityData()
         ..date = context.date
         ..timestamp = context.timestamp
         ..numberOfPlaces = context.numberOfSignificantPlaces
@@ -43,11 +44,11 @@ class MobilityDatum extends Datum {
         ..homeStay = context.homeStay
         ..distanceTravelled = context.distanceTravelled;
 
-  factory MobilityDatum.fromJson(Map<String, dynamic> json) =>
-      _$MobilityDatumFromJson(json);
+  factory MobilityData.fromJson(Map<String, dynamic> json) =>
+      _$MobilityDataFromJson(json);
 
   @override
-  Map<String, dynamic> toJson() => _$MobilityDatumToJson(this);
+  Map<String, dynamic> toJson() => _$MobilityDataToJson(this);
 
   @override
   String toString() =>

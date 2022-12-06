@@ -41,9 +41,11 @@ SmartphoneStudyProtocol _$SmartphoneStudyProtocolFromJson(
       ownerId: json['ownerId'] as String,
       name: json['name'] as String,
     )
+      ..applicationData = json['applicationData'] as Map<String, dynamic>
       ..id = json['id'] as String
       ..createdOn = DateTime.parse(json['createdOn'] as String)
       ..version = json['version'] as int
+      ..description = json['description'] as String
       ..primaryDevices = (json['primaryDevices'] as List<dynamic>)
           .map((e) =>
               PrimaryDeviceConfiguration.fromJson(e as Map<String, dynamic>))
@@ -76,16 +78,16 @@ SmartphoneStudyProtocol _$SmartphoneStudyProtocolFromJson(
           (json['expectedParticipantData'] as List<dynamic>?)
               ?.map((e) =>
                   ExpectedParticipantData.fromJson(e as Map<String, dynamic>))
-              .toSet()
-      ..applicationData = json['applicationData'] as Map<String, dynamic>
-      ..description = json['description'] as String;
+              .toSet();
 
 Map<String, dynamic> _$SmartphoneStudyProtocolToJson(
     SmartphoneStudyProtocol instance) {
   final val = <String, dynamic>{
+    'applicationData': instance.applicationData,
     'id': instance.id,
     'createdOn': instance.createdOn.toIso8601String(),
     'version': instance.version,
+    'description': instance.description,
     'ownerId': instance.ownerId,
     'name': instance.name,
     'primaryDevices': instance.primaryDevices.toList(),
@@ -107,8 +109,6 @@ Map<String, dynamic> _$SmartphoneStudyProtocolToJson(
       instance.assignedDevices?.map((k, e) => MapEntry(k, e.toList())));
   writeNotNull(
       'expectedParticipantData', instance.expectedParticipantData?.toList());
-  val['applicationData'] = instance.applicationData;
-  val['description'] = instance.description;
   return val;
 }
 
@@ -408,19 +408,20 @@ SmartphoneDeployment _$SmartphoneDeploymentFromJson(
                   ExpectedParticipantData.fromJson(e as Map<String, dynamic>))
               .toSet() ??
           const {},
+      userId: json['userId'] as String?,
     )
+      ..applicationData = json['applicationData'] as Map<String, dynamic>
       ..lastUpdateDate = json['lastUpdateDate'] == null
           ? null
           : DateTime.parse(json['lastUpdateDate'] as String)
-      ..applicationData = json['applicationData'] as Map<String, dynamic>
       ..deployed = json['deployed'] == null
           ? null
-          : DateTime.parse(json['deployed'] as String)
-      ..userId = json['userId'] as String?;
+          : DateTime.parse(json['deployed'] as String);
 
 Map<String, dynamic> _$SmartphoneDeploymentToJson(
     SmartphoneDeployment instance) {
   final val = <String, dynamic>{
+    'applicationData': instance.applicationData,
     'deviceConfiguration': instance.deviceConfiguration,
     'registration': instance.registration,
     'connectedDevices': instance.connectedDevices.toList(),
@@ -438,7 +439,6 @@ Map<String, dynamic> _$SmartphoneDeploymentToJson(
   }
 
   writeNotNull('lastUpdateDate', instance.lastUpdateDate?.toIso8601String());
-  val['applicationData'] = instance.applicationData;
   val['studyDeploymentId'] = instance.studyDeploymentId;
   writeNotNull('deployed', instance.deployed?.toIso8601String());
   writeNotNull('userId', instance.userId);
@@ -480,6 +480,31 @@ Map<String, dynamic> _$AppTaskToJson(AppTask instance) {
   writeNotNull('minutesToComplete', instance.minutesToComplete);
   writeNotNull('expire', instance.expire?.inMicroseconds);
   val['notification'] = instance.notification;
+  return val;
+}
+
+FunctionTask _$FunctionTaskFromJson(Map<String, dynamic> json) => FunctionTask(
+      name: json['name'] as String?,
+    )
+      ..$type = json['__type'] as String?
+      ..description = json['description'] as String?
+      ..measures = (json['measures'] as List<dynamic>?)
+          ?.map((e) => Measure.fromJson(e as Map<String, dynamic>))
+          .toList();
+
+Map<String, dynamic> _$FunctionTaskToJson(FunctionTask instance) {
+  final val = <String, dynamic>{};
+
+  void writeNotNull(String key, dynamic value) {
+    if (value != null) {
+      val[key] = value;
+    }
+  }
+
+  writeNotNull('__type', instance.$type);
+  val['name'] = instance.name;
+  writeNotNull('description', instance.description);
+  writeNotNull('measures', instance.measures);
   return val;
 }
 

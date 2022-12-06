@@ -1,11 +1,11 @@
 part of carp_context_package;
 
-/// Listen on location movements and reports a [GeofenceDatum] to the [stream]
-/// when a geofence event happens. This probe can handle only one [GeofenceMeasure].
+/// Listen on location movements and reports a [GeofenceData] to the [stream]
+/// when a geofence event happens. This probe can handle only one measure.
 /// If you need multiple geofences, add a [GeofenceMeasure] for each to your [Study]
 /// for example using the [Trigger] model.
 class GeofenceProbe extends StreamProbe {
-  StreamController<GeofenceDatum> geoFenceStreamController =
+  StreamController<Measurement> geoFenceStreamController =
       StreamController.broadcast();
 
   /// Set up option for geofence location tracking - accuracy
@@ -17,7 +17,7 @@ class GeofenceProbe extends StreamProbe {
       super.deviceManager as LocationServiceManager;
 
   @override
-  Future<bool> onResume() async {
+  Future<bool> onStart() async {
     Geofence fence = Geofence.fromGeofenceSamplingConfiguration(
         samplingConfiguration as GeofenceSamplingConfiguration);
 
@@ -25,17 +25,19 @@ class GeofenceProbe extends StreamProbe {
     deviceManager.manager.onLocationChanged
         .map((location) => GeoPosition.fromLocation(location))
         .listen((location) {
-      // when a location event is fired, check if the new location creates a new [GeofenceDatum] event.
+      // when a location event is fired, check if the new location creates a new [GeofenceData] event.
       // if so -- add it to the main stream.
-      GeofenceDatum? datum = fence.moved(location);
-      if (datum != null) geoFenceStreamController.add(datum);
+      GeofenceData? data = fence.moved(location);
+      if (data != null) {
+        geoFenceStreamController.add(Measurement.fromData(data));
+      }
     });
 
-    return super.onResume();
+    return await super.onStart();
   }
 
   @override
-  Stream<GeofenceDatum> get stream => geoFenceStreamController.stream;
+  Stream<Measurement> get stream => geoFenceStreamController.stream;
 }
 
 /// The possible states of a geofence.
@@ -79,8 +81,8 @@ class Geofence {
         dwell: configuration.dwell,
       );
 
-  GeofenceDatum? moved(GeoPosition location) {
-    GeofenceDatum? datum;
+  GeofenceData? moved(GeoPosition location) {
+    GeofenceData? data;
     if (center.distanceTo(location) < radius) {
       // we're inside the geofence
       switch (state) {
@@ -89,7 +91,7 @@ class Geofence {
           // if we came from outside the fence, we have now entered
           state = GeofenceState.inside;
           lastEvent = DateTime.now();
-          datum = GeofenceDatum(type: GeofenceType.ENTER, name: name);
+          data = GeofenceData(type: GeofenceType.ENTER, name: name);
           break;
         case GeofenceState.inside:
           // if we were already inside, check if dwelling takes place
@@ -97,7 +99,7 @@ class Geofence {
             // we have been dwelling in this geofence
             state = GeofenceState.inside;
             lastEvent = DateTime.now();
-            datum = GeofenceDatum(type: GeofenceType.DWELL, name: name);
+            data = GeofenceData(type: GeofenceType.DWELL, name: name);
           }
           break;
       }
@@ -107,11 +109,11 @@ class Geofence {
         // we have just left the geofence
         state = GeofenceState.outside;
         lastEvent = DateTime.now();
-        datum = GeofenceDatum(type: GeofenceType.EXIT, name: name);
+        data = GeofenceData(type: GeofenceType.EXIT, name: name);
       }
     }
 
-    return datum;
+    return data;
   }
 
   @override

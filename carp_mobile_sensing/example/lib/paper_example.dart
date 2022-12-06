@@ -23,12 +23,11 @@ void sensing() async {
     BackgroundTask()
       ..addMeasure(Measure(type: CarpDataTypes.ACCELERATION_TYPE_NAME))
       ..addMeasure(Measure(type: CarpDataTypes.ROTATION_TYPE_NAME))
-      ..addMeasure(Measure(type: DeviceSamplingPackage.FREE_MEMORY_TYPE_NAME))
-      ..addMeasure(Measure(type: DeviceSamplingPackage.BATTERY_STATE_TYPE_NAME))
-      ..addMeasure(Measure(type: DeviceSamplingPackage.SCREEN_EVENT_TYPE_NAME))
+      ..addMeasure(Measure(type: DeviceSamplingPackage.FREE_MEMORY))
+      ..addMeasure(Measure(type: DeviceSamplingPackage.BATTERY_STATE))
+      ..addMeasure(Measure(type: DeviceSamplingPackage.SCREEN_EVENT))
       ..addMeasure(Measure(type: CarpDataTypes.STEP_COUNT_TYPE_NAME))
-      ..addMeasure(
-          Measure(type: SensorSamplingPackage.AMBIENT_LIGHT_TYPE_NAME)),
+      ..addMeasure(Measure(type: SensorSamplingPackage.AMBIENT_LIGHT)),
     phone,
     Control.Start,
   );
@@ -65,6 +64,6 @@ void sensing() async {
 
   // listening on events of a specific type
   controller
-      ?.measurementsByType(DeviceSamplingPackage.SCREEN_EVENT_TYPE_NAME)
+      ?.measurementsByType(DeviceSamplingPackage.SCREEN_EVENT)
       .forEach(print);
 }

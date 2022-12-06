@@ -8,17 +8,17 @@
 part of carp_context_package;
 
 /// Collects activity information from the underlying OS's activity recognition
-/// API. It generates an [ActivityDatum] every time an activity is detected.
+/// API. It generates an [ActivityData] every time an activity is detected.
 ///
 /// Since the AR on both Android and iOS generates a lot of 'useless' events, the
 /// following AR event are removed:
 ///  * [ActivityType.UNKNOWN]
 ///  * Activities with a low confidence level (<50%)
 class ActivityProbe extends StreamProbe {
-  Stream<Datum>? _stream;
+  Stream<Measurement>? _stream;
 
   @override
-  Future<bool> onResume() async {
+  Future<bool> onStart() async {
     // check permission to access the AR on Android
     final status = await Permission.activityRecognition.status;
     if (!status.isGranted) {
@@ -32,7 +32,7 @@ class ActivityProbe extends StreamProbe {
       }
     }
 
-    return super.onResume();
+    return await super.onStart();
   }
 
   // @override
@@ -47,10 +47,11 @@ class ActivityProbe extends StreamProbe {
   //     .asBroadcastStream();
 
   @override
-  Stream<Datum> get stream =>
+  Stream<Measurement> get stream =>
       _stream ??= FlutterActivityRecognition.instance.activityStream
           .where((event) => event.type != ActivityType.UNKNOWN)
           .where((event) => event.confidence != ActivityConfidence.LOW)
-          .map((activity) => ActivityDatum.fromActivity(activity))
+          .map((activity) =>
+              Measurement.fromData(ActivityData.fromActivity(activity)))
           .asBroadcastStream();
 }

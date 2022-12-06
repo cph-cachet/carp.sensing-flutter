@@ -1,7 +1,7 @@
 part of carp_context_package;
 
 /// Collects local weather information using the [WeatherFactory] API.
-class WeatherProbe extends DatumProbe {
+class WeatherProbe extends MeasurementProbe {
   @override
   WeatherServiceManager get deviceManager =>
       super.deviceManager as WeatherServiceManager;
@@ -12,9 +12,9 @@ class WeatherProbe extends DatumProbe {
     return true;
   }
 
-  /// Returns the [WeatherDatum] for this location.
+  /// Returns the [WeatherData] for this location.
   @override
-  Future<Datum> getDatum() async {
+  Future<Measurement> getMeasurement() async {
     if (deviceManager.service != null) {
       try {
         final loc = await LocationManager().getLastKnownLocation();
@@ -24,14 +24,16 @@ class WeatherProbe extends DatumProbe {
           loc.longitude!,
         );
 
-        return WeatherDatum.fromWeatherData(weather);
+        return Measurement.fromData(WeatherData.fromWeatherData(weather));
       } catch (error) {
         warning('$runtimeType - Error getting weather - $error');
-        return ErrorDatum('$runtimeType Exception: $error');
+        return Measurement.fromData(
+            Error(message: '$runtimeType Exception: $error'));
       }
     }
     warning(
         '$runtimeType - no service available. Did you remember to add the WeatherService to the study protocol?');
-    return ErrorDatum('$runtimeType - no service available.');
+    return Measurement.fromData(
+        Error(message: '$runtimeType - no service available.'));
   }
 }

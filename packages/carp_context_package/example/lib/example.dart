@@ -22,10 +22,10 @@ void main() async {
 
   // Define the smartphone as the master device.
   Smartphone phone = Smartphone();
-  protocol.addMasterDevice(phone);
+  protocol.addPrimaryDevice(phone);
 
   // Add a background task that collects activity data from the phone
-  protocol.addTriggeredTask(
+  protocol.addTaskControl(
       ImmediateTrigger(),
       BackgroundTask()
         ..addMeasure(Measure(type: ContextSamplingPackage.ACTIVITY)),
@@ -39,15 +39,15 @@ void main() async {
   protocol.addConnectedDevice(locationService);
 
   // Add a background task that collects location on a regular basis
-  protocol.addTriggeredTask(
-      IntervalTrigger(period: Duration(minutes: 5)),
+  protocol.addTaskControl(
+      PeriodicTrigger(period: Duration(minutes: 5)),
       BackgroundTask()
         ..addMeasure(Measure(type: ContextSamplingPackage.LOCATION)),
       locationService);
 
-  // Add a background task that continously collects geolocation and mobility
+  // Add a background task that continuously collects geolocation and mobility
   // patterns. Delays sampling by 5 minutes.
-  protocol.addTriggeredTask(
+  protocol.addTaskControl(
       DelayedTrigger(delay: Duration(minutes: 5)),
       BackgroundTask()
         ..addMeasure(Measure(type: ContextSamplingPackage.GEOLOCATION))
@@ -56,7 +56,7 @@ void main() async {
 
   // Add a background task that collects geofence events using DTU as the
   // center for the geofence.
-  protocol.addTriggeredTask(
+  protocol.addTaskControl(
       ImmediateTrigger(),
       BackgroundTask()
         ..addMeasure(Measure(type: ContextSamplingPackage.GEOFENCE)
@@ -71,9 +71,9 @@ void main() async {
       WeatherService(apiKey: 'OW_API_key_goes_here');
   protocol.addConnectedDevice(weatherService);
 
-  // Add a background task that collects weather every 30 miutes.
-  protocol.addTriggeredTask(
-      IntervalTrigger(period: Duration(minutes: 30)),
+  // Add a background task that collects weather every 30 minutes.
+  protocol.addTaskControl(
+      PeriodicTrigger(period: Duration(minutes: 30)),
       BackgroundTask()
         ..addMeasure(Measure(type: ContextSamplingPackage.WEATHER)),
       weatherService);
@@ -83,9 +83,9 @@ void main() async {
       AirQualityService(apiKey: 'WAQI_API_key_goes_here');
   protocol.addConnectedDevice(airQualityService);
 
-  // Add a background task that air quality every 30 miutes.
-  protocol.addTriggeredTask(
-      IntervalTrigger(period: Duration(minutes: 30)),
+  // Add a background task that air quality every 30 minutes.
+  protocol.addTaskControl(
+      PeriodicTrigger(period: Duration(minutes: 30)),
       BackgroundTask()
         ..addMeasure(Measure(type: ContextSamplingPackage.AIR_QUALITY)),
       airQualityService);

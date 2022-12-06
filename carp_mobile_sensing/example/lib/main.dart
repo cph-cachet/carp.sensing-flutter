@@ -261,7 +261,7 @@ class LocalStudyProtocolManager implements StudyProtocolManager {
 
     var task_2 = BackgroundTask(
       measures: [
-        Measure(type: DeviceSamplingPackage.BATTERY_STATE_TYPE_NAME),
+        Measure(type: DeviceSamplingPackage.BATTERY_STATE),
       ],
     );
 
@@ -331,8 +331,7 @@ class LocalStudyProtocolManager implements StudyProtocolManager {
         type: BackgroundSensingUserTask.ONE_TIME_SENSING_TYPE,
         title: "Elapsed Time - App Task",
         notification: true,
-      )..addMeasure(
-          Measure(type: DeviceSamplingPackage.DEVICE_INFORMATION_TYPE_NAME)),
+      )..addMeasure(Measure(type: DeviceSamplingPackage.DEVICE_INFORMATION)),
       phone,
       Control.Start,
     );

@@ -28,11 +28,11 @@ class ContextSamplingPackage extends SmartphoneSamplingPackage {
   ///  * No sampling configuration needed.
   static const String LOCATION = "${NameSpace.CARP}.location";
 
-  /// Measure type for continous collection of GPS location data.
+  /// Measure type for continuos collection of GPS location data.
   ///  * Event-based measure.
   ///  * Uses the [LocationService] connected device for data collection.
   ///  * No sampling configuration needed.
-  static const String GEOLOCATION = "${NameSpace.CARP}.geolocation";
+  static const String GEOLOCATION = CarpDataTypes.GEOLOCATION_TYPE_NAME;
 
   /// Measure type for collection of geofence events (enter/exit/dwell).
   ///  * Event-based measure.
@@ -40,7 +40,7 @@ class ContextSamplingPackage extends SmartphoneSamplingPackage {
   ///  * Use [GeofenceSamplingConfiguration] for configuration.
   static const String GEOFENCE = "${NameSpace.CARP}.geofence";
 
-  /// Measure type for continous collection of mobility features like number of
+  /// Measure type for continuos collection of mobility features like number of
   /// places visited, home stay percentage, and location entrophy.
   ///
   ///  * Event-based measure.
@@ -63,8 +63,12 @@ class ContextSamplingPackage extends SmartphoneSamplingPackage {
   static const String WEATHER = "${NameSpace.CARP}.weather";
 
   @override
-  List<String> get dataTypes => [
-        ACTIVITY,
+  List<DataTypeMetaData> get dataTypes => [
+        DataTypeMetaData(
+          type: ACTIVITY,
+          displayName: "Activity",
+          timeType: DataTimeType.POINT,
+        ),
       ];
 
   @override
@@ -128,11 +132,27 @@ class LocationSamplingPackage extends SmartphoneSamplingPackage {
   final DeviceManager _deviceManager = LocationServiceManager();
 
   @override
-  List<String> get dataTypes => [
-        ContextSamplingPackage.LOCATION,
-        ContextSamplingPackage.GEOLOCATION,
-        ContextSamplingPackage.GEOFENCE,
-        ContextSamplingPackage.MOBILITY,
+  List<DataTypeMetaData> get dataTypes => [
+        DataTypeMetaData(
+          type: ContextSamplingPackage.LOCATION,
+          displayName: "Location",
+          timeType: DataTimeType.POINT,
+        ),
+        DataTypeMetaData(
+          type: ContextSamplingPackage.GEOLOCATION,
+          displayName: "Geolocation",
+          timeType: DataTimeType.POINT,
+        ),
+        DataTypeMetaData(
+          type: ContextSamplingPackage.GEOFENCE,
+          displayName: "Geofence",
+          timeType: DataTimeType.POINT,
+        ),
+        DataTypeMetaData(
+          type: ContextSamplingPackage.MOBILITY,
+          displayName: "Mobility",
+          timeType: DataTimeType.POINT,
+        ),
       ];
 
   @override
@@ -172,8 +192,12 @@ class AirQualitySamplingPackage extends SmartphoneSamplingPackage {
   final DeviceManager _deviceManager = AirQualityServiceManager();
 
   @override
-  List<String> get dataTypes => [
-        ContextSamplingPackage.AIR_QUALITY,
+  List<DataTypeMetaData> get dataTypes => [
+        DataTypeMetaData(
+          type: ContextSamplingPackage.AIR_QUALITY,
+          displayName: "Air Quality",
+          timeType: DataTimeType.POINT,
+        ),
       ];
 
   @override
@@ -207,8 +231,12 @@ class WeatherSamplingPackage extends SmartphoneSamplingPackage {
   final DeviceManager _deviceManager = WeatherServiceManager();
 
   @override
-  List<String> get dataTypes => [
-        ContextSamplingPackage.WEATHER,
+  List<DataTypeMetaData> get dataTypes => [
+        DataTypeMetaData(
+          type: ContextSamplingPackage.WEATHER,
+          displayName: "Weather",
+          timeType: DataTimeType.POINT,
+        ),
       ];
 
   @override

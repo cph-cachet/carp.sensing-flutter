@@ -9,29 +9,27 @@ part of carp_context_package;
 
 /// Holds activity information.
 @JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)
-class ActivityDatum extends Datum {
+class ActivityData extends Data {
   static final Map<ActivityConfidence, int> _confidenceLevelMap = {
     ActivityConfidence.HIGH: 100,
     ActivityConfidence.MEDIUM: 70,
     ActivityConfidence.LOW: 40,
   };
 
-  @override
-  DataFormat get format =>
-      DataFormat.fromString(ContextSamplingPackage.ACTIVITY);
+  static const dataType = ContextSamplingPackage.ACTIVITY;
 
-  ActivityDatum(this.type, this.confidence) : super();
+  ActivityData(this.type, this.confidence) : super();
 
-  factory ActivityDatum.fromActivity(Activity activity) => ActivityDatum(
+  factory ActivityData.fromActivity(Activity activity) => ActivityData(
         activity.type,
         _confidenceLevelMap[activity.confidence] ?? 0,
       );
 
-  factory ActivityDatum.fromJson(Map<String, dynamic> json) =>
-      _$ActivityDatumFromJson(json);
+  factory ActivityData.fromJson(Map<String, dynamic> json) =>
+      _$ActivityDataFromJson(json);
 
   @override
-  Map<String, dynamic> toJson() => _$ActivityDatumToJson(this);
+  Map<String, dynamic> toJson() => _$ActivityDataToJson(this);
 
   /// Confidence in activity recognition.
   int confidence;

@@ -14,7 +14,7 @@ part of device;
 ///   * [IosDeviceInfo](https://pub.dev/documentation/device_info/latest/device_info/IosDeviceInfo-class.html)
 @JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
 class DeviceInformation extends Data {
-  static const dataType = DeviceSamplingPackage.DEVICE_INFORMATION_TYPE_NAME;
+  static const dataType = DeviceSamplingPackage.DEVICE_INFORMATION;
 
   ///The platform type of the device.
   /// * `Android`
@@ -76,7 +76,7 @@ class DeviceInformation extends Data {
 /// Holds battery level and charging status collected from the phone.
 @JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
 class BatteryState extends Data {
-  static const dataType = DeviceSamplingPackage.BATTERY_STATE_TYPE_NAME;
+  static const dataType = DeviceSamplingPackage.BATTERY_STATE;
 
   static const String STATE_FULL = 'full';
   static const String STATE_CHARGING = 'charging';
@@ -133,7 +133,7 @@ class BatteryState extends Data {
 /// Holds information about free memory on the phone.
 @JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
 class FreeMemory extends Data {
-  static const dataType = DeviceSamplingPackage.FREE_MEMORY_TYPE_NAME;
+  static const dataType = DeviceSamplingPackage.FREE_MEMORY;
 
   /// Amount of free physical memory in bytes.
   int? freePhysicalMemory;
@@ -158,7 +158,7 @@ class FreeMemory extends Data {
 /// Holds a screen event collected from the phone.
 @JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
 class ScreenEvent extends Data {
-  static const dataType = DeviceSamplingPackage.SCREEN_EVENT_TYPE_NAME;
+  static const dataType = DeviceSamplingPackage.SCREEN_EVENT;
 
   /// A screen event:
   /// - SCREEN_OFF

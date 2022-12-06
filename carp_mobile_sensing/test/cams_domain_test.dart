@@ -65,8 +65,7 @@ void main() {
     primaryProtocol.addTaskControl(
       OneTimeTrigger(),
       BackgroundTask()
-        ..addMeasure(
-            Measure(type: DeviceSamplingPackage.DEVICE_INFORMATION_TYPE_NAME)),
+        ..addMeasure(Measure(type: DeviceSamplingPackage.DEVICE_INFORMATION)),
       primaryPhone,
       Control.Start,
     );
@@ -76,7 +75,7 @@ void main() {
       title: "Location, Weather & Air Quality",
       description: "Collect location, weather and air quality",
     )..addMeasures([
-        Measure(type: SensorSamplingPackage.AMBIENT_LIGHT_TYPE_NAME),
+        Measure(type: SensorSamplingPackage.AMBIENT_LIGHT),
         Measure(type: CarpDataTypes.STEP_COUNT_TYPE_NAME),
       ]);
 
@@ -101,9 +100,8 @@ void main() {
     primaryProtocol.addTaskControl(
       ImmediateTrigger(),
       BackgroundTask()
-        ..addMeasure(Measure(type: DeviceSamplingPackage.FREE_MEMORY_TYPE_NAME))
-        ..addMeasure(
-            Measure(type: SensorSamplingPackage.AMBIENT_LIGHT_TYPE_NAME)),
+        ..addMeasure(Measure(type: DeviceSamplingPackage.FREE_MEMORY))
+        ..addMeasure(Measure(type: SensorSamplingPackage.AMBIENT_LIGHT)),
       eSense,
       Control.Start,
     );
@@ -229,8 +227,7 @@ void main() {
       DelayedTrigger(delay: Duration(seconds: 10)),
       BackgroundTask()
         ..addMeasure(Measure(type: CarpDataTypes.STEP_COUNT_TYPE_NAME))
-        ..addMeasure(
-            Measure(type: DeviceSamplingPackage.SCREEN_EVENT_TYPE_NAME)),
+        ..addMeasure(Measure(type: DeviceSamplingPackage.SCREEN_EVENT)),
       primaryPhone,
       Control.Start,
     );
@@ -238,10 +235,8 @@ void main() {
     primaryProtocol.addTaskControl(
       PeriodicTrigger(period: const Duration(minutes: 1)), // collect every min.
       BackgroundTask()
-        ..addMeasure(
-            Measure(type: SensorSamplingPackage.AMBIENT_LIGHT_TYPE_NAME))
-        ..addMeasure(
-            Measure(type: DeviceSamplingPackage.DEVICE_INFORMATION_TYPE_NAME)),
+        ..addMeasure(Measure(type: SensorSamplingPackage.AMBIENT_LIGHT))
+        ..addMeasure(Measure(type: DeviceSamplingPackage.DEVICE_INFORMATION)),
       primaryPhone,
       Control.Start,
     );
@@ -258,8 +253,7 @@ void main() {
     primaryProtocol.addTaskControl(
       t1,
       BackgroundTask()
-        ..addMeasure(
-            Measure(type: DeviceSamplingPackage.FREE_MEMORY_TYPE_NAME)),
+        ..addMeasure(Measure(type: DeviceSamplingPackage.FREE_MEMORY)),
       primaryPhone,
       Control.Start,
     );
@@ -275,10 +269,8 @@ void main() {
     primaryProtocol.addTaskControl(
       t2,
       BackgroundTask()
-        ..addMeasure(
-            Measure(type: SensorSamplingPackage.AMBIENT_LIGHT_TYPE_NAME))
-        ..addMeasure(
-            Measure(type: DeviceSamplingPackage.FREE_MEMORY_TYPE_NAME)),
+        ..addMeasure(Measure(type: SensorSamplingPackage.AMBIENT_LIGHT))
+        ..addMeasure(Measure(type: DeviceSamplingPackage.FREE_MEMORY)),
       primaryPhone,
       Control.Start,
     );
@@ -294,10 +286,8 @@ void main() {
     primaryProtocol.addTaskControl(
       t3,
       BackgroundTask()
-        ..addMeasure(
-            Measure(type: SensorSamplingPackage.AMBIENT_LIGHT_TYPE_NAME))
-        ..addMeasure(
-            Measure(type: DeviceSamplingPackage.BATTERY_STATE_TYPE_NAME)),
+        ..addMeasure(Measure(type: SensorSamplingPackage.AMBIENT_LIGHT))
+        ..addMeasure(Measure(type: DeviceSamplingPackage.BATTERY_STATE)),
       primaryPhone,
       Control.Start,
     );
@@ -314,10 +304,8 @@ void main() {
     primaryProtocol.addTaskControl(
       t4,
       BackgroundTask()
-        ..addMeasure(
-            Measure(type: SensorSamplingPackage.AMBIENT_LIGHT_TYPE_NAME))
-        ..addMeasure(
-            Measure(type: DeviceSamplingPackage.SCREEN_EVENT_TYPE_NAME)),
+        ..addMeasure(Measure(type: SensorSamplingPackage.AMBIENT_LIGHT))
+        ..addMeasure(Measure(type: DeviceSamplingPackage.SCREEN_EVENT)),
       primaryPhone,
       Control.Start,
     );
@@ -325,11 +313,10 @@ void main() {
     // when battery level is 10% then sample light
     primaryProtocol.addTaskControl(
       SamplingEventTrigger(
-          measureType: DeviceSamplingPackage.BATTERY_STATE_TYPE_NAME,
+          measureType: DeviceSamplingPackage.BATTERY_STATE,
           triggerCondition: BatteryState(10)),
       BackgroundTask()
-        ..addMeasure(
-            Measure(type: SensorSamplingPackage.AMBIENT_LIGHT_TYPE_NAME)),
+        ..addMeasure(Measure(type: SensorSamplingPackage.AMBIENT_LIGHT)),
       primaryPhone,
       Control.Start,
     );
@@ -337,23 +324,21 @@ void main() {
     // when the screen is turned off then get device info
     primaryProtocol.addTaskControl(
       SamplingEventTrigger(
-          measureType: DeviceSamplingPackage.SCREEN_EVENT_TYPE_NAME,
+          measureType: DeviceSamplingPackage.SCREEN_EVENT,
           triggerCondition: ScreenEvent('SCREEN_OFF')),
       BackgroundTask()
-        ..addMeasure(
-            Measure(type: DeviceSamplingPackage.DEVICE_INFORMATION_TYPE_NAME)),
+        ..addMeasure(Measure(type: DeviceSamplingPackage.DEVICE_INFORMATION)),
       primaryPhone,
       Control.Start,
     );
 
     primaryProtocol.addTaskControl(
       ConditionalSamplingEventTrigger(
-          measureType: DeviceSamplingPackage.BATTERY_STATE_TYPE_NAME,
+          measureType: DeviceSamplingPackage.BATTERY_STATE,
           triggerCondition: (measurement) =>
               (measurement.data as BatteryState).batteryLevel == 10),
       BackgroundTask()
-        ..addMeasure(
-            Measure(type: SensorSamplingPackage.AMBIENT_LIGHT_TYPE_NAME)),
+        ..addMeasure(Measure(type: SensorSamplingPackage.AMBIENT_LIGHT)),
       primaryPhone,
       Control.Start,
     );

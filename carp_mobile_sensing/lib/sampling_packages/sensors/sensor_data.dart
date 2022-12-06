@@ -10,7 +10,7 @@ part of sensors;
 /// Typically collected from the light sensor on the phone.
 @JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
 class AmbientLight extends SensorData {
-  static const dataType = SensorSamplingPackage.AMBIENT_LIGHT_TYPE_NAME;
+  static const dataType = SensorSamplingPackage.AMBIENT_LIGHT;
 
   num? meanLux;
   num? stdLux;

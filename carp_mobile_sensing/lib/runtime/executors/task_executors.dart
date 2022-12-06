@@ -59,6 +59,17 @@ class BackgroundTaskExecutor extends TaskExecutor<BackgroundTask> {
   }
 }
 
+/// Executes a [FunctionTask].
+class FunctionTaskExecutor extends TaskExecutor<FunctionTask> {
+  @override
+  Future<bool> onStart() async {
+    if (configuration?.function != null) {
+      Function.apply(configuration!.function!, []);
+    }
+    return true;
+  }
+}
+
 /// Executes an [AppTask].
 ///
 /// An [AppTaskExecutor] simply wraps a [TaskExecutor], which is executed

@@ -12,7 +12,7 @@ part of carp_context_package;
 class LocationService extends OnlineService {
   /// The type of a location service.
   static const String DEVICE_TYPE =
-      '${DeviceDescriptor.DEVICE_NAMESPACE}.LocationService';
+      '${DeviceConfiguration.DEVICE_NAMESPACE}.LocationService';
 
   /// The default rolename for a location service.
   static const String DEFAULT_ROLENAME = 'location_service';

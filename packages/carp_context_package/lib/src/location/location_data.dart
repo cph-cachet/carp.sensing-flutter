@@ -9,25 +9,12 @@ part of carp_context_package;
 
 /// Holds location information using the GPS format.
 @JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)
-class LocationDatum extends Datum {
-  @override
-  DataFormat get format =>
-      DataFormat.fromString(ContextSamplingPackage.LOCATION);
+class LocationData extends Data {
+  static const dataType = ContextSamplingPackage.LOCATION;
 
-  LocationDatum() : super();
+  LocationData() : super();
 
-  // LocationDatum.fromLocationDto(LocationDto dto)
-  //     : latitude = dto.latitude,
-  //       longitude = dto.longitude,
-  //       altitude = dto.altitude,
-  //       accuracy = dto.accuracy,
-  //       speed = dto.speed,
-  //       speedAccuracy = dto.speedAccuracy,
-  //       heading = dto.heading,
-  //       time = DateTime.fromMillisecondsSinceEpoch(dto.time.toInt()),
-  //       super();
-
-  LocationDatum.fromLocation(location.LocationData location)
+  LocationData.fromLocation(location.LocationData location)
       : latitude = location.latitude,
         longitude = location.longitude,
         altitude = location.altitude,
@@ -40,22 +27,11 @@ class LocationDatum extends Datum {
             : null,
         super();
 
-  // LocationDatum.fromPosition(Position position)
-  //     : latitude = position.latitude,
-  //       longitude = position.longitude,
-  //       altitude = position.altitude,
-  //       accuracy = position.accuracy,
-  //       speed = position.speed,
-  //       speedAccuracy = position.speedAccuracy,
-  //       heading = position.heading,
-  //       time = position.timestamp,
-  //       super();
-
-  factory LocationDatum.fromJson(Map<String, dynamic> json) =>
-      _$LocationDatumFromJson(json);
+  factory LocationData.fromJson(Map<String, dynamic> json) =>
+      _$LocationDataFromJson(json);
 
   @override
-  Map<String, dynamic> toJson() => _$LocationDatumToJson(this);
+  Map<String, dynamic> toJson() => _$LocationDataToJson(this);
 
   /// The time when this location was collected.
   DateTime? time;
