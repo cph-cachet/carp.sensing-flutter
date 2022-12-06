@@ -50,95 +50,113 @@ class LocalStudyProtocolManager implements StudyProtocolManager {
     Smartphone phone = Smartphone();
     protocol.addMasterDevice(phone);
 
-    // build-in measure from sensor and device sampling packages
-    protocol.addTriggeredTask(
-        ImmediateTrigger(),
-        BackgroundTask()
-          ..addMeasures([
-            Measure(type: SensorSamplingPackage.PEDOMETER),
-            Measure(type: SensorSamplingPackage.LIGHT),
-            Measure(type: DeviceSamplingPackage.SCREEN),
-            Measure(type: DeviceSamplingPackage.MEMORY),
-            Measure(type: DeviceSamplingPackage.BATTERY),
-          ]),
-        phone);
+    Measure bluetoothMeasure =
+        Measure(type: ConnectivitySamplingPackage.BLUETOOTH);
+    bluetoothMeasure.overrideSamplingConfiguration =
+        PeriodicSamplingConfiguration(
+      interval: const Duration(seconds: 20),
+      duration: const Duration(seconds: 5),
+    );
 
-    // a random trigger - 3-8 times during time period of 8-20
-    protocol.addTriggeredTask(
-        RandomRecurrentTrigger(
-          startTime: TimeOfDay(hour: 8),
-          endTime: TimeOfDay(hour: 20),
-          minNumberOfTriggers: 3,
-          maxNumberOfTriggers: 8,
-        ),
-        BackgroundTask()
-          ..addMeasure(Measure(type: DeviceSamplingPackage.DEVICE)),
-        phone);
+    protocol.addTriggeredTask(ImmediateTrigger(),
+        BackgroundTask()..addMeasure(bluetoothMeasure), phone);
 
-    // activity measure using the phone
-    protocol.addTriggeredTask(
-        ImmediateTrigger(),
-        BackgroundTask()
-          ..addMeasure(Measure(type: ContextSamplingPackage.ACTIVITY)),
-        phone);
-
-    // Define the online location service and add it as a 'device'
-    LocationService locationService = LocationService();
-    protocol.addConnectedDevice(locationService);
-
-    // Add a background task that collects location on a regular basis
-    protocol.addTriggeredTask(
-        IntervalTrigger(period: Duration(minutes: 5)),
-        BackgroundTask()
-          ..addMeasure(Measure(type: ContextSamplingPackage.LOCATION)),
-        locationService);
-
-    // Add a background task that continously collects geolocation and mobility
-    protocol.addTriggeredTask(
-        ImmediateTrigger(),
-        BackgroundTask()
-          ..addMeasure(Measure(type: ContextSamplingPackage.GEOLOCATION))
-          ..addMeasure(Measure(type: ContextSamplingPackage.MOBILITY)),
-        locationService);
-
-    // Define the online weather service and add it as a 'device'
-    WeatherService weatherService =
-        WeatherService(apiKey: '12b6e28582eb9298577c734a31ba9f4f');
-    protocol.addConnectedDevice(weatherService);
-
-    // Add a background task that collects weather every 30 miutes.
-    protocol.addTriggeredTask(
-        IntervalTrigger(period: Duration(minutes: 30)),
-        BackgroundTask()
-          ..addMeasure(Measure(type: ContextSamplingPackage.WEATHER)),
-        weatherService);
-
-    // Define the online air quality service and add it as a 'device'
-    AirQualityService airQualityService =
-        AirQualityService(apiKey: '9e538456b2b85c92647d8b65090e29f957638c77');
-    protocol.addConnectedDevice(airQualityService);
-
-    // Add a background task that air quality every 30 miutes.
-    protocol.addTriggeredTask(
-        IntervalTrigger(period: Duration(minutes: 30)),
-        BackgroundTask()
-          ..addMeasure(Measure(type: ContextSamplingPackage.AIR_QUALITY)),
-        airQualityService);
+    Measure wifiMeasure = Measure(type: ConnectivitySamplingPackage.WIFI);
+    wifiMeasure.overrideSamplingConfiguration =
+        IntervalSamplingConfiguration(interval: Duration(seconds: 10));
 
     protocol.addTriggeredTask(
-        ImmediateTrigger(),
-        BackgroundTask()..addMeasure(Measure(type: MediaSamplingPackage.NOISE)),
-        phone);
+        ImmediateTrigger(), BackgroundTask()..addMeasure(wifiMeasure), phone);
 
-    protocol.addTriggeredTask(
-        ImmediateTrigger(),
-        BackgroundTask()
-          ..addMeasures([
-            Measure(type: ConnectivitySamplingPackage.CONNECTIVITY),
-            Measure(type: ConnectivitySamplingPackage.WIFI),
-            Measure(type: ConnectivitySamplingPackage.BLUETOOTH),
-          ]),
-        phone);
+    // // build-in measure from sensor and device sampling packages
+    // protocol.addTriggeredTask(
+    //     ImmediateTrigger(),
+    //     BackgroundTask()
+    //       ..addMeasures([
+    //         Measure(type: SensorSamplingPackage.PEDOMETER),
+    //         Measure(type: SensorSamplingPackage.LIGHT),
+    //         Measure(type: DeviceSamplingPackage.SCREEN),
+    //         Measure(type: DeviceSamplingPackage.MEMORY),
+    //         Measure(type: DeviceSamplingPackage.BATTERY),
+    //       ]),
+    //     phone);
+
+    // // a random trigger - 3-8 times during time period of 8-20
+    // protocol.addTriggeredTask(
+    //     RandomRecurrentTrigger(
+    //       startTime: TimeOfDay(hour: 8),
+    //       endTime: TimeOfDay(hour: 20),
+    //       minNumberOfTriggers: 3,
+    //       maxNumberOfTriggers: 8,
+    //     ),
+    //     BackgroundTask()
+    //       ..addMeasure(Measure(type: DeviceSamplingPackage.DEVICE)),
+    //     phone);
+
+    // // activity measure using the phone
+    // protocol.addTriggeredTask(
+    //     ImmediateTrigger(),
+    //     BackgroundTask()
+    //       ..addMeasure(Measure(type: ContextSamplingPackage.ACTIVITY)),
+    //     phone);
+
+    // // Define the online location service and add it as a 'device'
+    // LocationService locationService = LocationService();
+    // protocol.addConnectedDevice(locationService);
+
+    // // Add a background task that collects location on a regular basis
+    // protocol.addTriggeredTask(
+    //     IntervalTrigger(period: Duration(minutes: 5)),
+    //     BackgroundTask()
+    //       ..addMeasure(Measure(type: ContextSamplingPackage.LOCATION)),
+    //     locationService);
+
+    // // Add a background task that continously collects geolocation and mobility
+    // protocol.addTriggeredTask(
+    //     ImmediateTrigger(),
+    //     BackgroundTask()
+    //       ..addMeasure(Measure(type: ContextSamplingPackage.GEOLOCATION))
+    //       ..addMeasure(Measure(type: ContextSamplingPackage.MOBILITY)),
+    //     locationService);
+
+    // // Define the online weather service and add it as a 'device'
+    // WeatherService weatherService =
+    //     WeatherService(apiKey: '12b6e28582eb9298577c734a31ba9f4f');
+    // protocol.addConnectedDevice(weatherService);
+
+    // // Add a background task that collects weather every 30 miutes.
+    // protocol.addTriggeredTask(
+    //     IntervalTrigger(period: Duration(minutes: 30)),
+    //     BackgroundTask()
+    //       ..addMeasure(Measure(type: ContextSamplingPackage.WEATHER)),
+    //     weatherService);
+
+    // // Define the online air quality service and add it as a 'device'
+    // AirQualityService airQualityService =
+    //     AirQualityService(apiKey: '9e538456b2b85c92647d8b65090e29f957638c77');
+    // protocol.addConnectedDevice(airQualityService);
+
+    // // Add a background task that air quality every 30 miutes.
+    // protocol.addTriggeredTask(
+    //     IntervalTrigger(period: Duration(minutes: 30)),
+    //     BackgroundTask()
+    //       ..addMeasure(Measure(type: ContextSamplingPackage.AIR_QUALITY)),
+    //     airQualityService);
+
+    // protocol.addTriggeredTask(
+    //     ImmediateTrigger(),
+    //     BackgroundTask()..addMeasure(Measure(type: MediaSamplingPackage.NOISE)),
+    //     phone);
+
+    // protocol.addTriggeredTask(
+    //     ImmediateTrigger(),
+    //     BackgroundTask()
+    //       ..addMeasures([
+    //         Measure(type: ConnectivitySamplingPackage.CONNECTIVITY),
+    //         Measure(type: ConnectivitySamplingPackage.WIFI),
+    //         Measure(type: ConnectivitySamplingPackage.BLUETOOTH),
+    //       ]),
+    //     phone);
 
     // // Add an automatic task that collects SMS messages in/out
     // protocol.addTriggeredTask(

@@ -23,7 +23,7 @@
     <uses-permission android:name="android.permission.ACTIVITY_RECOGNITION" />
 
     <!-- The following permissions are used in the Connectivity Package -->
-    <uses-permission android:name="android.permission.CHANGE_WIFI_STATE"/>
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
     <!-- Legacy Bluetooth permissions, which is needed on devices with API 30 (Android Q) or older. -->
     <uses-permission
         android:name="android.permission.BLUETOOTH"
