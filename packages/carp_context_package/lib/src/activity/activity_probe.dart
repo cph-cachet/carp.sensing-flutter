@@ -8,7 +8,7 @@
 part of carp_context_package;
 
 /// Collects activity information from the underlying OS's activity recognition
-/// API. It generates an [ActivityData] every time an activity is detected.
+/// API. It generates an [ActivityEvent] every time an activity is detected.
 ///
 /// Since the AR on both Android and iOS generates a lot of 'useless' events, the
 /// following AR event are removed:
@@ -52,6 +52,6 @@ class ActivityProbe extends StreamProbe {
           .where((event) => event.type != ActivityType.UNKNOWN)
           .where((event) => event.confidence != ActivityConfidence.LOW)
           .map((activity) =>
-              Measurement.fromData(ActivityData.fromActivity(activity)))
+              Measurement.fromData(ActivityEvent.fromActivity(activity)))
           .asBroadcastStream();
 }

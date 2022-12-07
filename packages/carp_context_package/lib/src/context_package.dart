@@ -15,12 +15,12 @@ part of carp_context_package;
 ///   SamplingPackageRegistry().register(ContextSamplingPackage());
 /// ```
 class ContextSamplingPackage extends SmartphoneSamplingPackage {
-  /// Measure type for continous collection of activity as recognized by the phone's
-  /// activity recognition sub-system.
+  /// Measure type for continuous collection of activity events as recognized
+  /// by the phone's activity recognition sub-system.
   ///  * Event-based measure.
-  ///  * Uses the [Smartphone] master device for data collection.
+  ///  * Uses the [Smartphone] device for data collection.
   ///  * No sampling configuration needed.
-  static const String ACTIVITY = "${NameSpace.CARP}.activity";
+  static const String ACTIVITY = "${NameSpace.CARP}.activityevent";
 
   /// Measure type for one-time collection of GPS location.
   ///  * One-time measure.
@@ -41,7 +41,7 @@ class ContextSamplingPackage extends SmartphoneSamplingPackage {
   static const String GEOFENCE = "${NameSpace.CARP}.geofence";
 
   /// Measure type for continuos collection of mobility features like number of
-  /// places visited, home stay percentage, and location entrophy.
+  /// places visited, home stay percentage, and location entropy.
   ///
   ///  * Event-based measure.
   ///  * Uses the [LocationService] connected device for data collection.
@@ -53,7 +53,7 @@ class ContextSamplingPackage extends SmartphoneSamplingPackage {
   ///  * One-time measure.
   ///  * Uses the [AirQualityService] connected device for data collection.
   ///  * No sampling configuration needed.
-  static const String AIR_QUALITY = "${NameSpace.CARP}.air_quality";
+  static const String AIR_QUALITY = "${NameSpace.CARP}.airqualityindex";
 
   /// Measure type for collection of weather data from the
   /// [Open Weather]( https://openweathermap.org/) API.
@@ -100,6 +100,7 @@ class ContextSamplingPackage extends SmartphoneSamplingPackage {
     // registering the transformers from CARP to OMH for geolocation and physical activity
     // we assume that there is an OMH schema registered already...
     TransformerSchemaRegistry().lookup(NameSpace.OMH)!
+      ..add(GEOLOCATION, OMHGeopositionDataPoint.transformer)
       ..add(LOCATION, OMHGeopositionDataPoint.transformer)
       ..add(ACTIVITY, OMHPhysicalActivityDataPoint.transformer);
 

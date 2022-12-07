@@ -30,6 +30,8 @@ class Data extends Serializable {
       FromJsonFactory().fromJson(json) as Data;
   @override
   Map<String, dynamic> toJson() => _$DataToJson(this);
+
+  /// JSON type for data is per default `dk.cachet.carp.<class_name>`.
   @override
   String get jsonType => '${NameSpace.CARP}.$runtimeType'.toLowerCase();
 }
@@ -99,7 +101,10 @@ class MagneticField extends SensorData {
 class Geolocation extends SensorData {
   static const dataType = CarpDataTypes.GEOLOCATION_TYPE_NAME;
 
+  /// Latitude in GPS coordinates.
   double latitude;
+
+  /// Longitude in GPS coordinates.
   double longitude;
 
   Geolocation({this.latitude = 0, this.longitude = 0}) : super();

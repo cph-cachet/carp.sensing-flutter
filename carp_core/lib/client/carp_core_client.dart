@@ -32,4 +32,4 @@ part 'study.dart';
 part 'device_manager.dart';
 part 'datapoint.dart';
 
-part 'carp_core_client.g.dart';
+// part 'carp_core_client.g.dart';

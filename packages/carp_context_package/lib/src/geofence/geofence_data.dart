@@ -8,17 +8,17 @@
 part of carp_context_package;
 
 /// Holds information about a geofence event of entering, exiting, or dwelling.
-@JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)
-class GeofenceData extends Data {
+@JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
+class Geofence extends Data {
   static const dataType = ContextSamplingPackage.GEOFENCE;
 
-  GeofenceData({required this.type, this.name}) : super();
+  Geofence({required this.type, this.name}) : super();
 
-  factory GeofenceData.fromJson(Map<String, dynamic> json) =>
-      _$GeofenceDataFromJson(json);
+  factory Geofence.fromJson(Map<String, dynamic> json) =>
+      _$GeofenceFromJson(json);
 
   @override
-  Map<String, dynamic> toJson() => _$GeofenceDataToJson(this);
+  Map<String, dynamic> toJson() => _$GeofenceToJson(this);
 
   /// The name of this geofence.
   String? name;

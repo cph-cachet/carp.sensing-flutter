@@ -7,9 +7,9 @@
 
 part of carp_context_package;
 
-/// Holds activity information.
-@JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)
-class ActivityData extends Data {
+/// Holds an activity event as recognized by the phone Activity Recognition API.
+@JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
+class ActivityEvent extends Data {
   static final Map<ActivityConfidence, int> _confidenceLevelMap = {
     ActivityConfidence.HIGH: 100,
     ActivityConfidence.MEDIUM: 70,
@@ -18,18 +18,18 @@ class ActivityData extends Data {
 
   static const dataType = ContextSamplingPackage.ACTIVITY;
 
-  ActivityData(this.type, this.confidence) : super();
+  ActivityEvent(this.type, this.confidence) : super();
 
-  factory ActivityData.fromActivity(Activity activity) => ActivityData(
+  factory ActivityEvent.fromActivity(Activity activity) => ActivityEvent(
         activity.type,
         _confidenceLevelMap[activity.confidence] ?? 0,
       );
 
-  factory ActivityData.fromJson(Map<String, dynamic> json) =>
-      _$ActivityDataFromJson(json);
+  factory ActivityEvent.fromJson(Map<String, dynamic> json) =>
+      _$ActivityEventFromJson(json);
 
   @override
-  Map<String, dynamic> toJson() => _$ActivityDataToJson(this);
+  Map<String, dynamic> toJson() => _$ActivityEventToJson(this);
 
   /// Confidence in activity recognition.
   int confidence;

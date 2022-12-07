@@ -162,7 +162,7 @@ class CarpDataTypes {
       ),
       DataTypeMetaData(
         type: NON_GRAVITATIONAL_ACCELERATION_TYPE_NAME,
-        displayName: "Acceleration without Gravity",
+        displayName: "Acceleration excl. Gravity",
         timeType: DataTimeType.POINT,
       ),
       DataTypeMetaData(
@@ -172,7 +172,7 @@ class CarpDataTypes {
       ),
       DataTypeMetaData(
         type: ACCELERATION_TYPE_NAME,
-        displayName: "Acceleration including Gravity",
+        displayName: "Acceleration incl. Gravity",
         timeType: DataTimeType.POINT,
       ),
       DataTypeMetaData(

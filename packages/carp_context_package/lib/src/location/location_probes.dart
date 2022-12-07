@@ -8,7 +8,7 @@
 part of carp_context_package;
 
 /// Collects location information from the underlying OS's location API.
-/// Is a [MeasurementProbe] that collects one [LocationData] at a time.
+/// Is a [MeasurementProbe] that collects one [Location] at a time.
 class LocationProbe extends MeasurementProbe {
   @override
   LocationServiceManager get deviceManager =>
@@ -16,12 +16,12 @@ class LocationProbe extends MeasurementProbe {
 
   @override
   Future<Measurement> getMeasurement() async =>
-      deviceManager.manager.getLocation().then((location) =>
-          Measurement.fromData(LocationData.fromLocation(location)));
+      deviceManager.manager.getLocation().then(
+          (location) => Measurement.fromData(Location.fromLocation(location)));
 }
 
 /// Collects geolocation information from the underlying OS's location API.
-/// Is a [StreamProbe] that generates a [LocationData] every time location is
+/// Is a [StreamProbe] that generates a [Location] every time location is
 /// changed.
 class GeoLocationProbe extends StreamProbe {
   @override
@@ -29,6 +29,6 @@ class GeoLocationProbe extends StreamProbe {
       super.deviceManager as LocationServiceManager;
 
   @override
-  Stream<Measurement> get stream => deviceManager.manager.onLocationChanged.map(
-      (location) => Measurement.fromData(LocationData.fromLocation(location)));
+  Stream<Measurement> get stream => deviceManager.manager.onLocationChanged
+      .map((location) => Measurement.fromData(Location.fromLocation(location)));
 }

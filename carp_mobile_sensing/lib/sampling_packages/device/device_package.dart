@@ -7,25 +7,28 @@ class DeviceSamplingPackage extends SmartphoneSamplingPackage {
   ///  * Uses the [Smartphone] primary device for data collection.
   ///  * No sampling configuration needed.
   static const String DEVICE_INFORMATION =
-      '${CarpDataTypes.CARP_NAMESPACE}.device';
+      '${CarpDataTypes.CARP_NAMESPACE}.deviceinformation';
 
   /// Measure type for collection of free physical and virtual memory.
   ///  * Interval-based measure.
   ///  * Uses the [Smartphone] primary device for data collection.
   ///  * Use [IntervalSamplingConfiguration] for configuration.
-  static const String FREE_MEMORY = '${CarpDataTypes.CARP_NAMESPACE}.memory';
+  static const String FREE_MEMORY =
+      '${CarpDataTypes.CARP_NAMESPACE}.freememory';
 
   /// Measure type for collection of battery level and charging status.
   ///  * Event-based measure.
   ///  * Uses the [Smartphone] primary device for data collection.
   ///  * No sampling configuration needed.
-  static const String BATTERY_STATE = '${CarpDataTypes.CARP_NAMESPACE}.state';
+  static const String BATTERY_STATE =
+      '${CarpDataTypes.CARP_NAMESPACE}.batterystate';
 
   /// Measure type for collection of screen events (on/off/unlocked).
   ///  * Event-based measure.
   ///  * Uses the [Smartphone] primary device for data collection.
   ///  * No sampling configuration needed.
-  static const String SCREEN_EVENT = '${CarpDataTypes.CARP_NAMESPACE}.screen';
+  static const String SCREEN_EVENT =
+      '${CarpDataTypes.CARP_NAMESPACE}.screenevent';
 
   @override
   List<DataTypeMetaData> get dataTypes => [

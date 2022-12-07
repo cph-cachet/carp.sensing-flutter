@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 Copenhagen Center for Health Technology (CACHET) at the
+ * Copyright 2018-2022 Copenhagen Center for Health Technology (CACHET) at the
  * Technical University of Denmark (DTU).
  * Use of this source code is governed by a MIT-style license that can be
  * found in the LICENSE file.
@@ -8,39 +8,9 @@
 part of carp_context_package;
 
 /// Holds location information using the GPS format.
-@JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)
-class LocationData extends Data {
+@JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
+class Location extends Geolocation {
   static const dataType = ContextSamplingPackage.LOCATION;
-
-  LocationData() : super();
-
-  LocationData.fromLocation(location.LocationData location)
-      : latitude = location.latitude,
-        longitude = location.longitude,
-        altitude = location.altitude,
-        accuracy = location.accuracy,
-        speed = location.speed,
-        speedAccuracy = location.speedAccuracy,
-        heading = location.heading,
-        time = (location.time != null)
-            ? DateTime.fromMillisecondsSinceEpoch(location.time!.toInt())
-            : null,
-        super();
-
-  factory LocationData.fromJson(Map<String, dynamic> json) =>
-      _$LocationDataFromJson(json);
-
-  @override
-  Map<String, dynamic> toJson() => _$LocationDataToJson(this);
-
-  /// The time when this location was collected.
-  DateTime? time;
-
-  /// Latitude in GPS coordinates.
-  double? latitude;
-
-  /// Longitude in GPS coordinates.
-  double? longitude;
 
   /// Altitude in GPS coordinates.
   double? altitude;
@@ -59,8 +29,38 @@ class LocationData extends Data {
   /// Heading in degrees
   double? heading;
 
-  /// The 2D GPS coordinates [latitude, longitude].
-  // get gpsCoordinates => [latitude, longitude];
+  /// The time when this location was collected.
+  DateTime? time;
+
+  Location({
+    super.latitude,
+    super.longitude,
+    this.altitude,
+    this.accuracy,
+    this.heading,
+    this.speed,
+    this.speedAccuracy,
+    this.time,
+  }) : super();
+
+  Location.fromLocation(location.LocationData location) : super() {
+    latitude = location.latitude ?? 0;
+    longitude = location.longitude ?? 0;
+    altitude = location.altitude;
+    accuracy = location.accuracy;
+    speed = location.speed;
+    speedAccuracy = location.speedAccuracy;
+    heading = location.heading;
+    time = (location.time != null)
+        ? DateTime.fromMillisecondsSinceEpoch(location.time!.toInt())
+        : null;
+  }
+
+  factory Location.fromJson(Map<String, dynamic> json) =>
+      _$LocationFromJson(json);
+
+  @override
+  Map<String, dynamic> toJson() => _$LocationToJson(this);
 
   @override
   String toString() =>

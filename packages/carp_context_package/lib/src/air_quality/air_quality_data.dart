@@ -9,8 +9,8 @@ part of carp_context_package;
 
 /// A [Data] that holds air quality information collected via the
 /// [World's Air Quality Index (WAQI)](https://waqi.info) API.
-@JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)
-class AirQualityIndexData extends Data {
+@JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
+class AirQualityIndex extends Data {
   static const dataType = ContextSamplingPackage.AIR_QUALITY;
 
   int airQualityIndex;
@@ -18,7 +18,7 @@ class AirQualityIndexData extends Data {
   double latitude, longitude;
   AirQualityLevel airQualityLevel;
 
-  AirQualityIndexData(
+  AirQualityIndex(
     this.airQualityIndex,
     this.source,
     this.place,
@@ -27,7 +27,7 @@ class AirQualityIndexData extends Data {
     this.airQualityLevel,
   ) : super();
 
-  AirQualityIndexData.fromAirQualityData(AirQualityData airQualityData)
+  AirQualityIndex.fromAirQualityData(AirQualityData airQualityData)
       : latitude = airQualityData.latitude,
         longitude = airQualityData.longitude,
         airQualityIndex = airQualityData.airQualityIndex,
@@ -36,11 +36,11 @@ class AirQualityIndexData extends Data {
         airQualityLevel = airQualityData.airQualityLevel,
         super();
 
-  factory AirQualityIndexData.fromJson(Map<String, dynamic> json) =>
-      _$AirQualityIndexDataFromJson(json);
+  factory AirQualityIndex.fromJson(Map<String, dynamic> json) =>
+      _$AirQualityIndexFromJson(json);
 
   @override
-  Map<String, dynamic> toJson() => _$AirQualityIndexDataToJson(this);
+  Map<String, dynamic> toJson() => _$AirQualityIndexToJson(this);
 
   @override
   String toString() =>

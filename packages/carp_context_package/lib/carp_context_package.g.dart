@@ -6,12 +6,13 @@ part of carp_context_package;
 // JsonSerializableGenerator
 // **************************************************************************
 
-ActivityData _$ActivityDataFromJson(Map<String, dynamic> json) => ActivityData(
+ActivityEvent _$ActivityEventFromJson(Map<String, dynamic> json) =>
+    ActivityEvent(
       $enumDecode(_$ActivityTypeEnumMap, json['type']),
       json['confidence'] as int,
     )..$type = json['__type'] as String?;
 
-Map<String, dynamic> _$ActivityDataToJson(ActivityData instance) {
+Map<String, dynamic> _$ActivityEventToJson(ActivityEvent instance) {
   final val = <String, dynamic>{};
 
   void writeNotNull(String key, dynamic value) {
@@ -35,18 +36,23 @@ const _$ActivityTypeEnumMap = {
   ActivityType.UNKNOWN: 'UNKNOWN',
 };
 
-LocationData _$LocationDataFromJson(Map<String, dynamic> json) => LocationData()
-  ..$type = json['__type'] as String?
-  ..time = json['time'] == null ? null : DateTime.parse(json['time'] as String)
-  ..latitude = (json['latitude'] as num?)?.toDouble()
-  ..longitude = (json['longitude'] as num?)?.toDouble()
-  ..altitude = (json['altitude'] as num?)?.toDouble()
-  ..accuracy = (json['accuracy'] as num?)?.toDouble()
-  ..speed = (json['speed'] as num?)?.toDouble()
-  ..speedAccuracy = (json['speed_accuracy'] as num?)?.toDouble()
-  ..heading = (json['heading'] as num?)?.toDouble();
+Location _$LocationFromJson(Map<String, dynamic> json) => Location(
+      latitude: (json['latitude'] as num?)?.toDouble() ?? 0,
+      longitude: (json['longitude'] as num?)?.toDouble() ?? 0,
+      altitude: (json['altitude'] as num?)?.toDouble(),
+      accuracy: (json['accuracy'] as num?)?.toDouble(),
+      heading: (json['heading'] as num?)?.toDouble(),
+      speed: (json['speed'] as num?)?.toDouble(),
+      speedAccuracy: (json['speedAccuracy'] as num?)?.toDouble(),
+      time:
+          json['time'] == null ? null : DateTime.parse(json['time'] as String),
+    )
+      ..$type = json['__type'] as String?
+      ..sensorSpecificData = json['sensorSpecificData'] == null
+          ? null
+          : Data.fromJson(json['sensorSpecificData'] as Map<String, dynamic>);
 
-Map<String, dynamic> _$LocationDataToJson(LocationData instance) {
+Map<String, dynamic> _$LocationToJson(Location instance) {
   final val = <String, dynamic>{};
 
   void writeNotNull(String key, dynamic value) {
@@ -56,23 +62,24 @@ Map<String, dynamic> _$LocationDataToJson(LocationData instance) {
   }
 
   writeNotNull('__type', instance.$type);
-  writeNotNull('time', instance.time?.toIso8601String());
-  writeNotNull('latitude', instance.latitude);
-  writeNotNull('longitude', instance.longitude);
+  writeNotNull('sensorSpecificData', instance.sensorSpecificData);
+  val['latitude'] = instance.latitude;
+  val['longitude'] = instance.longitude;
   writeNotNull('altitude', instance.altitude);
   writeNotNull('accuracy', instance.accuracy);
   writeNotNull('speed', instance.speed);
-  writeNotNull('speed_accuracy', instance.speedAccuracy);
+  writeNotNull('speedAccuracy', instance.speedAccuracy);
   writeNotNull('heading', instance.heading);
+  writeNotNull('time', instance.time?.toIso8601String());
   return val;
 }
 
-WeatherData _$WeatherDataFromJson(Map<String, dynamic> json) => WeatherData()
+Weather _$WeatherFromJson(Map<String, dynamic> json) => Weather()
   ..$type = json['__type'] as String?
   ..country = json['country'] as String?
-  ..areaName = json['area_name'] as String?
-  ..weatherMain = json['weather_main'] as String?
-  ..weatherDescription = json['weather_description'] as String?
+  ..areaName = json['areaName'] as String?
+  ..weatherMain = json['weatherMain'] as String?
+  ..weatherDescription = json['weatherDescription'] as String?
   ..date = json['date'] == null ? null : DateTime.parse(json['date'] as String)
   ..sunrise =
       json['sunrise'] == null ? null : DateTime.parse(json['sunrise'] as String)
@@ -81,19 +88,19 @@ WeatherData _$WeatherDataFromJson(Map<String, dynamic> json) => WeatherData()
   ..latitude = (json['latitude'] as num?)?.toDouble()
   ..longitude = (json['longitude'] as num?)?.toDouble()
   ..pressure = (json['pressure'] as num?)?.toDouble()
-  ..windSpeed = (json['wind_speed'] as num?)?.toDouble()
-  ..windDegree = (json['wind_degree'] as num?)?.toDouble()
+  ..windSpeed = (json['windSpeed'] as num?)?.toDouble()
+  ..windDegree = (json['windDegree'] as num?)?.toDouble()
   ..humidity = (json['humidity'] as num?)?.toDouble()
   ..cloudiness = (json['cloudiness'] as num?)?.toDouble()
-  ..rainLastHour = (json['rain_last_hour'] as num?)?.toDouble()
-  ..rainLast3Hours = (json['rain_last3_hours'] as num?)?.toDouble()
-  ..snowLastHour = (json['snow_last_hour'] as num?)?.toDouble()
-  ..snowLast3Hours = (json['snow_last3_hours'] as num?)?.toDouble()
+  ..rainLastHour = (json['rainLastHour'] as num?)?.toDouble()
+  ..rainLast3Hours = (json['rainLast3Hours'] as num?)?.toDouble()
+  ..snowLastHour = (json['snowLastHour'] as num?)?.toDouble()
+  ..snowLast3Hours = (json['snowLast3Hours'] as num?)?.toDouble()
   ..temperature = (json['temperature'] as num?)?.toDouble()
-  ..tempMin = (json['temp_min'] as num?)?.toDouble()
-  ..tempMax = (json['temp_max'] as num?)?.toDouble();
+  ..tempMin = (json['tempMin'] as num?)?.toDouble()
+  ..tempMax = (json['tempMax'] as num?)?.toDouble();
 
-Map<String, dynamic> _$WeatherDataToJson(WeatherData instance) {
+Map<String, dynamic> _$WeatherToJson(Weather instance) {
   final val = <String, dynamic>{};
 
   void writeNotNull(String key, dynamic value) {
@@ -104,26 +111,26 @@ Map<String, dynamic> _$WeatherDataToJson(WeatherData instance) {
 
   writeNotNull('__type', instance.$type);
   writeNotNull('country', instance.country);
-  writeNotNull('area_name', instance.areaName);
-  writeNotNull('weather_main', instance.weatherMain);
-  writeNotNull('weather_description', instance.weatherDescription);
+  writeNotNull('areaName', instance.areaName);
+  writeNotNull('weatherMain', instance.weatherMain);
+  writeNotNull('weatherDescription', instance.weatherDescription);
   writeNotNull('date', instance.date?.toIso8601String());
   writeNotNull('sunrise', instance.sunrise?.toIso8601String());
   writeNotNull('sunset', instance.sunset?.toIso8601String());
   writeNotNull('latitude', instance.latitude);
   writeNotNull('longitude', instance.longitude);
   writeNotNull('pressure', instance.pressure);
-  writeNotNull('wind_speed', instance.windSpeed);
-  writeNotNull('wind_degree', instance.windDegree);
+  writeNotNull('windSpeed', instance.windSpeed);
+  writeNotNull('windDegree', instance.windDegree);
   writeNotNull('humidity', instance.humidity);
   writeNotNull('cloudiness', instance.cloudiness);
-  writeNotNull('rain_last_hour', instance.rainLastHour);
-  writeNotNull('rain_last3_hours', instance.rainLast3Hours);
-  writeNotNull('snow_last_hour', instance.snowLastHour);
-  writeNotNull('snow_last3_hours', instance.snowLast3Hours);
+  writeNotNull('rainLastHour', instance.rainLastHour);
+  writeNotNull('rainLast3Hours', instance.rainLast3Hours);
+  writeNotNull('snowLastHour', instance.snowLastHour);
+  writeNotNull('snowLast3Hours', instance.snowLast3Hours);
   writeNotNull('temperature', instance.temperature);
-  writeNotNull('temp_min', instance.tempMin);
-  writeNotNull('temp_max', instance.tempMax);
+  writeNotNull('tempMin', instance.tempMin);
+  writeNotNull('tempMax', instance.tempMax);
   return val;
 }
 
@@ -159,6 +166,25 @@ Map<String, dynamic> _$WeatherServiceToJson(WeatherService instance) {
   writeNotNull(
       'defaultSamplingConfiguration', instance.defaultSamplingConfiguration);
   val['apiKey'] = instance.apiKey;
+  return val;
+}
+
+OMHContextDataPoint _$OMHContextDataPointFromJson(Map<String, dynamic> json) =>
+    OMHContextDataPoint(
+      DataPoint.fromJson(json['datapoint'] as Map<String, dynamic>),
+    )..$type = json['__type'] as String?;
+
+Map<String, dynamic> _$OMHContextDataPointToJson(OMHContextDataPoint instance) {
+  final val = <String, dynamic>{};
+
+  void writeNotNull(String key, dynamic value) {
+    if (value != null) {
+      val[key] = value;
+    }
+  }
+
+  writeNotNull('__type', instance.$type);
+  val['datapoint'] = instance.datapoint;
   return val;
 }
 
@@ -214,12 +240,12 @@ Map<String, dynamic> _$GeofenceSamplingConfigurationToJson(
   return val;
 }
 
-GeofenceData _$GeofenceDataFromJson(Map<String, dynamic> json) => GeofenceData(
+Geofence _$GeofenceFromJson(Map<String, dynamic> json) => Geofence(
       type: $enumDecode(_$GeofenceTypeEnumMap, json['type']),
       name: json['name'] as String?,
     )..$type = json['__type'] as String?;
 
-Map<String, dynamic> _$GeofenceDataToJson(GeofenceData instance) {
+Map<String, dynamic> _$GeofenceToJson(Geofence instance) {
   final val = <String, dynamic>{};
 
   void writeNotNull(String key, dynamic value) {
@@ -240,17 +266,17 @@ const _$GeofenceTypeEnumMap = {
   GeofenceType.DWELL: 'DWELL',
 };
 
-AirQualityIndexData _$AirQualityIndexDataFromJson(Map<String, dynamic> json) =>
-    AirQualityIndexData(
-      json['air_quality_index'] as int,
+AirQualityIndex _$AirQualityIndexFromJson(Map<String, dynamic> json) =>
+    AirQualityIndex(
+      json['airQualityIndex'] as int,
       json['source'] as String,
       json['place'] as String,
       (json['latitude'] as num).toDouble(),
       (json['longitude'] as num).toDouble(),
-      $enumDecode(_$AirQualityLevelEnumMap, json['air_quality_level']),
+      $enumDecode(_$AirQualityLevelEnumMap, json['airQualityLevel']),
     )..$type = json['__type'] as String?;
 
-Map<String, dynamic> _$AirQualityIndexDataToJson(AirQualityIndexData instance) {
+Map<String, dynamic> _$AirQualityIndexToJson(AirQualityIndex instance) {
   final val = <String, dynamic>{};
 
   void writeNotNull(String key, dynamic value) {
@@ -260,13 +286,12 @@ Map<String, dynamic> _$AirQualityIndexDataToJson(AirQualityIndexData instance) {
   }
 
   writeNotNull('__type', instance.$type);
-  val['air_quality_index'] = instance.airQualityIndex;
+  val['airQualityIndex'] = instance.airQualityIndex;
   val['source'] = instance.source;
   val['place'] = instance.place;
   val['latitude'] = instance.latitude;
   val['longitude'] = instance.longitude;
-  val['air_quality_level'] =
-      _$AirQualityLevelEnumMap[instance.airQualityLevel]!;
+  val['airQualityLevel'] = _$AirQualityLevelEnumMap[instance.airQualityLevel]!;
   return val;
 }
 
@@ -316,20 +341,20 @@ Map<String, dynamic> _$AirQualityServiceToJson(AirQualityService instance) {
   return val;
 }
 
-MobilityData _$MobilityDataFromJson(Map<String, dynamic> json) => MobilityData()
+Mobility _$MobilityFromJson(Map<String, dynamic> json) => Mobility()
   ..$type = json['__type'] as String?
   ..timestamp = json['timestamp'] == null
       ? null
       : DateTime.parse(json['timestamp'] as String)
   ..date = json['date'] == null ? null : DateTime.parse(json['date'] as String)
-  ..numberOfPlaces = json['number_of_places'] as int?
-  ..locationVariance = (json['location_variance'] as num?)?.toDouble()
+  ..numberOfPlaces = json['numberOfPlaces'] as int?
+  ..locationVariance = (json['locationVariance'] as num?)?.toDouble()
   ..entropy = (json['entropy'] as num?)?.toDouble()
-  ..normalizedEntropy = (json['normalized_entropy'] as num?)?.toDouble()
-  ..homeStay = (json['home_stay'] as num?)?.toDouble()
-  ..distanceTravelled = (json['distance_travelled'] as num?)?.toDouble();
+  ..normalizedEntropy = (json['normalizedEntropy'] as num?)?.toDouble()
+  ..homeStay = (json['homeStay'] as num?)?.toDouble()
+  ..distanceTraveled = (json['distanceTraveled'] as num?)?.toDouble();
 
-Map<String, dynamic> _$MobilityDataToJson(MobilityData instance) {
+Map<String, dynamic> _$MobilityToJson(Mobility instance) {
   final val = <String, dynamic>{};
 
   void writeNotNull(String key, dynamic value) {
@@ -341,12 +366,12 @@ Map<String, dynamic> _$MobilityDataToJson(MobilityData instance) {
   writeNotNull('__type', instance.$type);
   writeNotNull('timestamp', instance.timestamp?.toIso8601String());
   writeNotNull('date', instance.date?.toIso8601String());
-  writeNotNull('number_of_places', instance.numberOfPlaces);
-  writeNotNull('location_variance', instance.locationVariance);
+  writeNotNull('numberOfPlaces', instance.numberOfPlaces);
+  writeNotNull('locationVariance', instance.locationVariance);
   writeNotNull('entropy', instance.entropy);
-  writeNotNull('normalized_entropy', instance.normalizedEntropy);
-  writeNotNull('home_stay', instance.homeStay);
-  writeNotNull('distance_travelled', instance.distanceTravelled);
+  writeNotNull('normalizedEntropy', instance.normalizedEntropy);
+  writeNotNull('homeStay', instance.homeStay);
+  writeNotNull('distanceTraveled', instance.distanceTraveled);
   return val;
 }
 

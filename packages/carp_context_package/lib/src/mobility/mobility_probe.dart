@@ -37,7 +37,6 @@ class MobilityProbe extends StreamProbe {
 
   /// The stream of mobility features as they are generated.
   @override
-  Stream<Measurement> get stream =>
-      MobilityFeatures().contextStream.map((context) =>
-          Measurement.fromData(MobilityData.fromMobilityContext(context)));
+  Stream<Measurement> get stream => MobilityFeatures().contextStream.map(
+      (context) => Measurement.fromData(Mobility.fromMobilityContext(context)));
 }

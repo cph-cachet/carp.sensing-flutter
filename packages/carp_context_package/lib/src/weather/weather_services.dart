@@ -40,13 +40,13 @@ class WeatherService extends OnlineService {
 /// A [DeviceManager] for the [WeatherService].
 class WeatherServiceManager
     extends OnlineServiceManager<DeviceRegistration, WeatherService> {
-  WeatherFactory? _service;
+  weather.WeatherFactory? _service;
 
   /// A handle to the [WeatherFactory] plugin.
-  WeatherFactory? get service => (_service != null)
+  weather.WeatherFactory? get service => (_service != null)
       ? _service
       : (deviceDescriptor?.apiKey != null)
-          ? _service = WeatherFactory(deviceDescriptor!.apiKey)
+          ? _service = weather.WeatherFactory(deviceDescriptor!.apiKey)
           : null;
 
   @override

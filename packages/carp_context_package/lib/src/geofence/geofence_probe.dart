@@ -1,6 +1,6 @@
 part of carp_context_package;
 
-/// Listen on location movements and reports a [GeofenceData] to the [stream]
+/// Listen on location movements and reports a [Geofence] to the [stream]
 /// when a geofence event happens. This probe can handle only one measure.
 /// If you need multiple geofences, add a [GeofenceMeasure] for each to your [Study]
 /// for example using the [Trigger] model.
@@ -18,7 +18,7 @@ class GeofenceProbe extends StreamProbe {
 
   @override
   Future<bool> onStart() async {
-    Geofence fence = Geofence.fromGeofenceSamplingConfiguration(
+    CircularGeofence fence = CircularGeofence.fromGeofenceSamplingConfiguration(
         samplingConfiguration as GeofenceSamplingConfiguration);
 
     // listen in on the location service
@@ -27,7 +27,7 @@ class GeofenceProbe extends StreamProbe {
         .listen((location) {
       // when a location event is fired, check if the new location creates a new [GeofenceData] event.
       // if so -- add it to the main stream.
-      GeofenceData? data = fence.moved(location);
+      Geofence? data = fence.moved(location);
       if (data != null) {
         geoFenceStreamController.add(Measurement.fromData(data));
       }
@@ -45,7 +45,7 @@ enum GeofenceState { inside, outside, unknown }
 
 /// A class representing a circular geofence with a center,
 /// a radius (in meters) and a name.
-class Geofence {
+class CircularGeofence {
   /// The last known state of this geofence.
   GeofenceState state = GeofenceState.unknown;
 
@@ -66,23 +66,23 @@ class Geofence {
   String? name;
 
   /// Specify a geofence.
-  Geofence({
+  CircularGeofence({
     required this.center,
     required this.radius,
     required this.dwell,
     this.name,
   }) : super();
 
-  factory Geofence.fromGeofenceSamplingConfiguration(
+  factory CircularGeofence.fromGeofenceSamplingConfiguration(
           GeofenceSamplingConfiguration configuration) =>
-      Geofence(
+      CircularGeofence(
         center: configuration.center,
         radius: configuration.radius,
         dwell: configuration.dwell,
       );
 
-  GeofenceData? moved(GeoPosition location) {
-    GeofenceData? data;
+  Geofence? moved(GeoPosition location) {
+    Geofence? data;
     if (center.distanceTo(location) < radius) {
       // we're inside the geofence
       switch (state) {
@@ -91,7 +91,7 @@ class Geofence {
           // if we came from outside the fence, we have now entered
           state = GeofenceState.inside;
           lastEvent = DateTime.now();
-          data = GeofenceData(type: GeofenceType.ENTER, name: name);
+          data = Geofence(type: GeofenceType.ENTER, name: name);
           break;
         case GeofenceState.inside:
           // if we were already inside, check if dwelling takes place
@@ -99,7 +99,7 @@ class Geofence {
             // we have been dwelling in this geofence
             state = GeofenceState.inside;
             lastEvent = DateTime.now();
-            data = GeofenceData(type: GeofenceType.DWELL, name: name);
+            data = Geofence(type: GeofenceType.DWELL, name: name);
           }
           break;
       }
@@ -109,7 +109,7 @@ class Geofence {
         // we have just left the geofence
         state = GeofenceState.outside;
         lastEvent = DateTime.now();
-        data = GeofenceData(type: GeofenceType.EXIT, name: name);
+        data = Geofence(type: GeofenceType.EXIT, name: name);
       }
     }
 

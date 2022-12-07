@@ -13,7 +13,7 @@ class SensorSamplingPackage extends SmartphoneSamplingPackage {
   ///  * Event-based measure.
   ///  * Uses the [Smartphone] device for data collection.
   ///  * No sampling configuration needed.
-  static const String USER_ACCELERATION =
+  static const String NON_GRAVITATIONAL_ACCELERATION =
       CarpDataTypes.NON_GRAVITATIONAL_ACCELERATION_TYPE_NAME;
 
   /// Rotation of the device in x,y,z (typically measured by a gyroscope).
@@ -33,7 +33,7 @@ class SensorSamplingPackage extends SmartphoneSamplingPackage {
   ///  * Uses the [Smartphone] device for data collection.
   ///  * Uses a [PeriodicSamplingConfiguration] for configuration.
   static const String AMBIENT_LIGHT =
-      '${CarpDataTypes.CARP_NAMESPACE}.ambient_light';
+      '${CarpDataTypes.CARP_NAMESPACE}.ambientlight';
 
   /// The number of steps taken in a specified time interval.
   ///  * Event-based measure.
@@ -44,17 +44,14 @@ class SensorSamplingPackage extends SmartphoneSamplingPackage {
   @override
   List<DataTypeMetaData> get dataTypes => [
         CarpDataTypes().types[CarpDataTypes.ACCELERATION_TYPE_NAME]!,
-        DataTypeMetaData(
-          type: USER_ACCELERATION,
-          displayName: "User acceleration",
-          timeType: DataTimeType.POINT,
-        ),
+        CarpDataTypes()
+            .types[CarpDataTypes.NON_GRAVITATIONAL_ACCELERATION_TYPE_NAME]!,
         CarpDataTypes().types[CarpDataTypes.ROTATION_TYPE_NAME]!,
         CarpDataTypes().types[CarpDataTypes.STEP_COUNT_TYPE_NAME]!,
         CarpDataTypes().types[CarpDataTypes.MAGNETIC_FIELD_TYPE_NAME]!,
         DataTypeMetaData(
           type: AMBIENT_LIGHT,
-          displayName: "Ambient light",
+          displayName: "Ambient Light",
           timeType: DataTimeType.TIME_SPAN,
         ),
       ];
@@ -64,7 +61,7 @@ class SensorSamplingPackage extends SmartphoneSamplingPackage {
     switch (type) {
       case ACCELERATION:
         return AccelerometerProbe();
-      case USER_ACCELERATION:
+      case NON_GRAVITATIONAL_ACCELERATION:
         return UserAccelerometerProbe();
       case MAGNETIC_FIELD:
         return MagnetometerProbe();

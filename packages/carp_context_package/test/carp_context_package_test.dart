@@ -159,7 +159,7 @@ void main() {
   });
 
   test('CARP Location', () {
-    LocationData loc = LocationData()
+    Location loc = Location()
       ..longitude = 12.23342
       ..latitude = 3.34224
       ..altitude = 124.2134235;
@@ -172,42 +172,47 @@ void main() {
   });
 
   test('CARP Location -> OMH Geoposition', () {
-    LocationData loc = LocationData()
-      ..longitude = 12.23342
-      ..latitude = 3.34224;
+    Location loc = Location(longitude: 12.23342, latitude: 3.34224);
     Measurement m_1 = Measurement.fromData(loc);
     expect(m_1.dataType.namespace, NameSpace.CARP);
-    print(_encode(m_1));
+    print(_encode(loc));
 
     OMHGeopositionDataPoint geo = TransformerSchemaRegistry()
         .lookup(NameSpace.OMH)!
         .transform(loc) as OMHGeopositionDataPoint;
+    print(_encode(geo));
+
     Measurement m_2 = Measurement.fromData(geo);
+    print(_encode(m_2));
+
     expect(m_2.dataType.namespace, NameSpace.OMH);
     expect(geo.datapoint.body, isA<omh.Geoposition>());
     var geopos = geo.datapoint.body as omh.Geoposition;
     expect(geopos.latitude.value, loc.latitude);
-    print(_encode(m_2));
   });
 
   test('CARP Activity -> OMH Physical Activity', () {
-    ActivityData act = ActivityData(ActivityType.WALKING, 100);
-    DataPoint dp_1 = DataPoint.fromData(act);
-    expect(dp_1.carpHeader.dataFormat.namespace, NameSpace.CARP);
-    print(_encode(dp_1));
+    ActivityEvent act = ActivityEvent(ActivityType.WALKING, 100);
+    Measurement m_1 = Measurement.fromData(act);
+    expect(m_1.dataType.namespace, NameSpace.CARP);
+    print(_encode(act));
 
     OMHPhysicalActivityDataPoint phy = TransformerSchemaRegistry()
         .lookup(NameSpace.OMH)!
         .transform(act) as OMHPhysicalActivityDataPoint;
-    DataPoint dp_2 = DataPoint.fromData(phy);
-    expect(dp_2.carpHeader.dataFormat.namespace, NameSpace.OMH);
+    print(_encode(phy));
+
+    Measurement m_2 = Measurement.fromData(phy);
+    print(_encode(m_2));
+
+    expect(m_2.dataType.namespace, NameSpace.OMH);
+    expect(phy.datapoint.body, isA<omh.PhysicalActivity>());
     var act_2 = phy.datapoint.body as omh.PhysicalActivity;
     expect(act_2.activityName, act.typeString);
-    print(_encode(dp_2));
   });
 
   test('Geofence', () {
-    GeofenceData? d;
+    Geofence? d;
     GeoPosition home = GeoPosition(55.7946, 12.4472); // Parsbergsvej
     GeoPosition dtu = GeoPosition(55.786025, 12.524159); // DTU
     GeoPosition compute = GeoPosition(55.783499, 12.518914); // DTU Compute
@@ -219,8 +224,9 @@ void main() {
       radius: 5,
     );
 
-    Geofence f = Geofence.fromGeofenceSamplingConfiguration(config)
-      ..dwell = const Duration(seconds: 2); // dwell timeout 2 secs.
+    CircularGeofence f =
+        CircularGeofence.fromGeofenceSamplingConfiguration(config)
+          ..dwell = const Duration(seconds: 2); // dwell timeout 2 secs.
     print(f);
 
     d = f.moved(home);

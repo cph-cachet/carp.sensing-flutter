@@ -12,19 +12,18 @@ class WeatherProbe extends MeasurementProbe {
     return true;
   }
 
-  /// Returns the [WeatherData] for this location.
+  /// Returns the [Weather] for this location.
   @override
   Future<Measurement> getMeasurement() async {
     if (deviceManager.service != null) {
       try {
         final loc = await LocationManager().getLastKnownLocation();
-        final Weather weather =
-            await deviceManager.service!.currentWeatherByLocation(
+        final w = await deviceManager.service!.currentWeatherByLocation(
           loc.latitude!,
           loc.longitude!,
         );
 
-        return Measurement.fromData(WeatherData.fromWeatherData(weather));
+        return Measurement.fromData(Weather.fromWeatherData(w));
       } catch (error) {
         warning('$runtimeType - Error getting weather - $error');
         return Measurement.fromData(

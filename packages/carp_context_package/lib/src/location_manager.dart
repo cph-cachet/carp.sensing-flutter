@@ -130,7 +130,7 @@ class LocationManager {
   Future<location.LocationData> getLastKnownLocation() async =>
       _lastKnownLocation ?? await locationManager.getLocation();
 
-  /// Returns a stream of [LocationData] objects.
+  /// Returns a stream of [Location] objects.
   /// Throws an error if the app has no permission to access location.
   Stream<location.LocationData> get onLocationChanged =>
       locationManager.onLocationChanged;

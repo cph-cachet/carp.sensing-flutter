@@ -169,7 +169,7 @@ class FromJsonFactory {
 
   /// Register all [serializables].
   ///
-  /// A convinient way to call [register] for multiple types.
+  /// A connivent way to call [register] for multiple types.
   void registerAll(List<Serializable> serializables) {
     for (var serializable in serializables) {
       register(serializable);
@@ -204,6 +204,6 @@ class SerializationException implements Exception {
   String toString() => '$runtimeType - $message';
 }
 
-/// A convient function to convert a Dart object into a formatted JSON string.
+/// A connivent function to convert a Dart object into a formatted JSON string.
 String toJsonString(Object? object) =>
     const JsonEncoder.withIndent(' ').convert(object);

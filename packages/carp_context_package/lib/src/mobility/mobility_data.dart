@@ -1,8 +1,8 @@
 part of carp_context_package;
 
-/// A [Data] that holds mobility features information.
-@JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)
-class MobilityData extends Data {
+/// Holds mobility features information.
+@JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
+class Mobility extends Data {
   static const dataType = ContextSamplingPackage.MOBILITY;
 
   /// The time this data was collected.
@@ -28,29 +28,28 @@ class MobilityData extends Data {
   /// Home Stay on [date]. A scalar between 0 and 1.
   double? homeStay;
 
-  /// Distance travelled on [date], in meters.
-  double? distanceTravelled;
+  /// Distance traveled on [date], in meters.
+  double? distanceTraveled;
 
-  MobilityData() : super();
+  Mobility() : super();
 
-  factory MobilityData.fromMobilityContext(MobilityContext context) =>
-      MobilityData()
-        ..date = context.date
-        ..timestamp = context.timestamp
-        ..numberOfPlaces = context.numberOfSignificantPlaces
-        ..locationVariance = context.locationVariance
-        ..entropy = context.entropy
-        ..normalizedEntropy = context.normalizedEntropy
-        ..homeStay = context.homeStay
-        ..distanceTravelled = context.distanceTravelled;
+  factory Mobility.fromMobilityContext(MobilityContext context) => Mobility()
+    ..date = context.date
+    ..timestamp = context.timestamp
+    ..numberOfPlaces = context.numberOfSignificantPlaces
+    ..locationVariance = context.locationVariance
+    ..entropy = context.entropy
+    ..normalizedEntropy = context.normalizedEntropy
+    ..homeStay = context.homeStay
+    ..distanceTraveled = context.distanceTravelled;
 
-  factory MobilityData.fromJson(Map<String, dynamic> json) =>
-      _$MobilityDataFromJson(json);
+  factory Mobility.fromJson(Map<String, dynamic> json) =>
+      _$MobilityFromJson(json);
 
   @override
-  Map<String, dynamic> toJson() => _$MobilityDataToJson(this);
+  Map<String, dynamic> toJson() => _$MobilityToJson(this);
 
   @override
   String toString() =>
-      '${super.toString()}, number of places: $numberOfPlaces, location variance: $locationVariance, entropy: $entropy, normalized entropy: $normalizedEntropy, home stay: $homeStay, distance travelled: $distanceTravelled';
+      '${super.toString()}, number of places: $numberOfPlaces, location variance: $locationVariance, entropy: $entropy, normalized entropy: $normalizedEntropy, home stay: $homeStay, distance travelled: $distanceTraveled';
 }

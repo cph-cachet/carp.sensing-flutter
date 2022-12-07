@@ -20,7 +20,7 @@ typedef VoidFunction = void Function();
 /// from a [DeploymentService] since it relies on specifying a Dart-specific function.
 /// Hence, this trigger is mostly useful when creating a [StudyProtocol] directly
 /// in the app using Dart code.
-@JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)
+@JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
 class FunctionTask extends TaskConfiguration {
   /// The function to execute when this task is resumed.
   @JsonKey(ignore: true)

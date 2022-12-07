@@ -12,7 +12,7 @@ class AirQualityProbe extends MeasurementProbe {
     return true;
   }
 
-  /// Returns the [AirQualityIndexData] based on the location of the phone.
+  /// Returns the [AirQualityIndex] based on the location of the phone.
   // ignore: annotate_overrides
   Future<Measurement> getMeasurement() async {
     if (deviceManager.service != null) {
@@ -22,7 +22,7 @@ class AirQualityProbe extends MeasurementProbe {
             .feedFromGeoLocation(loc.latitude!, loc.longitude!);
 
         return Measurement.fromData(
-            AirQualityIndexData.fromAirQualityData(airQuality));
+            AirQualityIndex.fromAirQualityData(airQuality));
       } catch (err) {
         warning('$runtimeType - Error getting air quality - $err');
         return Measurement.fromData(

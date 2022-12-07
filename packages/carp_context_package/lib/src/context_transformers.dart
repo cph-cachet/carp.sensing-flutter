@@ -2,65 +2,79 @@ part of carp_context_package;
 
 /// A [Data] which can hold an OMH [DataPoint](https://www.openmhealth.org/documentation/#/schema-docs/schema-library/schemas/omh_data-point)
 /// and provide its correct OMH [format] and [provenance].
-class OMHContextDataPointData extends Data {
-  static const dataType = "${NameSpace.OMH}.${omh.SchemaSupport.DATA_POINT}";
+@JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
+class OMHContextDataPoint extends Data {
+  static const dataType = "${NameSpace.OMH}.${SchemaSupport.DATA_POINT}";
 
-  omh.DataPoint datapoint;
+  DataPoint datapoint;
 
   static String get source =>
       '{smartphone:${DeviceInfo().deviceID},app:${Settings().appName}}';
 
-  static omh.DataPointAcquisitionProvenance get provenance =>
-      omh.DataPointAcquisitionProvenance(
-          sourceName: source, modality: omh.DataPointModality.SENSED);
+  static DataPointAcquisitionProvenance get provenance =>
+      DataPointAcquisitionProvenance(
+        sourceName: source,
+        modality: DataPointModality.SENSED,
+      );
 
-  OMHContextDataPointData(this.datapoint);
+  OMHContextDataPoint(this.datapoint);
+
+  // @override
+  // Map<String, dynamic> toJson() => datapoint.toJson();
 
   @override
-  Map<String, dynamic> toJson() => datapoint.toJson();
+  Function get fromJsonFunction => _$OMHContextDataPointFromJson;
+  factory OMHContextDataPoint.fromJson(Map<String, dynamic> json) =>
+      FromJsonFactory().fromJson(json) as OMHContextDataPoint;
+  @override
+  Map<String, dynamic> toJson() => _$OMHContextDataPointToJson(this);
+
+  @override
+  String get jsonType => "${NameSpace.OMH}.${SchemaSupport.DATA_POINT}";
 }
 
 /// Holds an OMH [Geoposition](https://pub.dartlang.org/documentation/openmhealth_schemas/latest/domain_omh_geoposition/Geoposition-class.html)
 /// data point.
-class OMHGeopositionDataPoint extends OMHContextDataPointData
+class OMHGeopositionDataPoint extends OMHContextDataPoint
     implements DataTransformerFactory {
-  OMHGeopositionDataPoint(omh.DataPoint datapoint) : super(datapoint);
+  OMHGeopositionDataPoint(DataPoint datapoint) : super(datapoint);
 
-  factory OMHGeopositionDataPoint.fromLocationData(LocationData location) {
-    var pos = omh.Geoposition(
-        latitude: omh.PlaneAngleUnitValue(
-            unit: omh.PlaneAngleUnit.DEGREE_OF_ARC, value: location.latitude),
-        longitude: omh.PlaneAngleUnitValue(
-            unit: omh.PlaneAngleUnit.DEGREE_OF_ARC, value: location.longitude),
-        positioningSystem: omh.PositioningSystem.GPS);
+  factory OMHGeopositionDataPoint.fromLocationData(Location location) {
+    var pos = Geoposition(
+        latitude: PlaneAngleUnitValue(
+            unit: PlaneAngleUnit.DEGREE_OF_ARC, value: location.latitude),
+        longitude: PlaneAngleUnitValue(
+            unit: PlaneAngleUnit.DEGREE_OF_ARC, value: location.longitude),
+        positioningSystem: PositioningSystem.GPS);
 
-    return OMHGeopositionDataPoint(omh.DataPoint(
-        body: pos, provenance: OMHContextDataPointData.provenance));
+    return OMHGeopositionDataPoint(
+        DataPoint(body: pos, provenance: OMHContextDataPoint.provenance));
   }
 
   factory OMHGeopositionDataPoint.fromJson(Map<String, dynamic> json) =>
-      OMHGeopositionDataPoint(omh.DataPoint.fromJson(json));
+      OMHGeopositionDataPoint(DataPoint.fromJson(json));
 
-  static DataTransformer get transformer => ((data) =>
-      OMHGeopositionDataPoint.fromLocationData(data as LocationData));
+  static DataTransformer get transformer =>
+      ((data) => OMHGeopositionDataPoint.fromLocationData(data as Location));
 }
 
 /// Holds an OMH [PhysicalActivity](https://pub.dartlang.org/documentation/openmhealth_schemas/latest/domain_omh_activity/PhysicalActivity-class.html)
 /// data point.
-class OMHPhysicalActivityDataPoint extends OMHContextDataPointData
+class OMHPhysicalActivityDataPoint extends OMHContextDataPoint
     implements DataTransformerFactory {
-  OMHPhysicalActivityDataPoint(omh.DataPoint datapoint) : super(datapoint);
+  OMHPhysicalActivityDataPoint(DataPoint datapoint) : super(datapoint);
 
-  factory OMHPhysicalActivityDataPoint.fromActivityData(ActivityData activity) {
-    var act = omh.PhysicalActivity(activityName: activity.typeString);
+  factory OMHPhysicalActivityDataPoint.fromActivityData(
+      ActivityEvent activity) {
+    var act = PhysicalActivity(activityName: activity.typeString);
 
-    return OMHPhysicalActivityDataPoint(omh.DataPoint(
-        body: act, provenance: OMHContextDataPointData.provenance));
+    return OMHPhysicalActivityDataPoint(
+        DataPoint(body: act, provenance: OMHContextDataPoint.provenance));
   }
 
   factory OMHPhysicalActivityDataPoint.fromJson(Map<String, dynamic> json) =>
-      OMHPhysicalActivityDataPoint(omh.DataPoint.fromJson(json));
+      OMHPhysicalActivityDataPoint(DataPoint.fromJson(json));
 
   static DataTransformer get transformer => ((data) =>
-      OMHPhysicalActivityDataPoint.fromActivityData(data as ActivityData));
+      OMHPhysicalActivityDataPoint.fromActivityData(data as ActivityEvent));
 }

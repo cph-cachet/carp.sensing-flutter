@@ -8,7 +8,7 @@
 part of carp_context_package;
 
 /// Position coordinated in Degrees (i.e. GPS-style).
-@JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)
+@JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
 class GeoPosition extends Serializable {
   /// Earth radius in km.
   static const double earthRadius = 6371000.0;
