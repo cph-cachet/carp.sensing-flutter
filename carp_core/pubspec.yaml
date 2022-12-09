@@ -1,11 +1,11 @@
 name: carp_core
 description: The core domain model for the CARP Mobile Sensing Framework in Flutter.
-version: 0.40.2
+version: 0.40.3
 homepage: https://github.com/cph-cachet/carp.sensing-flutter
 
 environment:
-  sdk: ">=2.17.6 <3.0.0"
-  flutter: ">=1.17.0"
+  sdk: '>=2.17.0 <3.0.0'
+  flutter: ">=3.0.0"
 
 dependencies:
   flutter:
@@ -22,9 +22,7 @@ dependency_overrides:
   #   path: ../carp_serializable/
 
 dev_dependencies:
-  flutter_test:
-    sdk: flutter
-  build_runner: any   # For building json serialization
+  build_runner: any
   json_serializable: any
-  flutter_lints: any
   test: any
+  flutter_lints: any

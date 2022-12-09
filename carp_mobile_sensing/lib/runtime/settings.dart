@@ -32,6 +32,10 @@ class Settings {
   String? _carpBasePath;
   final Map<String, String> _deploymentBasePaths = {};
   String _timezone = 'Europe/Copenhagen';
+  bool _initialized = false;
+
+  /// Has the setting been initializd via calling the [init] method?
+  bool get initialized => _initialized;
 
   /// The global debug level setting.
   ///
@@ -112,6 +116,9 @@ class Settings {
 
   /// Initialize settings. Must be called before using any settings.
   Future<void> init() async {
+    if (_initialized) return;
+    _initialized = true;
+
     _preferences ??= await SharedPreferences.getInstance();
     _packageInfo ??= await PackageInfo.fromPlatform();
 
@@ -123,7 +130,7 @@ class Settings {
     await localApplicationPath;
     await carpBasePath;
 
-    debug('Shared Preferences:');
+    debug('$runtimeType - Shared Preferences:');
     _preferences!
         .getKeys()
         .forEach((key) => debug('[$key] : ${_preferences!.get(key)}'));

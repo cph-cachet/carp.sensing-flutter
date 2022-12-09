@@ -79,7 +79,7 @@ class SmartPhoneClientManager extends ClientManager
     print('===========================================================');
     print('  CARP Mobile Sensing (CAMS) - $runtimeType');
     print('===========================================================');
-    print('  deployment service : $deploymentService');
+    print('  deployment service : ${this.deploymentService}');
     print('   device controller : ${this.deviceController}');
     print('           device ID : $deviceId');
     print('   available devices : ${this.deviceController.devicesToString()}');
@@ -109,11 +109,31 @@ class SmartPhoneClientManager extends ClientManager
     return status;
   }
 
+  /// Create and add a study based on the [protocol] which needs to be executed on
+  /// this client. This is similar to the [addStudy] method, but deploying the
+  /// [protocol] immediately.
+  ///
+  /// Returns the newly added study.
+  Future<Study> addStudyProtocol(StudyProtocol protocol) async {
+    assert(deploymentService != null,
+        'Deployment Service has not been configured. Call configure() first.');
+
+    StudyDeploymentStatus status =
+        await deploymentService!.createStudyDeployment(protocol);
+    Study study = Study(
+      status.studyDeploymentId,
+      status.masterDeviceStatus!.device.roleName,
+    );
+
+    await addStudy(study);
+    return study;
+  }
+
   @override
   SmartphoneDeploymentController? getStudyRuntime(Study study) =>
       repository[study] as SmartphoneDeploymentController;
 
-  /// Called when this client mananger is being (re-)activated by the OS
+  /// Called when this client manager is being (re-)activated by the OS
   ///
   /// Implementations of this method should start with a call to the inherited
   /// method, as in `super.activate()`.
@@ -121,7 +141,7 @@ class SmartPhoneClientManager extends ClientManager
   @mustCallSuper
   void activate() {}
 
-  /// Called when this client mananger is being deactivated and potentially
+  /// Called when this client manager is being deactivated and potentially
   /// stopped by the OS
   ///
   /// Implementations of this method should start with a call to the inherited
@@ -129,7 +149,9 @@ class SmartPhoneClientManager extends ClientManager
   @protected
   @mustCallSuper
   Future<void> deactivate() async {
-    // make sure to save all studies
+    // first save the task queue
+    AppTaskController().saveQueue();
+    // then save all studies
     for (var study in repository.keys) {
       await getStudyRuntime(study)?.saveDeployment();
     }

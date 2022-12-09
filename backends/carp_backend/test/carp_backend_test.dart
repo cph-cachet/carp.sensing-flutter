@@ -29,6 +29,7 @@ void main() {
 
   // Initialization of serialization
   CarpMobileSensing();
+  ResearchPackage();
 
   // register the context, eSense & audio sampling package
   // this is used to be able to deserialize the downloaded protocol

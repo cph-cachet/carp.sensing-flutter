@@ -12,6 +12,7 @@ import 'package:flutter/material.dart' hide TimeOfDay;
 void main() => runApp(CARPMobileSensingApp());
 
 class CARPMobileSensingApp extends StatelessWidget {
+  @override
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'CARP Mobile Sensing Demo',
@@ -34,6 +35,7 @@ class Console extends State<ConsolePage> {
   String _log = '';
   Sensing? sensing;
 
+  @override
   void initState() {
     super.initState();
     sensing = Sensing();
@@ -51,6 +53,7 @@ class Console extends State<ConsolePage> {
     super.dispose();
   }
 
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
@@ -98,25 +101,11 @@ class Console extends State<ConsolePage> {
   }
 }
 
-/// This class handles sensing with the following business logic flow:
-///
-///  * create a [StudyProtocol]
-///  * deploy the protocol
-///  * register devices
-///  * get the deployment configuration
-///  * mark the deployment successful
-///  * create and initialize a [SmartphoneDeploymentController]
-///  * start/pause/resume/stop sensing via this study controller
+/// This class handles sensing logic.
 ///
 /// This example is useful for creating a Business Logical Object (BLOC) in a
 /// Flutter app. See e.g. the CARP Mobile Sensing App.
 class Sensing {
-  // Specify the deployment id for this study.
-  // In a real app, the user would somehow specify this.
-  String studyDeploymentId = '83ec1e70-c647-11ec-8b84-214a8597ae84';
-
-  StudyProtocol? protocol;
-  DeploymentService service = SmartphoneDeploymentService();
   SmartphoneDeploymentController? controller;
   Study? study;
 
@@ -124,22 +113,15 @@ class Sensing {
   Future<void> init() async {
     Settings().debugLevel = DebugLevel.DEBUG;
 
-    // Configure the on-phone deployment service with a protocol.
-    protocol =
-        await LocalStudyProtocolManager().getStudyProtocol(studyDeploymentId);
-    StudyDeploymentStatus status =
-        await service.createStudyDeployment(protocol!, studyDeploymentId);
+    // Get the local protocol.
+    StudyProtocol protocol =
+        await LocalStudyProtocolManager().getStudyProtocol('ignored');
 
-    // Create and configure a client manager for this phone.
+    // Create and configure a client manager for this phone, and
+    // create a study based on the protocol.
     SmartPhoneClientManager client = SmartPhoneClientManager();
-    await client.configure(deploymentService: service);
-
-    // Define the study and add it to the client.
-    study = Study(
-      status.studyDeploymentId,
-      status.masterDeviceStatus!.device.roleName,
-    );
-    await client.addStudy(study!);
+    await client.configure();
+    study = await client.addStudyProtocol(protocol);
 
     // Get the study controller and try to deploy the study.
     //
@@ -158,12 +140,12 @@ class Sensing {
     // However, nothing will happen when you click on them.
     // See the PulmonaryMonitor demo app for a full-scale example of how to use
     // the App Task model.
-    await controller!.configure(
+    await controller?.configure(
       enableNotifications: true,
     );
 
     // Listening on the data stream and print them as json.
-    controller!.data.listen((data) => print(toJsonString(data)));
+    controller?.data.listen((data) => print(toJsonString(data)));
   }
 
   /// Is sensing running, i.e. has the study executor been resumed?
@@ -186,13 +168,14 @@ class Sensing {
 
 /// This is a simple local [StudyProtocolManager].
 ///
-/// This class shows how to configure a [StudyProtocol] with [Tigger]s,
-/// [TaskDescriptor]s and [Measure]s.
+/// This class shows how to configure a [StudyProtocol] with Triggers,
+/// Tasks and Measures.
 class LocalStudyProtocolManager implements StudyProtocolManager {
   Future<void> initialize() async {}
 
   /// Create a new CAMS study protocol.
   Future<SmartphoneStudyProtocol> getStudyProtocol(String id) async {
+    // Create a protocol. Note that the [id] is not used for anything.
     SmartphoneStudyProtocol protocol = SmartphoneStudyProtocol(
         ownerId: 'AB',
         name: 'Track patient movement',
@@ -207,54 +190,70 @@ class LocalStudyProtocolManager implements StudyProtocolManager {
     var phone = Smartphone();
     protocol.addMasterDevice(phone);
 
-    // Add measures from the [DeviceSamplingPackage] and [SensorSamplingPackage]
-    // sampling packages.
+    // // // Add measures from the [DeviceSamplingPackage] and [SensorSamplingPackage]
+    // // // sampling packages.
+    // protocol.addTriggeredTask(
+    //     ImmediateTrigger(),
+    //     BackgroundTask()
+    //       ..addMeasures([
+    //         // Measure(type: SensorSamplingPackage.ACCELEROMETER),
+    //         // Measure(type: SensorSamplingPackage.GYROSCOPE),
+    //         Measure(type: DeviceSamplingPackage.MEMORY),
+    //         Measure(type: DeviceSamplingPackage.BATTERY),
+    //         Measure(type: DeviceSamplingPackage.SCREEN),
+    //         Measure(type: SensorSamplingPackage.PEDOMETER),
+    //         Measure(type: SensorSamplingPackage.LIGHT)
+    //       ]),
+    //     phone);
+
+    // // Collect device info only once
+    // protocol.addTriggeredTask(
+    //     OneTimeTrigger(),
+    //     BackgroundTask()
+    //       ..addMeasure(Measure(type: DeviceSamplingPackage.DEVICE)),
+    //     phone);
+
+    // protocol.addTriggeredTask(
+    //     IntervalTrigger(period: Duration(seconds: 5)),
+    //     BackgroundTask(measures: [Measure(type: DeviceSamplingPackage.DEVICE)]),
+    //     phone);
+
     protocol.addTriggeredTask(
-        ImmediateTrigger(),
-        BackgroundTask()
-          ..addMeasures([
-            // Measure(type: SensorSamplingPackage.ACCELEROMETER),
-            // Measure(type: SensorSamplingPackage.GYROSCOPE),
-            Measure(type: DeviceSamplingPackage.MEMORY),
-            Measure(type: DeviceSamplingPackage.BATTERY),
-            Measure(type: DeviceSamplingPackage.SCREEN),
-            Measure(type: SensorSamplingPackage.PEDOMETER),
-            Measure(type: SensorSamplingPackage.LIGHT)
-          ]),
+        PeriodicTrigger(
+            period: Duration(seconds: 6), duration: Duration(seconds: 2)),
+        BackgroundTask(measures: [
+          Measure(type: SensorSamplingPackage.USER_ACCELEROMETER)
+        ]),
         phone);
 
-    // Collect device info only once
-    protocol.addTriggeredTask(
-        OneTimeTrigger(),
-        BackgroundTask()
-          ..addMeasure(Measure(type: DeviceSamplingPackage.DEVICE)),
-        phone);
+    protocol.addTriggeredTask(IntervalTrigger(period: Duration(seconds: 5)),
+        FunctionTask(function: () => print('Her går det godt....!')), phone);
 
-    // add a random trigger to collect device info at random times
-    protocol.addTriggeredTask(
-        RandomRecurrentTrigger(
-          startTime: TimeOfDay(hour: 07, minute: 45),
-          endTime: TimeOfDay(hour: 22, minute: 30),
-          minNumberOfTriggers: 2,
-          maxNumberOfTriggers: 8,
-        ),
-        BackgroundTask()
-          ..addMeasure(Measure(type: DeviceSamplingPackage.DEVICE)),
-        phone);
+    // // add a random trigger to collect device info at random times
+    // protocol.addTriggeredTask(
+    //     RandomRecurrentTrigger(
+    //       startTime: TimeOfDay(hour: 07, minute: 45),
+    //       endTime: TimeOfDay(hour: 22, minute: 30),
+    //       minNumberOfTriggers: 2,
+    //       maxNumberOfTriggers: 8,
+    //     ),
+    //     BackgroundTask()
+    //       ..addMeasure(Measure(type: DeviceSamplingPackage.DEVICE)),
+    //     phone);
 
-    // add a ConditionalPeriodicTrigger to check periodically
-    protocol.addTriggeredTask(
-        ConditionalPeriodicTrigger(
-          period: Duration(seconds: 10),
-          resumeCondition: () {
-            //
-            return ('jakob'.length == 5);
-          },
-          pauseCondition: () => true,
-        ),
-        BackgroundTask()
-          ..addMeasure(Measure(type: DeviceSamplingPackage.DEVICE)),
-        phone);
+    // // add a ConditionalPeriodicTrigger to check periodically
+    // protocol.addTriggeredTask(
+    //     ConditionalPeriodicTrigger(
+    //       period: Duration(seconds: 10),
+    //       resumeCondition: () {
+    //         //
+    //         return ('jakob'.length == 5);
+    //       },
+    //       pauseCondition: () => true,
+    //     ),
+    //     BackgroundTask()
+    //       ..addMeasure(Measure(type: DeviceSamplingPackage.DEVICE)),
+    //     phone);
 
     // Add an app task 2 minutes after deployment and make a notification.
     //

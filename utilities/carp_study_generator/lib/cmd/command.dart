@@ -33,15 +33,18 @@ abstract class AbstractCommand implements Command {
 
   @mustCallSuper
   AbstractCommand() {
-    // Settings().debugLevel = DebugLevel.DEBUG;
+    WidgetsFlutterBinding.ensureInitialized();
 
-    // make sure not to mess with CAMS
-    Settings().saveAppTaskQueue = false;
+    // Settings().debugLevel = DebugLevel.DEBUG;
 
     // Initialization of serialization
     CarpMobileSensing();
     CarpDataManager();
-    RPTask(identifier: 'ignored');
+    ResearchPackage();
+    CognitionPackage();
+
+    // make sure not to mess with CAMS
+    Settings().saveAppTaskQueue = false;
 
     if (_yaml == null) {
       _yaml = loadYaml(File('carp/carpspec.yaml').readAsStringSync());
@@ -52,9 +55,10 @@ abstract class AbstractCommand implements Command {
     // SamplingPackageRegistry().register(CommunicationSamplingPackage());
     SamplingPackageRegistry().register(ContextSamplingPackage());
     SamplingPackageRegistry().register(MediaSamplingPackage());
-    SamplingPackageRegistry().register(ESenseSamplingPackage());
     SamplingPackageRegistry().register(SurveySamplingPackage());
     SamplingPackageRegistry().register(HealthSamplingPackage());
+    SamplingPackageRegistry().register(ESenseSamplingPackage());
+    SamplingPackageRegistry().register(PolarSamplingPackage());
   }
 
   /// The configuration of the CARP server app.

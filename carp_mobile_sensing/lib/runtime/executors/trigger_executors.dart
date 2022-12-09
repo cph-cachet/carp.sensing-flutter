@@ -192,20 +192,11 @@ class ElapsedTimeTriggerExecutor
   }
 }
 
-abstract class TimerTriggerExecutor<TConfig extends Trigger>
-    extends ScheduleableTriggerExecutor<TConfig> {
+/// Executes a [IntervalTrigger], i.e. resumes sampling on a regular basis.
+class IntervalTriggerExecutor
+    extends ScheduleableTriggerExecutor<IntervalTrigger> {
   Timer? timer;
 
-  @override
-  Future<bool> onPause() async {
-    timer?.cancel();
-    await super.onPause();
-    return true;
-  }
-}
-
-/// Executes a [IntervalTrigger], i.e. resumes sampling on a regular basis.
-class IntervalTriggerExecutor extends TimerTriggerExecutor<IntervalTrigger> {
   @override
   List<DateTime> getSchedule(DateTime from, DateTime to, [int max = 100]) {
     final List<DateTime> schedule = [];
@@ -229,6 +220,13 @@ class IntervalTriggerExecutor extends TimerTriggerExecutor<IntervalTrigger> {
     });
     return true;
   }
+
+  @override
+  Future<bool> onPause() async {
+    timer?.cancel();
+    await super.onPause();
+    return true;
+  }
 }
 
 /// Executes a [PeriodicTrigger], i.e. resumes sampling on a regular basis for
@@ -237,7 +235,10 @@ class IntervalTriggerExecutor extends TimerTriggerExecutor<IntervalTrigger> {
 /// It is required that both the [period] and the [duration] of the
 /// [PeriodicTrigger] is specified to make sure that this executor is properly
 /// resumed and paused again.
-class PeriodicTriggerExecutor extends TimerTriggerExecutor<PeriodicTrigger> {
+class PeriodicTriggerExecutor
+    extends ScheduleableTriggerExecutor<PeriodicTrigger> {
+  Timer? timer;
+
   @override
   List<DateTime> getSchedule(DateTime from, DateTime to, [int max = 100]) {
     final List<DateTime> schedule = [];
@@ -265,10 +266,20 @@ class PeriodicTriggerExecutor extends TimerTriggerExecutor<PeriodicTrigger> {
     });
     return true;
   }
+
+  @override
+  Future<bool> onPause() async {
+    timer?.cancel();
+    await super.onPause();
+    return true;
+  }
 }
 
 /// Executes a [DateTimeTrigger] on the specified date and time.
-class DateTimeTriggerExecutor extends TimerTriggerExecutor<DateTimeTrigger> {
+class DateTimeTriggerExecutor
+    extends ScheduleableTriggerExecutor<DateTimeTrigger> {
+  Timer? timer;
+
   @override
   List<DateTime> getSchedule(DateTime from, DateTime to, [int? max]) =>
       (configuration!.schedule.isAfter(from) &&
@@ -298,11 +309,20 @@ class DateTimeTriggerExecutor extends TimerTriggerExecutor<DateTimeTrigger> {
     }
     return true;
   }
+
+  @override
+  Future<bool> onPause() async {
+    timer?.cancel();
+    await super.onPause();
+    return true;
+  }
 }
 
 /// Executes a [RecurrentScheduledTrigger].
 class RecurrentScheduledTriggerExecutor
-    extends TimerTriggerExecutor<RecurrentScheduledTrigger> {
+    extends ScheduleableTriggerExecutor<RecurrentScheduledTrigger> {
+  Timer? timer;
+
   @override
   List<DateTime> getSchedule(DateTime from, DateTime to, [int max = 100]) {
     List<DateTime> schedule = [];
@@ -323,10 +343,17 @@ class RecurrentScheduledTriggerExecutor
     Duration delay = configuration!.firstOccurrence.difference(DateTime.now());
     if (configuration!.end == null ||
         configuration!.end!.isAfter(DateTime.now())) {
-      Timer(delay, () async {
+      timer = Timer(delay, () async {
         await super.onResume();
       });
     }
+    return true;
+  }
+
+  @override
+  Future<bool> onPause() async {
+    timer?.cancel();
+    await super.onPause();
     return true;
   }
 }
@@ -605,8 +632,7 @@ class RandomRecurrentTriggerExecutor
     }
     // cancel the daily cron job
     await _scheduledTask.cancel();
-    await super.onPause();
-    return true;
+    return await super.onPause();
   }
 }
 
@@ -627,13 +653,13 @@ class UserTaskTriggerExecutor extends TriggerExecutor<UserTaskTrigger> {
             userTask.state == configuration!.pauseCondition!) super.onPause();
       }
     });
+    // print('>> listening to user task events - $_subscription');
     return true;
   }
 
   @override
   Future<bool> onPause() async {
     await _subscription?.cancel();
-    await super.onPause();
-    return true;
+    return await super.onPause();
   }
 }

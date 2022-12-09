@@ -60,6 +60,7 @@ class BluetoothProbe extends BufferingPeriodicStreamProbe {
 
   @override
   void onSamplingStart() {
+    _datum = BluetoothDatum();
     try {
       FlutterBluePlus.instance.startScan(
           scanMode: ScanMode.lowLatency,
@@ -76,12 +77,8 @@ class BluetoothProbe extends BufferingPeriodicStreamProbe {
 
   @override
   void onSamplingData(event) {
-    print('>> scan event: $event');
     if (event is List<ScanResult>) {
-      // add the datum for each scan list we get (don't wait for the scan to end)
-      addData(BluetoothDatum()
-        ..scanResult.addAll(event
-            .map((scanResult) => BluetoothDevice.fromScanResult(scanResult))));
+      (_datum as BluetoothDatum).addBluetoothDevicesFromScanResults(event);
     }
   }
 }

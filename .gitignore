@@ -33,6 +33,12 @@ build/
 .flutter-plugins
 *.xcconfig
 
+backends/carp_backend/test/credentials.dart
+apps/carp_mobile_sensing_app/lib/src/sensing/credentials.dart
+apps/carp_mobile_sensing_app/test/credentials.dart
+
+*.sh
+
 # See https://www.dartlang.org/guides/libraries/private-files
 
 # Files and directories created by pub

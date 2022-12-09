@@ -56,14 +56,23 @@ class BluetoothDatum extends Datum {
   DataFormat get format =>
       DataFormat.fromString(ConnectivitySamplingPackage.BLUETOOTH);
 
-  List<BluetoothDevice> scanResult = [];
+  /// A map of [BluetoothDevice] indexed by their [bluetoothDeviceId] to make
+  /// sure that the same device only appears once.
+  final Map<String, BluetoothDevice> _scanResult = {};
+
+  /// The list of [BluetoothDevice] found in a scan.
+  List<BluetoothDevice> get scanResult => _scanResult.values.toList();
+  set scanResult(List<BluetoothDevice> devices) => _scanResult.addEntries(
+      devices.map((device) => MapEntry(device.bluetoothDeviceId, device)));
 
   BluetoothDatum() : super();
 
-  factory BluetoothDatum.fromScanResults(List<ScanResult> results) =>
-      BluetoothDatum()
-        ..scanResult =
-            results.map((r) => BluetoothDevice.fromScanResult(r)).toList();
+  void addBluetoothDevice(BluetoothDevice device) =>
+      _scanResult[device.bluetoothDeviceId] = device;
+
+  void addBluetoothDevicesFromScanResults(List<ScanResult> results) =>
+      results.forEach((scanResult) =>
+          addBluetoothDevice(BluetoothDevice.fromScanResult(scanResult)));
 
   factory BluetoothDatum.fromJson(Map<String, dynamic> json) =>
       _$BluetoothDatumFromJson(json);

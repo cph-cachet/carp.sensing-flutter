@@ -1,11 +1,32 @@
+## 0.40.7
+
+* Fix of `BufferingUserAccelerometerProbe` error.
+
+## 0.40.6
+
+* Addition of `USER_ACCELEROMETER` measure (issue [#283](https://github.com/cph-cachet/carp.sensing-flutter/issues/283)).
+* Added the `FunctionTask` task type which can executed a Dart function when resumed (issue [#284](https://github.com/cph-cachet/carp.sensing-flutter/issues/284)).
+* Support for application-specific data / configuration in the `SmartphoneStudyProtocol` (issue [#285](https://github.com/cph-cachet/carp.sensing-flutter/issues/285)).
+
+## 0.40.5
+
+* Fix of issue [#280](https://github.com/cph-cachet/carp.sensing-flutter/issues/280).
+
+## 0.40.4+1
+
+* Added convenience method `addStudyProtocol` to `SmartPhoneClientManager` and updated examples accordingly.
+
 ## 0.40.3
 
-* added the `UserTaskTrigger` trigger.
+* Added the `UserTaskTrigger` trigger.
+* Added the `magnetometer` measure type.
+* Upgrade of `device_info_plus` v. ^8.0.0
+* Upgrade to `carp_core` v. 0.40.3
 
 ## 0.40.2
 
-* upgrade to `carp_core` v. 0.40.2
-* fix of issue [#269](https://github.com/cph-cachet/carp.sensing-flutter/issues/269).
+* Upgrade to `carp_core` v. 0.40.2
+* Fix of issue [#269](https://github.com/cph-cachet/carp.sensing-flutter/issues/269).
 
 ## 0.40.0 - BREAKING
 

@@ -35,7 +35,17 @@ AppUsageDatum _$AppUsageDatumFromJson(Map<String, dynamic> json) =>
     )
       ..id = json['id'] as String?
       ..timestamp = DateTime.parse(json['timestamp'] as String)
-      ..usage = Map<String, int>.from(json['usage'] as Map);
+      ..usage = Map<String, int>.from(json['usage'] as Map)
+      ..startRange = (json['start_range'] as Map<String, dynamic>).map(
+        (k, e) => MapEntry(k, DateTime.parse(e as String)),
+      )
+      ..stopRange = (json['stop_range'] as Map<String, dynamic>).map(
+        (k, e) => MapEntry(k, DateTime.parse(e as String)),
+      )
+      ..lastUseForeground =
+          (json['last_use_foreground'] as Map<String, dynamic>).map(
+        (k, e) => MapEntry(k, DateTime.parse(e as String)),
+      );
 
 Map<String, dynamic> _$AppUsageDatumToJson(AppUsageDatum instance) {
   final val = <String, dynamic>{};
@@ -51,5 +61,11 @@ Map<String, dynamic> _$AppUsageDatumToJson(AppUsageDatum instance) {
   val['start'] = instance.start.toIso8601String();
   val['end'] = instance.end.toIso8601String();
   val['usage'] = instance.usage;
+  val['start_range'] =
+      instance.startRange.map((k, e) => MapEntry(k, e.toIso8601String()));
+  val['stop_range'] =
+      instance.stopRange.map((k, e) => MapEntry(k, e.toIso8601String()));
+  val['last_use_foreground'] = instance.lastUseForeground
+      .map((k, e) => MapEntry(k, e.toIso8601String()));
   return val;
 }

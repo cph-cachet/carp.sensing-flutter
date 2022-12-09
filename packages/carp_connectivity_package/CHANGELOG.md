@@ -1,3 +1,9 @@
+## 0.40.1
+
+* fix of [#287](https://github.com/cph-cachet/carp.sensing-flutter/issues/287).
+* fix of [#293](https://github.com/cph-cachet/carp.sensing-flutter/issues/293).
+* upgrade of `connectivity_plus: ^3.0.0` and `network_info_plus: ^3.0.0`.
+
 ## 0.40.0
 
 * update to `carp_mobile_sensing` v. 0.40.0

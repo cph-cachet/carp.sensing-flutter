@@ -2,363 +2,363 @@
   "ownerId": "alex@uni.dk",
   "name": "Context package test",
   "description": "",
-  "creationDate": "2022-05-10T13:53:43.869397Z",
+  "creationDate": "2022-10-21T14:49:27.210808Z",
   "masterDevices": [
-   {
-    "$type": "dk.cachet.carp.protocols.domain.devices.Smartphone",
-    "isMasterDevice": true,
-    "roleName": "masterphone",
-    "samplingConfiguration": {}
-   }
+    {
+      "$type": "dk.cachet.carp.protocols.domain.devices.Smartphone",
+      "isMasterDevice": true,
+      "roleName": "masterphone",
+      "samplingConfiguration": {}
+    }
   ],
   "connectedDevices": [],
   "connections": [],
   "triggers": {
-   "0": {
-    "$type": "dk.cachet.carp.protocols.domain.triggers.ImmediateTrigger"
-   },
-   "1": {
-    "$type": "dk.cachet.carp.protocols.domain.triggers.DelayedTrigger",
-    "delay": 30000000
-   }
+    "0": {
+      "$type": "dk.cachet.carp.protocols.domain.triggers.ImmediateTrigger"
+    },
+    "1": {
+      "$type": "dk.cachet.carp.protocols.domain.triggers.DelayedTrigger",
+      "delay": 30000000
+    }
   },
   "tasks": [
-   {
-    "$type": "dk.cachet.carp.protocols.domain.tasks.BackgroundTask",
-    "name": "Task #6",
-    "measures": [
-     {
-      "$type": "dk.cachet.carp.protocols.domain.tasks.measures.Measure",
-      "type": "dk.cachet.carp.device"
-     },
-     {
-      "$type": "dk.cachet.carp.protocols.domain.tasks.measures.Measure",
-      "type": "dk.cachet.carp.memory"
-     },
-     {
-      "$type": "dk.cachet.carp.protocols.domain.tasks.measures.Measure",
-      "type": "dk.cachet.carp.battery"
-     },
-     {
-      "$type": "dk.cachet.carp.protocols.domain.tasks.measures.Measure",
-      "type": "dk.cachet.carp.screen"
-     },
-     {
-      "$type": "dk.cachet.carp.protocols.domain.tasks.measures.Measure",
-      "type": "dk.cachet.carp.accelerometer"
-     },
-     {
-      "$type": "dk.cachet.carp.protocols.domain.tasks.measures.Measure",
-      "type": "dk.cachet.carp.gyroscope"
-     },
-     {
-      "$type": "dk.cachet.carp.protocols.domain.tasks.measures.Measure",
-      "type": "dk.cachet.carp.periodic_accelerometer"
-     },
-     {
-      "$type": "dk.cachet.carp.protocols.domain.tasks.measures.Measure",
-      "type": "dk.cachet.carp.periodic_gyroscope"
-     },
-     {
-      "$type": "dk.cachet.carp.protocols.domain.tasks.measures.Measure",
-      "type": "dk.cachet.carp.pedometer"
-     },
-     {
-      "$type": "dk.cachet.carp.protocols.domain.tasks.measures.Measure",
-      "type": "dk.cachet.carp.light"
-     }
-    ]
-   },
-   {
-    "$type": "dk.cachet.carp.protocols.domain.tasks.RPAppTask",
-    "name": "WHO-5 Survey",
-    "measures": [
-     {
-      "$type": "dk.cachet.carp.protocols.domain.tasks.measures.Measure",
-      "type": "dk.cachet.carp.device"
-     },
-     {
-      "$type": "dk.cachet.carp.protocols.domain.tasks.measures.Measure",
-      "type": "dk.cachet.carp.light"
-     }
-    ],
-    "type": "who5",
-    "title": "",
-    "description": "",
-    "instructions": "",
-    "notification": false,
-    "rpTask": {
-     "$type": "RPOrderedTask",
-     "identifier": "who5_task",
-     "close_after_finished": true,
-     "steps": [
-      {
-       "$type": "RPQuestionStep",
-       "identifier": "who5_question_1",
-       "title": "I have felt cheerful and in good spirits",
-       "optional": false,
-       "answer_format": {
-        "$type": "RPChoiceAnswerFormat",
-        "question_type": "SingleChoice",
-        "choices": [
-         {
-          "$type": "RPChoice",
-          "text": "All of the time",
-          "value": 5,
-          "is_free_text": false
-         },
-         {
-          "$type": "RPChoice",
-          "text": "Most of the time",
-          "value": 4,
-          "is_free_text": false
-         },
-         {
-          "$type": "RPChoice",
-          "text": "More than half of the time",
-          "value": 3,
-          "is_free_text": false
-         },
-         {
-          "$type": "RPChoice",
-          "text": "Less than half of the time",
-          "value": 2,
-          "is_free_text": false
-         },
-         {
-          "$type": "RPChoice",
-          "text": "Some of the time",
-          "value": 1,
-          "is_free_text": false
-         },
-         {
-          "$type": "RPChoice",
-          "text": "At no time",
-          "value": 0,
-          "is_free_text": false
-         }
-        ],
-        "answer_style": "SingleChoice"
-       }
-      },
-      {
-       "$type": "RPQuestionStep",
-       "identifier": "who5_question_2",
-       "title": "I have felt calm and relaxed",
-       "optional": false,
-       "answer_format": {
-        "$type": "RPChoiceAnswerFormat",
-        "question_type": "SingleChoice",
-        "choices": [
-         {
-          "$type": "RPChoice",
-          "text": "All of the time",
-          "value": 5,
-          "is_free_text": false
-         },
-         {
-          "$type": "RPChoice",
-          "text": "Most of the time",
-          "value": 4,
-          "is_free_text": false
-         },
-         {
-          "$type": "RPChoice",
-          "text": "More than half of the time",
-          "value": 3,
-          "is_free_text": false
-         },
-         {
-          "$type": "RPChoice",
-          "text": "Less than half of the time",
-          "value": 2,
-          "is_free_text": false
-         },
-         {
-          "$type": "RPChoice",
-          "text": "Some of the time",
-          "value": 1,
-          "is_free_text": false
-         },
-         {
-          "$type": "RPChoice",
-          "text": "At no time",
-          "value": 0,
-          "is_free_text": false
-         }
-        ],
-        "answer_style": "SingleChoice"
-       }
-      },
-      {
-       "$type": "RPQuestionStep",
-       "identifier": "who5_question_3",
-       "title": "I have felt active and vigorous",
-       "optional": false,
-       "answer_format": {
-        "$type": "RPChoiceAnswerFormat",
-        "question_type": "SingleChoice",
-        "choices": [
-         {
-          "$type": "RPChoice",
-          "text": "All of the time",
-          "value": 5,
-          "is_free_text": false
-         },
-         {
-          "$type": "RPChoice",
-          "text": "Most of the time",
-          "value": 4,
-          "is_free_text": false
-         },
-         {
-          "$type": "RPChoice",
-          "text": "More than half of the time",
-          "value": 3,
-          "is_free_text": false
-         },
-         {
-          "$type": "RPChoice",
-          "text": "Less than half of the time",
-          "value": 2,
-          "is_free_text": false
-         },
-         {
-          "$type": "RPChoice",
-          "text": "Some of the time",
-          "value": 1,
-          "is_free_text": false
-         },
-         {
-          "$type": "RPChoice",
-          "text": "At no time",
-          "value": 0,
-          "is_free_text": false
-         }
-        ],
-        "answer_style": "SingleChoice"
-       }
-      },
-      {
-       "$type": "RPQuestionStep",
-       "identifier": "who5_question_4",
-       "title": "I woke up feeling fresh and rested",
-       "optional": false,
-       "answer_format": {
-        "$type": "RPChoiceAnswerFormat",
-        "question_type": "SingleChoice",
-        "choices": [
-         {
-          "$type": "RPChoice",
-          "text": "All of the time",
-          "value": 5,
-          "is_free_text": false
-         },
-         {
-          "$type": "RPChoice",
-          "text": "Most of the time",
-          "value": 4,
-          "is_free_text": false
-         },
-         {
-          "$type": "RPChoice",
-          "text": "More than half of the time",
-          "value": 3,
-          "is_free_text": false
-         },
-         {
-          "$type": "RPChoice",
-          "text": "Less than half of the time",
-          "value": 2,
-          "is_free_text": false
-         },
-         {
-          "$type": "RPChoice",
-          "text": "Some of the time",
-          "value": 1,
-          "is_free_text": false
-         },
-         {
-          "$type": "RPChoice",
-          "text": "At no time",
-          "value": 0,
-          "is_free_text": false
-         }
-        ],
-        "answer_style": "SingleChoice"
-       }
-      },
-      {
-       "$type": "RPQuestionStep",
-       "identifier": "who5_question_5",
-       "title": "My daily life has been filled with things that interest me",
-       "optional": false,
-       "answer_format": {
-        "$type": "RPChoiceAnswerFormat",
-        "question_type": "SingleChoice",
-        "choices": [
-         {
-          "$type": "RPChoice",
-          "text": "All of the time",
-          "value": 5,
-          "is_free_text": false
-         },
-         {
-          "$type": "RPChoice",
-          "text": "Most of the time",
-          "value": 4,
-          "is_free_text": false
-         },
-         {
-          "$type": "RPChoice",
-          "text": "More than half of the time",
-          "value": 3,
-          "is_free_text": false
-         },
-         {
-          "$type": "RPChoice",
-          "text": "Less than half of the time",
-          "value": 2,
-          "is_free_text": false
-         },
-         {
-          "$type": "RPChoice",
-          "text": "Some of the time",
-          "value": 1,
-          "is_free_text": false
-         },
-         {
-          "$type": "RPChoice",
-          "text": "At no time",
-          "value": 0,
-          "is_free_text": false
-         }
-        ],
-        "answer_style": "SingleChoice"
-       }
-      },
-      {
-       "$type": "RPCompletionStep",
-       "identifier": "completion_step",
-       "title": "Finished",
-       "text": "Thank you for filling out the survey!",
-       "optional": false
+    {
+      "$type": "dk.cachet.carp.protocols.domain.tasks.BackgroundTask",
+      "name": "Task #6",
+      "measures": [
+        {
+          "$type": "dk.cachet.carp.protocols.domain.tasks.measures.Measure",
+          "type": "dk.cachet.carp.device"
+        },
+        {
+          "$type": "dk.cachet.carp.protocols.domain.tasks.measures.Measure",
+          "type": "dk.cachet.carp.memory"
+        },
+        {
+          "$type": "dk.cachet.carp.protocols.domain.tasks.measures.Measure",
+          "type": "dk.cachet.carp.battery"
+        },
+        {
+          "$type": "dk.cachet.carp.protocols.domain.tasks.measures.Measure",
+          "type": "dk.cachet.carp.screen"
+        },
+        {
+          "$type": "dk.cachet.carp.protocols.domain.tasks.measures.Measure",
+          "type": "dk.cachet.carp.accelerometer"
+        },
+        {
+          "$type": "dk.cachet.carp.protocols.domain.tasks.measures.Measure",
+          "type": "dk.cachet.carp.gyroscope"
+        },
+        {
+          "$type": "dk.cachet.carp.protocols.domain.tasks.measures.Measure",
+          "type": "dk.cachet.carp.periodic_accelerometer"
+        },
+        {
+          "$type": "dk.cachet.carp.protocols.domain.tasks.measures.Measure",
+          "type": "dk.cachet.carp.periodic_gyroscope"
+        },
+        {
+          "$type": "dk.cachet.carp.protocols.domain.tasks.measures.Measure",
+          "type": "dk.cachet.carp.pedometer"
+        },
+        {
+          "$type": "dk.cachet.carp.protocols.domain.tasks.measures.Measure",
+          "type": "dk.cachet.carp.light"
+        }
+      ]
+    },
+    {
+      "$type": "dk.cachet.carp.protocols.domain.tasks.RPAppTask",
+      "name": "WHO-5 Survey",
+      "measures": [
+        {
+          "$type": "dk.cachet.carp.protocols.domain.tasks.measures.Measure",
+          "type": "dk.cachet.carp.device"
+        },
+        {
+          "$type": "dk.cachet.carp.protocols.domain.tasks.measures.Measure",
+          "type": "dk.cachet.carp.light"
+        }
+      ],
+      "type": "survey",
+      "title": "",
+      "description": "",
+      "instructions": "",
+      "notification": false,
+      "rpTask": {
+        "$type": "RPOrderedTask",
+        "identifier": "who5_task",
+        "close_after_finished": true,
+        "steps": [
+          {
+            "$type": "RPQuestionStep",
+            "identifier": "who5_question_1",
+            "title": "I have felt cheerful and in good spirits",
+            "optional": false,
+            "answer_format": {
+              "$type": "RPChoiceAnswerFormat",
+              "question_type": "SingleChoice",
+              "choices": [
+                {
+                  "$type": "RPChoice",
+                  "text": "All of the time",
+                  "value": 5,
+                  "is_free_text": false
+                },
+                {
+                  "$type": "RPChoice",
+                  "text": "Most of the time",
+                  "value": 4,
+                  "is_free_text": false
+                },
+                {
+                  "$type": "RPChoice",
+                  "text": "More than half of the time",
+                  "value": 3,
+                  "is_free_text": false
+                },
+                {
+                  "$type": "RPChoice",
+                  "text": "Less than half of the time",
+                  "value": 2,
+                  "is_free_text": false
+                },
+                {
+                  "$type": "RPChoice",
+                  "text": "Some of the time",
+                  "value": 1,
+                  "is_free_text": false
+                },
+                {
+                  "$type": "RPChoice",
+                  "text": "At no time",
+                  "value": 0,
+                  "is_free_text": false
+                }
+              ],
+              "answer_style": "SingleChoice"
+            }
+          },
+          {
+            "$type": "RPQuestionStep",
+            "identifier": "who5_question_2",
+            "title": "I have felt calm and relaxed",
+            "optional": false,
+            "answer_format": {
+              "$type": "RPChoiceAnswerFormat",
+              "question_type": "SingleChoice",
+              "choices": [
+                {
+                  "$type": "RPChoice",
+                  "text": "All of the time",
+                  "value": 5,
+                  "is_free_text": false
+                },
+                {
+                  "$type": "RPChoice",
+                  "text": "Most of the time",
+                  "value": 4,
+                  "is_free_text": false
+                },
+                {
+                  "$type": "RPChoice",
+                  "text": "More than half of the time",
+                  "value": 3,
+                  "is_free_text": false
+                },
+                {
+                  "$type": "RPChoice",
+                  "text": "Less than half of the time",
+                  "value": 2,
+                  "is_free_text": false
+                },
+                {
+                  "$type": "RPChoice",
+                  "text": "Some of the time",
+                  "value": 1,
+                  "is_free_text": false
+                },
+                {
+                  "$type": "RPChoice",
+                  "text": "At no time",
+                  "value": 0,
+                  "is_free_text": false
+                }
+              ],
+              "answer_style": "SingleChoice"
+            }
+          },
+          {
+            "$type": "RPQuestionStep",
+            "identifier": "who5_question_3",
+            "title": "I have felt active and vigorous",
+            "optional": false,
+            "answer_format": {
+              "$type": "RPChoiceAnswerFormat",
+              "question_type": "SingleChoice",
+              "choices": [
+                {
+                  "$type": "RPChoice",
+                  "text": "All of the time",
+                  "value": 5,
+                  "is_free_text": false
+                },
+                {
+                  "$type": "RPChoice",
+                  "text": "Most of the time",
+                  "value": 4,
+                  "is_free_text": false
+                },
+                {
+                  "$type": "RPChoice",
+                  "text": "More than half of the time",
+                  "value": 3,
+                  "is_free_text": false
+                },
+                {
+                  "$type": "RPChoice",
+                  "text": "Less than half of the time",
+                  "value": 2,
+                  "is_free_text": false
+                },
+                {
+                  "$type": "RPChoice",
+                  "text": "Some of the time",
+                  "value": 1,
+                  "is_free_text": false
+                },
+                {
+                  "$type": "RPChoice",
+                  "text": "At no time",
+                  "value": 0,
+                  "is_free_text": false
+                }
+              ],
+              "answer_style": "SingleChoice"
+            }
+          },
+          {
+            "$type": "RPQuestionStep",
+            "identifier": "who5_question_4",
+            "title": "I woke up feeling fresh and rested",
+            "optional": false,
+            "answer_format": {
+              "$type": "RPChoiceAnswerFormat",
+              "question_type": "SingleChoice",
+              "choices": [
+                {
+                  "$type": "RPChoice",
+                  "text": "All of the time",
+                  "value": 5,
+                  "is_free_text": false
+                },
+                {
+                  "$type": "RPChoice",
+                  "text": "Most of the time",
+                  "value": 4,
+                  "is_free_text": false
+                },
+                {
+                  "$type": "RPChoice",
+                  "text": "More than half of the time",
+                  "value": 3,
+                  "is_free_text": false
+                },
+                {
+                  "$type": "RPChoice",
+                  "text": "Less than half of the time",
+                  "value": 2,
+                  "is_free_text": false
+                },
+                {
+                  "$type": "RPChoice",
+                  "text": "Some of the time",
+                  "value": 1,
+                  "is_free_text": false
+                },
+                {
+                  "$type": "RPChoice",
+                  "text": "At no time",
+                  "value": 0,
+                  "is_free_text": false
+                }
+              ],
+              "answer_style": "SingleChoice"
+            }
+          },
+          {
+            "$type": "RPQuestionStep",
+            "identifier": "who5_question_5",
+            "title": "My daily life has been filled with things that interest me",
+            "optional": false,
+            "answer_format": {
+              "$type": "RPChoiceAnswerFormat",
+              "question_type": "SingleChoice",
+              "choices": [
+                {
+                  "$type": "RPChoice",
+                  "text": "All of the time",
+                  "value": 5,
+                  "is_free_text": false
+                },
+                {
+                  "$type": "RPChoice",
+                  "text": "Most of the time",
+                  "value": 4,
+                  "is_free_text": false
+                },
+                {
+                  "$type": "RPChoice",
+                  "text": "More than half of the time",
+                  "value": 3,
+                  "is_free_text": false
+                },
+                {
+                  "$type": "RPChoice",
+                  "text": "Less than half of the time",
+                  "value": 2,
+                  "is_free_text": false
+                },
+                {
+                  "$type": "RPChoice",
+                  "text": "Some of the time",
+                  "value": 1,
+                  "is_free_text": false
+                },
+                {
+                  "$type": "RPChoice",
+                  "text": "At no time",
+                  "value": 0,
+                  "is_free_text": false
+                }
+              ],
+              "answer_style": "SingleChoice"
+            }
+          },
+          {
+            "$type": "RPCompletionStep",
+            "identifier": "completion_step",
+            "title": "Finished",
+            "text": "Thank you for filling out the survey!",
+            "optional": false
+          }
+        ]
       }
-     ]
     }
-   }
   ],
   "triggeredTasks": [
-   {
-    "triggerId": 0,
-    "taskName": "Task #6",
-    "targetDeviceRoleName": "masterphone"
-   },
-   {
-    "triggerId": 1,
-    "taskName": "WHO-5 Survey",
-    "targetDeviceRoleName": "masterphone"
-   }
+    {
+      "triggerId": 0,
+      "taskName": "Task #6",
+      "targetDeviceRoleName": "masterphone"
+    },
+    {
+      "triggerId": 1,
+      "taskName": "WHO-5 Survey",
+      "targetDeviceRoleName": "masterphone"
+    }
   ],
   "expectedParticipantData": []
- }
+}

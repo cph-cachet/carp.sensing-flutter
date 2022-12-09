@@ -15,8 +15,7 @@ part of survey;
 class SurveyUserTask extends UserTask {
   static const String SURVEY_TYPE = 'survey';
   static const String COGNITIVE_ASSESSMENT_TYPE = 'cognition';
-  static const String DEMOGRAPHIC_SURVEY_TYPE = 'demographic';
-  static const String WHO5_SURVEY_TYPE = 'who5';
+  static const String INFORMED_CONSENT_TYPE = 'informed_consent';
 
   late BuildContext _context;
   final _controller = StreamController<DataPoint>();
@@ -67,10 +66,9 @@ class SurveyUserTask extends UserTask {
 class SurveyUserTaskFactory implements UserTaskFactory {
   @override
   List<String> types = [
-    SurveyUserTask.WHO5_SURVEY_TYPE,
+    SurveyUserTask.INFORMED_CONSENT_TYPE,
     SurveyUserTask.SURVEY_TYPE,
     SurveyUserTask.COGNITIVE_ASSESSMENT_TYPE,
-    SurveyUserTask.DEMOGRAPHIC_SURVEY_TYPE,
   ];
 
   // always create a [SurveyUserTask]
