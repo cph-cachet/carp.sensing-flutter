@@ -132,14 +132,14 @@ class SmartphoneDeploymentService implements DeploymentService {
       await getDeviceDeploymentFor(studyDeploymentId, thisPhone.roleName);
 
   @override
-  Future<StudyDeploymentStatus?> deploymentSuccessfulFor(
+  Future<StudyDeploymentStatus?> deviceDeployed(
     String studyDeploymentId,
     String primaryDeviceRoleName,
-    DateTime? deviceDeploymentLastUpdateDate,
+    DateTime? deviceDeploymentLastUpdatedOn,
   ) async {
     if (_repository[studyDeploymentId] == null) return null;
 
-    deviceDeploymentLastUpdateDate ??= DateTime.now();
+    deviceDeploymentLastUpdatedOn ??= DateTime.now();
     StudyDeployment deployment = _repository[studyDeploymentId]!;
     DeviceConfiguration device = deployment.registeredDevices.keys.firstWhere(
         (descriptor) => descriptor.roleName == primaryDeviceRoleName);
@@ -149,7 +149,7 @@ class SmartphoneDeploymentService implements DeploymentService {
           "The specified device with rolename '$primaryDeviceRoleName' is not a primary device.");
       return null;
     }
-    deployment.deviceDeployed(device, deviceDeploymentLastUpdateDate);
+    deployment.deviceDeployed(device, deviceDeploymentLastUpdatedOn);
 
     return deployment.status;
   }
@@ -161,7 +161,7 @@ class SmartphoneDeploymentService implements DeploymentService {
     String studyDeploymentId, {
     DateTime? deviceDeploymentLastUpdateDate,
   }) async =>
-      deploymentSuccessfulFor(
+      deviceDeployed(
         studyDeploymentId,
         thisPhone.roleName,
         deviceDeploymentLastUpdateDate,

@@ -22,7 +22,7 @@ void main() async {
   // Define which devices are used for data collection.
   phone = Smartphone();
 
-  protocol..addMasterDevice(phone);
+  protocol..addPrimaryDevice(phone);
 
   app = CarpApp(
     name: 'any_display_friendly_name_is_fine',
@@ -103,7 +103,7 @@ void main() async {
   // ------------------- DATA POINTS --------------------------------
 
   // Create a test datum
-  LightDatum datum = LightDatum(
+  final lightData = AmbientLight(
     maxLux: 12,
     meanLux: 23,
     minLux: 0.3,
@@ -111,7 +111,7 @@ void main() async {
   );
 
   // create a CARP data point
-  final DataPoint data = DataPoint.fromData(datum);
+  final DataPoint data = DataPoint.fromData(lightData);
 
   // post it to the CARP server, which returns the ID of the data point
   int dataPointId =
@@ -192,11 +192,11 @@ void main() async {
   StudyDeploymentStatus status = await deploymentReference.getStatus();
   print(status);
 
-  // register a device
-  status = await deploymentReference.registerDevice(deviceRoleName: 'phone');
+  // register this primary device
+  status = await deploymentReference.registerPrimaryDevice();
 
   // get the master device deployment
-  MasterDeviceDeployment deployment = await deploymentReference.get();
+  PrimaryDeviceDeployment deployment = await deploymentReference.get();
   print(deployment);
 
   // mark the deployment as a success
