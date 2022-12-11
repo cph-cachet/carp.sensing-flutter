@@ -89,18 +89,11 @@ void main() {
         ParticipationReference participation =
             CarpParticipationService().participation(testDeploymentId);
 
-        ParticipantData data_1 = ParticipantData(
-          studyDeploymentId: testDeploymentId,
-          data: {'dk.cachet.carp.input.sex': 'Male'},
+        ParticipantData data = await participation.setParticipantData(
+          {SexCustomInput.SEX_INPUT_TYPE_NAME: SexCustomInput(Sex.Male)},
+          'Participant',
         );
-
-        print(_encode(data_1));
-
-        ParticipantData data_2 = await participation.setParticipantData(
-          'dk.cachet.carp.input.sex',
-          data_1,
-        );
-        print(_encode(data_2));
+        print(_encode(data));
 
         // expect();
 
@@ -118,7 +111,7 @@ void main() {
           await CarpDeploymentService().deployment().getStatus();
       print(_encode(status.toJson()));
       print(status);
-      print(status.masterDeviceStatus!.device);
+      print(status.primaryDeviceStatus!.device);
       print(_encode(status));
       expect(status.studyDeploymentId, testDeploymentId);
     }, skip: false);
@@ -128,10 +121,9 @@ void main() {
           CarpDeploymentService().deployment(testDeploymentId);
       StudyDeploymentStatus status = await reference.getStatus();
       print(status);
-      expect(status.masterDeviceStatus!.device, isNotNull);
-      print(status.masterDeviceStatus!.device);
-      status = await reference.registerDevice(
-          deviceRoleName: status.masterDeviceStatus!.device.roleName);
+      expect(status.primaryDeviceStatus!.device, isNotNull);
+      print(status.primaryDeviceStatus!.device);
+      status = await reference.registerPrimaryDevice();
       print(status);
       expect(status.studyDeploymentId, testDeploymentId);
     }, skip: false);
@@ -141,23 +133,23 @@ void main() {
           CarpDeploymentService().deployment(testDeploymentId);
       StudyDeploymentStatus status = await reference.getStatus();
       print(status);
-      expect(status.masterDeviceStatus!.device, isNotNull);
-      print(status.masterDeviceStatus!.device);
-      MasterDeviceDeployment deployment = await reference.get();
+      expect(status.primaryDeviceStatus!.device, isNotNull);
+      print(status.primaryDeviceStatus!.device);
+      PrimaryDeviceDeployment deployment = await reference.get();
       print(toJsonString(deployment));
       deployment.tasks.forEach((task) {
         print(task);
         // task?.measures?.forEach(print);
       });
-      expect(deployment.configuration.deviceId, isNotNull);
+      expect(deployment.registration.deviceId, isNotNull);
     }, skip: false);
 
     test('- deployment success', () async {
       DeploymentReference reference =
           CarpDeploymentService().deployment(testDeploymentId);
       StudyDeploymentStatus status_1 = await reference.getStatus();
-      MasterDeviceDeployment? deployment = await reference.get();
-      StudyDeploymentStatus status_2 = await reference.success();
+      PrimaryDeviceDeployment? deployment = await reference.get();
+      StudyDeploymentStatus status_2 = await reference.deployed();
       print(deployment);
       print(status_2);
       expect(status_1.studyDeploymentId, status_2.studyDeploymentId);
@@ -169,10 +161,10 @@ void main() {
           CarpDeploymentService().deployment(testDeploymentId);
       StudyDeploymentStatus status = await reference.getStatus();
       print(status);
-      expect(status.masterDeviceStatus!.device, isNotNull);
-      print(status.masterDeviceStatus!.device);
+      expect(status.primaryDeviceStatus!.device, isNotNull);
+      print(status.primaryDeviceStatus!.device);
       status = await reference.unRegisterDevice(
-          deviceRoleName: status.masterDeviceStatus!.device.roleName);
+          deviceRoleName: status.primaryDeviceStatus!.device.roleName);
       print(status);
       expect(status.studyDeploymentId, testDeploymentId);
     }, skip: false);
@@ -184,7 +176,7 @@ void main() {
           .getStudyDeploymentStatus(testDeploymentId);
       print(_encode(status.toJson()));
       print(status);
-      print(status.masterDeviceStatus!.device);
+      print(status.primaryDeviceStatus!.device);
       print(_encode(status));
       expect(status.studyDeploymentId, testDeploymentId);
     }, skip: false);
@@ -193,10 +185,10 @@ void main() {
       StudyDeploymentStatus status = await CarpDeploymentService()
           .getStudyDeploymentStatus(testDeploymentId);
       print(status);
-      expect(status.masterDeviceStatus!.device, isNotNull);
-      print(status.masterDeviceStatus!.device);
+      expect(status.primaryDeviceStatus!.device, isNotNull);
+      print(status.primaryDeviceStatus!.device);
       status = await CarpDeploymentService().registerDevice(testDeploymentId,
-          status.masterDeviceStatus!.device.roleName, DeviceRegistration());
+          status.primaryDeviceStatus!.device.roleName, DeviceRegistration());
       print(status);
       expect(status.studyDeploymentId, testDeploymentId);
     }, skip: false);
@@ -205,39 +197,39 @@ void main() {
       StudyDeploymentStatus status = await CarpDeploymentService()
           .getStudyDeploymentStatus(testDeploymentId);
       print(status);
-      expect(status.masterDeviceStatus!.device, isNotNull);
-      print(status.masterDeviceStatus!.device);
-      MasterDeviceDeployment deployment =
+      expect(status.primaryDeviceStatus!.device, isNotNull);
+      print(status.primaryDeviceStatus!.device);
+      PrimaryDeviceDeployment deployment =
           await CarpDeploymentService().getDeviceDeploymentFor(
         testDeploymentId,
-        status.masterDeviceStatus!.device.roleName,
+        status.primaryDeviceStatus!.device.roleName,
       );
       print(deployment);
       deployment.tasks.forEach((task) {
         print(task);
-        task.measures.forEach(print);
+        task.measures?.forEach(print);
       });
-      expect(deployment.configuration.deviceId, isNotNull);
+      expect(deployment.registration.deviceId, isNotNull);
     }, skip: false);
 
     test('- deployment success', () async {
       StudyDeploymentStatus status_1 = await CarpDeploymentService()
           .getStudyDeploymentStatus(testDeploymentId);
       print(status_1);
-      expect(status_1.masterDeviceStatus!.device, isNotNull);
-      print(status_1.masterDeviceStatus!.device);
-      MasterDeviceDeployment deployment =
+      expect(status_1.primaryDeviceStatus!.device, isNotNull);
+      print(status_1.primaryDeviceStatus!.device);
+      PrimaryDeviceDeployment deployment =
           await CarpDeploymentService().getDeviceDeploymentFor(
         testDeploymentId,
-        status_1.masterDeviceStatus!.device.roleName,
+        status_1.primaryDeviceStatus!.device.roleName,
       );
       print(deployment);
 
       StudyDeploymentStatus status_2 =
-          await CarpDeploymentService().deploymentSuccessfulFor(
+          await CarpDeploymentService().deviceDeployed(
         testDeploymentId,
-        status_1.masterDeviceStatus!.device.roleName,
-        deployment.lastUpdateDate,
+        status_1.primaryDeviceStatus!.device.roleName,
+        deployment.lastUpdateDate!,
       );
       print(status_2);
       expect(status_1.studyDeploymentId, status_2.studyDeploymentId);
@@ -249,10 +241,10 @@ void main() {
           CarpDeploymentService().deployment(testDeploymentId);
       StudyDeploymentStatus status = await reference.getStatus();
       print(status);
-      expect(status.masterDeviceStatus!.device, isNotNull);
-      print(status.masterDeviceStatus!.device);
+      expect(status.primaryDeviceStatus!.device, isNotNull);
+      print(status.primaryDeviceStatus!.device);
       status = await reference.unRegisterDevice(
-          deviceRoleName: status.masterDeviceStatus!.device.roleName);
+          deviceRoleName: status.primaryDeviceStatus!.device.roleName);
       print(status);
       expect(status.studyDeploymentId, testDeploymentId);
     }, skip: false);

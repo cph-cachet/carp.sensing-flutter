@@ -65,7 +65,7 @@ abstract class DeploymentService {
 
   /// Indicate to stakeholders in the study deployment with [studyDeploymentId]
   /// that the device with [primaryDeviceRoleName] was deployed successfully,
-  /// using the deployment with the specified [deviceDeploymentLastUpdateDate],
+  /// using the deployment with the specified [deviceDeploymentLastUpdatedOn],
   /// i.e., that the study deployment was loaded on the device and that the
   /// necessary runtime is available to run it.
   ///
@@ -73,13 +73,13 @@ abstract class DeploymentService {
   ///
   ///  - a deployment with [studyDeploymentId] does not exist
   ///  - [primaryDeviceRoleName] is not present in the deployment
-  ///  - the [deviceDeploymentLastUpdateDate] does not match the expected date.
+  ///  - the [deviceDeploymentLastUpdatedOn] does not match the expected date.
   ///    The deployment might be outdated.
   ///  - the deployment cannot be deployed yet, or the deployment has stopped.
-  Future<StudyDeploymentStatus?> deploymentSuccessfulFor(
+  Future<StudyDeploymentStatus?> deviceDeployed(
     String studyDeploymentId,
     String primaryDeviceRoleName,
-    DateTime deviceDeploymentLastUpdateDate,
+    DateTime deviceDeploymentLastUpdatedOn,
   );
 
   /// Permanently stop the study deployment with the specified [studyDeploymentId].

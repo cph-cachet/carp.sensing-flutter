@@ -20,6 +20,7 @@ import 'package:uuid/uuid.dart';
 import 'package:flutter/material.dart';
 import 'package:form_field_validator/form_field_validator.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:json_annotation/json_annotation.dart';
 
 import 'package:carp_core/carp_core.dart';
 import 'package:carp_mobile_sensing/carp_mobile_sensing.dart';
@@ -34,6 +35,7 @@ part 'carp_tasks.dart';
 part 'consent_document.dart';
 part 'carp_references.dart';
 part 'datapoint_reference.dart';
+part 'datapoint.dart';
 part 'deployment_reference.dart';
 part 'participation_reference.dart';
 part 'collection_reference.dart';
@@ -44,6 +46,8 @@ part 'push_id_generator.dart';
 part 'authentication_form.dart';
 part 'authentication_dialog.dart';
 part 'invitations_dialog.dart';
+
+part 'carp_services.g.dart';
 
 String _encode(Object object) =>
     const JsonEncoder.withIndent(' ').convert(object);

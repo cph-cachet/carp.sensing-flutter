@@ -30,8 +30,7 @@ class ParticipantData {
   Map<String, dynamic> toJson() => _$ParticipantDataToJson(this);
 }
 
-/// Expected participant [data] for all participants in a study deployment
-/// with [studyDeploymentId].
+/// Expected participant [data] for all participants with a specific [roleName].
 @JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
 class RoleData {
   String roleName;

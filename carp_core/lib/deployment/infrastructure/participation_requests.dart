@@ -88,8 +88,8 @@ class GetParticipantDataList extends ParticipationServiceRequest {
 class SetParticipantData extends ParticipationServiceRequest {
   SetParticipantData(
     super.studyDeploymentId, [
-    this.inputByParticipantRole,
     this.data,
+    this.inputByParticipantRole,
   ]);
 
   /// The participant role who filled out [data]; null if all roles can set it.

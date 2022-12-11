@@ -43,7 +43,7 @@ class CarpParticipationService extends CarpBaseService
   /// Note that the [accountId] is the unique CARP account id (and not the
   /// username).
   /// If [accountId] is not specified, then the account id of the currently
-  /// authenticated [CarpUser] is used.  @override
+  /// authenticated [CarpUser] is used.
   @override
   Future<List<ActiveParticipationInvitation>> getActiveParticipationInvitations(
       [String? accountId]) async {
@@ -134,8 +134,11 @@ class CarpParticipationService extends CarpBaseService
   }
 
   @override
-  Future<ParticipantData> setParticipantData(String studyDeploymentId,
-          String inputDataType, ParticipantData data) async =>
+  Future<ParticipantData> setParticipantData(
+    String studyDeploymentId,
+    Map<String, Data> data,
+    String? inputByParticipantRole,
+  ) async =>
       await participation(studyDeploymentId)
-          .setParticipantData(inputDataType, data);
+          .setParticipantData(data, inputByParticipantRole);
 }

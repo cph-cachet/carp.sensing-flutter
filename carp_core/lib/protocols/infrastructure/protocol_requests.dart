@@ -22,7 +22,7 @@ abstract class ProtocolServiceRequest extends ServiceRequest {
 
 @JsonSerializable(fieldRename: FieldRename.none, includeIfNull: true)
 class Add extends ProtocolServiceRequest {
-  final StudyProtocol? protocol;
+  final StudyProtocol protocol;
   String? versionTag;
 
   /// Create a new add request.
@@ -92,7 +92,7 @@ class GetBy extends ProtocolServiceRequest {
 
 @JsonSerializable(fieldRename: FieldRename.none, includeIfNull: true)
 class GetAllForOwner extends ProtocolServiceRequest {
-  final String? ownerId;
+  final String ownerId;
 
   GetAllForOwner(this.ownerId) : super();
 
@@ -120,10 +120,10 @@ class GetVersionHistoryFor extends ProtocolServiceRequest {
 
 @JsonSerializable(fieldRename: FieldRename.none, includeIfNull: true)
 class CreateCustomProtocol extends ProtocolServiceRequest {
-  final String? ownerId;
-  final String? name;
-  final String? description;
-  final String? customProtocol;
+  final String ownerId;
+  final String name;
+  final String description;
+  final String customProtocol;
 
   CreateCustomProtocol(
     this.ownerId,

@@ -22,16 +22,16 @@ void main() {
   StudyProtocol protocol;
   Smartphone phone;
 
-  LightDatum datum1 = LightDatum(
+  final lightData = AmbientLight(
     maxLux: 12,
     meanLux: 23,
     minLux: 0.3,
     stdLux: 0.4,
   );
 
-  DeviceDatum datum2 = DeviceDatum(
-    'Android',
-    '12345jE',
+  final deviceData = DeviceInformation(
+    platform: 'Android',
+    deviceId: '12345jE',
   );
 
   DocumentSnapshot? document;
@@ -51,7 +51,7 @@ void main() {
     // Define which devices are used for data collection.
     phone = Smartphone();
 
-    protocol..addMasterDevice(phone);
+    protocol..addPrimaryDevice(phone);
 
     app = new CarpApp(
       name: "Test",
@@ -221,7 +221,7 @@ void main() {
     "Data points",
     () {
       test('- post', () async {
-        final DataPoint data = DataPoint.fromData(datum1);
+        final DataPoint data = DataPoint.fromData(lightData);
         // studyId & userId is required for upload
         data.carpHeader.studyId = testStudyId;
         data.carpHeader.userId = userId;
@@ -236,7 +236,7 @@ void main() {
       });
 
       test('- post w/o trigger id & device role name', () async {
-        final DataPoint data = DataPoint.fromData(datum1);
+        final DataPoint data = DataPoint.fromData(lightData);
         // studyId & userId is required for upload
         data.carpHeader.studyId = testStudyId;
         data.carpHeader.userId = userId;
@@ -313,7 +313,7 @@ void main() {
       });
 
       test('- get by id', () async {
-        final DataPoint dataPost = DataPoint.fromData(datum1);
+        final DataPoint dataPost = DataPoint.fromData(lightData);
         // studyId & userId is required for upload
         dataPost.carpHeader.studyId = studyId;
         dataPost.carpHeader.userId = userId;
@@ -349,12 +349,12 @@ void main() {
       test('- query', () async {
         await CarpService()
             .getDataPointReference()
-            .postDataPoint(DataPoint.fromData(datum1)
+            .postDataPoint(DataPoint.fromData(lightData)
               ..carpHeader.studyId = studyId
               ..carpHeader.userId = userId);
         await CarpService()
             .getDataPointReference()
-            .postDataPoint(DataPoint.fromData(datum2)
+            .postDataPoint(DataPoint.fromData(deviceData)
               ..carpHeader.studyId = studyId
               ..carpHeader.userId = userId);
 
@@ -381,7 +381,7 @@ void main() {
       test('- delete', () async {
         int dataPointId = await CarpService()
             .getDataPointReference()
-            .postDataPoint(DataPoint.fromData(datum1)
+            .postDataPoint(DataPoint.fromData(lightData)
               ..carpHeader.studyId = studyId
               ..carpHeader.userId = userId);
         print("DELETE data_point_id : $dataPointId");

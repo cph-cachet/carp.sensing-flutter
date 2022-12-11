@@ -40,12 +40,14 @@ class ParticipationReference extends RPCCarpReference {
     return data;
   }
 
-  /// Set participant [data] for the given [inputDataType] in thsis study deployment.
+  /// Set participant [data] for the given [inputByParticipantRole] in this study deployment.
   /// Returns all data for the specified study deployment, including the newly set data.
   Future<ParticipantData> setParticipantData(
-      String inputDataType, ParticipantData data) async {
+    Map<String, Data> data,
+    String? inputByParticipantRole,
+  ) async {
     ParticipantData newData = ParticipantData.fromJson(await _rpc(
-        SetParticipantData(studyDeploymentId!, inputDataType, data)));
+        SetParticipantData(studyDeploymentId!, data, inputByParticipantRole)));
     return newData;
   }
 }

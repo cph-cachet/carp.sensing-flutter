@@ -134,7 +134,7 @@ class StudyRuntime {
 
       // mark this deployment as successful
       try {
-        await deploymentService.deploymentSuccessfulFor(
+        await deploymentService.deviceDeployed(
           study!.studyDeploymentId,
           study!.deviceRoleName,
           deployment?.lastUpdateDate ?? DateTime.now(),

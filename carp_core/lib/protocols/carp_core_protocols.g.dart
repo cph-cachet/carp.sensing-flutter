@@ -113,9 +113,7 @@ Map<String, dynamic> _$ProtocolVersionToJson(ProtocolVersion instance) =>
     };
 
 Add _$AddFromJson(Map<String, dynamic> json) => Add(
-      json['protocol'] == null
-          ? null
-          : StudyProtocol.fromJson(json['protocol'] as Map<String, dynamic>),
+      StudyProtocol.fromJson(json['protocol'] as Map<String, dynamic>),
       json['versionTag'] as String?,
     )..$type = json['__type'] as String?;
 
@@ -126,9 +124,7 @@ Map<String, dynamic> _$AddToJson(Add instance) => <String, dynamic>{
     };
 
 AddVersion _$AddVersionFromJson(Map<String, dynamic> json) => AddVersion(
-      json['protocol'] == null
-          ? null
-          : StudyProtocol.fromJson(json['protocol'] as Map<String, dynamic>),
+      StudyProtocol.fromJson(json['protocol'] as Map<String, dynamic>),
       json['versionTag'] as String?,
     )..$type = json['__type'] as String?;
 
@@ -182,7 +178,7 @@ Map<String, dynamic> _$GetByToJson(GetBy instance) {
 
 GetAllForOwner _$GetAllForOwnerFromJson(Map<String, dynamic> json) =>
     GetAllForOwner(
-      json['ownerId'] as String?,
+      json['ownerId'] as String,
     )..$type = json['__type'] as String?;
 
 Map<String, dynamic> _$GetAllForOwnerToJson(GetAllForOwner instance) =>
@@ -207,10 +203,10 @@ Map<String, dynamic> _$GetVersionHistoryForToJson(
 CreateCustomProtocol _$CreateCustomProtocolFromJson(
         Map<String, dynamic> json) =>
     CreateCustomProtocol(
-      json['ownerId'] as String?,
-      json['name'] as String?,
-      json['description'] as String?,
-      json['customProtocol'] as String?,
+      json['ownerId'] as String,
+      json['name'] as String,
+      json['description'] as String,
+      json['customProtocol'] as String,
     )..$type = json['__type'] as String?;
 
 Map<String, dynamic> _$CreateCustomProtocolToJson(

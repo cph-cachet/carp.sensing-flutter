@@ -104,12 +104,13 @@ void _registerFromJsonFunctions() {
   FromJsonFactory().register(GetDeviceDeploymentFor('', ''));
   FromJsonFactory().register(DeviceDeployed('', '', DateTime.now()));
   FromJsonFactory().register(Stop(''));
-  FromJsonFactory().register(Add(null, null));
-  FromJsonFactory().register(AddVersion(null, null));
+  FromJsonFactory().register(Add(StudyProtocol(ownerId: '', name: ''), ''));
+  FromJsonFactory()
+      .register(AddVersion(StudyProtocol(ownerId: '', name: ''), ''));
   FromJsonFactory()
       .register(UpdateParticipantDataConfiguration('', null, null));
   FromJsonFactory().register(GetBy('', null));
-  FromJsonFactory().register(GetAllForOwner(null));
+  FromJsonFactory().register(GetAllForOwner(''));
   FromJsonFactory().register(GetVersionHistoryFor(''));
   FromJsonFactory().register(CreateCustomProtocol('', '', '', ''));
   FromJsonFactory().register(OpenDataStreams(DataStreamsConfiguration(

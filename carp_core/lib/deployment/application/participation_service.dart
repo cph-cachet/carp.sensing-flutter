@@ -46,15 +46,23 @@ abstract class ParticipationService {
       List<String> studyDeploymentIds);
 
   /// Set [data] that was [inputByParticipantRole] in the study deployment with
-  /// [studyDeploymentId], or unset it by passing `null`.
+  /// [studyDeploymentId].
   /// When you want to set data that was assigned to a specific participant role,
   /// [inputByParticipantRole] needs to be set.
-  /// You can still set common data (assigned to all roles) in the same call.
+  ///  If [inputByParticipantRole] is null, all roles can set it.
   ///
-  /// Returns all data for the specified study deployment, including the newly set data.
+  /// Returns all data for the specified study deployment, including the newly
+  /// set data.
   Future<ParticipantData> setParticipantData(
     String studyDeploymentId,
-    ParticipantData data,
+    Map<String, Data> data,
     String? inputByParticipantRole,
   );
+
+  // Future<ParticipantData> setParticipantData(
+  //   String studyDeploymentId,
+  //   ParticipantData data,
+  //   String? inputByParticipantRole,
+  // );
+
 }

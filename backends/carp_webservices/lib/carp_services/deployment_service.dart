@@ -87,21 +87,21 @@ class CarpDeploymentService extends CarpBaseService
           await _rpc(UnregisterDevice(studyDeploymentId, deviceRoleName)));
 
   @override
-  Future<MasterDeviceDeployment> getDeviceDeploymentFor(
+  Future<PrimaryDeviceDeployment> getDeviceDeploymentFor(
           String studyDeploymentId, String masterDeviceRoleName) async =>
-      MasterDeviceDeployment.fromJson(await _rpc(
+      PrimaryDeviceDeployment.fromJson(await _rpc(
           GetDeviceDeploymentFor(studyDeploymentId, masterDeviceRoleName)));
 
   @override
-  Future<StudyDeploymentStatus> deploymentSuccessfulFor(
+  Future<StudyDeploymentStatus> deviceDeployed(
     String studyDeploymentId,
     String masterDeviceRoleName,
-    DateTime deviceDeploymentLastUpdateDate,
+    DateTime deviceDeploymentLastUpdatedOn,
   ) async =>
-      StudyDeploymentStatus.fromJson(await _rpc(DeploymentSuccessful(
+      StudyDeploymentStatus.fromJson(await _rpc(DeviceDeployed(
         studyDeploymentId,
         masterDeviceRoleName,
-        deviceDeploymentLastUpdateDate,
+        deviceDeploymentLastUpdatedOn,
       )));
 
   @override

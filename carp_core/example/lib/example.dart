@@ -77,7 +77,7 @@ void carpCoreDeploymentExample() async {
         ?.getDeviceDeploymentFor(studyDeploymentId, patientPhone.roleName);
     DateTime deploymentDate =
         deploymentInformation!.lastUpdateDate ?? DateTime.now();
-    await deploymentService?.deploymentSuccessfulFor(
+    await deploymentService?.deviceDeployed(
         studyDeploymentId, patientPhone.roleName, deploymentDate);
   }
 

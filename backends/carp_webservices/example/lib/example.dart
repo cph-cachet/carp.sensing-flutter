@@ -200,5 +200,5 @@ void main() async {
   print(deployment);
 
   // mark the deployment as a success
-  status = await deploymentReference.success();
+  status = await deploymentReference.deployed();
 }

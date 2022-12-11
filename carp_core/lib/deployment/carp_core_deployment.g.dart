@@ -502,10 +502,10 @@ Map<String, dynamic> _$GetParticipantDataListToJson(
 SetParticipantData _$SetParticipantDataFromJson(Map<String, dynamic> json) =>
     SetParticipantData(
       json['studyDeploymentId'] as String?,
-      json['inputByParticipantRole'] as String?,
       (json['data'] as Map<String, dynamic>?)?.map(
         (k, e) => MapEntry(k, Data.fromJson(e as Map<String, dynamic>)),
       ),
+      json['inputByParticipantRole'] as String?,
     )
       ..$type = json['__type'] as String?
       ..apiVersion = json['apiVersion'] as String;
