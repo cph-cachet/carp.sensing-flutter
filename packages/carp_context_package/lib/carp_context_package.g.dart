@@ -6,13 +6,12 @@ part of carp_context_package;
 // JsonSerializableGenerator
 // **************************************************************************
 
-ActivityEvent _$ActivityEventFromJson(Map<String, dynamic> json) =>
-    ActivityEvent(
-      $enumDecode(_$ActivityTypeEnumMap, json['type']),
-      json['confidence'] as int,
+Activity _$ActivityFromJson(Map<String, dynamic> json) => Activity(
+      type: $enumDecode(_$ActivityTypeEnumMap, json['type']),
+      confidence: json['confidence'] as int,
     )..$type = json['__type'] as String?;
 
-Map<String, dynamic> _$ActivityEventToJson(ActivityEvent instance) {
+Map<String, dynamic> _$ActivityToJson(Activity instance) {
   final val = <String, dynamic>{};
 
   void writeNotNull(String key, dynamic value) {
@@ -214,7 +213,7 @@ GeofenceSamplingConfiguration _$GeofenceSamplingConfigurationFromJson(
       center: GeoPosition.fromJson(json['center'] as Map<String, dynamic>),
       radius: (json['radius'] as num).toDouble(),
       dwell: Duration(microseconds: json['dwell'] as int),
-      label: json['label'] as String?,
+      name: json['name'] as String,
     )
       ..$type = json['__type'] as String?
       ..lastTime = json['lastTime'] == null
@@ -236,13 +235,13 @@ Map<String, dynamic> _$GeofenceSamplingConfigurationToJson(
   val['center'] = instance.center;
   val['radius'] = instance.radius;
   val['dwell'] = instance.dwell.inMicroseconds;
-  writeNotNull('label', instance.label);
+  val['name'] = instance.name;
   return val;
 }
 
 Geofence _$GeofenceFromJson(Map<String, dynamic> json) => Geofence(
       type: $enumDecode(_$GeofenceTypeEnumMap, json['type']),
-      name: json['name'] as String?,
+      name: json['name'] as String,
     )..$type = json['__type'] as String?;
 
 Map<String, dynamic> _$GeofenceToJson(Geofence instance) {
@@ -255,7 +254,7 @@ Map<String, dynamic> _$GeofenceToJson(Geofence instance) {
   }
 
   writeNotNull('__type', instance.$type);
-  writeNotNull('name', instance.name);
+  val['name'] = instance.name;
   val['type'] = _$GeofenceTypeEnumMap[instance.type]!;
   return val;
 }
@@ -266,17 +265,17 @@ const _$GeofenceTypeEnumMap = {
   GeofenceType.DWELL: 'DWELL',
 };
 
-AirQualityIndex _$AirQualityIndexFromJson(Map<String, dynamic> json) =>
-    AirQualityIndex(
-      json['airQualityIndex'] as int,
-      json['source'] as String,
-      json['place'] as String,
-      (json['latitude'] as num).toDouble(),
-      (json['longitude'] as num).toDouble(),
-      $enumDecode(_$AirQualityLevelEnumMap, json['airQualityLevel']),
+AirQuality _$AirQualityFromJson(Map<String, dynamic> json) => AirQuality(
+      airQualityIndex: json['airQualityIndex'] as int,
+      source: json['source'] as String?,
+      place: json['place'] as String?,
+      latitude: (json['latitude'] as num).toDouble(),
+      longitude: (json['longitude'] as num).toDouble(),
+      airQualityLevel: $enumDecodeNullable(
+          _$AirQualityLevelEnumMap, json['airQualityLevel']),
     )..$type = json['__type'] as String?;
 
-Map<String, dynamic> _$AirQualityIndexToJson(AirQualityIndex instance) {
+Map<String, dynamic> _$AirQualityToJson(AirQuality instance) {
   final val = <String, dynamic>{};
 
   void writeNotNull(String key, dynamic value) {
@@ -287,11 +286,12 @@ Map<String, dynamic> _$AirQualityIndexToJson(AirQualityIndex instance) {
 
   writeNotNull('__type', instance.$type);
   val['airQualityIndex'] = instance.airQualityIndex;
-  val['source'] = instance.source;
-  val['place'] = instance.place;
+  writeNotNull('source', instance.source);
+  writeNotNull('place', instance.place);
   val['latitude'] = instance.latitude;
   val['longitude'] = instance.longitude;
-  val['airQualityLevel'] = _$AirQualityLevelEnumMap[instance.airQualityLevel]!;
+  writeNotNull(
+      'airQualityLevel', _$AirQualityLevelEnumMap[instance.airQualityLevel]);
   return val;
 }
 
@@ -341,18 +341,19 @@ Map<String, dynamic> _$AirQualityServiceToJson(AirQualityService instance) {
   return val;
 }
 
-Mobility _$MobilityFromJson(Map<String, dynamic> json) => Mobility()
-  ..$type = json['__type'] as String?
-  ..timestamp = json['timestamp'] == null
-      ? null
-      : DateTime.parse(json['timestamp'] as String)
-  ..date = json['date'] == null ? null : DateTime.parse(json['date'] as String)
-  ..numberOfPlaces = json['numberOfPlaces'] as int?
-  ..locationVariance = (json['locationVariance'] as num?)?.toDouble()
-  ..entropy = (json['entropy'] as num?)?.toDouble()
-  ..normalizedEntropy = (json['normalizedEntropy'] as num?)?.toDouble()
-  ..homeStay = (json['homeStay'] as num?)?.toDouble()
-  ..distanceTraveled = (json['distanceTraveled'] as num?)?.toDouble();
+Mobility _$MobilityFromJson(Map<String, dynamic> json) => Mobility(
+      timestamp: json['timestamp'] == null
+          ? null
+          : DateTime.parse(json['timestamp'] as String),
+      date:
+          json['date'] == null ? null : DateTime.parse(json['date'] as String),
+      numberOfPlaces: json['numberOfPlaces'] as int?,
+      locationVariance: (json['locationVariance'] as num?)?.toDouble(),
+      entropy: (json['entropy'] as num?)?.toDouble(),
+      normalizedEntropy: (json['normalizedEntropy'] as num?)?.toDouble(),
+      homeStay: (json['homeStay'] as num?)?.toDouble(),
+      distanceTraveled: (json['distanceTraveled'] as num?)?.toDouble(),
+    )..$type = json['__type'] as String?;
 
 Map<String, dynamic> _$MobilityToJson(Mobility instance) {
   final val = <String, dynamic>{};

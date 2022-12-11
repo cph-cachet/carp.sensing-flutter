@@ -31,11 +31,22 @@ class Mobility extends Data {
   /// Distance traveled on [date], in meters.
   double? distanceTraveled;
 
-  Mobility() : super();
+  Mobility({
+    this.timestamp,
+    this.date,
+    this.numberOfPlaces,
+    this.locationVariance,
+    this.entropy,
+    this.normalizedEntropy,
+    this.homeStay,
+    this.distanceTraveled,
+  }) : super() {
+    timestamp ??= DateTime.now();
+  }
 
   factory Mobility.fromMobilityContext(MobilityContext context) => Mobility()
-    ..date = context.date
     ..timestamp = context.timestamp
+    ..date = context.date
     ..numberOfPlaces = context.numberOfSignificantPlaces
     ..locationVariance = context.locationVariance
     ..entropy = context.entropy

@@ -6,8 +6,6 @@ import 'package:carp_serializable/carp_serializable.dart';
 import 'package:carp_core/carp_core.dart';
 import 'package:carp_mobile_sensing/carp_mobile_sensing.dart';
 import 'package:carp_context_package/carp_context_package.dart';
-// import 'package:activity_recognition_flutter/activity_recognition_flutter.dart';
-import 'package:flutter_activity_recognition/flutter_activity_recognition.dart';
 import 'package:openmhealth_schemas/openmhealth_schemas.dart' as omh;
 
 String _encode(Object object) =>
@@ -30,7 +28,7 @@ void main() {
       name: 'Context Sensing Example',
     );
 
-    // Define the smartphone as the master device.
+    // Define the smartphone as the primary device.
     Smartphone phone = Smartphone();
     protocol.addPrimaryDevice(phone);
 
@@ -55,12 +53,12 @@ void main() {
           ..addMeasure(Measure(type: ContextSamplingPackage.LOCATION)),
         locationService);
 
-    // Add a background task that continously collects geolocation and mobility
+    // Add a background task that continuously collects location and mobility
     // patterns. Delays sampling by 5 minutes.
     protocol.addTaskControl(
         DelayedTrigger(delay: Duration(minutes: 5)),
         BackgroundTask()
-          ..addMeasure(Measure(type: ContextSamplingPackage.GEOLOCATION))
+          ..addMeasure(Measure(type: ContextSamplingPackage.LOCATION))
           ..addMeasure(Measure(type: ContextSamplingPackage.MOBILITY)),
         locationService);
 
@@ -71,6 +69,7 @@ void main() {
         BackgroundTask()
           ..addMeasure(Measure(type: ContextSamplingPackage.GEOFENCE)
             ..overrideSamplingConfiguration = GeofenceSamplingConfiguration(
+                name: 'DTU',
                 center: GeoPosition(55.786025, 12.524159),
                 dwell: const Duration(minutes: 15),
                 radius: 10.0)),
@@ -81,7 +80,7 @@ void main() {
         WeatherService(apiKey: 'OW_API_key_goes_here');
     protocol.addConnectedDevice(weatherService);
 
-    // Add a background task that collects weather every 30 miutes.
+    // Add a background task that collects weather every 30 minutes.
     protocol.addTaskControl(
         PeriodicTrigger(period: Duration(minutes: 30)),
         BackgroundTask()
@@ -93,34 +92,12 @@ void main() {
         AirQualityService(apiKey: 'WAQI_API_key_goes_here');
     protocol.addConnectedDevice(airQualityService);
 
-    // Add a background task that air quality every 30 miutes.
+    // Add a background task that air quality every 30 minutes.
     protocol.addTaskControl(
         PeriodicTrigger(period: Duration(minutes: 30)),
         BackgroundTask()
           ..addMeasure(Measure(type: ContextSamplingPackage.AIR_QUALITY)),
         airQualityService);
-
-    // // Create a new study protocol.
-    // protocol = StudyProtocol(
-    //   ownerId: 'alex@uni.dk',
-    //   name: 'Context package test',
-    //   description: '',
-    // );
-
-    // // Define which devices are used for data collection.
-    // phone = Smartphone();
-    // protocol.addMasterDevice(phone);
-
-    // // adding all available measures to one one trigger and one task
-    // protocol.addTriggeredTask(
-    //   ImmediateTrigger(),
-    //   BackgroundTask()
-    //     ..measures = SamplingPackageRegistry()
-    //         .dataTypes
-    //         .map((type) => Measure(type: type))
-    //         .toList(),
-    //   phone,
-    // );
   });
 
   test('CAMSStudyProtocol -> JSON', () async {
@@ -140,7 +117,6 @@ void main() {
   });
 
   test('JSON File -> StudyProtocol', () async {
-    // Read the study protocol from json file
     String plainJson = File('test/json/protocol.json').readAsStringSync();
 
     StudyProtocol protocolFromFile =
@@ -158,6 +134,34 @@ void main() {
     print(toJsonString(protocolFromFile));
   });
 
+  test('CARP Activity', () {
+    Activity act = Activity(type: ActivityType.ON_BICYCLE, confidence: 90);
+    Measurement m_1 = Measurement.fromData(act);
+    expect(m_1.dataType.namespace, NameSpace.CARP);
+    print(_encode(m_1));
+  });
+
+  test('CARP AirQuality', () {
+    AirQuality air = AirQuality(
+      airQualityIndex: 10,
+      source: 'DMI',
+      place: 'Copenhagen',
+      latitude: 12,
+      longitude: 3,
+      airQualityLevel: AirQualityLevel.GOOD,
+    );
+    Measurement m_1 = Measurement.fromData(air);
+    expect(m_1.dataType.namespace, NameSpace.CARP);
+    print(_encode(m_1));
+  });
+
+  test('CARP Geofence', () {
+    Geofence geo = Geofence(type: GeofenceType.DWELL, name: 'DTU');
+    Measurement m_1 = Measurement.fromData(geo);
+    expect(m_1.dataType.namespace, NameSpace.CARP);
+    print(_encode(m_1));
+  });
+
   test('CARP Location', () {
     Location loc = Location()
       ..longitude = 12.23342
@@ -166,11 +170,27 @@ void main() {
     Measurement m_1 = Measurement.fromData(loc);
     expect(m_1.dataType.namespace, NameSpace.CARP);
     print(_encode(m_1));
+  });
 
-    // loc.altitude = 'encrypted value';
+  test('CARP Mobility', () {
+    Mobility mob = Mobility(
+      numberOfPlaces: 2,
+      homeStay: 86,
+      distanceTraveled: 3400,
+    );
+    Measurement m_1 = Measurement.fromData(mob);
+    expect(m_1.dataType.namespace, NameSpace.CARP);
     print(_encode(m_1));
   });
 
+  test('CARP Weather', () {
+    Weather wea = Weather()
+      ..cloudiness = 0.3
+      ..areaName = 'DTU';
+    Measurement m_1 = Measurement.fromData(wea);
+    expect(m_1.dataType.namespace, NameSpace.CARP);
+    print(_encode(m_1));
+  });
   test('CARP Location -> OMH Geoposition', () {
     Location loc = Location(longitude: 12.23342, latitude: 3.34224);
     Measurement m_1 = Measurement.fromData(loc);
@@ -192,7 +212,7 @@ void main() {
   });
 
   test('CARP Activity -> OMH Physical Activity', () {
-    ActivityEvent act = ActivityEvent(ActivityType.WALKING, 100);
+    Activity act = Activity(type: ActivityType.WALKING, confidence: 100);
     Measurement m_1 = Measurement.fromData(act);
     expect(m_1.dataType.namespace, NameSpace.CARP);
     print(_encode(act));
@@ -219,6 +239,7 @@ void main() {
     GeoPosition lyngby = GeoPosition(55.7704, 12.5038); // Kgs. Lyngby
 
     GeofenceSamplingConfiguration config = GeofenceSamplingConfiguration(
+      name: 'Home',
       center: home,
       dwell: const Duration(minutes: 10),
       radius: 5,

@@ -12,17 +12,16 @@ class AirQualityProbe extends MeasurementProbe {
     return true;
   }
 
-  /// Returns the [AirQualityIndex] based on the location of the phone.
+  /// Returns the [AirQuality] based on the location of the phone.
   // ignore: annotate_overrides
   Future<Measurement> getMeasurement() async {
     if (deviceManager.service != null) {
       try {
         final loc = await LocationManager().getLastKnownLocation();
-        AirQualityData airQuality = await deviceManager.service!
+        waqi.AirQualityData airQuality = await deviceManager.service!
             .feedFromGeoLocation(loc.latitude!, loc.longitude!);
 
-        return Measurement.fromData(
-            AirQualityIndex.fromAirQualityData(airQuality));
+        return Measurement.fromData(AirQuality.fromAirQualityData(airQuality));
       } catch (err) {
         warning('$runtimeType - Error getting air quality - $err');
         return Measurement.fromData(

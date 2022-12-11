@@ -20,7 +20,7 @@ void main() async {
     name: 'Context Sensing Example',
   );
 
-  // Define the smartphone as the master device.
+  // Define the smartphone as the primary device.
   Smartphone phone = Smartphone();
   protocol.addPrimaryDevice(phone);
 
@@ -45,12 +45,12 @@ void main() async {
         ..addMeasure(Measure(type: ContextSamplingPackage.LOCATION)),
       locationService);
 
-  // Add a background task that continuously collects geolocation and mobility
+  // Add a background task that continuously collects location and mobility
   // patterns. Delays sampling by 5 minutes.
   protocol.addTaskControl(
       DelayedTrigger(delay: Duration(minutes: 5)),
       BackgroundTask()
-        ..addMeasure(Measure(type: ContextSamplingPackage.GEOLOCATION))
+        ..addMeasure(Measure(type: ContextSamplingPackage.LOCATION))
         ..addMeasure(Measure(type: ContextSamplingPackage.MOBILITY)),
       locationService);
 
@@ -61,6 +61,7 @@ void main() async {
       BackgroundTask()
         ..addMeasure(Measure(type: ContextSamplingPackage.GEOFENCE)
           ..overrideSamplingConfiguration = GeofenceSamplingConfiguration(
+              name: 'DTU',
               center: GeoPosition(55.786025, 12.524159),
               dwell: const Duration(minutes: 15),
               radius: 10.0)),

@@ -12,7 +12,7 @@ part of carp_context_package;
 class Geofence extends Data {
   static const dataType = ContextSamplingPackage.GEOFENCE;
 
-  Geofence({required this.type, this.name}) : super();
+  Geofence({required this.type, required this.name}) : super();
 
   factory Geofence.fromJson(Map<String, dynamic> json) =>
       _$GeofenceFromJson(json);
@@ -21,7 +21,7 @@ class Geofence extends Data {
   Map<String, dynamic> toJson() => _$GeofenceToJson(this);
 
   /// The name of this geofence.
-  String? name;
+  String name;
 
   /// Type of geofence event:
   ///  - ENTER

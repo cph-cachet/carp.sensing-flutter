@@ -129,20 +129,20 @@ void main() {
     print(st);
   });
 
-  test('DataPoint -> JSON', () async {
-    DataPoint dataPoint = DataPoint(
-      DataPointHeader(
-        studyId: '1234',
-        dataFormat: const DataType(NameSpace.CARP, 'light'),
-      ),
-      Data(),
-    );
+  // test('DataPoint -> JSON', () async {
+  //   DataPoint dataPoint = DataPoint(
+  //     DataPointHeader(
+  //       studyId: '1234',
+  //       dataFormat: const DataType(NameSpace.CARP, 'light'),
+  //     ),
+  //     Data(),
+  //   );
 
-    print(dataPoint);
-    print(jsonEncode(dataPoint));
-    print(toJsonString(dataPoint));
-    assert(dataPoint.carpBody != null);
-  });
+  //   print(dataPoint);
+  //   print(jsonEncode(dataPoint));
+  //   print(toJsonString(dataPoint));
+  //   assert(dataPoint.carpBody != null);
+  // });
 
   test('DataStreamsConfiguration -> JSON', () async {
     String studyDeploymentId = "c9cc5317-48da-45f2-958e-58bc07f34681";

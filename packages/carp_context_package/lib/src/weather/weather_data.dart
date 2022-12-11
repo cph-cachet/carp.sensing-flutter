@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 Copenhagen Center for Health Technology (CACHET) at the
+ * Copyright 2018-2022 Copenhagen Center for Health Technology (CACHET) at the
  * Technical University of Denmark (DTU).
  * Use of this source code is governed by a MIT-style license that can be
  * found in the LICENSE file.
@@ -7,7 +7,7 @@
 
 part of carp_context_package;
 
-/// Holds weather information collected through OpenWeatherMap.
+/// Holds weather information collected through OpenWeather API.
 @JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
 class Weather extends Data {
   static const dataType = ContextSamplingPackage.WEATHER;

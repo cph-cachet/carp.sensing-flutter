@@ -10,39 +10,51 @@ part of carp_context_package;
 /// A [Data] that holds air quality information collected via the
 /// [World's Air Quality Index (WAQI)](https://waqi.info) API.
 @JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
-class AirQualityIndex extends Data {
+class AirQuality extends Data {
   static const dataType = ContextSamplingPackage.AIR_QUALITY;
 
   int airQualityIndex;
-  String source, place;
+  String? source, place;
   double latitude, longitude;
-  AirQualityLevel airQualityLevel;
+  AirQualityLevel? airQualityLevel;
 
-  AirQualityIndex(
-    this.airQualityIndex,
+  AirQuality({
+    required this.airQualityIndex,
     this.source,
     this.place,
-    this.latitude,
-    this.longitude,
+    required this.latitude,
+    required this.longitude,
     this.airQualityLevel,
-  ) : super();
+  }) : super();
 
-  AirQualityIndex.fromAirQualityData(AirQualityData airQualityData)
+  AirQuality.fromAirQualityData(waqi.AirQualityData airQualityData)
       : latitude = airQualityData.latitude,
         longitude = airQualityData.longitude,
         airQualityIndex = airQualityData.airQualityIndex,
         source = airQualityData.source,
         place = airQualityData.place,
-        airQualityLevel = airQualityData.airQualityLevel,
+        airQualityLevel =
+            AirQualityLevel.values[airQualityData.airQualityLevel.index],
         super();
 
-  factory AirQualityIndex.fromJson(Map<String, dynamic> json) =>
-      _$AirQualityIndexFromJson(json);
+  factory AirQuality.fromJson(Map<String, dynamic> json) =>
+      _$AirQualityFromJson(json);
 
   @override
-  Map<String, dynamic> toJson() => _$AirQualityIndexToJson(this);
+  Map<String, dynamic> toJson() => _$AirQualityToJson(this);
 
   @override
   String toString() =>
       '${super.toString()}, place: $place (latitude:$latitude, longitude:$longitude), souce: $source, airQualityIndex: $airQualityIndex, airQualityLevel: $airQualityLevel';
+}
+
+/// Level of air quality.
+enum AirQualityLevel {
+  UNKNOWN,
+  GOOD,
+  MODERATE,
+  UNHEALTHY_FOR_SENSITIVE_GROUPS,
+  UNHEALTHY,
+  VERY_UNHEALTHY,
+  HAZARDOUS
 }

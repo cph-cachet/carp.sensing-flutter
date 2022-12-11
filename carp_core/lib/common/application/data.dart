@@ -31,7 +31,8 @@ class Data extends Serializable {
   @override
   Map<String, dynamic> toJson() => _$DataToJson(this);
 
-  /// JSON type for data is per default `dk.cachet.carp.<class_name>`.
+  /// JSON type for data is per default `dk.cachet.carp.<class_name>`,
+  /// all in lower case.
   @override
   String get jsonType => '${NameSpace.CARP}.$runtimeType'.toLowerCase();
 }

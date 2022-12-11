@@ -94,13 +94,13 @@ class GeofenceSamplingConfiguration extends PersistentSamplingConfiguration {
   Duration dwell;
 
   /// A label for this geofence.
-  String? label;
+  String name;
 
   GeofenceSamplingConfiguration({
     required this.center,
     required this.radius,
     required this.dwell,
-    this.label,
+    required this.name,
   }) : super();
 
   @override

@@ -8,7 +8,7 @@
 part of carp_context_package;
 
 /// Collects activity information from the underlying OS's activity recognition
-/// API. It generates an [ActivityEvent] every time an activity is detected.
+/// API. It generates an [Activity] every time an activity is detected.
 ///
 /// Since the AR on both Android and iOS generates a lot of 'useless' events, the
 /// following AR event are removed:
@@ -38,7 +38,7 @@ class ActivityProbe extends StreamProbe {
   // @override
   // Stream<Datum> get stream => _stream ??= ActivityRecognition()
   //     // since this probe runs alongside location, which runs a foreground service
-  //     // this probe does not need to run as a foreground serive
+  //     // this probe does not need to run as a foreground service
   //     .activityStream(runForegroundService: false)
   //     .where((event) => event.type != ActivityType.UNKNOWN)
   //     .where((event) => event.type != ActivityType.TILTING)
@@ -47,11 +47,10 @@ class ActivityProbe extends StreamProbe {
   //     .asBroadcastStream();
 
   @override
-  Stream<Measurement> get stream =>
-      _stream ??= FlutterActivityRecognition.instance.activityStream
-          .where((event) => event.type != ActivityType.UNKNOWN)
-          .where((event) => event.confidence != ActivityConfidence.LOW)
-          .map((activity) =>
-              Measurement.fromData(ActivityEvent.fromActivity(activity)))
-          .asBroadcastStream();
+  Stream<Measurement> get stream => _stream ??= ar
+      .FlutterActivityRecognition.instance.activityStream
+      .where((event) => event.type != ActivityType.UNKNOWN)
+      .where((event) => event.confidence != ar.ActivityConfidence.LOW)
+      .map((activity) => Measurement.fromData(Activity.fromActivity(activity)))
+      .asBroadcastStream();
 }

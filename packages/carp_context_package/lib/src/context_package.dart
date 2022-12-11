@@ -20,19 +20,13 @@ class ContextSamplingPackage extends SmartphoneSamplingPackage {
   ///  * Event-based measure.
   ///  * Uses the [Smartphone] device for data collection.
   ///  * No sampling configuration needed.
-  static const String ACTIVITY = "${NameSpace.CARP}.activityevent";
+  static const String ACTIVITY = "${NameSpace.CARP}.activity";
 
-  /// Measure type for one-time collection of GPS location.
-  ///  * One-time measure.
-  ///  * Uses the [LocationService] connected device for data collection.
-  ///  * No sampling configuration needed.
-  static const String LOCATION = "${NameSpace.CARP}.location";
-
-  /// Measure type for continuos collection of GPS location data.
+  /// Measure type for continuos collection of location data.
   ///  * Event-based measure.
   ///  * Uses the [LocationService] connected device for data collection.
   ///  * No sampling configuration needed.
-  static const String GEOLOCATION = CarpDataTypes.GEOLOCATION_TYPE_NAME;
+  static const String LOCATION = "${NameSpace.CARP}.location";
 
   /// Measure type for collection of geofence events (enter/exit/dwell).
   ///  * Event-based measure.
@@ -53,7 +47,7 @@ class ContextSamplingPackage extends SmartphoneSamplingPackage {
   ///  * One-time measure.
   ///  * Uses the [AirQualityService] connected device for data collection.
   ///  * No sampling configuration needed.
-  static const String AIR_QUALITY = "${NameSpace.CARP}.airqualityindex";
+  static const String AIR_QUALITY = "${NameSpace.CARP}.airquality";
 
   /// Measure type for collection of weather data from the
   /// [Open Weather]( https://openweathermap.org/) API.
@@ -88,6 +82,7 @@ class ContextSamplingPackage extends SmartphoneSamplingPackage {
       ..register(AirQualityService(apiKey: ''))
       ..register(
         GeofenceSamplingConfiguration(
+            name: '',
             center: GeoPosition(1.1, 1.1),
             dwell: const Duration(),
             radius: 1.0),
@@ -100,7 +95,6 @@ class ContextSamplingPackage extends SmartphoneSamplingPackage {
     // registering the transformers from CARP to OMH for geolocation and physical activity
     // we assume that there is an OMH schema registered already...
     TransformerSchemaRegistry().lookup(NameSpace.OMH)!
-      ..add(GEOLOCATION, OMHGeopositionDataPoint.transformer)
       ..add(LOCATION, OMHGeopositionDataPoint.transformer)
       ..add(ACTIVITY, OMHPhysicalActivityDataPoint.transformer);
 
@@ -140,11 +134,6 @@ class LocationSamplingPackage extends SmartphoneSamplingPackage {
           timeType: DataTimeType.POINT,
         ),
         DataTypeMetaData(
-          type: ContextSamplingPackage.GEOLOCATION,
-          displayName: "Geolocation",
-          timeType: DataTimeType.POINT,
-        ),
-        DataTypeMetaData(
           type: ContextSamplingPackage.GEOFENCE,
           displayName: "Geofence",
           timeType: DataTimeType.POINT,
@@ -161,8 +150,6 @@ class LocationSamplingPackage extends SmartphoneSamplingPackage {
     switch (type) {
       case ContextSamplingPackage.LOCATION:
         return LocationProbe();
-      case ContextSamplingPackage.GEOLOCATION:
-        return GeoLocationProbe();
       case ContextSamplingPackage.GEOFENCE:
         return GeofenceProbe();
       case ContextSamplingPackage.MOBILITY:

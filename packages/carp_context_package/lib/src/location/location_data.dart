@@ -7,7 +7,7 @@
 
 part of carp_context_package;
 
-/// Holds location information using the GPS format.
+/// Holds location information using the GPS format from the phone.
 @JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
 class Location extends Geolocation {
   static const dataType = ContextSamplingPackage.LOCATION;

@@ -63,14 +63,14 @@ class CircularGeofence {
   Duration dwell;
 
   /// The name of this geofence.
-  String? name;
+  String name;
 
   /// Specify a geofence.
   CircularGeofence({
     required this.center,
     required this.radius,
     required this.dwell,
-    this.name,
+    required this.name,
   }) : super();
 
   factory CircularGeofence.fromGeofenceSamplingConfiguration(
@@ -79,6 +79,7 @@ class CircularGeofence {
         center: configuration.center,
         radius: configuration.radius,
         dwell: configuration.dwell,
+        name: configuration.name,
       );
 
   Geofence? moved(GeoPosition location) {

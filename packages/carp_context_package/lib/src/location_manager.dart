@@ -136,10 +136,11 @@ class LocationManager {
       locationManager.onLocationChanged;
 }
 
-/// The precision of the Location. A lower precision will provide a greater battery life.
+/// The precision of the Location. A lower precision will provide a greater
+/// battery life.
 ///
 /// This is modelled following [LocationAccuracy](https://pub.dev/documentation/location_platform_interface/latest/location_platform_interface/LocationAccuracy.html)
-/// in the location plugin. This is good comprimise between the iOS and Android models:
+/// in the location plugin. This is good compromise between the iOS and Android models:
 ///
 ///  * iOS [CLLocationAccuracy](https://developer.apple.com/documentation/corelocation/cllocationaccuracy?language=objc)
 ///  * Android [LocationRequest](https://developers.google.com/android/reference/com/google/android/gms/location/LocationRequest)

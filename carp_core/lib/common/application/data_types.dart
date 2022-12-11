@@ -17,22 +17,20 @@ class DataTypeMetaData {
   /// Determines how [Data] for [type] should be stored temporally.
   DataTimeType timeType;
 
-  DataTypeMetaData(
-      {required this.type,
-      this.displayName = '',
-      this.timeType = DataTimeType.POINT});
+  DataTypeMetaData({
+    required this.type,
+    this.displayName = '',
+    this.timeType = DataTimeType.POINT,
+  });
 }
 
-/// Describes how [Data] for a [DataType] should be stored temporally.
+/// Describes how [Data] for a [DataType] is stored temporally.
 enum DataTimeType {
   /// Data is related to one specific point in time.
   POINT,
 
-  /// Data is related to a period of time between two specific point in time.
+  /// Data is related to a period of time between two specific points in time.
   TIME_SPAN,
-
-  /// Data is streaming continuously.
-  STREAM
 }
 
 /// Contains CARP data type definitions, as defined in CARP Core.

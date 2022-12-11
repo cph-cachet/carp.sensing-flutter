@@ -40,13 +40,13 @@ class AirQualityService extends OnlineService {
 /// A [DeviceManager] for the [AirQualityService].
 class AirQualityServiceManager
     extends OnlineServiceManager<DeviceRegistration, AirQualityService> {
-  AirQuality? _service;
+  waqi.AirQuality? _service;
 
   /// A handle to the [AirQuality] plugin.
-  AirQuality? get service => (_service != null)
+  waqi.AirQuality? get service => (_service != null)
       ? _service
       : (deviceDescriptor?.apiKey != null)
-          ? _service = AirQuality(deviceDescriptor!.apiKey)
+          ? _service = waqi.AirQuality(deviceDescriptor!.apiKey)
           : null;
 
   @override

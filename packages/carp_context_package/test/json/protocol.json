@@ -1,6 +1,6 @@
 {
-  "id": "850f85e0-75b9-11ed-81d1-0b32adedb3bb",
-  "createdOn": "2022-12-06T22:58:38.014130Z",
+  "id": "f981ae60-77cd-11ed-9e7a-0feef5480f09",
+  "createdOn": "2022-12-09T14:30:05.638303Z",
   "version": 0,
   "ownerId": "owner@dtu.dk",
   "name": "Context Sensing Example",
@@ -66,7 +66,7 @@
       "measures": [
         {
           "__type": "dk.cachet.carp.common.application.tasks.Measure.DataStream",
-          "type": "dk.cachet.carp.geolocation"
+          "type": "dk.cachet.carp.location"
         },
         {
           "__type": "dk.cachet.carp.common.application.tasks.Measure.DataStream",
@@ -89,7 +89,8 @@
               "longitude": 12.524159
             },
             "radius": 10.0,
-            "dwell": 900000000
+            "dwell": 900000000,
+            "name": "DTU"
           }
         }
       ]
@@ -110,7 +111,7 @@
       "measures": [
         {
           "__type": "dk.cachet.carp.common.application.tasks.Measure.DataStream",
-          "type": "dk.cachet.carp.air_quality"
+          "type": "dk.cachet.carp.airquality"
         }
       ]
     }

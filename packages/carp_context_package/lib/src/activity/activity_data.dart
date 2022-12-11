@@ -9,27 +9,27 @@ part of carp_context_package;
 
 /// Holds an activity event as recognized by the phone Activity Recognition API.
 @JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
-class ActivityEvent extends Data {
-  static final Map<ActivityConfidence, int> _confidenceLevelMap = {
-    ActivityConfidence.HIGH: 100,
-    ActivityConfidence.MEDIUM: 70,
-    ActivityConfidence.LOW: 40,
+class Activity extends Data {
+  static final Map<ar.ActivityConfidence, int> _confidenceLevelMap = {
+    ar.ActivityConfidence.HIGH: 100,
+    ar.ActivityConfidence.MEDIUM: 70,
+    ar.ActivityConfidence.LOW: 40,
   };
 
   static const dataType = ContextSamplingPackage.ACTIVITY;
 
-  ActivityEvent(this.type, this.confidence) : super();
+  Activity({required this.type, required this.confidence}) : super();
 
-  factory ActivityEvent.fromActivity(Activity activity) => ActivityEvent(
-        activity.type,
-        _confidenceLevelMap[activity.confidence] ?? 0,
+  factory Activity.fromActivity(ar.Activity activity) => Activity(
+        type: ActivityType.values[activity.type.index],
+        confidence: _confidenceLevelMap[activity.confidence] ?? 0,
       );
 
-  factory ActivityEvent.fromJson(Map<String, dynamic> json) =>
-      _$ActivityEventFromJson(json);
+  factory Activity.fromJson(Map<String, dynamic> json) =>
+      _$ActivityFromJson(json);
 
   @override
-  Map<String, dynamic> toJson() => _$ActivityEventToJson(this);
+  Map<String, dynamic> toJson() => _$ActivityToJson(this);
 
   /// Confidence in activity recognition.
   int confidence;
@@ -65,4 +65,25 @@ class ActivityEvent extends Data {
   @override
   String toString() =>
       '${super.toString()}, type: $typeString, confidence: $confidence';
+}
+
+/// Defines the type of activity.
+enum ActivityType {
+  /// The device is in a vehicle, such as a car.
+  IN_VEHICLE,
+
+  /// The device is on a bicycle.
+  ON_BICYCLE,
+
+  /// The device is on a user who is running. This is a sub-activity of ON_FOOT.
+  RUNNING,
+
+  /// The device is still (not moving).
+  STILL,
+
+  /// The device is on a user who is walking. This is a sub-activity of ON_FOOT.
+  WALKING,
+
+  /// Unable to detect the current activity.
+  UNKNOWN
 }

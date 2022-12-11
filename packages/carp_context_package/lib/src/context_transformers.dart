@@ -64,8 +64,7 @@ class OMHPhysicalActivityDataPoint extends OMHContextDataPoint
     implements DataTransformerFactory {
   OMHPhysicalActivityDataPoint(DataPoint datapoint) : super(datapoint);
 
-  factory OMHPhysicalActivityDataPoint.fromActivityData(
-      ActivityEvent activity) {
+  factory OMHPhysicalActivityDataPoint.fromActivityData(Activity activity) {
     var act = PhysicalActivity(activityName: activity.typeString);
 
     return OMHPhysicalActivityDataPoint(
@@ -76,5 +75,5 @@ class OMHPhysicalActivityDataPoint extends OMHContextDataPoint
       OMHPhysicalActivityDataPoint(DataPoint.fromJson(json));
 
   static DataTransformer get transformer => ((data) =>
-      OMHPhysicalActivityDataPoint.fromActivityData(data as ActivityEvent));
+      OMHPhysicalActivityDataPoint.fromActivityData(data as Activity));
 }
