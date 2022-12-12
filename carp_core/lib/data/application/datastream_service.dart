@@ -16,7 +16,7 @@ abstract class DataStreamService {
   ///
   /// Throws IllegalStateException when data streams for the specified study
   /// deployment have already been configured.
-  void openDataStreams(DataStreamsConfiguration configuration);
+  Future<void> openDataStreams(DataStreamsConfiguration configuration);
 
   /// Append a [batch] of data measures to corresponding data streams
   /// in [studyDeploymentId].
@@ -31,7 +31,7 @@ abstract class DataStreamService {
   ///
   /// Throws IllegalStateException when data streams for [studyDeploymentId]
   /// have been closed.
-  void appendToDataStreams(
+  Future<void> appendToDataStreams(
     String studyDeploymentId,
     List<DataStreamBatch> batch,
   );
@@ -48,7 +48,7 @@ abstract class DataStreamService {
   ///  - [dataStream] has never been opened
   ///  - [fromSequenceId] is negative or [toSequenceIdInclusive] is smaller
   ///    than [fromSequenceId]
-  List<DataStreamBatch> getDataStream(
+  Future<List<DataStreamBatch>> getDataStream(
     DataStreamId dataStream,
     int fromSequenceId, [
     int? toSequenceIdInclusive,
@@ -58,11 +58,11 @@ abstract class DataStreamService {
   ///
   /// Throws IllegalArgumentException when no data streams were ever opened for
   /// any of the [studyDeploymentIds].
-  void closeDataStreams(List<String> studyDeploymentIds);
+  Future<void> closeDataStreams(List<String> studyDeploymentIds);
 
   /// Close data streams and remove all data for each of the [studyDeploymentIds].
   ///
   /// Returns the IDs of the study deployments for which data streams were configured.
   /// IDs for which no study deployment exists are ignored.
-  Set<String> removeDataStreams(List<String> studyDeploymentIds);
+  Future<Set<String>> removeDataStreams(List<String> studyDeploymentIds);
 }

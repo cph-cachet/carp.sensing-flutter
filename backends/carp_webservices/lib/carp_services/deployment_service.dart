@@ -7,7 +7,7 @@
 
 part of carp_services;
 
-/// A [DeploymentService] that talks to the CARP backend server(s).
+/// A [DeploymentService] that talks to the CARP Web Services.
 class CarpDeploymentService extends CarpBaseService
     implements DeploymentService {
   static CarpDeploymentService _instance = CarpDeploymentService._();

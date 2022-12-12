@@ -41,7 +41,7 @@ void main() {
       password: password,
     );
 
-    CANSProtocolService().configureFrom(CarpService());
+    CarpProtocolService().configureFrom(CarpService());
     ownerId = CarpService().currentUser!.accountId;
     name = 'test_protocol';
 
@@ -85,7 +85,7 @@ void main() {
       '- add',
       () async {
         print(toJsonString(protocol));
-        await CANSProtocolService().add(protocol);
+        await CarpProtocolService().add(protocol);
       },
     );
 
@@ -93,14 +93,14 @@ void main() {
       '- add custom',
       () async {
         print(toJsonString(custom!));
-        await CANSProtocolService().add(custom, '1.3');
+        await CarpProtocolService().add(custom, '1.3');
       },
     );
 
     test(
       '- addVersion',
       () async {
-        await CANSProtocolService().addVersion(custom);
+        await CarpProtocolService().addVersion(custom);
       },
     );
 
@@ -112,7 +112,7 @@ void main() {
     test(
       '- getBy',
       () async {
-        var p = await CANSProtocolService().getBy(protocol.id);
+        var p = await CarpProtocolService().getBy(protocol.id);
         print(p);
       },
     );
@@ -121,7 +121,7 @@ void main() {
       '- getAllFor',
       () async {
         List<StudyProtocol> protocols =
-            await CANSProtocolService().getAllForOwner(ownerId!);
+            await CarpProtocolService().getAllForOwner(ownerId!);
         print(protocols);
       },
     );
@@ -130,7 +130,7 @@ void main() {
       '- getVersionHistoryFor',
       () async {
         List<ProtocolVersion> versions =
-            await CANSProtocolService().getVersionHistoryFor(protocol.id);
+            await CarpProtocolService().getVersionHistoryFor(protocol.id);
         print(versions);
       },
     );
@@ -139,7 +139,7 @@ void main() {
       '- createCustomProtocol',
       () async {
         StudyProtocol protocol =
-            await CANSProtocolService().createCustomProtocol(
+            await CarpProtocolService().createCustomProtocol(
           ownerId!,
           name!,
           'Made from Dart unit test.',

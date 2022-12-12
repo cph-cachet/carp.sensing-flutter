@@ -7,7 +7,7 @@
 part of carp_services;
 
 /// Provides a reference to the deployment endpoint in a CARP web service that can
-/// handle a specific [MasterDeviceDeployment].
+/// handle a specific [PrimaryDeviceDeployment].
 ///
 /// According to CARP core, the protocol for using the
 /// [deployment sub-system](https://github.com/cph-cachet/carp.core-kotlin/blob/develop/docs/carp-deployment.md) is:

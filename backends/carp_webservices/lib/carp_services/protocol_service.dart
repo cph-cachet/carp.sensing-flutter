@@ -7,17 +7,16 @@
 
 part of carp_services;
 
-/// A [ProtocolService] that talks to the CARP Nervous System (CANS), i.e.,
-/// the CARP backend server(s).
-class CANSProtocolService extends CarpBaseService
+/// A [ProtocolService] that talks to the CARP Web Services.
+class CarpProtocolService extends CarpBaseService
     implements ProtocolService, ProtocolFactoryService {
-  static CANSProtocolService _instance = CANSProtocolService._();
+  static CarpProtocolService _instance = CarpProtocolService._();
 
-  CANSProtocolService._();
+  CarpProtocolService._();
 
-  /// Returns the singleton default instance of the [CANSProtocolService].
+  /// Returns the singleton default instance of the [CarpProtocolService].
   /// Before this instance can be used, it must be configured using the [configure] method.
-  factory CANSProtocolService() => _instance;
+  factory CarpProtocolService() => _instance;
 
   @override
   String get rpcEndpointName => "protocol-service";

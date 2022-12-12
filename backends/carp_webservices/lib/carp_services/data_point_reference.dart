@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 Copenhagen Center for Health Technology (CACHET) at the
+ * Copyright 2018-2022 Copenhagen Center for Health Technology (CACHET) at the
  * Technical University of Denmark (DTU).
  * Use of this source code is governed by a MIT-style license that can be
  * found in the LICENSE file.
@@ -7,10 +7,10 @@
 part of carp_services;
 
 /// Provide a data endpoint reference to a CARP web service. Used to:
-/// - post [CARPDataPoint]s
-/// - get a [CARPDataPoint]s
-/// - query for [CARPDataPoint]s
-/// - delete [CARPDataPoint]s
+/// - post [DataPoint]s
+/// - get a [DataPoint]s
+/// - query for [DataPoint]s
+/// - delete [DataPoint]s
 class DataPointReference extends CarpReference {
   DataPointReference._(CarpService service) : super._(service);
 
@@ -42,7 +42,7 @@ class DataPointReference extends CarpReference {
     );
   }
 
-  /// Batch upload a file with [CARPDataPoint]s to the CARP backend using
+  /// Batch upload a file with [DataPoint]s to the CARP backend using
   /// HTTP POST.
   ///
   /// A file can be created using a [FileDataManager] in `carp_mobile_sensing`.
@@ -106,12 +106,13 @@ class DataPointReference extends CarpReference {
     );
   }
 
-  /// Get all [CARPDataPoint]s for this study.
+  /// Get all [DataPoint]s for this study.
   ///
-  /// Be careful using this method - this might potential return an enormous amount of data.
+  /// Be careful using this method - this might potential return an enormous
+  /// amount of data.
   Future<List<DataPoint>> getAllDataPoint() async => queryDataPoint('');
 
-  /// Query for [CARPDataPoint]s from the CARP backend using
+  /// Query for [DataPoint]s from the CARP backend using
   /// [REST SQL (RSQL)](https://github.com/jirutka/rsql-parser).
   ///
   /// The [query] string can be build by querying data point _fields_ using
@@ -218,7 +219,7 @@ class DataPointReference extends CarpReference {
     );
   }
 
-  /// The count of datapoints for this deployment.
+  /// The count of data points for this deployment.
   ///
   /// A [query] using [REST SQL (RSQL)](https://github.com/jirutka/rsql-parser)
   /// can be provided.
