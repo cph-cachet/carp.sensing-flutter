@@ -335,7 +335,7 @@ Map<String, dynamic> _$PeriodicSamplingConfigurationToJson(
 OnlineService _$OnlineServiceFromJson(Map<String, dynamic> json) =>
     OnlineService(
       roleName: json['roleName'] as String,
-      isOptional: json['isOptional'] as bool? ?? false,
+      isOptional: json['isOptional'] as bool?,
       supportedDataTypes: (json['supportedDataTypes'] as List<dynamic>?)
           ?.map((e) => e as String)
           .toList(),
@@ -485,9 +485,9 @@ Map<String, dynamic> _$AppTaskToJson(AppTask instance) {
 
 FunctionTask _$FunctionTaskFromJson(Map<String, dynamic> json) => FunctionTask(
       name: json['name'] as String?,
+      description: json['description'] as String?,
     )
       ..$type = json['__type'] as String?
-      ..description = json['description'] as String?
       ..measures = (json['measures'] as List<dynamic>?)
           ?.map((e) => Measure.fromJson(e as Map<String, dynamic>))
           .toList();

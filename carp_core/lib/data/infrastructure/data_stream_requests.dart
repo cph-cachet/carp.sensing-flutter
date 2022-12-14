@@ -21,7 +21,7 @@ abstract class DataStreamServiceRequest extends ServiceRequest {
       '$_infrastructurePackageNamespace.DataStreamServiceRequest.$runtimeType';
 }
 
-@JsonSerializable(fieldRename: FieldRename.none, includeIfNull: true)
+@JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
 class OpenDataStreams extends DataStreamServiceRequest {
   DataStreamsConfiguration configuration;
   OpenDataStreams(this.configuration) : super();
@@ -34,7 +34,7 @@ class OpenDataStreams extends DataStreamServiceRequest {
   Map<String, dynamic> toJson() => _$OpenDataStreamsToJson(this);
 }
 
-@JsonSerializable(fieldRename: FieldRename.none, includeIfNull: true)
+@JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
 class AppendToDataStreams extends DataStreamServiceRequest {
   String studyDeploymentId;
   List<DataStreamBatch> batch = [];
@@ -49,7 +49,7 @@ class AppendToDataStreams extends DataStreamServiceRequest {
   Map<String, dynamic> toJson() => _$AppendToDataStreamsToJson(this);
 }
 
-@JsonSerializable(fieldRename: FieldRename.none, includeIfNull: true)
+@JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
 class GetDataStream extends DataStreamServiceRequest {
   DataStreamId dataStream;
   int fromSequenceId;
@@ -69,7 +69,7 @@ class GetDataStream extends DataStreamServiceRequest {
   Map<String, dynamic> toJson() => _$GetDataStreamToJson(this);
 }
 
-@JsonSerializable(fieldRename: FieldRename.none, includeIfNull: true)
+@JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
 class CloseDataStreams extends DataStreamServiceRequest {
   List<String> studyDeploymentIds;
   CloseDataStreams(this.studyDeploymentIds) : super();
@@ -82,7 +82,7 @@ class CloseDataStreams extends DataStreamServiceRequest {
   Map<String, dynamic> toJson() => _$CloseDataStreamsToJson(this);
 }
 
-@JsonSerializable(fieldRename: FieldRename.none, includeIfNull: true)
+@JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
 class RemoveDataStreams extends DataStreamServiceRequest {
   List<String> studyDeploymentIds;
   RemoveDataStreams(this.studyDeploymentIds) : super();

@@ -75,6 +75,7 @@ class BackgroundTask extends TaskConfiguration {
   /// Create a new task which can run in the background.
   BackgroundTask({
     super.name,
+    super.description,
     super.measures,
     this.duration,
   });
@@ -98,6 +99,7 @@ class CustomProtocolTask extends TaskConfiguration {
   /// string in [studyProtocol].
   CustomProtocolTask({
     super.name,
+    super.description,
     required this.studyProtocol,
     // The measures list is empty, since measures are defined in [studyProtocol]
     // in a different format.

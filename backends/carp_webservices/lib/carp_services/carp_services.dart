@@ -12,6 +12,7 @@ import 'dart:convert';
 import 'dart:io';
 import 'dart:math';
 
+import 'package:carp_serializable/carp_serializable.dart';
 import 'package:carp_webservices/carp_auth/carp_auth.dart';
 import 'package:http/http.dart' as http;
 import 'package:http_parser/http_parser.dart';
@@ -51,8 +52,8 @@ part 'invitations_dialog.dart';
 
 part 'carp_services.g.dart';
 
-String _encode(Object object) =>
-    const JsonEncoder.withIndent(' ').convert(object);
+// String _encode(Object object) =>
+//     const JsonEncoder.withIndent(' ').convert(object);
 
 /// Exception for CARP REST/HTTP service communication.
 class CarpServiceException implements Exception {

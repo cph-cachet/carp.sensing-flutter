@@ -30,7 +30,7 @@ abstract class ParticipationServiceRequest extends DeploymentServiceRequest {
 }
 
 /// A request for getting the deployment invitations for an account id.
-@JsonSerializable(fieldRename: FieldRename.none, includeIfNull: true)
+@JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
 class GetActiveParticipationInvitations extends ParticipationServiceRequest {
   GetActiveParticipationInvitations(this.accountId) : super();
 
@@ -56,7 +56,7 @@ class GetActiveParticipationInvitations extends ParticipationServiceRequest {
 }
 
 /// A request for getting the status of a study deployment.
-@JsonSerializable(fieldRename: FieldRename.none, includeIfNull: true)
+@JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
 class GetParticipantData extends ParticipationServiceRequest {
   GetParticipantData(super.studyDeploymentId);
 
@@ -68,9 +68,9 @@ class GetParticipantData extends ParticipationServiceRequest {
   Map<String, dynamic> toJson() => _$GetParticipantDataToJson(this);
 }
 
-/// A request for getting the list of partication data for this a list
+/// A request for getting the list of participant data for this a list
 /// of [studyDeploymentIds].
-@JsonSerializable(fieldRename: FieldRename.none, includeIfNull: true)
+@JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
 class GetParticipantDataList extends ParticipationServiceRequest {
   List<String> studyDeploymentIds;
   GetParticipantDataList(this.studyDeploymentIds) : super();
@@ -84,7 +84,7 @@ class GetParticipantDataList extends ParticipationServiceRequest {
 }
 
 /// A request for adding data for a participant.
-@JsonSerializable(fieldRename: FieldRename.none, includeIfNull: true)
+@JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
 class SetParticipantData extends ParticipationServiceRequest {
   SetParticipantData(
     super.studyDeploymentId, [

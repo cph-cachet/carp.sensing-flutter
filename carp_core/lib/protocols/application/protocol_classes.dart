@@ -7,7 +7,7 @@
 part of carp_core_protocols;
 
 // /// Uniquely identifies a study protocol by the [ownerId] and it's [name].
-// @JsonSerializable(fieldRename: FieldRename.none, includeIfNull: true)
+// @JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
 // class StudyProtocolId {
 //   String ownerId;
 //   String name;
@@ -35,7 +35,7 @@ part of carp_core_protocols;
 /// Specifies a specific version for a [StudyProtocol], identified by a [tag].
 ///
 /// [date] is the date when this version of the protocol was created.
-@JsonSerializable(fieldRename: FieldRename.none, includeIfNull: true)
+@JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
 class ProtocolVersion {
   String tag;
   late DateTime date;

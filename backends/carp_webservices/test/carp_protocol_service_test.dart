@@ -16,8 +16,10 @@ String _encode(Object object) =>
 void main() {
   CarpApp app;
   CarpUser? user;
-  String? ownerId, name;
+  String? ownerId;
   late StudyProtocol protocol, custom;
+  late Smartphone phone;
+  var testProtocolId = 'a515a280-7bbc-11ed-ae73-cbb78a9ed6ea';
 
   /// Runs once before all tests.
   setUpAll(() async {
@@ -43,14 +45,46 @@ void main() {
 
     CarpProtocolService().configureFrom(CarpService());
     ownerId = CarpService().currentUser!.accountId;
-    name = 'test_protocol';
+    phone = Smartphone(roleName: 'smartphone');
 
-    // a very simple protocol
+    // the study protocol from the json from core
     protocol = StudyProtocol(
         ownerId: ownerId!,
-        name: name!,
-        description: 'Generated from carp_webservices unit test.')
-      ..addPrimaryDevice(Smartphone(roleName: 'smartphone'));
+        name: 'Nonmotorized transport study',
+        description:
+            'Track how much nonmotorized movement participants perform.')
+      ..addPrimaryDevice(phone)
+      ..addConnectedDevice(AltBeacon(roleName: "Participant's bike"));
+
+    var trigger = ElapsedTimeTrigger(elapsedTime: IsoDuration.tryParse('PT0S'));
+
+    protocol
+      ..addTaskControl(
+        trigger,
+        BackgroundTask(
+            name: 'Monitor movement',
+            description: 'Track step count and geolocation for one week.',
+            duration: IsoDuration.tryParse('PT168H'),
+            measures: [
+              Measure(type: 'dk.cachet.carp.geolocation'),
+              Measure(type: 'dk.cachet.carp.stepcount'),
+            ]),
+        phone,
+      )
+      ..addTaskControl(
+        trigger,
+        BackgroundTask(
+            name: 'Monitor proximity to bike',
+            description: 'rack step count and geolocation for one week.',
+            duration: IsoDuration.tryParse('PT168H'),
+            measures: [
+              Measure(type: 'dk.cachet.carp.signalstrength'),
+            ]),
+        phone,
+      );
+
+    protocol.addParticipantRole(ParticipantRole('Participant'));
+    protocol.applicationData = {'uiTheme': 'black'};
 
     // a custom protocol
     var customDevice = CustomProtocolDevice(roleName: 'Custom device');
@@ -77,42 +111,29 @@ void main() {
       print('CarpService : ${CarpService().app}');
       print(" - signed in as: $user");
       //expect(user.accountId, testParticipantId);
-    }, skip: false);
+    });
   });
 
   group("Protocol", () {
     test(
       '- add',
       () async {
-        print(toJsonString(protocol));
+        // print(toJsonString(protocol));
         await CarpProtocolService().add(protocol);
-      },
-    );
-
-    test(
-      '- add custom',
-      () async {
-        print(toJsonString(custom!));
-        await CarpProtocolService().add(custom, '1.3');
       },
     );
 
     test(
       '- addVersion',
       () async {
-        await CarpProtocolService().addVersion(custom);
+        await CarpProtocolService().addVersion(protocol);
       },
-    );
-
-    test(
-      '- updateParticipantDataConfiguration',
-      () async {},
     );
 
     test(
       '- getBy',
       () async {
-        var p = await CarpProtocolService().getBy(protocol.id);
+        var p = await CarpProtocolService().getBy(testProtocolId);
         print(p);
       },
     );
@@ -130,18 +151,35 @@ void main() {
       '- getVersionHistoryFor',
       () async {
         List<ProtocolVersion> versions =
-            await CarpProtocolService().getVersionHistoryFor(protocol.id);
+            await CarpProtocolService().getVersionHistoryFor(testProtocolId);
         print(versions);
       },
     );
 
     test(
+      '- updateParticipantDataConfiguration',
+      () async {
+        var p = await CarpProtocolService().updateParticipantDataConfiguration(
+          testProtocolId,
+          '2022-12-14 14:36:07.258291Z',
+          [
+            ExpectedParticipantData(
+                ParticipantAttribute(inputDataType: 'dk.cachet.carp.input.sex'),
+                AssignedTo(roleNames: {'Participant'}))
+          ],
+        );
+        // print(toJsonString(p));
+      },
+    );
+
+    test(
       '- createCustomProtocol',
+      skip: true,
       () async {
         StudyProtocol protocol =
             await CarpProtocolService().createCustomProtocol(
           ownerId!,
-          name!,
+          custom.name,
           'Made from Dart unit test.',
           '{"version":1}',
         );

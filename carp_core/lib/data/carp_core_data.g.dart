@@ -97,12 +97,20 @@ OpenDataStreams _$OpenDataStreamsFromJson(Map<String, dynamic> json) =>
       ..$type = json['__type'] as String?
       ..apiVersion = json['apiVersion'] as String;
 
-Map<String, dynamic> _$OpenDataStreamsToJson(OpenDataStreams instance) =>
-    <String, dynamic>{
-      '__type': instance.$type,
-      'apiVersion': instance.apiVersion,
-      'configuration': instance.configuration,
-    };
+Map<String, dynamic> _$OpenDataStreamsToJson(OpenDataStreams instance) {
+  final val = <String, dynamic>{};
+
+  void writeNotNull(String key, dynamic value) {
+    if (value != null) {
+      val[key] = value;
+    }
+  }
+
+  writeNotNull('__type', instance.$type);
+  val['apiVersion'] = instance.apiVersion;
+  val['configuration'] = instance.configuration;
+  return val;
+}
 
 AppendToDataStreams _$AppendToDataStreamsFromJson(Map<String, dynamic> json) =>
     AppendToDataStreams(
@@ -114,14 +122,21 @@ AppendToDataStreams _$AppendToDataStreamsFromJson(Map<String, dynamic> json) =>
       ..$type = json['__type'] as String?
       ..apiVersion = json['apiVersion'] as String;
 
-Map<String, dynamic> _$AppendToDataStreamsToJson(
-        AppendToDataStreams instance) =>
-    <String, dynamic>{
-      '__type': instance.$type,
-      'apiVersion': instance.apiVersion,
-      'studyDeploymentId': instance.studyDeploymentId,
-      'batch': instance.batch,
-    };
+Map<String, dynamic> _$AppendToDataStreamsToJson(AppendToDataStreams instance) {
+  final val = <String, dynamic>{};
+
+  void writeNotNull(String key, dynamic value) {
+    if (value != null) {
+      val[key] = value;
+    }
+  }
+
+  writeNotNull('__type', instance.$type);
+  val['apiVersion'] = instance.apiVersion;
+  val['studyDeploymentId'] = instance.studyDeploymentId;
+  val['batch'] = instance.batch;
+  return val;
+}
 
 GetDataStream _$GetDataStreamFromJson(Map<String, dynamic> json) =>
     GetDataStream(
@@ -132,14 +147,22 @@ GetDataStream _$GetDataStreamFromJson(Map<String, dynamic> json) =>
       ..$type = json['__type'] as String?
       ..apiVersion = json['apiVersion'] as String;
 
-Map<String, dynamic> _$GetDataStreamToJson(GetDataStream instance) =>
-    <String, dynamic>{
-      '__type': instance.$type,
-      'apiVersion': instance.apiVersion,
-      'dataStream': instance.dataStream,
-      'fromSequenceId': instance.fromSequenceId,
-      'toSequenceIdInclusive': instance.toSequenceIdInclusive,
-    };
+Map<String, dynamic> _$GetDataStreamToJson(GetDataStream instance) {
+  final val = <String, dynamic>{};
+
+  void writeNotNull(String key, dynamic value) {
+    if (value != null) {
+      val[key] = value;
+    }
+  }
+
+  writeNotNull('__type', instance.$type);
+  val['apiVersion'] = instance.apiVersion;
+  val['dataStream'] = instance.dataStream;
+  val['fromSequenceId'] = instance.fromSequenceId;
+  writeNotNull('toSequenceIdInclusive', instance.toSequenceIdInclusive);
+  return val;
+}
 
 CloseDataStreams _$CloseDataStreamsFromJson(Map<String, dynamic> json) =>
     CloseDataStreams(
@@ -150,12 +173,20 @@ CloseDataStreams _$CloseDataStreamsFromJson(Map<String, dynamic> json) =>
       ..$type = json['__type'] as String?
       ..apiVersion = json['apiVersion'] as String;
 
-Map<String, dynamic> _$CloseDataStreamsToJson(CloseDataStreams instance) =>
-    <String, dynamic>{
-      '__type': instance.$type,
-      'apiVersion': instance.apiVersion,
-      'studyDeploymentIds': instance.studyDeploymentIds,
-    };
+Map<String, dynamic> _$CloseDataStreamsToJson(CloseDataStreams instance) {
+  final val = <String, dynamic>{};
+
+  void writeNotNull(String key, dynamic value) {
+    if (value != null) {
+      val[key] = value;
+    }
+  }
+
+  writeNotNull('__type', instance.$type);
+  val['apiVersion'] = instance.apiVersion;
+  val['studyDeploymentIds'] = instance.studyDeploymentIds;
+  return val;
+}
 
 RemoveDataStreams _$RemoveDataStreamsFromJson(Map<String, dynamic> json) =>
     RemoveDataStreams(
@@ -166,9 +197,17 @@ RemoveDataStreams _$RemoveDataStreamsFromJson(Map<String, dynamic> json) =>
       ..$type = json['__type'] as String?
       ..apiVersion = json['apiVersion'] as String;
 
-Map<String, dynamic> _$RemoveDataStreamsToJson(RemoveDataStreams instance) =>
-    <String, dynamic>{
-      '__type': instance.$type,
-      'apiVersion': instance.apiVersion,
-      'studyDeploymentIds': instance.studyDeploymentIds,
-    };
+Map<String, dynamic> _$RemoveDataStreamsToJson(RemoveDataStreams instance) {
+  final val = <String, dynamic>{};
+
+  void writeNotNull(String key, dynamic value) {
+    if (value != null) {
+      val[key] = value;
+    }
+  }
+
+  writeNotNull('__type', instance.$type);
+  val['apiVersion'] = instance.apiVersion;
+  val['studyDeploymentIds'] = instance.studyDeploymentIds;
+  return val;
+}

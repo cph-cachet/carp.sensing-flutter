@@ -46,7 +46,8 @@ void main() {
         duration: const IsoDuration(hours: 1),
         measures: measures);
     protocol.addTaskControl(
-      TriggerConfiguration(sourceDeviceRoleName: phone.roleName),
+      // TriggerConfiguration(sourceDeviceRoleName: phone.roleName),
+      TriggerConfiguration(),
       task,
       phone,
       Control.Start,
@@ -54,7 +55,7 @@ void main() {
 
     protocol.addTaskControl(
       ElapsedTimeTrigger(
-        sourceDeviceRoleName: phone.roleName,
+        // sourceDeviceRoleName: phone.roleName,
         elapsedTime: const IsoDuration(hours: 1),
       ),
       task,
@@ -84,6 +85,11 @@ void main() {
     expect(protocol.triggers.keys.first, '0');
     expect(protocol.tasks.length, 2);
     expect(protocol.taskControls.length, 3);
+  });
+
+  test('Add Request -> JSON', () async {
+    print(toJsonString(Add(protocol)));
+    // expect(toJsonString(expected), toJsonString(request));
   });
 
   test('JSON -> StudyProtocol', () async {

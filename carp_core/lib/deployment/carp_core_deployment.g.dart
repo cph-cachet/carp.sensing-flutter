@@ -344,12 +344,20 @@ CreateStudyDeployment _$CreateStudyDeploymentFromJson(
       ..apiVersion = json['apiVersion'] as String;
 
 Map<String, dynamic> _$CreateStudyDeploymentToJson(
-        CreateStudyDeployment instance) =>
-    <String, dynamic>{
-      '__type': instance.$type,
-      'apiVersion': instance.apiVersion,
-      'protocol': instance.protocol,
-    };
+    CreateStudyDeployment instance) {
+  final val = <String, dynamic>{};
+
+  void writeNotNull(String key, dynamic value) {
+    if (value != null) {
+      val[key] = value;
+    }
+  }
+
+  writeNotNull('__type', instance.$type);
+  val['apiVersion'] = instance.apiVersion;
+  val['protocol'] = instance.protocol;
+  return val;
+}
 
 GetStudyDeploymentStatus _$GetStudyDeploymentStatusFromJson(
         Map<String, dynamic> json) =>
@@ -360,12 +368,20 @@ GetStudyDeploymentStatus _$GetStudyDeploymentStatusFromJson(
       ..apiVersion = json['apiVersion'] as String;
 
 Map<String, dynamic> _$GetStudyDeploymentStatusToJson(
-        GetStudyDeploymentStatus instance) =>
-    <String, dynamic>{
-      '__type': instance.$type,
-      'apiVersion': instance.apiVersion,
-      'studyDeploymentId': instance.studyDeploymentId,
-    };
+    GetStudyDeploymentStatus instance) {
+  final val = <String, dynamic>{};
+
+  void writeNotNull(String key, dynamic value) {
+    if (value != null) {
+      val[key] = value;
+    }
+  }
+
+  writeNotNull('__type', instance.$type);
+  val['apiVersion'] = instance.apiVersion;
+  writeNotNull('studyDeploymentId', instance.studyDeploymentId);
+  return val;
+}
 
 GetStudyDeploymentStatusList _$GetStudyDeploymentStatusListFromJson(
         Map<String, dynamic> json) =>
@@ -379,13 +395,21 @@ GetStudyDeploymentStatusList _$GetStudyDeploymentStatusListFromJson(
       ..studyDeploymentId = json['studyDeploymentId'] as String?;
 
 Map<String, dynamic> _$GetStudyDeploymentStatusListToJson(
-        GetStudyDeploymentStatusList instance) =>
-    <String, dynamic>{
-      '__type': instance.$type,
-      'apiVersion': instance.apiVersion,
-      'studyDeploymentId': instance.studyDeploymentId,
-      'studyDeploymentIds': instance.studyDeploymentIds,
-    };
+    GetStudyDeploymentStatusList instance) {
+  final val = <String, dynamic>{};
+
+  void writeNotNull(String key, dynamic value) {
+    if (value != null) {
+      val[key] = value;
+    }
+  }
+
+  writeNotNull('__type', instance.$type);
+  val['apiVersion'] = instance.apiVersion;
+  writeNotNull('studyDeploymentId', instance.studyDeploymentId);
+  val['studyDeploymentIds'] = instance.studyDeploymentIds;
+  return val;
+}
 
 RegisterDevice _$RegisterDeviceFromJson(Map<String, dynamic> json) =>
     RegisterDevice(
@@ -396,14 +420,22 @@ RegisterDevice _$RegisterDeviceFromJson(Map<String, dynamic> json) =>
       ..$type = json['__type'] as String?
       ..apiVersion = json['apiVersion'] as String;
 
-Map<String, dynamic> _$RegisterDeviceToJson(RegisterDevice instance) =>
-    <String, dynamic>{
-      '__type': instance.$type,
-      'apiVersion': instance.apiVersion,
-      'studyDeploymentId': instance.studyDeploymentId,
-      'deviceRoleName': instance.deviceRoleName,
-      'registration': instance.registration,
-    };
+Map<String, dynamic> _$RegisterDeviceToJson(RegisterDevice instance) {
+  final val = <String, dynamic>{};
+
+  void writeNotNull(String key, dynamic value) {
+    if (value != null) {
+      val[key] = value;
+    }
+  }
+
+  writeNotNull('__type', instance.$type);
+  val['apiVersion'] = instance.apiVersion;
+  writeNotNull('studyDeploymentId', instance.studyDeploymentId);
+  val['deviceRoleName'] = instance.deviceRoleName;
+  val['registration'] = instance.registration;
+  return val;
+}
 
 UnregisterDevice _$UnregisterDeviceFromJson(Map<String, dynamic> json) =>
     UnregisterDevice(
@@ -413,13 +445,21 @@ UnregisterDevice _$UnregisterDeviceFromJson(Map<String, dynamic> json) =>
       ..$type = json['__type'] as String?
       ..apiVersion = json['apiVersion'] as String;
 
-Map<String, dynamic> _$UnregisterDeviceToJson(UnregisterDevice instance) =>
-    <String, dynamic>{
-      '__type': instance.$type,
-      'apiVersion': instance.apiVersion,
-      'studyDeploymentId': instance.studyDeploymentId,
-      'deviceRoleName': instance.deviceRoleName,
-    };
+Map<String, dynamic> _$UnregisterDeviceToJson(UnregisterDevice instance) {
+  final val = <String, dynamic>{};
+
+  void writeNotNull(String key, dynamic value) {
+    if (value != null) {
+      val[key] = value;
+    }
+  }
+
+  writeNotNull('__type', instance.$type);
+  val['apiVersion'] = instance.apiVersion;
+  writeNotNull('studyDeploymentId', instance.studyDeploymentId);
+  val['deviceRoleName'] = instance.deviceRoleName;
+  return val;
+}
 
 GetDeviceDeploymentFor _$GetDeviceDeploymentForFromJson(
         Map<String, dynamic> json) =>
@@ -431,13 +471,21 @@ GetDeviceDeploymentFor _$GetDeviceDeploymentForFromJson(
       ..apiVersion = json['apiVersion'] as String;
 
 Map<String, dynamic> _$GetDeviceDeploymentForToJson(
-        GetDeviceDeploymentFor instance) =>
-    <String, dynamic>{
-      '__type': instance.$type,
-      'apiVersion': instance.apiVersion,
-      'studyDeploymentId': instance.studyDeploymentId,
-      'primaryDeviceRoleName': instance.primaryDeviceRoleName,
-    };
+    GetDeviceDeploymentFor instance) {
+  final val = <String, dynamic>{};
+
+  void writeNotNull(String key, dynamic value) {
+    if (value != null) {
+      val[key] = value;
+    }
+  }
+
+  writeNotNull('__type', instance.$type);
+  val['apiVersion'] = instance.apiVersion;
+  writeNotNull('studyDeploymentId', instance.studyDeploymentId);
+  val['primaryDeviceRoleName'] = instance.primaryDeviceRoleName;
+  return val;
+}
 
 DeviceDeployed _$DeviceDeployedFromJson(Map<String, dynamic> json) =>
     DeviceDeployed(
@@ -450,15 +498,23 @@ DeviceDeployed _$DeviceDeployedFromJson(Map<String, dynamic> json) =>
       ..$type = json['__type'] as String?
       ..apiVersion = json['apiVersion'] as String;
 
-Map<String, dynamic> _$DeviceDeployedToJson(DeviceDeployed instance) =>
-    <String, dynamic>{
-      '__type': instance.$type,
-      'apiVersion': instance.apiVersion,
-      'studyDeploymentId': instance.studyDeploymentId,
-      'primaryDeviceRoleName': instance.primaryDeviceRoleName,
-      'deviceDeploymentLastUpdatedOn':
-          instance.deviceDeploymentLastUpdatedOn?.toIso8601String(),
-    };
+Map<String, dynamic> _$DeviceDeployedToJson(DeviceDeployed instance) {
+  final val = <String, dynamic>{};
+
+  void writeNotNull(String key, dynamic value) {
+    if (value != null) {
+      val[key] = value;
+    }
+  }
+
+  writeNotNull('__type', instance.$type);
+  val['apiVersion'] = instance.apiVersion;
+  writeNotNull('studyDeploymentId', instance.studyDeploymentId);
+  val['primaryDeviceRoleName'] = instance.primaryDeviceRoleName;
+  writeNotNull('deviceDeploymentLastUpdatedOn',
+      instance.deviceDeploymentLastUpdatedOn?.toIso8601String());
+  return val;
+}
 
 Stop _$StopFromJson(Map<String, dynamic> json) => Stop(
       json['studyDeploymentId'] as String?,
@@ -466,11 +522,20 @@ Stop _$StopFromJson(Map<String, dynamic> json) => Stop(
       ..$type = json['__type'] as String?
       ..apiVersion = json['apiVersion'] as String;
 
-Map<String, dynamic> _$StopToJson(Stop instance) => <String, dynamic>{
-      '__type': instance.$type,
-      'apiVersion': instance.apiVersion,
-      'studyDeploymentId': instance.studyDeploymentId,
-    };
+Map<String, dynamic> _$StopToJson(Stop instance) {
+  final val = <String, dynamic>{};
+
+  void writeNotNull(String key, dynamic value) {
+    if (value != null) {
+      val[key] = value;
+    }
+  }
+
+  writeNotNull('__type', instance.$type);
+  val['apiVersion'] = instance.apiVersion;
+  writeNotNull('studyDeploymentId', instance.studyDeploymentId);
+  return val;
+}
 
 GetActiveParticipationInvitations _$GetActiveParticipationInvitationsFromJson(
         Map<String, dynamic> json) =>
@@ -481,12 +546,20 @@ GetActiveParticipationInvitations _$GetActiveParticipationInvitationsFromJson(
       ..apiVersion = json['apiVersion'] as String;
 
 Map<String, dynamic> _$GetActiveParticipationInvitationsToJson(
-        GetActiveParticipationInvitations instance) =>
-    <String, dynamic>{
-      '__type': instance.$type,
-      'apiVersion': instance.apiVersion,
-      'accountId': instance.accountId,
-    };
+    GetActiveParticipationInvitations instance) {
+  final val = <String, dynamic>{};
+
+  void writeNotNull(String key, dynamic value) {
+    if (value != null) {
+      val[key] = value;
+    }
+  }
+
+  writeNotNull('__type', instance.$type);
+  val['apiVersion'] = instance.apiVersion;
+  val['accountId'] = instance.accountId;
+  return val;
+}
 
 GetParticipantData _$GetParticipantDataFromJson(Map<String, dynamic> json) =>
     GetParticipantData(
@@ -495,12 +568,20 @@ GetParticipantData _$GetParticipantDataFromJson(Map<String, dynamic> json) =>
       ..$type = json['__type'] as String?
       ..apiVersion = json['apiVersion'] as String;
 
-Map<String, dynamic> _$GetParticipantDataToJson(GetParticipantData instance) =>
-    <String, dynamic>{
-      '__type': instance.$type,
-      'studyDeploymentId': instance.studyDeploymentId,
-      'apiVersion': instance.apiVersion,
-    };
+Map<String, dynamic> _$GetParticipantDataToJson(GetParticipantData instance) {
+  final val = <String, dynamic>{};
+
+  void writeNotNull(String key, dynamic value) {
+    if (value != null) {
+      val[key] = value;
+    }
+  }
+
+  writeNotNull('__type', instance.$type);
+  writeNotNull('studyDeploymentId', instance.studyDeploymentId);
+  val['apiVersion'] = instance.apiVersion;
+  return val;
+}
 
 GetParticipantDataList _$GetParticipantDataListFromJson(
         Map<String, dynamic> json) =>
@@ -514,13 +595,21 @@ GetParticipantDataList _$GetParticipantDataListFromJson(
       ..apiVersion = json['apiVersion'] as String;
 
 Map<String, dynamic> _$GetParticipantDataListToJson(
-        GetParticipantDataList instance) =>
-    <String, dynamic>{
-      '__type': instance.$type,
-      'studyDeploymentId': instance.studyDeploymentId,
-      'apiVersion': instance.apiVersion,
-      'studyDeploymentIds': instance.studyDeploymentIds,
-    };
+    GetParticipantDataList instance) {
+  final val = <String, dynamic>{};
+
+  void writeNotNull(String key, dynamic value) {
+    if (value != null) {
+      val[key] = value;
+    }
+  }
+
+  writeNotNull('__type', instance.$type);
+  writeNotNull('studyDeploymentId', instance.studyDeploymentId);
+  val['apiVersion'] = instance.apiVersion;
+  val['studyDeploymentIds'] = instance.studyDeploymentIds;
+  return val;
+}
 
 SetParticipantData _$SetParticipantDataFromJson(Map<String, dynamic> json) =>
     SetParticipantData(
@@ -533,11 +622,19 @@ SetParticipantData _$SetParticipantDataFromJson(Map<String, dynamic> json) =>
       ..$type = json['__type'] as String?
       ..apiVersion = json['apiVersion'] as String;
 
-Map<String, dynamic> _$SetParticipantDataToJson(SetParticipantData instance) =>
-    <String, dynamic>{
-      '__type': instance.$type,
-      'studyDeploymentId': instance.studyDeploymentId,
-      'apiVersion': instance.apiVersion,
-      'inputByParticipantRole': instance.inputByParticipantRole,
-      'data': instance.data,
-    };
+Map<String, dynamic> _$SetParticipantDataToJson(SetParticipantData instance) {
+  final val = <String, dynamic>{};
+
+  void writeNotNull(String key, dynamic value) {
+    if (value != null) {
+      val[key] = value;
+    }
+  }
+
+  writeNotNull('__type', instance.$type);
+  writeNotNull('studyDeploymentId', instance.studyDeploymentId);
+  val['apiVersion'] = instance.apiVersion;
+  writeNotNull('inputByParticipantRole', instance.inputByParticipantRole);
+  writeNotNull('data', instance.data);
+  return val;
+}

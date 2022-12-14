@@ -37,7 +37,7 @@ class DeviceConfiguration extends Serializable {
 
   DeviceConfiguration({
     required this.roleName,
-    this.isOptional = false,
+    this.isOptional,
     this.supportedDataTypes,
   }) : super();
 
@@ -62,7 +62,7 @@ class PrimaryDeviceConfiguration extends DeviceConfiguration {
   PrimaryDeviceConfiguration({
     required super.roleName,
     super.supportedDataTypes,
-  }) : super(isOptional: true);
+  }) : super(isOptional: null);
 
   // This property is only here for (de)serialization purposes.
   // For unknown types we need to know whether to treat them as primary
@@ -131,7 +131,7 @@ class AltBeacon extends DeviceConfiguration {
   AltBeacon({
     super.roleName = 'AltBeacon',
     super.supportedDataTypes,
-  }) : super(isOptional: false);
+  }) : super(isOptional: true);
 
   @override
   Function get fromJsonFunction => _$AltBeaconFromJson;

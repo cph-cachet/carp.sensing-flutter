@@ -20,14 +20,14 @@ abstract class ProtocolServiceRequest extends ServiceRequest {
       '$_infrastructurePackageNamespace.ProtocolServiceRequest.$runtimeType';
 }
 
-@JsonSerializable(fieldRename: FieldRename.none, includeIfNull: true)
+@JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
 class Add extends ProtocolServiceRequest {
   final StudyProtocol protocol;
   String? versionTag;
 
   /// Create a new add request.
   /// If [versionTag] is `null` the version tag is current timestamp.
-  Add(this.protocol, this.versionTag) : super() {
+  Add(this.protocol, [this.versionTag]) : super() {
     versionTag ??= DateTime.now().toUtc().toString();
   }
 
@@ -39,7 +39,7 @@ class Add extends ProtocolServiceRequest {
   Map<String, dynamic> toJson() => _$AddToJson(this);
 }
 
-@JsonSerializable(fieldRename: FieldRename.none, includeIfNull: true)
+@JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
 class AddVersion extends Add {
   AddVersion(super.protocol, super.versionTag);
 
@@ -51,7 +51,7 @@ class AddVersion extends Add {
   Map<String, dynamic> toJson() => _$AddVersionToJson(this);
 }
 
-@JsonSerializable(fieldRename: FieldRename.none, includeIfNull: true)
+@JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
 class UpdateParticipantDataConfiguration extends ProtocolServiceRequest {
   final String protocolId;
   final String? versionTag;
@@ -73,7 +73,7 @@ class UpdateParticipantDataConfiguration extends ProtocolServiceRequest {
       _$UpdateParticipantDataConfigurationToJson(this);
 }
 
-@JsonSerializable(fieldRename: FieldRename.none, includeIfNull: true)
+@JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
 class GetBy extends ProtocolServiceRequest {
   final String protocolId;
 
@@ -90,7 +90,7 @@ class GetBy extends ProtocolServiceRequest {
   Map<String, dynamic> toJson() => _$GetByToJson(this);
 }
 
-@JsonSerializable(fieldRename: FieldRename.none, includeIfNull: true)
+@JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
 class GetAllForOwner extends ProtocolServiceRequest {
   final String ownerId;
 
@@ -104,7 +104,7 @@ class GetAllForOwner extends ProtocolServiceRequest {
   Map<String, dynamic> toJson() => _$GetAllForOwnerToJson(this);
 }
 
-@JsonSerializable(fieldRename: FieldRename.none, includeIfNull: true)
+@JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
 class GetVersionHistoryFor extends ProtocolServiceRequest {
   final String protocolId;
 
@@ -118,7 +118,7 @@ class GetVersionHistoryFor extends ProtocolServiceRequest {
   Map<String, dynamic> toJson() => _$GetVersionHistoryForToJson(this);
 }
 
-@JsonSerializable(fieldRename: FieldRename.none, includeIfNull: true)
+@JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
 class CreateCustomProtocol extends ProtocolServiceRequest {
   final String ownerId;
   final String name;

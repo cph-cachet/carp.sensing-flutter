@@ -126,9 +126,11 @@ class StudyProtocol extends Snapshot {
     // early out if already added
     if (triggers.values.contains(trigger)) return;
 
+    // if source is not defined, use the primary device role name
+    trigger.sourceDeviceRoleName ??= primaryDevice.roleName;
+
     // so much for null-safety "#%"&?
     if (trigger.requiresPrimaryDevice != null &&
-        trigger.sourceDeviceRoleName != null &&
         trigger.requiresPrimaryDevice!) {
       assert(
           hasPrimaryDevice(trigger.sourceDeviceRoleName!),

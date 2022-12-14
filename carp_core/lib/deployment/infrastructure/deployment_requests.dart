@@ -37,7 +37,7 @@ abstract class DeploymentServiceRequest extends ServiceRequest {
 }
 
 /// A request for creating a deployment based on the [protocol].
-@JsonSerializable(fieldRename: FieldRename.none, includeIfNull: true)
+@JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
 class CreateStudyDeployment extends DeploymentServiceRequest {
   StudyProtocol protocol;
 
@@ -60,7 +60,7 @@ class CreateStudyDeployment extends DeploymentServiceRequest {
 }
 
 /// A request for getting the status of a study deployment.
-@JsonSerializable(fieldRename: FieldRename.none, includeIfNull: true)
+@JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
 class GetStudyDeploymentStatus extends DeploymentServiceRequest {
   GetStudyDeploymentStatus(super.studyDeploymentId);
 
@@ -73,7 +73,7 @@ class GetStudyDeploymentStatus extends DeploymentServiceRequest {
 }
 
 /// A request for getting the status of a list of study deployment.
-@JsonSerializable(fieldRename: FieldRename.none, includeIfNull: true)
+@JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
 class GetStudyDeploymentStatusList extends DeploymentServiceRequest {
   List<String> studyDeploymentIds;
 
@@ -88,7 +88,7 @@ class GetStudyDeploymentStatusList extends DeploymentServiceRequest {
 }
 
 /// A request for registering this device.
-@JsonSerializable(fieldRename: FieldRename.none, includeIfNull: true)
+@JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
 class RegisterDevice extends DeploymentServiceRequest {
   RegisterDevice(
       super.studyDeploymentId, this.deviceRoleName, this.registration);
@@ -111,7 +111,7 @@ class RegisterDevice extends DeploymentServiceRequest {
 }
 
 /// A request for unregistering this device.
-@JsonSerializable(fieldRename: FieldRename.none, includeIfNull: true)
+@JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
 class UnregisterDevice extends DeploymentServiceRequest {
   UnregisterDevice(super.studyDeploymentId, this.deviceRoleName);
 
@@ -130,7 +130,7 @@ class UnregisterDevice extends DeploymentServiceRequest {
 }
 
 /// A request for getting the deployment for this primary device.
-@JsonSerializable(fieldRename: FieldRename.none, includeIfNull: true)
+@JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
 class GetDeviceDeploymentFor extends DeploymentServiceRequest {
   GetDeviceDeploymentFor(super.studyDeploymentId, this.primaryDeviceRoleName);
 
@@ -150,7 +150,7 @@ class GetDeviceDeploymentFor extends DeploymentServiceRequest {
 }
 
 /// A request for reporting this deployment as successful.
-@JsonSerializable(fieldRename: FieldRename.none, includeIfNull: true)
+@JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
 class DeviceDeployed extends GetDeviceDeploymentFor {
   /// Timestamp when this was last updated in UTC
   DateTime? deviceDeploymentLastUpdatedOn;
@@ -174,7 +174,7 @@ class DeviceDeployed extends GetDeviceDeploymentFor {
 }
 
 /// A request for permanently stopping a study deployment.
-@JsonSerializable(fieldRename: FieldRename.none, includeIfNull: true)
+@JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
 class Stop extends DeploymentServiceRequest {
   Stop(super.studyDeploymentId);
 

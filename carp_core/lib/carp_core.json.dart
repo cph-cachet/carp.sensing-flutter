@@ -62,7 +62,6 @@ void _registerFromJsonFunctions() {
   FromJsonFactory().register(ManualTrigger());
   FromJsonFactory().register(ScheduledTrigger(
       recurrenceRule: RecurrenceRule(Frequency.DAILY),
-      sourceDeviceRoleName: 'ignored',
       time: const TimeOfDay()));
 
   FromJsonFactory().register(TaskConfiguration());

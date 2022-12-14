@@ -38,7 +38,7 @@ abstract class Snapshot {
 
   /// The number of edits made to the object represented by this snapshot,
   /// indicating its version number.
-  int version = 0;
+  int? version;
 
   Snapshot() {
     id = const Uuid().v1();

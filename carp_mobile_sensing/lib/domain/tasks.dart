@@ -29,6 +29,7 @@ class FunctionTask extends TaskConfiguration {
   /// Create a function task that executed [function] when resumed.
   FunctionTask({
     super.name,
+    super.description,
     this.function,
   });
 

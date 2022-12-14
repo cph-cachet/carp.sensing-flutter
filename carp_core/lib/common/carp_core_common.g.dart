@@ -139,13 +139,12 @@ Map<String, dynamic> _$TaskConfigurationToJson(TaskConfiguration instance) {
 BackgroundTask _$BackgroundTaskFromJson(Map<String, dynamic> json) =>
     BackgroundTask(
       name: json['name'] as String?,
+      description: json['description'] as String?,
       measures: (json['measures'] as List<dynamic>?)
           ?.map((e) => Measure.fromJson(e as Map<String, dynamic>))
           .toList(),
       duration: _$IsoDurationFromJson(json['duration'] as String?),
-    )
-      ..$type = json['__type'] as String?
-      ..description = json['description'] as String?;
+    )..$type = json['__type'] as String?;
 
 Map<String, dynamic> _$BackgroundTaskToJson(BackgroundTask instance) {
   final val = <String, dynamic>{};
@@ -167,10 +166,10 @@ Map<String, dynamic> _$BackgroundTaskToJson(BackgroundTask instance) {
 CustomProtocolTask _$CustomProtocolTaskFromJson(Map<String, dynamic> json) =>
     CustomProtocolTask(
       name: json['name'] as String?,
+      description: json['description'] as String?,
       studyProtocol: json['studyProtocol'] as String,
     )
       ..$type = json['__type'] as String?
-      ..description = json['description'] as String?
       ..measures = (json['measures'] as List<dynamic>?)
           ?.map((e) => Measure.fromJson(e as Map<String, dynamic>))
           .toList();
@@ -230,7 +229,7 @@ const _$ControlEnumMap = {
 DeviceConfiguration _$DeviceConfigurationFromJson(Map<String, dynamic> json) =>
     DeviceConfiguration(
       roleName: json['roleName'] as String,
-      isOptional: json['isOptional'] as bool? ?? false,
+      isOptional: json['isOptional'] as bool?,
       supportedDataTypes: (json['supportedDataTypes'] as List<dynamic>?)
           ?.map((e) => e as String)
           .toList(),
