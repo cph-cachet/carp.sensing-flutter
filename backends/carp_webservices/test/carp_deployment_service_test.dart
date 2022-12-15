@@ -21,6 +21,9 @@ void main() {
   setUpAll(() async {
     Settings().debugLevel = DebugLevel.DEBUG;
 
+    // Initialization of serialization
+    CarpMobileSensing();
+
     app = new CarpApp(
       // studyId: testStudyId,
       studyDeploymentId: testDeploymentId,
@@ -66,7 +69,7 @@ void main() {
                 .getActiveParticipationInvitations();
         invitations.forEach((invitation) => print(invitation));
         assert(invitations.length >= 0);
-        // print(_encode(invitations));
+        print(_encode(invitations));
       },
       skip: false,
     );
@@ -170,7 +173,7 @@ void main() {
     }, skip: false);
   }, skip: true);
 
-  group("Deployment - using CANSDeploymentService()", () {
+  group("Deployment - using CarpDeploymentService", () {
     test('- get deployment status', () async {
       StudyDeploymentStatus status = await CarpDeploymentService()
           .getStudyDeploymentStatus(testDeploymentId);

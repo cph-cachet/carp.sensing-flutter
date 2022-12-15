@@ -39,9 +39,9 @@ class ActiveParticipationInvitationDialog {
               color: Color.fromRGBO(234, 91, 12, 1.0),
             ),
             title: Text(invitation.invitation.name),
-            subtitle: (invitation.invitation.description.isEmpty)
+            subtitle: (invitation.invitation.description == null)
                 ? Text('No description provided...')
                 : Text(
-                    shortStudyDescription(invitation.invitation.description)),
+                    shortStudyDescription(invitation.invitation.description!)),
           ));
 }

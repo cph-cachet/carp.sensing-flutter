@@ -77,19 +77,19 @@ class FileUploadTask extends CarpServiceTask {
 
     httpr.send(request).then((http.StreamedResponse response) {
       response.stream.toStringStream().first.then((body) {
-        // print("response:\n$response");
-        // print("body:\n$body");
         final int httpStatusCode = response.statusCode;
         final Map<String, dynamic> map = json.decode(body);
-
-        // save the id generated from the server
-        reference.id = map["id"];
+        // print("httpStatusCode: $httpStatusCode");
+        // print("response:\n$response");
+        // print("body:\n$body");
 
         switch (httpStatusCode) {
           // CARP web service returns "201 Created" when a file is created on the server.
           case 200:
           case 201:
             {
+              // save the id generated from the server
+              reference.id = map["id"];
               _state = TaskStateType.success;
               _completer.complete(CarpFileResponse._(map));
               break;

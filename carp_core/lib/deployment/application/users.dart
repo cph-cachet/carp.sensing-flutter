@@ -37,7 +37,7 @@ class StudyInvitation {
   String name;
 
   /// A description of the study clarifying to participants what it is about.
-  String description;
+  String? description;
 
   /// Application-specific data to be shared with clients when they are invited
   /// to a study.
@@ -47,7 +47,7 @@ class StudyInvitation {
   /// outside of scope or not yet supported by CARP core.
   String? applicationData;
 
-  StudyInvitation(this.name, this.description) : super();
+  StudyInvitation(this.name, [this.description]) : super();
 
   factory StudyInvitation.fromJson(Map<String, dynamic> json) =>
       _$StudyInvitationFromJson(json);

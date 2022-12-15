@@ -18,7 +18,7 @@ abstract class ProtocolService {
   Future<void> add(StudyProtocol protocol, [String? versionTag]);
 
   /// Add a new version for the specified study [protocol], of which a previous
-  /// version with the same owner and name is already stored.
+  /// version with the same `id`, `ownerId`, and `name` is already stored.
   ///
   /// [versionTag] is an optional unique label used to identify this specific
   /// version of the [protocol]. The current date/time by default.

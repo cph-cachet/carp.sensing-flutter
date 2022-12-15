@@ -19,7 +19,6 @@ void main() {
   String? ownerId;
   late StudyProtocol protocol, custom;
   late Smartphone phone;
-  var testProtocolId = 'a515a280-7bbc-11ed-ae73-cbb78a9ed6ea';
 
   /// Runs once before all tests.
   setUpAll(() async {
@@ -50,7 +49,7 @@ void main() {
     // the study protocol from the json from core
     protocol = StudyProtocol(
         ownerId: ownerId!,
-        name: 'Nonmotorized transport study',
+        name: 'Nonmotorized transport study II',
         description:
             'Track how much nonmotorized movement participants perform.')
       ..addPrimaryDevice(phone)
@@ -126,6 +125,7 @@ void main() {
     test(
       '- addVersion',
       () async {
+        protocol.id = testProtocolId;
         await CarpProtocolService().addVersion(protocol);
       },
     );

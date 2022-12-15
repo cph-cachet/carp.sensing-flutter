@@ -252,13 +252,12 @@ Map<String, dynamic> _$ParticipationToJson(Participation instance) =>
 StudyInvitation _$StudyInvitationFromJson(Map<String, dynamic> json) =>
     StudyInvitation(
       json['name'] as String,
-      json['description'] as String,
+      json['description'] as String?,
     )..applicationData = json['applicationData'] as String?;
 
 Map<String, dynamic> _$StudyInvitationToJson(StudyInvitation instance) {
   final val = <String, dynamic>{
     'name': instance.name,
-    'description': instance.description,
   };
 
   void writeNotNull(String key, dynamic value) {
@@ -267,6 +266,7 @@ Map<String, dynamic> _$StudyInvitationToJson(StudyInvitation instance) {
     }
   }
 
+  writeNotNull('description', instance.description);
   writeNotNull('applicationData', instance.applicationData);
   return val;
 }

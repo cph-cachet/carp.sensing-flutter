@@ -40,8 +40,8 @@ abstract class Snapshot {
   /// indicating its version number.
   int? version;
 
-  Snapshot() {
-    id = const Uuid().v1();
+  Snapshot([String? id]) {
+    this.id = id ?? const Uuid().v1();
     createdOn = DateTime.now().toUtc();
   }
 }

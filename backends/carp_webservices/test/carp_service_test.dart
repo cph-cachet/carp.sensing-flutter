@@ -187,7 +187,7 @@ void main() {
     });
   });
 
-  int? consentDocumentId;
+  int consentDocumentId = 0;
 
   group('Informed Consent', () {
     test('- create', () async {
@@ -200,12 +200,12 @@ void main() {
       print('createdByUserId : ${uploaded.createdByUserId}');
       print('document    : ${uploaded.document}');
 
-      consentDocumentId = uploaded.id;
+      consentDocumentId = uploaded.id ?? 0;
     });
 
     test('- get', () async {
       ConsentDocument downloaded =
-          await CarpService().getConsentDocument(consentDocumentId!);
+          await CarpService().getConsentDocument(consentDocumentId);
 
       assert(downloaded.id == consentDocumentId);
 
@@ -421,7 +421,7 @@ void main() {
   );
 
   group("Documents & Collections", () {
-    setUp(() async {
+    test('- create document', () async {
       // first create a document - providing userId as the document name
       // if the collection don't exist, it is created (according to David).
       document = await CarpService()
@@ -436,10 +436,10 @@ void main() {
     });
 
     test(' - add document', () async {
-      print(document);
-      print(_encode(document!.data));
+      // print(document);
+      // print(_encode(document!.data));
 
-      expect(document!.id, greaterThan(0));
+      // expect(document!.id, greaterThan(0));
 
       // create another document
       await CarpService()
@@ -796,9 +796,9 @@ void main() {
       print('status code : $downResponse');
     });
 
-    // NOTE that the following "get non-existing, "get all", "query", and
-    // "get by name" unit tests ONLY works if you're authenticated as
-    // a RESEARCHER.
+    // NOTE that the following "get non-existing, "get all", "query",
+    // "get by name", and "delete" unit tests ONLY works if you're
+    // authenticated as a RESEARCHER.
     // See https://github.com/cph-cachet/carp.webservices-docker/issues/56
 
     test('- get non-existing', () async {
