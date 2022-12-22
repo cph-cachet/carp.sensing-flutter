@@ -65,7 +65,6 @@ class CarpProtocolService extends CarpBaseService
         expectedParticipantData,
       )));
 
-  @Deprecated('Custom protocols should not be used in CARP v. 1.0.0')
   @override
   Future<StudyProtocol> createCustomProtocol(
     String ownerId,

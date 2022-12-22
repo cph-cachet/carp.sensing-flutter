@@ -114,12 +114,6 @@ void main() {
     primaryProtocol.addApplicationData('uiTheme', 'black');
   });
 
-  test('DataPoints -> JSON', () async {
-    final device = DataPoint.fromData(
-        DeviceInformation(platform: 'iOS', deviceId: '1234abcd'));
-    print(toJsonString(device));
-  });
-
   test('Measurement -> JSON', () async {
     final device = Measurement.fromData(
         DeviceInformation(platform: 'iOS', deviceId: '1234abcd'));

@@ -7,7 +7,7 @@
 
 part of carp_core_data;
 
-/// Configures [expectedDataStreams] for a study deployment.
+/// Configures the set of [ExpectedDataStream] for a study deployment.
 @JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
 class DataStreamsConfiguration {
   String studyDeploymentId;
@@ -22,6 +22,7 @@ class DataStreamsConfiguration {
   Map<String, dynamic> toJson() => _$DataStreamsConfigurationToJson(this);
 }
 
+/// The expected data type for a device with a rolename.
 @JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
 class ExpectedDataStream {
   String deviceRoleName;
@@ -34,6 +35,15 @@ class ExpectedDataStream {
   factory ExpectedDataStream.fromJson(Map<String, dynamic> json) =>
       _$ExpectedDataStreamFromJson(json);
   Map<String, dynamic> toJson() => _$ExpectedDataStreamToJson(this);
+
+  @override
+  bool operator ==(other) =>
+      other is ExpectedDataStream &&
+      deviceRoleName == other.deviceRoleName &&
+      dataType == other.dataType;
+
+  @override
+  int get hashCode => Object.hash(deviceRoleName.hashCode, dataType.hashCode);
 }
 
 /// Identifies a data stream of collected [dataType] data on the device with
@@ -60,7 +70,7 @@ class DataStreamBatch {
   DataStreamId dataStream;
   int firstSequenceId;
   List<Measurement> measurements;
-  List<int> triggerIds;
+  Set<int> triggerIds;
 
   DataStreamBatch({
     required this.dataStream,

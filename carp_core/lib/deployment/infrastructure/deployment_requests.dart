@@ -153,7 +153,7 @@ class GetDeviceDeploymentFor extends DeploymentServiceRequest {
 @JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
 class DeviceDeployed extends GetDeviceDeploymentFor {
   /// Timestamp when this was last updated in UTC
-  DateTime? deviceDeploymentLastUpdatedOn;
+  DateTime deviceDeploymentLastUpdatedOn;
 
   DeviceDeployed(
     super.studyDeploymentId,

@@ -16,9 +16,10 @@ part of carp_services;
 abstract class CarpBaseService {
   CarpApp? _app;
   CarpUser? _currentUser;
+  String? _endpointName;
 
   /// The CARP app associated with the CARP Web Service.
-  /// Returns `null` if this service has not yet been congfigured via the
+  /// Returns `null` if this service has not yet been configured via the
   /// [configure] method.
   CarpApp? get app => _app;
 
@@ -30,7 +31,7 @@ abstract class CarpBaseService {
     this._app = app;
   }
 
-  /// Configure from another [service] which has alreay been configured
+  /// Configure from another [service] which has already been configured
   /// and potentially authenticated.
   void configureFrom(CarpBaseService service) {
     this._app = service._app;
@@ -48,7 +49,7 @@ abstract class CarpBaseService {
   ///
   /// Typically on the form:
   /// `{{PROTOCOL}}://{{SERVER_HOST}}:{{SERVER_PORT}}/api/...`
-  String get rpcEndpointUri => "${app!.uri.toString()}/api/$rpcEndpointName";
+  String get rpcEndpointUri => "${app!.uri.toString()}/api/$_endpointName";
 
   /// The headers for any authenticated HTTP REST call to a [CarpBaseService].
   Map<String, String> get headers {
@@ -89,7 +90,7 @@ abstract class CarpBaseService {
     String? endpointName,
   ]) async {
     final String body = toJsonString(request.toJson());
-    endpointName ??= rpcEndpointName;
+    _endpointName = endpointName ?? rpcEndpointName;
 
     debug('REQUEST: $rpcEndpointUri\n$body');
     http.Response response = await httpr.post(Uri.encodeFull(rpcEndpointUri),

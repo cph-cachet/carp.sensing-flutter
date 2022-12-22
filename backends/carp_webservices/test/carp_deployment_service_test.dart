@@ -9,9 +9,6 @@ import 'package:test/test.dart';
 
 import 'credentials.dart';
 
-String _encode(Object object) =>
-    const JsonEncoder.withIndent(' ').convert(object);
-
 void main() {
   CarpApp app;
   CarpUser? user;
@@ -62,14 +59,14 @@ void main() {
 
   group("Participation", () {
     test(
-      '- get invitations for this account (user)',
+      '- get invitations for this user',
       () async {
         List<ActiveParticipationInvitation> invitations =
             await CarpParticipationService()
                 .getActiveParticipationInvitations();
         invitations.forEach((invitation) => print(invitation));
         assert(invitations.length >= 0);
-        print(_encode(invitations));
+        print(toJsonString(invitations));
       },
       skip: false,
     );
@@ -81,7 +78,7 @@ void main() {
             CarpParticipationService().participation(testDeploymentId);
 
         ParticipantData data = await participation.getParticipantData();
-        print(_encode(data));
+        print(toJsonString(data));
       },
       skip: false,
     );
@@ -96,12 +93,12 @@ void main() {
           {SexCustomInput.SEX_INPUT_TYPE_NAME: SexCustomInput(Sex.Male)},
           'Participant',
         );
-        print(_encode(data));
+        print(toJsonString(data));
 
         // expect();
 
         // ParticipantData data = await participation.getParticipantData();
-        // print(_encode(data));
+        // print(toJsonString(data));
         // assert(data != null);
       },
       skip: false,
@@ -112,23 +109,23 @@ void main() {
     test('- get deployment status', () async {
       StudyDeploymentStatus status =
           await CarpDeploymentService().deployment().getStatus();
-      print(_encode(status.toJson()));
-      print(status);
-      print(status.primaryDeviceStatus!.device);
-      print(_encode(status));
+      print(toJsonString(status));
+      // print(status);
+      // print(status.primaryDeviceStatus!.device);
       expect(status.studyDeploymentId, testDeploymentId);
-    }, skip: false);
+    });
 
     test('- register device', () async {
       DeploymentReference reference =
           CarpDeploymentService().deployment(testDeploymentId);
-      StudyDeploymentStatus status = await reference.getStatus();
+      var status = await reference.getStatus();
       print(status);
+
       expect(status.primaryDeviceStatus!.device, isNotNull);
       print(status.primaryDeviceStatus!.device);
-      status = await reference.registerPrimaryDevice();
-      print(status);
-      expect(status.studyDeploymentId, testDeploymentId);
+      var newStatus = await reference.registerPrimaryDevice();
+      print(newStatus);
+      expect(newStatus.studyDeploymentId, testDeploymentId);
     }, skip: false);
 
     test('- get master device deployment', () async {
@@ -138,12 +135,9 @@ void main() {
       print(status);
       expect(status.primaryDeviceStatus!.device, isNotNull);
       print(status.primaryDeviceStatus!.device);
+
       PrimaryDeviceDeployment deployment = await reference.get();
       print(toJsonString(deployment));
-      deployment.tasks.forEach((task) {
-        print(task);
-        // task?.measures?.forEach(print);
-      });
       expect(deployment.registration.deviceId, isNotNull);
     }, skip: false);
 
@@ -151,10 +145,12 @@ void main() {
       DeploymentReference reference =
           CarpDeploymentService().deployment(testDeploymentId);
       StudyDeploymentStatus status_1 = await reference.getStatus();
+      print(toJsonString(status_1));
+
       PrimaryDeviceDeployment? deployment = await reference.get();
       StudyDeploymentStatus status_2 = await reference.deployed();
-      print(deployment);
-      print(status_2);
+      print(toJsonString(deployment));
+      print(toJsonString(status_2));
       expect(status_1.studyDeploymentId, status_2.studyDeploymentId);
       expect(status_2.studyDeploymentId, testDeploymentId);
     }, skip: false);
@@ -177,10 +173,10 @@ void main() {
     test('- get deployment status', () async {
       StudyDeploymentStatus status = await CarpDeploymentService()
           .getStudyDeploymentStatus(testDeploymentId);
-      print(_encode(status.toJson()));
+      print(toJsonString(status.toJson()));
       print(status);
       print(status.primaryDeviceStatus!.device);
-      print(_encode(status));
+      print(toJsonString(status));
       expect(status.studyDeploymentId, testDeploymentId);
     }, skip: false);
 

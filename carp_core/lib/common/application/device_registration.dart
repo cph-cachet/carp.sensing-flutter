@@ -9,6 +9,9 @@ part of carp_core_common;
 
 /// A [DeviceRegistration] configures a [DeviceConfiguration] as part of the
 /// deployment of a [StudyProtocol].
+///
+/// Note that this is an abstract class and should not be used. If a simple
+/// device registration is needed, use a [DefaultDeviceRegistration].
 @JsonSerializable(fieldRename: FieldRename.none, includeIfNull: true)
 class DeviceRegistration extends Serializable {
   /// An ID for the device, used to disambiguate between devices of the same type,

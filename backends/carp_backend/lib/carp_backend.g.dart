@@ -8,23 +8,19 @@ part of carp_backend;
 
 CarpDataEndPoint _$CarpDataEndPointFromJson(Map<String, dynamic> json) =>
     CarpDataEndPoint(
-      uploadMethod:
-          $enumDecode(_$CarpUploadMethodEnumMap, json['uploadMethod']),
-      name: json['name'] as String,
+      uploadMethod: $enumDecodeNullable(
+              _$CarpUploadMethodEnumMap, json['uploadMethod']) ??
+          CarpUploadMethod.DATA_STREAM,
+      name: json['name'] as String? ?? 'CARP Web Services',
       uri: json['uri'] as String?,
       clientId: json['clientId'] as String?,
       clientSecret: json['clientSecret'] as String?,
       email: json['email'] as String?,
       password: json['password'] as String?,
-      collection: json['collection'] as String?,
       deleteWhenUploaded: json['deleteWhenUploaded'] as bool? ?? true,
       dataFormat: json['dataFormat'] as String? ?? NameSpace.CARP,
-      bufferSize: json['bufferSize'] as int? ?? 500 * 1000,
-      zip: json['zip'] as bool? ?? true,
-      encrypt: json['encrypt'] as bool? ?? false,
-      publicKey: json['publicKey'] as String?,
     )
-      ..$type = json[r'$type'] as String?
+      ..$type = json['__type'] as String?
       ..type = json['type'] as String;
 
 Map<String, dynamic> _$CarpDataEndPointToJson(CarpDataEndPoint instance) {
@@ -36,13 +32,9 @@ Map<String, dynamic> _$CarpDataEndPointToJson(CarpDataEndPoint instance) {
     }
   }
 
-  writeNotNull(r'$type', instance.$type);
+  writeNotNull('__type', instance.$type);
   val['type'] = instance.type;
   val['dataFormat'] = instance.dataFormat;
-  val['bufferSize'] = instance.bufferSize;
-  val['zip'] = instance.zip;
-  val['encrypt'] = instance.encrypt;
-  writeNotNull('publicKey', instance.publicKey);
   val['uploadMethod'] = _$CarpUploadMethodEnumMap[instance.uploadMethod]!;
   val['name'] = instance.name;
   writeNotNull('uri', instance.uri);
@@ -50,16 +42,14 @@ Map<String, dynamic> _$CarpDataEndPointToJson(CarpDataEndPoint instance) {
   writeNotNull('clientSecret', instance.clientSecret);
   writeNotNull('email', instance.email);
   writeNotNull('password', instance.password);
-  val['collection'] = instance.collection;
   val['deleteWhenUploaded'] = instance.deleteWhenUploaded;
   return val;
 }
 
 const _$CarpUploadMethodEnumMap = {
+  CarpUploadMethod.DATA_STREAM: 'DATA_STREAM',
   CarpUploadMethod.DATA_POINT: 'DATA_POINT',
-  CarpUploadMethod.BATCH_DATA_POINT: 'BATCH_DATA_POINT',
   CarpUploadMethod.FILE: 'FILE',
-  CarpUploadMethod.DOCUMENT: 'DOCUMENT',
 };
 
 Message _$MessageFromJson(Map<String, dynamic> json) => Message(

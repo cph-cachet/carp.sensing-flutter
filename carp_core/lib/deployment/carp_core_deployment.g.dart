@@ -491,9 +491,7 @@ DeviceDeployed _$DeviceDeployedFromJson(Map<String, dynamic> json) =>
     DeviceDeployed(
       json['studyDeploymentId'] as String?,
       json['primaryDeviceRoleName'] as String,
-      json['deviceDeploymentLastUpdatedOn'] == null
-          ? null
-          : DateTime.parse(json['deviceDeploymentLastUpdatedOn'] as String),
+      DateTime.parse(json['deviceDeploymentLastUpdatedOn'] as String),
     )
       ..$type = json['__type'] as String?
       ..apiVersion = json['apiVersion'] as String;
@@ -511,8 +509,8 @@ Map<String, dynamic> _$DeviceDeployedToJson(DeviceDeployed instance) {
   val['apiVersion'] = instance.apiVersion;
   writeNotNull('studyDeploymentId', instance.studyDeploymentId);
   val['primaryDeviceRoleName'] = instance.primaryDeviceRoleName;
-  writeNotNull('deviceDeploymentLastUpdatedOn',
-      instance.deviceDeploymentLastUpdatedOn?.toIso8601String());
+  val['deviceDeploymentLastUpdatedOn'] =
+      instance.deviceDeploymentLastUpdatedOn.toIso8601String();
   return val;
 }
 

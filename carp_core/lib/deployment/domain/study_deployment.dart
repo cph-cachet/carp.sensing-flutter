@@ -37,6 +37,29 @@ class StudyDeployment {
   DateTime get creationDate => _creationDate;
   StudyProtocol get protocol => _protocol;
 
+  /// All the data streams which are required to run this study deployment.
+  DataStreamsConfiguration get requiredDataStreams {
+    Set<ExpectedDataStream> streams = {};
+
+    for (var device in protocol.devices) {
+      for (var task in protocol.getTasksForDevice(device)) {
+        if (task != null) {
+          for (var type in task.getAllExpectedDataTypes()) {
+            streams.add(ExpectedDataStream(
+              dataType: type,
+              deviceRoleName: device.roleName,
+            ));
+          }
+        }
+      }
+    }
+
+    return DataStreamsConfiguration(
+      studyDeploymentId: studyDeploymentId,
+      expectedDataStreams: streams,
+    );
+  }
+
   /// The set of devices which are currently registered for this study deployment.
   Map<DeviceConfiguration, DeviceRegistration> get registeredDevices =>
       _registeredDevices.map(

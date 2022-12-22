@@ -47,6 +47,26 @@ class PrimaryDeviceDeployment {
   /// The time when this device deployment was last updated.
   DateTime? lastUpdateDate;
 
+  Set<ExpectedDataStream>? _expectedDataStreams;
+
+  /// The set of expected data streams from this device deployment.
+  Set<ExpectedDataStream> get expectedDataStreams {
+    if (_expectedDataStreams == null) {
+      _expectedDataStreams = {};
+
+      for (var control in taskControls) {
+        for (var type in control.task!.getAllExpectedDataTypes()) {
+          _expectedDataStreams!.add(ExpectedDataStream(
+            dataType: type,
+            deviceRoleName: control.targetDevice!.roleName,
+          ));
+        }
+      }
+    }
+
+    return _expectedDataStreams!;
+  }
+
   PrimaryDeviceDeployment({
     required this.deviceConfiguration,
     required this.registration,

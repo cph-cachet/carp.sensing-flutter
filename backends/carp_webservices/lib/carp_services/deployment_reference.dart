@@ -52,11 +52,9 @@ class DeploymentReference extends RPCCarpReference {
       _registeredDeviceId ??= DeviceInfo().deviceID ?? Uuid().v4().toString();
 
   /// Get the deployment status for this [DeploymentReference].
-  Future<StudyDeploymentStatus> getStatus() async {
-    _status = StudyDeploymentStatus.fromJson(
-        await _rpc(GetStudyDeploymentStatus(studyDeploymentId)));
-    return _status!;
-  }
+  Future<StudyDeploymentStatus> getStatus() async =>
+      _status = StudyDeploymentStatus.fromJson(
+          await _rpc(GetStudyDeploymentStatus(studyDeploymentId)));
 
   /// Register a device for this deployment at the CARP server.
   ///  * [deviceRoleName] - the role name of the device, e.g. `phone`.
@@ -71,15 +69,15 @@ class DeploymentReference extends RPCCarpReference {
     assert(deviceRoleName.length > 0,
         'deviceRoleName has to be specified when registering a device in CARP.');
 
-    _status = StudyDeploymentStatus.fromJson(await _rpc(RegisterDevice(
+    return _status = StudyDeploymentStatus.fromJson(await _rpc(RegisterDevice(
       studyDeploymentId,
       deviceRoleName,
       registration,
     )));
-    return _status!;
   }
 
-  /// Register this device as the primary device for this deployment at the CARP server.
+  /// Register this device as the primary device for this deployment at the
+  /// CARP server.
   ///
   /// Returns the updated study deployment status if the registration is successful.
   /// Throws a [CarpServiceException] if not.
@@ -90,7 +88,7 @@ class DeploymentReference extends RPCCarpReference {
         'Use the getStatus() method to get the deployment status');
     return registerDevice(
         deviceRoleName: status!.primaryDeviceStatus!.device.roleName,
-        registration: DeviceRegistration(
+        registration: DefaultDeviceRegistration(
           deviceId: DeviceInfo().deviceID,
           deviceDisplayName: DeviceInfo().toString(),
         ));
@@ -102,28 +100,26 @@ class DeploymentReference extends RPCCarpReference {
   /// Returns the updated study deployment status if the registration is successful.
   /// Throws a [CarpServiceException] if not.
   Future<StudyDeploymentStatus> unRegisterDevice(
-      {required String deviceRoleName}) async {
-    _status = StudyDeploymentStatus.fromJson(
-        await _rpc(UnregisterDevice(studyDeploymentId, deviceRoleName)));
-    return _status!;
-  }
+          {required String deviceRoleName}) async =>
+      _status = StudyDeploymentStatus.fromJson(
+          await _rpc(UnregisterDevice(studyDeploymentId, deviceRoleName)));
 
-  /// Get the deployment for this [DeploymentReference] for the specified [masterDeviceRoleName].
+  /// Get the deployment for this [DeploymentReference] for the specified
+  /// [masterDeviceRoleName].
   /// If [masterDeviceRoleName] is not specified, the previously used name is used.
   Future<PrimaryDeviceDeployment> get() async {
     assert(
         status != null,
         'The status of a deployment must be know before a master device can be registered. '
         'Use the getStatus() method to get the deployment status.');
-    _deployment = PrimaryDeviceDeployment.fromJson(await _rpc(
+    return _deployment = PrimaryDeviceDeployment.fromJson(await _rpc(
         GetDeviceDeploymentFor(
             studyDeploymentId, status!.primaryDeviceStatus!.device.roleName)));
-    return _deployment!;
   }
 
   /// Mark this deployment as a deployed on the server.
   ///
-  /// Returns the updated study deployment status if the registration is successful.
+  /// Returns the updated study deployment status if successful.
   /// Throws a [CarpServiceException] if not.
   Future<StudyDeploymentStatus> deployed() async {
     assert(
@@ -131,12 +127,11 @@ class DeploymentReference extends RPCCarpReference {
         'The deployment needs to be fetched before a master device can mark it successful. '
         'Use the get() method to get the master device deployment.');
 
-    _status = StudyDeploymentStatus.fromJson(await _rpc(DeviceDeployed(
+    return _status = StudyDeploymentStatus.fromJson(await _rpc(DeviceDeployed(
       studyDeploymentId,
       status!.primaryDeviceStatus!.device.roleName,
-      deployment!.lastUpdateDate,
+      status!.createdOn,
+      // deployment!.lastUpdateDate ?? DateTime.now().toUtc(),
     )));
-
-    return _status!;
   }
 }

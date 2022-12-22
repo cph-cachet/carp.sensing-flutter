@@ -25,7 +25,7 @@ String _encode(Object? object) =>
 void main() {
   CarpApp app;
   late CarpUser user;
-  CarpStudyProtocolManager manager = CarpStudyProtocolManager();
+  // CarpStudyProtocolManager manager = CarpStudyProtocolManager();
 
   // Initialization of serialization
   CarpMobileSensing();
@@ -54,7 +54,7 @@ void main() {
     );
 
     CarpService().configure(app);
-    await manager.initialize();
+    // await manager.initialize();
 
     // create a carp data manager in order to initialize jsoon serialization
     CarpDataManager();
@@ -73,126 +73,126 @@ void main() {
   /// Runs once after all tests.
   tearDownAll(() {});
 
-  group("Deployment", () {
-    test('- authentication', () async {
-      print('CarpService : ${CarpService().app}');
-      print(" - signed in as: $user");
-      expect(user.accountId?.length, isPositive);
-    });
+  // group("Deployment", () {
+  //   test('- authentication', () async {
+  //     print('CarpService : ${CarpService().app}');
+  //     print(" - signed in as: $user");
+  //     expect(user.accountId?.length, isPositive);
+  //   });
 
-    test('- get invitations for this account (user)', () async {
-      List<ActiveParticipationInvitation> invitations =
-          await CarpParticipationService().getActiveParticipationInvitations();
-      invitations.forEach((invitation) => print(invitation));
-      expect(invitations.length, isNonNegative);
-    }, skip: false);
+  //   test('- get invitations for this account (user)', () async {
+  //     List<ActiveParticipationInvitation> invitations =
+  //         await CarpParticipationService().getActiveParticipationInvitations();
+  //     invitations.forEach((invitation) => print(invitation));
+  //     expect(invitations.length, isNonNegative);
+  //   }, skip: false);
 
-    test('- get deployment status', () async {
-      CarpService().app!.studyDeploymentId = testDeploymentId;
+  //   test('- get deployment status', () async {
+  //     CarpService().app!.studyDeploymentId = testDeploymentId;
 
-      StudyDeploymentStatus status =
-          await CarpDeploymentService().deployment().getStatus();
-      print(_encode(status.toJson()));
-      print(status);
-      print(status.masterDeviceStatus!.device);
-      expect(status.studyDeploymentId, testDeploymentId);
-    }, skip: false);
+  //     StudyDeploymentStatus status =
+  //         await CarpDeploymentService().deployment().getStatus();
+  //     print(_encode(status.toJson()));
+  //     print(status);
+  //     print(status.masterDeviceStatus!.device);
+  //     expect(status.studyDeploymentId, testDeploymentId);
+  //   }, skip: false);
 
-    test('- register device', () async {
-      DeploymentReference reference =
-          CarpDeploymentService().deployment(testDeploymentId);
-      StudyDeploymentStatus status = await reference.getStatus();
-      print(status);
-      expect(status.masterDeviceStatus!.device, isNotNull);
-      print(status.masterDeviceStatus!.device);
-      status = await reference.registerDevice(
-          deviceRoleName: status.masterDeviceStatus!.device.roleName);
-      print(status);
-      expect(status.studyDeploymentId, testDeploymentId);
-    }, skip: false);
+  //   test('- register device', () async {
+  //     DeploymentReference reference =
+  //         CarpDeploymentService().deployment(testDeploymentId);
+  //     StudyDeploymentStatus status = await reference.getStatus();
+  //     print(status);
+  //     expect(status.masterDeviceStatus!.device, isNotNull);
+  //     print(status.masterDeviceStatus!.device);
+  //     status = await reference.registerDevice(
+  //         deviceRoleName: status.masterDeviceStatus!.device.roleName);
+  //     print(status);
+  //     expect(status.studyDeploymentId, testDeploymentId);
+  //   }, skip: false);
 
-    test('- get master device deployment', () async {
-      DeploymentReference reference =
-          CarpDeploymentService().deployment(testDeploymentId);
-      StudyDeploymentStatus status = await reference.getStatus();
-      print(status);
-      expect(status.masterDeviceStatus!.device, isNotNull);
-      print(status.masterDeviceStatus!.device);
-      MasterDeviceDeployment deployment = await reference.get();
-      print(deployment);
-      deployment.tasks.forEach((task) {
-        print(task);
-        task.measures.forEach(print);
-      });
-      expect(deployment.configuration.deviceId, isNotNull);
-    }, skip: false);
+  //   test('- get master device deployment', () async {
+  //     DeploymentReference reference =
+  //         CarpDeploymentService().deployment(testDeploymentId);
+  //     StudyDeploymentStatus status = await reference.getStatus();
+  //     print(status);
+  //     expect(status.masterDeviceStatus!.device, isNotNull);
+  //     print(status.masterDeviceStatus!.device);
+  //     MasterDeviceDeployment deployment = await reference.get();
+  //     print(deployment);
+  //     deployment.tasks.forEach((task) {
+  //       print(task);
+  //       task.measures.forEach(print);
+  //     });
+  //     expect(deployment.configuration.deviceId, isNotNull);
+  //   }, skip: false);
 
-    test('- deployment success', () async {
-      DeploymentReference reference =
-          CarpDeploymentService().deployment(testDeploymentId);
-      StudyDeploymentStatus status_1 = await reference.getStatus();
-      MasterDeviceDeployment deployment = await reference.get();
-      print(deployment);
-      StudyDeploymentStatus status_2 = await reference.success();
-      print(status_2);
-      expect(status_1.studyDeploymentId, status_2.studyDeploymentId);
-      expect(status_2.studyDeploymentId, testDeploymentId);
-    }, skip: false);
+  //   test('- deployment success', () async {
+  //     DeploymentReference reference =
+  //         CarpDeploymentService().deployment(testDeploymentId);
+  //     StudyDeploymentStatus status_1 = await reference.getStatus();
+  //     MasterDeviceDeployment deployment = await reference.get();
+  //     print(deployment);
+  //     StudyDeploymentStatus status_2 = await reference.success();
+  //     print(status_2);
+  //     expect(status_1.studyDeploymentId, status_2.studyDeploymentId);
+  //     expect(status_2.studyDeploymentId, testDeploymentId);
+  //   }, skip: false);
 
-    test('- unregister device', () async {
-      DeploymentReference reference =
-          CarpDeploymentService().deployment(testDeploymentId);
-      StudyDeploymentStatus status = await reference.getStatus();
-      print(status);
-      expect(status.masterDeviceStatus!.device, isNotNull);
-      print(status.masterDeviceStatus!.device);
-      status = await reference.unRegisterDevice(
-          deviceRoleName: status.masterDeviceStatus!.device.roleName);
-      print(status);
-      expect(status.studyDeploymentId, testDeploymentId);
-    }, skip: false);
-  }, skip: true);
+  //   test('- unregister device', () async {
+  //     DeploymentReference reference =
+  //         CarpDeploymentService().deployment(testDeploymentId);
+  //     StudyDeploymentStatus status = await reference.getStatus();
+  //     print(status);
+  //     expect(status.masterDeviceStatus!.device, isNotNull);
+  //     print(status.masterDeviceStatus!.device);
+  //     status = await reference.unRegisterDevice(
+  //         deviceRoleName: status.masterDeviceStatus!.device.roleName);
+  //     print(status);
+  //     expect(status.studyDeploymentId, testDeploymentId);
+  //   }, skip: false);
+  // }, skip: true);
 
-  group("Study Protocol Manager", () {
-    test('- get study protocol', () async {
-      SmartphoneStudyProtocol study =
-          await manager.getStudyProtocol(testDeploymentId);
-      print('study: $study');
-      print(_encode(study));
-    }, skip: false);
-  });
+  // group("Study Protocol Manager", () {
+  //   test('- get study protocol', () async {
+  //     SmartphoneStudyProtocol study =
+  //         await manager.getStudyProtocol(testDeploymentId);
+  //     print('study: $study');
+  //     print(_encode(study));
+  //   }, skip: false);
+  // });
 
-  group("CARP Deployment Service", () {
-    test('- get deployment status', () async {
-      StudyDeploymentStatus? status = await CustomProtocolDeploymentService()
-          .getStudyDeploymentStatus(testDeploymentId);
+  // group("CARP Deployment Service", () {
+  //   test('- get deployment status', () async {
+  //     StudyDeploymentStatus? status = await CustomProtocolDeploymentService()
+  //         .getStudyDeploymentStatus(testDeploymentId);
 
-      print(status);
-      print(_encode(status.toJson()));
-      print(status.masterDeviceStatus?.device);
-      expect(status.studyDeploymentId, testDeploymentId);
-    }, skip: false);
+  //     print(status);
+  //     print(_encode(status.toJson()));
+  //     print(status.masterDeviceStatus?.device);
+  //     expect(status.studyDeploymentId, testDeploymentId);
+  //   }, skip: false);
 
-    test('- get master device deployment', () async {
-      StudyDeploymentStatus? status = await CustomProtocolDeploymentService()
-          .getStudyDeploymentStatus(testDeploymentId);
+  //   test('- get master device deployment', () async {
+  //     StudyDeploymentStatus? status = await CustomProtocolDeploymentService()
+  //         .getStudyDeploymentStatus(testDeploymentId);
 
-      print(status);
-      expect(status.masterDeviceStatus!.device, isNotNull);
-      print(status.masterDeviceStatus!.device);
-      MasterDeviceDeployment deployment =
-          await CarpDeploymentService().getDeviceDeploymentFor(
-        status.studyDeploymentId,
-        status.masterDeviceStatus!.device.roleName,
-      );
-      print(deployment);
-      deployment.tasks.forEach((task) {
-        print(task);
-        task.measures.forEach(print);
-      });
-      expect(deployment.configuration.deviceId, isNotNull);
-    }, skip: false);
-  });
+  //     print(status);
+  //     expect(status.masterDeviceStatus!.device, isNotNull);
+  //     print(status.masterDeviceStatus!.device);
+  //     MasterDeviceDeployment deployment =
+  //         await CarpDeploymentService().getDeviceDeploymentFor(
+  //       status.studyDeploymentId,
+  //       status.masterDeviceStatus!.device.roleName,
+  //     );
+  //     print(deployment);
+  //     deployment.tasks.forEach((task) {
+  //       print(task);
+  //       task.measures.forEach(print);
+  //     });
+  //     expect(deployment.configuration.deviceId, isNotNull);
+  //   }, skip: false);
+  // });
 
   group("Informed Consent", () {
     test('- get', () async {

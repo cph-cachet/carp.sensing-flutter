@@ -21,11 +21,13 @@ Map<String, dynamic> _$ParticipantRoleToJson(ParticipantRole instance) =>
 ExpectedParticipantData _$ExpectedParticipantDataFromJson(
         Map<String, dynamic> json) =>
     ExpectedParticipantData(
-      json['attribute'] == null
+      attribute: json['attribute'] == null
           ? null
           : ParticipantAttribute.fromJson(
               json['attribute'] as Map<String, dynamic>),
-      AssignedTo.fromJson(json['assignedTo'] as Map<String, dynamic>),
+      assignedTo: json['assignedTo'] == null
+          ? null
+          : AssignedTo.fromJson(json['assignedTo'] as Map<String, dynamic>),
     );
 
 Map<String, dynamic> _$ExpectedParticipantDataToJson(

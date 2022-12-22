@@ -40,6 +40,18 @@ class StudyProtocol extends Snapshot {
   /// An optional description for the study protocol.
   String? description;
 
+  /// The full list of devices part of this configuration.
+  Set<DeviceConfiguration> get devices {
+    Set<DeviceConfiguration> set = {...primaryDevices, ...connectedDevices!};
+    return set;
+  }
+  //     (Set.from(primaryDevices)..addAll(connectedDevices ?? {})).toSet()
+  //         as Set<DeviceConfiguration>;
+  // //   Set<DeviceConfiguration> devices = primaryDevices;
+  //   devices.addAll(connectedDevices ?? {});
+  //   return devices;
+  // }
+
   /// The set of devices which are responsible for aggregating and synchronizing
   /// incoming data.
   Set<PrimaryDeviceConfiguration> primaryDevices = {};

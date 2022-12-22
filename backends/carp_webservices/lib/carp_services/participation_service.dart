@@ -136,9 +136,9 @@ class CarpParticipationService extends CarpBaseService
   @override
   Future<ParticipantData> setParticipantData(
     String studyDeploymentId,
-    Map<String, Data> data,
+    Map<String, Data> data, [
     String? inputByParticipantRole,
-  ) async =>
+  ]) async =>
       await participation(studyDeploymentId)
           .setParticipantData(data, inputByParticipantRole);
 }

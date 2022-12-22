@@ -56,7 +56,7 @@ DataStreamBatch _$DataStreamBatchFromJson(Map<String, dynamic> json) =>
           .map((e) => Measurement.fromJson(e as Map<String, dynamic>))
           .toList(),
       triggerIds:
-          (json['triggerIds'] as List<dynamic>).map((e) => e as int).toList(),
+          (json['triggerIds'] as List<dynamic>).map((e) => e as int).toSet(),
     );
 
 Map<String, dynamic> _$DataStreamBatchToJson(DataStreamBatch instance) =>
@@ -64,7 +64,7 @@ Map<String, dynamic> _$DataStreamBatchToJson(DataStreamBatch instance) =>
       'dataStream': instance.dataStream,
       'firstSequenceId': instance.firstSequenceId,
       'measurements': instance.measurements,
-      'triggerIds': instance.triggerIds,
+      'triggerIds': instance.triggerIds.toList(),
     };
 
 Measurement _$MeasurementFromJson(Map<String, dynamic> json) => Measurement(

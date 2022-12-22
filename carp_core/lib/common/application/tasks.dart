@@ -26,6 +26,12 @@ class TaskConfiguration extends Serializable {
   /// The data which needs to be collected/measured passively as part of this task.
   List<Measure>? measures = [];
 
+  /// Get data types of all data which may be collected, either passively as part
+  /// of task measures, or as the result of user interactions, for this task.
+  Set<String> getAllExpectedDataTypes() =>
+      (measures?.map((measure) => measure.type).toSet() ?? {})
+        ..add(CarpDataTypes.COMPLETED_TASK_TYPE_NAME);
+
   /// Add [measure] to this task.
   void addMeasure(Measure measure) => measures!.add(measure);
 

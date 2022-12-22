@@ -126,7 +126,7 @@ void carpCoreDataExample() async {
           dataType: Geolocation.dataType),
       firstSequenceId: 0,
       measurements: [measurement],
-      triggerIds: [0]);
+      triggerIds: {0});
 
   dataStreamService?.appendToDataStreams(studyDeploymentId, [uploadData]);
 }

@@ -29,9 +29,11 @@ class ExpectedParticipantData {
   /// Determines whether the attribute can be set by all participants in the study
   /// (one field for all), or an individual attribute can be set by each of
   /// the specified [AssignedTo.Roles] (one field per role).
-  AssignedTo assignedTo = AssignedTo();
+  late AssignedTo assignedTo;
 
-  ExpectedParticipantData(this.attribute, this.assignedTo);
+  ExpectedParticipantData({required this.attribute, AssignedTo? assignedTo}) {
+    this.assignedTo = assignedTo ?? AssignedTo(roleNames: {'Participant'});
+  }
 
   factory ExpectedParticipantData.fromJson(Map<String, dynamic> json) =>
       _$ExpectedParticipantDataFromJson(json);

@@ -143,7 +143,7 @@ class StudyRuntime {
         // we only print a warning
         // see issue #50 - there is a bug in CARP
         print(
-            "$runtimeType - Error marking deployment '${study!.studyDeploymentId}' as successful.\n$error");
+            "$runtimeType - Error marking deployment '${study!.studyDeploymentId}' as deployed.\n$error");
       }
       print(
           "$runtimeType - Study deployment '${study!.studyDeploymentId}' successfully deployed.");

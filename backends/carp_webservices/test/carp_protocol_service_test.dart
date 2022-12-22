@@ -10,14 +10,11 @@ import 'package:iso_duration_parser/iso_duration_parser.dart';
 
 import 'credentials.dart';
 
-String _encode(Object object) =>
-    const JsonEncoder.withIndent(' ').convert(object);
-
 void main() {
   CarpApp app;
   CarpUser? user;
   String? ownerId;
-  late StudyProtocol protocol, custom;
+  late StudyProtocol protocol;
   late Smartphone phone;
 
   /// Runs once before all tests.
@@ -83,23 +80,16 @@ void main() {
       );
 
     protocol.addParticipantRole(ParticipantRole('Participant'));
-    protocol.applicationData = {'uiTheme': 'black'};
 
-    // a custom protocol
-    var customDevice = CustomProtocolDevice(roleName: 'Custom device');
-    custom = StudyProtocol(
-        ownerId: ownerId!,
-        name: 'custom_test_protocol',
-        description:
-            'Custom protocol generated from carp_webservices unit test.');
-    custom.addPrimaryDevice(customDevice);
-    custom.addTaskControl(
-        ElapsedTimeTrigger(
-            sourceDeviceRoleName: customDevice.roleName,
-            elapsedTime: IsoDuration(seconds: 0)),
-        CustomProtocolTask(
-            name: 'Custom device task', studyProtocol: '{"version":"1.0"}'),
-        customDevice);
+    protocol.addExpectedParticipantData(
+      ExpectedParticipantData(
+        attribute:
+            ParticipantAttribute(inputDataType: 'dk.cachet.carp.input.sex'),
+        assignedTo: AssignedTo(roleNames: {'Participant'}),
+      ),
+    );
+
+    protocol.applicationData = {'uiTheme': 'black'};
   });
 
   /// Runs once after all tests.
@@ -113,6 +103,7 @@ void main() {
     });
   });
 
+  /// To test the Protocol Service you must be authenticated as a RESEARCHER
   group("Protocol", () {
     test(
       '- add',
@@ -134,7 +125,7 @@ void main() {
       '- getBy',
       () async {
         var p = await CarpProtocolService().getBy(testProtocolId);
-        print(p);
+        print(toJsonString(p));
       },
     );
 
@@ -143,7 +134,7 @@ void main() {
       () async {
         List<StudyProtocol> protocols =
             await CarpProtocolService().getAllForOwner(ownerId!);
-        print(protocols);
+        print(toJsonString(protocols));
       },
     );
 
@@ -152,7 +143,7 @@ void main() {
       () async {
         List<ProtocolVersion> versions =
             await CarpProtocolService().getVersionHistoryFor(testProtocolId);
-        print(versions);
+        print(toJsonString(versions));
       },
     );
 
@@ -161,14 +152,16 @@ void main() {
       () async {
         var p = await CarpProtocolService().updateParticipantDataConfiguration(
           testProtocolId,
-          '2022-12-14 14:36:07.258291Z',
+          testProtocolVersion,
           [
             ExpectedParticipantData(
-                ParticipantAttribute(inputDataType: 'dk.cachet.carp.input.sex'),
-                AssignedTo(roleNames: {'Participant'}))
+              attribute: ParticipantAttribute(
+                  inputDataType: 'dk.cachet.carp.input.sex'),
+              // assignedTo: AssignedTo(roleNames: {'Participant'}),
+            )
           ],
         );
-        // print(toJsonString(p));
+        print(toJsonString(p));
       },
     );
 
@@ -179,12 +172,12 @@ void main() {
         StudyProtocol protocol =
             await CarpProtocolService().createCustomProtocol(
           ownerId!,
-          custom.name,
+          'Custom Protocol Unit Test',
           'Made from Dart unit test.',
           '{"version":1}',
         );
 
-        print(_encode(protocol));
+        print(toJsonString(protocol));
       },
     );
   });

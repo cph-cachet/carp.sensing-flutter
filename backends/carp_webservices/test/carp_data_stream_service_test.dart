@@ -83,7 +83,7 @@ void main() {
                   dataType: "dk.cachet.carp.geolocation"),
               firstSequenceId: 0,
               measurements: [m1, m2],
-              triggerIds: [0]),
+              triggerIds: {0}),
           DataStreamBatch(
               dataStream: DataStreamId(
                   studyDeploymentId: testDeploymentId,
@@ -91,7 +91,7 @@ void main() {
                   dataType: "dk.cachet.carp.stepcount"),
               firstSequenceId: 0,
               measurements: [m3, m4],
-              triggerIds: [0]),
+              triggerIds: {0}),
         ];
 
         print(toJsonString(batch));

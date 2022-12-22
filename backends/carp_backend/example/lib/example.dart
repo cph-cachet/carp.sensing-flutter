@@ -41,55 +41,55 @@ void main() async {
   // use the first (i.e. latest) invitation
   String studyDeploymentId = invitations[0].studyDeploymentId!;
 
-  // -----------------------------------------------
-  // EXAMPLE OF GETTING A STUDY PROTOCOL FROM CARP
-  // -----------------------------------------------
+  // // -----------------------------------------------
+  // // EXAMPLE OF GETTING A STUDY PROTOCOL FROM CARP
+  // // -----------------------------------------------
 
-  // create a CARP study manager and initialize it
-  CarpStudyProtocolManager manager = CarpStudyProtocolManager();
-  await manager.initialize();
+  // // create a CARP study manager and initialize it
+  // CarpStudyProtocolManager manager = CarpStudyProtocolManager();
+  // await manager.initialize();
 
-  // get the study from CARP
-  StudyProtocol protocol = await manager.getStudyProtocol('protocol_id');
-  print(protocol);
+  // // get the study from CARP
+  // StudyProtocol protocol = await manager.getStudyProtocol('protocol_id');
+  // print(protocol);
 
-  // -----------------------------------------------
-  // EXAMPLE OF GETTING A STUDY DEPLOYMENT FROM CARP
-  // -----------------------------------------------
+  // // -----------------------------------------------
+  // // EXAMPLE OF GETTING A STUDY DEPLOYMENT FROM CARP
+  // // -----------------------------------------------
 
-  // get the status of the deployment
-  StudyDeploymentStatus status = await CustomProtocolDeploymentService()
-      .getStudyDeploymentStatus(studyDeploymentId);
+  // // get the status of the deployment
+  // StudyDeploymentStatus status = await CustomProtocolDeploymentService()
+  //     .getStudyDeploymentStatus(studyDeploymentId);
 
-  // create and configure a client manager for this phone
-  SmartPhoneClientManager client = SmartPhoneClientManager();
-  await client.configure(
-    deploymentService: CustomProtocolDeploymentService(),
-    deviceController: DeviceController(),
-  );
+  // // create and configure a client manager for this phone
+  // SmartPhoneClientManager client = SmartPhoneClientManager();
+  // await client.configure(
+  //   deploymentService: CustomProtocolDeploymentService(),
+  //   deviceController: DeviceController(),
+  // );
 
-  // Define the study and add it to the client.
-  final study = Study(
-    status.studyDeploymentId,
-    status.masterDeviceStatus!.device.roleName,
-  );
-  await client.addStudy(study);
+  // // Define the study and add it to the client.
+  // final study = Study(
+  //   status.studyDeploymentId,
+  //   status.masterDeviceStatus!.device.roleName,
+  // );
+  // await client.addStudy(study);
 
-  // Get the study controller and try to deploy the study.
-  //
-  // Note that if the study has already been deployed on this phone
-  // it has been cached locally in a file and the local cache will
-  // be used pr. default.
-  // If not deployed before (i.e., cached) the study deployment will be
-  // fetched from the deployment service.
-  SmartphoneDeploymentController? controller = client.getStudyRuntime(study);
-  await controller?.tryDeployment(useCached: true);
+  // // Get the study controller and try to deploy the study.
+  // //
+  // // Note that if the study has already been deployed on this phone
+  // // it has been cached locally in a file and the local cache will
+  // // be used pr. default.
+  // // If not deployed before (i.e., cached) the study deployment will be
+  // // fetched from the deployment service.
+  // SmartphoneDeploymentController? controller = client.getStudyRuntime(study);
+  // await controller?.tryDeployment(useCached: true);
 
-  // configure the controller with the default privacy schema
-  await controller?.configure();
+  // // configure the controller with the default privacy schema
+  // await controller?.configure();
 
-  // listening on the data stream and print them as json to the debug console
-  controller?.data.listen((data) => print(toJsonString(data)));
+  // // listening on the data stream and print them as json to the debug console
+  // controller?.data.listen((data) => print(toJsonString(data)));
 
   // -----------------------------------------------
   // DIFFERENT WAYS TO UPLOAD DATA TO CARP
@@ -98,7 +98,16 @@ void main() async {
   // first register the CARP data manager
   DataManagerRegistry().register(CarpDataManager());
 
-  // create a CARP data endpoint that upload using the DATA_POINT method
+  // using the (default) data stream batch upload method
+  CarpDataEndPoint cdep_3 = CarpDataEndPoint(
+    uploadMethod: CarpUploadMethod.DATA_STREAM,
+    deleteWhenUploaded: true,
+  );
+
+  print('$cdep_3');
+
+  // create a CARP data endpoint that upload each measurement using the
+  // DATA_POINT method
   CarpDataEndPoint cdep = CarpDataEndPoint(
       uploadMethod: CarpUploadMethod.DATA_POINT,
       name: 'CARP Staging Server',
@@ -108,42 +117,27 @@ void main() async {
       email: 'username@cachet.dk',
       password: 'password');
 
-  // create a study protocol with a specific data endpoint
-  SmartphoneStudyProtocol carpProtocol = SmartphoneStudyProtocol(
-    ownerId: 'AB',
-    name: 'Track patient movement',
-    dataEndPoint: cdep,
-  );
-
   // other types of data endpoints
 
-  // using the file method would also take information on file size whether to zip it
+  // using the file method would upload SQLite db files
   CarpDataEndPoint cdep_2 = CarpDataEndPoint(
-      uploadMethod: CarpUploadMethod.FILE,
-      name: 'CARP Staging Server',
-      uri: 'http://staging.carp.cachet.dk:8080',
-      clientId: 'carp',
-      clientSecret: 'a_secret',
-      email: 'username@cachet.dk',
-      password: 'password',
-      bufferSize: 500 * 1000,
-      zip: true);
-  print('$cdep_2');
-
-  // using the batch upload method could also take information on file size,
-  // but the file must NOT be zipped
-  CarpDataEndPoint cdep_3 = CarpDataEndPoint(
-    uploadMethod: CarpUploadMethod.BATCH_DATA_POINT,
+    uploadMethod: CarpUploadMethod.FILE,
     name: 'CARP Staging Server',
     uri: 'http://staging.carp.cachet.dk:8080',
     clientId: 'carp',
     clientSecret: 'a_secret',
     email: 'username@cachet.dk',
     password: 'password',
-    bufferSize: 500 * 1000,
-    deleteWhenUploaded: true,
   );
-  print('$cdep_3');
+
+  print('$cdep_2');
+
+  // create a study protocol with a specific data endpoint
+  SmartphoneStudyProtocol carpProtocol = SmartphoneStudyProtocol(
+    ownerId: 'AB',
+    name: 'Track patient movement',
+    dataEndPoint: cdep,
+  );
 
   // --------------------------------------------------
   // EXAMPLE OF GETTING AN INFORMED CONSENT FROM CARP

@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 Copenhagen Center for Health Technology (CACHET) at the
+ * Copyright 2018-2022 Copenhagen Center for Health Technology (CACHET) at the
  * Technical University of Denmark (DTU).
  * Use of this source code is governed by a MIT-style license that can be
  * found in the LICENSE file.
@@ -16,7 +16,10 @@ part of carp_backend;
 class CarpDataManager extends AbstractDataManager {
   bool _initialized = false;
   late CarpDataEndPoint carpEndPoint;
-  late FileDataManager fileDataManager;
+  // late FileDataManager fileDataManager;
+  // late SQLiteDataManager sqliteDataManager;
+  late DataStreamBuffer buffer;
+  Timer? uploadTimer;
 
   CarpDataManager() : super() {
     // Initialization of serialization
@@ -30,42 +33,43 @@ class CarpDataManager extends AbstractDataManager {
     ));
   }
 
-  String get type => DataEndPointTypes.CARP;
+  String get type => DataEndPointTypes.CAWS;
 
+  @override
   Future initialize(
-    MasterDeviceDeployment deployment,
+    SmartphoneDeployment deployment,
     DataEndPoint dataEndPoint,
-    Stream<DataPoint> data,
+    Stream<Measurement> data,
   ) async {
     super.initialize(deployment, dataEndPoint, data);
     assert(dataEndPoint is CarpDataEndPoint);
     carpEndPoint = dataEndPoint as CarpDataEndPoint;
 
-    if ((carpEndPoint.uploadMethod == CarpUploadMethod.FILE) ||
-        (carpEndPoint.uploadMethod == CarpUploadMethod.BATCH_DATA_POINT)) {
-      // make sure that files are not zipped if using batch upload
-      assert(
-          carpEndPoint.uploadMethod == CarpUploadMethod.BATCH_DATA_POINT
-              ? carpEndPoint.zip == false
-              : true,
-          'Files uploaded to CARP must not be zipped.');
-
-      // Create a [FileDataManager] and wrap it.
-      fileDataManager = new FileDataManager();
+    if ((carpEndPoint.uploadMethod == CarpUploadMethod.DATA_STREAM) ||
+        (carpEndPoint.uploadMethod == CarpUploadMethod.FILE)) {
+      // Create data managers for buffering.
+      // fileDataManager = FileDataManager();
+      // sqliteDataManager = SQLiteDataManager();
+      buffer = DataStreamBuffer();
 
       // merge the file data manager's events into this CARP data manager's event stream
-      fileDataManager.events.listen((event) => addEvent(event));
+      // fileDataManager.events.listen((event) => addEvent(event));
 
       // listen to data manager events, but only those from the file manager and only closing events
       // on a close event, upload the file to CARP
-      fileDataManager.events
-          .where((event) => event.runtimeType == FileDataManagerEvent)
-          .where((event) => event.type == FileDataManagerEventTypes.FILE_CLOSED)
-          .listen((event) =>
-              _uploadDatumFileToCarp((event as FileDataManagerEvent).path));
+      // fileDataManager.events
+      //     .where((event) => event.runtimeType == FileDataManagerEvent)
+      //     .where((event) => event.type == FileDataManagerEventTypes.FILE_CLOSED)
+      //     .listen((event) =>
+      //         _uploadDatumFileToCarp((event as FileDataManagerEvent).path));
 
-      // initialize the file data manager
-      fileDataManager.initialize(deployment, dataEndPoint, data);
+      // initialize the data managers
+      // fileDataManager.initialize(deployment, dataEndPoint, data);
+      buffer.initialize(deployment, data);
+
+      // set up a timer that uploads data on a regular basis
+      uploadTimer =
+          Timer.periodic(Duration(minutes: 1), (_) => _uploadMeasurements());
     }
     _initialized = true;
     await user; // This will trigger authentication to the CARP server
@@ -73,14 +77,14 @@ class CarpDataManager extends AbstractDataManager {
 
   /// The currently signed in user.
   ///
-  /// If a user is already autheticated to the [CarpService], then this account
+  /// If a user is already authenticated to the [CarpService], then this account
   /// is used for uploading the data to CARP.
   ///
   /// If the user is not authenticated, this method will try to authenticate
   /// the user based on the configuration (uri, client_id, client_secret) and
   /// credentials (username and password) specified in [carpEndPoint].
   Future<CarpUser?> get user async {
-    // check if the CARP webservice has already been configured and the user is logged in.
+    // check if the CARP web service has already been configured and the user is logged in.
     if (!CarpService().authenticated) {
       info('$runtimeType - No user is authenticated. '
           'Trying to authenticate based on configuration and credentials specified in the carpEndPoint.');
@@ -101,26 +105,29 @@ class CarpDataManager extends AbstractDataManager {
       info("CarpDataManager - signed in user: ${CarpService().currentUser}");
     }
 
+    CarpDataStreamService().configureFrom(CarpService());
+
     return CarpService().currentUser;
   }
 
-  Future<void> onDataPoint(DataPoint dataPoint) => uploadData(dataPoint);
+  @override
+  Future<void> onMeasurement(Measurement measurement) =>
+      uploadMeasurement(measurement);
 
+  @override
   Future<void> onError(Object? error) =>
-      uploadData(DataPoint.fromData(ErrorDatum(error.toString()))
-        ..carpHeader.dataFormat = DataFormat.fromString(CAMSDataType.ERROR)
-        ..carpHeader.studyId = deployment.studyDeploymentId
-        ..carpHeader.userId = deployment.userId);
+      uploadMeasurement(Measurement.fromData(Error(message: error.toString())));
 
+  @override
   Future<void> onDone() => close();
 
-  /// Handle upload of data depending on the specified [CarpUploadMethod].
-  Future<bool> uploadData(DataPoint dataPoint) async {
+  /// Handle upload of a measurement depending on the specified [CarpUploadMethod].
+  Future<bool> uploadMeasurement(Measurement measurement) async {
     // Check if CARP authentication is ready before writing...
     if (!_initialized) {
       warning("Waiting for CARP to be initialized -- delaying for 10 sec...");
       return Future.delayed(
-          const Duration(seconds: 10), () => uploadData(dataPoint));
+          const Duration(seconds: 10), () => uploadMeasurement(measurement));
     }
 
     CarpUser? _user = await user;
@@ -128,63 +135,134 @@ class CarpDataManager extends AbstractDataManager {
       warning('User is not authenticated - username: ${carpEndPoint.email}');
       return false;
     } else {
-      // first check if this is a [FileDatum] that has a separate file to be uploaded
-      if (dataPoint.data is FileDatum) {
-        FileDatum fileDatum = dataPoint.data as FileDatum;
-        if (fileDatum.upload) _uploadFileToCarp(fileDatum);
+      // first check if this is a measurement that has a separate file to be uploaded
+      if (measurement.data is FileData) {
+        var fileData = measurement.data as FileData;
+        if (fileData.upload) _uploadFile(fileData);
       }
 
-      // then upload the datum as specified in the upload method.
+      // then upload the measurement as specified in the upload method.
       switch (carpEndPoint.uploadMethod) {
-        case CarpUploadMethod.DATA_POINT:
-          info(
-              'Uploading data point to CARP - ${dataPoint.carpHeader.dataFormat}');
-          return (await CarpService()
-                  .getDataPointReference()
-                  .postDataPoint(dataPoint) >
-              0);
-        case CarpUploadMethod.BATCH_DATA_POINT:
+        case CarpUploadMethod.DATA_STREAM:
         case CarpUploadMethod.FILE:
-          // In both cases, forward to [FileDataManager], which collects data
-          // in a file before upload.
-          return fileDataManager.write(dataPoint);
-        case CarpUploadMethod.DOCUMENT:
-          info(
-              'Uploading data point document to CARP - ${dataPoint.carpHeader.dataFormat}');
-          await CarpService()
-              .collection('/${carpEndPoint.collection}')
-              .document()
-              .setData(
-                  json.decode(json.encode(dataPoint)) as Map<String, dynamic>);
+          // Forward to the [SQLiteDataManager] for buffering data
+          await buffer.onMeasurement(measurement);
           return true;
+        case CarpUploadMethod.DATA_POINT:
+          return await _uploadMeasurementAsDataPoint(measurement);
+        // case CarpUploadMethod.BATCH_DATA_POINT:
+        //   // Forward to [FileDataManager] for buffering data
+        //   return await fileDataManager.write(measurement);
       }
     }
   }
 
-  // This method upload a file of [Datum] data to CAPP.
-  // TODO - implement support for offline store-and-wait for later upload when online.
-  Future _uploadDatumFileToCarp(String path) async {
-    info("Datum json file upload to CARP started - path : '$path'");
-    final File file = File(path);
+  /// Upload buffered measurements to CAWS.
+  Future<void> _uploadMeasurements() async =>
+      CarpDataStreamService().appendToDataStreams(
+        studyDeploymentId,
+        await buffer.getDataStreamBatches(),
+      );
 
-    final String deviceID = DeviceInfo().deviceID.toString();
-    final String? userID = (await user)!.email;
+  /// Transform [measurement] to a [DataPoint] and upload it to CAWS using the
+  /// old data_point endpoint.
+  Future<bool> _uploadMeasurementAsDataPoint(Measurement measurement) async {
+    final dataPoint = DataPoint(
+      DataPointHeader(
+        studyId: deployment.studyDeploymentId,
+        userId: deployment.userId,
+        dataFormat: measurement.dataType,
+        deviceRoleName: measurement.taskControl?.targetDevice?.roleName ??
+            deployment.deviceConfiguration.roleName,
+        triggerId: measurement.taskControl?.triggerId.toString() ?? '0',
+        startTime:
+            DateTime.fromMicrosecondsSinceEpoch(measurement.sensorStartTime),
+        endTime: measurement.sensorEndTime == null
+            ? null
+            : DateTime.fromMicrosecondsSinceEpoch(measurement.sensorEndTime!),
+      ),
+      measurement.data,
+    );
+    info('Uploading data point to CAWS - ${dataPoint.carpHeader.dataFormat}');
+    return (await CarpService()
+            .getDataPointReference()
+            .postDataPoint(dataPoint) >
+        0);
+  }
 
-    switch (carpEndPoint.uploadMethod) {
-      case CarpUploadMethod.BATCH_DATA_POINT:
-        await CarpService().getDataPointReference().batchPostDataPoint(file);
+  // // This method upload a file of [Datum] data to CAPP.
+  // // TODO - implement support for offline store-and-wait for later upload when online.
+  // Future _uploadDatumFileToCarp(String path) async {
+  //   info("Datum json file upload to CARP started - path : '$path'");
+  //   final File file = File(path);
 
-        addEvent(CarpDataManagerEvent(
-            CarpDataManagerEventTypes.file_uploaded,
-            file.path,
-            null,
-            CarpService().getDataPointReference().dataEndpointUri));
-        info("Batch upload to CARP finished");
-        break;
-      case CarpUploadMethod.FILE:
-        final FileUploadTask uploadTask = CarpService()
-            .getFileStorageReference()
-            .upload(file, {'device_id': '$deviceID', 'user_id': '$userID'});
+  //   final String deviceID = DeviceInfo().deviceID.toString();
+  //   final String? userID = (await user)!.email;
+
+  //   switch (carpEndPoint.uploadMethod) {
+  //     case CarpUploadMethod.BATCH_DATA_POINT:
+  //       await CarpService().getDataPointReference().batchPostDataPoint(file);
+
+  //       addEvent(CarpDataManagerEvent(
+  //           CarpDataManagerEventTypes.file_uploaded,
+  //           file.path,
+  //           null,
+  //           CarpService().getDataPointReference().dataEndpointUri));
+  //       info("Batch upload to CARP finished");
+  //       break;
+  //     case CarpUploadMethod.FILE:
+  //       final FileUploadTask uploadTask = CarpService()
+  //           .getFileStorageReference()
+  //           .upload(file, {'device_id': '$deviceID', 'user_id': '$userID'});
+
+  //       // await the upload is successful
+  //       CarpFileResponse response = await uploadTask.onComplete;
+  //       int id = response.id;
+
+  //       addEvent(CarpDataManagerEvent(CarpDataManagerEventTypes.file_uploaded,
+  //           file.path, id, uploadTask.reference.fileEndpointUri));
+  //       info("Datum json file upload to CARP finished - remote id: '$id' ");
+  //       break;
+  //     case CarpUploadMethod.DATA_POINT:
+  //       // do nothing -- no file to upload since data point has already been
+  //       // uploaded (see uploadData method)
+  //       break;
+  //     case CarpUploadMethod.DATA_STREAM:
+  //       // TODO: Handle this case.
+  //       break;
+  //   }
+
+  //   if (carpEndPoint.deleteWhenUploaded) {
+  //     // delete the local file once uploaded
+  //     file.delete();
+  //     info("Locale json file deleted - path: '${file.path}'.");
+  //     addEvent(FileDataManagerEvent(
+  //         FileDataManagerEventTypes.FILE_DELETED, file.path));
+  //   }
+  // }
+
+  /// Upload a file attachment to CAWS, i.e. one that is referenced
+  /// in a [FileData] data object.
+  Future _uploadFile(FileData data) async {
+    if (data.path == null) {
+      warning(
+          '$runtimeType - No path to local FileData specified when trying to upload file - data: $data.');
+    } else {
+      info(
+          "$runtimeType - File attachment upload to CAWS started - path : '${data.path}'");
+      final File file = File(data.path!);
+
+      if (!file.existsSync()) {
+        warning(
+            '$runtimeType - The file attachment is not found - skipping upload.');
+      } else {
+        final String deviceID = DeviceInfo().deviceID.toString();
+        data.metadata!['device_id'] = deviceID;
+        data.metadata!['study_deployment_id'] = studyDeploymentId;
+
+        // start upload
+        final FileUploadTask uploadTask =
+            CarpService().getFileStorageReference().upload(file, data.metadata);
 
         // await the upload is successful
         CarpFileResponse response = await uploadTask.onComplete;
@@ -192,63 +270,22 @@ class CarpDataManager extends AbstractDataManager {
 
         addEvent(CarpDataManagerEvent(CarpDataManagerEventTypes.file_uploaded,
             file.path, id, uploadTask.reference.fileEndpointUri));
-        info("Datum json file upload to CARP finished - remote id: '$id' ");
-        break;
-      case CarpUploadMethod.DATA_POINT:
-      case CarpUploadMethod.DOCUMENT:
-        // do nothing -- no file to upload since data point has already been
-        // uploaded (see uploadData method)
-        break;
-    }
+        info("$runtimeType - File upload to CAWS finished - server id : $id ");
 
-    if (carpEndPoint.deleteWhenUploaded) {
-      // delete the local file once uploaded
-      file.delete();
-      info("Locale Datum json file deleted - path: '${file.path}'.");
-      addEvent(FileDataManagerEvent(
-          FileDataManagerEventTypes.FILE_DELETED, file.path));
-    }
-  }
-
-  // This method upload a file attachment to CARP, i.e. one that is referenced in a [FileDatum].
-  Future _uploadFileToCarp(FileDatum datum) async {
-    assert(
-      datum.path != null,
-      'No path to local FileDatum specified when trying to upload file.',
-    );
-
-    info("File attachment upload to CARP started - path : '${datum.path}'");
-    final File file = File(datum.path!);
-
-    if (!file.existsSync()) {
-      warning('The file attachment is not found - skipping upload.');
-    } else {
-      final String deviceID = DeviceInfo().deviceID.toString();
-      datum.metadata!['device_id'] = deviceID;
-      datum.metadata!['study_deployment_id'] = studyDeploymentId;
-
-      // start upload
-      final FileUploadTask uploadTask =
-          CarpService().getFileStorageReference().upload(file, datum.metadata);
-
-      // await the upload is successful
-      CarpFileResponse response = await uploadTask.onComplete;
-      int id = response.id;
-
-      addEvent(CarpDataManagerEvent(CarpDataManagerEventTypes.file_uploaded,
-          file.path, id, uploadTask.reference.fileEndpointUri));
-      info("File upload to CARP finished - remote id : $id ");
-
-      // delete the local file once uploaded?
-      if (carpEndPoint.deleteWhenUploaded) {
-        file.delete();
-        addEvent(FileDataManagerEvent(
-            FileDataManagerEventTypes.FILE_DELETED, file.path));
+        // delete the local file once uploaded?
+        if (carpEndPoint.deleteWhenUploaded) {
+          file.delete();
+          addEvent(FileDataManagerEvent(
+              FileDataManagerEventTypes.FILE_DELETED, file.path));
+        }
       }
     }
   }
 
-  Future close() async => super.close();
+  Future close() async {
+    uploadTimer?.cancel();
+    super.close();
+  }
 }
 
 /// A status event for this CARP data manager.

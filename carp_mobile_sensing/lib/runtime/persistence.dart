@@ -10,31 +10,27 @@ part of runtime;
 /// A persistence layer that knows how to persistently store deployment and app
 /// task information across app restart.
 class Persistence {
-  static const String DATABASE_NAME = 'carp-data';
-  static const String DEPLOYMENT_TABLENAME = 'deployment';
-  static const String TASK_QUEUE_TABLENAME = 'taskqueue';
+  static const String DATABASE_NAME = 'carp';
+  static const String DEPLOYMENT_TABLE_NAME = 'deployment';
+  static const String TASK_QUEUE_TABLE_NAME = 'task_queue';
 
   static final Persistence _instance = Persistence._();
   Persistence._();
   factory Persistence() => _instance;
 
-  String? _databaseName;
+  String? _databasePath;
   Database? database;
 
-  /// Full path and name of the database.
-  String get databaseName => _databaseName ?? 'unknown';
+  /// Path of the database.
+  String get databasePath => '$_databasePath';
 
-  Future<void> _initDatabasePath() async {
-    if (_databaseName == null) {
-      String path = await getDatabasesPath();
-      _databaseName = '$path/$DATABASE_NAME.db';
-    }
-  }
+  /// Full path and name of the database.
+  String get databaseName => '$_databasePath/$DATABASE_NAME.db';
 
   /// Initialize the persistence layer and the database.
   Future<void> init([SmartphoneDeployment? deployment]) async {
     info('Initializing $runtimeType...');
-    await _initDatabasePath();
+    _databasePath ??= await getDatabasesPath();
 
     // open the database - make sure to use the same database across app (re)start
     database = await openDatabase(
@@ -44,11 +40,11 @@ class Persistence {
       onCreate: (Database db, int version) async {
         // when creating the database, create the tables
         await db.execute(
-            'CREATE TABLE $DEPLOYMENT_TABLENAME (deployment_id TEXT PRIMARY KEY, updated_at TEXT, deployed_at TEXT, user_id TEXT, deployment TEXT)');
+            'CREATE TABLE $DEPLOYMENT_TABLE_NAME (deployment_id TEXT PRIMARY KEY, updated_at TEXT, deployed_at TEXT, user_id TEXT, deployment TEXT)');
         await db.execute(
-            'CREATE TABLE $TASK_QUEUE_TABLENAME (deployment_id TEXT PRIMARY KEY, task_id TEXT, task TEXT)');
+            'CREATE TABLE $TASK_QUEUE_TABLE_NAME (deployment_id TEXT PRIMARY KEY, task_id TEXT, task TEXT)');
 
-        debug('$runtimeType - SQLite DB created');
+        debug('$runtimeType - $databaseName DB created');
       },
     );
 
@@ -80,7 +76,7 @@ class Persistence {
         'deployment': jsonEncode(deployment),
       };
       await database?.insert(
-        DEPLOYMENT_TABLENAME,
+        DEPLOYMENT_TABLE_NAME,
         map,
         conflictAlgorithm: ConflictAlgorithm.replace,
       );
@@ -98,7 +94,7 @@ class Persistence {
     SmartphoneDeployment? deployment;
     try {
       final List<Map<String, Object?>>? maps = await database?.query(
-        DEPLOYMENT_TABLENAME,
+        DEPLOYMENT_TABLE_NAME,
         columns: ['deployment'],
         where: 'deployment_id = ?',
         whereArgs: [deploymentId],
@@ -133,7 +129,7 @@ class Persistence {
           'task': jsonEncode(snapshot),
         };
         await database?.insert(
-          TASK_QUEUE_TABLENAME,
+          TASK_QUEUE_TABLE_NAME,
           map,
           conflictAlgorithm: ConflictAlgorithm.replace,
         );
@@ -141,7 +137,7 @@ class Persistence {
 
       case UserTaskState.dequeued:
         await database?.delete(
-          TASK_QUEUE_TABLENAME,
+          TASK_QUEUE_TABLE_NAME,
           where: 'task_id = ?',
           whereArgs: [task.id],
         );
@@ -156,7 +152,7 @@ class Persistence {
     List<UserTaskSnapshot> result = [];
     try {
       final List<Map<String, Object?>>? list = await database?.query(
-        TASK_QUEUE_TABLENAME,
+        TASK_QUEUE_TABLE_NAME,
         columns: ['user_task'],
         where: 'deployment_id = ?',
         whereArgs: [studyDeploymentId],

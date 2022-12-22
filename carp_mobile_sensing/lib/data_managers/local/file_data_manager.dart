@@ -145,7 +145,7 @@ class FileDataManager extends AbstractDataManager {
       try {
         activeSink.write(json);
         debug(
-            'Writing data point to file - type: ${measurement.dataType.toString()}');
+            'Writing measurement to file - type: ${measurement.dataType.toString()}');
 
         await file.then((activeFile) async {
           await activeFile.length().then((len) {

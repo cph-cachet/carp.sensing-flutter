@@ -18,37 +18,29 @@ void main() {
     );
 
     Smartphone phone = Smartphone(roleName: 'phone');
-    DeviceConfiguration d1 = DeviceConfiguration(
-      roleName: 'connected_device',
+    DeviceConfiguration hr_monitor = DeviceConfiguration(
+      roleName: 'hr_monitor',
     );
-    DeviceConfiguration d2 = DeviceConfiguration(
-      roleName: 'connected_device',
+    DeviceConfiguration bike = DeviceConfiguration(
+      roleName: 'bike',
     );
 
     protocol
       ..addPrimaryDevice(phone)
-      ..addConnectedDevice(d1)
-      ..addConnectedDevice(d2);
+      ..addConnectedDevice(hr_monitor)
+      ..addConnectedDevice(bike);
 
-    // Define what needs to be measured, on which device, when.
-    List<Measure> measures = [
-      Measure(type: Acceleration.dataType),
-      Measure(type: Geolocation.dataType),
-      Measure(type: ECG.dataType),
-      Measure(type: EDA.dataType),
-      Measure(type: StepCount.dataType),
-      Measure(type: HeartRate.dataType),
-      Measure(type: SignalStrength.dataType),
-    ];
-
-    BackgroundTask task = BackgroundTask(
-        name: 'Start measures',
-        duration: const IsoDuration(hours: 1),
-        measures: measures);
     protocol.addTaskControl(
       // TriggerConfiguration(sourceDeviceRoleName: phone.roleName),
       TriggerConfiguration(),
-      task,
+      BackgroundTask(
+          name: 'Start measures',
+          duration: const IsoDuration(hours: 1),
+          measures: [
+            Measure(type: Acceleration.dataType),
+            Measure(type: Geolocation.dataType),
+            Measure(type: StepCount.dataType),
+          ]),
       phone,
       Control.Start,
     );
@@ -58,8 +50,31 @@ void main() {
         // sourceDeviceRoleName: phone.roleName,
         elapsedTime: const IsoDuration(hours: 1),
       ),
-      task,
-      phone,
+      BackgroundTask(
+          name: 'Start Heart Monitor',
+          duration: const IsoDuration(hours: 1),
+          measures: [
+            Measure(type: ECG.dataType),
+            Measure(type: EDA.dataType),
+            Measure(type: HeartRate.dataType),
+          ]),
+      hr_monitor,
+      Control.Start,
+    );
+
+    protocol.addTaskControl(
+      ElapsedTimeTrigger(
+        // sourceDeviceRoleName: phone.roleName,
+        elapsedTime: const IsoDuration(hours: 1),
+      ),
+      BackgroundTask(
+          name: 'Start Heart Monitor',
+          duration: const IsoDuration(hours: 1),
+          measures: [
+            Measure(type: Acceleration.dataType),
+            Measure(type: SignalStrength.dataType),
+          ]),
+      bike,
       Control.Start,
     );
 
@@ -81,10 +96,10 @@ void main() {
     print(protocol);
     print(toJsonString(protocol));
     expect(protocol.ownerId, 'xyz@dtu.dk');
-    expect(protocol.triggers.length, 3);
+    expect(protocol.triggers.length, 4);
     expect(protocol.triggers.keys.first, '0');
-    expect(protocol.tasks.length, 2);
-    expect(protocol.taskControls.length, 3);
+    expect(protocol.tasks.length, 4);
+    expect(protocol.taskControls.length, 4);
   });
 
   test('Add Request -> JSON', () async {
@@ -193,10 +208,16 @@ void main() {
           ),
         ),
       ],
-      triggerIds: [0],
+      triggerIds: {0},
     );
 
     print(toJsonString(batch));
     expect(batch.measurements, isNotEmpty);
+  });
+
+  test('RequiredDataStreams -> JSON', () async {
+    var streams = StudyDeployment(protocol).requiredDataStreams;
+    print(toJsonString(streams));
+    expect(streams.expectedDataStreams, isNotEmpty);
   });
 }

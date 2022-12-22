@@ -19,6 +19,7 @@ import 'package:carp_serializable/carp_serializable.dart';
 
 import 'package:carp_core/common/carp_core_common.dart';
 import 'package:carp_core/protocols/carp_core_protocols.dart';
+import 'package:carp_core/data/carp_core_data.dart';
 
 export 'carp_core_deployment.dart';
 

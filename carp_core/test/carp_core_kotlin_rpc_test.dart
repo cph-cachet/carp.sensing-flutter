@@ -79,8 +79,9 @@ void main() {
         'Version 3: ask participant data',
         [
           ExpectedParticipantData(
-            ParticipantAttribute(inputDataType: 'dk.cachet.carp.input.sex'),
-            AssignedTo(roleNames: {'Participant'}),
+            attribute:
+                ParticipantAttribute(inputDataType: 'dk.cachet.carp.input.sex'),
+            assignedTo: AssignedTo(roleNames: {'Participant'}),
           ),
         ],
       );
@@ -295,7 +296,7 @@ void main() {
                   dataType: "dk.cachet.carp.geolocation"),
               firstSequenceId: 0,
               measurements: [m1, m2],
-              triggerIds: [0]),
+              triggerIds: {0}),
           DataStreamBatch(
               dataStream: DataStreamId(
                   studyDeploymentId: 'c9cc5317-48da-45f2-958e-58bc07f34681',
@@ -303,7 +304,7 @@ void main() {
                   dataType: "dk.cachet.carp.stepcount"),
               firstSequenceId: 0,
               measurements: [m3, m4],
-              triggerIds: [0]),
+              triggerIds: {0}),
         ],
       );
 

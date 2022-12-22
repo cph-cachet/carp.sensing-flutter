@@ -26,21 +26,25 @@ part of data_managers;
 /// On Android, Flutter files are stored in the `databases` directory, which is
 /// located in the `data/data/<package_name>/databases/` folder.
 /// Files can be accessed via AndroidStudio.
-///
-/// A new DB file is created each time the app is (re)started. Hence, several
-/// `.db` files may exist for a study. This is done to ensure that the DB is
-/// not corrupted when an app is forced to close and to keep the size of db files
-/// down.
 class SQLiteDataManager extends AbstractDataManager {
-  static const String MEASUREMENT_TABLENAME = 'measurements';
+  static const String DATABASE_NAME = 'carp-data';
+
+  static const String MEASUREMENT_TABLE_NAME = 'measurements';
+  // // SQLite does not have a separate Boolean storage class. Instead,
+  // // Boolean values are stored as integers 0 (false) and 1 (true).
+  // static const String UPLOADED_COLUMN = 'uploaded';
   static const String DEPLOYMENT_ID_COLUMN = 'deployment_id';
   static const String TRIGGER_ID_COLUMN = 'trigger_id';
-  static const String ROLENAME_COLUMN = 'device_rolename';
-  static const String DTATYPE_COLUMN = 'data_type';
+  static const String ROLE_NAME_COLUMN = 'device_rolename';
+  static const String DATATYPE_COLUMN = 'data_type';
   static const String MEASUREMENT_COLUMN = 'measurement';
 
-  String get databaseName => Persistence().databaseName;
-  Database? get database => Persistence().database;
+  String? _databasePath;
+
+  /// Full path and name of the database.
+  String get databaseName => '$_databasePath/$DATABASE_NAME.db';
+
+  Database? database;
 
   @override
   String get type => DataEndPointTypes.SQLITE;
@@ -55,15 +59,22 @@ class SQLiteDataManager extends AbstractDataManager {
     info('Initializing $runtimeType...');
     await super.initialize(deployment, dataEndPoint, measurements);
 
-    // check to see if the measurements table is already created
-    List<Map<String, Object?>>? tables = await database?.query('sqlite_master',
-        where: 'name = ?', whereArgs: [MEASUREMENT_TABLENAME]);
+    _databasePath ??= await getDatabasesPath();
 
-    if (tables == null || tables.isEmpty) {
-      debug("$runtimeType - Creating '$MEASUREMENT_TABLENAME' table");
-      await database?.execute(
-          'CREATE TABLE $MEASUREMENT_TABLENAME (id INTEGER PRIMARY KEY, $DEPLOYMENT_ID_COLUMN TEXT, $TRIGGER_ID_COLUMN INTEGER, $ROLENAME_COLUMN TEXT, $DTATYPE_COLUMN TEXT, $MEASUREMENT_COLUMN TEXT)');
-    }
+    // open the database - make sure to use the same database across app (re)start
+    database = await openDatabase(
+      databaseName,
+      version: 1,
+      singleInstance: true,
+      onCreate: (Database db, int version) async {
+        // when creating the database, create the measurements table
+        debug("$runtimeType - Creating '$MEASUREMENT_TABLE_NAME' table");
+        await db.execute(
+            'CREATE TABLE $MEASUREMENT_TABLE_NAME (id INTEGER PRIMARY KEY, $DEPLOYMENT_ID_COLUMN TEXT, $TRIGGER_ID_COLUMN INTEGER, $ROLE_NAME_COLUMN TEXT, $DATATYPE_COLUMN TEXT, $MEASUREMENT_COLUMN TEXT)');
+
+        debug("$runtimeType - '$databaseName' DB created");
+      },
+    );
   }
 
   @override
@@ -71,29 +82,19 @@ class SQLiteDataManager extends AbstractDataManager {
     final Map<String, dynamic> map = {
       DEPLOYMENT_ID_COLUMN: deployment.studyDeploymentId,
       TRIGGER_ID_COLUMN: measurement.taskControl?.triggerId ?? 0,
-      ROLENAME_COLUMN: measurement.taskControl?.targetDevice?.roleName ??
+      ROLE_NAME_COLUMN: measurement.taskControl?.targetDevice?.roleName ??
           deployment.deviceConfiguration.roleName,
-      DTATYPE_COLUMN: measurement.dataType.toString(),
+      DATATYPE_COLUMN: measurement.dataType.toString(),
       MEASUREMENT_COLUMN: jsonEncode(measurement),
     };
     int? id = await database?.insert(
-      MEASUREMENT_TABLENAME,
+      MEASUREMENT_TABLE_NAME,
       map,
       conflictAlgorithm: ConflictAlgorithm.replace,
     );
 
-    // String deploymentId = deployment.studyDeploymentId;
-    // int triggerId = measurement.taskControl?.triggerId ?? 0;
-    // String rolename = measurement.taskControl?.targetDevice?.roleName ??
-    //     deployment.deviceConfiguration.roleName;
-    // String datatype = measurement.dataType.toString();
-    // String measurementJson = jsonEncode(measurement);
-    // String sql =
-    //     "INSERT INTO $MEASUREMENT_TABLENAME(deployment_id, trigger_id, device_rolename, data_type, measurement) VALUES('$deploymentId', '$triggerId', '$rolename', '$datatype', '$measurementJson')";
-
-    // int? id = await database?.rawInsert(sql);
     debug(
-        '$runtimeType - writing data point to SQLite - id: $id, type: ${measurement.data.format}');
+        '$runtimeType - wrote measurement to SQLite - id: $id, type: ${measurement.data.format}');
   }
 
   @override

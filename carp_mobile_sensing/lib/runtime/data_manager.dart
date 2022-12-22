@@ -97,7 +97,7 @@ abstract class AbstractDataManager implements DataManager {
     _deployment = deployment;
     _dataEndPoint = dataEndPoint;
     measurements.listen(
-      (dataPoint) => onMeasurement(dataPoint),
+      (measurement) => onMeasurement(measurement),
       onError: onError,
       onDone: onDone,
     );
