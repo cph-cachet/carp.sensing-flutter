@@ -11,15 +11,16 @@ part of connectivity;
 /// collect a [ConnectivityDatum] every time the connectivity state changes.
 class ConnectivityProbe extends StreamProbe {
   @override
-  Stream<Datum> get stream =>
-      Connectivity().onConnectivityChanged.map((ConnectivityResult event) =>
-          ConnectivityDatum.fromConnectivityResult(event));
+  Stream<Measurement> get stream => connectivity.Connectivity()
+      .onConnectivityChanged
+      .map((connectivity.ConnectivityResult event) =>
+          Measurement.fromData(Connectivity.fromConnectivityResult(event)));
 }
 
 // This probe requests access to location permissions (both on Android and iOS).
 // See https://pub.dev/packages/network_info_plus
 /// The [WifiProbe] get the wifi connectivity status of the phone and
-/// collect a [WifiDatum].
+/// collect a [Wifi].
 ///
 /// Note, that in order to make this probe work on iOS (especially after iOS
 /// 12 and 13), there is a set of requirements to meet for the app using this
@@ -32,14 +33,14 @@ class ConnectivityProbe extends StreamProbe {
 ///
 /// From Android 10.0 onwards the `ACCESS_FINE_LOCATION` permission must be
 /// granted.
-class WifiProbe extends IntervalDatumProbe {
+class WifiProbe extends IntervalProbe {
   @override
-  Future<Datum> getDatum() async {
+  Future<Measurement> getMeasurement() async {
     String? ssid = await NetworkInfo().getWifiName();
     String? bssid = await NetworkInfo().getWifiBSSID();
     String? ip = await NetworkInfo().getWifiIP();
 
-    return WifiDatum(ssid: ssid, bssid: bssid, ip: ip);
+    return Measurement.fromData(Wifi(ssid: ssid, bssid: bssid, ip: ip));
   }
 }
 
@@ -50,16 +51,18 @@ class WifiProbe extends IntervalDatumProbe {
 class BluetoothProbe extends BufferingPeriodicStreamProbe {
   /// Default timeout for bluetooth scan - 4 secs
   static const DEFAULT_TIMEOUT = 4 * 1000;
-  Datum? _datum;
+  Data? _data;
 
   @override
   Stream<dynamic> get bufferingStream => FlutterBluePlus.instance.scanResults;
 
   @override
-  Future<Datum?> getDatum() async => _datum;
+  Future<Measurement?> getMeasurement() async =>
+      _data != null ? Measurement.fromData(_data!) : null;
 
   @override
   void onSamplingStart() {
+    _data = Bluetooth();
     try {
       FlutterBluePlus.instance.startScan(
           scanMode: ScanMode.lowLatency,
@@ -67,21 +70,20 @@ class BluetoothProbe extends BufferingPeriodicStreamProbe {
               Duration(milliseconds: DEFAULT_TIMEOUT));
     } catch (error) {
       FlutterBluePlus.instance.stopScan();
-      _datum = ErrorDatum('Error scanning for bluetooth - $error');
+      _data = Error(message: 'Error scanning for bluetooth - $error');
     }
   }
 
   @override
-  void onSamplingEnd() => FlutterBluePlus.instance.stopScan();
+  void onSamplingEnd() {
+    FlutterBluePlus.instance.stopScan();
+    (_data as Bluetooth).endScan = DateTime.now();
+  }
 
   @override
   void onSamplingData(event) {
-    print('>> scan event: $event');
     if (event is List<ScanResult>) {
-      // add the datum for each scan list we get (don't wait for the scan to end)
-      addData(BluetoothDatum()
-        ..scanResult.addAll(event
-            .map((scanResult) => BluetoothDevice.fromScanResult(scanResult))));
+      (_data as Bluetooth).addBluetoothDevicesFromScanResults(event);
     }
   }
 }

@@ -19,11 +19,11 @@ void main() async {
   // define which devices are used for data collection
   // in this case, its only this smartphone
   Smartphone phone = Smartphone();
-  protocol.addMasterDevice(phone);
+  protocol.addPrimaryDevice(phone);
 
   // Add an automatic task that immediately starts collecting connectivity,
   // nearby bluetooth devices, and wifi information.
-  protocol.addTriggeredTask(
+  protocol.addTaskControl(
       ImmediateTrigger(),
       BackgroundTask()
         ..addMeasure(Measure(type: ConnectivitySamplingPackage.CONNECTIVITY))

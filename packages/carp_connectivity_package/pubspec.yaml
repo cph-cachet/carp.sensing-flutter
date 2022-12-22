@@ -1,6 +1,6 @@
 name: carp_connectivity_package
 description: CARP connectivity sampling package. Samples connectivity status, bluetooth devices, and wifi access points.
-version: 0.40.0
+version: 1.1.0
 homepage: https://github.com/cph-cachet/carp.sensing-flutter/tree/master/packages/carp_connectivity_package
 
 environment:
@@ -11,24 +11,26 @@ dependencies:
   flutter:
     sdk: flutter
 
-  carp_serializable: ^1.0.0
-  carp_core: ^0.40.0
-  carp_mobile_sensing: ^0.40.0
+  # carp_serializable: ^1.1.0
+  # carp_core: ^1.1.0
+  # carp_mobile_sensing: ^1.1.0
  
   json_annotation: ^4.4.0
   permission_handler: ^10.0.0  
-  connectivity_plus: ^2.3.0    # connectivity events
-  network_info_plus: ^2.1.0    # wifi ssid name
+  connectivity_plus: ^3.0.0    # connectivity events
+  network_info_plus: ^3.0.0    # wifi ssid name
   flutter_blue_plus: ^1.3.0    # bluetooth scan
   crypto: ^3.0.0               # hashing sensitive data
   
 # Overriding carp libraries to use the local copy
 # Remove this before release of package
 dependency_overrides:
-#  carp_core:
-#    path: ../../carp_core/
-#  carp_mobile_sensing:
-#    path: ../../carp_mobile_sensing/
+  carp_serializable:
+    path: ../../carp_serializable/
+  carp_core:
+    path: ../../carp_core/
+  carp_mobile_sensing:
+    path: ../../carp_mobile_sensing/
 
 dev_dependencies:
   lints: any

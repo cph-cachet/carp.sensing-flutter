@@ -21,7 +21,7 @@ void main() {
     // Create a new study protocol.
     protocol = StudyProtocol(
       ownerId: 'alex@uni.dk',
-      name: 'Context package test',
+      name: 'Apps package test',
     );
 
     // Define which devices are used for data collection.

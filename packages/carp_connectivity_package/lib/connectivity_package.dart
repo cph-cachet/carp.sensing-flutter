@@ -21,10 +21,22 @@ class ConnectivitySamplingPackage extends SmartphoneSamplingPackage {
   static const String WIFI = "${NameSpace.CARP}.wifi";
 
   @override
-  List<String> get dataTypes => [
-        CONNECTIVITY,
-        BLUETOOTH,
-        WIFI,
+  List<DataTypeMetaData> get dataTypes => [
+        DataTypeMetaData(
+          type: CONNECTIVITY,
+          displayName: "Connectivity Status",
+          timeType: DataTimeType.POINT,
+        ),
+        DataTypeMetaData(
+          type: BLUETOOTH,
+          displayName: "Bluetooth Scan of Nearby Devices",
+          timeType: DataTimeType.TIME_SPAN,
+        ),
+        DataTypeMetaData(
+          type: WIFI,
+          displayName: "Wifi Connectivity Status",
+          timeType: DataTimeType.POINT,
+        ),
       ];
 
   @override

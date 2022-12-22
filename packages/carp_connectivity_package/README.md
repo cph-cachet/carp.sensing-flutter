@@ -34,7 +34,8 @@ dependencies:
 ### Android Integration
 
 As explained in the Android [Wi-Fi scanning overview](https://developer.android.com/guide/topics/connectivity/wifi-scan), access to wifi information required different permission to be set.
-For Android >= 10 (API level 29) it is `ACCESS_FINE_LOCATION`, `ACCESS_COARSE_LOCATION` and `CHANGE_WIFI_STATE`.
+For Android >= 10 (API level 29) you need `ACCESS_FINE_LOCATION`, and `ACCESS_COARSE_LOCATION`.
+For Android >=12 (API level 31) be sure that your app has `ACCESS_NETWORK_STATE` permission.
 
 Add the following to your app's `manifest.xml` file located in `android/app/src/main`:
 
@@ -48,10 +49,12 @@ Add the following to your app's `manifest.xml` file located in `android/app/src/
     <!-- The following permissions are used in the Connectivity Package -->
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
-    <uses-permission android:name="android.permission.CHANGE_WIFI_STATE"/>
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
 
 </manifest>
 ````
+
+Note that connectivity changes are **not** communicated to Android apps in the background starting with Android 8 (SDK 26). Hence, connectivity status is only collected when your app is resumed.
 
 ### iOS Integration
 

@@ -1,8 +1,8 @@
 {
-  "id": "7fa68fe0-8220-11ed-85eb-4baa44f36a7f",
-  "createdOn": "2022-12-22T17:46:01.054442Z",
+  "id": "bd5e1f60-8220-11ed-8d71-190419919ffd",
+  "createdOn": "2022-12-22T17:47:44.598993Z",
   "ownerId": "alex@uni.dk",
-  "name": "Context package test",
+  "name": "Apps package test",
   "primaryDevices": [
     {
       "__type": "dk.cachet.carp.common.application.devices.Smartphone",

@@ -1,6 +1,6 @@
 name: carp_connectivity_package_example
 description: Examples of how to use the CANS Connectivity Package.
-version: 0.40.0
+version: 1.1.0
 publish_to: none
 
 environment:
@@ -10,10 +10,10 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  # carp_core:
-  #   path: ../../../carp_core/
-  # carp_mobile_sensing:
-  #   path: ../../../carp_mobile_sensing
+  carp_core:
+    path: ../../../carp_core/
+  carp_mobile_sensing:
+    path: ../../../carp_mobile_sensing
   carp_connectivity_package:
     path: ../
 

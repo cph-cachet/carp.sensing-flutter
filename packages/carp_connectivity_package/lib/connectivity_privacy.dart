@@ -1,12 +1,12 @@
 part of connectivity;
 
-/// A [BluetoothDatum] anonymizer function. Anonymizes the name and discovery
+/// A [Bluetooth] anonymizer function. Anonymizes the name and discovery
 /// name of each discovered bluetooth device.
 /// Bluetooth devices' names may contain participants' real name because people
 /// use their names to name their computers and phones.
-Datum blueetothNameAnoymizer(Datum datum) {
-  assert(datum is BluetoothDatum);
-  BluetoothDatum bt = datum as BluetoothDatum;
+Data blueetothNameAnoymizer(Data datum) {
+  assert(datum is Bluetooth);
+  Bluetooth bt = datum as Bluetooth;
   for (var result in bt.scanResult) {
     result.bluetoothDeviceName =
         sha1.convert(utf8.encode(result.bluetoothDeviceName)).toString();
@@ -16,12 +16,12 @@ Datum blueetothNameAnoymizer(Datum datum) {
   return bt;
 }
 
-/// A [WifiDatum] anonymizer function. Anonymizes the wifi name (SSID) of the
+/// A [Wifi] anonymizer function. Anonymizes the wifi name (SSID) of the
 /// wifi network. Wifi network names may contain participants' or house holds'
 /// real name because people use their names to name their wifi.
-Datum wifiNameAnoymizer(Datum datum) {
-  assert(datum is WifiDatum);
-  WifiDatum wd = datum as WifiDatum;
+Data wifiNameAnoymizer(Data datum) {
+  assert(datum is Wifi);
+  Wifi wd = datum as Wifi;
   return wd
     ..ssid = (wd.ssid != null)
         ? sha1.convert(utf8.encode(wd.ssid!)).toString()

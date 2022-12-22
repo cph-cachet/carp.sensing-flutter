@@ -1,89 +1,93 @@
 {
+  "id": "edba6510-8225-11ed-9d7a-1388a428cb8d",
+  "createdOn": "2022-12-22T18:24:53.217061Z",
   "ownerId": "alex@uni.dk",
-  "name": "Context package test",
-  "description": "",
-  "creationDate": "2022-05-10T18:43:42.086861Z",
-  "masterDevices": [
-   {
-    "$type": "dk.cachet.carp.protocols.domain.devices.Smartphone",
-    "isMasterDevice": true,
-    "roleName": "masterphone",
-    "samplingConfiguration": {}
-   }
+  "name": "Connectivity package test",
+  "primaryDevices": [
+    {
+      "__type": "dk.cachet.carp.common.application.devices.Smartphone",
+      "roleName": "primaryphone",
+      "defaultSamplingConfiguration": {},
+      "isPrimaryDevice": true
+    }
   ],
   "connectedDevices": [],
   "connections": [],
-  "triggers": {
-   "0": {
-    "$type": "dk.cachet.carp.protocols.domain.triggers.ImmediateTrigger"
-   }
-  },
   "tasks": [
-   {
-    "$type": "dk.cachet.carp.protocols.domain.tasks.BackgroundTask",
-    "name": "Task #5",
-    "measures": [
-     {
-      "$type": "dk.cachet.carp.protocols.domain.tasks.measures.Measure",
-      "type": "dk.cachet.carp.device"
-     },
-     {
-      "$type": "dk.cachet.carp.protocols.domain.tasks.measures.Measure",
-      "type": "dk.cachet.carp.memory"
-     },
-     {
-      "$type": "dk.cachet.carp.protocols.domain.tasks.measures.Measure",
-      "type": "dk.cachet.carp.battery"
-     },
-     {
-      "$type": "dk.cachet.carp.protocols.domain.tasks.measures.Measure",
-      "type": "dk.cachet.carp.screen"
-     },
-     {
-      "$type": "dk.cachet.carp.protocols.domain.tasks.measures.Measure",
-      "type": "dk.cachet.carp.accelerometer"
-     },
-     {
-      "$type": "dk.cachet.carp.protocols.domain.tasks.measures.Measure",
-      "type": "dk.cachet.carp.gyroscope"
-     },
-     {
-      "$type": "dk.cachet.carp.protocols.domain.tasks.measures.Measure",
-      "type": "dk.cachet.carp.periodic_accelerometer"
-     },
-     {
-      "$type": "dk.cachet.carp.protocols.domain.tasks.measures.Measure",
-      "type": "dk.cachet.carp.periodic_gyroscope"
-     },
-     {
-      "$type": "dk.cachet.carp.protocols.domain.tasks.measures.Measure",
-      "type": "dk.cachet.carp.pedometer"
-     },
-     {
-      "$type": "dk.cachet.carp.protocols.domain.tasks.measures.Measure",
-      "type": "dk.cachet.carp.light"
-     },
-     {
-      "$type": "dk.cachet.carp.protocols.domain.tasks.measures.Measure",
-      "type": "dk.cachet.carp.connectivity"
-     },
-     {
-      "$type": "dk.cachet.carp.protocols.domain.tasks.measures.Measure",
-      "type": "dk.cachet.carp.bluetooth"
-     },
-     {
-      "$type": "dk.cachet.carp.protocols.domain.tasks.measures.Measure",
-      "type": "dk.cachet.carp.wifi"
-     }
-    ]
-   }
+    {
+      "__type": "dk.cachet.carp.common.application.tasks.BackgroundTask",
+      "name": "Task #5",
+      "measures": [
+        {
+          "__type": "dk.cachet.carp.common.application.tasks.Measure.DataStream",
+          "type": "dk.cachet.carp.deviceinformation"
+        },
+        {
+          "__type": "dk.cachet.carp.common.application.tasks.Measure.DataStream",
+          "type": "dk.cachet.carp.freememory"
+        },
+        {
+          "__type": "dk.cachet.carp.common.application.tasks.Measure.DataStream",
+          "type": "dk.cachet.carp.batterystate"
+        },
+        {
+          "__type": "dk.cachet.carp.common.application.tasks.Measure.DataStream",
+          "type": "dk.cachet.carp.screenevent"
+        },
+        {
+          "__type": "dk.cachet.carp.common.application.tasks.Measure.DataStream",
+          "type": "dk.cachet.carp.acceleration"
+        },
+        {
+          "__type": "dk.cachet.carp.common.application.tasks.Measure.DataStream",
+          "type": "dk.cachet.carp.nongravitationalacceleration"
+        },
+        {
+          "__type": "dk.cachet.carp.common.application.tasks.Measure.DataStream",
+          "type": "dk.cachet.carp.rotation"
+        },
+        {
+          "__type": "dk.cachet.carp.common.application.tasks.Measure.DataStream",
+          "type": "dk.cachet.carp.stepcount"
+        },
+        {
+          "__type": "dk.cachet.carp.common.application.tasks.Measure.DataStream",
+          "type": "dk.cachet.carp.magneticfield"
+        },
+        {
+          "__type": "dk.cachet.carp.common.application.tasks.Measure.DataStream",
+          "type": "dk.cachet.carp.ambientlight"
+        },
+        {
+          "__type": "dk.cachet.carp.common.application.tasks.Measure.DataStream",
+          "type": "dk.cachet.carp.connectivity"
+        },
+        {
+          "__type": "dk.cachet.carp.common.application.tasks.Measure.DataStream",
+          "type": "dk.cachet.carp.bluetooth"
+        },
+        {
+          "__type": "dk.cachet.carp.common.application.tasks.Measure.DataStream",
+          "type": "dk.cachet.carp.wifi"
+        }
+      ]
+    }
   ],
-  "triggeredTasks": [
-   {
-    "triggerId": 0,
-    "taskName": "Task #5",
-    "targetDeviceRoleName": "masterphone"
-   }
+  "triggers": {
+    "0": {
+      "__type": "dk.cachet.carp.common.application.triggers.ImmediateTrigger",
+      "sourceDeviceRoleName": "primaryphone"
+    }
+  },
+  "taskControls": [
+    {
+      "triggerId": 0,
+      "taskName": "Task #5",
+      "destinationDeviceRoleName": "primaryphone",
+      "control": "Start"
+    }
   ],
+  "participantRoles": [],
+  "assignedDevices": {},
   "expectedParticipantData": []
- }
+}

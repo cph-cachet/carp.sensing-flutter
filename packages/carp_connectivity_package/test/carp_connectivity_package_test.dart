@@ -24,21 +24,21 @@ void main() {
     // Create a new study protocol.
     protocol = StudyProtocol(
       ownerId: 'alex@uni.dk',
-      name: 'Context package test',
+      name: 'Connectivity package test',
     );
 
     // Define which devices are used for data collection.
     phone = Smartphone();
 
-    protocol.addMasterDevice(phone);
+    protocol.addPrimaryDevice(phone);
 
     // adding all available measures to one one trigger and one task
-    protocol.addTriggeredTask(
+    protocol.addTaskControl(
       ImmediateTrigger(),
       BackgroundTask()
         ..measures = SamplingPackageRegistry()
             .dataTypes
-            .map((type) => Measure(type: type))
+            .map((type) => Measure(type: type.type))
             .toList(),
       phone,
     );
@@ -68,17 +68,13 @@ void main() {
         StudyProtocol.fromJson(json.decode(plainJson) as Map<String, dynamic>);
 
     expect(protocol.ownerId, 'alex@uni.dk');
-    expect(protocol.masterDevices.first.roleName, Smartphone.DEFAULT_ROLENAME);
+    expect(protocol.primaryDevice.roleName, Smartphone.DEFAULT_ROLENAME);
     print(toJsonString(protocol));
   });
 
-  test('Data point -> JSON', () async {
-    var dp = DataPoint.fromData(
-        MapDatum({'item_1': '12.23423452345', 'item_2': '3.82375823475'}));
-    print(_encode(dp));
-
-    BluetoothDatum datum = BluetoothDatum()
-      ..scanResult.add(BluetoothDevice(
+  test('Bluetooth  -> JSON', () async {
+    Bluetooth data = Bluetooth()
+      ..addBluetoothDevice(BluetoothDevice(
         advertisementName: 'myPhone',
         bluetoothDeviceId: "weg",
         bluetoothDeviceName: "ksjbdf",
@@ -88,8 +84,24 @@ void main() {
         bluetoothDeviceType: "classic",
       ));
 
-    final DataPoint data = DataPoint.fromData(datum);
+    final measurement = Measurement.fromData(data);
 
-    print(_encode(data.toJson()));
+    print(toJsonString(measurement));
+  });
+  test('Connectivity  -> JSON', () async {
+    Connectivity data = Connectivity()..connectivityStatus = "WiFi";
+
+    final measurement = Measurement.fromData(data);
+
+    print(toJsonString(measurement));
+  });
+  test('Wifi  -> JSON', () async {
+    Wifi data = Wifi()
+      ..bssid = 'kj'
+      ..ip = '127.0.0.1';
+
+    final measurement = Measurement.fromData(data);
+
+    print(toJsonString(measurement));
   });
 }

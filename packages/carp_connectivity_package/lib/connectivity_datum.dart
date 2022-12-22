@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 Copenhagen Center for Health Technology (CACHET) at the
+ * Copyright 2018-2022 Copenhagen Center for Health Technology (CACHET) at the
  * Technical University of Denmark (DTU).
  * Use of this source code is governed by a MIT-style license that can be
  * found in the LICENSE file.
@@ -9,10 +9,8 @@ part of connectivity;
 
 /// A [Datum] that holds connectivity status of the phone.
 @JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)
-class ConnectivityDatum extends Datum {
-  @override
-  DataFormat get format =>
-      DataFormat.fromString(ConnectivitySamplingPackage.CONNECTIVITY);
+class Connectivity extends Data {
+  static const dataType = ConnectivitySamplingPackage.CONNECTIVITY;
 
   /// The status of the connectivity.
   /// - WiFi: Device connected via Wi-Fi
@@ -20,24 +18,25 @@ class ConnectivityDatum extends Datum {
   /// - None: Device not connected to any network
   String connectivityStatus = "unknown";
 
-  ConnectivityDatum() : super();
+  Connectivity() : super();
 
-  ConnectivityDatum.fromConnectivityResult(ConnectivityResult result)
+  Connectivity.fromConnectivityResult(connectivity.ConnectivityResult result)
       : connectivityStatus = _parseConnectivityStatus(result),
         super();
 
-  factory ConnectivityDatum.fromJson(Map<String, dynamic> json) =>
-      _$ConnectivityDatumFromJson(json);
+  factory Connectivity.fromJson(Map<String, dynamic> json) =>
+      _$ConnectivityFromJson(json);
   @override
-  Map<String, dynamic> toJson() => _$ConnectivityDatumToJson(this);
+  Map<String, dynamic> toJson() => _$ConnectivityToJson(this);
 
-  static String _parseConnectivityStatus(ConnectivityResult result) {
+  static String _parseConnectivityStatus(
+      connectivity.ConnectivityResult result) {
     switch (result) {
-      case ConnectivityResult.wifi:
+      case connectivity.ConnectivityResult.wifi:
         return "wifi";
-      case ConnectivityResult.mobile:
+      case connectivity.ConnectivityResult.mobile:
         return "mobile";
-      case ConnectivityResult.none:
+      case connectivity.ConnectivityResult.none:
         return "none";
       default:
         return "unknown";
@@ -51,24 +50,43 @@ class ConnectivityDatum extends Datum {
 
 /// A [Datum] that holds information of nearby Bluetooth devices.
 @JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)
-class BluetoothDatum extends Datum {
+class Bluetooth extends Data {
+  static const dataType = ConnectivitySamplingPackage.BLUETOOTH;
+
+  /// Timestamp of scan start.
+  late DateTime startScan;
+
+  /// Timestamp of scan end, if available.
+  DateTime? endScan;
+
+  /// A map of [BluetoothDevice] indexed by their [bluetoothDeviceId] to make
+  /// sure that the same device only appears once.
+  final Map<String, BluetoothDevice> _scanResult = {};
+
+  /// The list of [BluetoothDevice] found in a scan.
+  List<BluetoothDevice> get scanResult => _scanResult.values.toList();
+  set scanResult(List<BluetoothDevice> devices) => _scanResult.addEntries(
+      devices.map((device) => MapEntry(device.bluetoothDeviceId, device)));
+
+  Bluetooth({DateTime? startScan, this.endScan}) : super() {
+    this.startScan = startScan ?? DateTime.now();
+  }
+
+  void addBluetoothDevice(BluetoothDevice device) =>
+      _scanResult[device.bluetoothDeviceId] = device;
+
+  void addBluetoothDevicesFromScanResults(List<ScanResult> results) =>
+      results.forEach((scanResult) =>
+          addBluetoothDevice(BluetoothDevice.fromScanResult(scanResult)));
+
+  // factory Bluetooth.fromScanResults(List<ScanResult> results) => Bluetooth()
+  //   ..scanResult =
+  //       results.map((r) => BluetoothDevice.fromScanResult(r)).toList();
+
+  factory Bluetooth.fromJson(Map<String, dynamic> json) =>
+      _$BluetoothFromJson(json);
   @override
-  DataFormat get format =>
-      DataFormat.fromString(ConnectivitySamplingPackage.BLUETOOTH);
-
-  List<BluetoothDevice> scanResult = [];
-
-  BluetoothDatum() : super();
-
-  factory BluetoothDatum.fromScanResults(List<ScanResult> results) =>
-      BluetoothDatum()
-        ..scanResult =
-            results.map((r) => BluetoothDevice.fromScanResult(r)).toList();
-
-  factory BluetoothDatum.fromJson(Map<String, dynamic> json) =>
-      _$BluetoothDatumFromJson(json);
-  @override
-  Map<String, dynamic> toJson() => _$BluetoothDatumToJson(this);
+  Map<String, dynamic> toJson() => _$BluetoothToJson(this);
 
   @override
   String toString() => '${super.toString()}, scanResult: $scanResult';
@@ -155,10 +173,8 @@ class BluetoothDevice {
 ///
 /// Note that it wifi information cannot be collected on emulators.
 @JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)
-class WifiDatum extends Datum {
-  @override
-  DataFormat get format =>
-      DataFormat.fromString(ConnectivitySamplingPackage.WIFI);
+class Wifi extends Data {
+  static const dataType = ConnectivitySamplingPackage.WIFI;
 
   /// The wifi service set ID (SSID) of the connected network
   String? ssid;
@@ -169,16 +185,15 @@ class WifiDatum extends Datum {
   /// The internet protocol (IP) address of the connected network
   String? ip;
 
-  WifiDatum({
+  Wifi({
     this.ssid,
     this.bssid,
     this.ip,
   }) : super();
 
-  factory WifiDatum.fromJson(Map<String, dynamic> json) =>
-      _$WifiDatumFromJson(json);
+  factory Wifi.fromJson(Map<String, dynamic> json) => _$WifiFromJson(json);
   @override
-  Map<String, dynamic> toJson() => _$WifiDatumToJson(this);
+  Map<String, dynamic> toJson() => _$WifiToJson(this);
 
   @override
   String toString() =>

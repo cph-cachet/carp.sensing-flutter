@@ -7,7 +7,7 @@ library connectivity;
 import 'dart:async';
 import 'package:flutter_blue_plus/flutter_blue_plus.dart';
 import 'package:json_annotation/json_annotation.dart';
-import 'package:connectivity_plus/connectivity_plus.dart';
+import 'package:connectivity_plus/connectivity_plus.dart' as connectivity;
 import 'package:network_info_plus/network_info_plus.dart';
 import 'package:crypto/crypto.dart';
 import 'dart:convert';
