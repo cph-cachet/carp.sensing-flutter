@@ -19,7 +19,7 @@ class CommunicationSamplingPackage extends SmartphoneSamplingPackage {
   ///  * One-time measure.
   ///  * Uses the [Smartphone] master device for data collection.
   ///  * Use the [HistoricSamplingConfiguration] for configuration.
-  static const String PHONE_LOG = "dk.cachet.carp.phone_log";
+  static const String PHONE_LOG = "${NameSpace.CARP}.phone_log";
 
   // static const String TELEPHONY = "dk.cachet.carp.telephony";
 
@@ -28,28 +28,43 @@ class CommunicationSamplingPackage extends SmartphoneSamplingPackage {
   ///  * One-time measure.
   ///  * Uses the [Smartphone] master device for data collection.
   ///  * Use the [HistoricSamplingConfiguration] for configuration.
-  static const String TEXT_MESSAGE_LOG = "dk.cachet.carp.text_message_log";
+  static const String TEXT_MESSAGE_LOG = "${NameSpace.CARP}.text_message_log";
 
   /// Measure type for collection of text message (SMS) as they are recieved.
   ///  * Event-based measure.
   ///  * Uses the [Smartphone] master device for data collection.
   ///  * No sampling configuration needed.
-  static const String TEXT_MESSAGE = "dk.cachet.carp.text_message";
+  static const String TEXT_MESSAGE = "${NameSpace.CARP}.text_message";
 
   /// Measure type for collection of calendar entries from the calendar on the
   /// phone for a specific time period.
   ///  * One-time measure.
   ///  * Uses the [Smartphone] master device for data collection.
   ///  * Use the [HistoricSamplingConfiguration] for configuration.
-  static const String CALENDAR = "dk.cachet.carp.calendar";
+  static const String CALENDAR = "${NameSpace.CARP}.calendar";
 
   @override
-  List<String> get dataTypes => [
-        PHONE_LOG,
-        //TELEPHONY,
-        TEXT_MESSAGE_LOG,
-        TEXT_MESSAGE,
-        CALENDAR,
+  List<DataTypeMetaData> get dataTypes => [
+        DataTypeMetaData(
+          type: PHONE_LOG,
+          displayName: "Phone Log",
+          timeType: DataTimeType.TIME_SPAN,
+        ),
+        DataTypeMetaData(
+          type: TEXT_MESSAGE_LOG,
+          displayName: "Text Message Log",
+          timeType: DataTimeType.POINT,
+        ),
+        DataTypeMetaData(
+          type: TEXT_MESSAGE,
+          displayName: "Text Messages",
+          timeType: DataTimeType.POINT,
+        ),
+        DataTypeMetaData(
+          type: CALENDAR,
+          displayName: "Calendar Entries",
+          timeType: DataTimeType.TIME_SPAN,
+        ),
       ];
 
   @override
@@ -75,7 +90,7 @@ class CommunicationSamplingPackage extends SmartphoneSamplingPackage {
     // register the default privacy transformers
     TransformerSchemaRegistry()
         .lookup(PrivacySchema.DEFAULT)!
-        .add(TEXT_MESSAGE, textMessageDatumAnoymizer);
+        .add(TEXT_MESSAGE, textMessageAnoymizer);
     TransformerSchemaRegistry()
         .lookup(PrivacySchema.DEFAULT)!
         .add(TEXT_MESSAGE_LOG, textMessageLogAnoymizer);

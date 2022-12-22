@@ -21,20 +21,20 @@ void main() {
     // Create a new study protocol.
     protocol = StudyProtocol(
       ownerId: 'alex@uni.dk',
-      name: 'Context package test',
+      name: 'Communication package test',
     );
 
     // Define which devices are used for data collection.
     phone = Smartphone();
-    protocol.addMasterDevice(phone);
+    protocol.addPrimaryDevice(phone);
 
     // adding all available measures to one one trigger and one task
-    protocol.addTriggeredTask(
+    protocol.addTaskControl(
       ImmediateTrigger(),
       BackgroundTask()
         ..measures = SamplingPackageRegistry()
             .dataTypes
-            .map((type) => Measure(type: type))
+            .map((type) => Measure(type: type.type))
             .toList(),
       phone,
     );
@@ -63,71 +63,71 @@ void main() {
         StudyProtocol.fromJson(json.decode(plainJson) as Map<String, dynamic>);
 
     expect(protocol.ownerId, 'alex@uni.dk');
-    expect(protocol.masterDevices.first.roleName, Smartphone.DEFAULT_ROLENAME);
+    expect(protocol.primaryDevice.roleName, Smartphone.DEFAULT_ROLENAME);
     print(toJsonString(protocol));
   });
 
   test('Privacy - TextMessageDatum', () {
-    TextMessageDatum msg = TextMessageDatum.fromTextMessage(
-        TextMessage(id: 123, address: '25550446', body: 'Hej Jakob'));
+    final msg = TextMessage(id: 123, address: '25550446', body: 'Hej Jakob');
     print(msg);
 
     print(toJsonString(msg));
 
-    TextMessageDatum pMsg = TransformerSchemaRegistry()
+    final pMsg = TransformerSchemaRegistry()
         .lookup(PrivacySchema.DEFAULT)!
-        .transform(msg) as TextMessageDatum;
-    expect(pMsg.textMessage!.address, isNot('25550446'));
-    expect(pMsg.textMessage!.body, isNot('Hej Jakob'));
+        .transform(msg) as TextMessage;
+    expect(pMsg.address, isNot('25550446'));
+    expect(pMsg.body, isNot('Hej Jakob'));
     print(pMsg);
   });
 
   test('Privacy - TextMessageLogDatum', () {
-    TextMessageLogDatum log = TextMessageLogDatum()
-      ..textMessageLog
-          .add(TextMessage(id: 123, address: '25550446', body: 'Hej Jakob'))
-      ..textMessageLog
-          .add(TextMessage(id: 1232, address: '25550467', body: 'Hej Eva'));
+    TextMessageLog log = TextMessageLog([
+      TextMessage(id: 123, address: '25550446', body: 'Hej Jakob'),
+      TextMessage(id: 1232, address: '25550467', body: 'Hej Eva'),
+    ]);
 
     print(toJsonString(log));
 
     log.textMessageLog.forEach(print);
 
-    TextMessageLogDatum pLog = TransformerSchemaRegistry()
+    TextMessageLog pLog = TransformerSchemaRegistry()
         .lookup(PrivacySchema.DEFAULT)!
-        .transform(log) as TextMessageLogDatum;
+        .transform(log) as TextMessageLog;
     //expect(p_msg.textMessage.address, isNot('25550446'));
     //expect(p_msg.textMessage.body, isNot('Hej Jakob'));
     pLog.textMessageLog.forEach(print);
   });
 
   test('Privacy - PhoneLogDatum', () {
-    PhoneLogDatum log = PhoneLogDatum()
-      ..phoneLog.add(PhoneCall(
-          DateTime.now(), 'ingoing', 23444, '2555 0446', '25550446', 'Jakob'))
-      ..phoneLog.add(PhoneCall(
-          DateTime.now(), 'ingoing', 2344444, '2555 0467', '25550457', 'Eva'));
+    PhoneLog log = PhoneLog(DateTime.now(), DateTime.now(), [
+      PhoneCall(
+          DateTime.now(), 'ingoing', 23444, '2555 0446', '25550446', 'Jakob'),
+      PhoneCall(
+          DateTime.now(), 'ingoing', 2344444, '2555 0467', '25550457', 'Eva'),
+    ]);
 
     print(toJsonString(log));
 
     log.phoneLog.forEach(print);
 
-    PhoneLogDatum pLog = TransformerSchemaRegistry()
+    PhoneLog pLog = TransformerSchemaRegistry()
         .lookup(PrivacySchema.DEFAULT)!
-        .transform(log) as PhoneLogDatum;
+        .transform(log) as PhoneLog;
     pLog.phoneLog.forEach(print);
   });
 
   test('Calendar', () {
-    CalendarDatum cal = CalendarDatum()
-      ..calendarEvents.add(CalendarEvent('122', 'wer', 'møde #1'))
-      ..calendarEvents.add(CalendarEvent('122', 'wer', 'møde #1'));
+    Calendar cal = Calendar(DateTime.now(), DateTime.now(), [
+      CalendarEvent('122', 'wer', 'møde #1'),
+      CalendarEvent('122', 'wer', 'møde #1')
+    ]);
 
     print(toJsonString(cal));
 
-    CalendarDatum pCal = TransformerSchemaRegistry()
+    Calendar pCal = TransformerSchemaRegistry()
         .lookup(PrivacySchema.DEFAULT)!
-        .transform(cal) as CalendarDatum;
+        .transform(cal) as Calendar;
     print(toJsonString(pCal));
   });
 }

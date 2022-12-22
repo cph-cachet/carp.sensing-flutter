@@ -10,7 +10,9 @@ part of communication;
 /// A [TextMessage] anonymizer function. Anonymizes:
 ///  - address
 ///  - body
-TextMessage textMessageAnoymizer(TextMessage msg) {
+TextMessage textMessageAnoymizer(Data data) {
+  assert(data is TextMessage);
+  var msg = data as TextMessage;
   if (msg.address != null) {
     msg.address = sha1.convert(utf8.encode(msg.address!)).toString();
   }
@@ -21,30 +23,22 @@ TextMessage textMessageAnoymizer(TextMessage msg) {
   return msg;
 }
 
-/// A [TextMessageDatum] anonymizer function. Anonymizes the [TextMessage]
-/// using the [textMessageAnoymizer] function.
-Datum textMessageDatumAnoymizer(Datum datum) {
-  assert(datum is TextMessageDatum);
-  TextMessageDatum msg = datum as TextMessageDatum;
-  return msg..textMessage = textMessageAnoymizer(msg.textMessage!);
-}
-
-/// A [TextMessageLogDatum] anonymizer function. Anonymizes each [TextMessageDatum]
+/// A [TextMessageLog] anonymizer function. Anonymizes each [TextMessageDatum]
 /// entry in the log using the [textMessageAnoymizer] function.
-Datum textMessageLogAnoymizer(Datum datum) {
-  assert(datum is TextMessageLogDatum);
-  TextMessageLogDatum log = datum as TextMessageLogDatum;
+Data textMessageLogAnoymizer(Data datum) {
+  assert(datum is TextMessageLog);
+  TextMessageLog log = datum as TextMessageLog;
   for (var msg in log.textMessageLog) {
     textMessageAnoymizer(msg);
   }
   return log;
 }
 
-/// A [PhoneLogDatum] anonymizer function. Anonymizes each [PhoneCall]
+/// A [PhoneLog] anonymizer function. Anonymizes each [PhoneCall]
 /// entry in the log using the [phoneCallAnoymizer] function.
-Datum phoneLogAnoymizer(Datum datum) {
-  assert(datum is PhoneLogDatum);
-  PhoneLogDatum log = datum as PhoneLogDatum;
+Data phoneLogAnoymizer(Data data) {
+  assert(data is PhoneLog);
+  PhoneLog log = data as PhoneLog;
   for (var call in log.phoneLog) {
     phoneCallAnoymizer(call);
   }
@@ -70,11 +64,11 @@ PhoneCall phoneCallAnoymizer(PhoneCall call) {
   return call;
 }
 
-/// A [CalendarDatum] anonymizer function. Anonymizes each [CalendarEvent]
+/// A [Calendar] anonymizer function. Anonymizes each [CalendarEvent]
 /// entry in the calendar using the [calendarEventAnoymizer] function.
-Datum calendarAnoymizer(Datum datum) {
-  assert(datum is CalendarDatum);
-  CalendarDatum calendar = datum as CalendarDatum;
+Data calendarAnoymizer(Data data) {
+  assert(data is Calendar);
+  Calendar calendar = data as Calendar;
   for (var event in calendar.calendarEvents) {
     calendarEventAnoymizer(event);
   }

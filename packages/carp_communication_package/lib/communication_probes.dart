@@ -10,28 +10,29 @@ part of communication;
 /// A probe that collects the phone log from this device.
 ///
 /// Only works on Android.
-class PhoneLogProbe extends DatumProbe {
+class PhoneLogProbe extends MeasurementProbe {
   @override
-  Future<Datum> getDatum() async {
-    HistoricSamplingConfiguration m =
-        (samplingConfiguration as HistoricSamplingConfiguration);
+  Future<Measurement> getMeasurement() async {
+    final m = (samplingConfiguration as HistoricSamplingConfiguration);
     int from = (m.lastTime != null)
         ? m.lastTime!.millisecondsSinceEpoch
         : DateTime.now().subtract(m.past).millisecondsSinceEpoch;
     int now = DateTime.now().millisecondsSinceEpoch;
     Iterable<CallLogEntry> entries =
         await CallLog.query(dateFrom: from, dateTo: now);
-    return PhoneLogDatum()
-      ..phoneLog =
-          entries.map((call) => PhoneCall.fromCallLogEntry(call)).toList();
+    return Measurement.fromData(PhoneLog(
+      m.lastTime!,
+      DateTime.now(),
+      entries.map((call) => PhoneCall.fromCallLogEntry(call)).toList(),
+    ));
   }
 }
 
 /// A probe that collects a complete list of all text (SMS) messages from
-/// this device. Combines both send and recieved messages.
+/// this device. Combines both send and received messages.
 ///
 /// Only works on Android.
-class TextMessageLogProbe extends DatumProbe {
+class TextMessageLogProbe extends MeasurementProbe {
   SmsColumn? col;
   static const List<SmsColumn> ALL_SMS_COLUMNS = [
     SmsColumn.ADDRESS,
@@ -48,7 +49,7 @@ class TextMessageLogProbe extends DatumProbe {
   ];
 
   @override
-  Future<Datum> getDatum() async {
+  Future<Measurement> getMeasurement() async {
     List<SmsMessage> allSms = [];
     allSms
       ..addAll(await Telephony.instance.getInboxSms(
@@ -57,21 +58,20 @@ class TextMessageLogProbe extends DatumProbe {
       ..addAll(await Telephony.instance.getSentSms(
         columns: ALL_SMS_COLUMNS,
       ));
-    return TextMessageLogDatum()
-      ..textMessageLog =
-          allSms.map((sms) => TextMessage.fromSmsMessage(sms)).toList();
+    return Measurement.fromData(TextMessageLog(
+        allSms.map((sms) => TextMessage.fromSmsMessage(sms)).toList()));
   }
 }
 
 // A private stream controller to be used in the call-back from the SMS probe.
-StreamController<Datum> _textMessageProbeController =
+StreamController<Measurement> _textMessageProbeController =
     StreamController.broadcast();
 
 /// The top-level call-back method for handling in-coming SMS messages when
 /// the app is in the background.
 void backgrounMessageHandler(SmsMessage message) async {
-  _textMessageProbeController.add(
-      TextMessageDatum.fromTextMessage(TextMessage.fromSmsMessage(message)));
+  _textMessageProbeController
+      .add(Measurement.fromData(TextMessage.fromSmsMessage(message)));
 }
 
 /// The [TextMessageProbe] listens to SMS messages and collects a
@@ -80,7 +80,7 @@ void backgrounMessageHandler(SmsMessage message) async {
 /// Only works on Android.
 class TextMessageProbe extends StreamProbe {
   @override
-  Stream<Datum> get stream => _textMessageProbeController.stream;
+  Stream<Measurement> get stream => _textMessageProbeController.stream;
 
   @override
   bool onInitialize() {
@@ -90,8 +90,8 @@ class TextMessageProbe extends StreamProbe {
 
     Telephony.instance.listenIncomingSms(
       onNewMessage: (SmsMessage message) {
-        _textMessageProbeController.add(TextMessageDatum.fromTextMessage(
-            TextMessage.fromSmsMessage(message)));
+        _textMessageProbeController
+            .add(Measurement.fromData(TextMessage.fromSmsMessage(message)));
       },
       onBackgroundMessage: backgrounMessageHandler,
     );
@@ -102,11 +102,12 @@ class TextMessageProbe extends StreamProbe {
 /// A probe collecting calendar entries from the calendar on the phone.
 ///
 /// See [CalendarMeasure] for how to configure this probe's measure.
-class CalendarProbe extends DatumProbe {
-  final DeviceCalendarPlugin _deviceCalendar = DeviceCalendarPlugin();
-  List<Calendar>? _calendars;
-  late Iterator<Calendar> _calendarIterator;
+class CalendarProbe extends MeasurementProbe {
+  final _deviceCalendar = cal.DeviceCalendarPlugin();
+  List<cal.Calendar>? _calendars;
+  late Iterator<cal.Calendar> _calendarIterator;
   List<CalendarEvent> _events = [];
+  DateTime? startDate, endDate;
 
   @override
   bool onInitialize() {
@@ -133,14 +134,14 @@ class CalendarProbe extends DatumProbe {
   HistoricSamplingConfiguration get samplingConfiguration =>
       super.samplingConfiguration as HistoricSamplingConfiguration;
 
-  // Collects events from the [calendar].
-  Future<bool> _retrieveEvents(Calendar calendar) async {
-    final startDate = DateTime.now().subtract(samplingConfiguration.past);
-    final endDate = DateTime.now().add(samplingConfiguration.future);
+  // Collects events from a calendar.
+  Future<bool> _retrieveEvents(cal.Calendar calendar) async {
+    startDate = DateTime.now().subtract(samplingConfiguration.past);
+    endDate = DateTime.now().add(samplingConfiguration.future);
 
     var calendarEventsResult = await _deviceCalendar.retrieveEvents(calendar.id,
-        RetrieveEventsParams(startDate: startDate, endDate: endDate));
-    List<Event>? calendarEvents = calendarEventsResult.data;
+        cal.RetrieveEventsParams(startDate: startDate, endDate: endDate));
+    List<cal.Event>? calendarEvents = calendarEventsResult.data;
     if (calendarEvents != null) {
       for (var event in calendarEvents) {
         _events.add(CalendarEvent.fromEvent(event));
@@ -157,9 +158,9 @@ class CalendarProbe extends DatumProbe {
     return true;
   }
 
-  /// Get the [CalendarDatum].
+  /// Get the [Calendar] measurement.
   @override
-  Future<Datum> getDatum() async {
+  Future<Measurement> getMeasurement() async {
     if (_calendars == null) await _retrieveCalendars();
 
     if (_calendars != null) {
@@ -170,9 +171,14 @@ class CalendarProbe extends DatumProbe {
         await _retrieveEvents(_calendarIterator.current);
       }
 
-      return CalendarDatum()..calendarEvents = _events;
+      return Measurement(
+        sensorStartTime: startDate!.microsecondsSinceEpoch,
+        sensorEndTime: endDate?.microsecondsSinceEpoch,
+        data: Calendar(startDate!, endDate!)..calendarEvents = _events,
+      );
     } else {
-      return ErrorDatum('Permission to collect calendar entries not granted.');
+      return Measurement.fromData(Error(
+          message: 'Permission to collect calendar entries not granted.'));
     }
   }
 }

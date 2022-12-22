@@ -8,53 +8,32 @@
 part of communication;
 
 /// Holds a list of text (SMS) messages from the device.
-@JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)
-class TextMessageLogDatum extends Datum {
-  @override
-  DataFormat get format =>
-      DataFormat.fromString(CommunicationSamplingPackage.TEXT_MESSAGE_LOG);
+@JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
+class TextMessageLog extends Data {
+  static const dataType = CommunicationSamplingPackage.TEXT_MESSAGE_LOG;
 
   List<TextMessage> textMessageLog = [];
 
-  TextMessageLogDatum() : super();
+  TextMessageLog([this.textMessageLog = const []]) : super();
 
-  factory TextMessageLogDatum.fromJson(Map<String, dynamic> json) =>
-      _$TextMessageLogDatumFromJson(json);
+  factory TextMessageLog.fromJson(Map<String, dynamic> json) =>
+      _$TextMessageLogFromJson(json);
+
   @override
-  Map<String, dynamic> toJson() => _$TextMessageLogDatumToJson(this);
+  Map<String, dynamic> toJson() => _$TextMessageLogToJson(this);
+
+  @override
+  String get jsonType => dataType;
 
   @override
   String toString() => '${super.toString()}, size: ${textMessageLog.length}';
 }
 
-/// Holds a single text (SMS) message as a [Datum] object.
-///
-/// Wraps a [TextMessage].
-@JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)
-class TextMessageDatum extends Datum {
-  @override
-  DataFormat get format =>
-      DataFormat.fromString(CommunicationSamplingPackage.TEXT_MESSAGE);
-
-  TextMessage? textMessage;
-
-  TextMessageDatum() : super();
-
-  factory TextMessageDatum.fromTextMessage(TextMessage msg) =>
-      TextMessageDatum()..textMessage = msg;
-
-  factory TextMessageDatum.fromJson(Map<String, dynamic> json) =>
-      _$TextMessageDatumFromJson(json);
-  @override
-  Map<String, dynamic> toJson() => _$TextMessageDatumToJson(this);
-
-  @override
-  String toString() => '${super.toString()}, textMessage: $textMessage';
-}
-
 /// Holds a text messages (SMS).
-@JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)
-class TextMessage {
+@JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
+class TextMessage extends Data {
+  static const dataType = CommunicationSamplingPackage.TEXT_MESSAGE;
+
   int? id;
 
   /// The receiver address of this message
@@ -108,7 +87,12 @@ class TextMessage {
 
   factory TextMessage.fromJson(Map<String, dynamic> json) =>
       _$TextMessageFromJson(json);
+
+  @override
   Map<String, dynamic> toJson() => _$TextMessageToJson(this);
+
+  @override
+  String get jsonType => dataType;
 
   @override
   String toString() =>
@@ -116,27 +100,29 @@ class TextMessage {
 }
 
 /// Holds a phone log, i.e. a list of phone calls made on the device.
-@JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)
-class PhoneLogDatum extends Datum {
-  @override
-  DataFormat get format =>
-      DataFormat.fromString(CommunicationSamplingPackage.PHONE_LOG);
+@JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
+class PhoneLog extends Data {
+  static const dataType = CommunicationSamplingPackage.PHONE_LOG;
 
+  DateTime start, end;
   List<PhoneCall> phoneLog = [];
 
-  PhoneLogDatum() : super();
+  PhoneLog(this.start, this.end, [this.phoneLog = const []]) : super();
 
-  factory PhoneLogDatum.fromJson(Map<String, dynamic> json) =>
-      _$PhoneLogDatumFromJson(json);
+  factory PhoneLog.fromJson(Map<String, dynamic> json) =>
+      _$PhoneLogFromJson(json);
   @override
-  Map<String, dynamic> toJson() => _$PhoneLogDatumToJson(this);
+  Map<String, dynamic> toJson() => _$PhoneLogToJson(this);
+
+  @override
+  String get jsonType => dataType;
 
   @override
   String toString() => "${super.toString()}, size: ${phoneLog.length}";
 }
 
 /// Phone call data.
-@JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)
+@JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
 class PhoneCall {
   /// Date & Time of the call.
   DateTime? timestamp;
@@ -216,27 +202,28 @@ class PhoneCall {
 }
 
 /// Holds a list of calendar events from the device.
-@JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)
-class CalendarDatum extends Datum {
-  @override
-  DataFormat get format =>
-      DataFormat.fromString(CommunicationSamplingPackage.CALENDAR);
+@JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
+class Calendar extends Data {
+  static const dataType = CommunicationSamplingPackage.CALENDAR;
 
+  /// The list of calendar entries collected.
   List<CalendarEvent> calendarEvents = [];
 
-  CalendarDatum() : super();
+  DateTime start, end;
 
-  factory CalendarDatum.fromJson(Map<String, dynamic> json) =>
-      _$CalendarDatumFromJson(json);
+  Calendar(this.start, this.end, [this.calendarEvents = const []]) : super();
+
+  factory Calendar.fromJson(Map<String, dynamic> json) =>
+      _$CalendarFromJson(json);
   @override
-  Map<String, dynamic> toJson() => _$CalendarDatumToJson(this);
+  Map<String, dynamic> toJson() => _$CalendarToJson(this);
 
   @override
   String toString() => '${super.toString()}, size: ${calendarEvents.length}';
 }
 
 /// A calendar event.
-@JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)
+@JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
 class CalendarEvent {
   /// The unique identifier for this event
   String? eventId;
@@ -276,7 +263,7 @@ class CalendarEvent {
       this.location,
       this.attendees]);
 
-  factory CalendarEvent.fromEvent(Event event) {
+  factory CalendarEvent.fromEvent(cal.Event event) {
     return CalendarEvent(
         event.eventId,
         event.calendarId,

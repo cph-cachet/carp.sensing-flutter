@@ -19,10 +19,10 @@ void main() async {
   // define which devices are used for data collection
   // in this case, its only this smartphone
   Smartphone phone = Smartphone();
-  protocol.addMasterDevice(phone);
+  protocol.addPrimaryDevice(phone);
 
   // Add an automatic task that collects SMS messages in/out
-  protocol.addTriggeredTask(
+  protocol.addTaskControl(
       ImmediateTrigger(),
       BackgroundTask()
         ..addMeasure(Measure(type: CommunicationSamplingPackage.TEXT_MESSAGE)),
@@ -32,10 +32,8 @@ void main() async {
   //  * in/out SMS
   //  * in/out phone calls
   //  * calendar entries
-  protocol.addTriggeredTask(
-      PeriodicTrigger(
-          period: const Duration(hours: 3),
-          duration: const Duration(seconds: 10)),
+  protocol.addTaskControl(
+      PeriodicTrigger(period: const Duration(hours: 3)),
       BackgroundTask()
         ..addMeasure(Measure(type: CommunicationSamplingPackage.PHONE_LOG))
         ..addMeasure(

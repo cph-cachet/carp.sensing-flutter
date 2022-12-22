@@ -5,8 +5,8 @@ the [`carp_mobile_sensing`](https://pub.dartlang.org/packages/carp_mobile_sensin
 This packages supports sampling of the following [`Measure`](https://pub.dev/documentation/carp_core/latest/carp_core_protocols/Measure-class.html) types:
 
 * `dk.cachet.carp.phone_log` - the phone log.
-* `dk.cachet.carp.text-message-log` - the text (sms) message log.
-* `dk.cachet.carp.text-message` - incoming text (sms) messages.
+* `dk.cachet.carp.text_message_log` - the text (sms) message log.
+* `dk.cachet.carp.text_message` - incoming text (sms) messages.
 * `dk.cachet.carp.calendar` - all calendar entries.
 
 Note that collection of phone and text message data is only supported on Android.
@@ -62,7 +62,7 @@ Add the following to your app's `manifest.xml` file located in `android/app/src/
   <application>
    ...
    ...
-    <!-- Registration of broadcast reciever to listen to SMS messages 
+    <!-- Registration of broadcast receiver to listen to SMS messages 
          when the app is in the background -->
    <receiver android:name="com.shounakmulay.telephony.sms.IncomingSmsReceiver"
      android:permission="android.permission.BROADCAST_SMS" android:exported="true">
