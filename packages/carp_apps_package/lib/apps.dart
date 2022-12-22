@@ -12,7 +12,7 @@ import 'dart:convert';
 import 'package:carp_core/carp_core.dart';
 import 'package:carp_mobile_sensing/carp_mobile_sensing.dart';
 
-part 'apps_datum.dart';
+part 'apps_data.dart';
 part 'app_probes.dart';
 part 'apps_package.dart';
 part 'apps.g.dart';
