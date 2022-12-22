@@ -8,7 +8,7 @@
 part of connectivity;
 
 /// A [Datum] that holds connectivity status of the phone.
-@JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)
+@JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
 class Connectivity extends Data {
   static const dataType = ConnectivitySamplingPackage.CONNECTIVITY;
 
@@ -49,7 +49,7 @@ class Connectivity extends Data {
 }
 
 /// A [Datum] that holds information of nearby Bluetooth devices.
-@JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)
+@JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
 class Bluetooth extends Data {
   static const dataType = ConnectivitySamplingPackage.BLUETOOTH;
 
@@ -93,7 +93,7 @@ class Bluetooth extends Data {
 }
 
 /// Bluetooth device data.
-@JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)
+@JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
 class BluetoothDevice {
   /// The bluetooth advertising name of the device.
   String advertisementName;
@@ -172,7 +172,7 @@ class BluetoothDevice {
 /// and BSSID.
 ///
 /// Note that it wifi information cannot be collected on emulators.
-@JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)
+@JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
 class Wifi extends Data {
   static const dataType = ConnectivitySamplingPackage.WIFI;
 

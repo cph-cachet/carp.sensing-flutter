@@ -8,7 +8,7 @@ part of connectivity;
 
 Connectivity _$ConnectivityFromJson(Map<String, dynamic> json) => Connectivity()
   ..$type = json['__type'] as String?
-  ..connectivityStatus = json['connectivity_status'] as String;
+  ..connectivityStatus = json['connectivityStatus'] as String;
 
 Map<String, dynamic> _$ConnectivityToJson(Connectivity instance) {
   final val = <String, dynamic>{};
@@ -20,20 +20,20 @@ Map<String, dynamic> _$ConnectivityToJson(Connectivity instance) {
   }
 
   writeNotNull('__type', instance.$type);
-  val['connectivity_status'] = instance.connectivityStatus;
+  val['connectivityStatus'] = instance.connectivityStatus;
   return val;
 }
 
 Bluetooth _$BluetoothFromJson(Map<String, dynamic> json) => Bluetooth(
-      startScan: json['start_scan'] == null
+      startScan: json['startScan'] == null
           ? null
-          : DateTime.parse(json['start_scan'] as String),
-      endScan: json['end_scan'] == null
+          : DateTime.parse(json['startScan'] as String),
+      endScan: json['endScan'] == null
           ? null
-          : DateTime.parse(json['end_scan'] as String),
+          : DateTime.parse(json['endScan'] as String),
     )
       ..$type = json['__type'] as String?
-      ..scanResult = (json['scan_result'] as List<dynamic>)
+      ..scanResult = (json['scanResult'] as List<dynamic>)
           .map((e) => BluetoothDevice.fromJson(e as Map<String, dynamic>))
           .toList();
 
@@ -47,29 +47,29 @@ Map<String, dynamic> _$BluetoothToJson(Bluetooth instance) {
   }
 
   writeNotNull('__type', instance.$type);
-  val['start_scan'] = instance.startScan.toIso8601String();
-  writeNotNull('end_scan', instance.endScan?.toIso8601String());
-  val['scan_result'] = instance.scanResult;
+  val['startScan'] = instance.startScan.toIso8601String();
+  writeNotNull('endScan', instance.endScan?.toIso8601String());
+  val['scanResult'] = instance.scanResult;
   return val;
 }
 
 BluetoothDevice _$BluetoothDeviceFromJson(Map<String, dynamic> json) =>
     BluetoothDevice(
-      advertisementName: json['advertisement_name'] as String,
-      bluetoothDeviceId: json['bluetooth_device_id'] as String,
-      bluetoothDeviceName: json['bluetooth_device_name'] as String,
-      bluetoothDeviceType: json['bluetooth_device_type'] as String,
+      advertisementName: json['advertisementName'] as String,
+      bluetoothDeviceId: json['bluetoothDeviceId'] as String,
+      bluetoothDeviceName: json['bluetoothDeviceName'] as String,
+      bluetoothDeviceType: json['bluetoothDeviceType'] as String,
       connectable: json['connectable'] as bool,
       rssi: json['rssi'] as int,
-      txPowerLevel: json['tx_power_level'] as int?,
+      txPowerLevel: json['txPowerLevel'] as int?,
     );
 
 Map<String, dynamic> _$BluetoothDeviceToJson(BluetoothDevice instance) {
   final val = <String, dynamic>{
-    'advertisement_name': instance.advertisementName,
-    'bluetooth_device_id': instance.bluetoothDeviceId,
-    'bluetooth_device_name': instance.bluetoothDeviceName,
-    'bluetooth_device_type': instance.bluetoothDeviceType,
+    'advertisementName': instance.advertisementName,
+    'bluetoothDeviceId': instance.bluetoothDeviceId,
+    'bluetoothDeviceName': instance.bluetoothDeviceName,
+    'bluetoothDeviceType': instance.bluetoothDeviceType,
     'connectable': instance.connectable,
   };
 
@@ -79,7 +79,7 @@ Map<String, dynamic> _$BluetoothDeviceToJson(BluetoothDevice instance) {
     }
   }
 
-  writeNotNull('tx_power_level', instance.txPowerLevel);
+  writeNotNull('txPowerLevel', instance.txPowerLevel);
   val['rssi'] = instance.rssi;
   return val;
 }
