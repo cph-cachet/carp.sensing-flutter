@@ -14,20 +14,19 @@ void main() {
     AppsSamplingPackage().onRegister();
   });
 
-  group('Apps Datum Tests', () {
+  group('Apps Tests', () {
     test(' - installed apps', () {
-      AppsDatum d = AppsDatum()
-        ..installedApps = [
-          'MUBS',
-          'mCardia',
-          'Safari',
-        ];
+      Apps d = Apps([
+        App(appName: 'MUBS'),
+        App(appName: 'mCardia'),
+        App(appName: 'Safari'),
+      ]);
       print(d);
       print(_encode(d));
     });
 
     test(' - apps usage', () {
-      AppUsageDatum d2 = AppUsageDatum(DateTime.now(), DateTime.now())
+      AppUsage d2 = AppUsage(DateTime.now(), DateTime.now())
         ..usage = {
           'carp_mobile_sensing_test_app': 1405,
           'systemui': 4,

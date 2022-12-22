@@ -5,19 +5,27 @@ class AppsSamplingPackage extends SmartphoneSamplingPackage {
   ///  * One-time measure.
   ///  * Uses the [Smartphone] master device for data collection.
   ///  * No sampling configuration needed.
-  static const String APPS = "dk.cachet.carp.apps";
+  static const String APPS = "${NameSpace.CARP}.apps";
 
   /// Measure type for one-time collection app usage information on apps that
   /// are installed on the phone.
   ///  * One-time measure.
   ///  * Uses the [Smartphone] master device for data collection.
   ///  * Use the [HistoricSamplingConfiguration] for configuration.
-  static const String APP_USAGE = "dk.cachet.carp.app_usage";
+  static const String APP_USAGE = "${NameSpace.CARP}.appusage";
 
   @override
-  List<String> get dataTypes => [
-        APPS,
-        APP_USAGE,
+  List<DataTypeMetaData> get dataTypes => [
+        DataTypeMetaData(
+          type: APPS,
+          displayName: "Installed Apps",
+          timeType: DataTimeType.POINT,
+        ),
+        DataTypeMetaData(
+          type: APP_USAGE,
+          displayName: "App Usage",
+          timeType: DataTimeType.TIME_SPAN,
+        ),
       ];
 
   @override

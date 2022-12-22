@@ -19,11 +19,11 @@ void main() async {
   // define which devices are used for data collection
   // in this case, its only this smartphone
   Smartphone phone = Smartphone();
-  protocol.addMasterDevice(phone);
+  protocol.addPrimaryDevice(phone);
 
   // add an automatic task that collects the list of installed apps
   // and a log of app usage activity
-  protocol.addTriggeredTask(
+  protocol.addTaskControl(
       ImmediateTrigger(),
       BackgroundTask()
         ..addMeasure(Measure(type: AppsSamplingPackage.APPS))
