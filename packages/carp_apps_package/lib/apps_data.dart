@@ -16,8 +16,6 @@ class Apps extends Data {
 
   Apps(this.installedApps) : super();
 
-  // Apps.fromApplications(List<Applications> ) : super();
-
   factory Apps.fromJson(Map<String, dynamic> json) => _$AppsFromJson(json);
 
   @override

@@ -7,16 +7,17 @@
 
 part of media;
 
-/// A listening probe collecting noise sampling from the microphone.
+/// A probe collecting noise sampling from the microphone.
 ///
 /// See [PeriodicSamplingConfiguration] on how to configure this probe,
 /// including setting the frequency and duration of the sampling rate.
 ///
 /// Does not record sound. Instead reports the audio level with a specified
-/// frequency, in a given sampling window as a [NoiseDatum].
+/// frequency, in a given sampling window as a [Noise] data object.
 class NoiseProbe extends BufferingPeriodicStreamProbe {
   NoiseMeter? _noiseMeter;
   final List<NoiseReading> _noiseReadings = [];
+  DateTime? _startRecordingTime, _endRecordingTime;
 
   @override
   Stream<NoiseReading> get bufferingStream => _noiseMeter!.noiseStream;
@@ -42,10 +43,10 @@ class NoiseProbe extends BufferingPeriodicStreamProbe {
   }
 
   @override
-  void onSamplingEnd() {} // Do nothing
+  void onSamplingStart() => _startRecordingTime = DateTime.now();
 
   @override
-  void onSamplingStart() {} // Do nothing
+  void onSamplingEnd() => _endRecordingTime = DateTime.now();
 
   @override
   void onSamplingData(dynamic event) {
@@ -53,7 +54,7 @@ class NoiseProbe extends BufferingPeriodicStreamProbe {
   }
 
   @override
-  Future<Datum?> getDatum() async {
+  Future<Measurement?> getMeasurement() async {
     if (_noiseReadings.isNotEmpty) {
       List<num> meanList = [];
       List<num> maxList = [];
@@ -73,11 +74,15 @@ class NoiseProbe extends BufferingPeriodicStreamProbe {
       num max = maxStats.max;
 
       if (mean.isFinite && std.isFinite && min.isFinite && max.isFinite) {
-        return NoiseDatum(
-            meanDecibel: mean.toDouble(),
-            stdDecibel: std.toDouble(),
-            minDecibel: min.toDouble(),
-            maxDecibel: max.toDouble());
+        return Measurement(
+            sensorStartTime: _startRecordingTime?.microsecondsSinceEpoch ??
+                DateTime.now().microsecondsSinceEpoch,
+            sensorEndTime: _endRecordingTime?.microsecondsSinceEpoch,
+            data: Noise(
+                meanDecibel: mean.toDouble(),
+                stdDecibel: std.toDouble(),
+                minDecibel: min.toDouble(),
+                maxDecibel: max.toDouble()));
       }
     }
 

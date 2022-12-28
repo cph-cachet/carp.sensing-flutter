@@ -6,72 +6,60 @@
  */
 part of media;
 
-/// A probe recording audio from the microphone. It starts recording on [resume]
-/// and stops recording on [pause], and post its [MediaDatum] to the [data] stream.
-///
-/// This probe can be used in a [PeriodicTrigger], which allows for periodic
-/// sampling of audio by specifying the [period] and [duration].
-/// It is important that the recording duration is not longer than the sampling
-/// frequency, i.e. this probe does **not** allow for overlapping recordings.
+/// A probe recording audio from the microphone. It starts recording on [start]
+/// and stops recording on [stop], and post the recorded [Media] object to the
+/// [measurements] stream.
 ///
 /// Note that this probe generates a lot of data and should be used with caution.
 ///
 /// Also note that this probe records raw sound directly from the microphone
 /// and hence records everything - including human speech - in its proximity.
 ///
-/// The audio probe generates an [MediaDatum] that holds the meta-data for each
-/// recording along with the actual recording in an audio file.
-/// How to upload this data to a data backend is up to the implementation of the
-/// [DataManager], which is used in the [Study].
-class AudioProbe extends DatumProbe {
+/// The audio probe generates an [Media] data measurement that holds the
+/// meta-data for each recording along with the actual recording in an audio file.
+/// How to upload or store this data to a data backend is up to the implementation
+/// of the [DataManager], which is used in the [Study].
+class AudioProbe extends MeasurementProbe {
   /// The name of the folder used for storing audio files.
   static const String AUDIO_FILES_PATH = 'audio';
 
   String? _path;
   bool _isRecording = false;
   DateTime? _startRecordingTime, _endRecordingTime;
-  MediaDatum? _datum;
+  Media? _data;
   var recorder = FlutterSoundRecorder();
   String? _soundFileName;
 
   bool get isRecording => _isRecording;
 
   @override
-  Future<bool> onResume() async {
+  Future<bool> onStart() async {
     try {
       await _startAudioRecording();
       debug('Audio recording resumed - sound file : $_soundFileName');
     } catch (error) {
-      warning('An error occured trying to start audio recording - $error');
+      warning('An error occurred trying to start audio recording - $error');
       controller.addError(error);
       return false;
-    }
-
-    return true;
-  }
-
-  @override
-  Future<bool> onPause() async {
-    // when pausing the audio sampling, stop recording and collect the datum
-    if (_isRecording) {
-      try {
-        await _stopAudioRecording();
-        Datum? data = await getDatum();
-        if (data != null) controller.add(data);
-        debug('Audio recording paused - sound file : $_soundFileName');
-      } catch (error) {
-        warning('An error occured trying to stop audio recording - $error');
-        controller.addError(error);
-      }
     }
     return true;
   }
 
   @override
   Future<bool> onStop() async {
-    if (_isRecording) await onPause();
-    await recorder.stopRecorder();
-    return super.onStop();
+    // when stopping the audio sampling, stop recording and collect the datum
+    if (_isRecording) {
+      try {
+        await _stopAudioRecording();
+        final measurement = await getMeasurement();
+        if (measurement != null) controller.add(measurement);
+        debug('Audio recording paused - sound file : $_soundFileName');
+      } catch (error) {
+        warning('An error occurred trying to stop audio recording - $error');
+        controller.addError(error);
+      }
+    }
+    return true;
   }
 
   Future<void> _startAudioRecording() async {
@@ -84,18 +72,18 @@ class AudioProbe extends DatumProbe {
       final status = await Permission.microphone.status;
       if (!status.isGranted) {
         warning(
-            '$runtimeType - permission not granted to use to micophone: $status - trying to request it');
+            '$runtimeType - permission not granted to use to microphone: $status - trying to request it');
         await Permission.microphone.request();
       }
       _startRecordingTime = DateTime.now().toUtc();
-      _datum = MediaDatum(
+      _data = Media(
         mediaType: MediaType.audio,
         filename: 'ignored for now',
         startRecordingTime: _startRecordingTime!,
       );
       _soundFileName = await filePath;
-      _datum!.path = _soundFileName;
-      _datum!.filename = _soundFileName!.split("/").last;
+      _data!.path = _soundFileName;
+      _data!.filename = _soundFileName!.split("/").last;
       _isRecording = true;
 
       // start the recording
@@ -117,8 +105,10 @@ class AudioProbe extends DatumProbe {
   }
 
   @override
-  Future<Datum?> getDatum() async =>
-      _datum?..endRecordingTime = _endRecordingTime;
+  Future<Measurement?> getMeasurement() async => Measurement(
+      sensorStartTime: _startRecordingTime!.microsecondsSinceEpoch,
+      sensorEndTime: _endRecordingTime?.microsecondsSinceEpoch,
+      data: _data!..endRecordingTime = _endRecordingTime);
 
   String get studyDeploymentPath => '/${deployment?.studyDeploymentId}';
 
@@ -137,8 +127,8 @@ class AudioProbe extends DatumProbe {
   }
 
   /// Returns the  filename of the sound file.
-  /// The file is named by the unique id (uuid) of the [MediaDatum]
-  String get filename => '${_datum!.id}.mp4';
+  /// The file is named by the unique id (uuid) of the [Media]
+  String get filename => '${_data!.id}.mp4';
 
   /// Returns the full file path to the sound file.
   Future<String> get filePath async {

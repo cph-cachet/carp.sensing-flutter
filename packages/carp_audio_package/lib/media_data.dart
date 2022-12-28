@@ -12,11 +12,12 @@ enum MediaType { audio, video, image }
 
 /// A datum that holds the path to media file on the local device,
 /// as well as the timestamps of when the recording was started and stopped
-@JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)
-class MediaDatum extends FileDatum {
-  @override
-  @JsonKey(ignore: true)
-  DataFormat get format => DataFormat.fromString(MediaSamplingPackage.MEDIA);
+@JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
+class Media extends FileData {
+  static const dataType = MediaSamplingPackage.MEDIA;
+
+  /// A unique id of this media file.
+  late String id;
 
   /// The type of media.
   MediaType mediaType;
@@ -27,29 +28,29 @@ class MediaDatum extends FileDatum {
   /// The timestamp for end of recording, if available.
   DateTime? endRecordingTime;
 
-  MediaDatum({
+  Media({
     required super.filename,
     required this.mediaType,
     this.startRecordingTime,
     this.endRecordingTime,
-  });
+  }) {
+    id = Uuid().v1();
+  }
 
-  factory MediaDatum.fromJson(Map<String, dynamic> json) =>
-      _$MediaDatumFromJson(json);
+  factory Media.fromJson(Map<String, dynamic> json) => _$MediaFromJson(json);
 
   @override
-  Map<String, dynamic> toJson() => _$MediaDatumToJson(this);
+  Map<String, dynamic> toJson() => _$MediaToJson(this);
 
   @override
   String toString() =>
       '${super.toString()}, start: $startRecordingTime, end: $endRecordingTime';
 }
 
-/// A [NoiseDatum] that holds the noise level in decibel of a noise sampling.
-@JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)
-class NoiseDatum extends Datum {
-  @override
-  DataFormat get format => DataFormat.fromString(MediaSamplingPackage.NOISE);
+/// Holds the noise level in decibel of a noise sampling.
+@JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
+class Noise extends Data {
+  static const dataType = MediaSamplingPackage.NOISE;
 
   // The sound intensity [dB] measurement statistics for a given sampling window.
 
@@ -65,18 +66,17 @@ class NoiseDatum extends Datum {
   /// Maximum decibel of sampling window.
   double maxDecibel;
 
-  NoiseDatum({
+  Noise({
     required this.meanDecibel,
     required this.stdDecibel,
     required this.minDecibel,
     required this.maxDecibel,
   }) : super();
 
-  factory NoiseDatum.fromJson(Map<String, dynamic> json) =>
-      _$NoiseDatumFromJson(json);
+  factory Noise.fromJson(Map<String, dynamic> json) => _$NoiseFromJson(json);
 
   @override
-  Map<String, dynamic> toJson() => _$NoiseDatumToJson(this);
+  Map<String, dynamic> toJson() => _$NoiseToJson(this);
 
   @override
   String toString() =>

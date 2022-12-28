@@ -34,11 +34,27 @@ class MediaSamplingPackage extends SmartphoneSamplingPackage {
   static const String NOISE = "${NameSpace.CARP}.noise";
 
   @override
-  List<String> get dataTypes => [
-        AUDIO,
-        VIDEO,
-        IMAGE,
-        NOISE,
+  List<DataTypeMetaData> get dataTypes => [
+        DataTypeMetaData(
+          type: AUDIO,
+          displayName: "Audio Recording",
+          timeType: DataTimeType.TIME_SPAN,
+        ),
+        DataTypeMetaData(
+          type: VIDEO,
+          displayName: "Video Recording",
+          timeType: DataTimeType.TIME_SPAN,
+        ),
+        DataTypeMetaData(
+          type: IMAGE,
+          displayName: "Image Capture",
+          timeType: DataTimeType.POINT,
+        ),
+        DataTypeMetaData(
+          type: NOISE,
+          displayName: "Noise Recording",
+          timeType: DataTimeType.TIME_SPAN,
+        ),
       ];
 
   @override

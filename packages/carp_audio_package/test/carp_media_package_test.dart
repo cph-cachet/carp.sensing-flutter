@@ -26,15 +26,15 @@ void main() {
 
     // Define which devices are used for data collection.
     phone = Smartphone();
-    protocol.addMasterDevice(phone);
+    protocol.addPrimaryDevice(phone);
 
     // adding all available measures to one one trigger and one task
-    protocol.addTriggeredTask(
+    protocol.addTaskControl(
       ImmediateTrigger(),
       BackgroundTask()
         ..measures = SamplingPackageRegistry()
             .dataTypes
-            .map((type) => Measure(type: type))
+            .map((type) => Measure(type: type.type))
             .toList(),
       phone,
     );
@@ -63,36 +63,36 @@ void main() {
         StudyProtocol.fromJson(json.decode(plainJson) as Map<String, dynamic>);
 
     expect(protocol.ownerId, 'alex@uni.dk');
-    expect(protocol.masterDevices.first.roleName, Smartphone.DEFAULT_ROLENAME);
+    expect(protocol.primaryDevice.roleName, Smartphone.DEFAULT_ROLENAME);
     print(toJsonString(protocol));
   });
   test('Audio Data Point', () async {
-    MediaDatum datum = MediaDatum(
+    Media media = Media(
       mediaType: MediaType.audio,
       filename: "filename.mp3",
       startRecordingTime: DateTime.now().subtract(Duration(days: 1)),
       endRecordingTime: DateTime.now(),
     );
 
-    DataPoint dataPoint = DataPoint.fromData(datum);
+    final measurement = Measurement.fromData(media);
 
-    print(dataPoint);
-    print(toJsonString(dataPoint));
-    assert(dataPoint.carpBody != null);
+    print(measurement);
+    print(toJsonString(measurement));
+    expect(measurement.data, isA<Media>());
   });
 
   test('Video Data Point', () async {
-    MediaDatum datum = MediaDatum(
+    Media media = Media(
       mediaType: MediaType.video,
       filename: "filename.mp3",
       startRecordingTime: DateTime.now().subtract(Duration(days: 1)),
       endRecordingTime: DateTime.now(),
     );
 
-    DataPoint dataPoint = DataPoint.fromData(datum);
+    final measurement = Measurement.fromData(media);
 
-    print(dataPoint);
-    print(toJsonString(dataPoint));
-    assert(dataPoint.carpBody != null);
+    print(measurement);
+    print(toJsonString(measurement));
+    expect(measurement.data, isA<Media>());
   });
 }
