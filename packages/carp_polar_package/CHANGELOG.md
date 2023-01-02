@@ -1,3 +1,7 @@
+## 1.1.0
+
+* update to `carp_mobile_sensing` v. 1.1.0
+
 ## 0.40.1
 
 * upgrade to`polar` 3.4.0

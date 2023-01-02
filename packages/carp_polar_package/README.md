@@ -31,7 +31,7 @@ how to [extend](https://github.com/cph-cachet/carp.sensing-flutter/wiki/4.-Exten
 
 ## Installing
 
-To use this package, add the following to you `pubspc.yaml` file. Note that
+To use this package, add the following to you `pubspec.yaml` file. Note that
 this package only works together with `carp_mobile_sensing`.
 
 `````dart
@@ -145,16 +145,16 @@ Collection of Polar data can be added to a study protocol like this.
   );
 
   protocol
-    ..addMasterDevice(phone)
+    ..addPrimaryDevice(phone)
     ..addConnectedDevice(polar);
 
   // Add a background task that immediately starts collecting HR and ECG data
   // from the Polar device.
-  protocol.addTriggeredTask(
+  protocol.addTaskControl(
       ImmediateTrigger(),
       BackgroundTask()
-        ..addMeasure(Measure(type: PolarSamplingPackage.POLAR_HR))
-        ..addMeasure(Measure(type: PolarSamplingPackage.POLAR_ECG)),
+        ..addMeasure(Measure(type: PolarSamplingPackage.HR))
+        ..addMeasure(Measure(type: PolarSamplingPackage.ECG)),
       polar);
 ````
 
