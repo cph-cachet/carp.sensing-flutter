@@ -2,7 +2,6 @@ part of runtime;
 
 /// A [NotificationController] based on the [awesome_notifications](https://pub.dev/packages/awesome_notifications)
 /// Flutter plugin.
-
 class AwesomeNotificationController implements NotificationController {
   static final AwesomeNotificationController _instance =
       AwesomeNotificationController._();
@@ -39,12 +38,18 @@ class AwesomeNotificationController implements NotificationController {
       ],
     );
 
+    // listen to when the use clicks a notification
+    AwesomeNotifications().setListeners(
+      onActionReceivedMethod: onActionReceivedMethod,
+    );
+
     // ask for permissions to use notifications
     AwesomeNotifications().isNotificationAllowed().then((isAllowed) {
       if (!isAllowed) {
         AwesomeNotifications().requestPermissionToSendNotifications();
       }
     });
+
     info('$runtimeType initialized.');
   }
 
@@ -52,14 +57,13 @@ class AwesomeNotificationController implements NotificationController {
   Future<int> get pendingNotificationRequestsCount async =>
       (await AwesomeNotifications().listScheduledNotifications()).length;
 
-  /// Schedule a notification for a [task] at the [UserTask.triggerTime].
   @override
   Future<void> scheduleNotification(UserTask task) async {
     // early out if not to be scheduled
     if (!task.notification) return;
 
     // early out if has already been scheduled
-    // this is relevant for AwecomeNotification since it makes notifications
+    // this is relevant for AwesomeNotification since it makes notifications
     // persistent across app re-start
     if (task.hasNotificationBeenCreated) {
       debug('$runtimeType - task has already been scheduled - task: $task');
@@ -76,6 +80,8 @@ class AwesomeNotificationController implements NotificationController {
               channelKey: 'scheduled_channel',
               title: task.title,
               body: task.description,
+              payload: {'task_id': task.id},
+              wakeUpScreen: true,
               notificationLayout: NotificationLayout.Default),
           schedule: NotificationCalendar.fromDate(
               date: task.triggerTime, allowWhileIdle: true));
@@ -87,7 +93,6 @@ class AwesomeNotificationController implements NotificationController {
     }
   }
 
-  /// Send an immediate notification for a [task].
   @override
   Future<void> sendNotification(UserTask task) async {
     await AwesomeNotifications().createNotification(
@@ -96,7 +101,34 @@ class AwesomeNotificationController implements NotificationController {
           channelKey: 'basic_channel',
           title: task.title,
           body: task.description,
+          payload: {'task_id': task.id},
+          wakeUpScreen: true,
           notificationLayout: NotificationLayout.Default),
     );
+  }
+
+  /// Callback method when the user taps on a notification or action button.
+  @pragma("vm:entry-point")
+  static Future<void> onActionReceivedMethod(
+    ReceivedAction receivedAction,
+  ) async {
+    String? payload = receivedAction.payload?['task_id'];
+
+    debug(
+        'NotificationController - callback on notification, payload: $payload');
+
+    if (payload != null) {
+      UserTask? task = AppTaskController().getUserTask(payload);
+      info('NotificationController - User Task notification selected - $task');
+      if (task != null) {
+        task.onNotification();
+      } else {
+        warning(
+            'NotificationController - Error in callback from notification - no task found.');
+      }
+    } else {
+      warning(
+          "NotificationController - Error in callback from notification - payload is '$payload'");
+    }
   }
 }

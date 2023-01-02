@@ -103,9 +103,9 @@ class FlutterLocalNotificationController implements NotificationController {
     }
   }
 
-  /// The number of pending nofitifications.
+  /// The number of pending notifications.
   ///
-  /// Note that on iOS there is a limit of 64 pending nofifications.
+  /// Note that on iOS there is a limit of 64 pending notifications.
   /// See https://pub.dev/packages/flutter_local_notifications#ios-pending-notifications-limit
   @override
   Future<int> get pendingNotificationRequestsCount async =>
@@ -128,18 +128,19 @@ void onDidReceiveNotificationResponse(
     notifications.NotificationResponse response) {
   String? payload = response.payload;
 
-  debug(
-      'FlutterLocalNotificationController - onDidReceiveNotificationResponse, payload: $payload');
+  debug('NotificationController - callback on notification, payload: $payload');
 
   if (payload != null) {
     UserTask? task = AppTaskController().getUserTask(payload);
-    info('User Task notification selected - $task');
+    info('NotificationController - User Task notification selected - $task');
     if (task != null) {
       task.onNotification();
     } else {
-      warning('Error in callback from notification - no task found.');
+      warning(
+          'NotificationController - Error in callback from notification - no task found.');
     }
   } else {
-    warning("Error in callback from notification - payload is '$payload'");
+    warning(
+        "NotificationController - Error in callback from notification - payload is '$payload'");
   }
 }

@@ -26,6 +26,21 @@ dependencies:
 
 ### Android Integration
 
+Set the minimum android SDK to 21 and Java SDK Version to 33 by setting the `minSdkVersion`, the `compileSdkVersion`, and `targetSdkVersion` in the `build.gradle` file, located in the `android/app/` folder:
+
+```gradle
+android {
+    compileSdkVersion 33
+
+    defaultConfig {
+        minSdkVersion 21
+        targetSdkVersion 33
+        ...
+    }
+    ...
+}
+```
+
 The pedometer (step count) probe needs permission to `ACTIVITY_RECOGNITION`.
 Add the following to your app's `manifest.xml` file located in `android/app/src/main`:
 

@@ -108,8 +108,8 @@ void main() {
     primaryProtocol.addParticipantRole(ParticipantRole('Participant'));
 
     primaryProtocol.addExpectedParticipantData(ExpectedParticipantData(
-        ParticipantAttribute(inputDataType: 'dk.cachet.carp.sex'),
-        AssignedTo(roleNames: {'Participant'})));
+        attribute: ParticipantAttribute(inputDataType: 'dk.cachet.carp.sex'),
+        assignedTo: AssignedTo(roleNames: {'Participant'})));
 
     primaryProtocol.addApplicationData('uiTheme', 'black');
   });

@@ -12,7 +12,7 @@ This packages supports sampling of the following [`Measure`](https://pub.dev/doc
 * `dk.cachet.carp.video`
 * `dk.cachet.carp.image`
 
-The name of the Flutter pub.dev package is "audio" for historical reasons - however, it is now a "media" package and the CAMS package name is `MediaSamplingPackage`.
+The name of the Flutter pub.dev package is "audio" for historical reasons - however, it is (now) a "media" package and the CAMS package name is `MediaSamplingPackage`.
 
 See the [wiki](https://github.com/cph-cachet/carp.sensing-flutter/wiki) for further documentation, particularly on available [measure types](https://github.com/cph-cachet/carp.sensing-flutter/wiki/A.-Measure-Types).
 See the [CARP Mobile Sensing App](https://github.com/cph-cachet/carp.sensing-flutter/tree/master/apps/carp_mobile_sensing_app) for an example of how to build a mobile sensing app in Flutter.

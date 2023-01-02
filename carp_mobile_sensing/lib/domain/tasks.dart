@@ -7,7 +7,7 @@
 
 part of domain;
 
-/// Signature of Dart function that have no arguments and return no data.
+/// Signature of Dart function that have no arguments and returns no data.
 typedef VoidFunction = void Function();
 
 /// A task that can run a custom Dart function.

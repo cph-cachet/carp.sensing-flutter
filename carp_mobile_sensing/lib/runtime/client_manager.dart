@@ -83,8 +83,6 @@ class SmartPhoneClientManager
     );
 
     // initialize default services, if not specified
-    // _notificationController =
-    //     notificationController ?? FlutterLocalNotificationController();
     _notificationController =
         notificationController ?? AwesomeNotificationController();
     deploymentService ??= SmartphoneDeploymentService();
@@ -103,7 +101,6 @@ class SmartPhoneClientManager
     print('===========================================================');
     print('  CARP Mobile Sensing (CAMS) - $runtimeType');
     print('===========================================================');
-    // print('           device ID : ${registration.deviceId}');
     print('              device : ${registration.deviceDisplayName}');
     print('   device controller : ${this.deviceController}');
     print('   available devices : ${this.deviceController.devicesToString()}');
