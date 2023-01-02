@@ -82,8 +82,8 @@ class DeviceController implements DeviceDataCollectorFactory {
     //  first initialize the primary device (i.e. this phone)
     initializeDevice(primaryDeviceDeployment.deviceConfiguration);
     // and then initialize all the connected devices (if any)
-    for (var descriptor in primaryDeviceDeployment.connectedDevices) {
-      initializeDevice(descriptor);
+    for (var configuration in primaryDeviceDeployment.connectedDevices) {
+      initializeDevice(configuration);
     }
   }
 

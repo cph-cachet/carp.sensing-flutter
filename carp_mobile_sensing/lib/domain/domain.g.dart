@@ -44,7 +44,7 @@ SmartphoneStudyProtocol _$SmartphoneStudyProtocolFromJson(
       ..applicationData = json['applicationData'] as Map<String, dynamic>
       ..id = json['id'] as String
       ..createdOn = DateTime.parse(json['createdOn'] as String)
-      ..version = json['version'] as int
+      ..version = json['version'] as int?
       ..description = json['description'] as String
       ..primaryDevices = (json['primaryDevices'] as List<dynamic>)
           .map((e) =>
@@ -86,11 +86,6 @@ Map<String, dynamic> _$SmartphoneStudyProtocolToJson(
     'applicationData': instance.applicationData,
     'id': instance.id,
     'createdOn': instance.createdOn.toIso8601String(),
-    'version': instance.version,
-    'description': instance.description,
-    'ownerId': instance.ownerId,
-    'name': instance.name,
-    'primaryDevices': instance.primaryDevices.toList(),
   };
 
   void writeNotNull(String key, dynamic value) {
@@ -99,6 +94,11 @@ Map<String, dynamic> _$SmartphoneStudyProtocolToJson(
     }
   }
 
+  writeNotNull('version', instance.version);
+  val['description'] = instance.description;
+  val['ownerId'] = instance.ownerId;
+  val['name'] = instance.name;
+  val['primaryDevices'] = instance.primaryDevices.toList();
   writeNotNull('connectedDevices', instance.connectedDevices?.toList());
   writeNotNull('connections', instance.connections);
   val['tasks'] = instance.tasks.toList();

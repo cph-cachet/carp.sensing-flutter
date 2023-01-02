@@ -13,10 +13,10 @@ part of carp_movisens_package;
 /// device, including the BTLE MAC [address], the [sensorName], the [sensorLocation]
 /// and the [weight], [height], [age], [gender] of the user using the device.
 @JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
-class MovisensDevice extends DeviceDescriptor {
+class MovisensDevice extends DeviceConfiguration {
   /// The type of a Movisens device.
   static const String DEVICE_TYPE =
-      '${DeviceDescriptor.DEVICE_NAMESPACE}.MovisensDevice';
+      '${DeviceConfiguration.DEVICE_NAMESPACE}.MovisensDevice';
 
   /// The default rolename for a Movisens device.
   static const String DEFAULT_ROLENAME = 'movisens';
@@ -57,7 +57,7 @@ class MovisensDevice extends DeviceDescriptor {
     this.age = 25,
   }) : super(
           roleName: roleName ?? DEFAULT_ROLENAME,
-          isMasterDevice: false,
+          isPrimaryDevice: false,
           supportedDataTypes: [MovisensSamplingPackage.MOVISENS],
         );
 

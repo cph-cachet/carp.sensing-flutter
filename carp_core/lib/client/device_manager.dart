@@ -8,15 +8,15 @@
 part of carp_core_client;
 
 /// Collects [Data] for a single device.
-abstract class DeviceDataCollector<TDeviceRegistration, TDeviceDescriptor> {
+abstract class DeviceDataCollector<TDeviceRegistration, TDeviceConfiguration> {
   /// The type of this device
   String? type;
 
   /// The registration for this device.
   TDeviceRegistration? deviceRegistration;
 
-  /// The description for this device.
-  TDeviceDescriptor? deviceDescriptor;
+  /// The configuration for this device.
+  TDeviceConfiguration? deviceConfiguration;
 
   /// The set of data types defining which data can be collected on this device.
   Set<String> get supportedDataTypes;
@@ -31,7 +31,7 @@ abstract class DeviceDataCollector<TDeviceRegistration, TDeviceDescriptor> {
   DeviceDataCollector([
     this.type,
     this.deviceRegistration,
-    this.deviceDescriptor,
+    this.deviceConfiguration,
   ]);
 }
 

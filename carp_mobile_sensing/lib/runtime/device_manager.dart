@@ -22,7 +22,7 @@ abstract class DeviceManager<TDeviceRegistration extends DeviceRegistration,
   DeviceManager([
     super.type,
     super.deviceRegistration,
-    super.deviceDescriptor,
+    super.deviceConfiguration,
   ]);
 
   @override
@@ -49,12 +49,13 @@ abstract class DeviceManager<TDeviceRegistration extends DeviceRegistration,
   /// Has this device manager been connected?
   bool get isConnected => status == DeviceStatus.connected;
 
-  /// Initialize the device manager by specifying its device [descriptor].
+  /// Initialize the device manager by specifying its device [configuration].
   @nonVirtual
-  void initialize(TDeviceConfiguration descriptor) {
-    info('Initializing device manager, type: $type, descriptor.: $descriptor');
-    deviceDescriptor = descriptor;
-    onInitialize(descriptor);
+  void initialize(TDeviceConfiguration configuration) {
+    info(
+        'Initializing device manager, type: $type, configuration: $configuration');
+    deviceConfiguration = configuration;
+    onInitialize(configuration);
     status = DeviceStatus.initialized;
   }
 
@@ -62,7 +63,7 @@ abstract class DeviceManager<TDeviceRegistration extends DeviceRegistration,
   ///
   /// Is to be overridden in sub-classes. Note, however, that it must not be
   /// doing a lot of work on startup.
-  void onInitialize(TDeviceConfiguration descriptor);
+  void onInitialize(TDeviceConfiguration configuration);
 
   /// Ask this [DeviceManager] to start connecting to the device.
   ///
@@ -81,7 +82,7 @@ abstract class DeviceManager<TDeviceRegistration extends DeviceRegistration,
       status = await onConnect();
     } catch (error) {
       warning(
-          '$runtimeType - cannot connect to device, descriptor: $deviceDescriptor - error: $error');
+          '$runtimeType - cannot connect to device $deviceConfiguration - error: $error');
     }
 
     return status;
@@ -171,7 +172,7 @@ class SmartphoneDeviceManager
   String get id => DeviceInfo().deviceID!;
 
   @override
-  void onInitialize(DeviceConfiguration descriptor) {
+  void onInitialize(DeviceConfiguration configuration) {
     // listen to the battery
     battery.onBatteryStateChanged
         .listen((state) async => _batteryLevel = await battery.batteryLevel);
@@ -215,7 +216,7 @@ abstract class BTLEDeviceManager<TDeviceRegistration extends DeviceRegistration,
 
   @override
   @mustCallSuper
-  void onInitialize(DeviceConfiguration descriptor) {
+  void onInitialize(DeviceConfiguration configuration) {
     statusEvents.listen((event) {
       // when this device is (re)connected, restart sampling
       if (event == DeviceStatus.connected) {

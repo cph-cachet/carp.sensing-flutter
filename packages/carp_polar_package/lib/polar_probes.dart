@@ -15,11 +15,14 @@ abstract class _PolarProbe extends StreamProbe {
 /// Collects accelerometer data from the Polar device.
 class PolarAccelerometerProbe extends _PolarProbe {
   @override
-  Stream<Datum>? get stream => (deviceManager.isConnected)
+  Stream<Measurement>? get stream => (deviceManager.isConnected)
       ? deviceManager.features.contains(DeviceStreamingFeature.acc)
           ? deviceManager.polar
               .startAccStreaming(deviceManager.id)
-              .map((event) => PolarAccelerometerDatum.fromPolarData(event))
+              .map((event) => Measurement.fromData(
+                    PolarAccelerometer.fromPolarData(event),
+                    event.timeStamp,
+                  ))
               .asBroadcastStream()
           : null
       : null;
@@ -28,11 +31,14 @@ class PolarAccelerometerProbe extends _PolarProbe {
 /// Collects gyroscope data from the Polar device.
 class PolarGyroscopeProbe extends _PolarProbe {
   @override
-  Stream<Datum>? get stream => (deviceManager.isConnected)
+  Stream<Measurement>? get stream => (deviceManager.isConnected)
       ? deviceManager.features.contains(DeviceStreamingFeature.gyro)
           ? deviceManager.polar
               .startGyroStreaming(deviceManager.id)
-              .map((event) => PolarGyroscopeDatum.fromPolarData(event))
+              .map((event) => Measurement.fromData(
+                    PolarGyroscope.fromPolarData(event),
+                    event.timeStamp,
+                  ))
               .asBroadcastStream()
           : null
       : null;
@@ -41,11 +47,14 @@ class PolarGyroscopeProbe extends _PolarProbe {
 /// Collects magnetometer data from the Polar device.
 class PolarMagnetometerProbe extends _PolarProbe {
   @override
-  Stream<Datum>? get stream => (deviceManager.isConnected)
+  Stream<Measurement>? get stream => (deviceManager.isConnected)
       ? deviceManager.features.contains(DeviceStreamingFeature.magnetometer)
           ? deviceManager.polar
               .startMagnetometerStreaming(deviceManager.id)
-              .map((event) => PolarMagnetometerDatum.fromPolarData(event))
+              .map((event) => Measurement.fromData(
+                    PolarMagnetometer.fromPolarData(event),
+                    event.timeStamp,
+                  ))
               .asBroadcastStream()
           : null
       : null;
@@ -54,11 +63,14 @@ class PolarMagnetometerProbe extends _PolarProbe {
 /// Collects PPG data from the Polar device.
 class PolarPPGProbe extends _PolarProbe {
   @override
-  Stream<Datum>? get stream => (deviceManager.isConnected)
+  Stream<Measurement>? get stream => (deviceManager.isConnected)
       ? deviceManager.features.contains(DeviceStreamingFeature.ppg)
           ? deviceManager.polar
               .startOhrStreaming(deviceManager.id)
-              .map((event) => PolarPPGDatum.fromPolarData(event))
+              .map((event) => Measurement.fromData(
+                    PolarPPG.fromPolarData(event),
+                    event.timeStamp,
+                  ))
               .asBroadcastStream()
           : null
       : null;
@@ -67,11 +79,14 @@ class PolarPPGProbe extends _PolarProbe {
 /// Collects PPI data from the Polar device.
 class PolarPPIProbe extends _PolarProbe {
   @override
-  Stream<Datum>? get stream => (deviceManager.isConnected)
+  Stream<Measurement>? get stream => (deviceManager.isConnected)
       ? deviceManager.features.contains(DeviceStreamingFeature.ppi)
           ? deviceManager.polar
               .startOhrPPIStreaming(deviceManager.id)
-              .map((event) => PolarPPIDatum.fromPolarData(event))
+              .map((event) => Measurement.fromData(
+                    PolarPPI.fromPolarData(event),
+                    event.timeStamp,
+                  ))
               .asBroadcastStream()
           : null
       : null;
@@ -80,13 +95,16 @@ class PolarPPIProbe extends _PolarProbe {
 /// Collects ECG data from the Polar device.
 class PolarECGProbe extends _PolarProbe {
   @override
-  Stream<Datum>? get stream {
+  Stream<Measurement>? get stream {
     debug('$runtimeType - features: ${deviceManager.features}');
     return (deviceManager.isConnected)
         ? deviceManager.features.contains(DeviceStreamingFeature.ecg)
             ? deviceManager.polar
                 .startEcgStreaming(deviceManager.id)
-                .map((event) => PolarECGDatum.fromPolarData(event))
+                .map((event) => Measurement.fromData(
+                      PolarECG.fromPolarData(event),
+                      event.timeStamp,
+                    ))
                 .asBroadcastStream()
             : null
         : null;
@@ -96,10 +114,10 @@ class PolarECGProbe extends _PolarProbe {
 /// Collects HR data from the Polar device.
 class PolarHRProbe extends _PolarProbe {
   @override
-  Stream<Datum>? get stream => (deviceManager.isConnected)
+  Stream<Measurement>? get stream => (deviceManager.isConnected)
       ? deviceManager.polar.heartRateStream
-          .map((event) =>
-              PolarHRDatum.fromPolarData(event.identifier, event.data))
+          .map((event) => Measurement.fromData(
+              PolarHR.fromPolarData(event.identifier, event.data)))
           .asBroadcastStream()
       : null;
 }

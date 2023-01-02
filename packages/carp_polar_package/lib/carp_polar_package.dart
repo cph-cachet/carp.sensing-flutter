@@ -37,10 +37,11 @@
 /// This package uses the [polar](https://pub.dev/packages?q=polar) Flutter plugin,
 /// which again builds upon the [official Polar SDK](https://github.com/polarofficial/polar-ble-sdk).
 /// Please consult the Polar [technical documentation](https://github.com/polarofficial/polar-ble-sdk/tree/master/technical_documentation)
-/// on the details on how to intepret the collected data.
+/// on the details on how to interpret the collected data.
 library carp_polar_package;
 
 import 'dart:async';
+import 'dart:math';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:polar/polar.dart';
@@ -49,7 +50,7 @@ import 'package:carp_serializable/carp_serializable.dart';
 import 'package:carp_core/carp_core.dart';
 import 'package:carp_mobile_sensing/carp_mobile_sensing.dart';
 
-part 'polar_datum.dart';
+part 'polar_data.dart';
 part 'polar_probes.dart';
 part "carp_polar_package.g.dart";
 part 'polar_device_manager.dart';
@@ -65,7 +66,7 @@ part 'polar_device_manager.dart';
 ///  * dk.cachet.carp.polar.ppg
 ///  * dk.cachet.carp.polar.hr
 ///
-/// All measure types are continous collection of Polar data from a Polar device,
+/// All measure types are continuos collection of Polar data from a Polar device,
 /// which are:
 ///
 ///  * Event-based measures.
@@ -75,8 +76,15 @@ part 'polar_device_manager.dart';
 /// An example of a study protocol configuration is:
 ///
 /// ```dart
+///   // Create a Polar H10 heart rate sensor.
+///   var polar = PolarDevice(
+///     roleName: 'hr-sensor',
+///     identifier: '1C709B20',
+///     name: 'H10',
+///     polarDeviceType: PolarDeviceType.H10,
+///   );
 ///   // Add a background task that immediately starts collecting Polar PPG and
-///   // PPI data from a Polar Verity Sense Optical heart rate sensor
+///   // PPI data from the Polar device.
 ///   protocol.addTriggeredTask(
 ///       ImmediateTrigger(),
 ///       BackgroundTask()
@@ -93,15 +101,13 @@ part 'polar_device_manager.dart';
 class PolarSamplingPackage implements SamplingPackage {
   static const String POLAR_NAMESPACE = "${NameSpace.CARP}.polar";
 
-  // static const String POLAR_BATTERY = "$POLAR_NAMESPACE.battery";
-  // static const String POLAR_CONNECTIVITY = "$POLAR_NAMESPACE.connectivity";
-  static const String POLAR_ACCELEROMETER = "$POLAR_NAMESPACE.accelerometer";
-  static const String POLAR_GYROSCOPE = "$POLAR_NAMESPACE.gyroscope";
-  static const String POLAR_MAGNETOMETER = "$POLAR_NAMESPACE.magnetometer";
-  static const String POLAR_PPG = "$POLAR_NAMESPACE.ppg";
-  static const String POLAR_PPI = "$POLAR_NAMESPACE.ppi";
-  static const String POLAR_ECG = "$POLAR_NAMESPACE.ecg";
-  static const String POLAR_HR = "$POLAR_NAMESPACE.hr";
+  static const String ACCELEROMETER = "$POLAR_NAMESPACE.accelerometer";
+  static const String GYROSCOPE = "$POLAR_NAMESPACE.gyroscope";
+  static const String MAGNETOMETER = "$POLAR_NAMESPACE.magnetometer";
+  static const String PPG = "$POLAR_NAMESPACE.ppg";
+  static const String PPI = "$POLAR_NAMESPACE.ppi";
+  static const String ECG = "$POLAR_NAMESPACE.ecg";
+  static const String HR = "$POLAR_NAMESPACE.hr";
 
   final DeviceManager _deviceManager = PolarDeviceManager();
 
@@ -127,19 +133,19 @@ class PolarSamplingPackage implements SamplingPackage {
   @override
   Probe? create(String type) {
     switch (type) {
-      case POLAR_ACCELEROMETER:
+      case ACCELEROMETER:
         return PolarAccelerometerProbe();
-      case POLAR_GYROSCOPE:
+      case GYROSCOPE:
         return PolarGyroscopeProbe();
-      case POLAR_MAGNETOMETER:
+      case MAGNETOMETER:
         return PolarMagnetometerProbe();
-      case POLAR_ECG:
+      case ECG:
         return PolarECGProbe();
-      case POLAR_PPI:
+      case PPI:
         return PolarPPIProbe();
-      case POLAR_PPG:
+      case PPG:
         return PolarPPGProbe();
-      case POLAR_HR:
+      case HR:
         return PolarHRProbe();
       default:
         return null;
@@ -147,14 +153,42 @@ class PolarSamplingPackage implements SamplingPackage {
   }
 
   @override
-  List<String> get dataTypes => [
-        POLAR_ACCELEROMETER,
-        POLAR_GYROSCOPE,
-        POLAR_MAGNETOMETER,
-        POLAR_ECG,
-        POLAR_PPI,
-        POLAR_PPG,
-        POLAR_HR,
+  List<DataTypeMetaData> get dataTypes => [
+        DataTypeMetaData(
+          type: ACCELEROMETER,
+          displayName: "Accelerometer",
+          timeType: DataTimeType.POINT,
+        ),
+        DataTypeMetaData(
+          type: GYROSCOPE,
+          displayName: "Gyroscope",
+          timeType: DataTimeType.POINT,
+        ),
+        DataTypeMetaData(
+          type: MAGNETOMETER,
+          displayName: "Magnetometer",
+          timeType: DataTimeType.POINT,
+        ),
+        DataTypeMetaData(
+          type: ECG,
+          displayName: "Electrocardiography (ECG)",
+          timeType: DataTimeType.POINT,
+        ),
+        DataTypeMetaData(
+          type: PPI,
+          displayName: "Peak-to-Peak Interval (PPI)",
+          timeType: DataTimeType.POINT,
+        ),
+        DataTypeMetaData(
+          type: PPG,
+          displayName: "Photoplethysmograpy (PPG)",
+          timeType: DataTimeType.POINT,
+        ),
+        DataTypeMetaData(
+          type: HR,
+          displayName: "Heart Rate (HR)",
+          timeType: DataTimeType.POINT,
+        ),
       ];
 
   @override

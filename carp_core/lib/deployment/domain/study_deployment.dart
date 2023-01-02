@@ -19,11 +19,11 @@ class StudyDeployment {
   late StudyDeploymentStatus _status;
   late StudyProtocol _protocol;
 
-  // the list of all registred devices, mapped to their rolename
+  // the list of all registered devices, mapped to their role name
   final Map<String, DeviceRegistration> _registeredDevices = {};
 
-  // the list of registrered devices' descriptions, mapped to their rolename
-  final Map<String, DeviceConfiguration> _registeredDeviceDescriptors = {};
+  // the list of registered devices' configurations, mapped to their role names
+  final Map<String, DeviceConfiguration> _registeredDeviceConfigurations = {};
   final Map<DeviceConfiguration, List<DeviceRegistration>>
       _deviceRegistrationHistory = {};
 
@@ -62,8 +62,8 @@ class StudyDeployment {
 
   /// The set of devices which are currently registered for this study deployment.
   Map<DeviceConfiguration, DeviceRegistration> get registeredDevices =>
-      _registeredDevices.map(
-          (key, value) => MapEntry(_registeredDeviceDescriptors[key]!, value));
+      _registeredDevices.map((key, value) =>
+          MapEntry(_registeredDeviceConfigurations[key]!, value));
 
   /// Per device, a list of all device registrations (included old registrations)
   /// in the order they were registered.
@@ -133,7 +133,7 @@ class StudyDeployment {
     _status.status = StudyDeploymentStatusTypes.DeployingDevices;
 
     // Add device to currently registered devices and also store it in registration history.
-    _registeredDeviceDescriptors[device.roleName] = device;
+    _registeredDeviceConfigurations[device.roleName] = device;
     _registeredDevices[device.roleName] = registration;
 
     if (_deviceRegistrationHistory[device] == null) {
@@ -145,7 +145,7 @@ class StudyDeployment {
   /// Remove the current device registration for the [device] in this deployment.
   void unregisterDevice(DeviceConfiguration device) {
     _deployedDevices.remove(device.roleName);
-    _registeredDeviceDescriptors.remove(device.roleName);
+    _registeredDeviceConfigurations.remove(device.roleName);
     _registeredDevices.remove(device.roleName);
   }
 
@@ -155,17 +155,17 @@ class StudyDeployment {
     PrimaryDeviceConfiguration device,
   ) {
     // Verify whether the specified device is part of the protocol of this
-    // deployment and has been registrered.
+    // deployment and has been registered.
     assert(_protocol.hasPrimaryDevice(device.roleName),
-        "The specified primary device with rolename '${device.roleName}' is not part of the protocol of this deployment.");
+        "The specified primary device with role name '${device.roleName}' is not part of the protocol of this deployment.");
     assert(_registeredDevices.containsKey(device.roleName),
-        "The specified primary device with rolename '${device.roleName}' has not been registrered to this deployment.");
+        "The specified primary device with role name '${device.roleName}' has not been registered to this deployment.");
 
     // TODO - Verify whether the specified device is ready to be deployed.
 
     DeviceRegistration configuration = _registeredDevices[device.roleName]!;
 
-    // mark all registrered devices as deployed
+    // mark all registered devices as deployed
     _deployedDevices.addAll(_registeredDevices.keys);
 
     // determine which devices this device needs to connect to
@@ -184,7 +184,7 @@ class StudyDeployment {
     tasks.addAll(protocol.getTasksForDeviceRoleName(device.roleName));
 
     // .. and connected devices
-    // note that connected devices need NOT to be registrered to be included
+    // note that connected devices need NOT to be registered to be included
     for (var descriptor in connectedDevices) {
       tasks.addAll(protocol.getTasksForDeviceRoleName(descriptor.roleName));
     }

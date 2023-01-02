@@ -128,28 +128,6 @@ class SmartphoneDeployment extends PrimaryDeviceDeployment
     }
   }
 
-  // /// Add a [MeasureListener] to this [Measure].
-  // void addMeasureListener(SmartphoneDeploymentListener listener) =>
-  //     _listeners.add(listener);
-
-  // /// Remove a [MeasureListener] to this [Measure].
-  // void removeMeasureListener(SmartphoneDeploymentListener listener) =>
-  //     _listeners.remove(listener);
-
-  // /// Call this method when this deployment has changed.
-  // Future<void> hasChanged([dynamic message]) async {
-  //   lastUpdateDate = DateTime.now();
-  //   for (var listener in _listeners) {
-  //     listener.hasChanged(message);
-  //   }
-  // }
-
-  // /// Adapt the sampling measures of this deployment to the specified [schema].
-  // void adapt(SamplingSchema schema, {bool restore = true}) {
-  //   samplingStrategy = schema.type;
-  //   schema.adapt(this, restore: restore);
-  // }
-
   factory SmartphoneDeployment.fromJson(Map<String, dynamic> json) =>
       _$SmartphoneDeploymentFromJson(json);
   @override
@@ -160,9 +138,3 @@ class SmartphoneDeployment extends PrimaryDeviceDeployment
       'device: ${deviceConfiguration.roleName}, '
       'title: ${studyDescription?.title}, responsible: ${responsible?.name}';
 }
-
-// /// A Listener that can listen on changes to a [SmartphoneDeployment].
-// abstract class SmartphoneDeploymentListener {
-//   /// Called when this [SmartphoneDeploymentListener] has changed.
-//   void hasChanged([dynamic message]);
-// }

@@ -31,26 +31,26 @@ void main() async {
   );
 
   protocol
-    ..addMasterDevice(phone)
+    ..addPrimaryDevice(phone)
     ..addConnectedDevice(polar);
 
   // Add a background task that immediately starts collecting step counts,
   //ambient light, screen activity, and battery level from the phone.
-  protocol.addTriggeredTask(
+  protocol.addTaskControl(
       ImmediateTrigger(),
       BackgroundTask()
-        ..addMeasure(Measure(type: SensorSamplingPackage.PEDOMETER))
-        ..addMeasure(Measure(type: SensorSamplingPackage.LIGHT))
-        ..addMeasure(Measure(type: DeviceSamplingPackage.SCREEN))
-        ..addMeasure(Measure(type: DeviceSamplingPackage.BATTERY)),
+        ..addMeasure(Measure(type: SensorSamplingPackage.STEP_COUNT))
+        ..addMeasure(Measure(type: SensorSamplingPackage.AMBIENT_LIGHT))
+        ..addMeasure(Measure(type: DeviceSamplingPackage.SCREEN_EVENT))
+        ..addMeasure(Measure(type: DeviceSamplingPackage.BATTERY_STATE)),
       phone);
 
   // Add a background task that immediately starts collecting HR and ECG data
   // from the Polar device.
-  protocol.addTriggeredTask(
+  protocol.addTaskControl(
       ImmediateTrigger(),
       BackgroundTask()
-        ..addMeasure(Measure(type: PolarSamplingPackage.POLAR_HR))
-        ..addMeasure(Measure(type: PolarSamplingPackage.POLAR_ECG)),
+        ..addMeasure(Measure(type: PolarSamplingPackage.HR))
+        ..addMeasure(Measure(type: PolarSamplingPackage.ECG)),
       polar);
 }

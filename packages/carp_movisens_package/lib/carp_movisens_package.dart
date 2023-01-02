@@ -32,7 +32,7 @@ import 'package:carp_serializable/carp_serializable.dart';
 import 'package:carp_core/carp_core.dart';
 import 'package:carp_mobile_sensing/carp_mobile_sensing.dart';
 
-part 'movisens_datum.dart';
+part 'movisens_data.dart';
 part 'movisens_probe.dart';
 part "carp_movisens_package.g.dart";
 part 'movisens_transformers.dart';

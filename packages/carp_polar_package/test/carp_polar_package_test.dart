@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
 import 'package:flutter/widgets.dart';
+import 'package:polar/polar.dart';
 import 'package:test/test.dart';
 
 import 'package:carp_serializable/carp_serializable.dart';
@@ -34,39 +35,39 @@ void main() {
     // Define which devices are used for data collection.
     phone = Smartphone(roleName: 'SM-A320FL');
     polar = PolarDevice(
-      roleName: 'eSense earplug',
+      roleName: 'Polar H10 HR monitor',
       identifier: deviceId,
       name: 'H10',
       polarDeviceType: PolarDeviceType.H10,
     );
 
     protocol
-      ..addMasterDevice(phone)
+      ..addPrimaryDevice(phone)
       ..addConnectedDevice(polar);
 
     // adding all available measures to one one trigger and one task
-    protocol.addTriggeredTask(
+    protocol.addTaskControl(
       ImmediateTrigger(),
       BackgroundTask()
         ..measures = SamplingPackageRegistry()
             .dataTypes
-            .map((type) => Measure(type: type))
+            .map((type) => Measure(type: type.type))
             .toList(),
       phone,
     );
 
     // Add a background task that immediately starts collecting eSense button and
     // sensor events from the eSense device.
-    protocol.addTriggeredTask(
+    protocol.addTaskControl(
         ImmediateTrigger(),
         BackgroundTask(measures: [
-          Measure(type: PolarSamplingPackage.POLAR_ACCELEROMETER),
-          Measure(type: PolarSamplingPackage.POLAR_GYROSCOPE),
-          Measure(type: PolarSamplingPackage.POLAR_MAGNETOMETER),
-          Measure(type: PolarSamplingPackage.POLAR_ECG),
-          Measure(type: PolarSamplingPackage.POLAR_HR),
-          Measure(type: PolarSamplingPackage.POLAR_PPG),
-          Measure(type: PolarSamplingPackage.POLAR_PPI),
+          Measure(type: PolarSamplingPackage.ACCELEROMETER),
+          Measure(type: PolarSamplingPackage.GYROSCOPE),
+          Measure(type: PolarSamplingPackage.MAGNETOMETER),
+          Measure(type: PolarSamplingPackage.ECG),
+          Measure(type: PolarSamplingPackage.HR),
+          Measure(type: PolarSamplingPackage.PPG),
+          Measure(type: PolarSamplingPackage.PPI),
         ]),
         polar);
   });
@@ -95,19 +96,30 @@ void main() {
         StudyProtocol.fromJson(json.decode(plainJson) as Map<String, dynamic>);
 
     expect(protocol.ownerId, 'alex@uni.dk');
-    expect(protocol.masterDevices.first.roleName, phone.roleName);
-    expect(protocol.connectedDevices.first.roleName, polar.roleName);
+    expect(protocol.primaryDevice.roleName, phone.roleName);
+    expect(protocol.connectedDevices?.first.roleName, polar.roleName);
     print(toJsonString(protocol));
   });
 
-  test('Data point -> JSON', () async {
-    PolarPPISample ppi = PolarPPISample(1, 2, 3, true, true, true);
-    PolarPPIDatum datum = PolarPPIDatum(deviceId, null, [ppi]);
+  test('Polar Measurements -> JSON', () async {
+    List<PolarData> data = [];
 
-    final DataPoint data = DataPoint.fromData(datum);
-    expect(
-        data.carpHeader.dataFormat.toString(), PolarSamplingPackage.POLAR_PPI);
+    data.add(PolarPPI(
+      deviceId,
+      DateTime.now().microsecondsSinceEpoch,
+      [PolarPPISample(1, 2, 3, true, true, true)],
+    ));
+    data.add(PolarPPG(deviceId, DateTime.now().microsecondsSinceEpoch,
+        OhrDataType.ppg3_ambient1, [
+      [1, 1],
+      [3, 2]
+    ]));
 
-    print(_encode(data.toJson()));
+    for (var d in data) {
+      var measurement = Measurement.fromData(d);
+      expect(measurement.dataType.toString(), measurement.data.jsonType);
+
+      print(_encode(measurement.toJson()));
+    }
   });
 }

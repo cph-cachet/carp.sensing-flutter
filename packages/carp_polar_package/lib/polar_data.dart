@@ -7,23 +7,23 @@
 part of carp_polar_package;
 
 /// An abstract Datum for all Polar data points.
-abstract class PolarDatum extends Datum {
+abstract class PolarData extends SensorData {
   /// Polar device identifier.
   String deviceIdentifier;
 
   /// Sample timestamp from the Polar device in nanoseconds.
   int? deviceTimestamp;
 
-  PolarDatum(this.deviceIdentifier, this.deviceTimestamp) : super();
+  PolarData(this.deviceIdentifier, this.deviceTimestamp) : super();
 
-  /// Create a [PolarDatum] based on [deviceIdentifier] and [deviceTimestamp] from
+  /// Create a [PolarData] based on [deviceIdentifier] and [deviceTimestamp] from
   /// a Polar data reading.
-  PolarDatum.fromPolarData(this.deviceIdentifier, [this.deviceTimestamp])
+  PolarData.fromPolarData(this.deviceIdentifier, [this.deviceTimestamp])
       : super();
 }
 
 /// Polar (x,y,z) values.
-@JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)
+@JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
 class PolarXYZ {
   ///  value
   final double x;
@@ -49,7 +49,7 @@ class PolarXYZ {
 }
 
 /// Polar optical heart rate (OHR) pulse-to-pulse interval (PPI) sample.
-@JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)
+@JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
 class PolarPPISample {
   /// Pulse-to-pulse interval (PPI) in milliseconds.
   int ppi;
@@ -99,124 +99,121 @@ class PolarPPISample {
 }
 
 /// Polar accelerometer data.
-@JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)
-class PolarAccelerometerDatum extends PolarDatum {
-  @JsonKey(ignore: true)
-  @override
-  DataFormat get format =>
-      DataFormat.fromString(PolarSamplingPackage.POLAR_ACCELEROMETER);
+@JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
+class PolarAccelerometer extends PolarData {
+  static const dataType = PolarSamplingPackage.ACCELEROMETER;
 
   /// Acceleration samples list (x,y,z).
   List<PolarXYZ> samples;
 
-  PolarAccelerometerDatum(
+  PolarAccelerometer(
     super.deviceIdentifier,
     super.deviceTimestamp,
     this.samples,
   );
 
-  /// Create a [PolarAccelerometerDatum] based on the original [PolarAccData] reading.
-  PolarAccelerometerDatum.fromPolarData(PolarAccData data)
+  /// Create a [PolarAccelerometer] based on the original [PolarAccData] reading.
+  PolarAccelerometer.fromPolarData(PolarAccData data)
       : samples =
             data.samples.map((xyz) => PolarXYZ.fromPolarData(xyz)).toList(),
         super.fromPolarData(data.identifier, data.timeStamp);
 
-  factory PolarAccelerometerDatum.fromJson(Map<String, dynamic> json) =>
-      _$PolarAccelerometerDatumFromJson(json);
+  factory PolarAccelerometer.fromJson(Map<String, dynamic> json) =>
+      _$PolarAccelerometerFromJson(json);
 
   @override
-  Map<String, dynamic> toJson() => _$PolarAccelerometerDatumToJson(this);
+  Map<String, dynamic> toJson() => _$PolarAccelerometerToJson(this);
+
+  @override
+  String get jsonType => PolarSamplingPackage.ACCELEROMETER;
 }
 
 /// Polar gyroscope data.
-@JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)
-class PolarGyroscopeDatum extends PolarDatum {
-  @JsonKey(ignore: true)
-  @override
-  DataFormat get format =>
-      DataFormat.fromString(PolarSamplingPackage.POLAR_GYROSCOPE);
+@JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
+class PolarGyroscope extends PolarData {
+  static const dataType = PolarSamplingPackage.GYROSCOPE;
 
   /// Gyroscope samples list (x,y,z) in °/s signed value
   List<PolarXYZ> samples;
 
-  PolarGyroscopeDatum(
+  PolarGyroscope(
     super.deviceIdentifier,
     super.deviceTimestamp,
     this.samples,
   );
 
-  /// Create a [PolarGyroscopeDatum] based on the original [PolarGyroData] reading.
-  PolarGyroscopeDatum.fromPolarData(PolarGyroData data)
+  /// Create a [PolarGyroscope] based on the original [PolarGyroData] reading.
+  PolarGyroscope.fromPolarData(PolarGyroData data)
       : samples =
             data.samples.map((xyz) => PolarXYZ.fromPolarData(xyz)).toList(),
         super.fromPolarData(data.identifier, data.timeStamp);
 
-  factory PolarGyroscopeDatum.fromJson(Map<String, dynamic> json) =>
-      _$PolarGyroscopeDatumFromJson(json);
+  factory PolarGyroscope.fromJson(Map<String, dynamic> json) =>
+      _$PolarGyroscopeFromJson(json);
 
   @override
-  Map<String, dynamic> toJson() => _$PolarGyroscopeDatumToJson(this);
+  Map<String, dynamic> toJson() => _$PolarGyroscopeToJson(this);
+
+  @override
+  String get jsonType => PolarSamplingPackage.GYROSCOPE;
 }
 
 /// Polar magnetometer data.
-@JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)
-class PolarMagnetometerDatum extends PolarDatum {
-  @JsonKey(ignore: true)
-  @override
-  DataFormat get format =>
-      DataFormat.fromString(PolarSamplingPackage.POLAR_MAGNETOMETER);
+@JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
+class PolarMagnetometer extends PolarData {
+  static const dataType = PolarSamplingPackage.MAGNETOMETER;
 
   /// Magnetometer samples list (x,y,z) in Gauss
   List<PolarXYZ> samples;
 
-  PolarMagnetometerDatum(
+  PolarMagnetometer(
       super.deviceIdentifier, super.deviceTimestamp, this.samples);
 
-  /// Create a [PolarMagnetometerDatum] based on the original [PolarMagnetometerData] reading.
-  PolarMagnetometerDatum.fromPolarData(PolarMagnetometerData data)
+  /// Create a [PolarMagnetometer] based on the original [PolarMagnetometerData] reading.
+  PolarMagnetometer.fromPolarData(PolarMagnetometerData data)
       : samples =
             data.samples.map((xyz) => PolarXYZ.fromPolarData(xyz)).toList(),
         super.fromPolarData(data.identifier, data.timeStamp);
 
-  factory PolarMagnetometerDatum.fromJson(Map<String, dynamic> json) =>
-      _$PolarMagnetometerDatumFromJson(json);
+  factory PolarMagnetometer.fromJson(Map<String, dynamic> json) =>
+      _$PolarMagnetometerFromJson(json);
 
   @override
-  Map<String, dynamic> toJson() => _$PolarMagnetometerDatumToJson(this);
+  Map<String, dynamic> toJson() => _$PolarMagnetometerToJson(this);
+
+  @override
+  String get jsonType => PolarSamplingPackage.MAGNETOMETER;
 }
 
 /// Polar ECG data.
-@JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)
-class PolarECGDatum extends PolarDatum {
-  @JsonKey(ignore: true)
-  @override
-  DataFormat get format =>
-      DataFormat.fromString(PolarSamplingPackage.POLAR_ECG);
+@JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
+class PolarECG extends PolarData {
+  static const dataType = PolarSamplingPackage.ECG;
 
   /// ECG sample in µVolts
   List<int> samples;
 
-  PolarECGDatum(super.deviceIdentifier, super.deviceTimestamp, this.samples);
+  PolarECG(super.deviceIdentifier, super.deviceTimestamp, this.samples);
 
-  /// Create a [PolarECGDatum] based on the original [PolarEcgData] reading.
-  PolarECGDatum.fromPolarData(PolarEcgData data)
+  /// Create a [PolarECG] based on the original [PolarEcgData] reading.
+  PolarECG.fromPolarData(PolarEcgData data)
       : samples = data.samples,
         super.fromPolarData(data.identifier, data.timeStamp);
 
-  factory PolarECGDatum.fromJson(Map<String, dynamic> json) =>
-      _$PolarECGDatumFromJson(json);
+  factory PolarECG.fromJson(Map<String, dynamic> json) =>
+      _$PolarECGFromJson(json);
 
   @override
-  Map<String, dynamic> toJson() => _$PolarECGDatumToJson(this);
+  Map<String, dynamic> toJson() => _$PolarECGToJson(this);
+
+  @override
+  String get jsonType => PolarSamplingPackage.ECG;
 }
 
 /// Polar optical heart rate (OHR) photoplethysmograpy (PPG) data.
-@JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)
-class PolarPPGDatum extends PolarDatum {
-  @JsonKey(ignore: true)
-  @override
-  DataFormat get format =>
-      DataFormat.fromString(PolarSamplingPackage.POLAR_PPG);
+@JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
+class PolarPPG extends PolarData {
+  static const dataType = PolarSamplingPackage.PPG;
 
   /// Source of OHR data
   OhrDataType type;
@@ -224,60 +221,61 @@ class PolarPPGDatum extends PolarDatum {
   /// ppg(s) and ambient(s) samples list
   List<List<int>> samples;
 
-  PolarPPGDatum(
+  PolarPPG(
     super.deviceIdentifier,
     super.deviceTimestamp,
     this.type,
     this.samples,
   );
 
-  /// Create a [PolarPPGDatum] based on the original [PolarOhrData] reading.
-  PolarPPGDatum.fromPolarData(PolarOhrData data)
+  /// Create a [PolarPPG] based on the original [PolarOhrData] reading.
+  PolarPPG.fromPolarData(PolarOhrData data)
       : samples = data.samples,
         type = data.type,
         super.fromPolarData(data.identifier, data.timeStamp);
 
-  factory PolarPPGDatum.fromJson(Map<String, dynamic> json) =>
-      _$PolarPPGDatumFromJson(json);
+  factory PolarPPG.fromJson(Map<String, dynamic> json) =>
+      _$PolarPPGFromJson(json);
 
   @override
-  Map<String, dynamic> toJson() => _$PolarPPGDatumToJson(this);
+  Map<String, dynamic> toJson() => _$PolarPPGToJson(this);
+
+  @override
+  String get jsonType => PolarSamplingPackage.PPG;
 }
 
 /// Polar PP interval (PPI) in milliseconds.
 /// Represents cardiac pulse-to-pulse interval extracted from PPG signal.
-@JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)
-class PolarPPIDatum extends PolarDatum {
-  @JsonKey(ignore: true)
-  @override
-  DataFormat get format =>
-      DataFormat.fromString(PolarSamplingPackage.POLAR_PPI);
+@JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
+class PolarPPI extends PolarData {
+  static const dataType = PolarSamplingPackage.PPI;
 
   /// List of PPI samples read from the Polar device.
   List<PolarPPISample> samples;
 
-  PolarPPIDatum(super.deviceIdentifier, super.deviceTimestamp, this.samples);
+  PolarPPI(super.deviceIdentifier, super.deviceTimestamp, this.samples);
 
-  /// Create a [PolarPPIDatum] based on the original [PolarPpiData] reading.
-  PolarPPIDatum.fromPolarData(PolarPpiData data)
+  /// Create a [PolarPPI] based on the original [PolarPpiData] reading.
+  PolarPPI.fromPolarData(PolarPpiData data)
       : samples = data.samples
             .map((ppi) => PolarPPISample.fromPolarData(ppi))
             .toList(),
         super.fromPolarData(data.identifier, data.timeStamp);
 
-  factory PolarPPIDatum.fromJson(Map<String, dynamic> json) =>
-      _$PolarPPIDatumFromJson(json);
+  factory PolarPPI.fromJson(Map<String, dynamic> json) =>
+      _$PolarPPIFromJson(json);
 
   @override
-  Map<String, dynamic> toJson() => _$PolarPPIDatumToJson(this);
+  Map<String, dynamic> toJson() => _$PolarPPIToJson(this);
+
+  @override
+  String get jsonType => PolarSamplingPackage.PPI;
 }
 
 /// Polar heart rate (HR).
-@JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)
-class PolarHRDatum extends PolarDatum {
-  @JsonKey(ignore: true)
-  @override
-  DataFormat get format => DataFormat.fromString(PolarSamplingPackage.POLAR_HR);
+@JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
+class PolarHR extends PolarData {
+  static const dataType = PolarSamplingPackage.HR;
 
   /// Heart rate (HR) in BPM
   int hr;
@@ -296,7 +294,7 @@ class PolarHRDatum extends PolarDatum {
   /// True contact detection is supported on the device.
   bool contactStatusSupported;
 
-  PolarHRDatum(
+  PolarHR(
     super.deviceIdentifier,
     super.deviceTimestamp,
     this.hr,
@@ -306,8 +304,8 @@ class PolarHRDatum extends PolarDatum {
     this.contactStatusSupported,
   );
 
-  /// Create a [PolarPPIDatum] based on the original [PolarPpiData] reading.
-  PolarHRDatum.fromPolarData(String identifier, PolarHrData data)
+  /// Create a [PolarPPI] based on the original [PolarPpiData] reading.
+  PolarHR.fromPolarData(String identifier, PolarHrData data)
       : hr = data.hr,
         rrs = data.rrs,
         rrsMs = data.rrsMs,
@@ -315,9 +313,12 @@ class PolarHRDatum extends PolarDatum {
         contactStatusSupported = data.contactStatusSupported,
         super.fromPolarData(identifier);
 
-  factory PolarHRDatum.fromJson(Map<String, dynamic> json) =>
-      _$PolarHRDatumFromJson(json);
+  factory PolarHR.fromJson(Map<String, dynamic> json) =>
+      _$PolarHRFromJson(json);
 
   @override
-  Map<String, dynamic> toJson() => _$PolarHRDatumToJson(this);
+  Map<String, dynamic> toJson() => _$PolarHRToJson(this);
+
+  @override
+  String get jsonType => PolarSamplingPackage.HR;
 }

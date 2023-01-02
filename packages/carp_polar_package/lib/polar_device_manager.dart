@@ -21,18 +21,18 @@ enum PolarDeviceType {
   SENSE,
 }
 
-/// A [DeviceDescriptor] for a Polar device used in a [StudyProtocol].
+/// A [deviceConfiguration] for a Polar device used in a [StudyProtocol].
 ///
 /// This device descriptor defined the basic configuration of the Polar
 /// device, including the [polarDeviceType], the [identifier], and the [name]
 /// of the device.
 @JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
-class PolarDevice extends DeviceDescriptor {
+class PolarDevice extends DeviceConfiguration {
   /// The type of a Polar device.
   static const String DEVICE_TYPE =
-      '${DeviceDescriptor.DEVICE_NAMESPACE}.PolarDevice';
+      '${DeviceConfiguration.DEVICE_NAMESPACE}.PolarDevice';
 
-  /// The default rolename for a Polar device.
+  /// The default role name for a Polar device.
   static const String DEFAULT_ROLENAME = 'polar';
 
   /// The polar sensor settings.
@@ -63,15 +63,15 @@ class PolarDevice extends DeviceDescriptor {
     this.identifier,
     this.name,
   }) : super(
-          isMasterDevice: false,
+          isOptional: true,
           supportedDataTypes: [
-            PolarSamplingPackage.POLAR_ACCELEROMETER,
-            PolarSamplingPackage.POLAR_GYROSCOPE,
-            PolarSamplingPackage.POLAR_MAGNETOMETER,
-            PolarSamplingPackage.POLAR_PPG,
-            PolarSamplingPackage.POLAR_PPI,
-            PolarSamplingPackage.POLAR_ECG,
-            PolarSamplingPackage.POLAR_HR,
+            PolarSamplingPackage.ACCELEROMETER,
+            PolarSamplingPackage.GYROSCOPE,
+            PolarSamplingPackage.MAGNETOMETER,
+            PolarSamplingPackage.PPG,
+            PolarSamplingPackage.PPI,
+            PolarSamplingPackage.ECG,
+            PolarSamplingPackage.HR,
           ],
         );
 
@@ -101,34 +101,34 @@ class PolarDeviceManager
   List<DeviceStreamingFeature> features = [];
 
   @override
-  String get id => deviceDescriptor?.identifier ?? '?????';
+  String get id => deviceConfiguration?.identifier ?? '?????';
 
   @override
-  String get btleName => deviceDescriptor?.name ?? '';
+  String get btleName => deviceConfiguration?.name ?? '';
 
   @override
   set btleName(String btleName) {
-    deviceDescriptor?.name = btleName;
+    deviceConfiguration?.name = btleName;
 
     // the polar BTLE name is typically of the form
     //  *  Polar Sense B34B4B56
     //  *  Polar H10 B36KB56
     // I.e., on the form "Polar <type> <identifier>
     if (btleName.split(' ').first.toUpperCase() == 'POLAR') {
-      deviceDescriptor?.identifier = btleName.split(' ').last;
+      deviceConfiguration?.identifier = btleName.split(' ').last;
 
       switch (btleName.split(' ').elementAt(1).toUpperCase()) {
         case 'H9':
-          deviceDescriptor?.polarDeviceType = PolarDeviceType.H9;
+          deviceConfiguration?.polarDeviceType = PolarDeviceType.H9;
           break;
         case 'H10':
-          deviceDescriptor?.polarDeviceType = PolarDeviceType.H10;
+          deviceConfiguration?.polarDeviceType = PolarDeviceType.H10;
           break;
         case 'SENSE':
-          deviceDescriptor?.polarDeviceType = PolarDeviceType.SENSE;
+          deviceConfiguration?.polarDeviceType = PolarDeviceType.SENSE;
           break;
         default:
-          deviceDescriptor?.polarDeviceType = PolarDeviceType.UNKNOWN;
+          deviceConfiguration?.polarDeviceType = PolarDeviceType.UNKNOWN;
           break;
       }
     }
@@ -138,10 +138,10 @@ class PolarDeviceManager
   bool get polarFeaturesAvailable => _polarFeaturesAvailable;
 
   @override
-  Future<void> onInitialize(DeviceDescriptor descriptor) async {
-    assert(descriptor is PolarDevice,
+  Future<void> onInitialize(DeviceConfiguration configuration) async {
+    assert(configuration is PolarDevice,
         '$runtimeType - can only be initialized with a PolarDevice device descriptor');
-    super.onInitialize(descriptor);
+    super.onInitialize(configuration);
   }
 
   /// The latest read of the battery level of the Polar device.
@@ -149,18 +149,18 @@ class PolarDeviceManager
   int? get batteryLevel => _batteryLevel;
 
   @override
-  String get btleAddress => deviceDescriptor?.address ?? '';
+  String get btleAddress => deviceConfiguration?.address ?? '';
 
   @override
   set btleAddress(String btleAddress) =>
-      deviceDescriptor?.address = btleAddress;
+      deviceConfiguration?.address = btleAddress;
 
   @override
-  Future<bool> canConnect() async => deviceDescriptor?.identifier != null;
+  Future<bool> canConnect() async => deviceConfiguration?.identifier != null;
 
   @override
   Future<DeviceStatus> onConnect() async {
-    if (deviceDescriptor?.identifier == null) {
+    if (deviceConfiguration?.identifier == null) {
       warning('$runtimeType - cannot connect to device, identifier is null.');
       return DeviceStatus.error;
     } else {
@@ -183,18 +183,18 @@ class PolarDeviceManager
         _connectingSubscription = polar.deviceConnectingStream.listen((event) {
           debug('$runtimeType - Polar event : $event');
           status = DeviceStatus.connecting;
-          deviceDescriptor?.address = event.address;
-          deviceDescriptor?.name = event.name;
-          deviceDescriptor?.rssi = event.rssi;
+          deviceConfiguration?.address = event.address;
+          deviceConfiguration?.name = event.name;
+          deviceConfiguration?.rssi = event.rssi;
         });
 
         _connectedSubscription = polar.deviceConnectedStream.listen((event) {
           debug('$runtimeType - Polar event : $event');
           // we do not mark the device as fully connected before the features are available
           status = DeviceStatus.connecting;
-          deviceDescriptor?.address = event.address;
-          deviceDescriptor?.name = event.name;
-          deviceDescriptor?.rssi = event.rssi;
+          deviceConfiguration?.address = event.address;
+          deviceConfiguration?.name = event.name;
+          deviceConfiguration?.rssi = event.rssi;
         });
 
         _disconnectedSubscription =
@@ -202,9 +202,9 @@ class PolarDeviceManager
           debug('$runtimeType - Polar event : $event');
           status = DeviceStatus.disconnected;
           _batteryLevel = null;
-          deviceDescriptor?.address = event.address;
-          deviceDescriptor?.name = event.name;
-          deviceDescriptor?.rssi = event.rssi;
+          deviceConfiguration?.address = event.address;
+          deviceConfiguration?.name = event.name;
+          deviceConfiguration?.rssi = event.rssi;
         });
 
         polar.connectToDevice(id);
@@ -220,13 +220,13 @@ class PolarDeviceManager
 
   @override
   Future<bool> onDisconnect() async {
-    if (deviceDescriptor?.identifier == null) {
+    if (deviceConfiguration?.identifier == null) {
       warning(
           '$runtimeType - cannot disconnect from device, identifier is null.');
       return false;
     }
 
-    polar.disconnectFromDevice(deviceDescriptor!.identifier!);
+    polar.disconnectFromDevice(deviceConfiguration!.identifier!);
 
     _batterySubscription?.cancel();
     _connectingSubscription?.cancel();

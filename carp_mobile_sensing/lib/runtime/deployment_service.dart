@@ -91,8 +91,8 @@ class SmartphoneDeploymentService implements DeploymentService {
   ) async {
     if (_repository[studyDeploymentId] == null) return null;
     StudyDeployment deployment = _repository[studyDeploymentId]!;
-    DeviceConfiguration device = deployment.registeredDevices.keys
-        .firstWhere((descriptor) => descriptor.roleName == deviceRoleName);
+    DeviceConfiguration device = deployment.registeredDevices.keys.firstWhere(
+        (configuration) => configuration.roleName == deviceRoleName);
 
     deployment.unregisterDevice(device);
 
@@ -108,7 +108,7 @@ class SmartphoneDeploymentService implements DeploymentService {
 
     StudyDeployment deployment = _repository[studyDeploymentId]!;
     DeviceConfiguration device = deployment.registeredDevices.keys.firstWhere(
-        (descriptor) => descriptor.roleName == primaryDeviceRoleName);
+        (configuration) => configuration.roleName == primaryDeviceRoleName);
 
     assert(device is PrimaryDeviceConfiguration,
         "The specified '$primaryDeviceRoleName' device is not registered as a primary device");
@@ -142,7 +142,7 @@ class SmartphoneDeploymentService implements DeploymentService {
     deviceDeploymentLastUpdatedOn ??= DateTime.now();
     StudyDeployment deployment = _repository[studyDeploymentId]!;
     DeviceConfiguration device = deployment.registeredDevices.keys.firstWhere(
-        (descriptor) => descriptor.roleName == primaryDeviceRoleName);
+        (configuration) => configuration.roleName == primaryDeviceRoleName);
 
     if (device is! PrimaryDeviceConfiguration) {
       warning(

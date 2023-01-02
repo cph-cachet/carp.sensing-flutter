@@ -84,10 +84,10 @@ void _registerFromJsonFunctions() {
   FromJsonFactory().register(AltBeacon());
   FromJsonFactory().register(DeviceConfiguration(roleName: ''),
       type:
-          'dk.cachet.carp.protocols.infrastructure.test.StubMasterDeviceDescriptor');
+          'dk.cachet.carp.protocols.infrastructure.test.StubMasterDeviceConfiguration');
   FromJsonFactory().register(DeviceConfiguration(roleName: ''),
       type:
-          'dk.cachet.carp.protocols.infrastructure.test.StubDeviceDescriptor');
+          'dk.cachet.carp.protocols.infrastructure.test.StubDeviceConfiguration');
   FromJsonFactory().register(ParticipantAttribute(inputDataType: 'ignored'));
   FromJsonFactory().register(AssignedTo());
 

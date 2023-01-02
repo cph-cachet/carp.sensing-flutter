@@ -194,28 +194,6 @@ enum DeviceDeploymentStatusTypes {
   NeedsRedeployment,
 }
 
-// /// Holds device invitation details.
-// @JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
-// class DeviceInvitation {
-//   DeviceInvitation() : super();
-
-//   /// The role name of the device in this invitation.
-//   late String deviceRoleName;
-
-//   /// True when the device is already registered in the study deployment,
-//   /// false otherwise.
-//   /// In case a device is registered, it needs to be unregistered first
-//   /// before a new device can be registered.
-//   late bool isRegistered;
-
-//   factory DeviceInvitation.fromJson(Map<String, dynamic> json) =>
-//       _$DeviceInvitationFromJson(json);
-//   Map<String, dynamic> toJson() => _$DeviceInvitationToJson(this);
-
-//   @override
-//   String toString() => '$runtimeType - deviceRoleName: $deviceRoleName';
-// }
-
 /// Primary [device] and its current [registration] assigned to participants as
 /// part of a participant group.
 @JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
