@@ -45,13 +45,13 @@ class WeatherServiceManager
   /// A handle to the [WeatherFactory] plugin.
   weather.WeatherFactory? get service => (_service != null)
       ? _service
-      : (deviceDescriptor?.apiKey != null)
-          ? _service = weather.WeatherFactory(deviceDescriptor!.apiKey)
+      : (deviceConfiguration?.apiKey != null)
+          ? _service = weather.WeatherFactory(deviceConfiguration!.apiKey)
           : null;
 
   @override
   String get id =>
-      deviceDescriptor?.roleName ?? WeatherService.DEFAULT_ROLENAME;
+      deviceConfiguration?.roleName ?? WeatherService.DEFAULT_ROLENAME;
 
   @override
   // ignore: avoid_renaming_method_parameters

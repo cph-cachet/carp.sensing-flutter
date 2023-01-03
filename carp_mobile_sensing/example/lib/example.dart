@@ -268,7 +268,7 @@ void example_2() async {
       ?.lookupProbe(SensorSamplingPackage.AMBIENT_LIGHT)
       .forEach((probe) => probe.restart());
 
-  // // Alternatively mark the deplyment as changed - calling hasChanged()
+  // // Alternatively mark the deployment as changed - calling hasChanged()
   // // this will force a restart of the entire sampling
   // controller.deployment?.hasChanged();
 
@@ -276,6 +276,40 @@ void example_2() async {
   // Note that once a sampling has stopped, it cannot be restarted.
   controller.stop();
   await subscription.cancel();
+}
+
+/// Example of different configuration options.
+void example_3() async {
+  var protocol = SmartphoneStudyProtocol(
+    ownerId: 'abc@dtu.dk',
+    name: 'Tracking',
+  );
+
+  // create and configure a client manager for this phone
+  final client = SmartPhoneClientManager();
+
+  // default configuration using:
+  // * [AwesomeNotificationController]
+  // * [SmartphoneDeploymentService]
+  // * [DeviceController]
+  await client.configure();
+
+  // use flutter_local_notification for notifications
+  await client.configure(
+    notificationController: FlutterLocalNotificationController(),
+  );
+
+  // add and deploy the protocol
+  final study = await client.addStudyProtocol(protocol);
+  final controller = client.getStudyRuntime(study);
+
+  // configure the controller
+  controller?.configure(
+    dataEndPoint: FileDataEndPoint(bufferSize: 50 * 1000, encrypt: false),
+    askForPermissions: false,
+    enableNotifications: false,
+    transformer: (data) => data,
+  );
 }
 
 /// Example of device management.
@@ -289,7 +323,7 @@ void example_2() async {
 ///  * register the devices which are available
 ///  * get the study deployment for this primary device
 ///  * start the sensing
-void example_3() async {
+void example_4() async {
   // we assume that we know the study deployment id
   // this might have been obtained from an invitation
   String studyDeploymentId = '2938y4h-rfhklwe98-erhui';

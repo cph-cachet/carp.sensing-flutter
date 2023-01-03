@@ -15,11 +15,12 @@ dependencies:
   # carp_core: ^1.1.0
   # carp_mobile_sensing: ^1.1.0
  
-  json_annotation: ^4.4.0
+  json_annotation: ^4.7.0
   permission_handler: ^10.0.0  
-  movisens_flutter: ^1.0.0
+  movisens_flutter: ^1.1.0
   convert: ^3.0.1
   openmhealth_schemas: ^0.2.1+1
+  flutter_blue_plus: any
 
 
 # Overriding carp libraries to use the local copy

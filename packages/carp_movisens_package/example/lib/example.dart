@@ -24,7 +24,7 @@ void main() async {
     address: '88:6B:0F:CD:E7:F2',
     sensorLocation: SensorLocation.chest,
     gender: Gender.male,
-    sensorName: 'Sensor 02655',
+    deviceName: 'Sensor 02655',
     height: 175,
     weight: 75,
     age: 25,

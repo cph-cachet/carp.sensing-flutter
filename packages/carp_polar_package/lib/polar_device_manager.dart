@@ -137,13 +137,6 @@ class PolarDeviceManager
   /// Are the [features] available (i.e., received from the device)?
   bool get polarFeaturesAvailable => _polarFeaturesAvailable;
 
-  @override
-  Future<void> onInitialize(DeviceConfiguration configuration) async {
-    assert(configuration is PolarDevice,
-        '$runtimeType - can only be initialized with a PolarDevice device descriptor');
-    super.onInitialize(configuration);
-  }
-
   /// The latest read of the battery level of the Polar device.
   @override
   int? get batteryLevel => _batteryLevel;

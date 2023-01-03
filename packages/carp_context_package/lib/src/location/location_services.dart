@@ -83,7 +83,7 @@ class LocationServiceManager
 
   @override
   String get id =>
-      deviceDescriptor?.roleName ?? LocationService.DEFAULT_ROLENAME;
+      deviceConfiguration?.roleName ?? LocationService.DEFAULT_ROLENAME;
 
   @override
   // ignore: avoid_renaming_method_parameters
@@ -94,7 +94,7 @@ class LocationServiceManager
 
   @override
   Future<DeviceStatus> onConnect() async {
-    await manager.configure(deviceDescriptor);
+    await manager.configure(deviceConfiguration);
     return manager.enabled ? DeviceStatus.connected : DeviceStatus.disconnected;
   }
 

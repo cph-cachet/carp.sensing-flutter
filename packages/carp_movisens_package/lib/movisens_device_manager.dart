@@ -7,10 +7,10 @@
 
 part of carp_movisens_package;
 
-/// A [DeviceDescriptor] for a Movisens device used in a [StudyProtocol].
+/// A [DeviceConfiguration] for a Movisens device used in a [StudyProtocol].
 ///
 /// This device descriptor defined the basic configuration of the Movisens
-/// device, including the BTLE MAC [address], the [sensorName], the [sensorLocation]
+/// device, including the BTLE MAC [address], the [deviceName], the [sensorLocation]
 /// and the [weight], [height], [age], [gender] of the user using the device.
 @JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
 class MovisensDevice extends DeviceConfiguration {
@@ -18,17 +18,15 @@ class MovisensDevice extends DeviceConfiguration {
   static const String DEVICE_TYPE =
       '${DeviceConfiguration.DEVICE_NAMESPACE}.MovisensDevice';
 
-  /// The default rolename for a Movisens device.
+  /// The default role name for a Movisens device.
   static const String DEFAULT_ROLENAME = 'movisens';
 
-  /// The MAC address of the sensor.
-  String address;
-
-  /// The user-friendly name of the sensor.
-  String sensorName;
+  /// The user-friendly name of the device.
+  /// Used for connecting to the device.
+  String deviceName;
 
   /// Sensor placement on body
-  SensorLocation sensorLocation;
+  movisens.SensorLocation sensorLocation;
 
   /// Weight of the person wearing the Movisens device in kg.
   int weight;
@@ -44,21 +42,25 @@ class MovisensDevice extends DeviceConfiguration {
 
   /// Create a new [MovisensDevice].
   ///
-  /// Default user setting is a 25 year old male, height 178 cm high, weight
+  /// Default user settings are a 25 year old male, height 178 cm high, weight
   /// 78 kg with the sensor place on the chest.
   MovisensDevice({
     String? roleName,
-    required this.address,
-    required this.sensorName,
-    this.sensorLocation = SensorLocation.chest,
+    required this.deviceName,
+    this.sensorLocation = movisens.SensorLocation.chest,
     this.gender = Gender.male,
     this.height = 178,
     this.weight = 78,
     this.age = 25,
   }) : super(
           roleName: roleName ?? DEFAULT_ROLENAME,
-          isPrimaryDevice: false,
-          supportedDataTypes: [MovisensSamplingPackage.MOVISENS],
+          isOptional: true,
+          supportedDataTypes: [
+            MovisensSamplingPackage.ACTIVITY,
+            MovisensSamplingPackage.EDA,
+            MovisensSamplingPackage.HR,
+            MovisensSamplingPackage.EDR,
+          ],
         );
 
   @override
@@ -70,45 +72,50 @@ class MovisensDevice extends DeviceConfiguration {
 }
 
 /// A Movisens [DeviceManager].
-class MovisensDeviceManager extends BTLEDeviceManager {
+class MovisensDeviceManager
+    extends BTLEDeviceManager<DeviceRegistration, MovisensDevice> {
   // the last known voltage level of the Movisens device
   int _batteryLevel = -1;
   String? _connectionStatus;
-  StreamSubscription<Map<String, dynamic>>? _subscription;
+  // StreamSubscription<Map<String, dynamic>>? _subscription;
+  StreamSubscription<BluetoothDeviceState>? _subscription;
 
   @override
   MovisensDevice get deviceDescriptor =>
-      super.deviceDescriptor as MovisensDevice;
+      super.deviceConfiguration as MovisensDevice;
 
   /// The [Movisens] device handler.
   /// Only available after this device manger has been initialized via the
   /// [initialize] method.
-  Movisens? movisens;
+  movisens.MovisensDevice? device;
 
-  /// Movisens user data as specified in the [MovisensDevice] device descriptor.
-  /// Only available after this device manger has been initialized via the
-  /// [initialize] method.
-  UserData? userData;
+  // /// Movisens user data as specified in the [MovisensDevice] device descriptor.
+  // /// Only available after this device manger has been initialized via the
+  // /// [initialize] method.
+  // UserData? userData;
 
   @override
-  String get id => userData?.sensorAddress ?? MovisensDevice.DEVICE_TYPE;
+  String get id => device?.name ?? MovisensDevice.DEVICE_TYPE;
 
   String? get connectionStatus => _connectionStatus;
 
   @override
-  Future<void> onInitialize(DeviceDescriptor descriptor) async {
-    assert(descriptor is MovisensDevice,
-        '$runtimeType - can only be initialized with a MovisensDevice device descriptor');
+  Future<void> onInitialize(MovisensDevice configuration) async {
+    super.onInitialize(configuration);
+    device = movisens.MovisensDevice(name: configuration.deviceName);
 
-    userData = UserData(
-      deviceDescriptor.weight,
-      deviceDescriptor.height,
-      deviceDescriptor.gender,
-      deviceDescriptor.age,
-      deviceDescriptor.sensorLocation,
-      deviceDescriptor.address,
-      deviceDescriptor.sensorName,
-    );
+    // // assert(descriptor is MovisensDevice,
+    // //     '$runtimeType - can only be initialized with a MovisensDevice device descriptor');
+
+    // userData = UserData(
+    //   deviceDescriptor.weight,
+    //   deviceDescriptor.height,
+    //   deviceDescriptor.gender,
+    //   deviceDescriptor.age,
+    //   deviceDescriptor.sensorLocation,
+    //   deviceDescriptor.address,
+    //   deviceDescriptor.sensorName,
+    // );
   }
 
   /// The latest read of the battery level of the Movisens device.
@@ -116,37 +123,45 @@ class MovisensDeviceManager extends BTLEDeviceManager {
   int get batteryLevel => _batteryLevel;
 
   @override
-  String get btleAddress => deviceDescriptor.address;
+  String get btleAddress => device?.id ?? super.btleAddress;
 
   @override
-  Future<bool> canConnect() async => userData != null;
+  Future<bool> canConnect() async => device != null;
 
   @override
   Future<DeviceStatus> onConnect() async {
     try {
-      // create and connect to the Movisens device
-      movisens = Movisens(userData!);
+      await device?.connect();
 
-      // listen for Movisens events
-      _subscription = movisens?.movisensStream.listen((event) {
-        debug('$runtimeType :: Movisens event : $event');
+      // listen for BTLE connection events
+      _subscription = device?.state?.listen((state) {
+        switch (state) {
+          case BluetoothDeviceState.connecting:
+            status = DeviceStatus.connecting;
 
-        if (event.containsKey("BatteryLevel")) {
-          _batteryLevel = int.tryParse(
-                  jsonDecode(event["BatteryLevel"].toString())[BATTERY_LEVEL]
-                      .toString()) ??
-              -1;
-        }
+            break;
+          case BluetoothDeviceState.connected:
+            status = DeviceStatus.connected;
 
-        if (event.containsKey("ConnectionStatus")) {
-          _connectionStatus =
-              jsonDecode(event["BatteryLevel"].toString())[BATTERY_LEVEL]
-                  .toString();
-
-          // TODO - set the right connection status - can this be other than connected?
-          status = DeviceStatus.connected;
+            break;
+          case BluetoothDeviceState.disconnecting:
+          case BluetoothDeviceState.disconnected:
+            status = DeviceStatus.disconnected;
+            break;
         }
       });
+
+      // TODO - how can I listen to battery information?
+      // device._subscription = movisens?.movisensStream.listen((event) {
+      //   debug('$runtimeType :: Movisens event : $event');
+
+      //   if (event.containsKey("BatteryLevel")) {
+      //     _batteryLevel = int.tryParse(
+      //             jsonDecode(event["BatteryLevel"].toString())[BATTERY_LEVEL]
+      //                 .toString()) ??
+      //         -1;
+      //   }
+      // });
     } catch (error) {
       warning(
           "$runtimeType - could not connect to device of type '$type' - error: $error");
@@ -159,6 +174,7 @@ class MovisensDeviceManager extends BTLEDeviceManager {
   @override
   Future<bool> onDisconnect() async {
     _subscription?.cancel();
+    await device?.disconnect();
     return true;
   }
 }

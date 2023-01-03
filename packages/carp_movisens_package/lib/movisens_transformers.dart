@@ -6,22 +6,19 @@
  */
 part of carp_movisens_package;
 
-/// A [Datum] which can hold an OMH [DataPoint](https://www.openmhealth.org/documentation/#/schema-docs/schema-library/schemas/omh_data-point)
+/// A [Data] object which can hold an OMH [DataPoint](https://www.openmhealth.org/documentation/#/schema-docs/schema-library/schemas/omh_data-point)
 /// and provide its correct OMH [format] and [provenance].
-class OMHMovisensDataPoint extends Datum {
-  static const DataFormat DATA_FORMAT =
-      DataFormat(NameSpace.OMH, omh.SchemaSupport.DATA_POINT);
-  @override
-  DataFormat get format => DATA_FORMAT;
+class OMHMovisensDataPoint extends Data {
+  static const dataType = "${NameSpace.OMH}.${omh.SchemaSupport.DATA_POINT}";
 
   omh.DataPoint datapoint;
 
-  static omh.DataPointAcquisitionProvenance provenance(MovisensDatum datum) {
+  static omh.DataPointAcquisitionProvenance provenance(MovisensData datum) {
     String source = '{'
         '"smartphone": "${DeviceInfo().deviceID!}", '
         '"app": "${Settings().appName}", '
         '"sensor_type": "movisens", '
-        '"sensor_name": "${datum.movisensDeviceName}" '
+        '"sensor_name": "${datum.deviceId}" '
         '}';
     return omh.DataPointAcquisitionProvenance(
       sourceName: source,
@@ -37,12 +34,12 @@ class OMHMovisensDataPoint extends Datum {
 
 /// A [Datum] that holds an OMH [HeartRate](https://www.openmhealth.org/documentation/#/schema-docs/schema-library/schemas/omh_heart-rate)
 class OMHHeartRateDataPoint extends OMHMovisensDataPoint
-    implements DatumTransformerFactory {
+    implements DataTransformerFactory {
   static const String DEFAULT_HR_UNIT = "beats/min";
 
   OMHHeartRateDataPoint(omh.DataPoint datapoint) : super(datapoint);
 
-  factory OMHHeartRateDataPoint.fromMovisensHRDatum(MovisensHRDatum datum) {
+  factory OMHHeartRateDataPoint.fromMovisensHRDatum(MovisensHR datum) {
     var hr = omh.HeartRate(
         heartRate: omh.HeartRateUnitValue(
             unit: DEFAULT_HR_UNIT, value: double.tryParse(datum.hr!)!));
@@ -50,7 +47,7 @@ class OMHHeartRateDataPoint extends OMHMovisensDataPoint
         '"smartphone": "${DeviceInfo().deviceID}", '
         '"app": "${Settings().appName}", '
         '"sensor_type": "movisens", '
-        '"sensor_name": "${datum.movisensDeviceName}" '
+        '"sensor_name": "${datum.deviceId}" '
         '}';
 
     return OMHHeartRateDataPoint(omh.DataPoint(
@@ -65,17 +62,17 @@ class OMHHeartRateDataPoint extends OMHMovisensDataPoint
   factory OMHHeartRateDataPoint.fromJson(Map<String, dynamic> json) =>
       OMHHeartRateDataPoint(omh.DataPoint.fromJson(json));
 
-  static DatumTransformer get transformer => ((datum) =>
-      OMHHeartRateDataPoint.fromMovisensHRDatum(datum as MovisensHRDatum));
+  static DataTransformer get transformer => ((datum) =>
+      OMHHeartRateDataPoint.fromMovisensHRDatum(datum as MovisensHR));
 }
 
 /// A [TransformedDatum] that holds an OMH [StepCount](https://pub.dev/documentation/openmhealth_schemas/latest/domain_omh_activity/StepCount-class.html)
 class OMHStepCountDataPoint extends OMHMovisensDataPoint
-    implements DatumTransformerFactory {
+    implements DataTransformerFactory {
   OMHStepCountDataPoint(omh.DataPoint datapoint) : super(datapoint);
 
   factory OMHStepCountDataPoint.fromMovisensStepCountDatum(
-      MovisensStepCountDatum datum) {
+      MovisensStepCount datum) {
     DateTime? time = DateTime.tryParse(datum.movisensTimestamp!);
 
     var steps = omh.StepCount(stepCount: int.tryParse(datum.stepCount!)!)
@@ -86,7 +83,7 @@ class OMHStepCountDataPoint extends OMHMovisensDataPoint
         '"smartphone": "${DeviceInfo().deviceID}", '
         '"app": "${Settings().appName}", '
         '"sensor_type": "movisens", '
-        '"sensor_name": "${datum.movisensDeviceName}" '
+        '"sensor_name": "${datum.deviceId}" '
         '}';
 
     return OMHStepCountDataPoint(omh.DataPoint(
@@ -101,26 +98,21 @@ class OMHStepCountDataPoint extends OMHMovisensDataPoint
   factory OMHStepCountDataPoint.fromJson(Map<String, dynamic> json) =>
       OMHStepCountDataPoint(omh.DataPoint.fromJson(json));
 
-  static DatumTransformer get transformer =>
+  static DataTransformer get transformer =>
       ((datum) => OMHStepCountDataPoint.fromMovisensStepCountDatum(
-          datum as MovisensStepCountDatum));
+          datum as MovisensStepCount));
 }
 
 /// A [Datum] that holds an FHIR [Heart Rate Observation](http://hl7.org/fhir/heartrate.html).
-class FHIRHeartRateObservation extends Datum
-    implements DatumTransformerFactory {
-  static const DataFormat DATA_FORMAT =
-      DataFormat(NameSpace.FHIR, "observation-vitalsigns");
+class FHIRHeartRateObservation extends Data implements DataTransformerFactory {
+  static const dataType = "${NameSpace.OMH}.observation-vitalsigns";
   static const String DEFAULT_HR_UNIT = "beats/min";
-
-  @override
-  DataFormat get format => DATA_FORMAT;
 
   Map<String, dynamic> fhirJson;
 
   FHIRHeartRateObservation(this.fhirJson) : super();
 
-  factory FHIRHeartRateObservation.fromMovisensHRDatum(MovisensHRDatum datum) {
+  factory FHIRHeartRateObservation.fromMovisensHRDatum(MovisensHR datum) {
     final String fhirString = '{'
         '"resourceType": "Observation",'
         '"id": "heart-rate",'
@@ -157,7 +149,7 @@ class FHIRHeartRateObservation extends Datum
         '  "reference": "Patient/example"'
         '},'
         '"effectiveDateTime": "${datum.movisensTimestamp}",'
-        '"device" : "${datum.movisensDeviceName}",'
+        '"device" : "${datum.deviceId}",'
         '"valueQuantity": {'
         '  "value": ${datum.hr},'
         '  "unit": "beats/minute",'
@@ -175,6 +167,6 @@ class FHIRHeartRateObservation extends Datum
   factory FHIRHeartRateObservation.fromJson(Map<String, dynamic> json) =>
       FHIRHeartRateObservation(json);
 
-  static DatumTransformer get transformer => ((datum) =>
-      FHIRHeartRateObservation.fromMovisensHRDatum(datum as MovisensHRDatum));
+  static DataTransformer get transformer => ((datum) =>
+      FHIRHeartRateObservation.fromMovisensHRDatum(datum as MovisensHR));
 }

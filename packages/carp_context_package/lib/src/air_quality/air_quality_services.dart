@@ -45,13 +45,13 @@ class AirQualityServiceManager
   /// A handle to the [AirQuality] plugin.
   waqi.AirQuality? get service => (_service != null)
       ? _service
-      : (deviceDescriptor?.apiKey != null)
-          ? _service = waqi.AirQuality(deviceDescriptor!.apiKey)
+      : (deviceConfiguration?.apiKey != null)
+          ? _service = waqi.AirQuality(deviceConfiguration!.apiKey)
           : null;
 
   @override
   String get id =>
-      deviceDescriptor?.roleName ?? AirQualityService.DEFAULT_ROLENAME;
+      deviceConfiguration?.roleName ?? AirQualityService.DEFAULT_ROLENAME;
 
   @override
   // ignore: avoid_renaming_method_parameters

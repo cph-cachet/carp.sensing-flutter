@@ -172,12 +172,12 @@ class SmartphoneDeviceManager
   String get id => DeviceInfo().deviceID!;
 
   @override
-  void onInitialize(DeviceConfiguration configuration) {
+  void onInitialize(Smartphone configuration) {
     // listen to the battery
     battery.onBatteryStateChanged
         .listen((state) async => _batteryLevel = await battery.batteryLevel);
 
-    // find the supported datatypes
+    // find the supported data types
     for (var package in SamplingPackageRegistry().packages) {
       if (package is SmartphoneSamplingPackage) {
         _supportedDataTypes.addAll(package.dataTypes.map((e) => e.type));
@@ -216,7 +216,7 @@ abstract class BTLEDeviceManager<TDeviceRegistration extends DeviceRegistration,
 
   @override
   @mustCallSuper
-  void onInitialize(DeviceConfiguration configuration) {
+  void onInitialize(TDeviceConfiguration configuration) {
     statusEvents.listen((event) {
       // when this device is (re)connected, restart sampling
       if (event == DeviceStatus.connected) {

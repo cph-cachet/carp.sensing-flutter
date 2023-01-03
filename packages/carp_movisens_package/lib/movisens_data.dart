@@ -6,70 +6,99 @@
  */
 part of carp_movisens_package;
 
-/// An abstract Datum for all Movisens data points.
-@JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)
-class MovisensDatum extends Datum {
-  @JsonKey(ignore: true)
-  @override
-  DataFormat get format =>
-      DataFormat.fromString(MovisensSamplingPackage.MOVISENS);
+/// An abstract  for all Movisens data events.
+@JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
+class MovisensData extends Data {
+  static const String STEPS = "${MovisensSamplingPackage.ACTIVITY}.steps";
+  static const String BODY_POSITION =
+      "${MovisensSamplingPackage.ACTIVITY}.body_position";
+  static const String INCLINATION =
+      "${MovisensSamplingPackage.ACTIVITY}.inclination";
+  static const String MOVEMENT_ACCELERATION =
+      "${MovisensSamplingPackage.ACTIVITY}.movement_acceleration";
+  static const String MET = "${MovisensSamplingPackage.ACTIVITY}.met";
+  static const String MET_LEVEL =
+      "${MovisensSamplingPackage.ACTIVITY}.met_level";
 
-  /// The timestamp from the Movisens device.
-  String? movisensTimestamp;
+  static const String HR_MEAN = "${MovisensSamplingPackage.HR}.hr_mean";
+  static const String HRV = "${MovisensSamplingPackage.HR}.hrv";
+  static const String IS_HRV_VALID =
+      "${MovisensSamplingPackage.HR}.is_hrv_valid";
 
-  /// The device name of the Movisens device that collected this datum.
-  String? movisensDeviceName;
+  /// The timestamp of the Movisens event.
+  ///
+  /// Note that on Movisens devices, the stream of data sent through Bluetooth
+  /// is not transmitted instantaneously after it has been measured on the device.
+  /// See the documentation on [Timestamps](https://pub.dev/packages/movisens_flutter#timestamps) for more information.
+  late DateTime timestamp;
 
-  MovisensDatum() : super();
+  /// The ID of the device which emitted this event.
+  /// Uses a MAC address format on Android. Uses a UUID format on iOS.
+  String deviceId;
 
-  factory MovisensDatum.fromMap(
-    Map<String, dynamic> map, [
-    String? deviceName,
-  ]) {
-    MovisensDatum datum = MovisensDatum();
+  /// The type of BTLE characteristic which emitted this event.
+  movisens.MovisensBluetoothCharacteristics type;
 
-    if (map.containsKey("MetLevel")) {
-      datum = MovisensMETLevelDatum.fromMap(map["MetLevel"].toString());
-    }
-    if (map.containsKey("Met")) {
-      datum = MovisensMETDatum.fromMap(map["Met"].toString());
-    }
-    if (map.containsKey("HR")) {
-      datum = MovisensHRDatum.fromMap(map["HR"].toString());
-    }
-    if (map.containsKey("HRV")) {
-      datum = MovisensHRVDatum.fromMap(map["HRV"].toString());
-    }
-    if (map.containsKey("IsHrvValid")) {
-      datum = MovisensIsHrvValidDatum.fromMap(map["IsHrvValid"].toString());
-    }
-    if (map.containsKey("BodyPosition")) {
-      datum = MovisensBodyPositionDatum.fromMap(map["BodyPosition"].toString());
-    }
-    if (map.containsKey("StepCount")) {
-      datum = MovisensStepCountDatum.fromMap(map["StepCount"].toString());
-    }
-    if (map.containsKey("MovementAcceleration")) {
-      datum = MovisensMovementAccelerationDatum.fromMap(
-          map["MovementAcceleration"].toString());
-    }
-    if (map.containsKey("TapMarker")) {
-      datum = MovisensTapMarkerDatum.fromMap(map["TapMarker"].toString());
-    }
-    if (map.containsKey("BatteryLevel")) {
-      datum = MovisensBatteryLevelDatum.fromMap(map["BatteryLevel"].toString());
-    }
-    if (map.containsKey("ConnectionStatus")) {
-      datum = MovisensConnectionStatusDatum.fromMap(
-          map["ConnectionStatus"].toString());
-    }
-
-    datum.movisensTimestamp =
-        _movisensTimestampToUTC(map['timestamp'].toString());
-    datum.movisensDeviceName = deviceName;
-
-    return datum;
+  MovisensData({
+    required this.deviceId,
+    required this.type,
+    DateTime? timestamp,
+  }) : super() {
+    this.timestamp = timestamp ?? DateTime.now();
   }
+
+  factory MovisensData.fromMovisensEvent(movisens.MovisensEvent event) =>
+      MovisensData(
+          deviceId: event.deviceId, type: event.type, timestamp: event.time);
+
+  // factory MovisensData.fromMap(
+  //   Map<String, dynamic> map, [
+  //   String? deviceName,
+  // ]) {
+  //   MovisensData  = MovisensData();
+
+  //   if (map.containsKey("MetLevel")) {
+  //      = MovisensMETLevel.fromMap(map["MetLevel"].toString());
+  //   }
+  //   if (map.containsKey("Met")) {
+  //      = MovisensMET.fromMap(map["Met"].toString());
+  //   }
+  //   if (map.containsKey("HR")) {
+  //      = MovisensHR.fromMap(map["HR"].toString());
+  //   }
+  //   if (map.containsKey("HRV")) {
+  //      = MovisensHRV.fromMap(map["HRV"].toString());
+  //   }
+  //   if (map.containsKey("IsHrvValid")) {
+  //      = MovisensIsHrvValid.fromMap(map["IsHrvValid"].toString());
+  //   }
+  //   if (map.containsKey("BodyPosition")) {
+  //      = MovisensBodyPosition.fromMap(map["BodyPosition"].toString());
+  //   }
+  //   if (map.containsKey("StepCount")) {
+  //      = MovisensStepCount.fromMap(map["StepCount"].toString());
+  //   }
+  //   if (map.containsKey("MovementAcceleration")) {
+  //      = MovisensMovementAcceleration.fromMap(
+  //         map["MovementAcceleration"].toString());
+  //   }
+  //   if (map.containsKey("TapMarker")) {
+  //      = MovisensTapMarker.fromMap(map["TapMarker"].toString());
+  //   }
+  //   if (map.containsKey("BatteryLevel")) {
+  //      = MovisensBatteryLevel.fromMap(map["BatteryLevel"].toString());
+  //   }
+  //   if (map.containsKey("ConnectionStatus")) {
+  //      = MovisensConnectionStatus.fromMap(
+  //         map["ConnectionStatus"].toString());
+  //   }
+
+  //   .movisensTimestamp =
+  //       _movisensTimestampToUTC(map['timestamp'].toString());
+  //   .deviceId = deviceName;
+
+  //   return ;
+  // }
 
   /// Make a Movisens timestamp into UTC format
   static String _movisensTimestampToUTC(String timestamp) {
@@ -77,259 +106,398 @@ class MovisensDatum extends Datum {
     return "${splittedTimestamp[0]}T${splittedTimestamp[1]}.000Z";
   }
 
-  factory MovisensDatum.fromJson(Map<String, dynamic> json) =>
-      _$MovisensDatumFromJson(json);
+  factory MovisensData.fromJson(Map<String, dynamic> json) =>
+      _$MovisensDataFromJson(json);
 
   @override
-  Map<String, dynamic> toJson() => _$MovisensDatumToJson(this);
+  Map<String, dynamic> toJson() => _$MovisensDataToJson(this);
 }
 
-/// Movisens Metabolic (MET) level. MET levels are:
+/// Step counts as measured by the Movisens device.
+@JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
+class MovisensStepCount extends MovisensData {
+  static const dataType = MovisensData.STEPS;
+
+  /// Number of steps taken by the user in last interval
+  int steps;
+
+  MovisensStepCount({
+    required super.deviceId,
+    required super.type,
+    super.timestamp,
+    required this.steps,
+  });
+
+  @override
+  factory MovisensStepCount.fromMovisensEvent(movisens.StepsEvent event) =>
+      MovisensStepCount(
+        deviceId: event.deviceId,
+        type: event.type,
+        timestamp: event.time,
+        steps: event.steps,
+      );
+
+  factory MovisensStepCount.fromJson(Map<String, dynamic> json) =>
+      _$MovisensStepCountFromJson(json);
+  @override
+  Map<String, dynamic> toJson() => _$MovisensStepCountToJson(this);
+}
+
+/// The body position of the person wearing the device.
+@JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
+class MovisensBodyPosition extends MovisensData {
+  static const dataType = MovisensData.BODY_POSITION;
+
+  String bodyPosition;
+
+  MovisensBodyPosition({
+    required super.deviceId,
+    required super.type,
+    super.timestamp,
+    required this.bodyPosition,
+  });
+
+  @override
+  factory MovisensBodyPosition.fromMovisensEvent(
+          movisens.BodyPositionEvent event) =>
+      MovisensBodyPosition(
+        deviceId: event.deviceId,
+        type: event.type,
+        timestamp: event.time,
+        bodyPosition: event.bodyPosition.name,
+      );
+
+  factory MovisensBodyPosition.fromJson(Map<String, dynamic> json) =>
+      _$MovisensBodyPositionFromJson(json);
+  @override
+  Map<String, dynamic> toJson() => _$MovisensBodyPositionToJson(this);
+}
+
+/// The inclination of the body axes at the sensor location against the x, y
+/// and z axises.
+///
+/// Calculates the mean inclinations of the three body axes from the
+/// acceleration signal and displays the value for each inclination in degrees.
+/// The values range from 0° to 180°.
+///
+/// Read more in the [Movisens Documentation](https://docs.movisens.com/Algorithms/physical_activity/#inclination-inclinsationdown-inclinationforward-inclinationright).
+@JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
+class MovisensInclination extends MovisensData {
+  static const dataType = MovisensData.INCLINATION;
+
+  /// Inclination of the sensor in degrees on the (x,y,z) axis
+  int x, y, z;
+
+  MovisensInclination({
+    required super.deviceId,
+    required super.type,
+    super.timestamp,
+    required this.x,
+    required this.y,
+    required this.z,
+  });
+
+  @override
+  factory MovisensInclination.fromMovisensEvent(
+          movisens.InclinationEvent event) =>
+      MovisensInclination(
+        deviceId: event.deviceId,
+        type: event.type,
+        timestamp: event.time,
+        x: event.x,
+        y: event.y,
+        z: event.z,
+      );
+
+  factory MovisensInclination.fromJson(Map<String, dynamic> json) =>
+      _$MovisensInclinationFromJson(json);
+  @override
+  Map<String, dynamic> toJson() => _$MovisensInclinationToJson(this);
+}
+
+/// Movisens movement (accelerometer) reading.
+@JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
+class MovisensMovementAcceleration extends MovisensData {
+  static const dataType = MovisensData.MOVEMENT_ACCELERATION;
+
+  /// A measurement of physical activity metric that outputs values that have a
+  /// very good correlation to the intensity of bodily movements.
+  /// Measure in g (multiples of earth gravity (1g = 9,81 m/s2).)
+  double movementAcceleration;
+
+  MovisensMovementAcceleration({
+    required super.deviceId,
+    required super.type,
+    super.timestamp,
+    required this.movementAcceleration,
+  });
+
+  @override
+  factory MovisensMovementAcceleration.fromMovisensEvent(
+          movisens.MovementAccelerationEvent event) =>
+      MovisensMovementAcceleration(
+        deviceId: event.deviceId,
+        type: event.type,
+        timestamp: event.time,
+        movementAcceleration: event.movementAcceleration,
+      );
+
+  factory MovisensMovementAcceleration.fromJson(Map<String, dynamic> json) =>
+      _$MovisensMovementAccelerationFromJson(json);
+  @override
+  Map<String, dynamic> toJson() => _$MovisensMovementAccelerationToJson(this);
+}
+
+@JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
+class MovisensMET extends MovisensData {
+  static const dataType = MovisensData.MET;
+
+  /// Measure of Metabolic Equivalent of Task (MET), indicates the energy expenditure.
+  /// It is defined as the ratio of metabolic rate during a specific physical
+  /// task to a reference metabolic rate.
+  int met;
+
+  MovisensMET({
+    required super.deviceId,
+    required super.type,
+    super.timestamp,
+    required this.met,
+  });
+
+  @override
+  factory MovisensMET.fromMovisensEvent(movisens.MetEvent event) => MovisensMET(
+        deviceId: event.deviceId,
+        type: event.type,
+        timestamp: event.time,
+        met: event.met,
+      );
+
+  factory MovisensMET.fromJson(Map<String, dynamic> json) =>
+      _$MovisensMETFromJson(json);
+  @override
+  Map<String, dynamic> toJson() => _$MovisensMETToJson(this);
+}
+
+/// Movisens Metabolic (MET) level.
+///
+/// Number of seconds the user is in one of the following MET levels:
 ///   * sedentary
 ///   * light
 ///   * moderate
 ///   * vigorous
-@JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)
-class MovisensMETLevelDatum extends MovisensDatum {
+@JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
+class MovisensMETLevel extends MovisensData {
+  static const dataType = MovisensData.MET_LEVEL;
+
+  int sedentary, light, moderate, vigorous;
+
+  MovisensMETLevel({
+    required super.deviceId,
+    required super.type,
+    super.timestamp,
+    required this.sedentary,
+    required this.light,
+    required this.moderate,
+    required this.vigorous,
+  });
+
   @override
-  DataFormat get format =>
-      DataFormat.fromString(MovisensSamplingPackage.MET_LEVEL);
+  factory MovisensMETLevel.fromMovisensEvent(movisens.MetLevelEvent event) =>
+      MovisensMETLevel(
+        deviceId: event.deviceId,
+        type: event.type,
+        timestamp: event.time,
+        sedentary: event.sedentary,
+        light: event.light,
+        moderate: event.moderate,
+        vigorous: event.vigorous,
+      );
 
-  String? sedentary;
-  String? light;
-  String? moderate;
-  String? vigorous;
-
-  MovisensMETLevelDatum() : super();
-
-  MovisensMETLevelDatum.fromMap(String value) {
-    final map = jsonDecode(value);
-
-    sedentary = map['sedentary'].toString();
-    light = map['light'].toString();
-    moderate = map['moderate'].toString();
-    vigorous = map['vigorous'].toString();
-  }
-
-  factory MovisensMETLevelDatum.fromJson(Map<String, dynamic> json) =>
-      _$MovisensMETLevelDatumFromJson(json);
+  factory MovisensMETLevel.fromJson(Map<String, dynamic> json) =>
+      _$MovisensMETLevelFromJson(json);
   @override
-  Map<String, dynamic> toJson() => _$MovisensMETLevelDatumToJson(this);
-}
-
-/// Movisens movement (accelerometer) reading.
-@JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)
-class MovisensMovementAccelerationDatum extends MovisensDatum {
-  @override
-  DataFormat get format =>
-      DataFormat.fromString(MovisensSamplingPackage.MOVEMENT_ACCELERATION);
-
-  String? movementAcceleration;
-
-  MovisensMovementAccelerationDatum() : super();
-
-  MovisensMovementAccelerationDatum.fromMap(String value) {
-    final map = jsonDecode(value);
-    movementAcceleration = map['movement_acceleration'].toString();
-  }
-
-  factory MovisensMovementAccelerationDatum.fromJson(
-          Map<String, dynamic> json) =>
-      _$MovisensMovementAccelerationDatumFromJson(json);
-  @override
-  Map<String, dynamic> toJson() =>
-      _$MovisensMovementAccelerationDatumToJson(this);
-}
-
-/// Representing a tap marker event from a user tap on the Movisens device.
-@JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)
-class MovisensTapMarkerDatum extends MovisensDatum {
-  @override
-  DataFormat get format =>
-      DataFormat.fromString(MovisensSamplingPackage.TAP_MARKER);
-
-  String? tapMarker;
-
-  MovisensTapMarkerDatum() : super();
-
-  MovisensTapMarkerDatum.fromMap(String value) {
-    final map = jsonDecode(value);
-    tapMarker = map['tap_marker'].toString();
-  }
-
-  factory MovisensTapMarkerDatum.fromJson(Map<String, dynamic> json) =>
-      _$MovisensTapMarkerDatumFromJson(json);
-  @override
-  Map<String, dynamic> toJson() => _$MovisensTapMarkerDatumToJson(this);
-}
-
-/// The battery level of the Movisens device.
-@JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)
-class MovisensBatteryLevelDatum extends MovisensDatum {
-  @override
-  DataFormat get format =>
-      DataFormat.fromString(MovisensSamplingPackage.BATTERY_LEVEL);
-
-  String? batteryLevel;
-
-  MovisensBatteryLevelDatum() : super();
-
-  MovisensBatteryLevelDatum.fromMap(String value) {
-    final map = jsonDecode(value);
-    batteryLevel = map['battery_level'].toString();
-  }
-
-  factory MovisensBatteryLevelDatum.fromJson(Map<String, dynamic> json) =>
-      _$MovisensBatteryLevelDatumFromJson(json);
-  @override
-  Map<String, dynamic> toJson() => _$MovisensBatteryLevelDatumToJson(this);
-}
-
-/// The body position of the person wearing the device.
-@JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)
-class MovisensBodyPositionDatum extends MovisensDatum {
-  @override
-  DataFormat get format =>
-      DataFormat.fromString(MovisensSamplingPackage.BODY_POSITION);
-
-  String? bodyPosition;
-
-  MovisensBodyPositionDatum() : super();
-
-  MovisensBodyPositionDatum.fromMap(String value) {
-    final map = jsonDecode(value);
-    bodyPosition = map['body_position'].toString();
-  }
-
-  factory MovisensBodyPositionDatum.fromJson(Map<String, dynamic> json) =>
-      _$MovisensBodyPositionDatumFromJson(json);
-  @override
-  Map<String, dynamic> toJson() => _$MovisensBodyPositionDatumToJson(this);
-}
-
-@JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)
-class MovisensMETDatum extends MovisensDatum {
-  @override
-  DataFormat get format => DataFormat.fromString(MovisensSamplingPackage.MET);
-
-  String? met;
-
-  MovisensMETDatum() : super();
-
-  MovisensMETDatum.fromMap(String value) {
-    final map = jsonDecode(value);
-    met = map['met'].toString();
-  }
-
-  factory MovisensMETDatum.fromJson(Map<String, dynamic> json) =>
-      _$MovisensMETDatumFromJson(json);
-  @override
-  Map<String, dynamic> toJson() => _$MovisensMETDatumToJson(this);
+  Map<String, dynamic> toJson() => _$MovisensMETLevelToJson(this);
 }
 
 /// Heart Rate (HR) in beats pr. minute (BPM).
-@JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)
-class MovisensHRDatum extends MovisensDatum {
+@JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
+class MovisensHR extends MovisensData {
+  static const dataType = MovisensData.HR_MEAN;
+
+  /// Heart Rate (HR) mean of the previous 60 seconds, i.e., beats pr. minute (BPM).
+  int hr;
+
+  MovisensHR({
+    required super.deviceId,
+    required super.type,
+    super.timestamp,
+    required this.hr,
+  });
+
   @override
-  DataFormat get format => DataFormat.fromString(MovisensSamplingPackage.HR);
+  factory MovisensHR.fromMovisensEvent(movisens.HrMeanEvent event) =>
+      MovisensHR(
+        deviceId: event.deviceId,
+        type: event.type,
+        timestamp: event.time,
+        hr: event.hrMean,
+      );
 
-  /// Heart Rate (HR) in beats pr. minute (BPM).
-  String? hr;
-
-  MovisensHRDatum() : super();
-
-  MovisensHRDatum.fromMap(String value) {
-    final map = jsonDecode(value);
-    hr = map['hr'].toString();
-  }
-
-  factory MovisensHRDatum.fromJson(Map<String, dynamic> json) =>
-      _$MovisensHRDatumFromJson(json);
+  factory MovisensHR.fromJson(Map<String, dynamic> json) =>
+      _$MovisensHRFromJson(json);
   @override
-  Map<String, dynamic> toJson() => _$MovisensHRDatumToJson(this);
+  Map<String, dynamic> toJson() => _$MovisensHRToJson(this);
 }
 
 /// Heart rate variability (HRV).
-@JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)
-class MovisensHRVDatum extends MovisensDatum {
+@JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
+class MovisensHRV extends MovisensData {
+  static const dataType = MovisensData.HR_MEAN;
+
+  /// The Root Mean Square of Successive Differences (RMSSD) of heart beat intervals.
+  ///
+  /// This parameter is the mean value of the HRV parameter RMSSD per output interval.
+  /// RMSSD is the root mean square of successive differences of beat intervals.
+  /// The unit is milliseconds.
+  int hrv;
+
+  MovisensHRV({
+    required super.deviceId,
+    required super.type,
+    super.timestamp,
+    required this.hrv,
+  });
+
   @override
-  DataFormat get format => DataFormat.fromString(MovisensSamplingPackage.HRV);
+  factory MovisensHRV.fromMovisensEvent(movisens.RmssdEvent event) =>
+      MovisensHRV(
+        deviceId: event.deviceId,
+        type: event.type,
+        timestamp: event.time,
+        hrv: event.rmssd,
+      );
 
-  String? hrv;
-
-  MovisensHRVDatum() : super();
-
-  MovisensHRVDatum.fromMap(String value) {
-    final map = jsonDecode(value);
-    hrv = map['hrv'].toString();
-  }
-
-  factory MovisensHRVDatum.fromJson(Map<String, dynamic> json) =>
-      _$MovisensHRVDatumFromJson(json);
+  factory MovisensHRV.fromJson(Map<String, dynamic> json) =>
+      _$MovisensHRVFromJson(json);
   @override
-  Map<String, dynamic> toJson() => _$MovisensHRVDatumToJson(this);
+  Map<String, dynamic> toJson() => _$MovisensHRVToJson(this);
 }
 
-@JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)
-class MovisensIsHrvValidDatum extends MovisensDatum {
+@JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
+class MovisensIsHrvValid extends MovisensData {
+  static const dataType = MovisensData.HR_MEAN;
+
+  /// Are the current HRV measurements valid?
+  bool isHrvValid;
+
+  MovisensIsHrvValid({
+    required super.deviceId,
+    required super.type,
+    super.timestamp,
+    required this.isHrvValid,
+  });
+
   @override
-  DataFormat get format =>
-      DataFormat.fromString(MovisensSamplingPackage.IS_HRV_VALID);
+  factory MovisensIsHrvValid.fromMovisensEvent(
+          movisens.HrvIsValidEvent event) =>
+      MovisensIsHrvValid(
+        deviceId: event.deviceId,
+        type: event.type,
+        timestamp: event.time,
+        isHrvValid: event.hrvIsValid,
+      );
 
-  String? isHrvValid;
-
-  MovisensIsHrvValidDatum() : super();
-
-  MovisensIsHrvValidDatum.fromMap(String value) {
-    final map = jsonDecode(value);
-    isHrvValid = map['is_hrv_valid'].toString();
-  }
-
-  factory MovisensIsHrvValidDatum.fromJson(Map<String, dynamic> json) =>
-      _$MovisensIsHrvValidDatumFromJson(json);
+  factory MovisensIsHrvValid.fromJson(Map<String, dynamic> json) =>
+      _$MovisensIsHrvValidFromJson(json);
   @override
-  Map<String, dynamic> toJson() => _$MovisensIsHrvValidDatumToJson(this);
+  Map<String, dynamic> toJson() => _$MovisensIsHrvValidToJson(this);
 }
 
-/// Step counts as measured by the Movisens device.
-@JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)
-class MovisensStepCountDatum extends MovisensDatum {
+/// Representing a tap marker event from a user tap on the Movisens device.
+@JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
+class MovisensTapMarker extends MovisensData {
+  static const dataType = MovisensSamplingPackage.TAP_MARKER;
+
+  /// The tap marker value.
+  int tapMarker;
+
+  MovisensTapMarker({
+    required super.deviceId,
+    required super.type,
+    super.timestamp,
+    required this.tapMarker,
+  });
+
   @override
-  DataFormat get format =>
-      DataFormat.fromString(MovisensSamplingPackage.STEP_COUNT);
+  factory MovisensTapMarker.fromMovisensEvent(movisens.TapMarkerEvent event) =>
+      MovisensTapMarker(
+        deviceId: event.deviceId,
+        type: event.type,
+        timestamp: event.time,
+        tapMarker: event.tapMarkerValue,
+      );
 
-  String? stepCount;
-
-  MovisensStepCountDatum() : super();
-
-  MovisensStepCountDatum.fromMap(String value) {
-    final map = jsonDecode(value);
-    stepCount = map['step_count'].toString();
-  }
-  factory MovisensStepCountDatum.fromJson(Map<String, dynamic> json) =>
-      _$MovisensStepCountDatumFromJson(json);
+  factory MovisensTapMarker.fromJson(Map<String, dynamic> json) =>
+      _$MovisensTapMarkerFromJson(json);
   @override
-  Map<String, dynamic> toJson() => _$MovisensStepCountDatumToJson(this);
+  Map<String, dynamic> toJson() => _$MovisensTapMarkerToJson(this);
 }
 
-/// Connectivity status of the Movisens device.
-@JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)
-class MovisensConnectionStatusDatum extends MovisensDatum {
+@JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
+class MovisensEDA extends MovisensData {
+  static const dataType = MovisensSamplingPackage.EDA;
+
+  /// The Mean Skin Conductance Level (SCL) value in micro Siemens.
+  double edaSclMean;
+
+  MovisensEDA({
+    required super.deviceId,
+    required super.type,
+    super.timestamp,
+    required this.edaSclMean,
+  });
+
   @override
-  DataFormat get format =>
-      DataFormat.fromString(MovisensSamplingPackage.CONNECTION_STATUS);
+  factory MovisensEDA.fromMovisensEvent(movisens.EdaSclMeanEvent event) =>
+      MovisensEDA(
+        deviceId: event.deviceId,
+        type: event.type,
+        timestamp: event.time,
+        edaSclMean: event.edaSclMean,
+      );
 
-  String? connectionStatus;
-
-  MovisensConnectionStatusDatum() : super();
-
-  MovisensConnectionStatusDatum.fromMap(String value) {
-    final map = jsonDecode(value);
-    connectionStatus = map['connection_status'].toString();
-  }
-
-  factory MovisensConnectionStatusDatum.fromJson(Map<String, dynamic> json) =>
-      _$MovisensConnectionStatusDatumFromJson(json);
+  factory MovisensEDA.fromJson(Map<String, dynamic> json) =>
+      _$MovisensEDAFromJson(json);
   @override
-  Map<String, dynamic> toJson() => _$MovisensConnectionStatusDatumToJson(this);
+  Map<String, dynamic> toJson() => _$MovisensEDAToJson(this);
+}
+
+@JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
+class MovisensSkinTemperature extends MovisensData {
+  static const dataType = MovisensSamplingPackage.SKIN_TEMPERATURE;
+
+  /// Temperature of the skin in degree Celsius.
+  double skinTemperature;
+
+  MovisensSkinTemperature({
+    required super.deviceId,
+    required super.type,
+    super.timestamp,
+    required this.skinTemperature,
+  });
+
+  @override
+  factory MovisensSkinTemperature.fromMovisensEvent(
+          movisens.SkinTemperatureEvent event) =>
+      MovisensSkinTemperature(
+        deviceId: event.deviceId,
+        type: event.type,
+        timestamp: event.time,
+        skinTemperature: event.skinTemperature,
+      );
+
+  factory MovisensSkinTemperature.fromJson(Map<String, dynamic> json) =>
+      _$MovisensSkinTemperatureFromJson(json);
+  @override
+  Map<String, dynamic> toJson() => _$MovisensSkinTemperatureToJson(this);
 }

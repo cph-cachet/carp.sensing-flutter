@@ -34,7 +34,7 @@ void main() {
       address: '88:6B:0F:CD:E7:F2',
       sensorLocation: SensorLocation.chest,
       gender: Gender.male,
-      sensorName: 'Sensor 02655',
+      deviceName: 'Sensor 02655',
       height: 175,
       weight: 75,
       age: 25,
@@ -95,9 +95,9 @@ void main() {
   });
 
   test('Movisens HR -> OMH HeartRate', () {
-    MovisensHRDatum hr = MovisensHRDatum()
+    MovisensHR hr = MovisensHR()
       ..hr = '78'
-      ..movisensDeviceName = 'unit_test_device_name';
+      ..deviceId = 'unit_test_device_name';
 
     DataPoint dp_1 = DataPoint.fromData(hr);
     expect(dp_1.carpHeader.dataFormat.namespace,
@@ -117,9 +117,9 @@ void main() {
   });
 
   test('Movisens Step Count -> OMH StepCount', () {
-    MovisensStepCountDatum steps = MovisensStepCountDatum()
+    MovisensStepCount steps = MovisensStepCount()
       ..stepCount = '56'
-      ..movisensDeviceName = 'unit_test_device_name';
+      ..deviceId = 'unit_test_device_name';
 
     steps.movisensTimestamp = DateTime.now().toUtc().toString();
 
@@ -141,9 +141,9 @@ void main() {
   });
 
   test('Movisens HR -> FHIR Heart Rate Observation', () {
-    MovisensHRDatum hr = MovisensHRDatum()
+    MovisensHR hr = MovisensHR()
       ..hr = '118'
-      ..movisensDeviceName = 'unit_test_device_name';
+      ..deviceId = 'unit_test_device_name';
 
     DataPoint dp_1 = DataPoint.fromData(hr);
     expect(dp_1.carpHeader.dataFormat.namespace,
@@ -162,7 +162,7 @@ void main() {
   });
 
   test('Movisens HR -> OMH HR Data Point Example', () {
-    var data = MovisensHRDatum()..hr = '118';
+    var data = MovisensHR()..hr = '118';
 
     var transformedData =
         TransformerSchemaRegistry().lookup(NameSpace.OMH)!.transform(data);
