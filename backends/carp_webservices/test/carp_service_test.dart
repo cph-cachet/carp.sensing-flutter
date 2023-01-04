@@ -190,10 +190,10 @@ void main() {
           {"text": "The original terms text.", "signature": "Image Blob"});
 
       print(uploaded);
-      print('document id : ${uploaded.id}');
-      print('createdAt   : ${uploaded.createdAt}');
-      print('createdByUserId : ${uploaded.createdByUserId}');
-      print('document    : ${uploaded.document}');
+      print('id        : ${uploaded.id}');
+      print('createdAt : ${uploaded.createdAt}');
+      print('createdBy : ${uploaded.createdBy}');
+      print('document  : ${uploaded.document}');
     });
 
     test('- get', () async {
@@ -203,13 +203,13 @@ void main() {
       expect(uploaded.id, isNotNull);
 
       ConsentDocument downloaded =
-          await CarpService().getConsentDocument(uploaded.id!);
+          await CarpService().getConsentDocument(uploaded.id);
 
       print(downloaded);
-      print('document id : ${downloaded.id}');
+      print('id        : ${downloaded.id}');
       print('createdAt : ${downloaded.createdAt}');
-      print('createdByUserId : ${downloaded.createdByUserId}');
-      print('document : ${downloaded.document}');
+      print('createdBy : ${downloaded.createdBy}');
+      print('document  : ${downloaded.document}');
     });
   }, skip: false);
 

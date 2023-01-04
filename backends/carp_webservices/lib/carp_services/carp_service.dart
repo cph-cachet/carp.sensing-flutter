@@ -387,15 +387,11 @@ class CarpService extends CarpBaseService {
   /// Returns the created [ConsentDocument] if the document is uploaded correctly.
   Future<ConsentDocument> createConsentDocument(
       Map<String, dynamic> document) async {
-    print('$consentDocumentEndpointUri');
     // POST the document to the CARP web service
     http.Response response = await http.post(
         Uri.parse(Uri.encodeFull(consentDocumentEndpointUri)),
         headers: headers,
         body: json.encode(document));
-
-    print(response.body);
-    print(toJsonString(response.body));
 
     int httpStatusCode = response.statusCode;
     Map<String, dynamic> responseJson = json.decode(response.body);
