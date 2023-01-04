@@ -1,32 +1,51 @@
 # CARP Movisens Sampling Package
 
-This library contains a sampling package for sampling data from the [Movisens Move4 and ECGMove4 devices](https://www.movisens.com/en/products/ecg-sensor/) to work with
-the [`carp_mobile_sensing`](https://pub.dartlang.org/packages/carp_mobile_sensing) package.
-This packages supports sampling of the following [`Measure`](https://pub.dev/documentation/carp_core/latest/carp_core_protocols/Measure-class.html) type:
+This library contains a [`carp_mobile_sensing`](https://pub.dartlang.org/packages/carp_mobile_sensing) (CAMS) sampling package for collecting data from [Movisens](https://www.movisens.com) devices:
 
-* `dk.cachet.carp.movisens`
+* [Move 4](https://docs.movisens.com/Sensors/Move4/)
+* [EcgMove 4](https://docs.movisens.com/Sensors/EcgMove4/)
+* [EdaMove 4](https://docs.movisens.com/Sensors/EdaMove4/)
 
-See the [wiki](https://github.com/cph-cachet/carp.sensing-flutter/wiki) for further documentation, particularly on available [measure types](https://github.com/cph-cachet/carp.sensing-flutter/wiki/A.-Measure-Types).
-See the [CARP Mobile Sensing App](https://github.com/cph-cachet/carp.sensing-flutter/tree/master/apps/carp_mobile_sensing_app) for an example of how to build a mobile sensing app in Flutter.
+> **NOTE** - as stressed by Movisens, none of the Movisens devices are medical devices. Do not use them for medical purposes.
 
-When running, the `MovisensProbe` in this package returns different [`MovisensDatum`](https://pub.dev/documentation/carp_movisens_package/latest/movisens/MovisensDatum-class.html) formats (note that the package defines its own namespace of `dk.cachet.carp.movisens`):
+This packages supports sampling of the following [`Measure`](https://pub.dev/documentation/carp_core/latest/carp_core_protocols/Measure-class.html) types:
 
-* `dk.cachet.carp.movisens.met_level`
-* `dk.cachet.carp.movisens.met`
-* `dk.cachet.carp.movisens.hr`
-* `dk.cachet.carp.movisens.hrv`
-* `dk.cachet.carp.movisens.is_hrv_valid`
-* `dk.cachet.carp.movisens.body_position`
-* `dk.cachet.carp.movisens.step_count`
-* `dk.cachet.carp.movisens.movement_acceleration`
+* `dk.cachet.carp.movisens.activity` – Physical activity like body positions, step count, inclination, acceleration, and metabolic (MET) levels.
+* `dk.cachet.carp.movisens.hr` - Heart Rate (HR), HR Variability (HRV), Mean HR
+* `dk.cachet.carp.movisens.eda` - Elecrodermal Activity
+* `dk.cachet.carp.movisens.skin_temperature` - Skin temperature.
+* `dk.cachet.carp.movisens.tap_marker` - Markers of user tapping on the sensor.
+
+These measures collect different types of data (note that the package defines its own namespace of `dk.cachet.carp.movisens...`):
+
+**Physical Activity:**
+
+* `dk.cachet.carp.movisens.activity.steps`
+* `dk.cachet.carp.movisens.activity.body_position`
+* `dk.cachet.carp.movisens.activity.inclination`
+* `dk.cachet.carp.movisens.activity.movement_acceleration`
+* `dk.cachet.carp.movisens.activity.met_level`
+* `dk.cachet.carp.movisens.activity.met`
+
+**Heart Rate:**
+
+* `dk.cachet.carp.movisens.hr.hr_mean`
+* `dk.cachet.carp.movisens.hr.hrv`
+* `dk.cachet.carp.movisens.hr.is_hrv_valid`
+
+**Misc:**
+
+* `dk.cachet.carp.movisens.eda`
+* `dk.cachet.carp.movisens.skin_temperature`
 * `dk.cachet.carp.movisens.tap_marker`
-* `dk.cachet.carp.movisens.battery_level`
-* `dk.cachet.carp.movisens.connection_status`
 
+For understanding how to use the Movisens Devices, please consult the [Movisens Documentation](https://docs.movisens.com).
+
+See the [wiki](https://github.com/cph-cachet/carp.sensing-flutter/wiki) for further documentation on how to use the CARP Mobile Sensing (CAMS) framework.
+See the [CARP Mobile Sensing App](https://github.com/cph-cachet/carp.sensing-flutter/tree/master/apps/carp_mobile_sensing_app) for an example of how to build a mobile sensing app in Flutter.
 For Flutter plugins for other CARP products, see [CARP Mobile Sensing in Flutter](https://github.com/cph-cachet/carp.sensing-flutter).
 
-If you're interested in writing you own sampling packages for CARP, see the description on
-how to [extend](https://github.com/cph-cachet/carp.sensing-flutter/wiki/4.-Extending-CARP-Mobile-Sensing) CARP on the wiki.
+If you're interested in writing you own sampling packages for CAMS, see the description on how to [extend](https://github.com/cph-cachet/carp.sensing-flutter/wiki/4.-Extending-CARP-Mobile-Sensing) CARP on the wiki.
 
 ## Installing
 
@@ -45,97 +64,31 @@ dependencies:
 
 Add the following to your app's `manifest.xml` file located in `android/app/src/main`:
 
-````xml
-<manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="<your_package_name>"
-    xmlns:tools="http://schemas.android.com/tools">
+```xml
+  <uses-permission android:name="android.permission.BLUETOOTH" />
+  <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
+  <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
+```
 
-   ...
-   
-   <!-- The following permissions are used for CARP Mobile Sensing -->
-   <uses-permission android:name="android.permission.RECORD_AUDIO"/>
-   <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
-   <uses-permission android:name="android.permission.PACKAGE_USAGE_STATS" tools:ignore="ProtectedPermissions"/>
-   
-   <!--   The following are used for Movisens package  -->
-   <uses-permission android:name="android.permission.INTERNET"/>
-   <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
-   <uses-permission android:name="android.permission.BLUETOOTH" />
-   <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
-   <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
-   <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
-    
-   <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-   <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
-        
-   <!--   The following are activity specific to  movisens native Android library  that talks to flutter over platform channel   -->  
-   <activity
-        android:name="de.kn.uni.smartact.movisenslibrary.screens.view.Activity_BluetoothUser"
-        android:configChanges="orientation|keyboardHidden|keyboard"
-        android:exported="true"
-        android:label="@string/app_name"
-        android:launchMode="singleTop"
-        android:screenOrientation="portrait">
-        <meta-data
-            android:name="android.support.PARENT_ACTIVITY"
-            android:value="de.kn.uni.smartact.movisenslibrary.screens.view.Activity_BluetoothStart" />
-   </activity>  
-   <activity
-         android:name="de.kn.uni.smartact.movisenslibrary.screens.view.Activity_BluetoothDeviceScan"
-         android:configChanges="orientation|keyboardHidden|keyboard"
-         android:exported="true"
-         android:label="@string/app_name"
-         android:launchMode="singleTop"
-         android:screenOrientation="portrait">
-         <meta-data
-             android:name="android.support.PARENT_ACTIVITY"
-             android:value="de.kn.uni.smartact.movisenslibrary.screens.view.Activity_BluetoothStart" />
-    </activity>   
-    <activity
-         android:name="de.kn.uni.smartact.movisenslibrary.screens.NoMeasurmentDialog"
-         android:configChanges="orientation|keyboardHidden|keyboard"
-         android:theme="@style/Theme.AppCompat.Light"
-         android:exported="true"
-         android:label="@string/app_name"
-         android:launchMode="singleTop"
-         android:screenOrientation="portrait">
-         <meta-data
-             android:name="android.support.PARENT_ACTIVITY"
-             android:value="de.kn.uni.smartact.movisenslibrary.screens.view.Activity_BluetoothStart" />
-    </activity>     
-    <activity
-         android:name="de.kn.uni.smartact.movisenslibrary.screens.view.Activity_BluetoothData"
-         android:configChanges="orientation|keyboardHidden|keyboard"
-         android:exported="true"
-         android:label="@string/app_name"
-         android:launchMode="singleTop"
-         android:screenOrientation="portrait">
-         <meta-data
-             android:name="android.support.PARENT_ACTIVITY"
-             android:value="de.kn.uni.smartact.movisenslibrary.screens.view.Activity_BluetoothStart" />
-     </activity>     
-     <activity
-          android:name="de.kn.uni.smartact.movisenslibrary.screens.view.Activity_BluetoothStart"
-          android:configChanges="orientation|keyboardHidden|keyboard"
-          android:exported="true"
-          android:label="@string/app_name"
-          android:launchMode="singleTop"
-          android:screenOrientation="portrait">
-     </activity>
-  
-     <service android:name="de.kn.uni.smartact.movisenslibrary.bluetooth.MovisensService" />
-  
-     <receiver android:name="de.kn.uni.smartact.movisenslibrary.reboot.RebootReceiver">
-          <intent-filter>
-              <action android:name="android.intent.action.BOOT_COMPLETED" />
-          </intent-filter>
-     </receiver>
-</manifest>
-````
+Update the Android `minSdkVersion` to at least 19 in the `android/app/build.gradle` file.
 
 ### iOS Integration
 
-iOS is not supported by Movisens.
+Add the following to your `ios/Runner/Info.plist` file:
+
+```xml
+<dict>
+  <key>NSBluetoothAlwaysUsageDescription</key>
+  <string>Need BLE permission</string>
+  <key>NSBluetoothPeripheralUsageDescription</key>
+  <string>Need BLE permission</string>
+  <key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
+  <string>Need Location permission</string>
+  <key>NSLocationAlwaysUsageDescription</key>
+  <string>Need Location permission</string>
+  <key>NSLocationWhenInUseUsageDescription</key>
+  <string>Need Location permission</string>
+````
 
 ## Usage
 
@@ -155,42 +108,42 @@ Before creating a study and running it, register this package in the
  SamplingPackageRegistry().register(MovisensSamplingPackage());
 `````
 
-Once the package is registered, a `MovisensMeasure` can be added to a study protocol like this.
+Once the package is registered, Movisens measures can be added to a study protocol like this.
 
 ````dart
-// register this sampling package before using its measures
-SamplingPackageRegistry().register(MovisensSamplingPackage());
+  // register this sampling package before using its measures
+  SamplingPackageRegistry().register(MovisensSamplingPackage());
 
-// Create a study protocol
-StudyProtocol protocol = StudyProtocol(
-  ownerId: 'owner@dtu.dk',
-  name: 'Context Sensing Example',
-);
+  // Create a study protocol
+  StudyProtocol protocol = StudyProtocol(
+    ownerId: 'owner@dtu.dk',
+    name: 'Movisens Example',
+  );
 
-// define which devices are used for data collection - both phone and MoviSens
-Smartphone phone = Smartphone();
-DeviceDescriptor movisens = DeviceDescriptor(roleName: 'main_ecg');
+  // define which devices are used for data collection - both phone and Movisens
+  Smartphone phone = Smartphone();
+  MovisensDevice movisens = MovisensDevice(
+    roleName: 'movisens-ecg',
+    deviceName: 'Sensor 02655',
+    sensorLocation: SensorLocation.Chest,
+    sex: Sex.Male,
+    height: 175,
+    weight: 75,
+    age: 25,
+  );
 
-protocol
-  ..addMasterDevice(phone)
-  ..addConnectedDevice(movisens);
+  protocol
+    ..addPrimaryDevice(phone)
+    ..addConnectedDevice(movisens);
 
-// adding a movisens measure
-protocol.addTriggeredTask(
-  ImmediateTrigger(), // a simple trigger that starts immediately
-  AutomaticTask(name: 'Movisens Task')
-    ..addMeasure(MovisensMeasure(
-        type: MovisensSamplingPackage.MOVISENS,
-        name: 'Movisens ECG device',
-        description:
-           "Collects heart rythm data from the Movisens EcgMove4 sensor",
-        enabled: true,
-        address: '06-00-00-00-00-00',
-        deviceName: "ECG-223",
-        height: 178,
-        weight: 77,
-        age: 32,
-        gender: Gender.male,
-        sensorLocation: SensorLocation.chest)),
-    movisens);
+  // adding a movisens measure
+  protocol.addTaskControl(
+      ImmediateTrigger(),
+      BackgroundTask(name: 'Movisens Task', measures: [
+        Measure(type: MovisensSamplingPackage.ACTIVITY),
+      ]),
+      movisens);
 ````
+
+This protocol will start collecting the physical activity data (steps, inclination, etc.) from a Movisens device (once this protocol is deployed on a phone and connected to a Movisens device using Bluetooth).
+Again, please see the [CARP Mobile Sensing App](https://github.com/cph-cachet/carp.sensing-flutter/tree/master/apps/carp_mobile_sensing_app) for an example of how to build a mobile sensing app that can handle protocols and connect to devices.

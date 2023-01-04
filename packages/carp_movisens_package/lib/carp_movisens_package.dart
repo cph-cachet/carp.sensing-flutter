@@ -23,6 +23,7 @@ library carp_movisens_package;
 import 'dart:convert';
 import 'dart:async';
 import 'dart:io' show Platform;
+import 'package:async/async.dart';
 import 'package:movisens_flutter/movisens_flutter.dart' as movisens;
 import 'package:json_annotation/json_annotation.dart';
 import 'package:openmhealth_schemas/openmhealth_schemas.dart' as omh;
@@ -75,9 +76,9 @@ class MovisensSamplingPackage implements SamplingPackage {
 
   static const String ACTIVITY = "$MOVISENS_NAMESPACE.activity";
   static const String HR = "$MOVISENS_NAMESPACE.hr";
-  static const String TAP_MARKER = "$MOVISENS_NAMESPACE.tap_marker";
   static const String EDA = "$MOVISENS_NAMESPACE.eda";
   static const String SKIN_TEMPERATURE = "$MOVISENS_NAMESPACE.skin_temperature";
+  static const String TAP_MARKER = "$MOVISENS_NAMESPACE.tap_marker";
 
   // // EdaService
   // static const String EDA = "$MOVISENS_NAMESPACE.eda";
@@ -115,16 +116,16 @@ class MovisensSamplingPackage implements SamplingPackage {
 
     // registering the transformers from CARP to OMH and FHIR for heart rate and step count.
     // we assume that there are OMH and FHIR schemas created and registered already...
-    TransformerSchemaRegistry().lookup(NameSpace.OMH)!.add(
-          HR,
+    TransformerSchemaRegistry().lookup(NameSpace.OMH)?.add(
+          MovisensData.HR_MEAN,
           OMHHeartRateDataPoint.transformer,
         );
-    TransformerSchemaRegistry().lookup(NameSpace.OMH)!.add(
-          '$ACTIVITY.steps',
+    TransformerSchemaRegistry().lookup(NameSpace.OMH)?.add(
+          MovisensData.STEPS,
           OMHStepCountDataPoint.transformer,
         );
-    TransformerSchemaRegistry().lookup(NameSpace.FHIR)!.add(
-          HR,
+    TransformerSchemaRegistry().lookup(NameSpace.FHIR)?.add(
+          MovisensData.HR_MEAN,
           FHIRHeartRateObservation.transformer,
         );
   }
@@ -142,18 +143,16 @@ class MovisensSamplingPackage implements SamplingPackage {
   @override
   Probe? create(String type) {
     switch (type) {
-      case EDA:
-        return MovisensProbe();
-      case HR:
-        return MovisensProbe();
-      case TAP_MARKER:
-        return MovisensProbe();
       case ACTIVITY:
-        return MovisensProbe();
-      case EDR:
-        return MovisensProbe();
+        return MovisensActivityProbe();
+      case HR:
+        return MovisensHRProbe();
+      case EDA:
+        return MovisensEDAProbe();
       case SKIN_TEMPERATURE:
-        return MovisensProbe();
+        return MovisensSkinTemperatureProbe();
+      case TAP_MARKER:
+        return MovisensTapMarkerProbe();
       default:
         return null;
     }
@@ -162,8 +161,8 @@ class MovisensSamplingPackage implements SamplingPackage {
   @override
   List<DataTypeMetaData> get dataTypes => [
         DataTypeMetaData(
-          type: EDA,
-          displayName: "Elecrodermal Activity (EDA)",
+          type: ACTIVITY,
+          displayName: "Physical Activity",
           timeType: DataTimeType.POINT,
         ),
         DataTypeMetaData(
@@ -172,23 +171,18 @@ class MovisensSamplingPackage implements SamplingPackage {
           timeType: DataTimeType.POINT,
         ),
         DataTypeMetaData(
-          type: TAP_MARKER,
-          displayName: "Tap markers by the user.",
-          timeType: DataTimeType.POINT,
-        ),
-        DataTypeMetaData(
-          type: ACTIVITY,
-          displayName: "Physical Activity",
-          timeType: DataTimeType.POINT,
-        ),
-        DataTypeMetaData(
-          type: EDR,
-          displayName: "ECG Derived Respiration (EDR)",
+          type: EDA,
+          displayName: "Elecrodermal Activity (EDA)",
           timeType: DataTimeType.POINT,
         ),
         DataTypeMetaData(
           type: SKIN_TEMPERATURE,
           displayName: "Skin Temperature",
+          timeType: DataTimeType.POINT,
+        ),
+        DataTypeMetaData(
+          type: TAP_MARKER,
+          displayName: "Tap markers by the user.",
           timeType: DataTimeType.POINT,
         ),
       ];
@@ -197,7 +191,17 @@ class MovisensSamplingPackage implements SamplingPackage {
   SamplingSchema get samplingSchema => SamplingSchema();
 }
 
-enum Gender {
-  male,
-  female,
+/// The location on the body where the Movisens device is placed.
+enum SensorLocation {
+  RightSideHip,
+  Chest,
+  RightWrist,
+  LeftWrist,
+  LeftAnkle,
+  RightAnkle,
+  RightThigh,
+  LeftThigh,
+  RightUpperArm,
+  LeftUpperArm,
+  LeftSideHip,
 }

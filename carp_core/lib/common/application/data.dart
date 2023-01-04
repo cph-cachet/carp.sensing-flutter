@@ -14,6 +14,7 @@ part of carp_core_common;
 /// This is an abstract class and contains no data as such.
 @JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
 class Data extends Serializable {
+  /// The format of this data as a [DataType].
   @JsonKey(ignore: true)
   DataType get format => DataType.fromString(jsonType);
 

@@ -1,116 +1,157 @@
 {
+  "id": "1c694fa0-8c41-11ed-9fad-d93af3661beb",
+  "createdOn": "2023-01-04T15:04:39.578457Z",
   "ownerId": "alex@uni.dk",
   "name": "Context package test",
-  "description": "",
-  "creationDate": "2022-07-06T08:54:26.377361Z",
-  "masterDevices": [
-   {
-    "$type": "dk.cachet.carp.protocols.domain.devices.Smartphone",
-    "isMasterDevice": true,
-    "roleName": "masterphone",
-    "samplingConfiguration": {}
-   }
+  "primaryDevices": [
+    {
+      "__type": "dk.cachet.carp.common.application.devices.Smartphone",
+      "roleName": "primaryphone",
+      "defaultSamplingConfiguration": {},
+      "isPrimaryDevice": true
+    }
   ],
   "connectedDevices": [
-   {
-    "$type": "dk.cachet.carp.protocols.domain.devices.MovisensDevice",
-    "isMasterDevice": false,
-    "roleName": "movisens",
-    "supportedDataTypes": [
-     "dk.cachet.carp.movisens"
-    ],
-    "samplingConfiguration": {},
-    "address": "88:6B:0F:CD:E7:F2",
-    "sensorName": "Sensor 02655",
-    "sensorLocation": "chest",
-    "weight": 75,
-    "height": 175,
-    "age": 25,
-    "gender": "male"
-   }
+    {
+      "__type": "dk.cachet.carp.common.application.devices.MovisensDevice",
+      "roleName": "movisens",
+      "isOptional": true,
+      "supportedDataTypes": [
+        "dk.cachet.carp.movisens.activity",
+        "dk.cachet.carp.movisens.hr",
+        "dk.cachet.carp.movisens.eda",
+        "dk.cachet.carp.movisens.tap_marker",
+        "dk.cachet.carp.movisens.skin_temperature"
+      ],
+      "defaultSamplingConfiguration": {},
+      "deviceName": "Sensor 02655",
+      "sensorLocation": "Chest",
+      "weight": 75,
+      "height": 175,
+      "age": 25,
+      "sex": "Male"
+    }
   ],
   "connections": [],
-  "triggers": {
-   "0": {
-    "$type": "dk.cachet.carp.protocols.domain.triggers.ImmediateTrigger"
-   },
-   "1": {
-    "$type": "dk.cachet.carp.protocols.domain.triggers.ImmediateTrigger"
-   }
-  },
   "tasks": [
-   {
-    "$type": "dk.cachet.carp.protocols.domain.tasks.BackgroundTask",
-    "name": "Task #5",
-    "measures": [
-     {
-      "$type": "dk.cachet.carp.protocols.domain.tasks.measures.Measure",
-      "type": "dk.cachet.carp.device"
-     },
-     {
-      "$type": "dk.cachet.carp.protocols.domain.tasks.measures.Measure",
-      "type": "dk.cachet.carp.memory"
-     },
-     {
-      "$type": "dk.cachet.carp.protocols.domain.tasks.measures.Measure",
-      "type": "dk.cachet.carp.battery"
-     },
-     {
-      "$type": "dk.cachet.carp.protocols.domain.tasks.measures.Measure",
-      "type": "dk.cachet.carp.screen"
-     },
-     {
-      "$type": "dk.cachet.carp.protocols.domain.tasks.measures.Measure",
-      "type": "dk.cachet.carp.accelerometer"
-     },
-     {
-      "$type": "dk.cachet.carp.protocols.domain.tasks.measures.Measure",
-      "type": "dk.cachet.carp.gyroscope"
-     },
-     {
-      "$type": "dk.cachet.carp.protocols.domain.tasks.measures.Measure",
-      "type": "dk.cachet.carp.periodic_accelerometer"
-     },
-     {
-      "$type": "dk.cachet.carp.protocols.domain.tasks.measures.Measure",
-      "type": "dk.cachet.carp.periodic_gyroscope"
-     },
-     {
-      "$type": "dk.cachet.carp.protocols.domain.tasks.measures.Measure",
-      "type": "dk.cachet.carp.pedometer"
-     },
-     {
-      "$type": "dk.cachet.carp.protocols.domain.tasks.measures.Measure",
-      "type": "dk.cachet.carp.light"
-     },
-     {
-      "$type": "dk.cachet.carp.protocols.domain.tasks.measures.Measure",
-      "type": "dk.cachet.carp.movisens"
-     }
-    ]
-   },
-   {
-    "$type": "dk.cachet.carp.protocols.domain.tasks.BackgroundTask",
-    "name": "Task #6",
-    "measures": [
-     {
-      "$type": "dk.cachet.carp.protocols.domain.tasks.measures.Measure",
-      "type": "dk.cachet.carp.movisens"
-     }
-    ]
-   }
+    {
+      "__type": "dk.cachet.carp.common.application.tasks.BackgroundTask",
+      "name": "Task #5",
+      "measures": [
+        {
+          "__type": "dk.cachet.carp.common.application.tasks.Measure.DataStream",
+          "type": "dk.cachet.carp.deviceinformation"
+        },
+        {
+          "__type": "dk.cachet.carp.common.application.tasks.Measure.DataStream",
+          "type": "dk.cachet.carp.freememory"
+        },
+        {
+          "__type": "dk.cachet.carp.common.application.tasks.Measure.DataStream",
+          "type": "dk.cachet.carp.batterystate"
+        },
+        {
+          "__type": "dk.cachet.carp.common.application.tasks.Measure.DataStream",
+          "type": "dk.cachet.carp.screenevent"
+        },
+        {
+          "__type": "dk.cachet.carp.common.application.tasks.Measure.DataStream",
+          "type": "dk.cachet.carp.acceleration"
+        },
+        {
+          "__type": "dk.cachet.carp.common.application.tasks.Measure.DataStream",
+          "type": "dk.cachet.carp.nongravitationalacceleration"
+        },
+        {
+          "__type": "dk.cachet.carp.common.application.tasks.Measure.DataStream",
+          "type": "dk.cachet.carp.rotation"
+        },
+        {
+          "__type": "dk.cachet.carp.common.application.tasks.Measure.DataStream",
+          "type": "dk.cachet.carp.stepcount"
+        },
+        {
+          "__type": "dk.cachet.carp.common.application.tasks.Measure.DataStream",
+          "type": "dk.cachet.carp.magneticfield"
+        },
+        {
+          "__type": "dk.cachet.carp.common.application.tasks.Measure.DataStream",
+          "type": "dk.cachet.carp.ambientlight"
+        },
+        {
+          "__type": "dk.cachet.carp.common.application.tasks.Measure.DataStream",
+          "type": "dk.cachet.carp.movisens.activity"
+        },
+        {
+          "__type": "dk.cachet.carp.common.application.tasks.Measure.DataStream",
+          "type": "dk.cachet.carp.movisens.hr"
+        },
+        {
+          "__type": "dk.cachet.carp.common.application.tasks.Measure.DataStream",
+          "type": "dk.cachet.carp.movisens.eda"
+        },
+        {
+          "__type": "dk.cachet.carp.common.application.tasks.Measure.DataStream",
+          "type": "dk.cachet.carp.movisens.skin_temperature"
+        },
+        {
+          "__type": "dk.cachet.carp.common.application.tasks.Measure.DataStream",
+          "type": "dk.cachet.carp.movisens.tap_marker"
+        }
+      ]
+    },
+    {
+      "__type": "dk.cachet.carp.common.application.tasks.BackgroundTask",
+      "name": "Task #6",
+      "measures": [
+        {
+          "__type": "dk.cachet.carp.common.application.tasks.Measure.DataStream",
+          "type": "dk.cachet.carp.movisens.activity"
+        },
+        {
+          "__type": "dk.cachet.carp.common.application.tasks.Measure.DataStream",
+          "type": "dk.cachet.carp.movisens.hr"
+        },
+        {
+          "__type": "dk.cachet.carp.common.application.tasks.Measure.DataStream",
+          "type": "dk.cachet.carp.movisens.eda"
+        },
+        {
+          "__type": "dk.cachet.carp.common.application.tasks.Measure.DataStream",
+          "type": "dk.cachet.carp.movisens.skin_temperature"
+        },
+        {
+          "__type": "dk.cachet.carp.common.application.tasks.Measure.DataStream",
+          "type": "dk.cachet.carp.movisens.tap_marker"
+        }
+      ]
+    }
   ],
-  "triggeredTasks": [
-   {
-    "triggerId": 0,
-    "taskName": "Task #5",
-    "targetDeviceRoleName": "masterphone"
-   },
-   {
-    "triggerId": 1,
-    "taskName": "Task #6",
-    "targetDeviceRoleName": "movisens"
-   }
+  "triggers": {
+    "0": {
+      "__type": "dk.cachet.carp.common.application.triggers.ImmediateTrigger",
+      "sourceDeviceRoleName": "primaryphone"
+    },
+    "1": {
+      "__type": "dk.cachet.carp.common.application.triggers.ImmediateTrigger",
+      "sourceDeviceRoleName": "primaryphone"
+    }
+  },
+  "taskControls": [
+    {
+      "triggerId": 0,
+      "taskName": "Task #5",
+      "destinationDeviceRoleName": "primaryphone",
+      "control": "Start"
+    },
+    {
+      "triggerId": 1,
+      "taskName": "Task #6",
+      "destinationDeviceRoleName": "movisens",
+      "control": "Start"
+    }
   ],
+  "participantRoles": [],
+  "assignedDevices": {},
   "expectedParticipantData": []
- }
+}

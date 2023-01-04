@@ -1,7 +1,7 @@
 import 'package:carp_core/carp_core.dart';
 import 'package:carp_mobile_sensing/carp_mobile_sensing.dart';
 import 'package:carp_movisens_package/carp_movisens_package.dart';
-import 'package:movisens_flutter/movisens_flutter.dart';
+// import 'package:movisens_flutter/movisens_flutter.dart';
 
 /// This is a very simple example of how this sampling package is used with
 /// CARP Mobile Sensing (CAMS).
@@ -21,23 +21,23 @@ void main() async {
   Smartphone phone = Smartphone();
   MovisensDevice movisens = MovisensDevice(
     roleName: 'movisens-ecg',
-    address: '88:6B:0F:CD:E7:F2',
-    sensorLocation: SensorLocation.chest,
-    gender: Gender.male,
     deviceName: 'Sensor 02655',
+    sensorLocation: SensorLocation.Chest,
+    sex: Sex.Male,
     height: 175,
     weight: 75,
     age: 25,
   );
 
   protocol
-    ..addMasterDevice(phone)
+    ..addPrimaryDevice(phone)
     ..addConnectedDevice(movisens);
 
   // adding a movisens measure
-  protocol.addTriggeredTask(
+  protocol.addTaskControl(
       ImmediateTrigger(),
-      BackgroundTask(name: 'Movisens Task')
-        ..addMeasure(Measure(type: MovisensSamplingPackage.MOVISENS)),
+      BackgroundTask(name: 'Movisens Task', measures: [
+        Measure(type: MovisensSamplingPackage.ACTIVITY),
+      ]),
       movisens);
 }

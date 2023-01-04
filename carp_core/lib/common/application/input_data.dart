@@ -28,6 +28,7 @@ class CustomInput extends Data {
   String get jsonType => CUSTOM_INPUT_TYPE_NAME;
 }
 
+/// Biological sex of a person.
 enum Sex { Male, Female, Intersex }
 
 /// The biological sex assigned at birth of a participant.

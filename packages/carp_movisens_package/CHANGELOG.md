@@ -1,3 +1,8 @@
+## 1.1.0
+
+* update to `carp_mobile_sensing` v. 1.1.0
+* update to `movisens_flutter` v. 1.1.0 (now support for both iOS and Android)
+
 ## 0.40.0
 
 * update to `carp_mobile_sensing` v. 0.40.0

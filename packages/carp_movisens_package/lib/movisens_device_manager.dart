@@ -11,7 +11,7 @@ part of carp_movisens_package;
 ///
 /// This device descriptor defined the basic configuration of the Movisens
 /// device, including the BTLE MAC [address], the [deviceName], the [sensorLocation]
-/// and the [weight], [height], [age], [gender] of the user using the device.
+/// and the [weight], [height], [age], [sex] of the user using the device.
 @JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
 class MovisensDevice extends DeviceConfiguration {
   /// The type of a Movisens device.
@@ -26,7 +26,7 @@ class MovisensDevice extends DeviceConfiguration {
   String deviceName;
 
   /// Sensor placement on body
-  movisens.SensorLocation sensorLocation;
+  SensorLocation sensorLocation;
 
   /// Weight of the person wearing the Movisens device in kg.
   int weight;
@@ -37,8 +37,8 @@ class MovisensDevice extends DeviceConfiguration {
   /// Age of the person wearing the Movisens device in years.
   int age;
 
-  /// Gender of the person wearing the Movisens device, male or female.
-  Gender gender;
+  /// Biological sex of the person wearing the Movisens device, male or female.
+  Sex sex;
 
   /// Create a new [MovisensDevice].
   ///
@@ -47,8 +47,8 @@ class MovisensDevice extends DeviceConfiguration {
   MovisensDevice({
     String? roleName,
     required this.deviceName,
-    this.sensorLocation = movisens.SensorLocation.chest,
-    this.gender = Gender.male,
+    this.sensorLocation = SensorLocation.Chest,
+    this.sex = Sex.Male,
     this.height = 178,
     this.weight = 78,
     this.age = 25,
@@ -57,9 +57,10 @@ class MovisensDevice extends DeviceConfiguration {
           isOptional: true,
           supportedDataTypes: [
             MovisensSamplingPackage.ACTIVITY,
-            MovisensSamplingPackage.EDA,
             MovisensSamplingPackage.HR,
-            MovisensSamplingPackage.EDR,
+            MovisensSamplingPackage.EDA,
+            MovisensSamplingPackage.TAP_MARKER,
+            MovisensSamplingPackage.SKIN_TEMPERATURE,
           ],
         );
 
@@ -152,6 +153,7 @@ class MovisensDeviceManager
       });
 
       // TODO - how can I listen to battery information?
+
       // device._subscription = movisens?.movisensStream.listen((event) {
       //   debug('$runtimeType :: Movisens event : $event');
 
@@ -162,6 +164,15 @@ class MovisensDeviceManager
       //         -1;
       //   }
       // });
+
+      // set user data parameters
+      await device?.userDataService
+          ?.setAgeFloat(deviceDescriptor.age.toDouble());
+      await device?.userDataService?.setSensorLocation(movisens
+          .SensorLocation.values[deviceDescriptor.sensorLocation.index]);
+
+      // TODO - how do I set the weight and gender of the user => https://github.com/cph-cachet/flutter-plugins/issues/648
+
     } catch (error) {
       warning(
           "$runtimeType - could not connect to device of type '$type' - error: $error");

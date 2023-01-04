@@ -2,7 +2,6 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 
-import 'package:movisens_flutter/movisens_flutter.dart';
 import 'package:carp_movisens_package/carp_movisens_package.dart';
 import 'package:test/test.dart';
 
@@ -31,9 +30,8 @@ void main() {
     // define the Movisens device used for data collection
     phone = Smartphone();
     MovisensDevice movisens = MovisensDevice(
-      address: '88:6B:0F:CD:E7:F2',
-      sensorLocation: SensorLocation.chest,
-      gender: Gender.male,
+      sensorLocation: SensorLocation.Chest,
+      sex: Sex.Male,
       deviceName: 'Sensor 02655',
       height: 175,
       weight: 75,
@@ -41,25 +39,30 @@ void main() {
     );
 
     protocol
-      ..addMasterDevice(phone)
+      ..addPrimaryDevice(phone)
       ..addConnectedDevice(movisens);
 
     // adding all available measures to one one trigger and one task
-    protocol.addTriggeredTask(
+    protocol.addTaskControl(
       ImmediateTrigger(),
       BackgroundTask()
         ..measures = SamplingPackageRegistry()
             .dataTypes
-            .map((type) => Measure(type: type))
+            .map((type) => Measure(type: type.type))
             .toList(),
       phone,
     );
 
     // add a background task that immediately starts collecting Movisens events
-    protocol.addTriggeredTask(
+    protocol.addTaskControl(
         ImmediateTrigger(),
-        BackgroundTask()
-          ..addMeasure(Measure(type: MovisensSamplingPackage.MOVISENS)),
+        BackgroundTask(measures: [
+          Measure(type: MovisensSamplingPackage.ACTIVITY),
+          Measure(type: MovisensSamplingPackage.HR),
+          Measure(type: MovisensSamplingPackage.EDA),
+          Measure(type: MovisensSamplingPackage.SKIN_TEMPERATURE),
+          Measure(type: MovisensSamplingPackage.TAP_MARKER),
+        ]),
         movisens);
   });
 
@@ -87,92 +90,99 @@ void main() {
         StudyProtocol.fromJson(json.decode(plainJson) as Map<String, dynamic>);
 
     expect(protocol.ownerId, 'alex@uni.dk');
-    expect(protocol.masterDevices.first.roleName, Smartphone.DEFAULT_ROLENAME);
-    expect(protocol.connectedDevices.first.roleName,
+    expect(protocol.primaryDevice.roleName, Smartphone.DEFAULT_ROLENAME);
+    expect(protocol.connectedDevices?.first.roleName,
         MovisensDevice.DEFAULT_ROLENAME);
 
     print(toJsonString(protocol));
   });
 
   test('Movisens HR -> OMH HeartRate', () {
-    MovisensHR hr = MovisensHR()
-      ..hr = '78'
-      ..deviceId = 'unit_test_device_name';
+    MovisensHR hr = MovisensHR(
+      deviceId: 'unit_test_device_name',
+      hr: 78,
+      type: 'hrMean',
+    );
 
-    DataPoint dp_1 = DataPoint.fromData(hr);
-    expect(dp_1.carpHeader.dataFormat.namespace,
-        MovisensSamplingPackage.MOVISENS_NAMESPACE);
+    final dp_1 = Measurement.fromData(hr);
     print(toJsonString(dp_1));
+    expect(dp_1.dataType.namespace, MovisensSamplingPackage.HR);
 
-    OMHHeartRateDataPoint omhHR = TransformerSchemaRegistry()
+    final omhHR = TransformerSchemaRegistry()
         .lookup(NameSpace.OMH)!
         .transform(hr) as OMHHeartRateDataPoint;
-    DataPoint dp_2 = DataPoint.fromData(omhHR);
+    ;
+    final dp_2 = Measurement.fromData(omhHR);
     print(toJsonString(dp_2));
 
-    expect(dp_2.carpHeader.dataFormat.namespace, NameSpace.OMH);
+    expect(dp_2.dataType.namespace, NameSpace.OMH);
     expect(omhHR.datapoint.body, isA<omh.HeartRate>());
     var hr_2 = omhHR.datapoint.body as omh.HeartRate;
-    expect(hr_2.heartRate.value, double.tryParse(hr.hr!));
+    expect(hr_2.heartRate.value, hr.hr);
   });
 
   test('Movisens Step Count -> OMH StepCount', () {
-    MovisensStepCount steps = MovisensStepCount()
-      ..stepCount = '56'
-      ..deviceId = 'unit_test_device_name';
+    MovisensStepCount steps = MovisensStepCount(
+      deviceId: 'unit_test_device_name',
+      steps: 56,
+      type: 'steps',
+      timestamp: DateTime.now().toUtc(),
+    );
 
-    steps.movisensTimestamp = DateTime.now().toUtc().toString();
+    final m_1 = Measurement.fromData(steps);
+    print(toJsonString(m_1));
+    expect(m_1.dataType.namespace, MovisensSamplingPackage.ACTIVITY);
 
-    DataPoint dp_1 = DataPoint.fromData(steps);
-    expect(dp_1.carpHeader.dataFormat.namespace,
-        MovisensSamplingPackage.MOVISENS_NAMESPACE);
-    print(toJsonString(dp_1));
-
-    OMHStepCountDataPoint omhSteps = TransformerSchemaRegistry()
+    final omhSteps = TransformerSchemaRegistry()
         .lookup(NameSpace.OMH)!
         .transform(steps) as OMHStepCountDataPoint;
-    DataPoint dp_2 = DataPoint.fromData(omhSteps);
-    print(toJsonString(dp_2));
+    final m_2 = Measurement.fromData(omhSteps);
+    print(toJsonString(m_2));
 
-    expect(dp_2.carpHeader.dataFormat.namespace, NameSpace.OMH);
+    expect(m_2.dataType.namespace, NameSpace.OMH);
     expect(omhSteps.datapoint.body, isA<omh.StepCount>());
     var steps_2 = omhSteps.datapoint.body as omh.StepCount;
-    expect(steps_2.stepCount, int.tryParse(steps.stepCount!));
+    expect(steps_2.stepCount, steps.steps);
   });
 
   test('Movisens HR -> FHIR Heart Rate Observation', () {
-    MovisensHR hr = MovisensHR()
-      ..hr = '118'
-      ..deviceId = 'unit_test_device_name';
+    MovisensHR hr = MovisensHR(
+      deviceId: 'unit_test_device_name',
+      hr: 118,
+      type: 'hrMean',
+    );
 
-    DataPoint dp_1 = DataPoint.fromData(hr);
-    expect(dp_1.carpHeader.dataFormat.namespace,
-        MovisensSamplingPackage.MOVISENS_NAMESPACE);
-    print(toJsonString(dp_1));
+    final m_1 = Measurement.fromData(hr);
+    print(toJsonString(m_1));
+    expect(m_1.dataType.namespace, MovisensSamplingPackage.HR);
 
-    FHIRHeartRateObservation fhirHR = TransformerSchemaRegistry()
+    final fhirHR = TransformerSchemaRegistry()
         .lookup(NameSpace.FHIR)!
         .transform(hr) as FHIRHeartRateObservation;
-    DataPoint dp_2 = DataPoint.fromData(fhirHR);
-    print(toJsonString(dp_2));
+    final m_2 = Measurement.fromData(fhirHR);
+    print(toJsonString(m_2));
 
-    expect(dp_2.carpHeader.dataFormat.namespace, NameSpace.FHIR);
+    expect(m_2.dataType.namespace, NameSpace.FHIR);
     expect(fhirHR.fhirJson["resourceType"], "Observation");
-    expect(fhirHR.fhirJson["valueQuantity"]["value"], double.tryParse(hr.hr!));
+    expect(fhirHR.fhirJson["valueQuantity"]["value"], hr.hr);
   });
 
   test('Movisens HR -> OMH HR Data Point Example', () {
-    var data = MovisensHR()..hr = '118';
+    MovisensHR data = MovisensHR(
+      deviceId: 'unit_test_device_name',
+      hr: 118,
+      type: 'hrMean',
+    );
 
     var transformedData =
         TransformerSchemaRegistry().lookup(NameSpace.OMH)!.transform(data);
 
-    Stream<Datum> dataStream = StreamController<Datum>().stream;
+    Stream<Data> dataStream = StreamController<Data>().stream;
 
-    Stream<Datum> transformedDataStream = dataStream.map((data) => data =
+    Stream<Data> transformedDataStream = dataStream.map((data) => data =
         TransformerSchemaRegistry().lookup(NameSpace.OMH)!.transform(data));
 
-    Stream<Datum> transformedPrivateDataStream = dataStream.map((data) => data =
+    Stream<Data> transformedPrivateDataStream = dataStream.map((data) => data =
         TransformerSchemaRegistry().lookup(NameSpace.OMH)!.transform(
             TransformerSchemaRegistry()
                 .lookup("privacySchemaName")!

@@ -127,7 +127,9 @@ class Sensing {
     // Create and configure a client manager for this phone, and
     // create a study based on the protocol.
     client = SmartPhoneClientManager();
-    await client?.configure();
+    await client?.configure(
+      notificationController: FlutterLocalNotificationController(),
+    );
 
     study = await client?.addStudyProtocol(protocol);
     // study = Study('723bbe80-72f7-11ed-b085-d1a8db32944b', 'primaryphone');

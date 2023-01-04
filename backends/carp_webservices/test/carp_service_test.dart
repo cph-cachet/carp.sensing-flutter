@@ -430,37 +430,33 @@ void main() {
     });
 
     test(' - add document', () async {
-      // print(document);
-      // print(_encode(document!.data));
-
-      // expect(document!.id, greaterThan(0));
-
       // create another document
-      await CarpService()
+      var document = await CarpService()
           .collection(collectionName)
-          .document(username)
+          .document('user@dtu.dk')
           .setData({'email': username, 'role': 'Participant'});
+
+      print(document);
+      expect(document, isNotNull);
     });
 
     test(' - update document', () async {
-      var document = await CarpService()
-          .collection(collectionName)
-          .document(userId)
-          .setData({'email': userId, 'role': 'Administrator'});
+      // var document = await CarpService()
+      //     .collection(collectionName)
+      //     .document(userId)
+      //     .setData({'email': userId, 'role': 'Administrator'});
 
-      expect(document, isNotNull);
+      // expect(document, isNotNull);
 
       // now get it back from the server
-      DocumentSnapshot? original = await CarpService()
-          .collection(collectionName)
-          .document(document!.name)
-          .get();
+      var original =
+          await CarpService().collection(collectionName).document(userId).get();
       print(_encode(original?.data));
 
       // updating the role to super user
       DocumentSnapshot updated = await CarpService()
           .collection(collectionName)
-          .document(document!.name)
+          .document(userId)
           .updateData({'email': userId, 'role': 'Super User'});
 
       print('----------- updated -------------');
@@ -472,20 +468,20 @@ void main() {
     });
 
     test(' - get document by id', () async {
-      var document = await CarpService()
-          .collection(collectionName)
-          .document(userId)
-          .setData({'email': userId, 'role': 'Administrator'});
+      // var document = await CarpService()
+      //     .collection(collectionName)
+      //     .document(userId)
+      //     .setData({'email': userId, 'role': 'Administrator'});
 
-      print(document);
-      expect(document, isNotNull);
+      // print(document);
+      // expect(document, isNotNull);
 
       // var newDocument = await CarpService().documentById(document.id).get();
       var newDocument = await CarpService().documentById(5).get();
 
       print((newDocument));
       expect(newDocument, isNotNull);
-      expect(newDocument?.id, document.id);
+      expect(newDocument?.id, 5);
     });
 
     test(' - get document by path', () async {

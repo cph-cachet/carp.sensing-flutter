@@ -40,3 +40,21 @@ abstract class NotificationController {
   /// Cancel (i.e., remove) the notification for the [task].
   void cancelNotification(UserTask task);
 }
+
+/// A no-operation notification controller that does nothing.
+class NoOpNotificationController implements NotificationController {
+  @override
+  void cancelNotification(UserTask task) {}
+
+  @override
+  Future<void> initialize() async {}
+
+  @override
+  Future<int> get pendingNotificationRequestsCount async => 0;
+
+  @override
+  Future<void> scheduleNotification(UserTask task) async {}
+
+  @override
+  Future<void> sendNotification(UserTask task) async {}
+}

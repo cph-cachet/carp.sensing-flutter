@@ -70,12 +70,12 @@ abstract class DataTransformerSchema {
   /// Callback method when this schema is being registered.
   void onRegister();
 
-  /// Add a transformer to this schema based on its type mapped to its
-  /// [String].
-  void add(String type, DataTransformer transformer) =>
-      transformers[type] = transformer;
+  /// Add a transformer to this schema that can map data of a specific [format].
+  void add(String format, DataTransformer transformer) =>
+      transformers[format] = transformer;
 
-  /// Transform the [data] according to the transformer for its data type.
+  /// Transform the [data] using a transformer for its data format.
+  /// If no transformer is found, returns [data] unchanged.
   Data transform(Data data) {
     DataTransformer? transformer = transformers[data.format.toString()];
     return (transformer != null) ? transformer(data) : data;

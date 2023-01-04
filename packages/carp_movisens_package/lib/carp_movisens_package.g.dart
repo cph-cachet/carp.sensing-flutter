@@ -8,8 +8,7 @@ part of carp_movisens_package;
 
 MovisensData _$MovisensDataFromJson(Map<String, dynamic> json) => MovisensData(
       deviceId: json['deviceId'] as String,
-      type:
-          $enumDecode(_$MovisensBluetoothCharacteristicsEnumMap, json['type']),
+      type: json['type'] as String,
       timestamp: json['timestamp'] == null
           ? null
           : DateTime.parse(json['timestamp'] as String),
@@ -27,94 +26,14 @@ Map<String, dynamic> _$MovisensDataToJson(MovisensData instance) {
   writeNotNull('__type', instance.$type);
   val['timestamp'] = instance.timestamp.toIso8601String();
   val['deviceId'] = instance.deviceId;
-  val['type'] = _$MovisensBluetoothCharacteristicsEnumMap[instance.type]!;
+  val['type'] = instance.type;
   return val;
 }
-
-const _$MovisensBluetoothCharacteristicsEnumMap = {
-  MovisensBluetoothCharacteristics.light: 'light',
-  MovisensBluetoothCharacteristics.lightBuffered: 'lightBuffered',
-  MovisensBluetoothCharacteristics.lightRGB: 'lightRGB',
-  MovisensBluetoothCharacteristics.lightRGBBuffered: 'lightRGBBuffered',
-  MovisensBluetoothCharacteristics.lightRGBWaiting: 'lightRGBWaiting',
-  MovisensBluetoothCharacteristics.lightWaiting: 'lightWaiting',
-  MovisensBluetoothCharacteristics.sensorTemperature: 'sensorTemperature',
-  MovisensBluetoothCharacteristics.sensorTemperatureBuffered:
-      'sensorTemperatureBuffered',
-  MovisensBluetoothCharacteristics.sensorTemperatureWaiting:
-      'sensorTemperatureWaiting',
-  MovisensBluetoothCharacteristics.edaSclMean: 'edaSclMean',
-  MovisensBluetoothCharacteristics.edaSclMeanBuffered: 'edaSclMeanBuffered',
-  MovisensBluetoothCharacteristics.edaSclMeanWaiting: 'edaSclMeanWaiting',
-  MovisensBluetoothCharacteristics.hrMean: 'hrMean',
-  MovisensBluetoothCharacteristics.hrMeanBuffered: 'hrMeanBuffered',
-  MovisensBluetoothCharacteristics.hrMeanWaiting: 'hrMeanWaiting',
-  MovisensBluetoothCharacteristics.hrvIsValid: 'hrvIsValid',
-  MovisensBluetoothCharacteristics.hrvIsValidBuffered: 'hrvIsValidBuffered',
-  MovisensBluetoothCharacteristics.hrvIsValidWaiting: 'hrvIsValidWaiting',
-  MovisensBluetoothCharacteristics.rmssd: 'rmssd',
-  MovisensBluetoothCharacteristics.rmssdBuffered: 'rmssdBuffered',
-  MovisensBluetoothCharacteristics.rmssdWaiting: 'rmssdWaiting',
-  MovisensBluetoothCharacteristics.tapMarker: 'tapMarker',
-  MovisensBluetoothCharacteristics.batteryLevelBuffered: 'batteryLevelBuffered',
-  MovisensBluetoothCharacteristics.batteryLevelWaiting: 'batteryLevelWaiting',
-  MovisensBluetoothCharacteristics.charging: 'charging',
-  MovisensBluetoothCharacteristics.chargingBuffered: 'chargingBuffered',
-  MovisensBluetoothCharacteristics.chargingWaiting: 'chargingWaiting',
-  MovisensBluetoothCharacteristics.ageFloat: 'ageFloat',
-  MovisensBluetoothCharacteristics.sensorLocation: 'sensorLocation',
-  MovisensBluetoothCharacteristics.bodyPosition: 'bodyPosition',
-  MovisensBluetoothCharacteristics.bodyPositionBuffered: 'bodyPositionBuffered',
-  MovisensBluetoothCharacteristics.bodyPositionWaiting: 'bodyPositionWaiting',
-  MovisensBluetoothCharacteristics.inclination: 'inclination',
-  MovisensBluetoothCharacteristics.inclinationBuffered: 'inclinationBuffered',
-  MovisensBluetoothCharacteristics.inclinationWaiting: 'inclinationWaiting',
-  MovisensBluetoothCharacteristics.met: 'met',
-  MovisensBluetoothCharacteristics.metBuffered: 'metBuffered',
-  MovisensBluetoothCharacteristics.metLevel: 'metLevel',
-  MovisensBluetoothCharacteristics.metLevelBuffered: 'metLevelBuffered',
-  MovisensBluetoothCharacteristics.metLevelWaiting: 'metLevelWaiting',
-  MovisensBluetoothCharacteristics.metWaiting: 'metWaiting',
-  MovisensBluetoothCharacteristics.movementAcceleration: 'movementAcceleration',
-  MovisensBluetoothCharacteristics.movementAccelerationBuffered:
-      'movementAccelerationBuffered',
-  MovisensBluetoothCharacteristics.movementAccelerationWaiting:
-      'movementAccelerationWaiting',
-  MovisensBluetoothCharacteristics.steps: 'steps',
-  MovisensBluetoothCharacteristics.stepsBuffered: 'stepsBuffered',
-  MovisensBluetoothCharacteristics.stepsWaiting: 'stepsWaiting',
-  MovisensBluetoothCharacteristics.respiratoryMovement: 'respiratoryMovement',
-  MovisensBluetoothCharacteristics.activatedBufferedCharacteristics:
-      'activatedBufferedCharacteristics',
-  MovisensBluetoothCharacteristics.commandResult: 'commandResult',
-  MovisensBluetoothCharacteristics.currentTimeMs: 'currentTimeMs',
-  MovisensBluetoothCharacteristics.customData: 'customData',
-  MovisensBluetoothCharacteristics.dataAvailable: 'dataAvailable',
-  MovisensBluetoothCharacteristics.deleteData: 'deleteData',
-  MovisensBluetoothCharacteristics.measurementEnabled: 'measurementEnabled',
-  MovisensBluetoothCharacteristics.measurementStartTime: 'measurementStartTime',
-  MovisensBluetoothCharacteristics.measurementStatus: 'measurementStatus',
-  MovisensBluetoothCharacteristics.saveEnergy: 'saveEnergy',
-  MovisensBluetoothCharacteristics.sendBufferedData: 'sendBufferedData',
-  MovisensBluetoothCharacteristics.startMeasurement: 'startMeasurement',
-  MovisensBluetoothCharacteristics.status: 'status',
-  MovisensBluetoothCharacteristics.storageLevel: 'storageLevel',
-  MovisensBluetoothCharacteristics.timeZoneId: 'timeZoneId',
-  MovisensBluetoothCharacteristics.timeZoneOffset: 'timeZoneOffset',
-  MovisensBluetoothCharacteristics.skinTemperature: 'skinTemperature',
-  MovisensBluetoothCharacteristics.skinTemperature1sBuffered:
-      'skinTemperature1sBuffered',
-  MovisensBluetoothCharacteristics.skinTemperatureBuffered:
-      'skinTemperatureBuffered',
-  MovisensBluetoothCharacteristics.skinTemperatureWaiting:
-      'skinTemperatureWaiting',
-};
 
 MovisensStepCount _$MovisensStepCountFromJson(Map<String, dynamic> json) =>
     MovisensStepCount(
       deviceId: json['deviceId'] as String,
-      type:
-          $enumDecode(_$MovisensBluetoothCharacteristicsEnumMap, json['type']),
+      type: json['type'] as String,
       timestamp: json['timestamp'] == null
           ? null
           : DateTime.parse(json['timestamp'] as String),
@@ -133,7 +52,7 @@ Map<String, dynamic> _$MovisensStepCountToJson(MovisensStepCount instance) {
   writeNotNull('__type', instance.$type);
   val['timestamp'] = instance.timestamp.toIso8601String();
   val['deviceId'] = instance.deviceId;
-  val['type'] = _$MovisensBluetoothCharacteristicsEnumMap[instance.type]!;
+  val['type'] = instance.type;
   val['steps'] = instance.steps;
   return val;
 }
@@ -142,8 +61,7 @@ MovisensBodyPosition _$MovisensBodyPositionFromJson(
         Map<String, dynamic> json) =>
     MovisensBodyPosition(
       deviceId: json['deviceId'] as String,
-      type:
-          $enumDecode(_$MovisensBluetoothCharacteristicsEnumMap, json['type']),
+      type: json['type'] as String,
       timestamp: json['timestamp'] == null
           ? null
           : DateTime.parse(json['timestamp'] as String),
@@ -163,7 +81,7 @@ Map<String, dynamic> _$MovisensBodyPositionToJson(
   writeNotNull('__type', instance.$type);
   val['timestamp'] = instance.timestamp.toIso8601String();
   val['deviceId'] = instance.deviceId;
-  val['type'] = _$MovisensBluetoothCharacteristicsEnumMap[instance.type]!;
+  val['type'] = instance.type;
   val['bodyPosition'] = instance.bodyPosition;
   return val;
 }
@@ -171,8 +89,7 @@ Map<String, dynamic> _$MovisensBodyPositionToJson(
 MovisensInclination _$MovisensInclinationFromJson(Map<String, dynamic> json) =>
     MovisensInclination(
       deviceId: json['deviceId'] as String,
-      type:
-          $enumDecode(_$MovisensBluetoothCharacteristicsEnumMap, json['type']),
+      type: json['type'] as String,
       timestamp: json['timestamp'] == null
           ? null
           : DateTime.parse(json['timestamp'] as String),
@@ -193,7 +110,7 @@ Map<String, dynamic> _$MovisensInclinationToJson(MovisensInclination instance) {
   writeNotNull('__type', instance.$type);
   val['timestamp'] = instance.timestamp.toIso8601String();
   val['deviceId'] = instance.deviceId;
-  val['type'] = _$MovisensBluetoothCharacteristicsEnumMap[instance.type]!;
+  val['type'] = instance.type;
   val['x'] = instance.x;
   val['y'] = instance.y;
   val['z'] = instance.z;
@@ -204,8 +121,7 @@ MovisensMovementAcceleration _$MovisensMovementAccelerationFromJson(
         Map<String, dynamic> json) =>
     MovisensMovementAcceleration(
       deviceId: json['deviceId'] as String,
-      type:
-          $enumDecode(_$MovisensBluetoothCharacteristicsEnumMap, json['type']),
+      type: json['type'] as String,
       timestamp: json['timestamp'] == null
           ? null
           : DateTime.parse(json['timestamp'] as String),
@@ -225,15 +141,14 @@ Map<String, dynamic> _$MovisensMovementAccelerationToJson(
   writeNotNull('__type', instance.$type);
   val['timestamp'] = instance.timestamp.toIso8601String();
   val['deviceId'] = instance.deviceId;
-  val['type'] = _$MovisensBluetoothCharacteristicsEnumMap[instance.type]!;
+  val['type'] = instance.type;
   val['movementAcceleration'] = instance.movementAcceleration;
   return val;
 }
 
 MovisensMET _$MovisensMETFromJson(Map<String, dynamic> json) => MovisensMET(
       deviceId: json['deviceId'] as String,
-      type:
-          $enumDecode(_$MovisensBluetoothCharacteristicsEnumMap, json['type']),
+      type: json['type'] as String,
       timestamp: json['timestamp'] == null
           ? null
           : DateTime.parse(json['timestamp'] as String),
@@ -252,7 +167,7 @@ Map<String, dynamic> _$MovisensMETToJson(MovisensMET instance) {
   writeNotNull('__type', instance.$type);
   val['timestamp'] = instance.timestamp.toIso8601String();
   val['deviceId'] = instance.deviceId;
-  val['type'] = _$MovisensBluetoothCharacteristicsEnumMap[instance.type]!;
+  val['type'] = instance.type;
   val['met'] = instance.met;
   return val;
 }
@@ -260,8 +175,7 @@ Map<String, dynamic> _$MovisensMETToJson(MovisensMET instance) {
 MovisensMETLevel _$MovisensMETLevelFromJson(Map<String, dynamic> json) =>
     MovisensMETLevel(
       deviceId: json['deviceId'] as String,
-      type:
-          $enumDecode(_$MovisensBluetoothCharacteristicsEnumMap, json['type']),
+      type: json['type'] as String,
       timestamp: json['timestamp'] == null
           ? null
           : DateTime.parse(json['timestamp'] as String),
@@ -283,7 +197,7 @@ Map<String, dynamic> _$MovisensMETLevelToJson(MovisensMETLevel instance) {
   writeNotNull('__type', instance.$type);
   val['timestamp'] = instance.timestamp.toIso8601String();
   val['deviceId'] = instance.deviceId;
-  val['type'] = _$MovisensBluetoothCharacteristicsEnumMap[instance.type]!;
+  val['type'] = instance.type;
   val['sedentary'] = instance.sedentary;
   val['light'] = instance.light;
   val['moderate'] = instance.moderate;
@@ -293,8 +207,7 @@ Map<String, dynamic> _$MovisensMETLevelToJson(MovisensMETLevel instance) {
 
 MovisensHR _$MovisensHRFromJson(Map<String, dynamic> json) => MovisensHR(
       deviceId: json['deviceId'] as String,
-      type:
-          $enumDecode(_$MovisensBluetoothCharacteristicsEnumMap, json['type']),
+      type: json['type'] as String,
       timestamp: json['timestamp'] == null
           ? null
           : DateTime.parse(json['timestamp'] as String),
@@ -313,15 +226,14 @@ Map<String, dynamic> _$MovisensHRToJson(MovisensHR instance) {
   writeNotNull('__type', instance.$type);
   val['timestamp'] = instance.timestamp.toIso8601String();
   val['deviceId'] = instance.deviceId;
-  val['type'] = _$MovisensBluetoothCharacteristicsEnumMap[instance.type]!;
+  val['type'] = instance.type;
   val['hr'] = instance.hr;
   return val;
 }
 
 MovisensHRV _$MovisensHRVFromJson(Map<String, dynamic> json) => MovisensHRV(
       deviceId: json['deviceId'] as String,
-      type:
-          $enumDecode(_$MovisensBluetoothCharacteristicsEnumMap, json['type']),
+      type: json['type'] as String,
       timestamp: json['timestamp'] == null
           ? null
           : DateTime.parse(json['timestamp'] as String),
@@ -340,7 +252,7 @@ Map<String, dynamic> _$MovisensHRVToJson(MovisensHRV instance) {
   writeNotNull('__type', instance.$type);
   val['timestamp'] = instance.timestamp.toIso8601String();
   val['deviceId'] = instance.deviceId;
-  val['type'] = _$MovisensBluetoothCharacteristicsEnumMap[instance.type]!;
+  val['type'] = instance.type;
   val['hrv'] = instance.hrv;
   return val;
 }
@@ -348,8 +260,7 @@ Map<String, dynamic> _$MovisensHRVToJson(MovisensHRV instance) {
 MovisensIsHrvValid _$MovisensIsHrvValidFromJson(Map<String, dynamic> json) =>
     MovisensIsHrvValid(
       deviceId: json['deviceId'] as String,
-      type:
-          $enumDecode(_$MovisensBluetoothCharacteristicsEnumMap, json['type']),
+      type: json['type'] as String,
       timestamp: json['timestamp'] == null
           ? null
           : DateTime.parse(json['timestamp'] as String),
@@ -368,43 +279,14 @@ Map<String, dynamic> _$MovisensIsHrvValidToJson(MovisensIsHrvValid instance) {
   writeNotNull('__type', instance.$type);
   val['timestamp'] = instance.timestamp.toIso8601String();
   val['deviceId'] = instance.deviceId;
-  val['type'] = _$MovisensBluetoothCharacteristicsEnumMap[instance.type]!;
+  val['type'] = instance.type;
   val['isHrvValid'] = instance.isHrvValid;
-  return val;
-}
-
-MovisensTapMarker _$MovisensTapMarkerFromJson(Map<String, dynamic> json) =>
-    MovisensTapMarker(
-      deviceId: json['deviceId'] as String,
-      type:
-          $enumDecode(_$MovisensBluetoothCharacteristicsEnumMap, json['type']),
-      timestamp: json['timestamp'] == null
-          ? null
-          : DateTime.parse(json['timestamp'] as String),
-      tapMarker: json['tapMarker'] as int,
-    )..$type = json['__type'] as String?;
-
-Map<String, dynamic> _$MovisensTapMarkerToJson(MovisensTapMarker instance) {
-  final val = <String, dynamic>{};
-
-  void writeNotNull(String key, dynamic value) {
-    if (value != null) {
-      val[key] = value;
-    }
-  }
-
-  writeNotNull('__type', instance.$type);
-  val['timestamp'] = instance.timestamp.toIso8601String();
-  val['deviceId'] = instance.deviceId;
-  val['type'] = _$MovisensBluetoothCharacteristicsEnumMap[instance.type]!;
-  val['tapMarker'] = instance.tapMarker;
   return val;
 }
 
 MovisensEDA _$MovisensEDAFromJson(Map<String, dynamic> json) => MovisensEDA(
       deviceId: json['deviceId'] as String,
-      type:
-          $enumDecode(_$MovisensBluetoothCharacteristicsEnumMap, json['type']),
+      type: json['type'] as String,
       timestamp: json['timestamp'] == null
           ? null
           : DateTime.parse(json['timestamp'] as String),
@@ -423,7 +305,7 @@ Map<String, dynamic> _$MovisensEDAToJson(MovisensEDA instance) {
   writeNotNull('__type', instance.$type);
   val['timestamp'] = instance.timestamp.toIso8601String();
   val['deviceId'] = instance.deviceId;
-  val['type'] = _$MovisensBluetoothCharacteristicsEnumMap[instance.type]!;
+  val['type'] = instance.type;
   val['edaSclMean'] = instance.edaSclMean;
   return val;
 }
@@ -432,8 +314,7 @@ MovisensSkinTemperature _$MovisensSkinTemperatureFromJson(
         Map<String, dynamic> json) =>
     MovisensSkinTemperature(
       deviceId: json['deviceId'] as String,
-      type:
-          $enumDecode(_$MovisensBluetoothCharacteristicsEnumMap, json['type']),
+      type: json['type'] as String,
       timestamp: json['timestamp'] == null
           ? null
           : DateTime.parse(json['timestamp'] as String),
@@ -453,8 +334,35 @@ Map<String, dynamic> _$MovisensSkinTemperatureToJson(
   writeNotNull('__type', instance.$type);
   val['timestamp'] = instance.timestamp.toIso8601String();
   val['deviceId'] = instance.deviceId;
-  val['type'] = _$MovisensBluetoothCharacteristicsEnumMap[instance.type]!;
+  val['type'] = instance.type;
   val['skinTemperature'] = instance.skinTemperature;
+  return val;
+}
+
+MovisensTapMarker _$MovisensTapMarkerFromJson(Map<String, dynamic> json) =>
+    MovisensTapMarker(
+      deviceId: json['deviceId'] as String,
+      type: json['type'] as String,
+      timestamp: json['timestamp'] == null
+          ? null
+          : DateTime.parse(json['timestamp'] as String),
+      tapMarker: json['tapMarker'] as int,
+    )..$type = json['__type'] as String?;
+
+Map<String, dynamic> _$MovisensTapMarkerToJson(MovisensTapMarker instance) {
+  final val = <String, dynamic>{};
+
+  void writeNotNull(String key, dynamic value) {
+    if (value != null) {
+      val[key] = value;
+    }
+  }
+
+  writeNotNull('__type', instance.$type);
+  val['timestamp'] = instance.timestamp.toIso8601String();
+  val['deviceId'] = instance.deviceId;
+  val['type'] = instance.type;
+  val['tapMarker'] = instance.tapMarker;
   return val;
 }
 
@@ -464,9 +372,8 @@ MovisensDevice _$MovisensDeviceFromJson(Map<String, dynamic> json) =>
       deviceName: json['deviceName'] as String,
       sensorLocation: $enumDecodeNullable(
               _$SensorLocationEnumMap, json['sensorLocation']) ??
-          movisens.SensorLocation.chest,
-      gender:
-          $enumDecodeNullable(_$GenderEnumMap, json['gender']) ?? Gender.male,
+          SensorLocation.Chest,
+      sex: $enumDecodeNullable(_$SexEnumMap, json['sex']) ?? Sex.Male,
       height: json['height'] as int? ?? 178,
       weight: json['weight'] as int? ?? 78,
       age: json['age'] as int? ?? 25,
@@ -502,25 +409,26 @@ Map<String, dynamic> _$MovisensDeviceToJson(MovisensDevice instance) {
   val['weight'] = instance.weight;
   val['height'] = instance.height;
   val['age'] = instance.age;
-  val['gender'] = _$GenderEnumMap[instance.gender]!;
+  val['sex'] = _$SexEnumMap[instance.sex]!;
   return val;
 }
 
 const _$SensorLocationEnumMap = {
-  SensorLocation.rightSideHip: 'rightSideHip',
-  SensorLocation.chest: 'chest',
-  SensorLocation.rightWrist: 'rightWrist',
-  SensorLocation.leftWrist: 'leftWrist',
-  SensorLocation.leftAnkle: 'leftAnkle',
-  SensorLocation.rightAnkle: 'rightAnkle',
-  SensorLocation.rightThigh: 'rightThigh',
-  SensorLocation.leftThigh: 'leftThigh',
-  SensorLocation.rightUpperArm: 'rightUpperArm',
-  SensorLocation.leftUpperArm: 'leftUpperArm',
-  SensorLocation.leftSideHip: 'leftSideHip',
+  SensorLocation.RightSideHip: 'RightSideHip',
+  SensorLocation.Chest: 'Chest',
+  SensorLocation.RightWrist: 'RightWrist',
+  SensorLocation.LeftWrist: 'LeftWrist',
+  SensorLocation.LeftAnkle: 'LeftAnkle',
+  SensorLocation.RightAnkle: 'RightAnkle',
+  SensorLocation.RightThigh: 'RightThigh',
+  SensorLocation.LeftThigh: 'LeftThigh',
+  SensorLocation.RightUpperArm: 'RightUpperArm',
+  SensorLocation.LeftUpperArm: 'LeftUpperArm',
+  SensorLocation.LeftSideHip: 'LeftSideHip',
 };
 
-const _$GenderEnumMap = {
-  Gender.male: 'male',
-  Gender.female: 'female',
+const _$SexEnumMap = {
+  Sex.Male: 'Male',
+  Sex.Female: 'Female',
+  Sex.Intersex: 'Intersex',
 };

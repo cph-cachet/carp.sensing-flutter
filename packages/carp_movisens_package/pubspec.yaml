@@ -16,6 +16,7 @@ dependencies:
   # carp_mobile_sensing: ^1.1.0
  
   json_annotation: ^4.7.0
+  async: ^2.7.0
   permission_handler: ^10.0.0  
   movisens_flutter: ^1.1.0
   convert: ^3.0.1

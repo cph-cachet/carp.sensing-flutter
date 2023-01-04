@@ -394,6 +394,9 @@ class CarpService extends CarpBaseService {
         headers: headers,
         body: json.encode(document));
 
+    print(response.body);
+    print(toJsonString(response.body));
+
     int httpStatusCode = response.statusCode;
     Map<String, dynamic> responseJson = json.decode(response.body);
 
