@@ -6,15 +6,14 @@ part of esense;
 // JsonSerializableGenerator
 // **************************************************************************
 
-ESenseButtonDatum _$ESenseButtonDatumFromJson(Map<String, dynamic> json) =>
-    ESenseButtonDatum(
+ESenseButton _$ESenseButtonFromJson(Map<String, dynamic> json) => ESenseButton(
       deviceName: json['device_name'] as String,
       pressed: json['pressed'] as bool,
     )
-      ..id = json['id'] as String?
+      ..$type = json['__type'] as String?
       ..timestamp = DateTime.parse(json['timestamp'] as String);
 
-Map<String, dynamic> _$ESenseButtonDatumToJson(ESenseButtonDatum instance) {
+Map<String, dynamic> _$ESenseButtonToJson(ESenseButton instance) {
   final val = <String, dynamic>{};
 
   void writeNotNull(String key, dynamic value) {
@@ -23,15 +22,14 @@ Map<String, dynamic> _$ESenseButtonDatumToJson(ESenseButtonDatum instance) {
     }
   }
 
-  writeNotNull('id', instance.id);
+  writeNotNull('__type', instance.$type);
   val['timestamp'] = instance.timestamp.toIso8601String();
   val['device_name'] = instance.deviceName;
   val['pressed'] = instance.pressed;
   return val;
 }
 
-ESenseSensorDatum _$ESenseSensorDatumFromJson(Map<String, dynamic> json) =>
-    ESenseSensorDatum(
+ESenseSensor _$ESenseSensorFromJson(Map<String, dynamic> json) => ESenseSensor(
       deviceName: json['device_name'] as String,
       timestamp: json['timestamp'] == null
           ? null
@@ -39,9 +37,9 @@ ESenseSensorDatum _$ESenseSensorDatumFromJson(Map<String, dynamic> json) =>
       packetIndex: json['packet_index'] as int?,
       accel: (json['accel'] as List<dynamic>?)?.map((e) => e as int).toList(),
       gyro: (json['gyro'] as List<dynamic>?)?.map((e) => e as int).toList(),
-    )..id = json['id'] as String?;
+    )..$type = json['__type'] as String?;
 
-Map<String, dynamic> _$ESenseSensorDatumToJson(ESenseSensorDatum instance) {
+Map<String, dynamic> _$ESenseSensorToJson(ESenseSensor instance) {
   final val = <String, dynamic>{};
 
   void writeNotNull(String key, dynamic value) {
@@ -50,7 +48,7 @@ Map<String, dynamic> _$ESenseSensorDatumToJson(ESenseSensorDatum instance) {
     }
   }
 
-  writeNotNull('id', instance.id);
+  writeNotNull('__type', instance.$type);
   val['timestamp'] = instance.timestamp.toIso8601String();
   val['device_name'] = instance.deviceName;
   writeNotNull('packet_index', instance.packetIndex);
@@ -64,13 +62,13 @@ ESenseDevice _$ESenseDeviceFromJson(Map<String, dynamic> json) => ESenseDevice(
       deviceName: json['deviceName'] as String?,
       samplingRate: json['samplingRate'] as int?,
     )
-      ..$type = json[r'$type'] as String?
-      ..isMasterDevice = json['isMasterDevice'] as bool?
+      ..$type = json['__type'] as String?
+      ..isOptional = json['isOptional'] as bool?
       ..supportedDataTypes = (json['supportedDataTypes'] as List<dynamic>?)
           ?.map((e) => e as String)
           .toList()
-      ..samplingConfiguration =
-          (json['samplingConfiguration'] as Map<String, dynamic>).map(
+      ..defaultSamplingConfiguration =
+          (json['defaultSamplingConfiguration'] as Map<String, dynamic>?)?.map(
         (k, e) => MapEntry(
             k, SamplingConfiguration.fromJson(e as Map<String, dynamic>)),
       );
@@ -84,11 +82,12 @@ Map<String, dynamic> _$ESenseDeviceToJson(ESenseDevice instance) {
     }
   }
 
-  writeNotNull(r'$type', instance.$type);
-  writeNotNull('isMasterDevice', instance.isMasterDevice);
+  writeNotNull('__type', instance.$type);
   val['roleName'] = instance.roleName;
+  writeNotNull('isOptional', instance.isOptional);
   writeNotNull('supportedDataTypes', instance.supportedDataTypes);
-  val['samplingConfiguration'] = instance.samplingConfiguration;
+  writeNotNull(
+      'defaultSamplingConfiguration', instance.defaultSamplingConfiguration);
   writeNotNull('deviceName', instance.deviceName);
   writeNotNull('samplingRate', instance.samplingRate);
   return val;

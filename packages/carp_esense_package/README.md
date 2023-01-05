@@ -86,10 +86,10 @@ import 'package:carp_mobile_sensing/carp_mobile_sensing.dart';
 import 'package:carp_esense_package/esense.dart';
 `````
 
-Collection of eSense data can be added to a study protocol like this.
+Collection of eSense measurements can be added to a study protocol like this.
 
 ```dart
- // Create a study protocol
+  // Create a study protocol
   StudyProtocol protocol = StudyProtocol(
     ownerId: 'owner@dtu.dk',
     name: 'eSense Sensing Example',
@@ -103,29 +103,29 @@ Collection of eSense data can be added to a study protocol like this.
   );
 
   protocol
-    ..addMasterDevice(phone)
+    ..addPrimaryDevice(phone)
     ..addConnectedDevice(eSense);
 
   // Add a background task that immediately starts collecting step counts,
   //ambient light, screen activity, and battery level from the phone.
-  protocol.addTriggeredTask(
+  protocol.addTaskControl(
       ImmediateTrigger(),
-      BackgroundTask()
-        ..addMeasures([
-          Measure(type: SensorSamplingPackage.PEDOMETER),
-          Measure(type: SensorSamplingPackage.LIGHT),
-          Measure(type: DeviceSamplingPackage.SCREEN),
-          Measure(type: DeviceSamplingPackage.BATTERY),
-        ]),
+      BackgroundTask(measures: [
+        Measure(type: SensorSamplingPackage.STEP_COUNT),
+        Measure(type: SensorSamplingPackage.AMBIENT_LIGHT),
+        Measure(type: DeviceSamplingPackage.SCREEN_EVENT),
+        Measure(type: DeviceSamplingPackage.BATTERY_STATE),
+      ]),
       phone);
 
   // Add a background task that immediately starts collecting eSense button and
   // sensor events from the eSense device.
-  protocol.addTriggeredTask(
+  protocol.addTaskControl(
       ImmediateTrigger(),
-      BackgroundTask()
-        ..addMeasure(Measure(type: ESenseSamplingPackage.ESENSE_BUTTON))
-        ..addMeasure(Measure(type: ESenseSamplingPackage.ESENSE_SENSOR)),
+      BackgroundTask(measures: [
+        Measure(type: ESenseSamplingPackage.ESENSE_BUTTON),
+        Measure(type: ESenseSamplingPackage.ESENSE_SENSOR),
+      ]),
       eSense);
 ````
 

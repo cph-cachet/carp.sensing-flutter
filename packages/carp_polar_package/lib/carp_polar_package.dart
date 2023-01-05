@@ -83,14 +83,16 @@ part 'polar_device_manager.dart';
 ///     name: 'H10',
 ///     polarDeviceType: PolarDeviceType.H10,
 ///   );
-///   // Add a background task that immediately starts collecting Polar PPG and
-///   // PPI data from the Polar device.
-///   protocol.addTriggeredTask(
-///       ImmediateTrigger(),
-///       BackgroundTask()
-///         ..addMeasure(Measure(type: PolarSamplingPackage.POLAR_PPG))
-///         ..addMeasure(Measure(type: PolarSamplingPackage.POLAR_PPI)),
-///       polar);
+///
+///   // Add a background task that immediately starts collecting Polar HR and
+///   // ECG data from the Polar device.
+///   protocol.addTaskControl(
+///      ImmediateTrigger(),
+///      BackgroundTask(measures: [
+///        Measure(type: PolarSamplingPackage.HR),
+///        Measure(type: PolarSamplingPackage.ECG),
+///      ]),
+///      polar);
 /// ```
 ///
 /// To use this package, register it in the [carp_mobile_sensing] package using

@@ -135,7 +135,7 @@ Collection of Polar data can be added to a study protocol like this.
     name: 'Polar Sensing Example',
   );
 
-  // define which devices are used for data collection - both phone and Polar
+  // define which devices are used for data collection - both phone and eSense
   var phone = Smartphone();
   var polar = PolarDevice(
     roleName: 'hr-sensor',
@@ -152,9 +152,10 @@ Collection of Polar data can be added to a study protocol like this.
   // from the Polar device.
   protocol.addTaskControl(
       ImmediateTrigger(),
-      BackgroundTask()
-        ..addMeasure(Measure(type: PolarSamplingPackage.HR))
-        ..addMeasure(Measure(type: PolarSamplingPackage.ECG)),
+      BackgroundTask(measures: [
+        Measure(type: PolarSamplingPackage.HR),
+        Measure(type: PolarSamplingPackage.ECG),
+      ]),
       polar);
 ````
 

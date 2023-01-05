@@ -49,8 +49,9 @@ void main() async {
   // from the Polar device.
   protocol.addTaskControl(
       ImmediateTrigger(),
-      BackgroundTask()
-        ..addMeasure(Measure(type: PolarSamplingPackage.HR))
-        ..addMeasure(Measure(type: PolarSamplingPackage.ECG)),
+      BackgroundTask(measures: [
+        Measure(type: PolarSamplingPackage.HR),
+        Measure(type: PolarSamplingPackage.ECG),
+      ]),
       polar);
 }

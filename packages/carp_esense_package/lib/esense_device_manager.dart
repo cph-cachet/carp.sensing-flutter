@@ -49,10 +49,10 @@ part of esense;
 /// to use the right earbud to record only sound samples and the left earbud to
 /// record only IMU data.
 @JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
-class ESenseDevice extends DeviceDescriptor {
+class ESenseDevice extends DeviceConfiguration {
   /// The type of a eSense device.
   static const String DEVICE_TYPE =
-      '${DeviceDescriptor.DEVICE_NAMESPACE}.ESenseDevice';
+      '${DeviceConfiguration.DEVICE_NAMESPACE}.ESenseDevice';
 
   /// The default rolename for a eSense device.
   static const String DEFAULT_ROLENAME = 'esense';
@@ -69,10 +69,13 @@ class ESenseDevice extends DeviceDescriptor {
     super.roleName = ESenseDevice.DEFAULT_ROLENAME,
     this.deviceName,
     this.samplingRate,
-  }) : super(isMasterDevice: false, supportedDataTypes: [
-          ESenseSamplingPackage.ESENSE_BUTTON,
-          ESenseSamplingPackage.ESENSE_SENSOR,
-        ]);
+  }) : super(
+          isOptional: true,
+          supportedDataTypes: [
+            ESenseSamplingPackage.ESENSE_BUTTON,
+            ESenseSamplingPackage.ESENSE_SENSOR,
+          ],
+        );
 
   @override
   Function get fromJsonFunction => _$ESenseDeviceFromJson;
@@ -92,15 +95,15 @@ class ESenseDeviceManager
   ESenseManager? manager;
 
   @override
-  String get id => deviceDescriptor?.deviceName ?? 'eSense-????';
+  String get id => deviceConfiguration?.deviceName ?? 'eSense-????';
 
   @override
-  String get btleName => deviceDescriptor?.deviceName ?? 'eSense-????';
+  String get btleName => deviceConfiguration?.deviceName ?? 'eSense-????';
 
   /// Set the name of this device based on the Bluetooth name.
   /// This name is used for connection.
   @override
-  set btleName(String btleName) => deviceDescriptor?.deviceName = btleName;
+  set btleName(String btleName) => deviceConfiguration?.deviceName = btleName;
 
   /// A estimate of the battery level of the eSense device.
   ///
@@ -127,13 +130,13 @@ class ESenseDeviceManager
       : null;
 
   @override
-  Future<bool> canConnect() async => (deviceDescriptor?.deviceName != null &&
-      deviceDescriptor!.deviceName!.isNotEmpty);
+  Future<bool> canConnect() async => (deviceConfiguration?.deviceName != null &&
+      deviceConfiguration!.deviceName!.isNotEmpty);
 
   @override
   Future<DeviceStatus> onConnect() async {
-    if (deviceDescriptor?.deviceName == null ||
-        deviceDescriptor!.deviceName!.isEmpty) return DeviceStatus.error;
+    if (deviceConfiguration?.deviceName == null ||
+        deviceConfiguration!.deviceName!.isEmpty) return DeviceStatus.error;
 
     manager = ESenseManager(id);
 

@@ -36,23 +36,23 @@ void main() {
     );
 
     protocol
-      ..addMasterDevice(phone)
+      ..addPrimaryDevice(phone)
       ..addConnectedDevice(eSense);
 
     // adding all available measures to one one trigger and one task
-    protocol.addTriggeredTask(
+    protocol.addTaskControl(
       ImmediateTrigger(),
       BackgroundTask()
         ..measures = SamplingPackageRegistry()
             .dataTypes
-            .map((type) => Measure(type: type))
+            .map((type) => Measure(type: type.type))
             .toList(),
       phone,
     );
 
     // Add a background task that immediately starts collecting eSense button and
     // sensor events from the eSense device.
-    protocol.addTriggeredTask(
+    protocol.addTaskControl(
         ImmediateTrigger(),
         BackgroundTask()
           ..addMeasure(Measure(type: ESenseSamplingPackage.ESENSE_BUTTON))
@@ -84,19 +84,18 @@ void main() {
         StudyProtocol.fromJson(json.decode(plainJson) as Map<String, dynamic>);
 
     expect(protocol.ownerId, 'alex@uni.dk');
-    expect(protocol.masterDevices.first.roleName, phone.roleName);
-    expect(protocol.connectedDevices.first.roleName, eSense.roleName);
+    expect(protocol.primaryDevice.roleName, phone.roleName);
+    expect(protocol.connectedDevices?.first.roleName, eSense.roleName);
     print(toJsonString(protocol));
   });
 
-  test('Data point -> JSON', () async {
-    ESenseButtonDatum datum =
-        ESenseButtonDatum(pressed: true, deviceName: 'eSense-123');
+  test('Measure -> JSON', () async {
+    final data = ESenseButton(pressed: true, deviceName: 'eSense-123');
 
-    final DataPoint data = DataPoint.fromData(datum);
-    expect(data.carpHeader.dataFormat.namespace,
+    final measurement = Measurement.fromData(data);
+    expect(measurement.data.format.namespace,
         ESenseSamplingPackage.ESENSE_NAMESPACE);
 
-    print(_encode(data.toJson()));
+    print(_encode(measurement.toJson()));
   });
 }

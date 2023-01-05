@@ -125,7 +125,7 @@ class PolarAccelerometer extends PolarData {
   Map<String, dynamic> toJson() => _$PolarAccelerometerToJson(this);
 
   @override
-  String get jsonType => PolarSamplingPackage.ACCELEROMETER;
+  String get jsonType => dataType;
 }
 
 /// Polar gyroscope data.
@@ -155,7 +155,7 @@ class PolarGyroscope extends PolarData {
   Map<String, dynamic> toJson() => _$PolarGyroscopeToJson(this);
 
   @override
-  String get jsonType => PolarSamplingPackage.GYROSCOPE;
+  String get jsonType => dataType;
 }
 
 /// Polar magnetometer data.
@@ -182,7 +182,7 @@ class PolarMagnetometer extends PolarData {
   Map<String, dynamic> toJson() => _$PolarMagnetometerToJson(this);
 
   @override
-  String get jsonType => PolarSamplingPackage.MAGNETOMETER;
+  String get jsonType => dataType;
 }
 
 /// Polar ECG data.
@@ -207,7 +207,7 @@ class PolarECG extends PolarData {
   Map<String, dynamic> toJson() => _$PolarECGToJson(this);
 
   @override
-  String get jsonType => PolarSamplingPackage.ECG;
+  String get jsonType => dataType;
 }
 
 /// Polar optical heart rate (OHR) photoplethysmograpy (PPG) data.
@@ -241,7 +241,7 @@ class PolarPPG extends PolarData {
   Map<String, dynamic> toJson() => _$PolarPPGToJson(this);
 
   @override
-  String get jsonType => PolarSamplingPackage.PPG;
+  String get jsonType => dataType;
 }
 
 /// Polar PP interval (PPI) in milliseconds.
@@ -269,7 +269,7 @@ class PolarPPI extends PolarData {
   Map<String, dynamic> toJson() => _$PolarPPIToJson(this);
 
   @override
-  String get jsonType => PolarSamplingPackage.PPI;
+  String get jsonType => dataType;
 }
 
 /// Polar heart rate (HR).
@@ -320,5 +320,5 @@ class PolarHR extends PolarData {
   Map<String, dynamic> toJson() => _$PolarHRToJson(this);
 
   @override
-  String get jsonType => PolarSamplingPackage.HR;
+  String get jsonType => dataType;
 }

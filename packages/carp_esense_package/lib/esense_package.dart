@@ -50,7 +50,18 @@ class ESenseSamplingPackage implements SamplingPackage {
   final DeviceManager _deviceManager = ESenseDeviceManager();
 
   @override
-  List<String> get dataTypes => [ESENSE_BUTTON, ESENSE_SENSOR];
+  List<DataTypeMetaData> get dataTypes => [
+        DataTypeMetaData(
+          type: ESENSE_BUTTON,
+          displayName: "eSense Button Events",
+          timeType: DataTimeType.POINT,
+        ),
+        DataTypeMetaData(
+          type: ESENSE_SENSOR,
+          displayName: "eSense Movement Events",
+          timeType: DataTimeType.TIME_SPAN,
+        ),
+      ];
 
   @override
   Probe? create(String type) {
