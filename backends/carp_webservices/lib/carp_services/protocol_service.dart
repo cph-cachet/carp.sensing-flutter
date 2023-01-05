@@ -8,6 +8,9 @@
 part of carp_services;
 
 /// A [ProtocolService] that talks to the CARP Web Services.
+///
+/// In order to use this service and manage protocols the user must be
+/// authenticated as a researcher.
 class CarpProtocolService extends CarpBaseService
     implements ProtocolService, ProtocolFactoryService {
   static CarpProtocolService _instance = CarpProtocolService._();

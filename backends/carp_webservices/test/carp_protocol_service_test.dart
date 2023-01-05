@@ -25,7 +25,7 @@ void main() {
     CarpMobileSensing();
 
     app = new CarpApp(
-      // studyId: testStudyId,
+      studyId: testStudyId,
       studyDeploymentId: testDeploymentId,
       name: "Test",
       uri: Uri.parse(uri),
