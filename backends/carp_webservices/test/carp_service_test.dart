@@ -441,6 +441,7 @@ void main() {
     });
 
     test(' - update document', () async {
+      // first create a document
       // var document = await CarpService()
       //     .collection(collectionName)
       //     .document(userId)
@@ -448,16 +449,20 @@ void main() {
 
       // expect(document, isNotNull);
 
-      // now get it back from the server
-      var original =
-          await CarpService().collection(collectionName).document(userId).get();
+      // create a document reference
+      final reference =
+          CarpService().collection(collectionName).document(userId);
+
+      // get it back from the server
+      final original = await reference.get();
       print(_encode(original?.data));
 
       // updating the role to super user
-      DocumentSnapshot updated = await CarpService()
-          .collection(collectionName)
-          .document(userId)
-          .updateData({'email': userId, 'role': 'Super User'});
+      // DocumentSnapshot updated = await CarpService()
+      //     .collection(collectionName)
+      //     .document(userId)
+      final updated =
+          await reference.updateData({'email': userId, 'role': 'Super User'});
 
       print('----------- updated -------------');
       print(updated);
@@ -468,20 +473,21 @@ void main() {
     });
 
     test(' - get document by id', () async {
-      // var document = await CarpService()
-      //     .collection(collectionName)
-      //     .document(userId)
-      //     .setData({'email': userId, 'role': 'Administrator'});
+      // first create a document
+      var document = await CarpService()
+          .collection(collectionName)
+          .document(userId)
+          .setData({'email': userId, 'role': 'Administrator'});
 
-      // print(document);
-      // expect(document, isNotNull);
+      print(document);
+      expect(document, isNotNull);
 
-      // var newDocument = await CarpService().documentById(document.id).get();
-      var newDocument = await CarpService().documentById(5).get();
+      // then get it back by the id
+      var newDocument = await CarpService().documentById(document.id).get();
 
       print((newDocument));
       expect(newDocument, isNotNull);
-      expect(newDocument?.id, 5);
+      expect(newDocument?.id, document.id);
     });
 
     test(' - get document by path', () async {

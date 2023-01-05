@@ -123,7 +123,6 @@ Once the package is registered, Movisens measures can be added to a study protoc
   // define which devices are used for data collection - both phone and Movisens
   Smartphone phone = Smartphone();
   MovisensDevice movisens = MovisensDevice(
-    roleName: 'movisens-ecg',
     deviceName: 'Sensor 02655',
     sensorLocation: SensorLocation.Chest,
     sex: Sex.Male,
@@ -145,5 +144,7 @@ Once the package is registered, Movisens measures can be added to a study protoc
       movisens);
 ````
 
-This protocol will start collecting the physical activity data (steps, inclination, etc.) from a Movisens device (once this protocol is deployed on a phone and connected to a Movisens device using Bluetooth).
-Again, please see the [CARP Mobile Sensing App](https://github.com/cph-cachet/carp.sensing-flutter/tree/master/apps/carp_mobile_sensing_app) for an example of how to build a mobile sensing app that can handle protocols and connect to devices.
+This protocol collects physical activity data (steps, inclination, etc.) from a Movisens device with the name `MOVISENS Sensor 04421`.
+The default Movisens names of devices are `MOVISENS Sensor <serial>`, where `serial` is the 5-digit serial number written on the back of the device.
+Once this protocol is deployed on a phone and connected to a Movisens device using Bluetooth, it will start to collect the physical activity data from the device.
+Please see the [CARP Mobile Sensing App](https://github.com/cph-cachet/carp.sensing-flutter/tree/master/apps/carp_mobile_sensing_app) for an example of how to build a mobile sensing app that can handle protocols and connect to devices.

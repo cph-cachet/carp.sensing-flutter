@@ -554,7 +554,7 @@ class CarpService extends CarpBaseService {
   /// Get all documents for this study.
   ///
   /// Note that this might return a very long list of documents and the
-  /// retquest may time out.
+  /// request may time out.
   Future<List<DocumentSnapshot>> documents() async {
     http.Response response =
         await httpr.get(Uri.encodeFull(documentEndpointUri), headers: headers);

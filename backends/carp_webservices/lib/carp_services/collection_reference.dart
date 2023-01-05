@@ -65,9 +65,13 @@ class CollectionReference extends CarpReference {
   Future<CollectionReference> get() async {
     final restHeaders = headers;
 
+    debug('REQUEST: GET $collectionUri\n');
+
     http.Response response =
         await httpr.get(Uri.encodeFull(collectionUri), headers: restHeaders);
     int httpStatusCode = response.statusCode;
+
+    debug('RESPONSE: $httpStatusCode\n${response.body}\n');
 
     Map<String, dynamic> responseJson = json.decode(response.body);
     if (httpStatusCode == HttpStatus.ok)

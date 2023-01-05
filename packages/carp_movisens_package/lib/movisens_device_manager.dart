@@ -21,8 +21,10 @@ class MovisensDevice extends DeviceConfiguration {
   /// The default role name for a Movisens device.
   static const String DEFAULT_ROLENAME = 'movisens';
 
-  /// The user-friendly name of the device.
-  /// Used for connecting to the device.
+  /// The name of the device used for connecting to the device.
+  ///
+  /// The default Movisens names of devices are `MOVISENS Sensor <serial>`, where
+  /// `serial` is the 5-digit serial number written on the back of the device.
   String deviceName;
 
   /// Sensor placement on body

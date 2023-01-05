@@ -85,7 +85,7 @@ class DocumentReference extends CarpReference {
 
     Map<String, dynamic> payload = {'name': name, 'data': data};
 
-    debug('REQUEST: $documentUri\n$payload');
+    debug('REQUEST: PUT $documentUri\n$payload');
 
     http.Response response = await httpr.put(Uri.encodeFull(documentUri),
         headers: headers, body: json.encode(payload));
@@ -140,7 +140,7 @@ class DocumentReference extends CarpReference {
   ///
   /// If no document exists, the read will return `null`.
   Future<DocumentSnapshot?> get() async {
-    debug('REQUEST: $documentUri\n');
+    debug('REQUEST: GET $documentUri\n');
 
     http.Response response =
         await httpr.get(Uri.encodeFull(documentUri), headers: headers);
