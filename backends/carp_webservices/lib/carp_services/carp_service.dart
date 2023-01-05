@@ -520,10 +520,12 @@ class CarpService extends CarpBaseService {
   String get documentEndpointUri =>
       "${_app!.uri.toString()}/api/studies/${_app!.studyId}/documents";
 
-  /// Get a list documents from a query.
+  /// Get a list documents based on a query.
   ///
   /// The [query] string uses the RSQL query language for RESTful APIs.
   /// See the [RSQL Documentation](https://developer.here.com/documentation/data-client-library/dev_guide/client/rsql.html).
+  ///
+  /// Can only be accessed by users who are authenticated as researchers.
   Future<List<DocumentSnapshot>> documentsByQuery(String query) async {
     // GET the list of documents in this collection from the CARP web service
     http.Response response = await httpr.get(
@@ -552,6 +554,8 @@ class CarpService extends CarpBaseService {
   }
 
   /// Get all documents for this study.
+  ///
+  /// Can only be accessed by users who are authenticated as researchers.
   ///
   /// Note that this might return a very long list of documents and the
   /// request may time out.
@@ -587,7 +591,7 @@ class CarpService extends CarpBaseService {
 
 /// Authentication state change events.
 enum AuthEvent {
-  /// The user has successfull been authenticated (signed in).
+  /// The user has successfully been authenticated (signed in).
   authenticated,
 
   /// The user has been unauthenticated (signed out).

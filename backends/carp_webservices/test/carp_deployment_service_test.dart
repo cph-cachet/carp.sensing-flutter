@@ -107,17 +107,13 @@ void main() {
 
   group("Deployment - using DeploymentReference", () {
     test('- get deployment status', () async {
-      StudyDeploymentStatus status =
-          await CarpDeploymentService().deployment().getStatus();
+      final status = await CarpDeploymentService().deployment().getStatus();
       print(toJsonString(status));
-      // print(status);
-      // print(status.primaryDeviceStatus!.device);
       expect(status.studyDeploymentId, testDeploymentId);
     });
 
     test('- register device', () async {
-      DeploymentReference reference =
-          CarpDeploymentService().deployment(testDeploymentId);
+      final reference = CarpDeploymentService().deployment(testDeploymentId);
       var status = await reference.getStatus();
       print(status);
 
@@ -129,9 +125,8 @@ void main() {
     }, skip: false);
 
     test('- get master device deployment', () async {
-      DeploymentReference reference =
-          CarpDeploymentService().deployment(testDeploymentId);
-      StudyDeploymentStatus status = await reference.getStatus();
+      final reference = CarpDeploymentService().deployment(testDeploymentId);
+      final status = await reference.getStatus();
       print(status);
       expect(status.primaryDeviceStatus!.device, isNotNull);
       print(status.primaryDeviceStatus!.device);
@@ -142,13 +137,12 @@ void main() {
     }, skip: false);
 
     test('- deployment success', () async {
-      DeploymentReference reference =
-          CarpDeploymentService().deployment(testDeploymentId);
-      StudyDeploymentStatus status_1 = await reference.getStatus();
+      final reference = CarpDeploymentService().deployment(testDeploymentId);
+      final status_1 = await reference.getStatus();
       print(toJsonString(status_1));
 
-      PrimaryDeviceDeployment? deployment = await reference.get();
-      StudyDeploymentStatus status_2 = await reference.deployed();
+      final deployment = await reference.get();
+      final status_2 = await reference.deployed();
       print(toJsonString(deployment));
       print(toJsonString(status_2));
       expect(status_1.studyDeploymentId, status_2.studyDeploymentId);
@@ -156,9 +150,8 @@ void main() {
     }, skip: false);
 
     test('- unregister device', () async {
-      DeploymentReference reference =
-          CarpDeploymentService().deployment(testDeploymentId);
-      StudyDeploymentStatus status = await reference.getStatus();
+      final reference = CarpDeploymentService().deployment(testDeploymentId);
+      var status = await reference.getStatus();
       print(status);
       expect(status.primaryDeviceStatus!.device, isNotNull);
       print(status.primaryDeviceStatus!.device);

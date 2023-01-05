@@ -130,8 +130,7 @@ class DeploymentReference extends RPCCarpReference {
     return _status = StudyDeploymentStatus.fromJson(await _rpc(DeviceDeployed(
       studyDeploymentId,
       status!.primaryDeviceStatus!.device.roleName,
-      status!.createdOn,
-      // deployment!.lastUpdateDate ?? DateTime.now().toUtc(),
+      deployment!.lastUpdateDate,
     )));
   }
 }

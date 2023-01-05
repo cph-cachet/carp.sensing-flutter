@@ -411,9 +411,6 @@ SmartphoneDeployment _$SmartphoneDeploymentFromJson(
       userId: json['userId'] as String?,
     )
       ..applicationData = json['applicationData'] as Map<String, dynamic>
-      ..lastUpdateDate = json['lastUpdateDate'] == null
-          ? null
-          : DateTime.parse(json['lastUpdateDate'] as String)
       ..deployed = json['deployed'] == null
           ? null
           : DateTime.parse(json['deployed'] as String);
@@ -430,6 +427,7 @@ Map<String, dynamic> _$SmartphoneDeploymentToJson(
     'triggers': instance.triggers,
     'taskControls': instance.taskControls.toList(),
     'expectedParticipantData': instance.expectedParticipantData.toList(),
+    'studyDeploymentId': instance.studyDeploymentId,
   };
 
   void writeNotNull(String key, dynamic value) {
@@ -438,8 +436,6 @@ Map<String, dynamic> _$SmartphoneDeploymentToJson(
     }
   }
 
-  writeNotNull('lastUpdateDate', instance.lastUpdateDate?.toIso8601String());
-  val['studyDeploymentId'] = instance.studyDeploymentId;
   writeNotNull('deployed', instance.deployed?.toIso8601String());
   writeNotNull('userId', instance.userId);
   return val;

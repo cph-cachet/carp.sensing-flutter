@@ -96,8 +96,8 @@ void main() {
 
         print(toJsonString(batch));
 
-        await CarpDataStreamService()
-            .appendToDataStreams(testDeploymentId, batch);
+        // await CarpDataStreamService()
+        //     .appendToDataStreams(testDeploymentId, batch);
       },
     );
 

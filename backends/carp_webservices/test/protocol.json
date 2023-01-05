@@ -1,0 +1,88 @@
+{
+    "id": "f67cc840-7cae-11ed-b4a5-0f5241a4d271",
+    "createdOn": "2022-12-15T19:44:20.487225Z",
+    "ownerId": "01dc52c4-b33b-4304-b265-8118c69f5935",
+    "name": "Nonmotorized transport study II",
+    "description": "Track how much nonmotorized movement participants perform.",
+    "primaryDevices": [
+        {
+            "__type": "dk.cachet.carp.common.application.devices.Smartphone",
+            "isPrimaryDevice": true,
+            "roleName": "smartphone"
+        }
+    ],
+    "tasks": [
+        {
+            "__type": "dk.cachet.carp.common.application.tasks.BackgroundTask",
+            "name": "Monitor movement",
+            "measures": [
+                {
+                    "__type": "dk.cachet.carp.common.application.tasks.Measure.DataStream",
+                    "type": "dk.cachet.carp.geolocation"
+                },
+                {
+                    "__type": "dk.cachet.carp.common.application.tasks.Measure.DataStream",
+                    "type": "dk.cachet.carp.stepcount"
+                }
+            ],
+            "description": "Track step count and geolocation for one week.",
+            "duration": "PT168H"
+        },
+        {
+            "__type": "dk.cachet.carp.common.application.tasks.BackgroundTask",
+            "name": "Monitor proximity to bike",
+            "measures": [
+                {
+                    "__type": "dk.cachet.carp.common.application.tasks.Measure.DataStream",
+                    "type": "dk.cachet.carp.signalstrength"
+                }
+            ],
+            "description": "rack step count and geolocation for one week.",
+            "duration": "PT168H"
+        }
+    ],
+    "triggers": {
+        "0": {
+            "__type": "dk.cachet.carp.common.application.triggers.ElapsedTimeTrigger",
+            "sourceDeviceRoleName": "smartphone",
+            "elapsedTime": "PT0S"
+        }
+    },
+    "taskControls": [
+        {
+            "triggerId": 0,
+            "taskName": "Monitor movement",
+            "destinationDeviceRoleName": "smartphone",
+            "control": "Start"
+        },
+        {
+            "triggerId": 0,
+            "taskName": "Monitor proximity to bike",
+            "destinationDeviceRoleName": "smartphone",
+            "control": "Start"
+        }
+    ],
+    "participantRoles": [
+        {
+            "role": "Participant",
+            "isOptional": false
+        }
+    ],
+    "expectedParticipantData": [
+        {
+            "attribute": {
+                "__type": "dk.cachet.carp.common.application.users.ParticipantAttribute.DefaultParticipantAttribute",
+                "inputDataType": "dk.cachet.carp.input.sex"
+            },
+            "assignedTo": {
+                "__type": "dk.cachet.carp.common.application.users.AssignedTo.Roles",
+                "roleNames": [
+                    "Participant"
+                ]
+            }
+        }
+    ],
+    "applicationData": {
+        "uiTheme": "black"
+    }
+}

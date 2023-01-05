@@ -1,0 +1,6 @@
+{
+    "statusCode": 500,
+    "exception": "java.lang.IllegalStateException",
+    "message": "Data streams for deployment with \"f803ce90-cae3-4f23-9b79-b1c865ed1b03\" have already been configured.",
+    "path": "POST /dev/api/deployment-service"
+}

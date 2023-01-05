@@ -44,9 +44,6 @@ class PrimaryDeviceDeployment {
   /// outside of scope or not yet supported by CARP core.
   Map<String, dynamic>? applicationData;
 
-  /// The time when this device deployment was last updated.
-  DateTime? lastUpdateDate;
-
   Set<ExpectedDataStream>? _expectedDataStreams;
 
   /// The set of expected data streams from this device deployment.
@@ -76,9 +73,7 @@ class PrimaryDeviceDeployment {
     this.triggers = const {},
     this.taskControls = const {},
     this.expectedParticipantData = const {},
-  }) {
-    lastUpdateDate = DateTime.now();
-  }
+  });
 
   // internal map, mapping task name to the task
   Map<String, TaskConfiguration>? _taskMap;
@@ -93,6 +88,11 @@ class PrimaryDeviceDeployment {
     }
     return _taskMap![name];
   }
+
+  /// The time when this device deployment was last updated.
+  /// This corresponds to the most recent device registration as part of this
+  /// device deployment.
+  DateTime get lastUpdateDate => registration.registrationCreatedOn;
 
   factory PrimaryDeviceDeployment.fromJson(Map<String, dynamic> json) =>
       _$PrimaryDeviceDeploymentFromJson(json);

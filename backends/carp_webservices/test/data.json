@@ -1,0 +1,60 @@
+[
+    {
+        "sequenceId": 0,
+        "studyDeploymentId": "f803ce90-cae3-4f23-9b79-b1c865ed1b03",
+        "deviceRoleName": "smartphone",
+        "measurement": {
+            "sensorStartTime": 1642505045000000,
+            "data": {
+                "__type": "dk.cachet.carp.geolocation",
+                "latitude": 55.68061908805645,
+                "longitude": 12.582050313435703
+            }
+        },
+        "triggerIds": [
+            0
+        ],
+        "syncPoint": {
+            "synchronizedOn": "1970-01-01T00:00:00Z",
+            "sensorTimestampAtSyncPoint": 0,
+            "relativeClockSpeed": 1.0
+        },
+        "dataStream": {
+            "studyDeploymentId": "f803ce90-cae3-4f23-9b79-b1c865ed1b03",
+            "deviceRoleName": "smartphone",
+            "dataType": {
+                "namespace": "dk.cachet.carp",
+                "name": "geolocation"
+            }
+        }
+    },
+    {
+        "sequenceId": 1,
+        "studyDeploymentId": "f803ce90-cae3-4f23-9b79-b1c865ed1b03",
+        "deviceRoleName": "smartphone",
+        "measurement": {
+            "sensorStartTime": 1642505144000000,
+            "data": {
+                "__type": "dk.cachet.carp.geolocation",
+                "latitude": 55.680802203873114,
+                "longitude": 12.581802212861367
+            }
+        },
+        "triggerIds": [
+            0
+        ],
+        "syncPoint": {
+            "synchronizedOn": "1970-01-01T00:00:00Z",
+            "sensorTimestampAtSyncPoint": 0,
+            "relativeClockSpeed": 1.0
+        },
+        "dataStream": {
+            "studyDeploymentId": "f803ce90-cae3-4f23-9b79-b1c865ed1b03",
+            "deviceRoleName": "smartphone",
+            "dataType": {
+                "namespace": "dk.cachet.carp",
+                "name": "geolocation"
+            }
+        }
+    }
+]

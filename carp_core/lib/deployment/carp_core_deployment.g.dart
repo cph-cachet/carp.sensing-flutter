@@ -48,11 +48,7 @@ PrimaryDeviceDeployment _$PrimaryDeviceDeploymentFromJson(
                   ExpectedParticipantData.fromJson(e as Map<String, dynamic>))
               .toSet() ??
           const {},
-    )
-      ..applicationData = json['applicationData'] as Map<String, dynamic>?
-      ..lastUpdateDate = json['lastUpdateDate'] == null
-          ? null
-          : DateTime.parse(json['lastUpdateDate'] as String);
+    )..applicationData = json['applicationData'] as Map<String, dynamic>?;
 
 Map<String, dynamic> _$PrimaryDeviceDeploymentToJson(
     PrimaryDeviceDeployment instance) {
@@ -74,7 +70,6 @@ Map<String, dynamic> _$PrimaryDeviceDeploymentToJson(
   }
 
   writeNotNull('applicationData', instance.applicationData);
-  writeNotNull('lastUpdateDate', instance.lastUpdateDate?.toIso8601String());
   return val;
 }
 
