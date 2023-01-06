@@ -15,8 +15,6 @@ part of carp_core_common;
 /// secondary data stream, or how triggers can act on it.
 @JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
 class DataType {
-  static const DataType UNKNOWN = DataType(NameSpace.UNKNOWN, 'unknown');
-
   /// The data type namespace. See [NameSpace].
   ///
   /// Uniquely identifies the organization/person who determines how to
@@ -75,7 +73,6 @@ class DataType {
 /// * `org.openmhealth`  : Open mHealth (OMH)
 /// * `org.hl7.fhir`     : Health Level 7 Fast Healthcare Interoperability Resources (HL7 FHIR)
 class NameSpace {
-  static const String UNKNOWN = 'unknown';
   static const String CARP = 'dk.cachet.carp';
   static const String OMH = 'org.openmhealth';
   static const String FHIR = 'org.hl7.fhir';

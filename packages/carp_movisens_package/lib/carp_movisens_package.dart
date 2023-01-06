@@ -61,10 +61,36 @@ part 'movisens_device_manager.dart';
 ///
 /// An example of a study protocol configuration is:
 ///
+/// ```dart
+///  // Create a study protocol
+///     StudyProtocol protocol = StudyProtocol(
+///    ownerId: 'owner@dtu.dk',
+///    name: 'Movisens Example',
+///  );
 ///
+///  // define which devices are used for data collection - both phone and Movisens
+///  Smartphone phone = Smartphone();
+///  MovisensDevice movisens = MovisensDevice(
+///    deviceName: 'MOVISENS Sensor 02655',
+///    sensorLocation: SensorLocation.Chest,
+///    sex: Sex.Male,
+///    height: 175,
+///    weight: 75,
+///    age: 25,
+///  );
 ///
+///  protocol
+///    ..addPrimaryDevice(phone)
+///    ..addConnectedDevice(movisens);
 ///
-
+///  // adding a movisens measure
+///  protocol.addTaskControl(
+///      ImmediateTrigger(),
+///      BackgroundTask(name: 'Movisens Task', measures: [
+///        Measure(type: MovisensSamplingPackage.ACTIVITY),
+///      ]),
+///      movisens);
+/// ```
 ///
 /// To use this package, register it in the [carp_mobile_sensing] package using
 ///

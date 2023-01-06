@@ -5,20 +5,6 @@ This packages supports sampling of the following [`Measure`](https://pub.dev/doc
 
 * `dk.cachet.carp.health`
 
-A [`HealthMeasure`](https://pub.dev/documentation/carp_health_package/latest/health_lib/HealthMeasure-class.html) can be configured to collect a specific [`HealthDataType`](https://pub.dev/documentation/health/latest/health/HealthDataType-class.html).
-
-A `HealthDataType` can be:
-
-* BODY_FAT_PERCENTAGE,
-* HEIGHT,
-* WEIGHT,
-* BODY_MASS_INDEX,
-* WAIST_CIRCUMFERENCE,
-* STEPS,
-* ...
-
-See the [`HealthDataType`](https://pub.dev/documentation/health/latest/health/HealthDataType-class.html) documentation for a complete list.
-
 See the [wiki](https://github.com/cph-cachet/carp.sensing-flutter/wiki) for further documentation, particularly on available [measure types](https://github.com/cph-cachet/carp.sensing-flutter/wiki/A.-Measure-Types).
 See the [CARP Mobile Sensing App](https://github.com/cph-cachet/carp.sensing-flutter/tree/master/apps/carp_mobile_sensing_app) for an example of how to build a mobile sensing app in Flutter.
 
@@ -88,17 +74,72 @@ Before creating a study and running it, register this package in the
 SamplingPackageRegistry().register(HealthSamplingPackage());
 `````
 
-When defining a study protocol with this health measure, it would look like this:
+When defining a study protocol with a health measure, it would look like this:
 
 ```dart
-  // collect weight every day at 23:00
-  protocol.addTriggeredTask(
-      RecurrentScheduledTrigger(
-          type: RecurrentType.daily, time: TimeOfDay(hour: 23, minute: 00)),
+  // automatically collect the default (steps) data every hour
+  protocol.addTaskControl(
+      PeriodicTrigger(period: Duration(minutes: 60)),
+      BackgroundTask(measures: [Measure(type: HealthSamplingPackage.HEALTH)]),
+      phone);
+```
+
+This would collect health data every hour using the default configuration (which only collect step count).
+Configuration of what data to collect is done via the `HealthSamplingConfiguration` which can be used to override the default configuration:
+
+```dart
+  // automatically collect a set of health data every hour
+  protocol.addTaskControl(
+      PeriodicTrigger(period: Duration(minutes: 60)),
       BackgroundTask()
         ..addMeasure(Measure(type: HealthSamplingPackage.HEALTH)
-          ..overrideSamplingConfiguration = HealthSamplingConfiguration(
-              healthDataTypes: [HealthDataType.WEIGHT])),
+          ..overrideSamplingConfiguration =
+              HealthSamplingConfiguration(healthDataTypes: [
+            HealthDataType.BLOOD_GLUCOSE,
+            HealthDataType.BLOOD_PRESSURE_DIASTOLIC,
+            HealthDataType.BLOOD_PRESSURE_SYSTOLIC,
+            HealthDataType.BLOOD_PRESSURE_DIASTOLIC,
+            HealthDataType.HEART_RATE,
+            HealthDataType.STEPS,
+          ])),
+      phone);
+```
+
+The `HealthSamplingConfiguration` can be configured to collect a specific set of [`HealthDataType`](https://pub.dev/documentation/health/latest/health/HealthDataType-class.html), like:
+
+* BODY_FAT_PERCENTAGE,
+* HEIGHT,
+* WEIGHT,
+* BODY_MASS_INDEX,
+* WAIST_CIRCUMFERENCE,
+* STEPS,
+* ...
+
+See the [`HealthDataType`](https://pub.dev/documentation/health/latest/health/HealthDataType-class.html) documentation for a complete list.
+
+A `HealthSamplingConfiguration` is a [`HistoricSamplingConfiguration`](https://pub.dev/documentation/carp_mobile_sensing/latest/domain/HistoricSamplingConfiguration-class.html).
+This means that when triggered, the task and measure will try to collect data back to the last time data was collected.
+Hence, this probe is suited for configuration using some trigger that collects data on a regular basis, like the `PeriodicTrigger` used above.
+However, it can also be configured using as an [`AppTask`](https://pub.dev/documentation/carp_mobile_sensing/latest/domain/AppTask-class.html) that asks the user to collect the data.
+
+```dart
+  // create an app task for the user to collect his own health data every day
+  protocol.addTaskControl(
+      PeriodicTrigger(period: Duration(hours: 24)),
+      AppTask(
+          type: 'health',
+          title: "Press here to collect your physical health data",
+          description: "This will collect your weight, exercise time, steps, and sleep time from Apple Health.",
+          measures: [
+            Measure(type: HealthSamplingPackage.HEALTH)
+              ..overrideSamplingConfiguration =
+                  HealthSamplingConfiguration(healthDataTypes: [
+                HealthDataType.WEIGHT,
+                HealthDataType.EXERCISE_TIME,
+                HealthDataType.STEPS,
+                HealthDataType.SLEEP_ASLEEP,
+              ])
+          ]),
       phone);
 ```
 

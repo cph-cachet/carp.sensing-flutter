@@ -30,22 +30,22 @@ void main() {
 
     // Define which devices are used for data collection.
     phone = Smartphone();
-    protocol.addMasterDevice(phone);
+    protocol.addPrimaryDevice(phone);
 
     // adding all available measures to one one trigger and one task
-    protocol.addTriggeredTask(
+    protocol.addTaskControl(
       ImmediateTrigger(),
       BackgroundTask()
         ..measures = SamplingPackageRegistry()
             .dataTypes
-            .map((type) => Measure(type: type))
+            .map((type) => Measure(type: type.type))
             .toList(),
       phone,
     );
 
-    protocol.addTriggeredTask(
+    protocol.addTaskControl(
         // collect every hour
-        IntervalTrigger(period: Duration(minutes: 60)),
+        PeriodicTrigger(period: Duration(minutes: 60)),
         BackgroundTask()
           ..addMeasure(Measure(type: HealthSamplingPackage.HEALTH)
             ..overrideSamplingConfiguration =
@@ -59,7 +59,7 @@ void main() {
             ])),
         phone);
 
-    protocol.addTriggeredTask(
+    protocol.addTaskControl(
         // collect every day at 23:00
         RecurrentScheduledTrigger(
             type: RecurrentType.daily, time: TimeOfDay(hour: 23, minute: 00)),
@@ -94,7 +94,7 @@ void main() {
         StudyProtocol.fromJson(json.decode(plainJson) as Map<String, dynamic>);
 
     expect(protocol.ownerId, 'alex@uni.dk');
-    expect(protocol.masterDevices.first.roleName, Smartphone.DEFAULT_ROLENAME);
+    expect(protocol.primaryDevice.roleName, Smartphone.DEFAULT_ROLENAME);
     print(toJsonString(protocol));
   });
 
@@ -121,7 +121,7 @@ void main() {
       String deviceId = '1234';
       String uuid = "4321";
 
-      HealthDatum hd = HealthDatum(
+      HealthData hd = HealthData(
         NumericHealthValue(value),
         unit,
         type,
@@ -132,17 +132,17 @@ void main() {
         uuid,
       );
 
-      DataPoint dp_1 = DataPoint.fromData(hd);
-      expect(dp_1.carpHeader.dataFormat.namespace,
-          HealthSamplingPackage.HEALTH_NAMESPACE);
-      expect(dp_1.carpHeader.dataFormat.name, "calories_intake");
+      final dp_1 = Measurement.fromData(hd);
+      expect(
+          dp_1.data.format.namespace, HealthSamplingPackage.HEALTH_NAMESPACE);
+      expect(dp_1.data.format.name, "calories_intake");
       print(_encode(dp_1));
     });
 
     test(' - ALCOHOL', () {
       DateTime to = DateTime.now();
       DateTime from = to.subtract(Duration(milliseconds: 10000));
-      HealthDatum hd = HealthDatum(
+      HealthData hd = HealthData(
           NumericHealthValue(6),
           enumToString(dasesDataTypeToUnit[DasesHealthDataType.ALCOHOL]),
           enumToString(DasesHealthDataType.ALCOHOL),
@@ -152,17 +152,17 @@ void main() {
           '1234',
           '4321');
 
-      DataPoint dp_1 = DataPoint.fromData(hd);
-      expect(dp_1.carpHeader.dataFormat.namespace,
-          HealthSamplingPackage.HEALTH_NAMESPACE);
-      expect(dp_1.carpHeader.dataFormat.name, "alcohol");
+      final dp_1 = Measurement.fromData(hd);
+      expect(
+          dp_1.data.format.namespace, HealthSamplingPackage.HEALTH_NAMESPACE);
+      expect(dp_1.data.format.name, "alcohol");
       print(_encode(dp_1));
     });
 
     test(' - SLEEP', () {
       DateTime to = DateTime.now();
       DateTime from = to.subtract(Duration(hours: 8));
-      HealthDatum hd = HealthDatum(
+      HealthData hd = HealthData(
           NumericHealthValue(6),
           enumToString(dasesDataTypeToUnit[DasesHealthDataType.SLEEP]),
           enumToString(DasesHealthDataType.SLEEP),
@@ -172,10 +172,10 @@ void main() {
           '1234',
           '4321');
 
-      DataPoint dp_1 = DataPoint.fromData(hd);
-      expect(dp_1.carpHeader.dataFormat.namespace,
-          HealthSamplingPackage.HEALTH_NAMESPACE);
-      expect(dp_1.carpHeader.dataFormat.name, "sleep");
+      final dp_1 = Measurement.fromData(hd);
+      expect(
+          dp_1.data.format.namespace, HealthSamplingPackage.HEALTH_NAMESPACE);
+      expect(dp_1.data.format.name, "sleep");
       print(_encode(dp_1));
     });
 
@@ -183,7 +183,7 @@ void main() {
       DateTime to = DateTime.now();
       DateTime from = to.subtract(Duration(hours: 8));
 
-      HealthDatum smoking = HealthDatum(
+      HealthData smoking = HealthData(
           NumericHealthValue(12),
           enumToString(
               dasesDataTypeToUnit[DasesHealthDataType.SMOKED_CIGARETTES]),
@@ -196,10 +196,10 @@ void main() {
           '1234',
           '4321');
 
-      DataPoint dp_1 = DataPoint.fromData(smoking);
-      expect(dp_1.carpHeader.dataFormat.namespace,
-          HealthSamplingPackage.HEALTH_NAMESPACE);
-      expect(dp_1.carpHeader.dataFormat.name, "smoked_cigarettes");
+      final dp_1 = Measurement.fromData(smoking);
+      expect(
+          dp_1.data.format.namespace, HealthSamplingPackage.HEALTH_NAMESPACE);
+      expect(dp_1.data.format.name, "smoked_cigarettes");
       print(_encode(dp_1));
     });
 
@@ -207,7 +207,7 @@ void main() {
       DateTime to = DateTime.now();
       DateTime from = to.subtract(Duration(hours: 8));
 
-      HealthDatum audiogram = HealthDatum(
+      HealthData audiogram = HealthData(
           AudiogramHealthValue([12, 32], [1, 2, 3, 4], [1, 4, 7]),
           enumToString(HealthDataUnit.NO_UNIT),
           enumToString(HealthDataType.AUDIOGRAM),
@@ -219,10 +219,10 @@ void main() {
           '1234',
           '4321');
 
-      DataPoint dp_1 = DataPoint.fromData(audiogram);
-      expect(dp_1.carpHeader.dataFormat.namespace,
-          HealthSamplingPackage.HEALTH_NAMESPACE);
-      expect(dp_1.carpHeader.dataFormat.name, "audiogram");
+      final dp_1 = Measurement.fromData(audiogram);
+      expect(
+          dp_1.data.format.namespace, HealthSamplingPackage.HEALTH_NAMESPACE);
+      expect(dp_1.data.format.name, "audiogram");
       print(_encode(dp_1));
     });
 
@@ -230,7 +230,7 @@ void main() {
       DateTime to = DateTime.now();
       DateTime from = to.subtract(Duration(hours: 8));
 
-      HealthDatum workout = HealthDatum(
+      HealthData workout = HealthData(
           WorkoutHealthValue(HealthWorkoutActivityType.AEROBICS, 8,
               HealthDataUnit.KILOCALORIE, 1000, HealthDataUnit.METER),
           enumToString(HealthDataUnit.NO_UNIT),
@@ -243,10 +243,10 @@ void main() {
           '1234',
           '4321');
 
-      DataPoint dp_1 = DataPoint.fromData(workout);
-      expect(dp_1.carpHeader.dataFormat.namespace,
-          HealthSamplingPackage.HEALTH_NAMESPACE);
-      expect(dp_1.carpHeader.dataFormat.name, "workout");
+      final dp_1 = Measurement.fromData(workout);
+      expect(
+          dp_1.data.format.namespace, HealthSamplingPackage.HEALTH_NAMESPACE);
+      expect(dp_1.data.format.name, "workout");
       print(_encode(dp_1));
     });
   });

@@ -64,13 +64,7 @@ HealthValue _healthValueFromJson(json) => NumericHealthValue(-1);
 
 /// A [Datum] that holds a [HealthDataPoint](https://pub.dev/documentation/health/latest/health/HealthDataPoint-class.html) data point information.
 @JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)
-class HealthDatum extends Datum {
-  /// The format of this health datum is `carp.health.<healthdatatype>`,
-  /// where `<healthdatatype>` is the lowercase of the [HealthDataType](https://pub.dev/documentation/health/latest/health/HealthDataType-class.html) collected.
-  @override
-  DataFormat get format => DataFormat.fromString(
-      '${HealthSamplingPackage.HEALTH}.${dataType.toLowerCase()}');
-
+class HealthData extends Data {
   /// The value of the health data.
   @JsonKey(fromJson: _healthValueFromJson)
   HealthValue value;
@@ -100,14 +94,14 @@ class HealthDatum extends Datum {
   /// The unique UUID of the data point.
   String uuid;
 
-  HealthDatum(this.value, this.unit, this.dataType, this.dateFrom, this.dateTo,
+  HealthData(this.value, this.unit, this.dataType, this.dateFrom, this.dateTo,
       this.platform, this.deviceId, this.uuid)
       : super();
 
-  factory HealthDatum.fromHealthDataPoint(HealthDataPoint healthDataPoint) {
+  factory HealthData.fromHealthDataPoint(HealthDataPoint healthDataPoint) {
     String uuid =
         Uuid().v5(Uuid.NAMESPACE_URL, healthDataPoint.toJson().toString());
-    return HealthDatum(
+    return HealthData(
       healthDataPoint.value,
       healthDataPoint.unitString,
       healthDataPoint.typeString,
@@ -119,11 +113,17 @@ class HealthDatum extends Datum {
     );
   }
 
-  factory HealthDatum.fromJson(Map<String, dynamic> json) =>
-      _$HealthDatumFromJson(json);
+  factory HealthData.fromJson(Map<String, dynamic> json) =>
+      _$HealthDataFromJson(json);
 
   @override
-  Map<String, dynamic> toJson() => _$HealthDatumToJson(this);
+  Map<String, dynamic> toJson() => _$HealthDataToJson(this);
+
+  /// The json type of this health datum is `carp.health.<healthdatatype>`,
+  /// where `<healthdatatype>` is the lowercase of the [HealthDataType](https://pub.dev/documentation/health/latest/health/HealthDataType-class.html) collected.
+  @override
+  String get jsonType =>
+      '${HealthSamplingPackage.HEALTH}.${dataType.toLowerCase()}';
 
   @override
   String toString() => '${super.toString()}'

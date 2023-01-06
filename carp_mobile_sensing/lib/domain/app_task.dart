@@ -47,6 +47,7 @@ class AppTask extends TaskConfiguration {
   /// [name] is a unique name of the task.
   /// [measures] is the list of measures to be collected in the background when
   /// this app task is started.
+  /// [type] provide a unique type for this kind of app task.
   AppTask({
     super.name,
     super.measures,

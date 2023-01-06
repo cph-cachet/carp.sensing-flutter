@@ -6,7 +6,7 @@
  */
 part of carp_polar_package;
 
-/// An abstract Datum for all Polar data points.
+/// An abstract [Data] class for all Polar data points.
 abstract class PolarData extends SensorData {
   /// Polar device identifier.
   String deviceIdentifier;

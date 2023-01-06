@@ -5,11 +5,10 @@
  * found in the LICENSE file.
  */
 
-/// A CAMS sampling package for collecting health information from Apple Health or Google Fit.
+/// A CAMS sampling package for collecting health information from Apple Health
+/// or Google Fit.
 /// Is using the [health](https://pub.dev/packages/health) plugin.
 /// Can be configured to collect the different [HealthDataType](https://pub.dev/documentation/health/latest/health/HealthDataType-class.html).
-///
-/// The measure type is `dk.cachet.carp.health`.
 library health_package;
 
 import 'dart:async';
@@ -28,7 +27,30 @@ part 'health_probe.dart';
 
 HealthFactory _healthFactory = HealthFactory();
 
-/// This is the base class for this health sampling package.
+/// The health sampling package supports the following overall measure type:
+///
+///  * `dk.cachet.carp.health`
+///
+/// In order to specify which health data to collect, a `HealthSamplingConfiguration`
+/// needs to specified.
+/// An example of a configuration of collection of health data once pr. hours is:
+///
+/// ```dart
+///   protocol.addTriggeredTask(
+///         IntervalTrigger(period: Duration(minutes: 60)),
+///         BackgroundTask()
+///           ..addMeasure(Measure(type: HealthSamplingPackage.HEALTH)
+///             ..overrideSamplingConfiguration =
+///                 HealthSamplingConfiguration(healthDataTypes: [
+///               HealthDataType.BLOOD_GLUCOSE,
+///               HealthDataType.BLOOD_PRESSURE_DIASTOLIC,
+///               HealthDataType.BLOOD_PRESSURE_SYSTOLIC,
+///               HealthDataType.BLOOD_PRESSURE_DIASTOLIC,
+///               HealthDataType.HEART_RATE,
+///               HealthDataType.STEPS,
+///             ])),
+///         phone);
+/// ```
 ///
 /// To use this package, register it in the [carp_mobile_sensing] package using
 ///
@@ -42,30 +64,15 @@ class HealthSamplingPackage extends SmartphoneSamplingPackage {
   ///  * One-time measure.
   ///  * Uses the [Smartphone] master device for data collection.
   ///  * Use a [HealthSamplingConfiguration] for sampling configuration.
-  ///
-  /// An example of a confguration of collection of health data once pr. hours is:
-  ///
-  /// ```dart
-  ///   protocol.addTriggeredTask(
-  ///         IntervalTrigger(period: Duration(minutes: 60)),
-  ///         BackgroundTask()
-  ///           ..addMeasure(Measure(type: HealthSamplingPackage.HEALTH)
-  ///             ..overrideSamplingConfiguration =
-  ///                 HealthSamplingConfiguration(healthDataTypes: [
-  ///               HealthDataType.BLOOD_GLUCOSE,
-  ///               HealthDataType.BLOOD_PRESSURE_DIASTOLIC,
-  ///               HealthDataType.BLOOD_PRESSURE_SYSTOLIC,
-  ///               HealthDataType.BLOOD_PRESSURE_DIASTOLIC,
-  ///               HealthDataType.HEART_RATE,
-  ///               HealthDataType.STEPS,
-  ///             ])),
-  ///         phone);
-  /// ```
   static const String HEALTH = "${NameSpace.CARP}.health";
 
   @override
-  List<String> get dataTypes => [
-        HEALTH,
+  List<DataTypeMetaData> get dataTypes => [
+        DataTypeMetaData(
+          type: HEALTH,
+          displayName: "Health Data",
+          timeType: DataTimeType.TIME_SPAN,
+        ),
       ];
 
   @override
@@ -81,12 +88,16 @@ class HealthSamplingPackage extends SmartphoneSamplingPackage {
   List<Permission> get permissions => [];
 
   /// Request access to Google Fit or Apple HealthKit.
-  /// This method can be used from the app to request access at a 'convinient'
+  /// This method can be used from the app to request access at a 'convenient'
   /// time and will typically be done before sampling is started for
   /// all [types] that are needed.
   Future<bool> requestAuthorization(List<HealthDataType> types) async =>
       _healthFactory.requestAuthorization(types);
 
+  /// Default samplings schema for sampling of health data which only collects
+  /// step count.
   @override
-  SamplingSchema get samplingSchema => SamplingSchema();
+  SamplingSchema get samplingSchema => SamplingSchema()
+    ..addConfiguration(HEALTH,
+        HealthSamplingConfiguration(healthDataTypes: [HealthDataType.STEPS]));
 }

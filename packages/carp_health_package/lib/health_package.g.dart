@@ -16,7 +16,7 @@ HealthSamplingConfiguration _$HealthSamplingConfigurationFromJson(
           .map((e) => $enumDecode(_$HealthDataTypeEnumMap, e))
           .toList(),
     )
-      ..$type = json[r'$type'] as String?
+      ..$type = json['__type'] as String?
       ..lastTime = json['lastTime'] == null
           ? null
           : DateTime.parse(json['lastTime'] as String)
@@ -32,7 +32,7 @@ Map<String, dynamic> _$HealthSamplingConfigurationToJson(
     }
   }
 
-  writeNotNull(r'$type', instance.$type);
+  writeNotNull('__type', instance.$type);
   writeNotNull('lastTime', instance.lastTime?.toIso8601String());
   val['past'] = instance.past.inMicroseconds;
   val['future'] = instance.future.inMicroseconds;
@@ -85,9 +85,10 @@ const _$HealthDataTypeEnumMap = {
   HealthDataType.LOW_HEART_RATE_EVENT: 'LOW_HEART_RATE_EVENT',
   HealthDataType.IRREGULAR_HEART_RATE_EVENT: 'IRREGULAR_HEART_RATE_EVENT',
   HealthDataType.ELECTRODERMAL_ACTIVITY: 'ELECTRODERMAL_ACTIVITY',
+  HealthDataType.ELECTROCARDIOGRAM: 'ELECTROCARDIOGRAM',
 };
 
-HealthDatum _$HealthDatumFromJson(Map<String, dynamic> json) => HealthDatum(
+HealthData _$HealthDataFromJson(Map<String, dynamic> json) => HealthData(
       _healthValueFromJson(json['value']),
       json['unit'] as String,
       json['data_type'] as String,
@@ -96,11 +97,9 @@ HealthDatum _$HealthDatumFromJson(Map<String, dynamic> json) => HealthDatum(
       json['platform'] as String,
       json['device_id'] as String,
       json['uuid'] as String,
-    )
-      ..id = json['id'] as String?
-      ..timestamp = DateTime.parse(json['timestamp'] as String);
+    )..$type = json['__type'] as String?;
 
-Map<String, dynamic> _$HealthDatumToJson(HealthDatum instance) {
+Map<String, dynamic> _$HealthDataToJson(HealthData instance) {
   final val = <String, dynamic>{};
 
   void writeNotNull(String key, dynamic value) {
@@ -109,8 +108,7 @@ Map<String, dynamic> _$HealthDatumToJson(HealthDatum instance) {
     }
   }
 
-  writeNotNull('id', instance.id);
-  val['timestamp'] = instance.timestamp.toIso8601String();
+  writeNotNull('__type', instance.$type);
   val['value'] = instance.value;
   val['unit'] = instance.unit;
   val['date_from'] = instance.dateFrom.toIso8601String();

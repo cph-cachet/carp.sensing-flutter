@@ -1,3 +1,7 @@
+## 3.0.0
+
+* update to `carp_mobile_sensing` v. 1.1.0
+
 ## 2.5.0
 
 * update to `carp_mobile_sensing` v. 0.40.0

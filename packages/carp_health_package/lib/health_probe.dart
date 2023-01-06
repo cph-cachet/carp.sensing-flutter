@@ -1,10 +1,20 @@
 part of health_package;
 
+/// A probe collecting health data from Apple Health or Google Fit.
+///
+/// Configuration of this probe is based on a [HealthSamplingConfiguration] which
+/// again is a [HistoricSamplingConfiguration].
+/// This means that when started, it will try to collect data back to the last
+/// time data was collected.
+/// Hence, this probe is suited for configuration using some trigger that
+/// collects data on a regular basis. This could be a [PeriodicTrigger] or it
+/// could be configured as an [AppTask] asking the user to collect the data
+/// on a regular basis.
 class HealthProbe extends StreamProbe {
-  final StreamController<HealthDatum> _ctrl = StreamController.broadcast();
+  final StreamController<Measurement> _ctrl = StreamController.broadcast();
 
   @override
-  Stream<HealthDatum> get stream => _ctrl.stream;
+  Stream<Measurement> get stream => _ctrl.stream;
 
   @override
   HealthSamplingConfiguration get samplingConfiguration =>
@@ -18,8 +28,8 @@ class HealthProbe extends StreamProbe {
   }
 
   @override
-  Future<bool> onResume() async {
-    super.onResume();
+  Future<bool> onStart() async {
+    super.onStart();
 
     debug(
         '$runtimeType - Collecting health data, configuration : $samplingConfiguration');
@@ -42,9 +52,12 @@ class HealthProbe extends StreamProbe {
       debug(
           '$runtimeType - Retrieved ${data.length} health data points of type. $healthDataTypes');
 
-      // convert HealthDataPoint to Datums and add them to the stream
+      // convert HealthDataPoint to measurements and add them to the stream
       for (var data in data) {
-        _ctrl.add(HealthDatum.fromHealthDataPoint(data));
+        _ctrl.add(Measurement(
+            sensorStartTime: data.dateFrom.microsecondsSinceEpoch,
+            sensorEndTime: data.dateTo.microsecondsSinceEpoch,
+            data: HealthData.fromHealthDataPoint(data)));
       }
     } catch (exception) {
       _ctrl.addError(exception);

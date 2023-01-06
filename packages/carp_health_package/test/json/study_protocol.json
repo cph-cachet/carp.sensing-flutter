@@ -1,148 +1,155 @@
 {
+  "id": "f0729490-8dc8-11ed-896e-b717274e8d1b",
+  "createdOn": "2023-01-06T13:49:28.537529Z",
   "ownerId": "alex@uni.dk",
   "name": "Context package test",
-  "description": "",
-  "creationDate": "2022-07-06T13:06:13.860922Z",
-  "masterDevices": [
-   {
-    "$type": "dk.cachet.carp.protocols.domain.devices.Smartphone",
-    "isMasterDevice": true,
-    "roleName": "masterphone",
-    "samplingConfiguration": {}
-   }
+  "primaryDevices": [
+    {
+      "__type": "dk.cachet.carp.common.application.devices.Smartphone",
+      "roleName": "primaryphone",
+      "defaultSamplingConfiguration": {},
+      "isPrimaryDevice": true
+    }
   ],
   "connectedDevices": [],
   "connections": [],
-  "triggers": {
-   "0": {
-    "$type": "dk.cachet.carp.protocols.domain.triggers.ImmediateTrigger"
-   },
-   "1": {
-    "$type": "dk.cachet.carp.protocols.domain.triggers.IntervalTrigger",
-    "period": 3600000000
-   },
-   "2": {
-    "$type": "dk.cachet.carp.protocols.domain.triggers.RecurrentScheduledTrigger",
-    "duration": 2000000,
-    "type": "daily",
-    "time": {
-     "hour": 23,
-     "minute": 0,
-     "second": 0
-    },
-    "separationCount": 0,
-    "period": 86400000000
-   }
-  },
   "tasks": [
-   {
-    "$type": "dk.cachet.carp.protocols.domain.tasks.BackgroundTask",
-    "name": "Task #5",
-    "measures": [
-     {
-      "$type": "dk.cachet.carp.protocols.domain.tasks.measures.Measure",
-      "type": "dk.cachet.carp.device"
-     },
-     {
-      "$type": "dk.cachet.carp.protocols.domain.tasks.measures.Measure",
-      "type": "dk.cachet.carp.memory"
-     },
-     {
-      "$type": "dk.cachet.carp.protocols.domain.tasks.measures.Measure",
-      "type": "dk.cachet.carp.battery"
-     },
-     {
-      "$type": "dk.cachet.carp.protocols.domain.tasks.measures.Measure",
-      "type": "dk.cachet.carp.screen"
-     },
-     {
-      "$type": "dk.cachet.carp.protocols.domain.tasks.measures.Measure",
-      "type": "dk.cachet.carp.accelerometer"
-     },
-     {
-      "$type": "dk.cachet.carp.protocols.domain.tasks.measures.Measure",
-      "type": "dk.cachet.carp.gyroscope"
-     },
-     {
-      "$type": "dk.cachet.carp.protocols.domain.tasks.measures.Measure",
-      "type": "dk.cachet.carp.periodic_accelerometer"
-     },
-     {
-      "$type": "dk.cachet.carp.protocols.domain.tasks.measures.Measure",
-      "type": "dk.cachet.carp.periodic_gyroscope"
-     },
-     {
-      "$type": "dk.cachet.carp.protocols.domain.tasks.measures.Measure",
-      "type": "dk.cachet.carp.pedometer"
-     },
-     {
-      "$type": "dk.cachet.carp.protocols.domain.tasks.measures.Measure",
-      "type": "dk.cachet.carp.light"
-     },
-     {
-      "$type": "dk.cachet.carp.protocols.domain.tasks.measures.Measure",
-      "type": "dk.cachet.carp.health"
-     }
-    ]
-   },
-   {
-    "$type": "dk.cachet.carp.protocols.domain.tasks.BackgroundTask",
-    "name": "Task #6",
-    "measures": [
-     {
-      "$type": "dk.cachet.carp.protocols.domain.tasks.measures.Measure",
-      "type": "dk.cachet.carp.health",
-      "overrideSamplingConfiguration": {
-       "$type": "dk.cachet.carp.protocols.domain.sampling.SamplingConfiguration",
-       "past": 86400000000,
-       "future": 86400000000,
-       "healthDataTypes": [
-        "BLOOD_GLUCOSE",
-        "BLOOD_PRESSURE_DIASTOLIC",
-        "BLOOD_PRESSURE_SYSTOLIC",
-        "BLOOD_PRESSURE_DIASTOLIC",
-        "HEART_RATE",
-        "STEPS"
-       ]
-      }
-     }
-    ]
-   },
-   {
-    "$type": "dk.cachet.carp.protocols.domain.tasks.BackgroundTask",
-    "name": "Task #7",
-    "measures": [
-     {
-      "$type": "dk.cachet.carp.protocols.domain.tasks.measures.Measure",
-      "type": "dk.cachet.carp.health",
-      "overrideSamplingConfiguration": {
-       "$type": "dk.cachet.carp.protocols.domain.sampling.SamplingConfiguration",
-       "past": 86400000000,
-       "future": 86400000000,
-       "healthDataTypes": [
-        "WEIGHT"
-       ]
-      }
-     }
-    ]
-   }
+    {
+      "__type": "dk.cachet.carp.common.application.tasks.BackgroundTask",
+      "name": "Task #5",
+      "measures": [
+        {
+          "__type": "dk.cachet.carp.common.application.tasks.Measure.DataStream",
+          "type": "dk.cachet.carp.deviceinformation"
+        },
+        {
+          "__type": "dk.cachet.carp.common.application.tasks.Measure.DataStream",
+          "type": "dk.cachet.carp.freememory"
+        },
+        {
+          "__type": "dk.cachet.carp.common.application.tasks.Measure.DataStream",
+          "type": "dk.cachet.carp.batterystate"
+        },
+        {
+          "__type": "dk.cachet.carp.common.application.tasks.Measure.DataStream",
+          "type": "dk.cachet.carp.screenevent"
+        },
+        {
+          "__type": "dk.cachet.carp.common.application.tasks.Measure.DataStream",
+          "type": "dk.cachet.carp.acceleration"
+        },
+        {
+          "__type": "dk.cachet.carp.common.application.tasks.Measure.DataStream",
+          "type": "dk.cachet.carp.nongravitationalacceleration"
+        },
+        {
+          "__type": "dk.cachet.carp.common.application.tasks.Measure.DataStream",
+          "type": "dk.cachet.carp.rotation"
+        },
+        {
+          "__type": "dk.cachet.carp.common.application.tasks.Measure.DataStream",
+          "type": "dk.cachet.carp.stepcount"
+        },
+        {
+          "__type": "dk.cachet.carp.common.application.tasks.Measure.DataStream",
+          "type": "dk.cachet.carp.magneticfield"
+        },
+        {
+          "__type": "dk.cachet.carp.common.application.tasks.Measure.DataStream",
+          "type": "dk.cachet.carp.ambientlight"
+        },
+        {
+          "__type": "dk.cachet.carp.common.application.tasks.Measure.DataStream",
+          "type": "dk.cachet.carp.health"
+        }
+      ]
+    },
+    {
+      "__type": "dk.cachet.carp.common.application.tasks.BackgroundTask",
+      "name": "Task #6",
+      "measures": [
+        {
+          "__type": "dk.cachet.carp.common.application.tasks.Measure.DataStream",
+          "type": "dk.cachet.carp.health",
+          "overrideSamplingConfiguration": {
+            "__type": "dk.cachet.carp.common.application.sampling.HealthSamplingConfiguration",
+            "past": 86400000000,
+            "future": 86400000000,
+            "healthDataTypes": [
+              "BLOOD_GLUCOSE",
+              "BLOOD_PRESSURE_DIASTOLIC",
+              "BLOOD_PRESSURE_SYSTOLIC",
+              "BLOOD_PRESSURE_DIASTOLIC",
+              "HEART_RATE",
+              "STEPS"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "__type": "dk.cachet.carp.common.application.tasks.BackgroundTask",
+      "name": "Task #7",
+      "measures": [
+        {
+          "__type": "dk.cachet.carp.common.application.tasks.Measure.DataStream",
+          "type": "dk.cachet.carp.health",
+          "overrideSamplingConfiguration": {
+            "__type": "dk.cachet.carp.common.application.sampling.HealthSamplingConfiguration",
+            "past": 86400000000,
+            "future": 86400000000,
+            "healthDataTypes": [
+              "WEIGHT"
+            ]
+          }
+        }
+      ]
+    }
   ],
-  "triggeredTasks": [
-   {
-    "triggerId": 0,
-    "taskName": "Task #5",
-    "targetDeviceRoleName": "masterphone"
-   },
-   {
-    "triggerId": 1,
-    "taskName": "Task #6",
-    "targetDeviceRoleName": "masterphone"
-   },
-   {
-    "triggerId": 2,
-    "taskName": "Task #7",
-    "targetDeviceRoleName": "masterphone"
-   }
+  "triggers": {
+    "0": {
+      "__type": "dk.cachet.carp.common.application.triggers.ImmediateTrigger",
+      "sourceDeviceRoleName": "primaryphone"
+    },
+    "1": {
+      "__type": "dk.cachet.carp.common.application.triggers.PeriodicTrigger",
+      "sourceDeviceRoleName": "primaryphone",
+      "period": 3600000000
+    },
+    "2": {
+      "__type": "dk.cachet.carp.common.application.triggers.RecurrentScheduledTrigger",
+      "sourceDeviceRoleName": "primaryphone",
+      "type": "daily",
+      "time": {
+        "hour": 23,
+        "minute": 0,
+        "second": 0
+      },
+      "separationCount": 0,
+      "period": 86400000000
+    }
+  },
+  "taskControls": [
+    {
+      "triggerId": 0,
+      "taskName": "Task #5",
+      "destinationDeviceRoleName": "primaryphone",
+      "control": "Start"
+    },
+    {
+      "triggerId": 1,
+      "taskName": "Task #6",
+      "destinationDeviceRoleName": "primaryphone",
+      "control": "Start"
+    },
+    {
+      "triggerId": 2,
+      "taskName": "Task #7",
+      "destinationDeviceRoleName": "primaryphone",
+      "control": "Start"
+    }
   ],
+  "participantRoles": [],
+  "assignedDevices": {},
   "expectedParticipantData": []
- }
+}

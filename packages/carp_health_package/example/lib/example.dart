@@ -20,11 +20,17 @@ void main() async {
   // define which devices are used for data collection
   // in this case, its only this smartphone
   Smartphone phone = Smartphone();
-  protocol.addMasterDevice(phone);
+  protocol.addPrimaryDevice(phone);
 
-  // collect a set of health data every hour
-  protocol.addTriggeredTask(
-      IntervalTrigger(period: Duration(minutes: 60)),
+  // automatically collect the default (steps) data every hour
+  protocol.addTaskControl(
+      PeriodicTrigger(period: Duration(minutes: 60)),
+      BackgroundTask(measures: [Measure(type: HealthSamplingPackage.HEALTH)]),
+      phone);
+
+  // automatically collect a set of health data every hour
+  protocol.addTaskControl(
+      PeriodicTrigger(period: Duration(minutes: 60)),
       BackgroundTask()
         ..addMeasure(Measure(type: HealthSamplingPackage.HEALTH)
           ..overrideSamplingConfiguration =
@@ -39,12 +45,32 @@ void main() async {
       phone);
 
   // collect weight every day at 23:00
-  protocol.addTriggeredTask(
+  protocol.addTaskControl(
       RecurrentScheduledTrigger(
           type: RecurrentType.daily, time: TimeOfDay(hour: 23, minute: 00)),
       BackgroundTask()
         ..addMeasure(Measure(type: HealthSamplingPackage.HEALTH)
           ..overrideSamplingConfiguration = HealthSamplingConfiguration(
               healthDataTypes: [HealthDataType.WEIGHT])),
+      phone);
+
+  // create an app task for the user to collect his own health data every day
+  protocol.addTaskControl(
+      PeriodicTrigger(period: Duration(hours: 24)),
+      AppTask(
+          type: 'health',
+          title: "Press here to collect your physical health data",
+          description:
+              "This will collect your weight, exercise time, steps, and sleep time from Apple Health.",
+          measures: [
+            Measure(type: HealthSamplingPackage.HEALTH)
+              ..overrideSamplingConfiguration =
+                  HealthSamplingConfiguration(healthDataTypes: [
+                HealthDataType.WEIGHT,
+                HealthDataType.EXERCISE_TIME,
+                HealthDataType.STEPS,
+                HealthDataType.SLEEP_ASLEEP,
+              ])
+          ]),
       phone);
 }
