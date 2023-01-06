@@ -9,7 +9,7 @@ part of survey;
 
 /// A [UserTask] that contains a survey.
 ///
-/// A [SurveyUserTask] is enqued on the [AppTaskController]'s [userTaskQueue]
+/// A [SurveyUserTask] is enqueued on the [AppTaskController]'s [userTaskQueue]
 /// and can be accessed from here. When a user starts this user task, the
 /// [onStart] method is called, and the survey (a [RPTask]) is shown.
 class SurveyUserTask extends UserTask {
@@ -18,7 +18,7 @@ class SurveyUserTask extends UserTask {
   static const String INFORMED_CONSENT_TYPE = 'informed_consent';
 
   late BuildContext _context;
-  final _controller = StreamController<DataPoint>();
+  final _controller = StreamController<Measurement>();
 
   /// The [RPAppTask] from which this user task originates from.
   RPAppTask get rpAppTask => task as RPAppTask;
@@ -32,7 +32,7 @@ class SurveyUserTask extends UserTask {
 
     super.onStart(context);
     executor.group.add(_controller.stream);
-    executor.resume();
+    executor.start();
 
     _onSurveyTriggered(SurveyPage(
       task: rpAppTask.rpTask,
@@ -49,16 +49,16 @@ class SurveyUserTask extends UserTask {
   }
 
   void _onSurveySubmit(RPTaskResult result) {
-    executor.pause();
+    executor.stop();
     // when we have the survey result, add it to the data stream
-    _controller.add(DataPoint.fromData(RPTaskResultDatum(result)));
+    _controller.add(Measurement.fromData(RPTaskResultData(result)));
     super.onDone(_context);
   }
 
   void _onSurveyCancel([RPTaskResult? result]) {
-    executor.pause();
+    executor.stop();
     // also saved result even though it was canceled by the user
-    _controller.add(DataPoint.fromData(RPTaskResultDatum(result)));
+    _controller.add(Measurement.fromData(RPTaskResultData(result)));
     super.onCancel(_context);
   }
 }

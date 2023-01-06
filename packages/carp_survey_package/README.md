@@ -40,15 +40,17 @@ Once this is in place, a survey can be added as a `RPAppTask` to a CAMS protocol
 ```dart
   // add a WHO-5 survey as an app task
   // plus collect device and ambient light information when survey is done
-  protocol.addTriggeredTask(
+  protocol.addTaskControl(
       DelayedTrigger(delay: Duration(seconds: 30)),
       RPAppTask(
-          type: SurveyUserTask.WHO5_SURVEY_TYPE,
+          type: SurveyUserTask.SURVEY_TYPE,
           name: 'WHO-5 Survey',
-          rpTask: who5Task)
-        ..measures.add(Measure(type: DeviceSamplingPackage.DEVICE))
-        ..measures.add(Measure(type: SensorSamplingPackage.LIGHT)),
+          rpTask: who5Task,
+          measures: [
+            Measure(type: DeviceSamplingPackage.DEVICE_INFORMATION),
+            Measure(type: SensorSamplingPackage.AMBIENT_LIGHT),
+          ]),
       phone);
 ````
 
-See the `example.dart` file for a full example.
+Please check out the [Pulmonary Monitor App](https://github.com/cph-cachet/pulmonary_monitor_app) which demonstrates how surveys and cognitive tasks can be added to a full Flutter app.

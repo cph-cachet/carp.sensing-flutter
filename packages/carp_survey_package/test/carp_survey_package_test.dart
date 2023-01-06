@@ -15,7 +15,6 @@ void main() {
   setUp(() {
     // Initialization of serialization
     CarpMobileSensing();
-    ResearchPackage();
 
     // register the survey sampling package
     SamplingPackageRegistry().register(SurveySamplingPackage());
@@ -29,29 +28,31 @@ void main() {
     // Define which devices are used for data collection.
     phone = Smartphone();
 
-    protocol.addMasterDevice(phone);
+    protocol.addPrimaryDevice(phone);
 
     // adding all available measures to one one trigger and one task
-    protocol.addTriggeredTask(
+    protocol.addTaskControl(
       ImmediateTrigger(),
       BackgroundTask()
         ..measures = SamplingPackageRegistry()
             .dataTypes
-            .map((type) => Measure(type: type))
+            .map((type) => Measure(type: type.type))
             .toList(),
       phone,
     );
 
     // add a WHO-5 survey as an app task
     // plus collect device and ambient light information when survey is done
-    protocol.addTriggeredTask(
+    protocol.addTaskControl(
         DelayedTrigger(delay: Duration(seconds: 30)),
         RPAppTask(
             type: SurveyUserTask.SURVEY_TYPE,
             name: 'WHO-5 Survey',
-            rpTask: who5Task)
-          ..measures.add(Measure(type: DeviceSamplingPackage.DEVICE))
-          ..measures.add(Measure(type: SensorSamplingPackage.LIGHT)),
+            rpTask: who5Task,
+            measures: [
+              Measure(type: DeviceSamplingPackage.DEVICE_INFORMATION),
+              Measure(type: SensorSamplingPackage.AMBIENT_LIGHT),
+            ]),
         phone);
   });
 
@@ -79,7 +80,7 @@ void main() {
         StudyProtocol.fromJson(json.decode(plainJson) as Map<String, dynamic>);
 
     expect(protocol.ownerId, 'alex@uni.dk');
-    expect(protocol.masterDevices.first.roleName, Smartphone.DEFAULT_ROLENAME);
+    expect(protocol.primaryDevice.roleName, Smartphone.DEFAULT_ROLENAME);
     expect((protocol.tasks.last as RPAppTask).type, SurveyUserTask.SURVEY_TYPE);
     print(toJsonString(protocol));
   });

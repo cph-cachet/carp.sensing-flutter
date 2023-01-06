@@ -46,18 +46,18 @@ class RPAppTask extends AppTask {
 
 /// Holds information about the result of a survey.
 @JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)
-class RPTaskResultDatum extends Datum {
-  @override
-  DataFormat get format => DataFormat.fromString(SurveySamplingPackage.SURVEY);
+class RPTaskResultData extends Data {
+  static const dataType = SurveySamplingPackage.SURVEY;
 
   // The survey result.
   RPTaskResult? surveyResult;
 
-  RPTaskResultDatum([this.surveyResult]);
+  RPTaskResultData([this.surveyResult]);
 
-  factory RPTaskResultDatum.fromJson(Map<String, dynamic> json) =>
-      _$RPTaskResultDatumFromJson(json);
-
+  factory RPTaskResultData.fromJson(Map<String, dynamic> json) =>
+      _$RPTaskResultDataFromJson(json);
   @override
-  Map<String, dynamic> toJson() => _$RPTaskResultDatumToJson(this);
+  Map<String, dynamic> toJson() => _$RPTaskResultDataToJson(this);
+  @override
+  String get jsonType => dataType;
 }

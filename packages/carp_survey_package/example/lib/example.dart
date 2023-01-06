@@ -19,17 +19,19 @@ void main() async {
   // define which devices are used for data collection
   // in this case, its only this smartphone
   Smartphone phone = Smartphone();
-  protocol.addMasterDevice(phone);
+  protocol.addPrimaryDevice(phone);
 
   // add a WHO-5 survey as an app task
   // plus collect device and ambient light information when survey is done
-  protocol.addTriggeredTask(
+  protocol.addTaskControl(
       DelayedTrigger(delay: Duration(seconds: 30)),
       RPAppTask(
           type: SurveyUserTask.SURVEY_TYPE,
           name: 'WHO-5 Survey',
-          rpTask: who5Task)
-        ..measures.add(Measure(type: DeviceSamplingPackage.DEVICE))
-        ..measures.add(Measure(type: SensorSamplingPackage.LIGHT)),
+          rpTask: who5Task,
+          measures: [
+            Measure(type: DeviceSamplingPackage.DEVICE_INFORMATION),
+            Measure(type: SensorSamplingPackage.AMBIENT_LIGHT),
+          ]),
       phone);
 }
