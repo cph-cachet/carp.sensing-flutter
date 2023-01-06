@@ -82,20 +82,26 @@ Before creating a study and running it, register this package in the
   SamplingPackageRegistry().register(MediaSamplingPackage());
 ```
 
-Adding a measure from this package to a study protocol would look something like:
+Adding audio measure from this package to a study protocol would look something like:
 
 ```dart
+  // Create a study protocol
+  StudyProtocol protocol = StudyProtocol(
+    ownerId: 'owner@dtu.dk',
+    name: 'Audio Sensing Example',
+  );
+
+  // define which devices are used for data collection
+  // in this case, its only this smartphone
+  Smartphone phone = Smartphone();
+  protocol.addPrimaryDevice(phone);
+
   // Add an automatic task that immediately starts collecting audio and noise.
-  protocol.addTriggeredTask(
+  protocol.addTaskControl(
       ImmediateTrigger(),
-      BackgroundTask()
-        ..addMeasures(
-          [
-            Measure(type: MediaSamplingPackage.AUDIO),
-            Measure(type: MediaSamplingPackage.NOISE),
-          ],
-        ),
+      BackgroundTask(measures: [
+        Measure(type: MediaSamplingPackage.AUDIO),
+        Measure(type: MediaSamplingPackage.NOISE),
+      ]),
       phone);
 ```
-
-See the `example.dart` file for a full example of how to set up a CAMS study protocol for this sampling package.

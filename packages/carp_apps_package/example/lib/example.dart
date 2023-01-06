@@ -25,8 +25,9 @@ void main() async {
   // and a log of app usage activity
   protocol.addTaskControl(
       ImmediateTrigger(),
-      BackgroundTask()
-        ..addMeasure(Measure(type: AppsSamplingPackage.APPS))
-        ..addMeasure(Measure(type: AppsSamplingPackage.APP_USAGE)),
+      BackgroundTask(measures: [
+        Measure(type: AppsSamplingPackage.APPS),
+        Measure(type: AppsSamplingPackage.APP_USAGE),
+      ]),
       phone);
 }

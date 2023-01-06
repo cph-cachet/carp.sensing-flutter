@@ -24,8 +24,8 @@ void main() async {
   // Add an automatic task that collects SMS messages in/out
   protocol.addTaskControl(
       ImmediateTrigger(),
-      BackgroundTask()
-        ..addMeasure(Measure(type: CommunicationSamplingPackage.TEXT_MESSAGE)),
+      BackgroundTask(
+          measures: [Measure(type: CommunicationSamplingPackage.TEXT_MESSAGE)]),
       phone);
 
   // Add an automatic task that every 3 hour collects the logs for:
@@ -34,10 +34,10 @@ void main() async {
   //  * calendar entries
   protocol.addTaskControl(
       PeriodicTrigger(period: const Duration(hours: 3)),
-      BackgroundTask()
-        ..addMeasure(Measure(type: CommunicationSamplingPackage.PHONE_LOG))
-        ..addMeasure(
-            Measure(type: CommunicationSamplingPackage.TEXT_MESSAGE_LOG))
-        ..addMeasure(Measure(type: CommunicationSamplingPackage.CALENDAR)),
+      BackgroundTask(measures: [
+        Measure(type: CommunicationSamplingPackage.PHONE_LOG),
+        Measure(type: CommunicationSamplingPackage.TEXT_MESSAGE_LOG),
+        Measure(type: CommunicationSamplingPackage.CALENDAR),
+      ]),
       phone);
 }

@@ -64,15 +64,40 @@ Not supported.
 To use this package, import it into your app together with the
 [`carp_mobile_sensing`](https://pub.dartlang.org/packages/carp_mobile_sensing) package:
 
-`````dart
+```dart
 import 'package:carp_core/carp_core.dart';
 import 'package:carp_mobile_sensing/carp_mobile_sensing.dart';
 import 'package:carp_apps_package/apps.dart';
-`````
+```
 
 Before creating a study and running it, register this package in the
 [SamplingPackageRegistry](https://pub.dartlang.org/documentation/carp_mobile_sensing/latest/runtime/SamplingPackageRegistry.html).
 
-`````dart
+```dart
   SamplingPackageRegistry().register(AppsSamplingPackage());
-`````
+```
+
+Collection of apps measures can be added to a study protocol like this.
+
+```dart
+  // create a study protocol
+  StudyProtocol protocol = StudyProtocol(
+    ownerId: 'owner@dtu.dk',
+    name: 'Apps Sensing Example',
+  );
+
+  // define which devices are used for data collection
+  // in this case, its only this smartphone
+  Smartphone phone = Smartphone();
+  protocol.addPrimaryDevice(phone);
+
+  // add an automatic task that collects the list of installed apps
+  // and a log of app usage activity
+  protocol.addTaskControl(
+      ImmediateTrigger(),
+      BackgroundTask(measures: [
+        Measure(type: AppsSamplingPackage.APPS),
+        Measure(type: AppsSamplingPackage.APP_USAGE),
+      ]),
+      phone);
+```

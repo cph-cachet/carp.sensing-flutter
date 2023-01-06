@@ -94,4 +94,29 @@ Before creating a study and running it, register this package in the
   SamplingPackageRegistry().register(ConnectivitySamplingPackage());
 `````
 
-See the `example.dart` file for a full example of how to set up a CAMS study protocol for this connectivity sampling package.
+Collection of connectivity measures can be added to a study protocol like this.
+
+```dart
+  // Create a study protocol
+  StudyProtocol protocol = StudyProtocol(
+    ownerId: 'owner@dtu.dk',
+    name: 'Context Sensing Example',
+  );
+
+  // define which devices are used for data collection
+  // in this case, its only this smartphone
+  Smartphone phone = Smartphone();
+  protocol.addPrimaryDevice(phone);
+
+  // Add an automatic task that immediately starts collecting connectivity,
+  // nearby bluetooth devices, and wifi information.
+  protocol.addTaskControl(
+      ImmediateTrigger(),
+      BackgroundTask(measures: [
+        Measure(type: ConnectivitySamplingPackage.CONNECTIVITY),
+        Measure(type: ConnectivitySamplingPackage.BLUETOOTH),
+        Measure(type: ConnectivitySamplingPackage.WIFI),
+      ]),
+      phone);
+}
+```

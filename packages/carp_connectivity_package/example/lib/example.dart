@@ -25,9 +25,10 @@ void main() async {
   // nearby bluetooth devices, and wifi information.
   protocol.addTaskControl(
       ImmediateTrigger(),
-      BackgroundTask()
-        ..addMeasure(Measure(type: ConnectivitySamplingPackage.CONNECTIVITY))
-        ..addMeasure(Measure(type: ConnectivitySamplingPackage.BLUETOOTH))
-        ..addMeasure(Measure(type: ConnectivitySamplingPackage.WIFI)),
+      BackgroundTask(measures: [
+        Measure(type: ConnectivitySamplingPackage.CONNECTIVITY),
+        Measure(type: ConnectivitySamplingPackage.BLUETOOTH),
+        Measure(type: ConnectivitySamplingPackage.WIFI),
+      ]),
       phone);
 }

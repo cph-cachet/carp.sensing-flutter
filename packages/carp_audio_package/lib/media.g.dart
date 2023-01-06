@@ -8,13 +8,13 @@ part of media;
 
 Media _$MediaFromJson(Map<String, dynamic> json) => Media(
       filename: json['filename'] as String,
-      mediaType: $enumDecode(_$MediaTypeEnumMap, json['media_type']),
-      startRecordingTime: json['start_recording_time'] == null
+      mediaType: $enumDecode(_$MediaTypeEnumMap, json['mediaType']),
+      startRecordingTime: json['startRecordingTime'] == null
           ? null
-          : DateTime.parse(json['start_recording_time'] as String),
-      endRecordingTime: json['end_recording_time'] == null
+          : DateTime.parse(json['startRecordingTime'] as String),
+      endRecordingTime: json['endRecordingTime'] == null
           ? null
-          : DateTime.parse(json['end_recording_time'] as String),
+          : DateTime.parse(json['endRecordingTime'] as String),
     )
       ..$type = json['__type'] as String?
       ..upload = json['upload'] as bool
@@ -37,11 +37,11 @@ Map<String, dynamic> _$MediaToJson(Media instance) {
   val['upload'] = instance.upload;
   writeNotNull('metadata', instance.metadata);
   val['id'] = instance.id;
-  val['media_type'] = _$MediaTypeEnumMap[instance.mediaType]!;
+  val['mediaType'] = _$MediaTypeEnumMap[instance.mediaType]!;
   writeNotNull(
-      'start_recording_time', instance.startRecordingTime?.toIso8601String());
+      'startRecordingTime', instance.startRecordingTime?.toIso8601String());
   writeNotNull(
-      'end_recording_time', instance.endRecordingTime?.toIso8601String());
+      'endRecordingTime', instance.endRecordingTime?.toIso8601String());
   return val;
 }
 
@@ -52,10 +52,10 @@ const _$MediaTypeEnumMap = {
 };
 
 Noise _$NoiseFromJson(Map<String, dynamic> json) => Noise(
-      meanDecibel: (json['mean_decibel'] as num).toDouble(),
-      stdDecibel: (json['std_decibel'] as num).toDouble(),
-      minDecibel: (json['min_decibel'] as num).toDouble(),
-      maxDecibel: (json['max_decibel'] as num).toDouble(),
+      meanDecibel: (json['meanDecibel'] as num).toDouble(),
+      stdDecibel: (json['stdDecibel'] as num).toDouble(),
+      minDecibel: (json['minDecibel'] as num).toDouble(),
+      maxDecibel: (json['maxDecibel'] as num).toDouble(),
     )..$type = json['__type'] as String?;
 
 Map<String, dynamic> _$NoiseToJson(Noise instance) {
@@ -68,9 +68,9 @@ Map<String, dynamic> _$NoiseToJson(Noise instance) {
   }
 
   writeNotNull('__type', instance.$type);
-  val['mean_decibel'] = instance.meanDecibel;
-  val['std_decibel'] = instance.stdDecibel;
-  val['min_decibel'] = instance.minDecibel;
-  val['max_decibel'] = instance.maxDecibel;
+  val['meanDecibel'] = instance.meanDecibel;
+  val['stdDecibel'] = instance.stdDecibel;
+  val['minDecibel'] = instance.minDecibel;
+  val['maxDecibel'] = instance.maxDecibel;
   return val;
 }

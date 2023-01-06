@@ -126,7 +126,7 @@ import 'package:carp_mobile_sensing/carp_mobile_sensing.dart';
 import 'package:carp_polar_package/carp_polar_package.dart';
 `````
 
-Collection of Polar data can be added to a study protocol like this.
+Collection of Polar measures can be added to a study protocol like this.
 
 ```dart
   // Create a study protocol

@@ -102,4 +102,38 @@ Before creating a study and running it, register this package in the
   SamplingPackageRegistry().register(CommunicationSamplingPackage());
 `````
 
-See the `example.dart` file for a full example of how to set up a CAMS study protocol for this context sampling package.
+Collection of communication measures can be added to a study protocol like this.
+
+```dart
+  // Create a study protocol
+  StudyProtocol protocol = StudyProtocol(
+    ownerId: 'owner@dtu.dk',
+    name: 'Communication Sensing Example',
+  );
+
+  // define which devices are used for data collection
+  // in this case, its only this smartphone
+  Smartphone phone = Smartphone();
+  protocol.addPrimaryDevice(phone);
+
+  // Add an automatic task that collects SMS messages in/out
+  protocol.addTaskControl(
+      ImmediateTrigger(),
+      BackgroundTask(
+          measures: [Measure(type: CommunicationSamplingPackage.TEXT_MESSAGE)]),
+      phone);
+
+  // Add an automatic task that every 3 hour collects the logs for:
+  //  * in/out SMS
+  //  * in/out phone calls
+  //  * calendar entries
+  protocol.addTaskControl(
+      PeriodicTrigger(period: const Duration(hours: 3)),
+      BackgroundTask(measures: [
+        Measure(type: CommunicationSamplingPackage.PHONE_LOG),
+        Measure(type: CommunicationSamplingPackage.TEXT_MESSAGE_LOG),
+        Measure(type: CommunicationSamplingPackage.CALENDAR),
+      ]),
+      phone);
+}
+```
