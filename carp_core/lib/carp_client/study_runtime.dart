@@ -185,7 +185,7 @@ class StudyRuntime {
   ///
   /// The [deploymentStatus] lists the devices needed to be deployed on this device.
   ///
-  /// This is a convinient method for synchronizing the devices neeeded for a
+  /// This is a convenient method for synchronizing the devices needed for a
   /// deployment and the available devices on this phone.
   Future<void> tryRegisterConnectedDevices() async {
     for (var deviceStatus in deploymentStatus.devicesStatus) {
@@ -194,18 +194,26 @@ class StudyRuntime {
   }
 
   /// Start collecting data for this [StudyRuntime].
-  void start() {
-    _status = StudyStatus.Running;
-  }
+  @mustCallSuper
+  void start() => _status = StudyStatus.Running;
+
+  /// Pause the collection of data for this [StudyRuntime].
+  @mustCallSuper
+  void pause() => _status = StudyStatus.Paused;
+
+  /// Called when this [StudyRuntime] is removed from a [ClientManager].
+  @mustCallSuper
+  Future<void> remove() async => _status = StudyStatus.DeploymentNotStarted;
 
   /// Permanently stop collecting data for this [StudyRuntime].
   /// Once a runtime is stopped it **cannot** be (re)started.
-  void stop() {
+  @mustCallSuper
+  Future<void> stop() async {
     // Early out in case study has already been stopped.
     if (status == StudyStatus.Stopped) return;
 
     // Stop study deployment.
-    deploymentService.stop(study!.studyDeploymentId);
+    await deploymentService.stop(study!.studyDeploymentId);
     _status = StudyStatus.Stopped;
   }
 }
@@ -264,6 +272,9 @@ enum StudyStatus {
   /// The study is resumed and is sampling data.
   Running,
 
-  /// The deployment has been stopped, either by this client or researcher.
+  /// The study is paused and is not sampling data.
+  Paused,
+
+  /// The deployment has been permanently stopped, either by this client or a researcher.
   Stopped,
 }

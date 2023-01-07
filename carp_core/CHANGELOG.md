@@ -1,3 +1,7 @@
+## 0.40.4
+
+* adding `pause` and `remove` life cycle methods to the `StudyRuntime`
+
 ## 0.40.3
 
 * fix of non-null `id` in `DeviceDataCollector`.

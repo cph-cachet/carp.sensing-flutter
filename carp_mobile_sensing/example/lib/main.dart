@@ -162,6 +162,9 @@ class Sensing {
   /// Pause sensing
   void pause() async => controller?.executor?.pause();
 
+  /// Pause sensing
+  void remove() async => controller?.remove();
+
   /// Stop sensing.
   void stop() async => controller!.stop();
 }

@@ -120,7 +120,7 @@ class SmartphoneDeploymentController extends StudyRuntime {
     return _filename;
   }
 
-  /// Save the [deployment] persistenly to a file cache.
+  /// Save the [deployment] persistently to a file cache.
   /// Returns `true` if successful.
   Future<bool> saveDeployment() async {
     bool success = true;
@@ -331,15 +331,27 @@ class SmartphoneDeploymentController extends StudyRuntime {
     if (resume) _executor!.resume();
   }
 
-  /// Stop the sampling.
-  ///
-  /// Once a controller is stopped it **cannot** be (re)started.
   @override
-  void stop() {
-    info('Stopping data sampling ...');
-    // disablePowerAwareness();
-    _dataManager?.close();
-    _executor!.stop();
+  void pause() {
+    info('Pausing data sampling ...');
+    super.pause();
+    _executor!.pause();
+  }
+
+  @override
+  Future<void> remove() async {
+    info('Removing data sampling ...');
+    await _dataManager?.close();
+    _executor?.stop();
+    AppTaskController().removeStudyDeployment(studyDeploymentId!);
+    await AppTaskController().saveQueue();
+    await eraseDeployment();
+    await super.remove();
+  }
+
+  @override
+  Future<void> stop() async {
+    info('Permanently stopping data sampling ...');
     super.stop();
   }
 }
