@@ -148,12 +148,35 @@ class SmartPhoneClientManager extends ClientManager
   /// method, as in `super.deactivate()`.
   @protected
   @mustCallSuper
-  Future<void> deactivate() async {
+  void deactivate() {
     // first save the task queue
     AppTaskController().saveQueue();
     // then save all studies
     for (var study in repository.keys) {
-      await getStudyRuntime(study)?.saveDeployment();
+      getStudyRuntime(study)?.saveDeployment();
+    }
+  }
+
+  /// Called when this client manager is removed from execution permanently.
+  ///
+  /// The framework calls this method when this [SmartPhoneClientManager] will
+  /// never run again.
+  /// Typically called as part of the [State.dispose] method of an app.
+  ///
+  /// Subclasses should override this method to release any resources retained
+  /// by this object (e.g., stop any active sampling).
+  ///
+  /// Implementations of this method should end with a call to the inherited
+  /// method, as in `super.dispose()`.
+  ///
+  /// See also:
+  ///
+  ///  * [deactivate], which is called prior to [dispose].
+  @mustCallSuper
+  void dispose() {
+    deactivate();
+    for (var study in repository.keys) {
+      getStudyRuntime(study)?.dispose();
     }
   }
 

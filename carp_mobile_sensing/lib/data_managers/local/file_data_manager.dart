@@ -227,6 +227,7 @@ class FileDataManager extends AbstractDataManager {
         flush(activeFile, activeSink);
       });
     });
+    await _sink?.close();
     await super.close();
   }
 }

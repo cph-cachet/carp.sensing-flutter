@@ -49,7 +49,7 @@ class Console extends State<ConsolePage> {
 
   @override
   void dispose() {
-    sensing!.stop();
+    sensing!.dispose();
     super.dispose();
   }
 
@@ -106,6 +106,7 @@ class Console extends State<ConsolePage> {
 /// This example is useful for creating a Business Logical Object (BLOC) in a
 /// Flutter app. See e.g. the CARP Mobile Sensing App.
 class Sensing {
+  SmartPhoneClientManager? client;
   SmartphoneDeploymentController? controller;
   Study? study;
 
@@ -119,9 +120,9 @@ class Sensing {
 
     // Create and configure a client manager for this phone, and
     // create a study based on the protocol.
-    SmartPhoneClientManager client = SmartPhoneClientManager();
-    await client.configure();
-    study = await client.addStudyProtocol(protocol);
+    client = SmartPhoneClientManager();
+    await client?.configure();
+    study = await client?.addStudyProtocol(protocol);
 
     // Get the study controller and try to deploy the study.
     //
@@ -130,7 +131,7 @@ class Sensing {
     // be used pr. default.
     // If not deployed before (i.e., cached) the study deployment will be
     // fetched from the deployment service.
-    controller = client.getStudyRuntime(study!);
+    controller = client?.getStudyRuntime(study!);
     await controller?.tryDeployment(useCached: false);
 
     // Configure the controller.
@@ -161,6 +162,12 @@ class Sensing {
 
   /// Pause sensing
   void pause() async => controller?.executor?.pause();
+
+  /// Remove sensing from this phone.
+  void remove() async => controller?.remove();
+
+  /// Dispose the entire deployment.
+  void dispose() async => client?.dispose();
 
   /// Stop sensing.
   void stop() async => controller!.stop();

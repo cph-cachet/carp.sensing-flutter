@@ -1,3 +1,8 @@
+## 0.40.9
+
+* adding `dispose`, `pause`, and `remove` life cycle methods to the `DeploymentController`
+* support for deleting cached runtime information (deployment and task list)
+
 ## 0.40.7
 
 * Fix of `BufferingUserAccelerometerProbe` error.

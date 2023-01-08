@@ -132,7 +132,7 @@ abstract class AbstractExecutor<TConfig> implements Executor<TConfig> {
 
   void _setState(_ExecutorStateMachine state) {
     _stateMachine = state;
-    _stateEventController.add(state.state);
+    if (!_stateEventController.isClosed) _stateEventController.add(state.state);
   }
 
   @override
@@ -245,6 +245,7 @@ abstract class AggregateExecutor<TConfig> extends AbstractExecutor<TConfig> {
     for (var executor in executors) {
       executor.stop();
     }
+    group.close();
     executors.clear();
     return true;
   }

@@ -17,7 +17,7 @@ class AppTaskController {
 
   final Map<String, UserTask> _userTaskMap = {};
 
-  /// The etire list of all [UserTask]s.
+  /// The entire list of all [UserTask]s.
   ///
   /// Note that this list contains all tasks which has already triggered
   /// and which are planned to trigger in the future.
@@ -70,7 +70,7 @@ class AppTaskController {
   /// [enqueue] method.
   Future<void> initialize({bool enableNotifications = true}) async {
     if (Settings().saveAppTaskQueue) {
-      // retore the queue from persistent storage
+      // restore the queue from persistent storage
       await restoreQueue();
 
       // listen to events and save the queue every time it is modified
@@ -102,7 +102,7 @@ class AppTaskController {
     }
   }
 
-  /// Get an [UserTask] from the [userTasks] based on its [id].
+  /// Get an [UserTask] based on its [id].
   /// Returns `null` if no task is found.
   UserTask? getUserTask(String id) => _userTaskMap[id];
 
@@ -211,6 +211,12 @@ class AppTaskController {
     }
   }
 
+  /// Removes all tasks for a study deployment from the queue.
+  void removeStudyDeployment(String studyDeploymentId) =>
+      _userTaskMap.removeWhere((key, task) =>
+          task.appTaskExecutor.deployment?.studyDeploymentId ==
+          studyDeploymentId);
+
   String? _filename;
 
   /// Current path and filename of the task queue.
@@ -222,7 +228,7 @@ class AppTaskController {
     return _filename;
   }
 
-  /// Save the queue persistenly to a file.
+  /// Save the queue persistently to a file.
   /// Returns `true` if successful.
   Future<bool> saveQueue() async {
     bool success = true;
@@ -293,6 +299,20 @@ class AppTaskController {
     } catch (exception) {
       success = false;
       warning('$runtimeType - Failed to load task queue - $exception');
+    }
+    return success;
+  }
+
+  /// Delete the entire queue. Returns `true` if successful.
+  Future<bool> deleteQueue() async {
+    bool success = true;
+    try {
+      String name = (await filename)!;
+      info("$runtimeType - Deleting task queue from file '$name'.");
+      File(name).deleteSync();
+    } catch (exception) {
+      success = false;
+      warning('$runtimeType - Failed to delete task queue - $exception');
     }
     return success;
   }

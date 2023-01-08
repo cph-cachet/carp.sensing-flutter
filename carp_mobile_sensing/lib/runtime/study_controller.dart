@@ -120,7 +120,7 @@ class SmartphoneDeploymentController extends StudyRuntime {
     return _filename;
   }
 
-  /// Save the [deployment] persistenly to a file cache.
+  /// Save the [deployment] persistently to a file cache.
   /// Returns `true` if successful.
   Future<bool> saveDeployment() async {
     bool success = true;
@@ -326,20 +326,40 @@ class SmartphoneDeploymentController extends StudyRuntime {
         '$runtimeType - Cannot resume this controller, since the the runtime is not initialized. '
         'Call the configure() method first.');
 
-    info('Starting data sampling ...');
+    info('$runtimeType - Starting data sampling ...');
     super.start();
-    if (resume) _executor!.resume();
+    if (resume) executor!.resume();
   }
 
-  /// Stop the sampling.
-  ///
-  /// Once a controller is stopped it **cannot** be (re)started.
   @override
-  void stop() {
-    info('Stopping data sampling ...');
-    // disablePowerAwareness();
-    _dataManager?.close();
-    _executor!.stop();
+  void pause() {
+    info('$runtimeType - Pausing data sampling ...');
+    super.pause();
+    executor!.pause();
+  }
+
+  @override
+  void dispose() {
+    info('$runtimeType - Disposing ...');
+    executor?.stop();
+    dataManager?.close().then((_) => super.dispose());
+  }
+
+  @override
+  Future<void> remove() async {
+    info('$runtimeType - Removing deployment from this smartphone ...');
+    dispose();
+    AppTaskController().removeStudyDeployment(studyDeploymentId!);
+    await AppTaskController().saveQueue();
+    await eraseDeployment();
+    await super.remove();
+  }
+
+  @override
+  Future<void> stop() async {
+    info(
+        '$runtimeType - Permanently stopping data sampling on this smartphone...');
+    await remove();
     super.stop();
   }
 }
