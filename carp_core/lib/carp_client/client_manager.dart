@@ -95,10 +95,27 @@ class ClientManager {
   ) =>
       repository[Study(studyDeploymentId, deviceRoleName)];
 
-  /// Permanently stop collecting data for the study runtime identified by [studyRuntimeId].
+  /// Remove [study] from this client manager.
+  ///
+  /// Note that by removing a study, it isn't stopped. Hence, the study can later
+  /// be added again using the [addStudy] method.
+  /// If a study is to be permanently stopped, use the [stopStudy] method.
   @mustCallSuper
-  void stopStudy(Study studyRuntimeId) async =>
-      repository[studyRuntimeId]?.stop();
+  Future<void> removeStudy(Study study) async {
+    await repository[study]?.remove();
+    repository.remove(study);
+  }
+
+  /// Permanently stop collecting data for [study] and then remove it.
+  ///
+  /// Once a study is stopped it cannot be deployed anymore since it will
+  /// be marked as permanently stopped in the [DeploymentService] via the [stop]
+  /// method.
+  @mustCallSuper
+  Future<void> stopStudy(Study study) async {
+    await repository[study]?.stop();
+    await removeStudy(study);
+  }
 
   // /// Once a connected device has been registered, this returns a manager
   // /// which provides access to the status of the [registeredDevice].
