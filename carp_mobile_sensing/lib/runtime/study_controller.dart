@@ -326,23 +326,29 @@ class SmartphoneDeploymentController extends StudyRuntime {
         '$runtimeType - Cannot resume this controller, since the the runtime is not initialized. '
         'Call the configure() method first.');
 
-    info('Starting data sampling ...');
+    info('$runtimeType - Starting data sampling ...');
     super.start();
-    if (resume) _executor!.resume();
+    if (resume) executor!.resume();
   }
 
   @override
   void pause() {
-    info('Pausing data sampling ...');
+    info('$runtimeType - Pausing data sampling ...');
     super.pause();
-    _executor!.pause();
+    executor!.pause();
+  }
+
+  @override
+  void dispose() {
+    info('$runtimeType - Disposing ...');
+    executor?.stop();
+    dataManager?.close().then((_) => super.dispose());
   }
 
   @override
   Future<void> remove() async {
-    info('Removing data sampling ...');
-    await _dataManager?.close();
-    _executor?.stop();
+    info('$runtimeType - Removing deployment from this smartphone ...');
+    dispose();
     AppTaskController().removeStudyDeployment(studyDeploymentId!);
     await AppTaskController().saveQueue();
     await eraseDeployment();
@@ -351,7 +357,9 @@ class SmartphoneDeploymentController extends StudyRuntime {
 
   @override
   Future<void> stop() async {
-    info('Permanently stopping data sampling ...');
+    info(
+        '$runtimeType - Permanently stopping data sampling on this smartphone...');
+    await remove();
     super.stop();
   }
 }

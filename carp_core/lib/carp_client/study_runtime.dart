@@ -8,7 +8,7 @@
 part of carp_core_client;
 
 /// Manage data collection for a specific master device [deployment] on a client device.
-class StudyRuntime {
+abstract class StudyRuntime {
   final List<DeviceDescriptor> _remainingDevicesToRegister = [];
   Study? _study;
   StudyStatus _status = StudyStatus.DeploymentNotStarted;
@@ -66,8 +66,8 @@ class StudyRuntime {
   /// Has the study and data collection been stopped?
   bool get isStopped => (_status == StudyStatus.Stopped);
 
-  /// The list of devices that still remain to be registrered before all devices
-  /// in this study runtime is registrered.
+  /// The list of devices that still remain to be registered before all devices
+  /// in this study runtime is registered.
   List<DeviceDescriptor> get remainingDevicesToRegister =>
       _remainingDevicesToRegister;
 
@@ -76,7 +76,7 @@ class StudyRuntime {
   /// [deviceRegistry] to handle the devices used in this study deployment.
   StudyRuntime(this.deploymentService, this.deviceRegistry);
 
-  /// Intialize this study runtime by specifying its [study] and [deviceRegistration].
+  /// Initialize this study runtime by specifying its [study] and [deviceRegistration].
   ///
   /// [deviceRegistration] is the device configuration for the device this study
   /// runtime runs on, identified by [deviceRoleName] in the study deployment
@@ -201,9 +201,14 @@ class StudyRuntime {
   @mustCallSuper
   void pause() => _status = StudyStatus.Paused;
 
+  /// Called when this [StudyRuntime] is disposed.
+  /// This entails stopping and disposing all data sampling and storage.
+  @mustCallSuper
+  void dispose() {}
+
   /// Called when this [StudyRuntime] is removed from a [ClientManager].
   @mustCallSuper
-  Future<void> remove() async => _status = StudyStatus.DeploymentNotStarted;
+  Future<void> remove() async {}
 
   /// Permanently stop collecting data for this [StudyRuntime].
   /// Once a runtime is stopped it **cannot** be (re)started.
@@ -254,6 +259,10 @@ enum StudyStatus {
   /// The state of the deployment can be tracked using [deploymentStatus].
   Deploying,
 
+  /// Deployment information for this primary device cannot be retrieved yet since
+  /// other primary devices in the study deployment need to be registered first.
+  AwaitingOtherDeviceRegistrations,
+
   /// The study deployment is ready to deliver the deployment information to
   /// this primary device.
   AwaitingDeviceDeployment,
@@ -261,7 +270,8 @@ enum StudyStatus {
   /// Deployment information has been received.
   DeploymentReceived,
 
-  /// Deployment can complete after [remainingDevicesToRegister] have been registered.
+  /// Deployment can complete after [StudyRuntime.remainingDevicesToRegister]
+  /// have been registered.
   RegisteringDevices,
 
   /// Study runtime status when deployment has been successfully completed.

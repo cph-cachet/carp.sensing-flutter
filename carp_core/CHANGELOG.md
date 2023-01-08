@@ -1,6 +1,6 @@
-## 0.40.4
+## 0.40.6
 
-* adding `pause` and `remove` life cycle methods to the `StudyRuntime`
+* adding `pause`, `remove`, and `dispose` life cycle methods to the `StudyRuntime`
 
 ## 0.40.3
 
