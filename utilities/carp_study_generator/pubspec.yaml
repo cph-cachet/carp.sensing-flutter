@@ -1,6 +1,6 @@
 name: carp_study_generator
-description: Utilities for generating CARP Mobile Sensing studies
-version: 0.40.0
+description: Utilities for generating CARP Mobile Sensing studies incl. protocol, informed consent, translations, and messages.
+version: 0.40.1
 homepage: https://github.com/cph-cachet/carp.sensing-flutter
 
 environment:
@@ -11,18 +11,20 @@ dependencies:
     sdk: flutter
 
   carp_serializable: ^1.0.0
-  # carp_core: ^0.40.0
-  # carp_mobile_sensing: ^0.40.0
-  # carp_webservices: ^0.40.0
-  # carp_backend: ^0.40.0
-  # carp_apps_package: ^0.40.0
-  # carp_context_package: ^0.40.0
-  # carp_audio_package: ^0.40.0
-  # carp_esense_package: ^0.40.0
-  # carp_survey_package: ^0.40.0
-  # carp_health_package: ^2.4.0
-  # # carp_communication_package: ^0.40.0
-  # carp_connectivity_package: ^0.40.0
+  carp_core: ^0.40.0
+  carp_mobile_sensing: ^0.40.0
+  carp_webservices: ^0.40.0
+  carp_backend: ^0.40.0
+  carp_apps_package: ^0.40.0
+  carp_context_package: ^0.40.0
+  carp_audio_package: ^0.40.0
+  carp_survey_package: ^0.40.0
+  carp_health_package: ^2.4.0
+  # carp_communication_package: ^0.40.0
+  carp_connectivity_package: ^0.40.0
+
+  carp_esense_package: ^0.40.0
+  carp_polar_package: ^0.40.0
 
   research_package: ^1.2.0
   cognition_package: ^1.3.2
@@ -62,77 +64,77 @@ dependencies:
 
 # Overriding carp libraries to use github branch
 #
-# NOTE - you need to run "flutter pub upgrade" and "flutter pub get" in order to download the lastest
+# NOTE - you need to run "flutter pub upgrade" and "flutter pub get" in order to download the latest
 # versions from Github.
 dependency_overrides:  
-  carp_core:
-    git:
-      url: https://github.com/cph-cachet/carp.sensing-flutter.git
-      ref: develop
-      path: carp_core
-  carp_mobile_sensing:
-    git:
-      url: https://github.com/cph-cachet/carp.sensing-flutter.git
-      ref: develop
-      path: carp_mobile_sensing
-  carp_context_package:
-    git:
-      url: https://github.com/cph-cachet/carp.sensing-flutter.git
-      ref: develop
-      path: packages/carp_context_package/
-  carp_survey_package:
-    git:
-      url: https://github.com/cph-cachet/carp.sensing-flutter.git
-      ref: develop
-      path: packages/carp_survey_package/
-  # # carp_connectivity_package:
-  # #   git:
-  # #     url: https://github.com/cph-cachet/carp.sensing-flutter.git
-  # #     ref: develop
-  # #     path: packages/carp_connectivity_package/
-  carp_audio_package:
-    git:
-      url: https://github.com/cph-cachet/carp.sensing-flutter.git
-      ref: develop
-      path: packages/carp_audio_package/
-  carp_apps_package:
-    git:
-      url: https://github.com/cph-cachet/carp.sensing-flutter.git
-      ref: develop
-      path: packages/carp_apps_package/
-  carp_health_package:
-    git:
-      url: https://github.com/cph-cachet/carp.sensing-flutter.git
-      ref: develop
-      path: packages/carp_health_package/
-  carp_esense_package:
-    git:
-      url: https://github.com/cph-cachet/carp.sensing-flutter.git
-      ref: develop
-      path: packages/carp_esense_package/
-  carp_polar_package:
-    git:
-      url: https://github.com/cph-cachet/carp.sensing-flutter.git
-      ref: develop
-      path: packages/carp_polar_package/
-  carp_backend:
-    git:
-      url: https://github.com/cph-cachet/carp.sensing-flutter.git
-      ref: develop
-      path: backends/carp_backend/
-  carp_webservices:
-    git:
-      url: https://github.com/cph-cachet/carp.sensing-flutter.git
-      ref: develop
-      path: backends/carp_webservices/
-  # research_package: 
+  # carp_core:
   #   git:
-  #     url: https://github.com/cph-cachet/research.package.git
-  #     ref: dev-carp-core-0_40_0
-  # cognition_package: 
-  #   git:
-  #     url: https://github.com/cph-cachet/cognition_package.git
+  #     url: https://github.com/cph-cachet/carp.sensing-flutter.git
   #     ref: develop
+  #     path: carp_core
+  # carp_mobile_sensing:
+  #   git:
+  #     url: https://github.com/cph-cachet/carp.sensing-flutter.git
+  #     ref: develop
+  #     path: carp_mobile_sensing
+  # carp_context_package:
+  #   git:
+  #     url: https://github.com/cph-cachet/carp.sensing-flutter.git
+  #     ref: develop
+  #     path: packages/carp_context_package/
+  # carp_survey_package:
+  #   git:
+  #     url: https://github.com/cph-cachet/carp.sensing-flutter.git
+  #     ref: develop
+  #     path: packages/carp_survey_package/
+  # # # carp_connectivity_package:
+  # # #   git:
+  # # #     url: https://github.com/cph-cachet/carp.sensing-flutter.git
+  # # #     ref: develop
+  # # #     path: packages/carp_connectivity_package/
+  # carp_audio_package:
+  #   git:
+  #     url: https://github.com/cph-cachet/carp.sensing-flutter.git
+  #     ref: develop
+  #     path: packages/carp_audio_package/
+  # carp_apps_package:
+  #   git:
+  #     url: https://github.com/cph-cachet/carp.sensing-flutter.git
+  #     ref: develop
+  #     path: packages/carp_apps_package/
+  # carp_health_package:
+  #   git:
+  #     url: https://github.com/cph-cachet/carp.sensing-flutter.git
+  #     ref: develop
+  #     path: packages/carp_health_package/
+  # carp_esense_package:
+  #   git:
+  #     url: https://github.com/cph-cachet/carp.sensing-flutter.git
+  #     ref: develop
+  #     path: packages/carp_esense_package/
+  # carp_polar_package:
+  #   git:
+  #     url: https://github.com/cph-cachet/carp.sensing-flutter.git
+  #     ref: develop
+  #     path: packages/carp_polar_package/
+  # carp_backend:
+  #   git:
+  #     url: https://github.com/cph-cachet/carp.sensing-flutter.git
+  #     ref: develop
+  #     path: backends/carp_backend/
+  # carp_webservices:
+  #   git:
+  #     url: https://github.com/cph-cachet/carp.sensing-flutter.git
+  #     ref: develop
+  #     path: backends/carp_webservices/
+  # # research_package: 
+  # #   git:
+  # #     url: https://github.com/cph-cachet/research.package.git
+  # #     ref: dev-carp-core-0_40_0
+  # # cognition_package: 
+  # #   git:
+  # #     url: https://github.com/cph-cachet/cognition_package.git
+  # #     ref: develop
 
 
 dev_dependencies:
