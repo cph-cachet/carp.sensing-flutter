@@ -1,11 +1,11 @@
 {
     "__type": "dk.cachet.carp.deployments.infrastructure.DeploymentServiceRequest.RegisterDevice",
-    "apiVersion": "1.1",
+    "apiVersion": "1.0",
     "studyDeploymentId": "c9cc5317-48da-45f2-958e-58bc07f34681",
     "deviceRoleName": "Participant's phone",
     "registration": {
         "__type": "dk.cachet.carp.common.application.devices.DefaultDeviceRegistration",
-        "registrationCreatedOn": "2022-01-18T13:55:10.000Z",
+        "registrationCreatedOn": "2022-01-18T13:55:10Z",
         "deviceDisplayName": null,
         "deviceId": "fc7b41b0-e9e2-4b5d-8c3d-5119b556a3f0"
     }

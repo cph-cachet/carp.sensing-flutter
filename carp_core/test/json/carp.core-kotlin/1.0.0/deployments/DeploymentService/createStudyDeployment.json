@@ -1,0 +1,154 @@
+{
+    "__type": "dk.cachet.carp.deployments.infrastructure.DeploymentServiceRequest.CreateStudyDeployment",
+    "apiVersion": "1.0",
+    "id": "c9cc5317-48da-45f2-958e-58bc07f34681",
+    "protocol": {
+        "id": "25fe92a5-0d52-4e37-8d05-31f347d72d3d",
+        "createdOn": "2022-01-18T10:56:59Z",
+        "ownerId": "491f03fc-964b-4783-86a6-a528bbfe4e94",
+        "name": "Nonmotorized transport study",
+        "description": "Track how much nonmotorized movement participants perform.",
+        "primaryDevices": [
+            {
+                "__type": "dk.cachet.carp.common.application.devices.Smartphone",
+                "isPrimaryDevice": true,
+                "roleName": "Participant's phone",
+                "defaultSamplingConfiguration": {
+                    "dk.cachet.carp.geolocation": {
+                        "__type": "dk.cachet.carp.common.application.sampling.BatteryAwareSamplingConfiguration",
+                        "normal": {
+                            "__type": "dk.cachet.carp.common.application.sampling.GranularitySamplingConfiguration",
+                            "granularity": "Detailed"
+                        },
+                        "low": {
+                            "__type": "dk.cachet.carp.common.application.sampling.GranularitySamplingConfiguration",
+                            "granularity": "Coarse"
+                        }
+                    }
+                }
+            }
+        ],
+        "connectedDevices": [
+            {
+                "__type": "dk.cachet.carp.common.application.devices.AltBeacon",
+                "roleName": "Participant's bike",
+                "isOptional": true
+            }
+        ],
+        "connections": [
+            {
+                "roleName": "Participant's bike",
+                "connectedToRoleName": "Participant's phone"
+            }
+        ],
+        "tasks": [
+            {
+                "__type": "dk.cachet.carp.common.application.tasks.BackgroundTask",
+                "name": "Monitor movement",
+                "measures": [
+                    {
+                        "__type": "dk.cachet.carp.common.application.tasks.Measure.DataStream",
+                        "type": "dk.cachet.carp.geolocation",
+                        "overrideSamplingConfiguration": {
+                            "__type": "dk.cachet.carp.common.application.sampling.BatteryAwareSamplingConfiguration",
+                            "normal": {
+                                "__type": "dk.cachet.carp.common.application.sampling.GranularitySamplingConfiguration",
+                                "granularity": "Balanced"
+                            },
+                            "low": {
+                                "__type": "dk.cachet.carp.common.application.sampling.GranularitySamplingConfiguration",
+                                "granularity": "Coarse"
+                            }
+                        }
+                    },
+                    {
+                        "__type": "dk.cachet.carp.common.application.tasks.Measure.DataStream",
+                        "type": "dk.cachet.carp.stepcount",
+                        "overrideSamplingConfiguration": {
+                            "__type": "dk.cachet.carp.common.application.sampling.NoOptionsSamplingConfiguration"
+                        }
+                    }
+                ],
+                "description": "Track step count and geolocation for one week.",
+                "duration": "PT168H"
+            },
+            {
+                "__type": "dk.cachet.carp.common.application.tasks.BackgroundTask",
+                "name": "Monitor proximity to bike",
+                "measures": [
+                    {
+                        "__type": "dk.cachet.carp.common.application.tasks.Measure.DataStream",
+                        "type": "dk.cachet.carp.signalstrength",
+                        "overrideSamplingConfiguration": {
+                            "__type": "dk.cachet.carp.common.application.sampling.NoOptionsSamplingConfiguration"
+                        }
+                    }
+                ],
+                "duration": "PT168H"
+            }
+        ],
+        "triggers": {
+            "0": {
+                "__type": "dk.cachet.carp.common.application.triggers.ElapsedTimeTrigger",
+                "sourceDeviceRoleName": "Participant's phone",
+                "elapsedTime": "PT0S"
+            }
+        },
+        "taskControls": [
+            {
+                "triggerId": 0,
+                "taskName": "Monitor movement",
+                "destinationDeviceRoleName": "Participant's phone",
+                "control": "Start"
+            },
+            {
+                "triggerId": 0,
+                "taskName": "Monitor proximity to bike",
+                "destinationDeviceRoleName": "Participant's bike",
+                "control": "Start"
+            }
+        ],
+        "participantRoles": [
+            {
+                "role": "Participant",
+                "isOptional": false
+            }
+        ],
+        "applicationData": {
+            "uiTheme": "black"
+        }
+    },
+    "invitations": [
+        {
+            "participantId": "32880e82-01c9-40cf-a6ed-17ff3348f251",
+            "assignedRoles": {
+                "__type": "dk.cachet.carp.common.application.users.AssignedTo.Roles",
+                "roleNames": [
+                    "Participant"
+                ]
+            },
+            "identity": {
+                "__type": "dk.cachet.carp.common.application.users.EmailAccountIdentity",
+                "emailAddress": "boaty@mcboatface.com"
+            },
+            "invitation": {
+                "name": "Copenhagen transportation study",
+                "description": "Participate in this study, which keeps track of how much you walk and bike!",
+                "applicationData": "{\"trialGroup\", \"A\"}"
+            }
+        }
+    ],
+    "connectedDevicePreregistrations": {
+        "Participant's bike": {
+            "__type": "dk.cachet.carp.common.application.devices.AltBeaconDeviceRegistration",
+            "registrationCreatedOn": "2022-01-18T11:06:40Z",
+            "manufacturerId": 280,
+            "organizationId": "4e990957-0838-414c-bf25-2d391e2990b5",
+            "majorId": 42,
+            "minorId": 42,
+            "referenceRssi": 0,
+            "deviceDisplayName": null,
+            "deviceId": "280:4e990957-0838-414c-bf25-2d391e2990b5:42:42"
+        }
+    }
+}

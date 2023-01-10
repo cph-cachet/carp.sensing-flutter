@@ -1,0 +1,5 @@
+{
+    "__type": "dk.cachet.carp.studies.infrastructure.StudyServiceRequest.GetStudiesOverview",
+    "apiVersion": "1.0",
+    "ownerId": "491f03fc-964b-4783-86a6-a528bbfe4e94"
+}

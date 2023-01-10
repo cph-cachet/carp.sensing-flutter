@@ -136,14 +136,14 @@ class DataPointHeader {
   /// If this data point does not cover a period, [endTime] will be `null`.
   DateTime? endTime;
 
-  /// The data format. See [DataFormat] and [NameSpace].
-  DataType dataFormat;
+  /// The data format. See [DataType] and [NameSpace].
+  DataType? dataFormat;
 
   /// Create a new [DataPointHeader].
   DataPointHeader({
     this.studyId,
     this.userId,
-    this.dataFormat = DataType.UNKNOWN,
+    this.dataFormat,
     this.deviceRoleName,
     this.triggerId,
     this.startTime,
@@ -162,45 +162,45 @@ class DataPointHeader {
   Map<String, dynamic> toJson() => _$DataPointHeaderToJson(this);
 }
 
-/// Specifies the format of the [data] in a [DataPoint].
-///
-/// Note that the only reason why we have both a [DataType] and a [DataFormat]
-/// class definition is because the JSON serialization is different in data
-/// upload versus download from CANS.... :-?
-/// Upload is `FieldRename.snake` while download is `FieldRename.none`.
-@JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)
-class DataFormat {
-  static const DataFormat UNKNOWN = DataFormat(NameSpace.CARP, 'unknown');
+// /// Specifies the format of the [data] in a [DataPoint].
+// ///
+// /// Note that the only reason why we have both a [DataType] and a [DataFormat]
+// /// class definition is because the JSON serialization is different in data
+// /// upload versus download from CANS.... :-?
+// /// Upload is `FieldRename.snake` while download is `FieldRename.none`.
+// @JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)
+// class DataFormat {
+//   static const DataFormat UNKNOWN = DataFormat(NameSpace.CARP, 'unknown');
 
-  /// The data type namespace. See [NameSpace].
-  ///
-  /// Uniquely identifies the organization/person who determines how to
-  /// interpret [name].
-  /// To prevent conflicts, a reverse domain namespace is suggested:
-  /// e.g., "org.openmhealth" or "dk.cachet.carp".
-  final String namespace;
+//   /// The data type namespace. See [NameSpace].
+//   ///
+//   /// Uniquely identifies the organization/person who determines how to
+//   /// interpret [name].
+//   /// To prevent conflicts, a reverse domain namespace is suggested:
+//   /// e.g., "org.openmhealth" or "dk.cachet.carp".
+//   final String namespace;
 
-  /// The name of this data format. See [String].
-  ///
-  /// Uniquely identifies something within the [namespace].
-  /// The name may not contain any periods. Periods are reserved for namespaces.
-  final String name;
+//   /// The name of this data format. See [String].
+//   ///
+//   /// Uniquely identifies something within the [namespace].
+//   /// The name may not contain any periods. Periods are reserved for namespaces.
+//   final String name;
 
-  /// Create a [DataFormat].
-  const DataFormat(this.namespace, this.name) : super();
+//   /// Create a [DataFormat].
+//   const DataFormat(this.namespace, this.name) : super();
 
-  factory DataFormat.fromString(String type) {
-    assert(type.contains('.'),
-        "A data type must contain both a namespace and a name separated with a '.'");
-    final String name = type.split('.').last;
-    final String namespace = type.substring(0, type.indexOf(name) - 1);
-    return DataFormat(namespace, name);
-  }
+//   factory DataFormat.fromString(String type) {
+//     assert(type.contains('.'),
+//         "A data type must contain both a namespace and a name separated with a '.'");
+//     final String name = type.split('.').last;
+//     final String namespace = type.substring(0, type.indexOf(name) - 1);
+//     return DataFormat(namespace, name);
+//   }
 
-  @override
-  String toString() => '$namespace.$name';
+//   @override
+//   String toString() => '$namespace.$name';
 
-  factory DataFormat.fromJson(Map<String, dynamic> json) =>
-      _$DataFormatFromJson(json);
-  Map<String, dynamic> toJson() => _$DataFormatToJson(this);
-}
+//   factory DataFormat.fromJson(Map<String, dynamic> json) =>
+//       _$DataFormatFromJson(json);
+//   Map<String, dynamic> toJson() => _$DataFormatToJson(this);
+// }

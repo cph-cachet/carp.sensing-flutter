@@ -1,0 +1,41 @@
+[
+    {
+        "participation": {
+            "studyDeploymentId": "c9cc5317-48da-45f2-958e-58bc07f34681",
+            "assignedRoles": {
+                "__type": "dk.cachet.carp.common.application.users.AssignedTo.Roles",
+                "roleNames": [
+                    "Participant"
+                ]
+            },
+            "participantId": "32880e82-01c9-40cf-a6ed-17ff3348f251"
+        },
+        "invitation": {
+            "name": "Copenhagen transportation study",
+            "description": "Participate in this study, which keeps track of how much you walk and bike!",
+            "applicationData": "{\"trialGroup\", \"A\"}"
+        },
+        "assignedDevices": [
+            {
+                "device": {
+                    "__type": "dk.cachet.carp.common.application.devices.Smartphone",
+                    "isPrimaryDevice": true,
+                    "roleName": "Participant's phone",
+                    "defaultSamplingConfiguration": {
+                        "dk.cachet.carp.geolocation": {
+                            "__type": "dk.cachet.carp.common.application.sampling.BatteryAwareSamplingConfiguration",
+                            "normal": {
+                                "__type": "dk.cachet.carp.common.application.sampling.GranularitySamplingConfiguration",
+                                "granularity": "Detailed"
+                            },
+                            "low": {
+                                "__type": "dk.cachet.carp.common.application.sampling.GranularitySamplingConfiguration",
+                                "granularity": "Coarse"
+                            }
+                        }
+                    }
+                }
+            }
+        ]
+    }
+]

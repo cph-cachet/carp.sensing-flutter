@@ -1,12 +1,11 @@
 import 'dart:convert';
 import 'dart:io';
-import 'package:flutter/material.dart';
 import 'package:test/test.dart';
 import 'package:carp_core/carp_core.dart';
 import 'package:carp_serializable/carp_serializable.dart';
 
 void main() {
-  const String path = 'test/json/carp.core-kotlin';
+  const String path = 'test/json/carp.core-kotlin/1.1.1';
 
   setUp(() {
     Core();
@@ -430,9 +429,13 @@ void main() {
               '$path/deployments/ParticipationService/getActiveParticipationInvitations-response.json')
           .readAsStringSync();
 
+      // expecting a list of invitations
+      final invitations = json.decode(plainJson) as List<dynamic>;
+
+      // checking the first one
       ActiveParticipationInvitation invitation =
           ActiveParticipationInvitation.fromJson(
-              json.decode(plainJson) as Map<String, dynamic>);
+              invitations.first as Map<String, dynamic>);
       expect(invitation.participation.participantId,
           '32880e82-01c9-40cf-a6ed-17ff3348f251');
       print(toJsonString(invitation));

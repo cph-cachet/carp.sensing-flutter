@@ -1,0 +1,6 @@
+{
+    "__type": "dk.cachet.carp.protocols.infrastructure.ProtocolServiceRequest.GetBy",
+    "apiVersion": "1.0",
+    "protocolId": "25fe92a5-0d52-4e37-8d05-31f347d72d3d",
+    "versionTag": "Version 1"
+}

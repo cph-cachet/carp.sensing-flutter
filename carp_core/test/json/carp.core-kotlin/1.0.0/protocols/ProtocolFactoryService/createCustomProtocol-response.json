@@ -1,0 +1,36 @@
+{
+    "id": "4d8c75c7-9604-48fa-8f9b-5ed3e4bd5df8",
+    "createdOn": "2022-01-18T10:56:59Z",
+    "ownerId": "491f03fc-964b-4783-86a6-a528bbfe4e94",
+    "name": "Fictional Company study",
+    "description": "Collect heartrate and GPS using Fictional Company's software.",
+    "primaryDevices": [
+        {
+            "__type": "dk.cachet.carp.common.application.devices.CustomProtocolDevice",
+            "isPrimaryDevice": true,
+            "roleName": "Custom device"
+        }
+    ],
+    "tasks": [
+        {
+            "__type": "dk.cachet.carp.common.application.tasks.CustomProtocolTask",
+            "name": "Custom device task",
+            "studyProtocol": "{\"collect-data\": \"heartrate, gps\"}"
+        }
+    ],
+    "triggers": {
+        "0": {
+            "__type": "dk.cachet.carp.common.application.triggers.ElapsedTimeTrigger",
+            "sourceDeviceRoleName": "Custom device",
+            "elapsedTime": "PT0S"
+        }
+    },
+    "taskControls": [
+        {
+            "triggerId": 0,
+            "taskName": "Custom device task",
+            "destinationDeviceRoleName": "Custom device",
+            "control": "Start"
+        }
+    ]
+}
