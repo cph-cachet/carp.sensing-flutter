@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Copenhagen Center for Health Technology (CACHET) at the
+ * Copyright 2020-2023 Copenhagen Center for Health Technology (CACHET) at the
  * Technical University of Denmark (DTU).
  * Use of this source code is governed by a MIT-style license that can be
  * found in the LICENSE file.
@@ -9,16 +9,9 @@ part of runtime;
 
 /// Returns the relevant [TaskExecutor] based on the type of [task].
 TaskExecutor getTaskExecutor(TaskDescriptor task) {
-  switch (task.runtimeType) {
-    case AppTask:
-      return AppTaskExecutor();
-    case FunctionTask:
-      return FunctionTaskExecutor();
-    case BackgroundTask:
-      return BackgroundTaskExecutor();
-    default:
-      return BackgroundTaskExecutor();
-  }
+  if (task is AppTask) return AppTaskExecutor();
+  if (task is FunctionTask) return FunctionTaskExecutor();
+  return BackgroundTaskExecutor();
 }
 
 /// The [TaskExecutor] is responsible for executing a [TaskDescriptor].

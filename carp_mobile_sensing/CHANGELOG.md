@@ -1,7 +1,8 @@
-## 0.40.9
+## 0.40.10
 
 * adding `dispose`, `pause`, and `remove` life cycle methods to the `DeploymentController`
 * support for deleting cached runtime information (deployment and task list)
+* fix of bug in `getTaskExecutor` method
 
 ## 0.40.7
 
