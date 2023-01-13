@@ -1,3 +1,7 @@
+## 0.40.11
+
+* Fix of issue [#305](https://github.com/cph-cachet/carp.sensing-flutter/issues/305).
+
 ## 0.40.10
 
 * adding `dispose`, `pause`, and `remove` life cycle methods to the `DeploymentController`
