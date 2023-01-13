@@ -144,7 +144,8 @@ class FileDataManager extends AbstractDataManager {
 
     await sink.then((activeSink) async {
       try {
-        activeSink.write(json);
+        activeSink
+            .write('$json\n,\n'); // always add a comma directly after json
         debug(
             'Writing data point to file - type: ${dataPoint.carpHeader.dataFormat}');
 
@@ -152,8 +153,6 @@ class FileDataManager extends AbstractDataManager {
           await activeFile.length().then((len) {
             if (len > _fileDataEndPoint.bufferSize) {
               flush(activeFile, activeSink);
-            } else {
-              activeSink.write('\n,\n'); // write a ',' to separate json objects
             }
           });
         });
@@ -188,7 +187,7 @@ class FileDataManager extends AbstractDataManager {
     var finalFilePath = jsonFilePath;
 
     info("Written JSON to file '$jsonFilePath'. Closing it.");
-    flushSink.write('\n]\n');
+    flushSink.write('{}]\n'); // add empty object {} and ] to make file valid
 
     // once finished closing the file, then zip and encrypt it
     flushSink.close().then((value) {

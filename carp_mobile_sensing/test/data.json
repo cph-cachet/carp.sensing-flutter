@@ -1,0 +1,2203 @@
+[
+    {
+        "carp_header": {
+            "study_id": "912b77a0-935d-11ed-a024-51f8219387f2",
+            "device_role_name": "masterphone",
+            "trigger_id": "0",
+            "user_id": "9baf7e30-935b-11ed-9078-17d60c26cc72",
+            "start_time": "2023-01-13T16:16:09.971431Z",
+            "data_format": {
+                "namespace": "dk.cachet.carp",
+                "name": "accelerometer"
+            }
+        },
+        "carp_body": {
+            "id": "9764ca40-935d-11ed-8062-23635d8ea749",
+            "timestamp": "2023-01-13T16:16:09.955425Z",
+            "x": -0.004523925483226776,
+            "y": -0.003854416310787201,
+            "z": -0.12859535217285156
+        }
+    },
+    {
+        "carp_header": {
+            "study_id": "912b77a0-935d-11ed-a024-51f8219387f2",
+            "device_role_name": "masterphone",
+            "trigger_id": "0",
+            "user_id": "9baf7e30-935b-11ed-9078-17d60c26cc72",
+            "start_time": "2023-01-13T16:16:10.122479Z",
+            "data_format": {
+                "namespace": "dk.cachet.carp",
+                "name": "accelerometer"
+            }
+        },
+        "carp_body": {
+            "id": "977e1ea0-935d-11ed-a69d-b702a8574d1d",
+            "timestamp": "2023-01-13T16:16:10.121197Z",
+            "x": -0.003930617123842239,
+            "y": -0.005913622677326202,
+            "z": -0.1285839080810547
+        }
+    },
+    {
+        "carp_header": {
+            "study_id": "912b77a0-935d-11ed-a024-51f8219387f2",
+            "device_role_name": "masterphone",
+            "trigger_id": "0",
+            "user_id": "9baf7e30-935b-11ed-9078-17d60c26cc72",
+            "start_time": "2023-01-13T16:16:10.302845Z",
+            "data_format": {
+                "namespace": "dk.cachet.carp",
+                "name": "accelerometer"
+            }
+        },
+        "carp_body": {
+            "id": "97996ed0-935d-11ed-95bc-eb58da741096",
+            "timestamp": "2023-01-13T16:16:10.300924Z",
+            "x": -0.0030766092240810394,
+            "y": -0.0017055496573448181,
+            "z": -0.1286182403564453
+        }
+    },
+    {
+        "carp_header": {
+            "study_id": "912b77a0-935d-11ed-a024-51f8219387f2",
+            "device_role_name": "masterphone",
+            "trigger_id": "0",
+            "user_id": "9baf7e30-935b-11ed-9078-17d60c26cc72",
+            "start_time": "2023-01-13T16:16:10.482037Z",
+            "data_format": {
+                "namespace": "dk.cachet.carp",
+                "name": "accelerometer"
+            }
+        },
+        "carp_body": {
+            "id": "97b4e610-935d-11ed-be00-17c821495cd5",
+            "timestamp": "2023-01-13T16:16:10.480611Z",
+            "x": 0.012744750827550888,
+            "y": -0.017018210142850876,
+            "z": -0.1382160186767578
+        }
+    },
+    {
+        "carp_header": {
+            "study_id": "912b77a0-935d-11ed-a024-51f8219387f2",
+            "device_role_name": "masterphone",
+            "trigger_id": "0",
+            "user_id": "9baf7e30-935b-11ed-9078-17d60c26cc72",
+            "start_time": "2023-01-13T16:16:10.664553Z",
+            "data_format": {
+                "namespace": "dk.cachet.carp",
+                "name": "accelerometer"
+            }
+        },
+        "carp_body": {
+            "id": "97d0ab70-935d-11ed-88ad-6b14cb122026",
+            "timestamp": "2023-01-13T16:16:10.662678Z",
+            "x": -0.009982086718082428,
+            "y": 0.006384309381246567,
+            "z": -0.11189842224121094
+        }
+    },
+    {
+        "carp_header": {
+            "study_id": "912b77a0-935d-11ed-a024-51f8219387f2",
+            "device_role_name": "masterphone",
+            "trigger_id": "0",
+            "user_id": "9baf7e30-935b-11ed-9078-17d60c26cc72",
+            "start_time": "2023-01-13T16:16:10.843524Z",
+            "data_format": {
+                "namespace": "dk.cachet.carp",
+                "name": "accelerometer"
+            }
+        },
+        "carp_body": {
+            "id": "97ebfba0-935d-11ed-a192-eb5db35a6ead",
+            "timestamp": "2023-01-13T16:16:10.839340Z",
+            "x": -0.006383791565895081,
+            "y": -0.015982292592525482,
+            "z": -0.12382793426513672
+        }
+    },
+    {
+        "carp_header": {
+            "study_id": "912b77a0-935d-11ed-a024-51f8219387f2",
+            "device_role_name": "masterphone",
+            "trigger_id": "0",
+            "user_id": "9baf7e30-935b-11ed-9078-17d60c26cc72",
+            "start_time": "2023-01-13T16:16:11.022529Z",
+            "data_format": {
+                "namespace": "dk.cachet.carp",
+                "name": "accelerometer"
+            }
+        },
+        "carp_body": {
+            "id": "98074bd0-935d-11ed-8609-d56e2246750e",
+            "timestamp": "2023-01-13T16:16:11.020789Z",
+            "x": -0.005465444177389145,
+            "y": 0.011598475277423859,
+            "z": -0.1310100555419922
+        }
+    },
+    {
+        "carp_header": {
+            "study_id": "912b77a0-935d-11ed-a024-51f8219387f2",
+            "device_role_name": "masterphone",
+            "trigger_id": "0",
+            "user_id": "9baf7e30-935b-11ed-9078-17d60c26cc72",
+            "start_time": "2023-01-13T16:16:11.203377Z",
+            "data_format": {
+                "namespace": "dk.cachet.carp",
+                "name": "accelerometer"
+            }
+        },
+        "carp_body": {
+            "id": "9822ea20-935d-11ed-92d1-bfaa8ae2fce1",
+            "timestamp": "2023-01-13T16:16:11.201934Z",
+            "x": -0.003980480134487152,
+            "y": -0.00207505002617836,
+            "z": -0.1238250732421875
+        }
+    },
+    {
+        "carp_header": {
+            "study_id": "912b77a0-935d-11ed-a024-51f8219387f2",
+            "device_role_name": "masterphone",
+            "trigger_id": "0",
+            "user_id": "9baf7e30-935b-11ed-9078-17d60c26cc72",
+            "start_time": "2023-01-13T16:16:11.382824Z",
+            "data_format": {
+                "namespace": "dk.cachet.carp",
+                "name": "accelerometer"
+            }
+        },
+        "carp_body": {
+            "id": "983e6160-935d-11ed-89c6-b1ca6fc39456",
+            "timestamp": "2023-01-13T16:16:11.381326Z",
+            "x": -0.005787152796983719,
+            "y": -0.016745738685131073,
+            "z": -0.13341903686523438
+        }
+    },
+    {
+        "carp_header": {
+            "study_id": "912b77a0-935d-11ed-a024-51f8219387f2",
+            "device_role_name": "masterphone",
+            "trigger_id": "0",
+            "user_id": "9baf7e30-935b-11ed-9078-17d60c26cc72",
+            "start_time": "2023-01-13T16:16:11.564487Z",
+            "data_format": {
+                "namespace": "dk.cachet.carp",
+                "name": "accelerometer"
+            }
+        },
+        "carp_body": {
+            "id": "9859ffb0-935d-11ed-bf15-8dcb627ecf46",
+            "timestamp": "2023-01-13T16:16:11.562625Z",
+            "x": -0.015104256570339203,
+            "y": 0.014908574521541595,
+            "z": -0.12384700775146484
+        }
+    },
+    {
+        "carp_header": {
+            "study_id": "912b77a0-935d-11ed-a024-51f8219387f2",
+            "device_role_name": "masterphone",
+            "trigger_id": "0",
+            "user_id": "9baf7e30-935b-11ed-9078-17d60c26cc72",
+            "start_time": "2023-01-13T16:16:15.893007Z",
+            "data_format": {
+                "namespace": "dk.cachet.carp",
+                "name": "accelerometer"
+            }
+        },
+        "carp_body": {
+            "id": "9aee6630-935d-11ed-8b66-f1e7fe517b44",
+            "timestamp": "2023-01-13T16:16:15.890964Z",
+            "x": 0.36766332387924194,
+            "y": 0.3835574984550476,
+            "z": -0.11858081817626953
+        }
+    },
+    {
+        "carp_header": {
+            "study_id": "912b77a0-935d-11ed-a024-51f8219387f2",
+            "device_role_name": "masterphone",
+            "trigger_id": "0",
+            "user_id": "9baf7e30-935b-11ed-9078-17d60c26cc72",
+            "start_time": "2023-01-13T16:16:16.072549Z",
+            "data_format": {
+                "namespace": "dk.cachet.carp",
+                "name": "accelerometer"
+            }
+        },
+        "carp_body": {
+            "id": "9b09dd70-935d-11ed-8c43-c5d449a76b69",
+            "timestamp": "2023-01-13T16:16:16.070683Z",
+            "x": 0.0646263062953949,
+            "y": 0.08692040294408798,
+            "z": -0.12894248962402344
+        }
+    },
+    {
+        "carp_header": {
+            "study_id": "912b77a0-935d-11ed-a024-51f8219387f2",
+            "device_role_name": "masterphone",
+            "trigger_id": "0",
+            "user_id": "9baf7e30-935b-11ed-9078-17d60c26cc72",
+            "start_time": "2023-01-13T16:16:16.250232Z",
+            "data_format": {
+                "namespace": "dk.cachet.carp",
+                "name": "accelerometer"
+            }
+        },
+        "carp_body": {
+            "id": "9b250690-935d-11ed-b806-7bdcaa03e8ce",
+            "timestamp": "2023-01-13T16:16:16.249360Z",
+            "x": -0.0017518438398838043,
+            "y": 0.012672822922468185,
+            "z": -0.1287221908569336
+        }
+    },
+    {
+        "carp_header": {
+            "study_id": "912b77a0-935d-11ed-a024-51f8219387f2",
+            "device_role_name": "masterphone",
+            "trigger_id": "0",
+            "user_id": "9baf7e30-935b-11ed-9078-17d60c26cc72",
+            "start_time": "2023-01-13T16:16:16.433504Z",
+            "data_format": {
+                "namespace": "dk.cachet.carp",
+                "name": "accelerometer"
+            }
+        },
+        "carp_body": {
+            "id": "9b40f300-935d-11ed-bbac-e9e2a2061f0e",
+            "timestamp": "2023-01-13T16:16:16.431822Z",
+            "x": 0.00397486612200737,
+            "y": 0.014501679688692093,
+            "z": -0.13820838928222656
+        }
+    },
+    {
+        "carp_header": {
+            "study_id": "912b77a0-935d-11ed-a024-51f8219387f2",
+            "device_role_name": "masterphone",
+            "trigger_id": "0",
+            "user_id": "9baf7e30-935b-11ed-9078-17d60c26cc72",
+            "start_time": "2023-01-13T16:16:16.611220Z",
+            "data_format": {
+                "namespace": "dk.cachet.carp",
+                "name": "accelerometer"
+            }
+        },
+        "carp_body": {
+            "id": "9b5c1c20-935d-11ed-ad1c-1d0ac0af23d2",
+            "timestamp": "2023-01-13T16:16:16.609865Z",
+            "x": 0.004438783973455429,
+            "y": 0.010272741317749023,
+            "z": -0.12142753601074219
+        }
+    },
+    {
+        "carp_header": {
+            "study_id": "912b77a0-935d-11ed-a024-51f8219387f2",
+            "device_role_name": "masterphone",
+            "trigger_id": "0",
+            "user_id": "9baf7e30-935b-11ed-9078-17d60c26cc72",
+            "start_time": "2023-01-13T16:16:16.789414Z",
+            "data_format": {
+                "namespace": "dk.cachet.carp",
+                "name": "accelerometer"
+            }
+        },
+        "carp_body": {
+            "id": "9b774540-935d-11ed-9d40-dfe97f5957df",
+            "timestamp": "2023-01-13T16:16:16.788139Z",
+            "x": -0.004370257258415222,
+            "y": 0.013507388532161713,
+            "z": -0.1334075927734375
+        }
+    },
+    {
+        "carp_header": {
+            "study_id": "912b77a0-935d-11ed-a024-51f8219387f2",
+            "device_role_name": "masterphone",
+            "trigger_id": "0",
+            "user_id": "9baf7e30-935b-11ed-9078-17d60c26cc72",
+            "start_time": "2023-01-13T16:16:16.973231Z",
+            "data_format": {
+                "namespace": "dk.cachet.carp",
+                "name": "accelerometer"
+            }
+        },
+        "carp_body": {
+            "id": "9b9358c0-935d-11ed-8c8a-23e046cee9dd",
+            "timestamp": "2023-01-13T16:16:16.971807Z",
+            "x": 0.00234333798289299,
+            "y": -0.0028878822922706604,
+            "z": -0.11902618408203125
+        }
+    },
+    {
+        "carp_header": {
+            "study_id": "912b77a0-935d-11ed-a024-51f8219387f2",
+            "device_role_name": "masterphone",
+            "trigger_id": "0",
+            "user_id": "9baf7e30-935b-11ed-9078-17d60c26cc72",
+            "start_time": "2023-01-13T16:16:17.153585Z",
+            "data_format": {
+                "namespace": "dk.cachet.carp",
+                "name": "accelerometer"
+            }
+        },
+        "carp_body": {
+            "id": "9baed000-935d-11ed-b6f7-9df9a350db7e",
+            "timestamp": "2023-01-13T16:16:17.152187Z",
+            "x": -0.0026063434779644012,
+            "y": -0.007603392004966736,
+            "z": -0.1358013153076172
+        }
+    },
+    {
+        "carp_header": {
+            "study_id": "912b77a0-935d-11ed-a024-51f8219387f2",
+            "device_role_name": "masterphone",
+            "trigger_id": "0",
+            "user_id": "9baf7e30-935b-11ed-9078-17d60c26cc72",
+            "start_time": "2023-01-13T16:16:17.332112Z",
+            "data_format": {
+                "namespace": "dk.cachet.carp",
+                "name": "accelerometer"
+            }
+        },
+        "carp_body": {
+            "id": "9bca2030-935d-11ed-b3d4-afd4c2118e45",
+            "timestamp": "2023-01-13T16:16:17.330474Z",
+            "x": -0.00031128525733947754,
+            "y": -0.010903395712375641,
+            "z": -0.1477499008178711
+        }
+    },
+    {
+        "carp_header": {
+            "study_id": "912b77a0-935d-11ed-a024-51f8219387f2",
+            "device_role_name": "masterphone",
+            "trigger_id": "0",
+            "user_id": "9baf7e30-935b-11ed-9078-17d60c26cc72",
+            "start_time": "2023-01-13T16:16:17.510473Z",
+            "data_format": {
+                "namespace": "dk.cachet.carp",
+                "name": "accelerometer"
+            }
+        },
+        "carp_body": {
+            "id": "9be54950-935d-11ed-b2a9-cbb4b4977752",
+            "timestamp": "2023-01-13T16:16:17.509091Z",
+            "x": 0.016631368547677994,
+            "y": -0.01382853090763092,
+            "z": -0.14776325225830078
+        }
+    },
+    {
+        "carp_header": {
+            "study_id": "912b77a0-935d-11ed-a024-51f8219387f2",
+            "device_role_name": "masterphone",
+            "trigger_id": "0",
+            "user_id": "9baf7e30-935b-11ed-9078-17d60c26cc72",
+            "start_time": "2023-01-13T16:16:17.692357Z",
+            "data_format": {
+                "namespace": "dk.cachet.carp",
+                "name": "accelerometer"
+            }
+        },
+        "carp_body": {
+            "id": "9c010eb0-935d-11ed-97ed-57d0986a94ad",
+            "timestamp": "2023-01-13T16:16:17.690519Z",
+            "x": -0.0004124194383621216,
+            "y": 0.0029613450169563293,
+            "z": -0.1381998062133789
+        }
+    },
+    {
+        "carp_header": {
+            "study_id": "912b77a0-935d-11ed-a024-51f8219387f2",
+            "device_role_name": "masterphone",
+            "trigger_id": "0",
+            "user_id": "9baf7e30-935b-11ed-9078-17d60c26cc72",
+            "start_time": "2023-01-13T16:16:21.829686Z",
+            "data_format": {
+                "namespace": "dk.cachet.carp",
+                "name": "accelerometer"
+            }
+        },
+        "carp_body": {
+            "id": "9e787750-935d-11ed-b527-3f05a239ca1a",
+            "timestamp": "2023-01-13T16:16:21.828492Z",
+            "x": -0.0000983215868473053,
+            "y": 0.0026418715715408325,
+            "z": -0.1381998062133789
+        }
+    },
+    {
+        "carp_header": {
+            "study_id": "912b77a0-935d-11ed-a024-51f8219387f2",
+            "device_role_name": "masterphone",
+            "trigger_id": "0",
+            "user_id": "9baf7e30-935b-11ed-9078-17d60c26cc72",
+            "start_time": "2023-01-13T16:16:22.008919Z",
+            "data_format": {
+                "namespace": "dk.cachet.carp",
+                "name": "accelerometer"
+            }
+        },
+        "carp_body": {
+            "id": "9e93c780-935d-11ed-b2f0-ab07596cbcab",
+            "timestamp": "2023-01-13T16:16:22.008192Z",
+            "x": -0.0005333572626113892,
+            "y": 0.0030457153916358948,
+            "z": -0.1381988525390625
+        }
+    },
+    {
+        "carp_header": {
+            "study_id": "912b77a0-935d-11ed-a024-51f8219387f2",
+            "device_role_name": "masterphone",
+            "trigger_id": "0",
+            "user_id": "9baf7e30-935b-11ed-9078-17d60c26cc72",
+            "start_time": "2023-01-13T16:16:22.189972Z",
+            "data_format": {
+                "namespace": "dk.cachet.carp",
+                "name": "accelerometer"
+            }
+        },
+        "carp_body": {
+            "id": "9eaf65d0-935d-11ed-963d-751573bd5134",
+            "timestamp": "2023-01-13T16:16:22.188542Z",
+            "x": -0.001255873590707779,
+            "y": 0.004098836332559586,
+            "z": -0.13820171356201172
+        }
+    },
+    {
+        "carp_header": {
+            "study_id": "912b77a0-935d-11ed-a024-51f8219387f2",
+            "device_role_name": "masterphone",
+            "trigger_id": "0",
+            "user_id": "9baf7e30-935b-11ed-9078-17d60c26cc72",
+            "start_time": "2023-01-13T16:16:22.369122Z",
+            "data_format": {
+                "namespace": "dk.cachet.carp",
+                "name": "accelerometer"
+            }
+        },
+        "carp_body": {
+            "id": "9ecab600-935d-11ed-81fd-3925029d3625",
+            "timestamp": "2023-01-13T16:16:22.367866Z",
+            "x": -0.007021825760602951,
+            "y": -0.000026520341634750366,
+            "z": -0.12381935119628906
+        }
+    },
+    {
+        "carp_header": {
+            "study_id": "912b77a0-935d-11ed-a024-51f8219387f2",
+            "device_role_name": "masterphone",
+            "trigger_id": "0",
+            "user_id": "9baf7e30-935b-11ed-9078-17d60c26cc72",
+            "start_time": "2023-01-13T16:16:22.548588Z",
+            "data_format": {
+                "namespace": "dk.cachet.carp",
+                "name": "accelerometer"
+            }
+        },
+        "carp_body": {
+            "id": "9ee60630-935d-11ed-8aff-cfc5d821ec09",
+            "timestamp": "2023-01-13T16:16:22.547507Z",
+            "x": -0.0014790408313274384,
+            "y": -0.0025708936154842377,
+            "z": -0.1238088607788086
+        }
+    },
+    {
+        "carp_header": {
+            "study_id": "912b77a0-935d-11ed-a024-51f8219387f2",
+            "device_role_name": "masterphone",
+            "trigger_id": "0",
+            "user_id": "9baf7e30-935b-11ed-9078-17d60c26cc72",
+            "start_time": "2023-01-13T16:16:22.729573Z",
+            "data_format": {
+                "namespace": "dk.cachet.carp",
+                "name": "accelerometer"
+            }
+        },
+        "carp_body": {
+            "id": "9f01cb90-935d-11ed-976a-d9b0ed218f4c",
+            "timestamp": "2023-01-13T16:16:22.728739Z",
+            "x": -0.019137941300868988,
+            "y": 0.012426815927028656,
+            "z": -0.13338375091552734
+        }
+    },
+    {
+        "carp_header": {
+            "study_id": "912b77a0-935d-11ed-a024-51f8219387f2",
+            "device_role_name": "masterphone",
+            "trigger_id": "0",
+            "user_id": "9baf7e30-935b-11ed-9078-17d60c26cc72",
+            "start_time": "2023-01-13T16:16:22.910454Z",
+            "data_format": {
+                "namespace": "dk.cachet.carp",
+                "name": "accelerometer"
+            }
+        },
+        "carp_body": {
+            "id": "9f1d42d0-935d-11ed-8c16-79240a5e7598",
+            "timestamp": "2023-01-13T16:16:22.909238Z",
+            "x": -0.00017581135034561157,
+            "y": -0.015742316842079163,
+            "z": -0.13099193572998047
+        }
+    },
+    {
+        "carp_header": {
+            "study_id": "912b77a0-935d-11ed-a024-51f8219387f2",
+            "device_role_name": "masterphone",
+            "trigger_id": "0",
+            "user_id": "9baf7e30-935b-11ed-9078-17d60c26cc72",
+            "start_time": "2023-01-13T16:16:23.093231Z",
+            "data_format": {
+                "namespace": "dk.cachet.carp",
+                "name": "accelerometer"
+            }
+        },
+        "carp_body": {
+            "id": "9f392f40-935d-11ed-825e-d5f06ab5c45d",
+            "timestamp": "2023-01-13T16:16:23.091927Z",
+            "x": 0.021282270550727844,
+            "y": -0.018212415277957916,
+            "z": -0.14056777954101562
+        }
+    },
+    {
+        "carp_header": {
+            "study_id": "912b77a0-935d-11ed-a024-51f8219387f2",
+            "device_role_name": "masterphone",
+            "trigger_id": "0",
+            "user_id": "9baf7e30-935b-11ed-9078-17d60c26cc72",
+            "start_time": "2023-01-13T16:16:23.271394Z",
+            "data_format": {
+                "namespace": "dk.cachet.carp",
+                "name": "accelerometer"
+            }
+        },
+        "carp_body": {
+            "id": "9f545860-935d-11ed-9961-6b46d2c5e5b4",
+            "timestamp": "2023-01-13T16:16:23.270019Z",
+            "x": 0.006071306765079498,
+            "y": -0.0143328458070755,
+            "z": -0.12143325805664062
+        }
+    },
+    {
+        "carp_header": {
+            "study_id": "912b77a0-935d-11ed-a024-51f8219387f2",
+            "device_role_name": "masterphone",
+            "trigger_id": "0",
+            "user_id": "9baf7e30-935b-11ed-9078-17d60c26cc72",
+            "start_time": "2023-01-13T16:16:23.451568Z",
+            "data_format": {
+                "namespace": "dk.cachet.carp",
+                "name": "accelerometer"
+            }
+        },
+        "carp_body": {
+            "id": "9f6fcfa0-935d-11ed-94e7-c5fba77c5ed6",
+            "timestamp": "2023-01-13T16:16:23.450406Z",
+            "x": -0.008906826376914978,
+            "y": -0.002885393798351288,
+            "z": -0.13100242614746094
+        }
+    },
+    {
+        "carp_header": {
+            "study_id": "912b77a0-935d-11ed-a024-51f8219387f2",
+            "device_role_name": "masterphone",
+            "trigger_id": "0",
+            "user_id": "9baf7e30-935b-11ed-9078-17d60c26cc72",
+            "start_time": "2023-01-13T16:16:23.631252Z",
+            "data_format": {
+                "namespace": "dk.cachet.carp",
+                "name": "accelerometer"
+            }
+        },
+        "carp_body": {
+            "id": "9f8b46e0-935d-11ed-9738-2fe13cffbbc7",
+            "timestamp": "2023-01-13T16:16:23.630133Z",
+            "x": -0.004506990313529968,
+            "y": 0.011338770389556885,
+            "z": -0.1381816864013672
+        }
+    },
+    {
+        "carp_header": {
+            "study_id": "912b77a0-935d-11ed-a024-51f8219387f2",
+            "device_role_name": "masterphone",
+            "trigger_id": "0",
+            "user_id": "9baf7e30-935b-11ed-9078-17d60c26cc72",
+            "start_time": "2023-01-13T16:16:27.771714Z",
+            "data_format": {
+                "namespace": "dk.cachet.carp",
+                "name": "accelerometer"
+            }
+        },
+        "carp_body": {
+            "id": "a20324b0-935d-11ed-96a5-07d57bcb4dc7",
+            "timestamp": "2023-01-13T16:16:27.770412Z",
+            "x": -1.1319783926010132,
+            "y": 1.4577699899673462,
+            "z": 0.03236675262451172
+        }
+    },
+    {
+        "carp_header": {
+            "study_id": "912b77a0-935d-11ed-a024-51f8219387f2",
+            "device_role_name": "masterphone",
+            "trigger_id": "0",
+            "user_id": "9baf7e30-935b-11ed-9078-17d60c26cc72",
+            "start_time": "2023-01-13T16:16:27.950999Z",
+            "data_format": {
+                "namespace": "dk.cachet.carp",
+                "name": "accelerometer"
+            }
+        },
+        "carp_body": {
+            "id": "a21e74e0-935d-11ed-bea7-a728f4e1cff2",
+            "timestamp": "2023-01-13T16:16:27.949946Z",
+            "x": -0.9042546153068542,
+            "y": 1.1679407358169556,
+            "z": -0.030051231384277344
+        }
+    },
+    {
+        "carp_header": {
+            "study_id": "912b77a0-935d-11ed-a024-51f8219387f2",
+            "device_role_name": "masterphone",
+            "trigger_id": "0",
+            "user_id": "9baf7e30-935b-11ed-9078-17d60c26cc72",
+            "start_time": "2023-01-13T16:16:28.131367Z",
+            "data_format": {
+                "namespace": "dk.cachet.carp",
+                "name": "accelerometer"
+            }
+        },
+        "carp_body": {
+            "id": "a239ec20-935d-11ed-89f0-899e1b6428f3",
+            "timestamp": "2023-01-13T16:16:28.130137Z",
+            "x": -0.1351645588874817,
+            "y": 0.189552441239357,
+            "z": -0.13604068756103516
+        }
+    },
+    {
+        "carp_header": {
+            "study_id": "912b77a0-935d-11ed-a024-51f8219387f2",
+            "device_role_name": "masterphone",
+            "trigger_id": "0",
+            "user_id": "9baf7e30-935b-11ed-9078-17d60c26cc72",
+            "start_time": "2023-01-13T16:16:28.312889Z",
+            "data_format": {
+                "namespace": "dk.cachet.carp",
+                "name": "accelerometer"
+            }
+        },
+        "carp_body": {
+            "id": "a255b180-935d-11ed-bfc6-79c2190c06fe",
+            "timestamp": "2023-01-13T16:16:28.311634Z",
+            "x": -0.02532259374856949,
+            "y": 0.0386686846613884,
+            "z": -0.1381702423095703
+        }
+    },
+    {
+        "carp_header": {
+            "study_id": "912b77a0-935d-11ed-a024-51f8219387f2",
+            "device_role_name": "masterphone",
+            "trigger_id": "0",
+            "user_id": "9baf7e30-935b-11ed-9078-17d60c26cc72",
+            "start_time": "2023-01-13T16:16:28.493493Z",
+            "data_format": {
+                "namespace": "dk.cachet.carp",
+                "name": "accelerometer"
+            }
+        },
+        "carp_body": {
+            "id": "a27128c0-935d-11ed-a63d-4169e03cbe72",
+            "timestamp": "2023-01-13T16:16:28.491573Z",
+            "x": -0.010634608566761017,
+            "y": 0.014651797711849213,
+            "z": -0.13340473175048828
+        }
+    },
+    {
+        "carp_header": {
+            "study_id": "912b77a0-935d-11ed-a024-51f8219387f2",
+            "device_role_name": "masterphone",
+            "trigger_id": "0",
+            "user_id": "9baf7e30-935b-11ed-9078-17d60c26cc72",
+            "start_time": "2023-01-13T16:16:28.671846Z",
+            "data_format": {
+                "namespace": "dk.cachet.carp",
+                "name": "accelerometer"
+            }
+        },
+        "carp_body": {
+            "id": "a28c78f0-935d-11ed-9610-95665f061e1a",
+            "timestamp": "2023-01-13T16:16:28.670346Z",
+            "x": -0.006424684077501297,
+            "y": -0.012223031371831894,
+            "z": -0.13579273223876953
+        }
+    },
+    {
+        "carp_header": {
+            "study_id": "912b77a0-935d-11ed-a024-51f8219387f2",
+            "device_role_name": "masterphone",
+            "trigger_id": "0",
+            "user_id": "9baf7e30-935b-11ed-9078-17d60c26cc72",
+            "start_time": "2023-01-13T16:16:28.851597Z",
+            "data_format": {
+                "namespace": "dk.cachet.carp",
+                "name": "accelerometer"
+            }
+        },
+        "carp_body": {
+            "id": "a2a7c920-935d-11ed-9d7b-854377fe79dc",
+            "timestamp": "2023-01-13T16:16:28.849890Z",
+            "x": -0.004038505256175995,
+            "y": 0.011543571949005127,
+            "z": -0.13579177856445312
+        }
+    },
+    {
+        "carp_header": {
+            "study_id": "912b77a0-935d-11ed-a024-51f8219387f2",
+            "device_role_name": "masterphone",
+            "trigger_id": "0",
+            "user_id": "9baf7e30-935b-11ed-9078-17d60c26cc72",
+            "start_time": "2023-01-13T16:16:29.029082Z",
+            "data_format": {
+                "namespace": "dk.cachet.carp",
+                "name": "accelerometer"
+            }
+        },
+        "carp_body": {
+            "id": "a2c2f240-935d-11ed-9247-fb5af9c54728",
+            "timestamp": "2023-01-13T16:16:29.028120Z",
+            "x": 0.002771727740764618,
+            "y": -0.01072724536061287,
+            "z": -0.13340473175048828
+        }
+    },
+    {
+        "carp_header": {
+            "study_id": "912b77a0-935d-11ed-a024-51f8219387f2",
+            "device_role_name": "masterphone",
+            "trigger_id": "0",
+            "user_id": "9baf7e30-935b-11ed-9078-17d60c26cc72",
+            "start_time": "2023-01-13T16:16:29.211608Z",
+            "data_format": {
+                "namespace": "dk.cachet.carp",
+                "name": "accelerometer"
+            }
+        },
+        "carp_body": {
+            "id": "a2deb7a0-935d-11ed-a66d-47c739ee4be8",
+            "timestamp": "2023-01-13T16:16:29.210047Z",
+            "x": -0.005136944353580475,
+            "y": 0.007364481687545776,
+            "z": -0.14536571502685547
+        }
+    },
+    {
+        "carp_header": {
+            "study_id": "912b77a0-935d-11ed-a024-51f8219387f2",
+            "device_role_name": "masterphone",
+            "trigger_id": "0",
+            "user_id": "9baf7e30-935b-11ed-9078-17d60c26cc72",
+            "start_time": "2023-01-13T16:16:29.392884Z",
+            "data_format": {
+                "namespace": "dk.cachet.carp",
+                "name": "accelerometer"
+            }
+        },
+        "carp_body": {
+            "id": "a2fa55f0-935d-11ed-95e4-a5e0465def4a",
+            "timestamp": "2023-01-13T16:16:29.390963Z",
+            "x": -0.007826946675777435,
+            "y": 0.0002649053931236267,
+            "z": -0.14536380767822266
+        }
+    },
+    {
+        "carp_header": {
+            "study_id": "912b77a0-935d-11ed-a024-51f8219387f2",
+            "device_role_name": "masterphone",
+            "trigger_id": "0",
+            "user_id": "9baf7e30-935b-11ed-9078-17d60c26cc72",
+            "start_time": "2023-01-13T16:16:29.571834Z",
+            "data_format": {
+                "namespace": "dk.cachet.carp",
+                "name": "accelerometer"
+            }
+        },
+        "carp_body": {
+            "id": "a315cd30-935d-11ed-a022-471d50e14d66",
+            "timestamp": "2023-01-13T16:16:29.570596Z",
+            "x": 0.007204245775938034,
+            "y": 0.00911492109298706,
+            "z": -0.1381511688232422
+        }
+    },
+    {
+        "carp_header": {
+            "study_id": "912b77a0-935d-11ed-a024-51f8219387f2",
+            "device_role_name": "masterphone",
+            "trigger_id": "0",
+            "user_id": "9baf7e30-935b-11ed-9078-17d60c26cc72",
+            "start_time": "2023-01-13T16:16:33.891171Z",
+            "data_format": {
+                "namespace": "dk.cachet.carp",
+                "name": "accelerometer"
+            }
+        },
+        "carp_body": {
+            "id": "a5a8d420-935d-11ed-be51-6f60a0105333",
+            "timestamp": "2023-01-13T16:16:33.889416Z",
+            "x": 0.11103525757789612,
+            "y": 0.07979199290275574,
+            "z": -0.1406269073486328
+        }
+    },
+    {
+        "carp_header": {
+            "study_id": "912b77a0-935d-11ed-a024-51f8219387f2",
+            "device_role_name": "masterphone",
+            "trigger_id": "0",
+            "user_id": "9baf7e30-935b-11ed-9078-17d60c26cc72",
+            "start_time": "2023-01-13T16:16:34.070188Z",
+            "data_format": {
+                "namespace": "dk.cachet.carp",
+                "name": "accelerometer"
+            }
+        },
+        "carp_body": {
+            "id": "a5c42450-935d-11ed-a094-75bf1ff34d63",
+            "timestamp": "2023-01-13T16:16:34.069251Z",
+            "x": 0.004222530871629715,
+            "y": 0.021252643316984177,
+            "z": -0.14084815979003906
+        }
+    },
+    {
+        "carp_header": {
+            "study_id": "912b77a0-935d-11ed-a024-51f8219387f2",
+            "device_role_name": "masterphone",
+            "trigger_id": "0",
+            "user_id": "9baf7e30-935b-11ed-9078-17d60c26cc72",
+            "start_time": "2023-01-13T16:16:34.251608Z",
+            "data_format": {
+                "namespace": "dk.cachet.carp",
+                "name": "accelerometer"
+            }
+        },
+        "carp_body": {
+            "id": "a5dfc2a0-935d-11ed-8695-b34dba88c66e",
+            "timestamp": "2023-01-13T16:16:34.250102Z",
+            "x": -0.022397637367248535,
+            "y": 0.0016758590936660767,
+            "z": -0.1406412124633789
+        }
+    },
+    {
+        "carp_header": {
+            "study_id": "912b77a0-935d-11ed-a024-51f8219387f2",
+            "device_role_name": "masterphone",
+            "trigger_id": "0",
+            "user_id": "9baf7e30-935b-11ed-9078-17d60c26cc72",
+            "start_time": "2023-01-13T16:16:34.431655Z",
+            "data_format": {
+                "namespace": "dk.cachet.carp",
+                "name": "accelerometer"
+            }
+        },
+        "carp_body": {
+            "id": "a5fb39e0-935d-11ed-963b-55ca32fabcb2",
+            "timestamp": "2023-01-13T16:16:34.430207Z",
+            "x": -0.004589427262544632,
+            "y": 0.012462850660085678,
+            "z": -0.14059734344482422
+        }
+    },
+    {
+        "carp_header": {
+            "study_id": "912b77a0-935d-11ed-a024-51f8219387f2",
+            "device_role_name": "masterphone",
+            "trigger_id": "0",
+            "user_id": "9baf7e30-935b-11ed-9078-17d60c26cc72",
+            "start_time": "2023-01-13T16:16:34.609582Z",
+            "data_format": {
+                "namespace": "dk.cachet.carp",
+                "name": "accelerometer"
+            }
+        },
+        "carp_body": {
+            "id": "a6168a10-935d-11ed-85c0-0bd16b1f82a4",
+            "timestamp": "2023-01-13T16:16:34.608886Z",
+            "x": -0.010321781039237976,
+            "y": 0.008334651589393616,
+            "z": -0.1381998062133789
+        }
+    },
+    {
+        "carp_header": {
+            "study_id": "912b77a0-935d-11ed-a024-51f8219387f2",
+            "device_role_name": "masterphone",
+            "trigger_id": "0",
+            "user_id": "9baf7e30-935b-11ed-9078-17d60c26cc72",
+            "start_time": "2023-01-13T16:16:34.790039Z",
+            "data_format": {
+                "namespace": "dk.cachet.carp",
+                "name": "accelerometer"
+            }
+        },
+        "carp_body": {
+            "id": "a6320150-935d-11ed-82d6-bd6809a5e15e",
+            "timestamp": "2023-01-13T16:16:34.788875Z",
+            "x": -0.0029372163116931915,
+            "y": -0.005282286554574966,
+            "z": -0.14537525177001953
+        }
+    },
+    {
+        "carp_header": {
+            "study_id": "912b77a0-935d-11ed-a024-51f8219387f2",
+            "device_role_name": "masterphone",
+            "trigger_id": "0",
+            "user_id": "9baf7e30-935b-11ed-9078-17d60c26cc72",
+            "start_time": "2023-01-13T16:16:34.971683Z",
+            "data_format": {
+                "namespace": "dk.cachet.carp",
+                "name": "accelerometer"
+            }
+        },
+        "carp_body": {
+            "id": "a64d9fa0-935d-11ed-9b75-d50d4456ff4d",
+            "timestamp": "2023-01-13T16:16:34.969936Z",
+            "x": -0.00471104308962822,
+            "y": -0.019019287079572678,
+            "z": -0.140594482421875
+        }
+    },
+    {
+        "carp_header": {
+            "study_id": "912b77a0-935d-11ed-a024-51f8219387f2",
+            "device_role_name": "masterphone",
+            "trigger_id": "0",
+            "user_id": "9baf7e30-935b-11ed-9078-17d60c26cc72",
+            "start_time": "2023-01-13T16:16:35.153536Z",
+            "data_format": {
+                "namespace": "dk.cachet.carp",
+                "name": "accelerometer"
+            }
+        },
+        "carp_body": {
+            "id": "a6698c10-935d-11ed-b40b-a5a11fc84211",
+            "timestamp": "2023-01-13T16:16:35.151694Z",
+            "x": 0.011094089597463608,
+            "y": -0.012204654514789581,
+            "z": -0.1525564193725586
+        }
+    },
+    {
+        "carp_header": {
+            "study_id": "912b77a0-935d-11ed-a024-51f8219387f2",
+            "device_role_name": "masterphone",
+            "trigger_id": "0",
+            "user_id": "9baf7e30-935b-11ed-9078-17d60c26cc72",
+            "start_time": "2023-01-13T16:16:35.330936Z",
+            "data_format": {
+                "namespace": "dk.cachet.carp",
+                "name": "accelerometer"
+            }
+        },
+        "carp_body": {
+            "id": "a6848e20-935d-11ed-a6ac-db3e7b10761c",
+            "timestamp": "2023-01-13T16:16:35.329361Z",
+            "x": -0.013090137392282486,
+            "y": 0.01425677165389061,
+            "z": -0.13102245330810547
+        }
+    },
+    {
+        "carp_header": {
+            "study_id": "912b77a0-935d-11ed-a024-51f8219387f2",
+            "device_role_name": "masterphone",
+            "trigger_id": "0",
+            "user_id": "9baf7e30-935b-11ed-9078-17d60c26cc72",
+            "start_time": "2023-01-13T16:16:35.513317Z",
+            "data_format": {
+                "namespace": "dk.cachet.carp",
+                "name": "accelerometer"
+            }
+        },
+        "carp_body": {
+            "id": "a6a05380-935d-11ed-8ff4-0d172a1b4aeb",
+            "timestamp": "2023-01-13T16:16:35.511570Z",
+            "x": -0.0034520886838436127,
+            "y": -0.001115158200263977,
+            "z": -0.14539718627929688
+        }
+    },
+    {
+        "carp_header": {
+            "study_id": "912b77a0-935d-11ed-a024-51f8219387f2",
+            "device_role_name": "masterphone",
+            "trigger_id": "0",
+            "user_id": "9baf7e30-935b-11ed-9078-17d60c26cc72",
+            "start_time": "2023-01-13T16:16:35.691556Z",
+            "data_format": {
+                "namespace": "dk.cachet.carp",
+                "name": "accelerometer"
+            }
+        },
+        "carp_body": {
+            "id": "a6bb7ca0-935d-11ed-84fd-3fcdaa922557",
+            "timestamp": "2023-01-13T16:16:35.690390Z",
+            "x": 0.011119164526462555,
+            "y": -0.0214989073574543,
+            "z": -0.14539051055908203
+        }
+    },
+    {
+        "carp_header": {
+            "study_id": "912b77a0-935d-11ed-a024-51f8219387f2",
+            "device_role_name": "masterphone",
+            "trigger_id": "0",
+            "user_id": "9baf7e30-935b-11ed-9078-17d60c26cc72",
+            "start_time": "2023-01-13T16:16:39.828779Z",
+            "data_format": {
+                "namespace": "dk.cachet.carp",
+                "name": "accelerometer"
+            }
+        },
+        "carp_body": {
+            "id": "a932e540-935d-11ed-a769-9b4a7d1bb9a9",
+            "timestamp": "2023-01-13T16:16:39.827333Z",
+            "x": 0.007852796465158463,
+            "y": -0.02361268922686577,
+            "z": -0.14535808563232422
+        }
+    },
+    {
+        "carp_header": {
+            "study_id": "912b77a0-935d-11ed-a024-51f8219387f2",
+            "device_role_name": "masterphone",
+            "trigger_id": "0",
+            "user_id": "9baf7e30-935b-11ed-9078-17d60c26cc72",
+            "start_time": "2023-01-13T16:16:40.014297Z",
+            "data_format": {
+                "namespace": "dk.cachet.carp",
+                "name": "accelerometer"
+            }
+        },
+        "carp_body": {
+            "id": "a94f1fd0-935d-11ed-a8e7-a32e9f6e4145",
+            "timestamp": "2023-01-13T16:16:40.013488Z",
+            "x": 0.0067666321992874146,
+            "y": -0.028431672602891922,
+            "z": -0.14531803131103516
+        }
+    },
+    {
+        "carp_header": {
+            "study_id": "912b77a0-935d-11ed-a024-51f8219387f2",
+            "device_role_name": "masterphone",
+            "trigger_id": "0",
+            "user_id": "9baf7e30-935b-11ed-9078-17d60c26cc72",
+            "start_time": "2023-01-13T16:16:40.191025Z",
+            "data_format": {
+                "namespace": "dk.cachet.carp",
+                "name": "accelerometer"
+            }
+        },
+        "carp_body": {
+            "id": "a96a21e0-935d-11ed-9ec0-7164682822f8",
+            "timestamp": "2023-01-13T16:16:40.189717Z",
+            "x": 0.006012238562107086,
+            "y": -0.02736074849963188,
+            "z": -0.14532089233398438
+        }
+    },
+    {
+        "carp_header": {
+            "study_id": "912b77a0-935d-11ed-a024-51f8219387f2",
+            "device_role_name": "masterphone",
+            "trigger_id": "0",
+            "user_id": "9baf7e30-935b-11ed-9078-17d60c26cc72",
+            "start_time": "2023-01-13T16:16:40.370817Z",
+            "data_format": {
+                "namespace": "dk.cachet.carp",
+                "name": "accelerometer"
+            }
+        },
+        "carp_body": {
+            "id": "a9859920-935d-11ed-b52c-453d05eb5ad1",
+            "timestamp": "2023-01-13T16:16:40.369709Z",
+            "x": 0.011770360171794891,
+            "y": 0.007776603102684021,
+            "z": -0.1429443359375
+        }
+    },
+    {
+        "carp_header": {
+            "study_id": "912b77a0-935d-11ed-a024-51f8219387f2",
+            "device_role_name": "masterphone",
+            "trigger_id": "0",
+            "user_id": "9baf7e30-935b-11ed-9078-17d60c26cc72",
+            "start_time": "2023-01-13T16:16:40.550430Z",
+            "data_format": {
+                "namespace": "dk.cachet.carp",
+                "name": "accelerometer"
+            }
+        },
+        "carp_body": {
+            "id": "a9a0e950-935d-11ed-be99-cf5c67e06910",
+            "timestamp": "2023-01-13T16:16:40.549268Z",
+            "x": 0.008643556386232376,
+            "y": -0.0016580000519752502,
+            "z": -0.1405773162841797
+        }
+    },
+    {
+        "carp_header": {
+            "study_id": "912b77a0-935d-11ed-a024-51f8219387f2",
+            "device_role_name": "masterphone",
+            "trigger_id": "0",
+            "user_id": "9baf7e30-935b-11ed-9078-17d60c26cc72",
+            "start_time": "2023-01-13T16:16:40.731453Z",
+            "data_format": {
+                "namespace": "dk.cachet.carp",
+                "name": "accelerometer"
+            }
+        },
+        "carp_body": {
+            "id": "a9bc87a0-935d-11ed-adbe-010bc7fd1bb0",
+            "timestamp": "2023-01-13T16:16:40.730509Z",
+            "x": 0.0021768510341644287,
+            "y": -0.013913203030824661,
+            "z": -0.15254974365234375
+        }
+    },
+    {
+        "carp_header": {
+            "study_id": "912b77a0-935d-11ed-a024-51f8219387f2",
+            "device_role_name": "masterphone",
+            "trigger_id": "0",
+            "user_id": "9baf7e30-935b-11ed-9078-17d60c26cc72",
+            "start_time": "2023-01-13T16:16:40.913345Z",
+            "data_format": {
+                "namespace": "dk.cachet.carp",
+                "name": "accelerometer"
+            }
+        },
+        "carp_body": {
+            "id": "a9d84d00-935d-11ed-9587-6d4bd7a3b523",
+            "timestamp": "2023-01-13T16:16:40.912589Z",
+            "x": 0.0063609592616558075,
+            "y": -0.0002577155828475952,
+            "z": -0.14296531677246094
+        }
+    },
+    {
+        "carp_header": {
+            "study_id": "912b77a0-935d-11ed-a024-51f8219387f2",
+            "device_role_name": "masterphone",
+            "trigger_id": "0",
+            "user_id": "9baf7e30-935b-11ed-9078-17d60c26cc72",
+            "start_time": "2023-01-13T16:16:41.087581Z",
+            "data_format": {
+                "namespace": "dk.cachet.carp",
+                "name": "accelerometer"
+            }
+        },
+        "carp_body": {
+            "id": "a9f300f0-935d-11ed-b088-f125481e9ea8",
+            "timestamp": "2023-01-13T16:16:41.086787Z",
+            "x": 0.0011108256876468658,
+            "y": -0.013156592845916748,
+            "z": -0.15492725372314453
+        }
+    },
+    {
+        "carp_header": {
+            "study_id": "912b77a0-935d-11ed-a024-51f8219387f2",
+            "device_role_name": "masterphone",
+            "trigger_id": "0",
+            "user_id": "9baf7e30-935b-11ed-9078-17d60c26cc72",
+            "start_time": "2023-01-13T16:16:41.269606Z",
+            "data_format": {
+                "namespace": "dk.cachet.carp",
+                "name": "accelerometer"
+            }
+        },
+        "carp_body": {
+            "id": "aa0ec650-935d-11ed-a969-61526de8ab39",
+            "timestamp": "2023-01-13T16:16:41.268534Z",
+            "x": -0.019261501729488373,
+            "y": 0.0030090361833572388,
+            "z": -0.15015697479248047
+        }
+    },
+    {
+        "carp_header": {
+            "study_id": "912b77a0-935d-11ed-a024-51f8219387f2",
+            "device_role_name": "masterphone",
+            "trigger_id": "0",
+            "user_id": "9baf7e30-935b-11ed-9078-17d60c26cc72",
+            "start_time": "2023-01-13T16:16:41.450990Z",
+            "data_format": {
+                "namespace": "dk.cachet.carp",
+                "name": "accelerometer"
+            }
+        },
+        "carp_body": {
+            "id": "aa2a64a0-935d-11ed-ba79-e7569728dfaf",
+            "timestamp": "2023-01-13T16:16:41.449673Z",
+            "x": -0.013477146625518799,
+            "y": 0.006875857710838318,
+            "z": -0.1453399658203125
+        }
+    },
+    {
+        "carp_header": {
+            "study_id": "912b77a0-935d-11ed-a024-51f8219387f2",
+            "device_role_name": "masterphone",
+            "trigger_id": "0",
+            "user_id": "9baf7e30-935b-11ed-9078-17d60c26cc72",
+            "start_time": "2023-01-13T16:16:41.629703Z",
+            "data_format": {
+                "namespace": "dk.cachet.carp",
+                "name": "accelerometer"
+            }
+        },
+        "carp_body": {
+            "id": "aa45b4d0-935d-11ed-a3e3-173ee4ba0eb1",
+            "timestamp": "2023-01-13T16:16:41.629365Z",
+            "x": -0.011194389313459396,
+            "y": -0.00940178707242012,
+            "z": -0.1237783432006836
+        }
+    },
+    {
+        "carp_header": {
+            "study_id": "912b77a0-935d-11ed-a024-51f8219387f2",
+            "device_role_name": "masterphone",
+            "trigger_id": "0",
+            "user_id": "9baf7e30-935b-11ed-9078-17d60c26cc72",
+            "start_time": "2023-01-13T16:16:45.781339Z",
+            "data_format": {
+                "namespace": "dk.cachet.carp",
+                "name": "accelerometer"
+            }
+        },
+        "carp_body": {
+            "id": "acbf1940-935d-11ed-b085-4f646140175b",
+            "timestamp": "2023-01-13T16:16:45.779875Z",
+            "x": -0.010937262326478958,
+            "y": -0.0070703886449337006,
+            "z": -0.1237955093383789
+        }
+    },
+    {
+        "carp_header": {
+            "study_id": "912b77a0-935d-11ed-a024-51f8219387f2",
+            "device_role_name": "masterphone",
+            "trigger_id": "0",
+            "user_id": "9baf7e30-935b-11ed-9078-17d60c26cc72",
+            "start_time": "2023-01-13T16:16:45.958931Z",
+            "data_format": {
+                "namespace": "dk.cachet.carp",
+                "name": "accelerometer"
+            }
+        },
+        "carp_body": {
+            "id": "acda4260-935d-11ed-b2f3-65a3c256c014",
+            "timestamp": "2023-01-13T16:16:45.958428Z",
+            "x": -0.012986201792955399,
+            "y": -0.004332304000854492,
+            "z": -0.12379932403564453
+        }
+    },
+    {
+        "carp_header": {
+            "study_id": "912b77a0-935d-11ed-a024-51f8219387f2",
+            "device_role_name": "masterphone",
+            "trigger_id": "0",
+            "user_id": "9baf7e30-935b-11ed-9078-17d60c26cc72",
+            "start_time": "2023-01-13T16:16:46.141425Z",
+            "data_format": {
+                "namespace": "dk.cachet.carp",
+                "name": "accelerometer"
+            }
+        },
+        "carp_body": {
+            "id": "acf607c0-935d-11ed-916a-fbe4845a17ff",
+            "timestamp": "2023-01-13T16:16:46.139305Z",
+            "x": -0.013785358518362045,
+            "y": -0.002510901540517807,
+            "z": -0.12380599975585938
+        }
+    },
+    {
+        "carp_header": {
+            "study_id": "912b77a0-935d-11ed-a024-51f8219387f2",
+            "device_role_name": "masterphone",
+            "trigger_id": "0",
+            "user_id": "9baf7e30-935b-11ed-9078-17d60c26cc72",
+            "start_time": "2023-01-13T16:16:46.319234Z",
+            "data_format": {
+                "namespace": "dk.cachet.carp",
+                "name": "accelerometer"
+            }
+        },
+        "carp_body": {
+            "id": "ad1130e0-935d-11ed-8b6f-7f1f13be3d02",
+            "timestamp": "2023-01-13T16:16:46.318583Z",
+            "x": -0.0002975165843963623,
+            "y": 0.007741052657365799,
+            "z": -0.1453542709350586
+        }
+    },
+    {
+        "carp_header": {
+            "study_id": "912b77a0-935d-11ed-a024-51f8219387f2",
+            "device_role_name": "masterphone",
+            "trigger_id": "0",
+            "user_id": "9baf7e30-935b-11ed-9078-17d60c26cc72",
+            "start_time": "2023-01-13T16:16:46.498468Z",
+            "data_format": {
+                "namespace": "dk.cachet.carp",
+                "name": "accelerometer"
+            }
+        },
+        "carp_body": {
+            "id": "ad2ca820-935d-11ed-82ee-373d365dc6cd",
+            "timestamp": "2023-01-13T16:16:46.497844Z",
+            "x": 0.002826385200023651,
+            "y": -0.00025984644889831543,
+            "z": -0.14774703979492188
+        }
+    },
+    {
+        "carp_header": {
+            "study_id": "912b77a0-935d-11ed-a024-51f8219387f2",
+            "device_role_name": "masterphone",
+            "trigger_id": "0",
+            "user_id": "9baf7e30-935b-11ed-9078-17d60c26cc72",
+            "start_time": "2023-01-13T16:16:46.681786Z",
+            "data_format": {
+                "namespace": "dk.cachet.carp",
+                "name": "accelerometer"
+            }
+        },
+        "carp_body": {
+            "id": "ad489490-935d-11ed-90c1-11c025123fe4",
+            "timestamp": "2023-01-13T16:16:46.679531Z",
+            "x": 0.009439334273338318,
+            "y": -0.0020910724997520447,
+            "z": -0.1453685760498047
+        }
+    },
+    {
+        "carp_header": {
+            "study_id": "912b77a0-935d-11ed-a024-51f8219387f2",
+            "device_role_name": "masterphone",
+            "trigger_id": "0",
+            "user_id": "9baf7e30-935b-11ed-9078-17d60c26cc72",
+            "start_time": "2023-01-13T16:16:46.859642Z",
+            "data_format": {
+                "namespace": "dk.cachet.carp",
+                "name": "accelerometer"
+            }
+        },
+        "carp_body": {
+            "id": "ad6396a0-935d-11ed-ae0f-e18ed98aea06",
+            "timestamp": "2023-01-13T16:16:46.858122Z",
+            "x": -0.008893497288227081,
+            "y": -0.005457144230604172,
+            "z": -0.14776039123535156
+        }
+    },
+    {
+        "carp_header": {
+            "study_id": "912b77a0-935d-11ed-a024-51f8219387f2",
+            "device_role_name": "masterphone",
+            "trigger_id": "0",
+            "user_id": "9baf7e30-935b-11ed-9078-17d60c26cc72",
+            "start_time": "2023-01-13T16:16:47.038946Z",
+            "data_format": {
+                "namespace": "dk.cachet.carp",
+                "name": "accelerometer"
+            }
+        },
+        "carp_body": {
+            "id": "ad7f0de0-935d-11ed-b63d-f9bde4f6f6bc",
+            "timestamp": "2023-01-13T16:16:47.038266Z",
+            "x": -0.00898434966802597,
+            "y": 0.0022281333804130554,
+            "z": -0.15014266967773438
+        }
+    },
+    {
+        "carp_header": {
+            "study_id": "912b77a0-935d-11ed-a024-51f8219387f2",
+            "device_role_name": "masterphone",
+            "trigger_id": "0",
+            "user_id": "9baf7e30-935b-11ed-9078-17d60c26cc72",
+            "start_time": "2023-01-13T16:16:47.220836Z",
+            "data_format": {
+                "namespace": "dk.cachet.carp",
+                "name": "accelerometer"
+            }
+        },
+        "carp_body": {
+            "id": "ad9aac30-935d-11ed-9b91-bf06afdc9618",
+            "timestamp": "2023-01-13T16:16:47.219148Z",
+            "x": -0.010282255709171295,
+            "y": 0.004982218146324158,
+            "z": -0.14775753021240234
+        }
+    },
+    {
+        "carp_header": {
+            "study_id": "912b77a0-935d-11ed-a024-51f8219387f2",
+            "device_role_name": "masterphone",
+            "trigger_id": "0",
+            "user_id": "9baf7e30-935b-11ed-9078-17d60c26cc72",
+            "start_time": "2023-01-13T16:16:47.400457Z",
+            "data_format": {
+                "namespace": "dk.cachet.carp",
+                "name": "accelerometer"
+            }
+        },
+        "carp_body": {
+            "id": "adb62370-935d-11ed-b442-597d509be592",
+            "timestamp": "2023-01-13T16:16:47.398877Z",
+            "x": -0.0008613802492618561,
+            "y": -0.006868466734886169,
+            "z": -0.13817977905273438
+        }
+    },
+    {
+        "carp_header": {
+            "study_id": "912b77a0-935d-11ed-a024-51f8219387f2",
+            "device_role_name": "masterphone",
+            "trigger_id": "0",
+            "user_id": "9baf7e30-935b-11ed-9078-17d60c26cc72",
+            "start_time": "2023-01-13T16:16:47.581084Z",
+            "data_format": {
+                "namespace": "dk.cachet.carp",
+                "name": "accelerometer"
+            }
+        },
+        "carp_body": {
+            "id": "add1c1c0-935d-11ed-90be-5f9b4fc76854",
+            "timestamp": "2023-01-13T16:16:47.579675Z",
+            "x": 0.009137585759162903,
+            "y": -0.006892293691635132,
+            "z": -0.1405925750732422
+        }
+    },
+    {
+        "carp_header": {
+            "study_id": "912b77a0-935d-11ed-a024-51f8219387f2",
+            "device_role_name": "masterphone",
+            "trigger_id": "0",
+            "user_id": "9baf7e30-935b-11ed-9078-17d60c26cc72",
+            "start_time": "2023-01-13T16:16:51.900538Z",
+            "data_format": {
+                "namespace": "dk.cachet.carp",
+                "name": "accelerometer"
+            }
+        },
+        "carp_body": {
+            "id": "b064c8b0-935d-11ed-b02c-3b40432f22fc",
+            "timestamp": "2023-01-13T16:16:51.899067Z",
+            "x": 0.01023745909333229,
+            "y": -0.015846438705921173,
+            "z": -0.14053726196289062
+        }
+    },
+    {
+        "carp_header": {
+            "study_id": "912b77a0-935d-11ed-a024-51f8219387f2",
+            "device_role_name": "masterphone",
+            "trigger_id": "0",
+            "user_id": "9baf7e30-935b-11ed-9078-17d60c26cc72",
+            "start_time": "2023-01-13T16:16:52.079491Z",
+            "data_format": {
+                "namespace": "dk.cachet.carp",
+                "name": "accelerometer"
+            }
+        },
+        "carp_body": {
+            "id": "b08018e0-935d-11ed-a80d-95e3c506d365",
+            "timestamp": "2023-01-13T16:16:52.078356Z",
+            "x": 0.009573586285114288,
+            "y": -0.01898404210805893,
+            "z": -0.14051151275634766
+        }
+    },
+    {
+        "carp_header": {
+            "study_id": "912b77a0-935d-11ed-a024-51f8219387f2",
+            "device_role_name": "masterphone",
+            "trigger_id": "0",
+            "user_id": "9baf7e30-935b-11ed-9078-17d60c26cc72",
+            "start_time": "2023-01-13T16:16:52.261113Z",
+            "data_format": {
+                "namespace": "dk.cachet.carp",
+                "name": "accelerometer"
+            }
+        },
+        "carp_body": {
+            "id": "b09bb730-935d-11ed-b281-3b268bb7e7f3",
+            "timestamp": "2023-01-13T16:16:52.258867Z",
+            "x": 0.009183675050735474,
+            "y": -0.01686549186706543,
+            "z": -0.14052486419677734
+        }
+    },
+    {
+        "carp_header": {
+            "study_id": "912b77a0-935d-11ed-a024-51f8219387f2",
+            "device_role_name": "masterphone",
+            "trigger_id": "0",
+            "user_id": "9baf7e30-935b-11ed-9078-17d60c26cc72",
+            "start_time": "2023-01-13T16:16:52.450825Z",
+            "data_format": {
+                "namespace": "dk.cachet.carp",
+                "name": "accelerometer"
+            }
+        },
+        "carp_body": {
+            "id": "b0b8dc20-935d-11ed-a181-45a12950817e",
+            "timestamp": "2023-01-13T16:16:52.450252Z",
+            "x": 0.016644705086946487,
+            "y": 0.005752488970756531,
+            "z": -0.13815593719482422
+        }
+    },
+    {
+        "carp_header": {
+            "study_id": "912b77a0-935d-11ed-a024-51f8219387f2",
+            "device_role_name": "masterphone",
+            "trigger_id": "0",
+            "user_id": "9baf7e30-935b-11ed-9078-17d60c26cc72",
+            "start_time": "2023-01-13T16:16:52.617792Z",
+            "data_format": {
+                "namespace": "dk.cachet.carp",
+                "name": "accelerometer"
+            }
+        },
+        "carp_body": {
+            "id": "b0d25790-935d-11ed-9a6e-7d26ae6758d0",
+            "timestamp": "2023-01-13T16:16:52.616802Z",
+            "x": -0.00787019357085228,
+            "y": -0.0011396706104278564,
+            "z": -0.1381683349609375
+        }
+    },
+    {
+        "carp_header": {
+            "study_id": "912b77a0-935d-11ed-a024-51f8219387f2",
+            "device_role_name": "masterphone",
+            "trigger_id": "0",
+            "user_id": "9baf7e30-935b-11ed-9078-17d60c26cc72",
+            "start_time": "2023-01-13T16:16:52.799168Z",
+            "data_format": {
+                "namespace": "dk.cachet.carp",
+                "name": "accelerometer"
+            }
+        },
+        "carp_body": {
+            "id": "b0edf5e0-935d-11ed-b20e-057fa549fdee",
+            "timestamp": "2023-01-13T16:16:52.798283Z",
+            "x": -0.004652570933103561,
+            "y": 0.00283648818731308,
+            "z": -0.13336563110351562
+        }
+    },
+    {
+        "carp_header": {
+            "study_id": "912b77a0-935d-11ed-a024-51f8219387f2",
+            "device_role_name": "masterphone",
+            "trigger_id": "0",
+            "user_id": "9baf7e30-935b-11ed-9078-17d60c26cc72",
+            "start_time": "2023-01-13T16:16:52.979703Z",
+            "data_format": {
+                "namespace": "dk.cachet.carp",
+                "name": "accelerometer"
+            }
+        },
+        "carp_body": {
+            "id": "b1099430-935d-11ed-b4fd-c5b095ecb04c",
+            "timestamp": "2023-01-13T16:16:52.979078Z",
+            "x": 0.0021852701902389526,
+            "y": 0.0027557089924812317,
+            "z": -0.14533424377441406
+        }
+    },
+    {
+        "carp_header": {
+            "study_id": "912b77a0-935d-11ed-a024-51f8219387f2",
+            "device_role_name": "masterphone",
+            "trigger_id": "0",
+            "user_id": "9baf7e30-935b-11ed-9078-17d60c26cc72",
+            "start_time": "2023-01-13T16:16:53.161432Z",
+            "data_format": {
+                "namespace": "dk.cachet.carp",
+                "name": "accelerometer"
+            }
+        },
+        "carp_body": {
+            "id": "b1253280-935d-11ed-a378-2146db6e4742",
+            "timestamp": "2023-01-13T16:16:53.159632Z",
+            "x": 0.009601354598999023,
+            "y": -0.009885933250188828,
+            "z": -0.13816452026367188
+        }
+    },
+    {
+        "carp_header": {
+            "study_id": "912b77a0-935d-11ed-a024-51f8219387f2",
+            "device_role_name": "masterphone",
+            "trigger_id": "0",
+            "user_id": "9baf7e30-935b-11ed-9078-17d60c26cc72",
+            "start_time": "2023-01-13T16:16:53.341715Z",
+            "data_format": {
+                "namespace": "dk.cachet.carp",
+                "name": "accelerometer"
+            }
+        },
+        "carp_body": {
+            "id": "b140d0d0-935d-11ed-966f-f5f60b19ff07",
+            "timestamp": "2023-01-13T16:16:53.340249Z",
+            "x": 0.0032341890037059784,
+            "y": -0.0083845853805542,
+            "z": -0.1597118377685547
+        }
+    },
+    {
+        "carp_header": {
+            "study_id": "912b77a0-935d-11ed-a024-51f8219387f2",
+            "device_role_name": "masterphone",
+            "trigger_id": "0",
+            "user_id": "9baf7e30-935b-11ed-9078-17d60c26cc72",
+            "start_time": "2023-01-13T16:16:53.520753Z",
+            "data_format": {
+                "namespace": "dk.cachet.carp",
+                "name": "accelerometer"
+            }
+        },
+        "carp_body": {
+            "id": "b15c2100-935d-11ed-b042-2dc7bfac44af",
+            "timestamp": "2023-01-13T16:16:53.519035Z",
+            "x": -0.012237057089805603,
+            "y": -0.0007515624165534973,
+            "z": -0.1501312255859375
+        }
+    },
+    {
+        "carp_header": {
+            "study_id": "912b77a0-935d-11ed-a024-51f8219387f2",
+            "device_role_name": "masterphone",
+            "trigger_id": "0",
+            "user_id": "9baf7e30-935b-11ed-9078-17d60c26cc72",
+            "start_time": "2023-01-13T16:16:53.696019Z",
+            "data_format": {
+                "namespace": "dk.cachet.carp",
+                "name": "accelerometer"
+            }
+        },
+        "carp_body": {
+            "id": "b176d4f0-935d-11ed-b247-b19bd64900de",
+            "timestamp": "2023-01-13T16:16:53.695691Z",
+            "x": 0.00679367408156395,
+            "y": 0.00609666109085083,
+            "z": -0.1501445770263672
+        }
+    },
+    {
+        "carp_header": {
+            "study_id": "912b77a0-935d-11ed-a024-51f8219387f2",
+            "device_role_name": "masterphone",
+            "trigger_id": "0",
+            "user_id": "9baf7e30-935b-11ed-9078-17d60c26cc72",
+            "start_time": "2023-01-13T16:16:57.841633Z",
+            "data_format": {
+                "namespace": "dk.cachet.carp",
+                "name": "accelerometer"
+            }
+        },
+        "carp_body": {
+            "id": "b3ef4f00-935d-11ed-b782-9bdd86bc2f43",
+            "timestamp": "2023-01-13T16:16:57.839858Z",
+            "x": -0.00931355357170105,
+            "y": 0.0048462823033332825,
+            "z": -0.1405792236328125
+        }
+    },
+    {
+        "carp_header": {
+            "study_id": "912b77a0-935d-11ed-a024-51f8219387f2",
+            "device_role_name": "masterphone",
+            "trigger_id": "0",
+            "user_id": "9baf7e30-935b-11ed-9078-17d60c26cc72",
+            "start_time": "2023-01-13T16:16:58.017088Z",
+            "data_format": {
+                "namespace": "dk.cachet.carp",
+                "name": "accelerometer"
+            }
+        },
+        "carp_body": {
+            "id": "b40a2a00-935d-11ed-b030-79e345346776",
+            "timestamp": "2023-01-13T16:16:58.016853Z",
+            "x": 0.003916177898645401,
+            "y": 0.0020907074213027954,
+            "z": -0.1477222442626953
+        }
+    },
+    {
+        "carp_header": {
+            "study_id": "912b77a0-935d-11ed-a024-51f8219387f2",
+            "device_role_name": "masterphone",
+            "trigger_id": "0",
+            "user_id": "9baf7e30-935b-11ed-9078-17d60c26cc72",
+            "start_time": "2023-01-13T16:16:58.228651Z",
+            "data_format": {
+                "namespace": "dk.cachet.carp",
+                "name": "accelerometer"
+            }
+        },
+        "carp_body": {
+            "id": "b42a8340-935d-11ed-b93f-7fe484c374c6",
+            "timestamp": "2023-01-13T16:16:58.228457Z",
+            "x": -0.008206658065319061,
+            "y": 0.001147352159023285,
+            "z": -0.15251922607421875
+        }
+    },
+    {
+        "carp_header": {
+            "study_id": "912b77a0-935d-11ed-a024-51f8219387f2",
+            "device_role_name": "masterphone",
+            "trigger_id": "0",
+            "user_id": "9baf7e30-935b-11ed-9078-17d60c26cc72",
+            "start_time": "2023-01-13T16:16:58.378712Z",
+            "data_format": {
+                "namespace": "dk.cachet.carp",
+                "name": "accelerometer"
+            }
+        },
+        "carp_body": {
+            "id": "b44166a0-935d-11ed-8c80-e9b6705dcef8",
+            "timestamp": "2023-01-13T16:16:58.377999Z",
+            "x": -0.01315271109342575,
+            "y": 0.0074619874358177185,
+            "z": -0.14293479919433594
+        }
+    },
+    {
+        "carp_header": {
+            "study_id": "912b77a0-935d-11ed-a024-51f8219387f2",
+            "device_role_name": "masterphone",
+            "trigger_id": "0",
+            "user_id": "9baf7e30-935b-11ed-9078-17d60c26cc72",
+            "start_time": "2023-01-13T16:16:58.559401Z",
+            "data_format": {
+                "namespace": "dk.cachet.carp",
+                "name": "accelerometer"
+            }
+        },
+        "carp_body": {
+            "id": "b45cdde0-935d-11ed-9459-ef53bbda4f2b",
+            "timestamp": "2023-01-13T16:16:58.558403Z",
+            "x": -0.01305224746465683,
+            "y": -0.0052013397216796875,
+            "z": -0.13336849212646484
+        }
+    },
+    {
+        "carp_header": {
+            "study_id": "912b77a0-935d-11ed-a024-51f8219387f2",
+            "device_role_name": "masterphone",
+            "trigger_id": "0",
+            "user_id": "9baf7e30-935b-11ed-9078-17d60c26cc72",
+            "start_time": "2023-01-13T16:16:58.739226Z",
+            "data_format": {
+                "namespace": "dk.cachet.carp",
+                "name": "accelerometer"
+            }
+        },
+        "carp_body": {
+            "id": "b4785520-935d-11ed-a471-77993bd97205",
+            "timestamp": "2023-01-13T16:16:58.738283Z",
+            "x": 0.002388879656791687,
+            "y": -0.0122479647397995,
+            "z": -0.14536476135253906
+        }
+    },
+    {
+        "carp_header": {
+            "study_id": "912b77a0-935d-11ed-a024-51f8219387f2",
+            "device_role_name": "masterphone",
+            "trigger_id": "0",
+            "user_id": "9baf7e30-935b-11ed-9078-17d60c26cc72",
+            "start_time": "2023-01-13T16:16:58.937466Z",
+            "data_format": {
+                "namespace": "dk.cachet.carp",
+                "name": "accelerometer"
+            }
+        },
+        "carp_body": {
+            "id": "b496b290-935d-11ed-9d00-558e06e88dd5",
+            "timestamp": "2023-01-13T16:16:58.936777Z",
+            "x": -0.006978277117013931,
+            "y": 0.03389450162649155,
+            "z": -0.13577842712402344
+        }
+    },
+    {
+        "carp_header": {
+            "study_id": "912b77a0-935d-11ed-a024-51f8219387f2",
+            "device_role_name": "masterphone",
+            "trigger_id": "0",
+            "user_id": "9baf7e30-935b-11ed-9078-17d60c26cc72",
+            "start_time": "2023-01-13T16:16:59.099891Z",
+            "data_format": {
+                "namespace": "dk.cachet.carp",
+                "name": "accelerometer"
+            }
+        },
+        "carp_body": {
+            "id": "b4af6ab0-935d-11ed-8e09-3be11d5aab4b",
+            "timestamp": "2023-01-13T16:16:59.098708Z",
+            "x": -0.015929628163576126,
+            "y": 0.0030789226293563843,
+            "z": -0.15252685546875
+        }
+    },
+    {
+        "carp_header": {
+            "study_id": "912b77a0-935d-11ed-a024-51f8219387f2",
+            "device_role_name": "masterphone",
+            "trigger_id": "0",
+            "user_id": "9baf7e30-935b-11ed-9078-17d60c26cc72",
+            "start_time": "2023-01-13T16:16:59.281560Z",
+            "data_format": {
+                "namespace": "dk.cachet.carp",
+                "name": "accelerometer"
+            }
+        },
+        "carp_body": {
+            "id": "b4cb0900-935d-11ed-bf9e-775ce24a76ce",
+            "timestamp": "2023-01-13T16:16:59.279130Z",
+            "x": -0.004540655761957169,
+            "y": 0.018137581646442413,
+            "z": -0.14775466918945312
+        }
+    },
+    {
+        "carp_header": {
+            "study_id": "912b77a0-935d-11ed-a024-51f8219387f2",
+            "device_role_name": "masterphone",
+            "trigger_id": "0",
+            "user_id": "9baf7e30-935b-11ed-9078-17d60c26cc72",
+            "start_time": "2023-01-13T16:16:59.462442Z",
+            "data_format": {
+                "namespace": "dk.cachet.carp",
+                "name": "accelerometer"
+            }
+        },
+        "carp_body": {
+            "id": "b4e6ce60-935d-11ed-a281-2120b4a08315",
+            "timestamp": "2023-01-13T16:16:59.461676Z",
+            "x": 0.0007905475795269012,
+            "y": -0.0018906816840171814,
+            "z": -0.1525402069091797
+        }
+    },
+    {
+        "carp_header": {
+            "study_id": "912b77a0-935d-11ed-a024-51f8219387f2",
+            "device_role_name": "masterphone",
+            "trigger_id": "0",
+            "user_id": "9baf7e30-935b-11ed-9078-17d60c26cc72",
+            "start_time": "2023-01-13T16:16:59.639428Z",
+            "data_format": {
+                "namespace": "dk.cachet.carp",
+                "name": "accelerometer"
+            }
+        },
+        "carp_body": {
+            "id": "b501a960-935d-11ed-889e-194d69243169",
+            "timestamp": "2023-01-13T16:16:59.638151Z",
+            "x": 0.002993747591972351,
+            "y": -0.01595268025994301,
+            "z": -0.12859821319580078
+        }
+    },
+    {
+        "carp_header": {
+            "study_id": "912b77a0-935d-11ed-a024-51f8219387f2",
+            "device_role_name": "masterphone",
+            "trigger_id": "0",
+            "user_id": "9baf7e30-935b-11ed-9078-17d60c26cc72",
+            "start_time": "2023-01-13T16:17:03.780234Z",
+            "data_format": {
+                "namespace": "dk.cachet.carp",
+                "name": "accelerometer"
+            }
+        },
+        "carp_body": {
+            "id": "b7798730-935d-11ed-ae5b-6b422d157871",
+            "timestamp": "2023-01-13T16:17:03.779259Z",
+            "x": 0.0031430386006832123,
+            "y": -0.015021305531263351,
+            "z": -0.12860584259033203
+        }
+    },
+    {
+        "carp_header": {
+            "study_id": "912b77a0-935d-11ed-a024-51f8219387f2",
+            "device_role_name": "masterphone",
+            "trigger_id": "0",
+            "user_id": "9baf7e30-935b-11ed-9078-17d60c26cc72",
+            "start_time": "2023-01-13T16:17:03.963858Z",
+            "data_format": {
+                "namespace": "dk.cachet.carp",
+                "name": "accelerometer"
+            }
+        },
+        "carp_body": {
+            "id": "b7959ab0-935d-11ed-be85-d972a66e4181",
+            "timestamp": "2023-01-13T16:17:03.963117Z",
+            "x": 0.004536096006631851,
+            "y": -0.01783556118607521,
+            "z": -0.12859439849853516
+        }
+    },
+    {
+        "carp_header": {
+            "study_id": "912b77a0-935d-11ed-a024-51f8219387f2",
+            "device_role_name": "masterphone",
+            "trigger_id": "0",
+            "user_id": "9baf7e30-935b-11ed-9078-17d60c26cc72",
+            "start_time": "2023-01-13T16:17:04.138437Z",
+            "data_format": {
+                "namespace": "dk.cachet.carp",
+                "name": "accelerometer"
+            }
+        },
+        "carp_body": {
+            "id": "b7b04ea0-935d-11ed-8cc5-13eca9432c07",
+            "timestamp": "2023-01-13T16:17:04.137716Z",
+            "x": 0.005416661500930786,
+            "y": -0.019833583384752274,
+            "z": -0.1285858154296875
+        }
+    },
+    {
+        "carp_header": {
+            "study_id": "912b77a0-935d-11ed-a024-51f8219387f2",
+            "device_role_name": "masterphone",
+            "trigger_id": "0",
+            "user_id": "9baf7e30-935b-11ed-9078-17d60c26cc72",
+            "start_time": "2023-01-13T16:17:04.318400Z",
+            "data_format": {
+                "namespace": "dk.cachet.carp",
+                "name": "accelerometer"
+            }
+        },
+        "carp_body": {
+            "id": "b7cb9ed0-935d-11ed-b1d7-e52cabc204a0",
+            "timestamp": "2023-01-13T16:17:04.317443Z",
+            "x": -0.003843449056148529,
+            "y": -0.013751771301031113,
+            "z": -0.1501140594482422
+        }
+    },
+    {
+        "carp_header": {
+            "study_id": "912b77a0-935d-11ed-a024-51f8219387f2",
+            "device_role_name": "masterphone",
+            "trigger_id": "0",
+            "user_id": "9baf7e30-935b-11ed-9078-17d60c26cc72",
+            "start_time": "2023-01-13T16:17:04.499720Z",
+            "data_format": {
+                "namespace": "dk.cachet.carp",
+                "name": "accelerometer"
+            }
+        },
+        "carp_body": {
+            "id": "b7e76430-935d-11ed-9e8e-c997793fab9d",
+            "timestamp": "2023-01-13T16:17:04.498588Z",
+            "x": 0.006631478667259216,
+            "y": -0.014328956604003906,
+            "z": -0.14055824279785156
+        }
+    },
+    {
+        "carp_header": {
+            "study_id": "912b77a0-935d-11ed-a024-51f8219387f2",
+            "device_role_name": "masterphone",
+            "trigger_id": "0",
+            "user_id": "9baf7e30-935b-11ed-9078-17d60c26cc72",
+            "start_time": "2023-01-13T16:17:04.680358Z",
+            "data_format": {
+                "namespace": "dk.cachet.carp",
+                "name": "accelerometer"
+            }
+        },
+        "carp_body": {
+            "id": "b802db70-935d-11ed-b5d1-59a23c47cf2f",
+            "timestamp": "2023-01-13T16:17:04.679666Z",
+            "x": -0.013879597187042236,
+            "y": 0.004895292222499847,
+            "z": -0.16211223602294922
+        }
+    },
+    {
+        "carp_header": {
+            "study_id": "912b77a0-935d-11ed-a024-51f8219387f2",
+            "device_role_name": "masterphone",
+            "trigger_id": "0",
+            "user_id": "9baf7e30-935b-11ed-9078-17d60c26cc72",
+            "start_time": "2023-01-13T16:17:04.857890Z",
+            "data_format": {
+                "namespace": "dk.cachet.carp",
+                "name": "accelerometer"
+            }
+        },
+        "carp_body": {
+            "id": "b81e0490-935d-11ed-8fe7-ebc6a8f8b8ac",
+            "timestamp": "2023-01-13T16:17:04.856962Z",
+            "x": 0.01089402660727501,
+            "y": 0.015715420246124268,
+            "z": -0.1381692886352539
+        }
+    },
+    {
+        "carp_header": {
+            "study_id": "912b77a0-935d-11ed-a024-51f8219387f2",
+            "device_role_name": "masterphone",
+            "trigger_id": "0",
+            "user_id": "9baf7e30-935b-11ed-9078-17d60c26cc72",
+            "start_time": "2023-01-13T16:17:05.039620Z",
+            "data_format": {
+                "namespace": "dk.cachet.carp",
+                "name": "accelerometer"
+            }
+        },
+        "carp_body": {
+            "id": "b839a2e0-935d-11ed-a1b8-c765be053d83",
+            "timestamp": "2023-01-13T16:17:05.038173Z",
+            "x": 0.01759789139032364,
+            "y": -0.0028473064303398132,
+            "z": -0.1645050048828125
+        }
+    },
+    {
+        "carp_header": {
+            "study_id": "912b77a0-935d-11ed-a024-51f8219387f2",
+            "device_role_name": "masterphone",
+            "trigger_id": "0",
+            "user_id": "9baf7e30-935b-11ed-9078-17d60c26cc72",
+            "start_time": "2023-01-13T16:17:05.219418Z",
+            "data_format": {
+                "namespace": "dk.cachet.carp",
+                "name": "accelerometer"
+            }
+        },
+        "carp_body": {
+            "id": "b8551a20-935d-11ed-b33a-a9bbbf9bd221",
+            "timestamp": "2023-01-13T16:17:05.217917Z",
+            "x": 0.0016330108046531677,
+            "y": 0.018636897206306458,
+            "z": -0.1501302719116211
+        }
+    },
+    {
+        "carp_header": {
+            "study_id": "912b77a0-935d-11ed-a024-51f8219387f2",
+            "device_role_name": "masterphone",
+            "trigger_id": "0",
+            "user_id": "9baf7e30-935b-11ed-9078-17d60c26cc72",
+            "start_time": "2023-01-13T16:17:05.438482Z",
+            "data_format": {
+                "namespace": "dk.cachet.carp",
+                "name": "accelerometer"
+            }
+        },
+        "carp_body": {
+            "id": "b87684d0-935d-11ed-907c-e170d86f51bd",
+            "timestamp": "2023-01-13T16:17:05.437701Z",
+            "x": -0.010872796177864075,
+            "y": -0.002848803997039795,
+            "z": -0.1405811309814453
+        }
+    },
+    {
+        "carp_header": {
+            "study_id": "912b77a0-935d-11ed-a024-51f8219387f2",
+            "device_role_name": "masterphone",
+            "trigger_id": "0",
+            "user_id": "9baf7e30-935b-11ed-9078-17d60c26cc72",
+            "start_time": "2023-01-13T16:17:05.579044Z",
+            "data_format": {
+                "namespace": "dk.cachet.carp",
+                "name": "accelerometer"
+            }
+        },
+        "carp_body": {
+            "id": "b88c08a0-935d-11ed-907f-fd19696603e5",
+            "timestamp": "2023-01-13T16:17:05.578641Z",
+            "x": 0.006658665835857391,
+            "y": 0.0047607943415641785,
+            "z": -0.1525421142578125
+        }
+    },
+    {
+        "carp_header": {
+            "study_id": "912b77a0-935d-11ed-a024-51f8219387f2",
+            "device_role_name": "masterphone",
+            "trigger_id": "0",
+            "user_id": "9baf7e30-935b-11ed-9078-17d60c26cc72",
+            "start_time": "2023-01-13T16:17:09.902734Z",
+            "data_format": {
+                "namespace": "dk.cachet.carp",
+                "name": "accelerometer"
+            }
+        },
+        "carp_body": {
+            "id": "bb1fabd0-935d-11ed-94c3-ab84d48ebfe5",
+            "timestamp": "2023-01-13T16:17:09.901046Z",
+            "x": -0.25036782026290894,
+            "y": -0.6582900881767273,
+            "z": -0.12071418762207031
+        }
+    },
+    {}
+]

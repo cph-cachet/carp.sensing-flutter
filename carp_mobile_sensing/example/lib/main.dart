@@ -184,9 +184,11 @@ class LocalStudyProtocolManager implements StudyProtocolManager {
   Future<SmartphoneStudyProtocol> getStudyProtocol(String id) async {
     // Create a protocol. Note that the [id] is not used for anything.
     SmartphoneStudyProtocol protocol = SmartphoneStudyProtocol(
-        ownerId: 'AB',
-        name: 'Track patient movement',
-        dataEndPoint: SQLiteDataEndPoint());
+      ownerId: 'AB',
+      name: 'Track patient movement',
+      // dataEndPoint: SQLiteDataEndPoint(),
+      dataEndPoint: FileDataEndPoint(bufferSize: 50 * 1000, zip: false),
+    );
 
     // Define which devices are used for data collection.
     //
