@@ -95,6 +95,7 @@ class DataPoint {
       DataPointHeader(
         dataFormat: data.format,
         startTime: DateTime.now().toUtc(),
+        timeZoneName: DateTime.now().timeZoneName,
       ),
       data);
 
@@ -136,6 +137,9 @@ class DataPointHeader {
   /// If this data point does not cover a period, [endTime] will be `null`.
   DateTime? endTime;
 
+  // Current time zone name of the device
+  String? timeZoneName;
+
   /// The data format. See [DataFormat] and [NameSpace].
   DataFormat dataFormat;
 
@@ -148,6 +152,7 @@ class DataPointHeader {
     this.triggerId,
     this.startTime,
     this.endTime,
+    this.timeZoneName,
   }) {
     // make sure that timestamps are in UTC
     if (startTime != null) startTime!.toUtc();
