@@ -46,6 +46,7 @@ DataPointHeader _$DataPointHeaderFromJson(Map<String, dynamic> json) =>
       endTime: json['end_time'] == null
           ? null
           : DateTime.parse(json['end_time'] as String),
+      timeZoneName: json['time_zone_name'] as String?,
     )..uploadTime = json['upload_time'] == null
         ? null
         : DateTime.parse(json['upload_time'] as String);
@@ -66,6 +67,7 @@ Map<String, dynamic> _$DataPointHeaderToJson(DataPointHeader instance) {
   writeNotNull('upload_time', instance.uploadTime?.toIso8601String());
   writeNotNull('start_time', instance.startTime?.toIso8601String());
   writeNotNull('end_time', instance.endTime?.toIso8601String());
+  writeNotNull('time_zone_name', instance.timeZoneName);
   val['data_format'] = instance.dataFormat;
   return val;
 }
