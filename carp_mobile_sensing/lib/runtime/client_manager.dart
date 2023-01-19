@@ -97,7 +97,7 @@ class SmartPhoneClientManager extends ClientManager
     StudyStatus status = await super.addStudy(study);
     info('Adding study to $runtimeType - $study');
 
-    SmartphoneDeploymentController controller =
+    final controller =
         SmartphoneDeploymentController(deploymentService!, deviceController);
     repository[study] = controller;
 

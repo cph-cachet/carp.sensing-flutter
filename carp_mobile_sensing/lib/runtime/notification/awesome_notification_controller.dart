@@ -2,7 +2,6 @@ part of runtime;
 
 /// A [NotificationController] based on the [awesome_notifications](https://pub.dev/packages/awesome_notifications)
 /// Flutter plugin.
-
 class AwesomeNotificationController implements NotificationController {
   static final AwesomeNotificationController _instance =
       AwesomeNotificationController._();
@@ -10,11 +9,6 @@ class AwesomeNotificationController implements NotificationController {
 
   /// The singleton [NotificationController].
   factory AwesomeNotificationController() => _instance;
-
-  @override
-  void cancelNotification(UserTask task) async {
-    await AwesomeNotifications().cancelAllSchedules();
-  }
 
   @override
   Future<void> initialize() async {
@@ -59,7 +53,7 @@ class AwesomeNotificationController implements NotificationController {
     if (!task.notification) return;
 
     // early out if has already been scheduled
-    // this is relevant for AwecomeNotification since it makes notifications
+    // this is relevant for AwesomeNotification since it makes notifications
     // persistent across app re-start
     if (task.hasNotificationBeenCreated) {
       debug('$runtimeType - task has already been scheduled - task: $task');
@@ -98,5 +92,14 @@ class AwesomeNotificationController implements NotificationController {
           body: task.description,
           notificationLayout: NotificationLayout.Default),
     );
+    info('$runtimeType - Notification created for $task');
+  }
+
+  @override
+  Future<void> cancelNotification(UserTask task) async {
+    if (task.notification) {
+      await AwesomeNotifications().cancel(task.id.hashCode);
+      info('$runtimeType - Notification canceled for $task');
+    }
   }
 }

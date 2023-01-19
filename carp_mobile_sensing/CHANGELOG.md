@@ -1,3 +1,7 @@
+## 0.40.12
+
+* NotificationController now cancels notifications for a study which is removed.
+
 ## 0.40.11
 
 * Fix of issue [#305](https://github.com/cph-cachet/carp.sensing-flutter/issues/305).

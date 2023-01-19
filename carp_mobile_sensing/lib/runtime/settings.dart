@@ -34,7 +34,7 @@ class Settings {
   String _timezone = 'Europe/Copenhagen';
   bool _initialized = false;
 
-  /// Has the setting been initializd via calling the [init] method?
+  /// Has the setting been initialized via calling the [init] method?
   bool get initialized => _initialized;
 
   /// The global debug level setting.

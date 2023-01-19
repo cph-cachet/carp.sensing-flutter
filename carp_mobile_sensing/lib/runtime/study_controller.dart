@@ -413,7 +413,7 @@ class SmartphoneDeploymentController extends StudyRuntime {
 
 //   SamplingSchema get schema => SamplingPackageRegistry().minimum;
 
-//   String toString() => 'Minimun Sampling Mode';
+//   String toString() => 'Minimum Sampling Mode';
 // }
 
 // class LightSamplingState implements PowerAwarenessState {

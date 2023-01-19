@@ -28,8 +28,8 @@ import 'package:async/async.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:flutter_local_notifications/flutter_local_notifications.dart'
-    as notifications;
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+// as notifications;
 import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:uuid/uuid.dart';
 import 'package:cron/cron.dart' as cron;

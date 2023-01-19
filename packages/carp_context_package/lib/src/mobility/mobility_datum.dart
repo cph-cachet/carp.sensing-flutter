@@ -27,8 +27,8 @@ class MobilityDatum extends Datum {
   /// Home Stay on [date]. A scalar between 0 and 1.
   double? homeStay;
 
-  /// Distance travelled on [date], in meters.
-  double? distanceTravelled;
+  /// Distance traveled on [date], in meters.
+  double? distanceTraveled;
 
   MobilityDatum() : super();
 
@@ -41,7 +41,7 @@ class MobilityDatum extends Datum {
         ..entropy = context.entropy
         ..normalizedEntropy = context.normalizedEntropy
         ..homeStay = context.homeStay
-        ..distanceTravelled = context.distanceTravelled;
+        ..distanceTraveled = context.distanceTravelled;
 
   factory MobilityDatum.fromJson(Map<String, dynamic> json) =>
       _$MobilityDatumFromJson(json);
@@ -51,5 +51,5 @@ class MobilityDatum extends Datum {
 
   @override
   String toString() =>
-      '${super.toString()}, number of places: $numberOfPlaces, location variance: $locationVariance, entropy: $entropy, normalized entropy: $normalizedEntropy, home stay: $homeStay, distance travelled: $distanceTravelled';
+      '${super.toString()}, number of places: $numberOfPlaces, location variance: $locationVariance, entropy: $entropy, normalized entropy: $normalizedEntropy, home stay: $homeStay, distance traveled: $distanceTraveled';
 }

@@ -211,11 +211,23 @@ class AppTaskController {
     }
   }
 
-  /// Removes all tasks for a study deployment from the queue.
-  void removeStudyDeployment(String studyDeploymentId) =>
-      _userTaskMap.removeWhere((key, task) =>
-          task.appTaskExecutor.deployment?.studyDeploymentId ==
-          studyDeploymentId);
+  /// Removes all tasks for a study deployment from the queue and cancels
+  /// all notifications generated for these tasks.
+  void removeStudyDeployment(String studyDeploymentId) {
+    // first cancel notifications for all the tasks
+    _userTaskMap.values
+        .where((task) =>
+            task.appTaskExecutor.deployment?.studyDeploymentId ==
+            studyDeploymentId)
+        .forEach((userTask) => SmartPhoneClientManager()
+            .notificationController
+            ?.cancelNotification(userTask));
+
+    // then remove from queue
+    _userTaskMap.removeWhere((key, task) =>
+        task.appTaskExecutor.deployment?.studyDeploymentId ==
+        studyDeploymentId);
+  }
 
   String? _filename;
 

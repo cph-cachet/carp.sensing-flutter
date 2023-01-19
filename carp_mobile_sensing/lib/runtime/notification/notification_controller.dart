@@ -38,5 +38,5 @@ abstract class NotificationController {
   Future<int> get pendingNotificationRequestsCount;
 
   /// Cancel (i.e., remove) the notification for the [task].
-  void cancelNotification(UserTask task);
+  Future<void> cancelNotification(UserTask task);
 }

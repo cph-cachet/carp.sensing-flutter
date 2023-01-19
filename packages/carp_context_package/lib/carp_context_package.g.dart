@@ -342,7 +342,7 @@ MobilityDatum _$MobilityDatumFromJson(Map<String, dynamic> json) =>
       ..entropy = (json['entropy'] as num?)?.toDouble()
       ..normalizedEntropy = (json['normalized_entropy'] as num?)?.toDouble()
       ..homeStay = (json['home_stay'] as num?)?.toDouble()
-      ..distanceTravelled = (json['distance_travelled'] as num?)?.toDouble();
+      ..distanceTraveled = (json['distance_traveled'] as num?)?.toDouble();
 
 Map<String, dynamic> _$MobilityDatumToJson(MobilityDatum instance) {
   final val = <String, dynamic>{};
@@ -361,7 +361,7 @@ Map<String, dynamic> _$MobilityDatumToJson(MobilityDatum instance) {
   writeNotNull('entropy', instance.entropy);
   writeNotNull('normalized_entropy', instance.normalizedEntropy);
   writeNotNull('home_stay', instance.homeStay);
-  writeNotNull('distance_travelled', instance.distanceTravelled);
+  writeNotNull('distance_traveled', instance.distanceTraveled);
   return val;
 }
 
