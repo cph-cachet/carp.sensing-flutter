@@ -31,7 +31,7 @@ class AppTaskController {
   /// A stream of [UserTask] events generate whenever a user task change state,
   /// like enqueued, dequeued, done, and expire.
   ///
-  /// This stream is usefull in a [StreamBuilder] to listen on
+  /// This stream is useful in a [StreamBuilder] to listen on
   /// changes to the [userTaskQueue].
   Stream<UserTask> get userTaskEvents => _controller.stream;
 
@@ -66,7 +66,7 @@ class AppTaskController {
   /// [Settings().saveAppTaskQueue] is `true`.
   ///
   /// If [enableNotifications] is true, a notification will be added to
-  /// the phone's notification system when a task is enqued via the
+  /// the phone's notification system when a task is enqueued via the
   /// [enqueue] method.
   Future<void> initialize({bool enableNotifications = true}) async {
     if (Settings().saveAppTaskQueue) {
@@ -110,7 +110,7 @@ class AppTaskController {
   ///
   /// [triggerTime] specifies when the task should trigger, i.e., be available.
   /// Notify the user if [sendNotification] and [notificationsEnabled] is true.
-  /// If [triggerTime] is null, a notification is send imediately.
+  /// If [triggerTime] is null, a notification is send immediately.
   /// [userTaskEvent] specifies if an app event should be generated.
   ///
   /// Returns the [UserTask] added to the [userTasks].
@@ -175,7 +175,7 @@ class AppTaskController {
 
   /// Mark an [UserTask] as done.
   /// Note that a done task remains on the queue.
-  /// If you want to remove a taks from the queue, use the [dequeue] method.
+  /// If you want to remove a task from the queue, use the [dequeue] method.
   void done(String id) {
     UserTask? userTask = _userTaskMap[id];
     if (userTask == null) {
@@ -193,7 +193,7 @@ class AppTaskController {
 
   /// Expire an [UserTask].
   /// Note that an expired task remains on the queue.
-  /// If you want to remove a taks from the queue, use the [dequeue] method.
+  /// If you want to remove a task from the queue, use the [dequeue] method.
   void expire(String id) {
     UserTask? userTask = _userTaskMap[id];
     if (userTask == null) {

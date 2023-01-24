@@ -37,12 +37,12 @@ class SmartphoneDeployment extends MasterDeviceDeployment {
   /// purpose, and the responsible researcher for this study.
   StudyDescription? protocolDescription;
 
-  /// The PI responsible for this study.
+  /// The Primary Investigator responsible for this study.
   StudyResponsible? get responsible => protocolDescription?.responsible;
 
   /// Specifies where and how to stored or upload the data collected from this
   /// deployment. If `null`, the sensed data is not stored, but may still be
-  /// used in the app somehow.
+  /// used in the app.
   DataEndPoint? dataEndPoint;
 
   /// Create a new [SmartphoneDeployment].

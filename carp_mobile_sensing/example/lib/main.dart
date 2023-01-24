@@ -37,14 +37,19 @@ class Console extends State<ConsolePage> {
 
   @override
   void initState() {
-    super.initState();
     sensing = Sensing();
     Settings().init().then((_) {
-      sensing!.init().then((_) {
+      sensing?.init().then((_) {
         log('Setting up study : ${sensing!.study}');
         log('Deployment status : ${sensing!.status}');
+        Future.delayed(Duration(seconds: 1), () {
+          sensing?.resume();
+          log('\nSensing resumed ...');
+        });
       });
     });
+
+    super.initState();
   }
 
   @override
@@ -89,15 +94,17 @@ class Console extends State<ConsolePage> {
   }
 
   void restart() {
-    setState(() {
-      if (sensing!.isRunning) {
-        sensing!.pause();
-        log('\nSensing paused ...');
-      } else {
-        sensing!.resume();
-        log('\nSensing resumed ...');
-      }
-    });
+    // setState(() {
+    //   if (sensing!.isRunning) {
+    //     sensing!.pause();
+    //     log('\nSensing paused ...');
+    //   } else {
+    //     sensing!.resume();
+    //     log('\nSensing resumed ...');
+    //   }
+    // });
+
+    sensing?.client?.removeStudy(sensing!.study!);
   }
 }
 
@@ -141,9 +148,7 @@ class Sensing {
     // However, nothing will happen when you click on them.
     // See the PulmonaryMonitor demo app for a full-scale example of how to use
     // the App Task model.
-    await controller?.configure(
-      enableNotifications: true,
-    );
+    await controller?.configure();
 
     // Listening on the data stream and print them as json.
     controller?.data.listen((data) => print(toJsonString(data)));
@@ -186,8 +191,8 @@ class LocalStudyProtocolManager implements StudyProtocolManager {
     SmartphoneStudyProtocol protocol = SmartphoneStudyProtocol(
       ownerId: 'AB',
       name: 'Track patient movement',
-      // dataEndPoint: SQLiteDataEndPoint(),
-      dataEndPoint: FileDataEndPoint(bufferSize: 50 * 1000, zip: false),
+      dataEndPoint: SQLiteDataEndPoint(),
+      // dataEndPoint: FileDataEndPoint(bufferSize: 50 * 1000, zip: false),
     );
 
     // Define which devices are used for data collection.

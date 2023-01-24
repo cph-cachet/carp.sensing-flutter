@@ -12,6 +12,9 @@ class SmartPhoneClientManager extends ClientManager
   static final SmartPhoneClientManager _instance = SmartPhoneClientManager._();
   NotificationController? _notificationController;
 
+  /// The permissions granted to this client from the OS.
+  Map<Permission, PermissionStatus>? permissions;
+
   SmartPhoneClientManager._() {
     WidgetsFlutterBinding.ensureInitialized();
     WidgetsBinding.instance.addObserver(this);
@@ -40,30 +43,37 @@ class SmartPhoneClientManager extends ClientManager
           as SmartphoneDeploymentController;
 
   /// Configure this [SmartPhoneClientManager] by specifying:
-  ///  * [deviceId] - this device's id in study deployments.
-  ///      If not specified, the OS's device id is used.
   ///  * [deploymentService] - where to get study deployments.
   ///      If not specified, the [SmartphoneDeploymentService] will be used.
   ///  * [deviceController] that handles devices connected to this client.
   ///      If not specified, the default [DeviceController] is used.
+  ///  * [deviceId] - this device's id in study deployments.
+  ///      If not specified, the OS's device id is used.
   ///  * [notificationController] - what [NotificationController] to use for notifications.
-  ///     Two alternatives exists; [FlutterLocalNotificationController] or [AwesomeNotificationController].
+  ///     Two alternatives exists: [FlutterLocalNotificationController] or [AwesomeNotificationController].
   ///     If not specified, the [AwesomeNotificationController] is used.
+  ///  * [enableNotifications] - should notification be enabled and send to the user
+  ///      when an app task is triggered?
+  ///  * [askForPermissions] - automatically ask for permissions for all sampling
+  ///      packages at once. Default to `true`. If you want the app to handle
+  ///      permissions, set this to `false`.
   @override
   Future<DeviceRegistration> configure({
-    NotificationController? notificationController,
     DeploymentService? deploymentService,
     DeviceDataCollectorFactory? deviceController,
     String? deviceId,
+    NotificationController? notificationController,
+    bool enableNotifications = true,
+    bool askForPermissions = true,
   }) async {
     // initialize device settings
     await DeviceInfo().init();
     await Settings().init();
 
     // create and register the built-in data managers
-    DataManagerRegistry().register(ConsoleDataManager());
-    DataManagerRegistry().register(FileDataManager());
-    DataManagerRegistry().register(SQLiteDataManager());
+    DataManagerRegistry().register(ConsoleDataManagerFactory());
+    DataManagerRegistry().register(FileDataManagerFactory());
+    DataManagerRegistry().register(SQLiteDataManagerFactory());
 
     // set default values, if not specified
     deviceId ??= DeviceInfo().deviceID;
@@ -74,14 +84,21 @@ class SmartPhoneClientManager extends ClientManager
     this.deploymentService = deploymentService ?? SmartphoneDeploymentService();
     this.deviceController = deviceController ?? DeviceController();
 
+    // initialize the app task controller singleton
+    await AppTaskController()
+        .initialize(enableNotifications: enableNotifications);
+
+    // setting up permissions
+    if (askForPermissions) await askForAllPermissions();
+
     this.deviceController.registerAllAvailableDevices();
 
     print('===========================================================');
     print('  CARP Mobile Sensing (CAMS) - $runtimeType');
     print('===========================================================');
+    print('           device ID : $deviceId');
     print('  deployment service : ${this.deploymentService}');
     print('   device controller : ${this.deviceController}');
-    print('           device ID : $deviceId');
     print('   available devices : ${this.deviceController.devicesToString()}');
     print('===========================================================');
 
@@ -97,6 +114,7 @@ class SmartPhoneClientManager extends ClientManager
     StudyStatus status = await super.addStudy(study);
     info('Adding study to $runtimeType - $study');
 
+    // always create a new controller
     final controller =
         SmartphoneDeploymentController(deploymentService!, deviceController);
     repository[study] = controller;
@@ -132,6 +150,29 @@ class SmartPhoneClientManager extends ClientManager
   @override
   SmartphoneDeploymentController? getStudyRuntime(Study study) =>
       repository[study] as SmartphoneDeploymentController;
+
+  @override
+  Future<void> removeStudy(Study study) async {
+    AppTaskController().removeStudyDeployment(study.studyDeploymentId);
+    await AppTaskController().saveQueue();
+    super.removeStudy(study);
+  }
+
+  /// Asking for all permissions needed for the included sampling packages.
+  ///
+  /// Should be called before sensing is started, if not already done as part of
+  /// [configure].
+  Future<void> askForAllPermissions() async {
+    if (SamplingPackageRegistry().permissions.isNotEmpty) {
+      info('Asking for permission for all measure types.');
+      permissions = await SamplingPackageRegistry().permissions.request();
+
+      for (var permission in SamplingPackageRegistry().permissions) {
+        PermissionStatus status = await permission.status;
+        info('Permissions for $permission : $status');
+      }
+    }
+  }
 
   /// Called when this client manager is being (re-)activated by the OS
   ///

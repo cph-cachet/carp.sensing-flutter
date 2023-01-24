@@ -201,16 +201,18 @@ abstract class StudyRuntime {
   @mustCallSuper
   void pause() => _status = StudyStatus.Paused;
 
+  /// Called when this [StudyRuntime] is removed from a [ClientManager].
+  @mustCallSuper
+  Future<void> remove() async {}
+
   /// Called when this [StudyRuntime] is disposed.
   /// This entails stopping and disposing all data sampling and storage.
   @mustCallSuper
   void dispose() {}
 
-  /// Called when this [StudyRuntime] is removed from a [ClientManager].
-  @mustCallSuper
-  Future<void> remove() async {}
-
   /// Permanently stop collecting data for this [StudyRuntime].
+  ///
+  /// This entails stopping this study at the [deploymentService].
   /// Once a runtime is stopped it **cannot** be (re)started.
   @mustCallSuper
   Future<void> stop() async {
