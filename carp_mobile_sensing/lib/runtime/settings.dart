@@ -41,7 +41,7 @@ class Settings {
   ///
   /// See [DebugLevel] for valid debug level settings.
   /// Can be changed on runtime.
-  DebugLevel debugLevel = DebugLevel.WARNING;
+  DebugLevel debugLevel = DebugLevel.warning;
 
   /// Save the queue of [AppTask]s in the [AppTaskController] across
   /// app re-start?
@@ -173,4 +173,4 @@ class Settings {
 }
 
 /// Debugging levels.
-enum DebugLevel { NONE, INFO, WARNING, DEBUG }
+enum DebugLevel { none, info, warning, debug }

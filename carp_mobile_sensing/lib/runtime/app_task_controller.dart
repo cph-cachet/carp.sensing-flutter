@@ -70,9 +70,6 @@ class AppTaskController {
   /// [enqueue] method.
   Future<void> initialize({bool enableNotifications = true}) async {
     if (Settings().saveAppTaskQueue) {
-      // restore the queue from persistent storage
-      await restoreQueue();
-
       // listen to events and save the queue every time it is modified
       userTaskEvents.listen((_) async => await saveQueue());
     }
@@ -285,27 +282,27 @@ class AppTaskController {
         }
         if (deployment == null) {
           warning(
-              '$runtimeType - Could not find deployment information based on snapshot: $snapshot');
-        }
-
-        executor.initialize(snapshot.task, deployment);
-
-        // now put the task on the queue
-        if (_userTaskFactories[executor.task.type] == null) {
-          warning(
-              'Could not enqueue AppTask. Could not find a factory for creating '
-              "a UserTask for type '${executor.task.type}'");
+              '$runtimeType - Could not find deployment information based on snapshot: $snapshot\nAppTask is not restored.');
         } else {
-          UserTask userTask =
-              _userTaskFactories[executor.task.type]!.create(executor);
-          userTask.id = snapshot.id;
-          userTask.state = snapshot.state;
-          userTask.enqueued = snapshot.enqueued;
-          userTask.triggerTime = snapshot.triggerTime;
+          executor.initialize(snapshot.task, deployment);
 
-          _userTaskMap[userTask.id] = userTask;
-          debug(
-              '$runtimeType - Enqueued UserTask from loaded task queue: $userTask');
+          // now put the task on the queue
+          if (_userTaskFactories[executor.task.type] == null) {
+            warning(
+                'Could not enqueue AppTask. Could not find a factory for creating '
+                "a UserTask for type '${executor.task.type}'");
+          } else {
+            UserTask userTask =
+                _userTaskFactories[executor.task.type]!.create(executor);
+            userTask.id = snapshot.id;
+            userTask.state = snapshot.state;
+            userTask.enqueued = snapshot.enqueued;
+            userTask.triggerTime = snapshot.triggerTime;
+
+            _userTaskMap[userTask.id] = userTask;
+            debug(
+                '$runtimeType - Enqueued UserTask from loaded task queue: $userTask');
+          }
         }
       }
     } catch (exception) {

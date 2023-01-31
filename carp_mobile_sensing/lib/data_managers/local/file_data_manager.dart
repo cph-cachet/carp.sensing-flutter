@@ -222,7 +222,6 @@ class FileDataManager extends AbstractDataManager {
   @override
   Future<void> close() async {
     _initialized = false;
-    print('>> $runtimeType - close()');
     await file.then((activeFile) async {
       sink.then((activeSink) async {
         await flush(activeFile, activeSink);

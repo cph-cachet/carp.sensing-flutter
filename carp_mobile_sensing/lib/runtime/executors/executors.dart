@@ -137,8 +137,7 @@ abstract class AbstractExecutor<TConfig> implements Executor<TConfig> {
 
   @override
   void initialize(TConfig configuration, [SmartphoneDeployment? deployment]) {
-    info(
-        'Initializing $runtimeType - configuration: $configuration, deployment: $deployment');
+    info('Initializing $runtimeType');
     _deployment = deployment;
     _configuration = configuration;
     _stateMachine.initialize();
@@ -180,28 +179,27 @@ abstract class AbstractExecutor<TConfig> implements Executor<TConfig> {
   bool onInitialize();
 
   /// Callback when this executor is resumed.
-  /// Returns true if succesfully resumed, false othervise.
+  /// Returns true if successfully resumed, false otherwise.
   @protected
   Future<bool> onResume();
 
   /// Callback when this executor is paused.
-  /// Returns true if succesfully paused, false othervise.
+  /// Returns true if successfully paused, false otherwise.
   @protected
   Future<bool> onPause();
 
   /// Callback when this executor is restarted.
-  /// Returns true if succesfully restarted, false othervise.
+  /// Returns true if successfully restarted, false otherwise.
   @protected
   Future<bool> onRestart();
 
   /// Callback when this executor is stopped.
-  /// Returns true if succesfully stopped, false othervise.
+  /// Returns true if successfully stopped, false otherwise.
   @protected
   Future<bool> onStop();
 
   @override
-  String toString() =>
-      '$runtimeType - state: $state, configuration: $configuration';
+  String toString() => '$runtimeType - state: $state';
 }
 
 /// An abstract class used to implement aggregated executors (i.e., executors

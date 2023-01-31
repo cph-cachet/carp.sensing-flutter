@@ -153,9 +153,11 @@ class SmartPhoneClientManager extends ClientManager
 
   @override
   Future<void> removeStudy(Study study) async {
+    info('Removing study from $runtimeType - $study');
     AppTaskController().removeStudyDeployment(study.studyDeploymentId);
     await AppTaskController().saveQueue();
-    super.removeStudy(study);
+    await deviceController.disconnectAllConnectedDevices();
+    await super.removeStudy(study);
   }
 
   /// Asking for all permissions needed for the included sampling packages.

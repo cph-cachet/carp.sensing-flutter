@@ -102,8 +102,9 @@ class ClientManager {
   /// If a study is to be permanently stopped, use the [stopStudy] method.
   @mustCallSuper
   Future<void> removeStudy(Study study) async {
-    await repository[study]?.remove();
+    var runtime = repository[study];
     repository.remove(study);
+    if (runtime != null) runtime.remove();
   }
 
   /// Permanently stop collecting data for [study] and then remove it.

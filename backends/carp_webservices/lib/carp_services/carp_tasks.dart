@@ -59,7 +59,7 @@ class FileUploadTask extends CarpServiceTask {
 
     Map<String, String> headers = reference.headers;
 
-    var request = new http.MultipartRequest("POST", Uri.parse(url));
+    var request = http.MultipartRequest("POST", Uri.parse(url));
     request.headers['Authorization'] = headers['Authorization']!;
     request.headers['Content-Type'] = 'multipart/form-data';
     request.headers['cache-control'] = 'no-cache';
@@ -69,11 +69,13 @@ class FileUploadTask extends CarpServiceTask {
     metadata['size'] = (await file.length()).toString();
     request.fields['metadata'] = json.encode(metadata);
 
-    request.files.add(new http.MultipartFile.fromBytes(
-      'file',
-      file.readAsBytesSync(),
-      filename: name,
-    ));
+    // request.files.add(http.MultipartFile.fromBytes(
+    //   'file',
+    //   file.readAsBytesSync(),
+    //   filename: name,
+    // ));
+
+    request.files.add(MultipartFileRecreatable.fromFileSync(file.path));
 
     httpr.send(request).then((http.StreamedResponse response) {
       response.stream.toStringStream().first.then((body) {
@@ -82,31 +84,26 @@ class FileUploadTask extends CarpServiceTask {
         final int httpStatusCode = response.statusCode;
         final Map<String, dynamic> map = json.decode(body);
 
-        // save the id generated from the server
-        reference.id = map["id"];
-
         switch (httpStatusCode) {
-          // CARP web service returns "201 Created" when a file is created on the server.
+          // CAWS returns "201 Created" when a file is created on the server.
           case 200:
           case 201:
-            {
-              _state = TaskStateType.success;
-              _completer.complete(CarpFileResponse._(map));
-              break;
-            }
+            // save the id generated from the server
+            reference.id = map["id"];
+            _state = TaskStateType.success;
+            _completer.complete(CarpFileResponse._(map));
+            break;
           default:
             // All other cases are treated as an error.
-            {
-              _state = TaskStateType.failure;
-              final HTTPStatus status =
-                  HTTPStatus(httpStatusCode, response.reasonPhrase);
-              _completer.completeError(status);
-              throw CarpServiceException(
-                httpStatus: status,
-                message: map["message"],
-                path: map["path"],
-              );
-            }
+            _state = TaskStateType.failure;
+            final HTTPStatus status =
+                HTTPStatus(httpStatusCode, response.reasonPhrase);
+            _completer.completeError(status);
+            throw CarpServiceException(
+              httpStatus: status,
+              message: map["message"],
+              path: map["path"],
+            );
         }
       });
     });

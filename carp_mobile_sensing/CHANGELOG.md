@@ -1,7 +1,9 @@
 ## 0.40.12
 
-* Refactor of `DataManager` interfaces; file, sqlite, etc. to support multiple deployments on the same client.
-* NotificationController now cancels notifications for a study which is removed.
+* Better support for removing a study deployment from a client manager
+  * Refactor of `DataManager` interfaces; file, sqlite, etc. to support multiple deployments on the same client.
+  * NotificationController now cancels notifications for a study which is removed.
+  * Removal of tasks from the AppTaskController.
 
 ## 0.40.11
 

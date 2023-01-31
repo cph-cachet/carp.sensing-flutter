@@ -17,13 +17,13 @@ part of domain;
 class SmartphoneStudyProtocol extends StudyProtocol {
   /// The description of this study protocol containing the title, description,
   /// purpose, and the responsible researcher for this study.
-  StudyDescription? protocolDescription;
+  StudyDescription? studyDescription;
 
   @override
-  String get description => protocolDescription?.description ?? '';
+  String get description => studyDescription?.description ?? '';
 
   /// The PI responsible for this protocol.
-  StudyResponsible? get responsible => protocolDescription?.responsible;
+  StudyResponsible? get responsible => studyDescription?.responsible;
 
   /// Specifies where and how to stored or upload the data collected from this
   /// deployment. If `null`, the sensed data is not stored, but may still be
@@ -38,11 +38,11 @@ class SmartphoneStudyProtocol extends StudyProtocol {
   SmartphoneStudyProtocol({
     required super.ownerId,
     required super.name,
-    this.protocolDescription,
+    this.studyDescription,
     this.dataEndPoint,
     this.applicationData,
   }) : super(
-          description: protocolDescription?.description ?? '',
+          description: studyDescription?.description ?? '',
         );
 
   factory SmartphoneStudyProtocol.fromJson(Map<String, dynamic> json) =>

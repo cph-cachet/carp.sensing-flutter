@@ -11,7 +11,7 @@ SmartphoneStudyProtocol _$SmartphoneStudyProtocolFromJson(
     SmartphoneStudyProtocol(
       ownerId: json['ownerId'] as String,
       name: json['name'] as String,
-      protocolDescription: json['protocolDescription'] == null
+      studyDescription: json['protocolDescription'] == null
           ? null
           : StudyDescription.fromJson(
               json['protocolDescription'] as Map<String, dynamic>),
@@ -67,7 +67,7 @@ Map<String, dynamic> _$SmartphoneStudyProtocolToJson(
   }
 
   writeNotNull('expectedParticipantData', instance.expectedParticipantData);
-  writeNotNull('protocolDescription', instance.protocolDescription);
+  writeNotNull('protocolDescription', instance.studyDescription);
   val['description'] = instance.description;
   writeNotNull('dataEndPoint', instance.dataEndPoint);
   writeNotNull('applicationData', instance.applicationData);
@@ -360,10 +360,10 @@ SmartphoneDeployment _$SmartphoneDeploymentFromJson(
               ?.map((e) => TriggeredTask.fromJson(e as Map<String, dynamic>))
               .toList() ??
           const [],
-      protocolDescription: json['protocolDescription'] == null
+      studyDescription: json['studyDescription'] == null
           ? null
           : StudyDescription.fromJson(
-              json['protocolDescription'] as Map<String, dynamic>),
+              json['studyDescription'] as Map<String, dynamic>),
       dataEndPoint: json['dataEndPoint'] == null
           ? null
           : DataEndPoint.fromJson(json['dataEndPoint'] as Map<String, dynamic>),
@@ -396,7 +396,7 @@ Map<String, dynamic> _$SmartphoneDeploymentToJson(
 
   writeNotNull('deployed', instance.deployed?.toIso8601String());
   writeNotNull('userId', instance.userId);
-  writeNotNull('protocolDescription', instance.protocolDescription);
+  writeNotNull('studyDescription', instance.studyDescription);
   writeNotNull('dataEndPoint', instance.dataEndPoint);
   return val;
 }

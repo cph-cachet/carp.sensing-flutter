@@ -65,9 +65,13 @@ class StudyDeployment {
   /// If not specified, an UUID v1 id is generated.
   StudyDeployment(StudyProtocol protocol, [String? studyDeploymentId]) {
     _studyDeploymentId = studyDeploymentId ?? const Uuid().v1();
-    _protocol = protocol;
     _creationDate = DateTime.now();
     _status = StudyDeploymentStatus(studyDeploymentId: _studyDeploymentId);
+
+    // TODO - clone the protocol to avoid side-effects
+    // _protocol = StudyProtocol.fromJson(
+    //     json.decode(toJsonString(protocol)) as Map<String, dynamic>);
+    _protocol = protocol;
   }
 
   /// Get the status of this [StudyDeployment].

@@ -89,7 +89,9 @@ class SmartphoneDeploymentController extends StudyRuntime {
 
     // check cache
     if (useCached) {
+      // restore the deployment and app task queue
       bool success = await restoreDeployment();
+      await AppTaskController().restoreQueue();
       if (success) {
         status = StudyStatus.Deployed;
         return status;
@@ -122,8 +124,9 @@ class SmartphoneDeploymentController extends StudyRuntime {
   Future<bool> saveDeployment() async {
     bool success = true;
     try {
-      String name = (await filename)!;
-      info("Saving deployment to file '$name'.");
+      final name = (await filename)!;
+      info(
+          "Saving deployment to file '$name' - deployment hash=${deployment.hashCode}");
       final json = jsonEncode(deployment);
       File(name).writeAsStringSync(json);
     } catch (exception) {
@@ -139,9 +142,9 @@ class SmartphoneDeploymentController extends StudyRuntime {
     bool success = true;
 
     try {
-      String name = (await filename)!;
+      final name = (await filename)!;
       info("Restoring deployment from file '$name'.");
-      String jsonString = File(name).readAsStringSync();
+      final jsonString = File(name).readAsStringSync();
       deployment = SmartphoneDeployment.fromJson(
           json.decode(jsonString) as Map<String, dynamic>);
     } catch (exception) {
@@ -151,17 +154,24 @@ class SmartphoneDeploymentController extends StudyRuntime {
     return success;
   }
 
-  /// Erase all study deployment information cached locally on this phone.
-  /// Note that all data sampled and cached locally on the phone is also deleted.
+  /// Erase study deployment information cached locally on this phone.
+  ///
+  /// The method actually renames the file containing the cached deployment from
+  /// 'deployment.json' to '<study_deployment_id>.json'. In this way, the deployment
+  /// information is still available together with the collected data.
   ///
   /// Returns `true` if successful.
   Future<bool> eraseDeployment() async {
     bool success = true;
 
+    info("Erasing (i.e., renaming) deployment cache for "
+        "deployment '$studyDeploymentId'.");
     try {
-      String name = await Settings().getDeploymentBasePath(studyDeploymentId!);
-      info("Erasing deployment cache for deployment '$studyDeploymentId'.");
-      await File(name).delete(recursive: true);
+      final name = (await filename)!;
+      final newName =
+          '${await Settings().getDeploymentBasePath(studyDeploymentId!)}/$studyDeploymentId.json';
+      File(name).renameSync(newName);
+      // await File(name).delete();
     } catch (exception) {
       success = false;
       warning('Failed to delete deployment - $exception');
@@ -243,6 +253,7 @@ class SmartphoneDeploymentController extends StudyRuntime {
     print('===============================================================');
     print('  CARP Mobile Sensing (CAMS) - $runtimeType');
     print('===============================================================');
+    print(' controller id : $hashCode');
     print(' deployment id : ${deployment!.studyDeploymentId}');
     print(' deployed time : ${deployment!.deployed}');
     print('       user id : ${deployment!.userId}');
@@ -307,11 +318,26 @@ class SmartphoneDeploymentController extends StudyRuntime {
     executor!.pause();
   }
 
+  /// Remove a study from this [SmartphoneDeploymentController].
+  ///
+  /// This entails:
+  ///   * stopping data sampling
+  ///   * closing the data manager (e.g., flushing data to a file)
+  ///   * erasing any locally cached deployment information
+  ///
+  /// Note that only cached deployment information is deleted. Any data sampled
+  /// from this deployment will remain on the phone.
+  ///
+  /// If the same deployment is deployed again, it will start on a fresh start
+  /// and not use old deployment information. This means, for example,
+  /// that any [OneTimeTrigger] will trigger again, since it is considered to
+  /// be a new deployment.
   @override
   Future<void> remove() async {
     info('$runtimeType - Removing deployment from this smartphone...');
     executor?.stop();
     await dataManager?.close();
+
     await eraseDeployment();
     await super.remove();
   }
