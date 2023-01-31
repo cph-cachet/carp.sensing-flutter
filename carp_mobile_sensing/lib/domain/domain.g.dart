@@ -11,10 +11,10 @@ SmartphoneStudyProtocol _$SmartphoneStudyProtocolFromJson(
     SmartphoneStudyProtocol(
       ownerId: json['ownerId'] as String,
       name: json['name'] as String,
-      studyDescription: json['protocolDescription'] == null
+      studyDescription: json['studyDescription'] == null
           ? null
           : StudyDescription.fromJson(
-              json['protocolDescription'] as Map<String, dynamic>),
+              json['studyDescription'] as Map<String, dynamic>),
       dataEndPoint: json['dataEndPoint'] == null
           ? null
           : DataEndPoint.fromJson(json['dataEndPoint'] as Map<String, dynamic>),
@@ -67,7 +67,7 @@ Map<String, dynamic> _$SmartphoneStudyProtocolToJson(
   }
 
   writeNotNull('expectedParticipantData', instance.expectedParticipantData);
-  writeNotNull('protocolDescription', instance.studyDescription);
+  writeNotNull('studyDescription', instance.studyDescription);
   val['description'] = instance.description;
   writeNotNull('dataEndPoint', instance.dataEndPoint);
   writeNotNull('applicationData', instance.applicationData);

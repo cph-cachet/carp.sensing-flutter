@@ -67,10 +67,6 @@ class StudyDeployment {
     _studyDeploymentId = studyDeploymentId ?? const Uuid().v1();
     _creationDate = DateTime.now();
     _status = StudyDeploymentStatus(studyDeploymentId: _studyDeploymentId);
-
-    // TODO - clone the protocol to avoid side-effects
-    // _protocol = StudyProtocol.fromJson(
-    //     json.decode(toJsonString(protocol)) as Map<String, dynamic>);
     _protocol = protocol;
   }
 
