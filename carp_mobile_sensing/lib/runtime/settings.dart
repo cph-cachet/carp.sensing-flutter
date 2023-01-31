@@ -15,6 +15,7 @@ class Settings {
   static const String USER_ID_KEY = 'user_id';
 
   static const String CARP_DATA_FILE_PATH = 'data';
+  static const String CARP_CACHE_FILE_PATH = 'cache';
   static const String CARP_RESOURCE_FILE_PATH = 'resources';
   static const String CARP_DEPLOYMENT_FILE_PATH = 'deployments';
 
@@ -110,6 +111,13 @@ class Settings {
 
     return _deploymentBasePaths[studyDeploymentId]!;
   }
+
+  /// The base path for storing all cached data.
+  ///
+  ///  `<localApplicationPath>/carp/deployments/<study_deployment_id>/cache`
+  ///
+  Future<String> getCacheBasePath(String studyDeploymentId) async =>
+      '${await getDeploymentBasePath(studyDeploymentId)}/${Settings.CARP_CACHE_FILE_PATH}';
 
   /// The local time zone setting of this app.
   String get timezone => _timezone;

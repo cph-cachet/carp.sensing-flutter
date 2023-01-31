@@ -108,12 +108,12 @@ class SmartphoneDeploymentController extends StudyRuntime {
 
   String? _filename;
 
-  /// Current path and filename of the deployment file.
+  /// Current path and filename of the cached deployment file.
   Future<String?> get filename async {
     assert(studyDeploymentId != null,
         'Study Deployment ID is null -- cannot find cached file.');
     if (_filename == null) {
-      String? path = await Settings().getDeploymentBasePath(studyDeploymentId!);
+      String? path = await Settings().getCacheBasePath(studyDeploymentId!);
       _filename = '$path/deployment.json';
     }
     return _filename;
@@ -125,10 +125,15 @@ class SmartphoneDeploymentController extends StudyRuntime {
     bool success = true;
     try {
       final name = (await filename)!;
-      info(
-          "Saving deployment to file '$name' - deployment hash=${deployment.hashCode}");
+      final newName =
+          '${await Settings().getDeploymentBasePath(studyDeploymentId!)}/$studyDeploymentId.json';
+
+      info("Saving deployment to file '$name'.");
       final json = jsonEncode(deployment);
+
+      // saving two version of the deployment file - on permanently and a cached version
       File(name).writeAsStringSync(json);
+      File(newName).writeAsStringSync(json);
     } catch (exception) {
       success = false;
       warning('Failed to save deployment - $exception');
@@ -155,28 +160,14 @@ class SmartphoneDeploymentController extends StudyRuntime {
   }
 
   /// Erase study deployment information cached locally on this phone.
-  ///
-  /// The method actually renames the file containing the cached deployment from
-  /// 'deployment.json' to '<study_deployment_id>.json'. In this way, the deployment
-  /// information is still available together with the collected data.
-  ///
-  /// Returns `true` if successful.
-  Future<bool> eraseDeployment() async {
-    bool success = true;
-
-    info("Erasing (i.e., renaming) deployment cache for "
-        "deployment '$studyDeploymentId'.");
+  Future<void> eraseDeployment() async {
+    info("Erasing deployment cache for deployment '$studyDeploymentId'.");
     try {
-      final name = (await filename)!;
-      final newName =
-          '${await Settings().getDeploymentBasePath(studyDeploymentId!)}/$studyDeploymentId.json';
-      File(name).renameSync(newName);
-      // await File(name).delete();
+      final name = await Settings().getCacheBasePath(studyDeploymentId!);
+      await File(name).delete(recursive: true);
     } catch (exception) {
-      success = false;
       warning('Failed to delete deployment - $exception');
     }
-    return success;
   }
 
   /// Configure this [SmartphoneDeploymentController].

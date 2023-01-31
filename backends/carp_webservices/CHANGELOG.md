@@ -1,3 +1,8 @@
+## 0.40.2
+
+* update to `carp_core` v. 0.40.12
+* improvements to retry upload of large files
+
 ## 0.40.1
 
 * update to `carp_core` v. 0.40.1

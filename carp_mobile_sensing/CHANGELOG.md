@@ -4,6 +4,7 @@
   * Refactor of `DataManager` interfaces; file, sqlite, etc. to support multiple deployments on the same client.
   * NotificationController now cancels notifications for a study which is removed.
   * Removal of tasks from the AppTaskController.
+* Support for local caching of files while keeping sampled data
 
 ## 0.40.11
 
