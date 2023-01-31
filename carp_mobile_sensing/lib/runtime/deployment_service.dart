@@ -34,12 +34,7 @@ class SmartphoneDeploymentService implements DeploymentService {
     assert(protocol is SmartphoneStudyProtocol,
         "$runtimeType only supports the deployment of protocols of type 'SmartphoneStudyProtocol'");
 
-    // clone the protocol to avoid side-effects
-    final clonedProtocol = SmartphoneStudyProtocol.fromJson(
-        json.decode(toJsonString(protocol)) as Map<String, dynamic>);
-
-    StudyDeployment deployment =
-        StudyDeployment(clonedProtocol, studyDeploymentId);
+    StudyDeployment deployment = StudyDeployment(protocol, studyDeploymentId);
     _repository[deployment.studyDeploymentId] = deployment;
 
     // make sure to register this phone as a master device
@@ -116,15 +111,11 @@ class SmartphoneDeploymentService implements DeploymentService {
     MasterDeviceDeployment deviceDeployment =
         deployment.getDeviceDeploymentFor(device as MasterDeviceDescriptor);
 
-    // clone the protocol to avoid side-effects
-    final clonedProtocol = SmartphoneStudyProtocol.fromJson(
-        json.decode(toJsonString(deployment.protocol)) as Map<String, dynamic>);
-
     return SmartphoneDeployment
         .fromMasterDeviceDeploymentAndSmartphoneStudyProtocol(
       studyDeploymentId: studyDeploymentId,
       deployment: deviceDeployment,
-      protocol: clonedProtocol,
+      protocol: deployment.protocol as SmartphoneStudyProtocol,
     );
   }
 

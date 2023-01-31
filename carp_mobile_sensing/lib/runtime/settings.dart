@@ -9,7 +9,7 @@ part of runtime;
 ///  * setting whether to save [AppTask]s across app re-start - see [saveAppTaskQueue]
 ///  * getting shared preferences - see [preferences]
 ///  * getting app info - see [packageInfo]
-///  * generating a unique and annonymous user id - see [userId]
+///  * generating a unique and anonymous user id - see [userId]
 ///
 class Settings {
   static const String USER_ID_KEY = 'user_id';
@@ -103,8 +103,15 @@ class Settings {
   ///
   Future<String> getDeploymentBasePath(String studyDeploymentId) async {
     if (_deploymentBasePaths[studyDeploymentId] == null) {
-      final directory = await Directory(
-              '${await carpBasePath}/$CARP_DEPLOYMENT_FILE_PATH/$studyDeploymentId')
+      final path = await carpBasePath;
+      final directory =
+          await Directory('$path/$CARP_DEPLOYMENT_FILE_PATH/$studyDeploymentId')
+              .create(recursive: true);
+      await Directory(
+              '$path/$CARP_DEPLOYMENT_FILE_PATH/$studyDeploymentId/$CARP_CACHE_FILE_PATH')
+          .create(recursive: true);
+      await Directory(
+              '$path/$CARP_DEPLOYMENT_FILE_PATH/$studyDeploymentId/$CARP_DATA_FILE_PATH')
           .create(recursive: true);
       _deploymentBasePaths[studyDeploymentId] = directory.path;
     }
@@ -116,8 +123,11 @@ class Settings {
   ///
   ///  `<localApplicationPath>/carp/deployments/<study_deployment_id>/cache`
   ///
-  Future<String> getCacheBasePath(String studyDeploymentId) async =>
-      '${await getDeploymentBasePath(studyDeploymentId)}/${Settings.CARP_CACHE_FILE_PATH}';
+  Future<
+      String> getCacheBasePath(String studyDeploymentId) async => (await Directory(
+              '${await getDeploymentBasePath(studyDeploymentId)}/$CARP_CACHE_FILE_PATH')
+          .create(recursive: true))
+      .path;
 
   /// The local time zone setting of this app.
   String get timezone => _timezone;

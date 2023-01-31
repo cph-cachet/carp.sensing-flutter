@@ -45,7 +45,7 @@ class SamplingSchema {
 
     for (var type in types) {
       if (configurations.containsKey(type)) {
-        // using json encoding/decoding to clone the measure object
+        // clone the measure object
         final configurationAsJson = _encode(configurations[type]);
         final SamplingConfiguration configurationClone =
             SamplingConfiguration.fromJson(

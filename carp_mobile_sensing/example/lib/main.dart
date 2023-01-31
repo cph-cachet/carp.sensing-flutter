@@ -94,17 +94,15 @@ class Console extends State<ConsolePage> {
   }
 
   void restart() {
-    // setState(() {
-    //   if (sensing!.isRunning) {
-    //     sensing!.pause();
-    //     log('\nSensing paused ...');
-    //   } else {
-    //     sensing!.resume();
-    //     log('\nSensing resumed ...');
-    //   }
-    // });
-
-    sensing?.client?.removeStudy(sensing!.study!);
+    setState(() {
+      if (sensing!.isRunning) {
+        sensing!.pause();
+        log('\nSensing paused ...');
+      } else {
+        sensing!.resume();
+        log('\nSensing resumed ...');
+      }
+    });
   }
 }
 
@@ -191,8 +189,8 @@ class LocalStudyProtocolManager implements StudyProtocolManager {
     SmartphoneStudyProtocol protocol = SmartphoneStudyProtocol(
       ownerId: 'AB',
       name: 'Track patient movement',
-      dataEndPoint: SQLiteDataEndPoint(),
-      // dataEndPoint: FileDataEndPoint(bufferSize: 50 * 1000, zip: false),
+      // dataEndPoint: SQLiteDataEndPoint(),
+      dataEndPoint: FileDataEndPoint(bufferSize: 50 * 1000, zip: false),
     );
 
     // Define which devices are used for data collection.
