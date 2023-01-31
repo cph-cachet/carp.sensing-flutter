@@ -160,6 +160,9 @@ class PolarDeviceManager
 
   @override
   Future<DeviceStatus> onConnect() async {
+    // fast out if already connected.
+    if (isConnected) return status;
+
     if (deviceDescriptor?.identifier == null) {
       warning('$runtimeType - cannot connect to device, identifier is null.');
       return DeviceStatus.error;
@@ -207,7 +210,7 @@ class PolarDeviceManager
           deviceDescriptor?.rssi = event.rssi;
         });
 
-        polar.connectToDevice(id);
+        polar.connectToDevice(id, requestPermissions: true);
 
         return DeviceStatus.connecting;
       } catch (error) {

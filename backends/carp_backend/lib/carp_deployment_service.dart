@@ -33,10 +33,6 @@ class CustomProtocolDeploymentService implements DeploymentService {
   CarpStudyProtocolManager manager = CarpStudyProtocolManager();
   late SmartphoneStudyProtocol protocol;
 
-  // /// Should the [getDeviceDeploymentFor] method cache the downloaded
-  // /// [MasterDeviceDeployment] locally?
-  // bool useCache = true;
-
   /// The stream of [CarpBackendEvents] reflecting the state of this service.
   Stream get carpBackendEvents => _eventController.stream;
 
@@ -86,9 +82,6 @@ class CustomProtocolDeploymentService implements DeploymentService {
           'Could not get deployment status in $runtimeType');
   }
 
-  // Future<String> get _cacheFilename async =>
-  //     '${await Settings().deploymentBasePath}/deployment.json';
-
   @override
   Future<MasterDeviceDeployment> getDeviceDeploymentFor(
     String studyDeploymentId,
@@ -96,21 +89,6 @@ class CustomProtocolDeploymentService implements DeploymentService {
   ) async {
     SmartphoneDeployment? deployment;
 
-    // // first try to get local cache
-    // if (useCache) {
-    //   try {
-    //     String jsonString = File(await _cacheFilename).readAsStringSync();
-    //     deployment = SmartphoneDeployment.fromJson(
-    //         json.decode(jsonString) as Map<String, dynamic>);
-    //     info(
-    //         "Study deployment was read from local cache - id: $studyDeploymentId");
-    //   } catch (exception) {
-    //     warning(
-    //         "Failed to read cache of study deployment - id: '$studyDeploymentId' - $exception");
-    //   }
-    // }
-
-    // if (deployment == null) {
     if (isConfigured()) {
       // get the protocol from the study protocol manager
       protocol = await manager.getStudyProtocol(studyDeploymentId);
@@ -130,25 +108,11 @@ class CustomProtocolDeploymentService implements DeploymentService {
 
       _eventController.add(CarpBackendEvents.DeploymentRetrieved);
     }
-    // }
 
     // register a CARP data manager which can upload data back to CARP
-    DataManagerRegistry().register(CarpDataManager());
+    DataManagerRegistry().register(CarpDataManagerFactory());
 
     if (deployment != null) {
-      //   // saving to the local cache
-      //   if (useCache) {
-      //     info("Saving study deployment to local cache - id: $studyDeploymentId");
-      //     try {
-      //       final json = jsonEncode(deployment);
-      //       File(await _cacheFilename).writeAsStringSync(json);
-      //     } catch (exception) {
-      //       warning(
-      //           "Failed to save local cache for study deployment - id: '$studyDeploymentId' - $exception");
-      //     }
-      //   }
-
-      // in all cases, return the deployment
       return deployment;
     } else
       throw CarpBackendException(

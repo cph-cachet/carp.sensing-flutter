@@ -31,7 +31,7 @@ class AppTaskController {
   /// A stream of [UserTask] events generate whenever a user task change state,
   /// like enqueued, dequeued, done, and expire.
   ///
-  /// This stream is usefull in a [StreamBuilder] to listen on
+  /// This stream is useful in a [StreamBuilder] to listen on
   /// changes to the [userTaskQueue].
   Stream<UserTask> get userTaskEvents => _controller.stream;
 
@@ -66,13 +66,10 @@ class AppTaskController {
   /// [Settings().saveAppTaskQueue] is `true`.
   ///
   /// If [enableNotifications] is true, a notification will be added to
-  /// the phone's notification system when a task is enqued via the
+  /// the phone's notification system when a task is enqueued via the
   /// [enqueue] method.
   Future<void> initialize({bool enableNotifications = true}) async {
     if (Settings().saveAppTaskQueue) {
-      // restore the queue from persistent storage
-      await restoreQueue();
-
       // listen to events and save the queue every time it is modified
       userTaskEvents.listen((_) async => await saveQueue());
     }
@@ -110,7 +107,7 @@ class AppTaskController {
   ///
   /// [triggerTime] specifies when the task should trigger, i.e., be available.
   /// Notify the user if [sendNotification] and [notificationsEnabled] is true.
-  /// If [triggerTime] is null, a notification is send imediately.
+  /// If [triggerTime] is null, a notification is send immediately.
   /// [userTaskEvent] specifies if an app event should be generated.
   ///
   /// Returns the [UserTask] added to the [userTasks].
@@ -175,7 +172,7 @@ class AppTaskController {
 
   /// Mark an [UserTask] as done.
   /// Note that a done task remains on the queue.
-  /// If you want to remove a taks from the queue, use the [dequeue] method.
+  /// If you want to remove a task from the queue, use the [dequeue] method.
   void done(String id) {
     UserTask? userTask = _userTaskMap[id];
     if (userTask == null) {
@@ -193,7 +190,7 @@ class AppTaskController {
 
   /// Expire an [UserTask].
   /// Note that an expired task remains on the queue.
-  /// If you want to remove a taks from the queue, use the [dequeue] method.
+  /// If you want to remove a task from the queue, use the [dequeue] method.
   void expire(String id) {
     UserTask? userTask = _userTaskMap[id];
     if (userTask == null) {
@@ -211,11 +208,23 @@ class AppTaskController {
     }
   }
 
-  /// Removes all tasks for a study deployment from the queue.
-  void removeStudyDeployment(String studyDeploymentId) =>
-      _userTaskMap.removeWhere((key, task) =>
-          task.appTaskExecutor.deployment?.studyDeploymentId ==
-          studyDeploymentId);
+  /// Removes all tasks for a study deployment from the queue and cancels
+  /// all notifications generated for these tasks.
+  void removeStudyDeployment(String studyDeploymentId) {
+    // first cancel notifications for all the tasks
+    _userTaskMap.values
+        .where((task) =>
+            task.appTaskExecutor.deployment?.studyDeploymentId ==
+            studyDeploymentId)
+        .forEach((userTask) => SmartPhoneClientManager()
+            .notificationController
+            ?.cancelNotification(userTask));
+
+    // then remove from queue
+    _userTaskMap.removeWhere((key, task) =>
+        task.appTaskExecutor.deployment?.studyDeploymentId ==
+        studyDeploymentId);
+  }
 
   String? _filename;
 
@@ -273,27 +282,27 @@ class AppTaskController {
         }
         if (deployment == null) {
           warning(
-              '$runtimeType - Could not find deployment information based on snapshot: $snapshot');
-        }
-
-        executor.initialize(snapshot.task, deployment);
-
-        // now put the task on the queue
-        if (_userTaskFactories[executor.task.type] == null) {
-          warning(
-              'Could not enqueue AppTask. Could not find a factory for creating '
-              "a UserTask for type '${executor.task.type}'");
+              '$runtimeType - Could not find deployment information based on snapshot: $snapshot\nAppTask is not restored.');
         } else {
-          UserTask userTask =
-              _userTaskFactories[executor.task.type]!.create(executor);
-          userTask.id = snapshot.id;
-          userTask.state = snapshot.state;
-          userTask.enqueued = snapshot.enqueued;
-          userTask.triggerTime = snapshot.triggerTime;
+          executor.initialize(snapshot.task, deployment);
 
-          _userTaskMap[userTask.id] = userTask;
-          debug(
-              '$runtimeType - Enqueued UserTask from loaded task queue: $userTask');
+          // now put the task on the queue
+          if (_userTaskFactories[executor.task.type] == null) {
+            warning(
+                'Could not enqueue AppTask. Could not find a factory for creating '
+                "a UserTask for type '${executor.task.type}'");
+          } else {
+            UserTask userTask =
+                _userTaskFactories[executor.task.type]!.create(executor);
+            userTask.id = snapshot.id;
+            userTask.state = snapshot.state;
+            userTask.enqueued = snapshot.enqueued;
+            userTask.triggerTime = snapshot.triggerTime;
+
+            _userTaskMap[userTask.id] = userTask;
+            debug(
+                '$runtimeType - Enqueued UserTask from loaded task queue: $userTask');
+          }
         }
       }
     } catch (exception) {

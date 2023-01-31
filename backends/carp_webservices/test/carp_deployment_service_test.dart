@@ -19,7 +19,7 @@ void main() {
   /// Setup CARP and authenticate.
   /// Runs once before all tests.
   setUpAll(() async {
-    Settings().debugLevel = DebugLevel.DEBUG;
+    Settings().debugLevel = DebugLevel.debug;
 
     app = new CarpApp(
       // studyId: testStudyId,

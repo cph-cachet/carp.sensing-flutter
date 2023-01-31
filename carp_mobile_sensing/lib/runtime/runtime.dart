@@ -28,8 +28,8 @@ import 'package:async/async.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:flutter_local_notifications/flutter_local_notifications.dart'
-    as notifications;
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+// as notifications;
 import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:uuid/uuid.dart';
 import 'package:cron/cron.dart' as cron;
@@ -72,18 +72,18 @@ class SensingException implements Exception {
 
 /// A simple method for printing warning messages to the console.
 void info(String message) =>
-    (Settings().debugLevel.index >= DebugLevel.INFO.index)
+    (Settings().debugLevel.index >= DebugLevel.info.index)
         ? print('[CAMS INFO] $message')
         : 0;
 
 /// A simple method for printing warning messages to the console.
 void warning(String message) =>
-    (Settings().debugLevel.index >= DebugLevel.WARNING.index)
+    (Settings().debugLevel.index >= DebugLevel.warning.index)
         ? print('[CAMS WARNING]  $message')
         : 0;
 
 /// A simple method for printing debug messages to the console.
 void debug(String message) =>
-    (Settings().debugLevel.index >= DebugLevel.DEBUG.index)
+    (Settings().debugLevel.index >= DebugLevel.debug.index)
         ? print('[CAMS DEBUG] $message')
         : 0;

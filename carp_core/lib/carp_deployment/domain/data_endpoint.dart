@@ -50,7 +50,7 @@ class DataEndPointTypes {
   static const String FILE = 'FILE';
   static const String SQLITE = 'SQLITE';
   static const String FIREBASE_STORAGE = 'FIREBASE_STORAGE';
-  static const String FIREBASE_DATABSE = 'FIREBASE_DATABSE';
+  static const String FIREBASE_DATABASE = 'FIREBASE_DATABASE';
   static const String CARP = 'CARP';
   static const String OMH = 'OMH';
   static const String AWS = 'AWS';

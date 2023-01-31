@@ -60,13 +60,12 @@ abstract class DeviceManager<TDeviceRegistration extends DeviceRegistration,
 
   /// Callback on [initialize].
   ///
-  /// Is to be overriden in sub-classes. Note, however, that it must not be
+  /// Is to be overridden in sub-classes. Note, however, that it must not be
   /// doing a lot of work on startup.
   void onInitialize(TDeviceDescriptor descriptor);
 
   /// Ask this [DeviceManager] to start connecting to the device.
-  ///
-  /// Returns true if successful, false if not.
+  /// Returns the [DeviceStatus] of the device.
   @nonVirtual
   Future<DeviceStatus> connect() async {
     if (!isInitialized) {
@@ -89,7 +88,7 @@ abstract class DeviceManager<TDeviceRegistration extends DeviceRegistration,
 
   /// Callback on [connect]. Returns the [DeviceStatus] of the device.
   ///
-  /// Is to be overriden in sub-classes.
+  /// Is to be overridden in sub-classes.
   Future<DeviceStatus> onConnect();
 
   /// Restart sampling of the measures using this device.
@@ -141,7 +140,7 @@ abstract class DeviceManager<TDeviceRegistration extends DeviceRegistration,
 
   /// Callback on [disconnect].
   ///
-  /// Is to be overriden in sub-classes.
+  /// Is to be overridden in sub-classes.
   Future<bool> onDisconnect();
 }
 

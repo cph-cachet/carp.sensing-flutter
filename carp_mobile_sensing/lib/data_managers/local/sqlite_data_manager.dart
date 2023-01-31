@@ -7,6 +7,14 @@
 
 part of managers;
 
+class SQLiteDataManagerFactory implements DataManagerFactory {
+  @override
+  String get type => DataEndPointTypes.SQLITE;
+
+  @override
+  DataManager create() => SQLiteDataManager();
+}
+
 /// Stores [DataPoint] json objects in an SQLite database on the device's
 /// local storage media. The name of the table is 'data_points'.
 ///
@@ -28,7 +36,7 @@ part of managers;
 /// not corrupted when an app is forced to close and to keep the size of db files
 /// down.
 class SQLiteDataManager extends AbstractDataManager {
-  static const String TABLENAME = 'data_points';
+  static const String TABLE_NAME = 'data_points';
 
   String? _databasePath;
   Database? database;
@@ -38,13 +46,13 @@ class SQLiteDataManager extends AbstractDataManager {
 
   @override
   Future<void> initialize(
-    MasterDeviceDeployment deployment,
     DataEndPoint dataEndPoint,
+    MasterDeviceDeployment deployment,
     Stream<DataPoint> data,
   ) async {
     assert(dataEndPoint is SQLiteDataEndPoint);
     info('Initializing $runtimeType...');
-    await super.initialize(deployment, dataEndPoint, data);
+    await super.initialize(dataEndPoint, deployment, data);
 
     // note that a new db (with timestamp in its name) is created on each app (re)start.
     String path = await databasePath;
@@ -53,7 +61,7 @@ class SQLiteDataManager extends AbstractDataManager {
         onCreate: (Database db, int version) async {
       // when creating the db, create the table
       await db.execute(
-          'CREATE TABLE $TABLENAME (id INTEGER PRIMARY KEY, created_at INTEGER, created_by TEXT, deployment_id TEXT, carp_header TEXT, carp_body TEXT)');
+          'CREATE TABLE $TABLE_NAME (id INTEGER PRIMARY KEY, created_at INTEGER, created_by TEXT, deployment_id TEXT, carp_header TEXT, carp_body TEXT)');
       debug('$runtimeType - SQLite DB created');
     });
 
@@ -84,13 +92,13 @@ class SQLiteDataManager extends AbstractDataManager {
 
   @override
   Future<void> onDataPoint(DataPoint dataPoint) async {
-    int createdAt = DateTime.now().millisecondsSinceEpoch;
-    String createdBy = dataPoint.carpHeader.userId.toString();
-    String carpHeader = jsonEncode(dataPoint.carpHeader);
-    String carpBody = jsonEncode(dataPoint.carpBody);
-    String deploymentId = deployment.studyDeploymentId;
-    String sql =
-        "INSERT INTO $TABLENAME(created_at, created_by, deployment_id, carp_header, carp_body) VALUES('$createdAt', '$createdBy', '$deploymentId', '$carpHeader', '$carpBody')";
+    final createdAt = DateTime.now().millisecondsSinceEpoch;
+    final createdBy = dataPoint.carpHeader.userId.toString();
+    final carpHeader = jsonEncode(dataPoint.carpHeader);
+    final carpBody = jsonEncode(dataPoint.carpBody);
+    final deploymentId = studyDeploymentId;
+    final sql =
+        "INSERT INTO $TABLE_NAME(created_at, created_by, deployment_id, carp_header, carp_body) VALUES('$createdAt', '$createdBy', '$deploymentId', '$carpHeader', '$carpBody')";
 
     int? id = await database?.rawInsert(sql);
     debug(
@@ -98,15 +106,8 @@ class SQLiteDataManager extends AbstractDataManager {
   }
 
   @override
-  Future<void> onDone() async {
+  Future<void> close() async {
     await database?.close();
     await super.close();
   }
-
-  @override
-  Future<void> onError(Object? error) async =>
-      await onDataPoint(DataPoint.fromData(ErrorDatum(error.toString()))
-        ..carpHeader.dataFormat = DataFormat.fromString(CAMSDataType.ERROR)
-        ..carpHeader.studyId = deployment.studyDeploymentId
-        ..carpHeader.userId = deployment.userId);
 }

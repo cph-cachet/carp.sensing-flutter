@@ -103,8 +103,8 @@ class OneTimeTriggerExecutor extends TriggerExecutor<OneTimeTrigger> {
       configuration!.triggerTimestamp = DateTime.now();
       await super.onResume();
     } else {
-      info(
-          "$runtimeType - one time trigger already occured at: ${configuration?.triggerTimestamp}. "
+      warning(
+          "$runtimeType - one time trigger already occurred at: ${configuration?.triggerTimestamp}. "
           'Will not trigger now.');
     }
     return true;
@@ -653,7 +653,6 @@ class UserTaskTriggerExecutor extends TriggerExecutor<UserTaskTrigger> {
             userTask.state == configuration!.pauseCondition!) super.onPause();
       }
     });
-    // print('>> listening to user task events - $_subscription');
     return true;
   }
 

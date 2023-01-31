@@ -15,9 +15,6 @@ abstract class UserTaskFactory {
 
   /// Create a [UserTask] that wraps [executor].
   UserTask create(AppTaskExecutor executor);
-
-  // /// Create a [UserTask] of type [type].
-  // UserTask create(String type);
 }
 
 /// A [UserTaskFactory] that can create the non-UI sensing tasks:
@@ -82,7 +79,7 @@ abstract class UserTask {
 
   /// A stream of state changes of this user task.
   ///
-  /// This stream is usefull in a [StreamBuilder] to listen on
+  /// This stream is useful in a [StreamBuilder] to listen on
   /// changes to a [UserTask].
   Stream<UserTaskState> get stateEvents => _stateController.stream;
 
@@ -109,7 +106,7 @@ abstract class UserTask {
   /// Callback from the app if this task is canceled.
   ///
   /// If [dequeue] is `true` the task is removed from the queue.
-  /// Othervise, it it kept on the queue for later.
+  /// Otherwise, it it kept on the queue for later.
   @mustCallSuper
   void onCancel(BuildContext context, {bool dequeue = false}) {
     state = UserTaskState.canceled;
@@ -179,7 +176,7 @@ enum UserTaskState {
   undefined,
 }
 
-/// A non-UI sensing taks that collects sensor data in the background.
+/// A non-UI sensing task that collects sensor data in the background.
 /// For example, a `noise` datum.
 ///
 /// It resumes sensing when the [onStart] methods is called and
@@ -207,7 +204,7 @@ class BackgroundSensingUserTask extends UserTask {
   }
 }
 
-/// A non-UI sensing taks that collects sensor data once.
+/// A non-UI sensing task that collects sensor data once.
 /// For example collecting a `location` datum.
 ///
 /// It resumes sensing when the [onStart] methods is called and then

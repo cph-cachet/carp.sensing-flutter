@@ -6,7 +6,7 @@
  */
 part of runtime;
 
-/// A controller of user notifcations based on [UserTask]s.
+/// A controller of user notifications based on [UserTask]s.
 /// Works closely with the [AppTaskController].
 abstract class NotificationController {
   /// The upper limit of scheduled notification on iOS.
@@ -34,9 +34,9 @@ abstract class NotificationController {
   /// Schedule a notification for a [task] at the [task.triggerTime].
   Future<void> scheduleNotification(UserTask task);
 
-  /// The number of pending nofitifications.
+  /// The number of pending notifications.
   Future<int> get pendingNotificationRequestsCount;
 
   /// Cancel (i.e., remove) the notification for the [task].
-  void cancelNotification(UserTask task);
+  Future<void> cancelNotification(UserTask task);
 }

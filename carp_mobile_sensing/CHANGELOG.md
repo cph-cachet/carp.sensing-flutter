@@ -1,12 +1,20 @@
+## 0.40.12
+
+* Better support for removing a study deployment from a client manager
+  * Refactor of `DataManager` interfaces; file, sqlite, etc. to support multiple deployments on the same client.
+  * NotificationController now cancels notifications for a study which is removed.
+  * Removal of tasks from the AppTaskController.
+* Support for local caching of files while keeping sampled data
+
 ## 0.40.11
 
 * Fix of issue [#305](https://github.com/cph-cachet/carp.sensing-flutter/issues/305).
 
 ## 0.40.10
 
-* adding `dispose`, `pause`, and `remove` life cycle methods to the `DeploymentController`
-* support for deleting cached runtime information (deployment and task list)
-* fix of bug in `getTaskExecutor` method
+* Adding `dispose`, `pause`, and `remove` life cycle methods to the `DeploymentController`
+* Support for deleting cached runtime information (deployment and task list)
+* Fix of bug in `getTaskExecutor` method
 
 ## 0.40.7
 

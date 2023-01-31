@@ -26,6 +26,7 @@ void _registerFromJsonFunctions() {
 
   // Task classes
   FromJsonFactory().register(AppTask(type: 'ignored'));
+  FromJsonFactory().register(FunctionTask());
 
   // Trigger classes
   FromJsonFactory().register(ImmediateTrigger());

@@ -35,14 +35,14 @@ class SmartphoneDeployment extends MasterDeviceDeployment {
 
   /// The [StudyDescription] containing the title, description,
   /// purpose, and the responsible researcher for this study.
-  StudyDescription? protocolDescription;
+  StudyDescription? studyDescription;
 
-  /// The PI responsible for this study.
-  StudyResponsible? get responsible => protocolDescription?.responsible;
+  /// The Primary Investigator responsible for this study.
+  StudyResponsible? get responsible => studyDescription?.responsible;
 
   /// Specifies where and how to stored or upload the data collected from this
   /// deployment. If `null`, the sensed data is not stored, but may still be
-  /// used in the app somehow.
+  /// used in the app.
   DataEndPoint? dataEndPoint;
 
   /// Create a new [SmartphoneDeployment].
@@ -59,18 +59,16 @@ class SmartphoneDeployment extends MasterDeviceDeployment {
     super.tasks = const [],
     super.triggers = const {},
     super.triggeredTasks = const [],
-    this.protocolDescription,
+    this.studyDescription,
     this.dataEndPoint,
   }) {
     _studyDeploymentId = studyDeploymentId ?? Uuid().v1();
   }
 
-  /// Create a [SmartphoneDeployment] that combines a [MasterDeviceDeployment] and
-  /// a [SmartphoneStudyProtocol].
+  /// Create a [SmartphoneDeployment] based on a [MasterDeviceDeployment].
   SmartphoneDeployment.fromMasterDeviceDeployment({
     String? studyDeploymentId,
     required MasterDeviceDeployment masterDeviceDeployment,
-    required SmartphoneStudyProtocol protocol,
   }) : this(
           studyDeploymentId: studyDeploymentId,
           deviceDescriptor: masterDeviceDeployment.deviceDescriptor,
@@ -81,7 +79,25 @@ class SmartphoneDeployment extends MasterDeviceDeployment {
           tasks: masterDeviceDeployment.tasks,
           triggers: masterDeviceDeployment.triggers,
           triggeredTasks: masterDeviceDeployment.triggeredTasks,
-          protocolDescription: protocol.protocolDescription,
+        );
+
+  /// Create a [SmartphoneDeployment] that combines a [MasterDeviceDeployment] and
+  /// a [SmartphoneStudyProtocol].
+  SmartphoneDeployment.fromMasterDeviceDeploymentAndSmartphoneStudyProtocol({
+    String? studyDeploymentId,
+    required MasterDeviceDeployment deployment,
+    required SmartphoneStudyProtocol protocol,
+  }) : this(
+          studyDeploymentId: studyDeploymentId,
+          deviceDescriptor: deployment.deviceDescriptor,
+          configuration: deployment.configuration,
+          connectedDevices: protocol.connectedDevices,
+          connectedDeviceConfigurations:
+              deployment.connectedDeviceConfigurations,
+          tasks: protocol.tasks.toList(),
+          triggers: protocol.triggers,
+          triggeredTasks: protocol.triggeredTasks,
+          studyDescription: protocol.studyDescription,
           dataEndPoint: protocol.dataEndPoint,
         );
 
@@ -101,11 +117,11 @@ class SmartphoneDeployment extends MasterDeviceDeployment {
           tasks: protocol.tasks.toList(),
           triggers: protocol.triggers,
           triggeredTasks: protocol.triggeredTasks,
-          protocolDescription: protocol.protocolDescription,
+          studyDescription: protocol.studyDescription,
           dataEndPoint: protocol.dataEndPoint,
         );
 
-  /// Get the list of all mesures in this study deployment.
+  /// Get the list of all measures in this study deployment.
   List<Measure> get measures {
     final List<Measure> measures = [];
     for (var task in tasks) {
@@ -157,7 +173,7 @@ class SmartphoneDeployment extends MasterDeviceDeployment {
   @override
   String toString() => '$runtimeType - studyDeploymentId: $studyDeploymentId, '
       'device: ${deviceDescriptor.roleName}, '
-      'title: ${protocolDescription?.title}, responsible: ${responsible?.name}';
+      'title: ${studyDescription?.title}, responsible: ${responsible?.name}';
 }
 
 /// A Listener that can listen on changes to a [SmartphoneDeployment].

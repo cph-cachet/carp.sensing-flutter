@@ -37,14 +37,19 @@ class Console extends State<ConsolePage> {
 
   @override
   void initState() {
-    super.initState();
     sensing = Sensing();
     Settings().init().then((_) {
-      sensing!.init().then((_) {
+      sensing?.init().then((_) {
         log('Setting up study : ${sensing!.study}');
         log('Deployment status : ${sensing!.status}');
+        Future.delayed(Duration(seconds: 1), () {
+          sensing?.resume();
+          log('\nSensing resumed ...');
+        });
       });
     });
+
+    super.initState();
   }
 
   @override
@@ -112,7 +117,7 @@ class Sensing {
 
   /// Initialize sensing.
   Future<void> init() async {
-    Settings().debugLevel = DebugLevel.DEBUG;
+    Settings().debugLevel = DebugLevel.debug;
 
     // Get the local protocol.
     StudyProtocol protocol =
@@ -141,9 +146,7 @@ class Sensing {
     // However, nothing will happen when you click on them.
     // See the PulmonaryMonitor demo app for a full-scale example of how to use
     // the App Task model.
-    await controller?.configure(
-      enableNotifications: true,
-    );
+    await controller?.configure();
 
     // Listening on the data stream and print them as json.
     controller?.data.listen((data) => print(toJsonString(data)));

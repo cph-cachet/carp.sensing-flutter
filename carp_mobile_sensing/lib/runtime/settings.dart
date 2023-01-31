@@ -9,12 +9,13 @@ part of runtime;
 ///  * setting whether to save [AppTask]s across app re-start - see [saveAppTaskQueue]
 ///  * getting shared preferences - see [preferences]
 ///  * getting app info - see [packageInfo]
-///  * generating a unique and annonymous user id - see [userId]
+///  * generating a unique and anonymous user id - see [userId]
 ///
 class Settings {
   static const String USER_ID_KEY = 'user_id';
 
   static const String CARP_DATA_FILE_PATH = 'data';
+  static const String CARP_CACHE_FILE_PATH = 'cache';
   static const String CARP_RESOURCE_FILE_PATH = 'resources';
   static const String CARP_DEPLOYMENT_FILE_PATH = 'deployments';
 
@@ -34,14 +35,14 @@ class Settings {
   String _timezone = 'Europe/Copenhagen';
   bool _initialized = false;
 
-  /// Has the setting been initializd via calling the [init] method?
+  /// Has the setting been initialized via calling the [init] method?
   bool get initialized => _initialized;
 
   /// The global debug level setting.
   ///
   /// See [DebugLevel] for valid debug level settings.
   /// Can be changed on runtime.
-  DebugLevel debugLevel = DebugLevel.WARNING;
+  DebugLevel debugLevel = DebugLevel.warning;
 
   /// Save the queue of [AppTask]s in the [AppTaskController] across
   /// app re-start?
@@ -102,14 +103,31 @@ class Settings {
   ///
   Future<String> getDeploymentBasePath(String studyDeploymentId) async {
     if (_deploymentBasePaths[studyDeploymentId] == null) {
-      final directory = await Directory(
-              '${await carpBasePath}/$CARP_DEPLOYMENT_FILE_PATH/$studyDeploymentId')
+      final path = await carpBasePath;
+      final directory =
+          await Directory('$path/$CARP_DEPLOYMENT_FILE_PATH/$studyDeploymentId')
+              .create(recursive: true);
+      await Directory(
+              '$path/$CARP_DEPLOYMENT_FILE_PATH/$studyDeploymentId/$CARP_CACHE_FILE_PATH')
+          .create(recursive: true);
+      await Directory(
+              '$path/$CARP_DEPLOYMENT_FILE_PATH/$studyDeploymentId/$CARP_DATA_FILE_PATH')
           .create(recursive: true);
       _deploymentBasePaths[studyDeploymentId] = directory.path;
     }
 
     return _deploymentBasePaths[studyDeploymentId]!;
   }
+
+  /// The base path for storing all cached data.
+  ///
+  ///  `<localApplicationPath>/carp/deployments/<study_deployment_id>/cache`
+  ///
+  Future<
+      String> getCacheBasePath(String studyDeploymentId) async => (await Directory(
+              '${await getDeploymentBasePath(studyDeploymentId)}/$CARP_CACHE_FILE_PATH')
+          .create(recursive: true))
+      .path;
 
   /// The local time zone setting of this app.
   String get timezone => _timezone;
@@ -173,4 +191,4 @@ class Settings {
 }
 
 /// Debugging levels.
-enum DebugLevel { NONE, INFO, WARNING, DEBUG }
+enum DebugLevel { none, info, warning, debug }

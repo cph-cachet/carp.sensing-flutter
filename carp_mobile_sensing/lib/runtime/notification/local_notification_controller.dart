@@ -28,10 +28,10 @@ class FlutterLocalNotificationController implements NotificationController {
     debug('$runtimeType initializing....');
     tz.initializeTimeZones();
 
-    await notifications.FlutterLocalNotificationsPlugin().initialize(
-      notifications.InitializationSettings(
-        android: const notifications.AndroidInitializationSettings('app_icon'),
-        iOS: const notifications.DarwinInitializationSettings(),
+    await FlutterLocalNotificationsPlugin().initialize(
+      InitializationSettings(
+        android: const AndroidInitializationSettings('app_icon'),
+        iOS: const DarwinInitializationSettings(),
       ),
       onDidReceiveBackgroundNotificationResponse:
           onDidReceiveNotificationResponse,
@@ -40,37 +40,35 @@ class FlutterLocalNotificationController implements NotificationController {
 
     info('$runtimeType initialized.');
     debug('PENDING NOTIFICATIONS:');
-    for (var notification
-        in (await notifications.FlutterLocalNotificationsPlugin()
-            .pendingNotificationRequests())) {
+    for (var notification in (await FlutterLocalNotificationsPlugin()
+        .pendingNotificationRequests())) {
       debug('${notification.title}');
     }
   }
 
-  final notifications.NotificationDetails _platformChannelSpecifics =
-      notifications.NotificationDetails(
-    android: const notifications.AndroidNotificationDetails(
+  final NotificationDetails _platformChannelSpecifics = NotificationDetails(
+    android: const AndroidNotificationDetails(
       NotificationController.CHANNEL_ID,
       NotificationController.CHANNEL_NAME,
-      importance: notifications.Importance.max,
-      priority: notifications.Priority.max,
+      importance: Importance.max,
+      priority: Priority.max,
       ongoing: true,
     ),
-    iOS: const notifications.DarwinNotificationDetails(),
+    iOS: const DarwinNotificationDetails(),
   );
 
   /// Send an immediate notification for a [task].
   @override
   Future<void> sendNotification(UserTask task) async {
     if (task.notification) {
-      await notifications.FlutterLocalNotificationsPlugin().show(
+      await FlutterLocalNotificationsPlugin().show(
         task.id.hashCode,
         task.title,
         task.description,
         _platformChannelSpecifics,
         payload: task.id,
       );
-      info('Notification send for $task');
+      info('$runtimeType - Notification created for $task');
     }
   }
 
@@ -84,7 +82,7 @@ class FlutterLocalNotificationController implements NotificationController {
       final time = tz.TZDateTime.from(
           task.triggerTime, tz.getLocation(Settings().timezone));
 
-      await notifications.FlutterLocalNotificationsPlugin().zonedSchedule(
+      await FlutterLocalNotificationsPlugin().zonedSchedule(
         task.id.hashCode,
         task.title,
         task.description,
@@ -92,7 +90,7 @@ class FlutterLocalNotificationController implements NotificationController {
         _platformChannelSpecifics,
         androidAllowWhileIdle: true,
         uiLocalNotificationDateInterpretation:
-            notifications.UILocalNotificationDateInterpretation.absoluteTime,
+            UILocalNotificationDateInterpretation.absoluteTime,
         payload: task.id,
       );
       task.hasNotificationBeenCreated = true;
@@ -103,29 +101,27 @@ class FlutterLocalNotificationController implements NotificationController {
     }
   }
 
-  /// The number of pending nofitifications.
+  /// The number of pending
   ///
-  /// Note that on iOS there is a limit of 64 pending nofifications.
+  /// Note that on iOS there is a limit of 64 pending
   /// See https://pub.dev/packages/flutter_local_notifications#ios-pending-notifications-limit
   @override
   Future<int> get pendingNotificationRequestsCount async =>
-      (await notifications.FlutterLocalNotificationsPlugin()
-              .pendingNotificationRequests())
+      (await FlutterLocalNotificationsPlugin().pendingNotificationRequests())
           .length;
 
   /// Cancel (i.e., remove) the notification for the [task].
   @override
-  void cancelNotification(UserTask task) {
+  Future<void> cancelNotification(UserTask task) async {
     if (task.notification) {
-      notifications.FlutterLocalNotificationsPlugin().cancel(task.id.hashCode);
-      info('Notification cancled for $task');
+      await FlutterLocalNotificationsPlugin().cancel(task.id.hashCode);
+      info('$runtimeType - Notification canceled for $task');
     }
   }
 }
 
 @pragma('vm:entry-point')
-void onDidReceiveNotificationResponse(
-    notifications.NotificationResponse response) {
+void onDidReceiveNotificationResponse(NotificationResponse response) {
   String? payload = response.payload;
 
   debug(

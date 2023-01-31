@@ -1,5 +1,6 @@
-## 0.40.6
+## 0.40.7
 
+* refactor of `DataManager` interface to support multiple deployment on the `ClientManager`.
 * adding `pause`, `remove`, and `dispose` life cycle methods to the `StudyRuntime`
 
 ## 0.40.3
@@ -16,12 +17,12 @@
 
 ## 0.40.0
 
-* Serialization has been moved to a separate package - [carp_serializable](https://pub.dev/packages/carp_serializable)
+* serialization has been moved to a separate package - [carp_serializable](https://pub.dev/packages/carp_serializable)
 * `ConcurrentTask` is renamed to `BackgroundTask`
 * support for `BatteryAwareSamplingConfiguration` sampling configuration added
 * fix of error in `SetParticipantData` request
-* Upgraded to Dart 2.17
-* Refactoring to comply to [official Dart recommended lint rules](https://pub.dev/packages/flutter_lints)
+* upgraded to Dart 2.17
+* refactoring to comply to [official Dart recommended lint rules](https://pub.dev/packages/flutter_lints)
 
 ## 0.33.1
 

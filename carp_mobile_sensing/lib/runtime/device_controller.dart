@@ -6,7 +6,7 @@
  */
 part of runtime;
 
-/// A [DeviceController] handles runtime managenent of all devices and services
+/// A [DeviceController] handles runtime management of all devices and services
 /// connected to this phone, including the phone itself.
 class DeviceController implements DeviceDataCollectorFactory {
   static final DeviceController _instance = DeviceController._();
@@ -39,7 +39,7 @@ class DeviceController implements DeviceDataCollectorFactory {
 
   @override
   Future<DeviceManager?> createDevice(String deviceType) async {
-    // early out if already registrered
+    // early out if already registered
     if (_devices.containsKey(deviceType)) return _devices[deviceType]!;
 
     info('$runtimeType - Creating device manager for device type: $deviceType');
@@ -59,8 +59,8 @@ class DeviceController implements DeviceDataCollectorFactory {
     return manager;
   }
 
-  /// A convinient method for creating and registring all devices which are
-  /// available in each [SamplingPackage] that has been registred in the
+  /// A convenient method for creating and registering all devices which are
+  /// available in each [SamplingPackage] that has been registered in the
   /// [SamplingPackageRegistry].
   void registerAllAvailableDevices() {
     for (var package in SamplingPackageRegistry().packages) {
@@ -99,8 +99,8 @@ class DeviceController implements DeviceDataCollectorFactory {
     }
   }
 
-  /// A convinient method for connecting all connectable devices available
-  /// in each [SamplingPackage] that has been registred in the
+  /// A convenient method for connecting all connectable devices available
+  /// in each [SamplingPackage] that has been registered in the
   /// [SamplingPackageRegistry].
   Future<void> connectAllConnectableDevices() async {
     for (var package in SamplingPackageRegistry().packages) {
@@ -110,6 +110,13 @@ class DeviceController implements DeviceDataCollectorFactory {
           await getDevice(package.deviceType)?.connect();
         }
       }
+    }
+  }
+
+  /// A convenient method for disconnecting all connected devices.
+  Future<void> disconnectAllConnectedDevices() async {
+    for (var device in connectedDevices) {
+      device.disconnect();
     }
   }
 
