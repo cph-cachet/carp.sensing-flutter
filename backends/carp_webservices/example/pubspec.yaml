@@ -1,6 +1,6 @@
 name: carp_webservices_example
 description: An small example of how to usee the CARP web service package.
-version: 0.40.0
+version: 0.40.2
 homepage: https://github.com/cph-cachet/carp.sensing-flutter/tree/master/carp_core
 publish_to: none
 

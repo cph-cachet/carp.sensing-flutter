@@ -96,7 +96,7 @@ void main() async {
   // -----------------------------------------------
 
   // first register the CARP data manager
-  DataManagerRegistry().register(CarpDataManager());
+  DataManagerRegistry().register(CarpDataManagerFactory());
 
   // create a CARP data endpoint that upload using the DATA_POINT method
   CarpDataEndPoint cdep = CarpDataEndPoint(
