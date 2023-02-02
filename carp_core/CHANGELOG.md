@@ -2,6 +2,11 @@
 
 * The first stable release of CARP cores which follows the [carp.core-kotlin](https://github.com/imotions/carp.core-kotlin) v. 1.1.0 domain model.
 
+## 0.40.7
+
+* refactor of `DataManager` interface to support multiple deployment on the `ClientManager`.
+* adding `pause`, `remove`, and `dispose` life cycle methods to the `StudyRuntime`
+
 ## 0.40.3
 
 * fix of non-null `id` in `DeviceDataCollector`.

@@ -189,8 +189,8 @@ class SmartphoneDeploymentController extends StudyRuntime {
 
     // initialize the data manager, device registry, and study executor
     await _dataManager?.initialize(
-      deployment!,
       deployment!.dataEndPoint!,
+      deployment!,
       measurements,
     );
 

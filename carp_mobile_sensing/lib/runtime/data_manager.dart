@@ -8,8 +8,14 @@ part of runtime;
 
 /// The [DataManager] interface is used to upload [Measurement] objects to any
 /// data manager that implements this interface.
+///
+/// Note that each instance of a data manager supports one deployment
+/// ([PrimaryDeviceDeployment]). A data manager should hence be able to handle
+/// separate data management of concurrently running deployments.
+/// Hence, caution on resource starvation should be considered, such as not
+/// accessing the same file or network socket.
 abstract class DataManager {
-  /// The deployment using this data manager
+  /// The deployment using this data manager.
   PrimaryDeviceDeployment get deployment;
 
   /// The ID of the study deployment that this manager is handling.
@@ -21,18 +27,22 @@ abstract class DataManager {
   /// Initialize the data manager by specifying the study [deployment], the
   /// [dataEndPoint], and the stream of [measurements] events to handle.
   Future<void> initialize(
-    SmartphoneDeployment deployment,
     DataEndPoint dataEndPoint,
+    SmartphoneDeployment deployment,
     Stream<Measurement> measurements,
   );
 
-  /// Close the data manager (e.g. closing connections).
+  /// Flush any buffered data and close this data manager.
+  /// After calling [close] the data manager can no longer be used.
   Future<void> close();
 
   /// Stream of data manager events.
   Stream<DataManagerEvent> get events;
 
   /// On each measurement collected, the [onMeasurement] handler is called.
+  ///
+  /// Implementations of this interface should handle how to save
+  /// or upload the [measurement].
   Future<void> onMeasurement(Measurement measurement);
 
   /// When the data stream closes, the [onDone] handler is called.
@@ -54,12 +64,10 @@ class DataManagerEvent {
   String toString() => 'DataManagerEvent - type: $type';
 }
 
-/// An enumeration of data manager event types
+/// An enumeration of data manager event types.
 class DataManagerEventTypes {
-  /// DATA MANAGER INITIALIZED event
   static const String INITIALIZED = 'initialized';
 
-  /// DATA MANAGER CLOSED event
   static const String CLOSED = 'closed';
 }
 
@@ -90,8 +98,8 @@ abstract class AbstractDataManager implements DataManager {
   @override
   @mustCallSuper
   Future<void> initialize(
-    SmartphoneDeployment deployment,
     DataEndPoint dataEndPoint,
+    SmartphoneDeployment deployment,
     Stream<Measurement> measurements,
   ) async {
     _deployment = deployment;
