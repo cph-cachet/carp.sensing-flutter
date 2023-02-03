@@ -38,13 +38,13 @@ abstract class NotificationController {
   Future<int> get pendingNotificationRequestsCount;
 
   /// Cancel (i.e., remove) the notification for the [task].
-  void cancelNotification(UserTask task);
+  Future<void> cancelNotification(UserTask task);
 }
 
 /// A no-operation notification controller that does nothing.
 class NoOpNotificationController implements NotificationController {
   @override
-  void cancelNotification(UserTask task) {}
+  Future<void> cancelNotification(UserTask task) async {}
 
   @override
   Future<void> initialize() async {}

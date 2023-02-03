@@ -67,7 +67,6 @@ class DataManagerEvent {
 /// An enumeration of data manager event types.
 class DataManagerEventTypes {
   static const String INITIALIZED = 'initialized';
-
   static const String CLOSED = 'closed';
 }
 
@@ -78,9 +77,13 @@ class DataManagerEventTypes {
 abstract class AbstractDataManager implements DataManager {
   late SmartphoneDeployment _deployment;
   DataEndPoint? _dataEndPoint;
-  DataEndPoint? get dataEndPoint => _dataEndPoint;
+  StreamSubscription? _subscription;
+  final StreamController<DataManagerEvent> _controller =
+      StreamController.broadcast();
 
-  StreamController<DataManagerEvent> controller = StreamController.broadcast();
+  /// The [DataEndPoint] that this data manager is handling.
+  /// Set in the [initialize] method.
+  DataEndPoint? get dataEndPoint => _dataEndPoint;
 
   @override
   SmartphoneDeployment get deployment => _deployment;
@@ -89,11 +92,13 @@ abstract class AbstractDataManager implements DataManager {
   String get studyDeploymentId => deployment.studyDeploymentId;
 
   @override
-  Stream<DataManagerEvent> get events => controller.stream;
+  @protected
+  Stream<DataManagerEvent> get events => _controller.stream;
 
   /// Add [event] to the [events] stream.
   @mustCallSuper
-  void addEvent(DataManagerEvent event) => controller.add(event);
+  @protected
+  void addEvent(DataManagerEvent event) => _controller.add(event);
 
   @override
   @mustCallSuper
@@ -102,9 +107,10 @@ abstract class AbstractDataManager implements DataManager {
     SmartphoneDeployment deployment,
     Stream<Measurement> measurements,
   ) async {
+    info('Initializing $runtimeType...');
     _deployment = deployment;
     _dataEndPoint = dataEndPoint;
-    measurements.listen(
+    _subscription = measurements.listen(
       (measurement) => onMeasurement(measurement),
       onError: onError,
       onDone: onDone,
@@ -112,37 +118,61 @@ abstract class AbstractDataManager implements DataManager {
     addEvent(DataManagerEvent(DataManagerEventTypes.INITIALIZED));
   }
 
+  /// When the data stream closes, the [onDone] handler is called.
+  /// Default implementation is a no-op function. If another behavior is wanted,
+  /// implementations of this abstract data manager should handle closing of
+  /// the data stream.
+  @override
+  Future<void> onDone() async {}
+
+  @override
+  Future<void> onError(Object? error) async => await onMeasurement(
+      Measurement.fromData(Error(message: error.toString())));
+
   @override
   @mustCallSuper
-  Future<void> close() async =>
-      addEvent(DataManagerEvent(DataManagerEventTypes.CLOSED));
-
-  /// Encode [object] to a JSON string.
-  String toJsonString(Object object) =>
-      const JsonEncoder.withIndent(' ').convert(object);
+  Future<void> close() async {
+    _subscription?.cancel();
+    addEvent(DataManagerEvent(DataManagerEventTypes.CLOSED));
+  }
 
   @override
   String toString() => runtimeType.toString();
 }
 
-/// A registry of [DataManager]s.
+/// A factory which can create a [DataManager] based on the `type` of an
+/// [DataEndPoint].
+abstract class DataManagerFactory {
+  /// The [DataEndPoint] type.
+  String get type;
+
+  /// Create a [DataManager].
+  DataManager create();
+}
+
+/// A registry of [DataManagerFactory]s.
 ///
-/// When creating a new [DataManager] you can register it here using the
-/// [register] method which is later used to call [lookup] when trying to find
-/// an appropriate [DataManager] for a specific [DataEndPointTypes].
+/// In order to be able to create a new [DataManager], you must [register] a
+/// [DataManagerFactory] here, which then later is used to call [create]
+/// an appropriate [DataManager] for a specific [DataEndPoint] type.
 class DataManagerRegistry {
   static final DataManagerRegistry _instance = DataManagerRegistry._();
-
-  DataManagerRegistry._();
-  final Map<String, DataManager> _registry = {};
-
-  /// Get the singleton [DataManagerRegistry].
   factory DataManagerRegistry() => _instance;
+  final Map<String, DataManagerFactory> _registry = {};
+  DataManagerRegistry._();
 
-  /// Register a [DataManager].
-  void register(DataManager manager) => _registry[manager.type] = manager;
+  /// Register a [DataManagerFactory] which can create a [DataManager] for
+  /// a specific data endpoint type.
+  void register(DataManagerFactory factory) =>
+      _registry[factory.type] = factory;
 
-  /// Lookup an instance of a [DataManager] based on the [type] as specified in
-  /// [DataEndPointTypes].
-  DataManager? lookup(String type) => _registry[type];
+  /// Register all [factories].
+  /// A convenient way to call [register] for multiple types.
+  void registerAll(List<DataManagerFactory> factories) {
+    for (var factory in factories) {
+      register(factory);
+    }
+  }
+
+  DataManager? create(String type) => _registry[type]?.create();
 }

@@ -11,11 +11,6 @@ part of runtime;
 class AppTaskController {
   static final AppTaskController _instance = AppTaskController._();
   final StreamController<UserTask> _controller = StreamController.broadcast();
-  SmartphoneDeployment? _deployment;
-
-  /// The [SmartphoneDeployment] that this controller controls.
-  /// Set in the [initialize] method.
-  SmartphoneDeployment? get deployment => _deployment;
 
   /// Should this App Task Controller send notifications to the user.
   bool notificationsEnabled = true;
@@ -70,16 +65,11 @@ class AppTaskController {
   /// If [enableNotifications] is true, a notification will be added to
   /// the phone's notification system when a task is enqueued via the
   /// [enqueue] method.
-  Future<void> initialize(
-    SmartphoneDeployment deployment, {
+  Future<void> initialize({
     bool enableNotifications = true,
   }) async {
-    _deployment = deployment;
     if (Settings().saveAppTaskQueue) {
-      // restore the queue from persistent storage
-      await restoreQueue();
-
-      // // listen to events and save the queue every time it is modified
+      // listen to events and save the queue every time it is modified
       // userTaskEvents.listen((_) async => await saveQueue());
     }
 
@@ -216,40 +206,18 @@ class AppTaskController {
     }
   }
 
-  // String? _filename;
-
-  // /// Current path and filename of the task queue.
-  // Future<String?> get filename async {
-  //   if (_filename == null) {
-  //     String? path = await Settings().carpBasePath;
-  //     _filename = '$path/tasks.json';
-  //   }
-  //   return _filename;
-  // }
-
-  // /// Save the queue persistently to a file.
-  // /// Returns `true` if successful.
-  // Future<bool> saveQueue() async {
-  //   bool success = true;
-  //   try {
-  //     String name = (await filename)!;
-  //     debug("$runtimeType - Saving task queue to file '$name'.");
-  //     final json = jsonEncode(UserTaskSnapshotList.fromUserTasks(userTasks));
-  //     File(name).writeAsStringSync(json);
-  //   } catch (exception) {
-  //     success = false;
-  //     warning('$runtimeType - Failed to save task queue - $exception');
-  //   }
-  //   return success;
-  // }
+  /// Removes all tasks for a study deployment from the queue and cancels
+  /// all notifications generated for these tasks.
+  void removeStudyDeployment(String studyDeploymentId) {
+    _userTaskMap.values
+        .where((task) =>
+            task.appTaskExecutor.deployment?.studyDeploymentId ==
+            studyDeploymentId)
+        .forEach((userTask) => dequeue(userTask.id));
+  }
 
   /// Restore the queue from a file. Returns `true` if successful.
   Future<bool> restoreQueue() async {
-    if (deployment == null) {
-      warning('$runtimeType - No deployment information available');
-      return false;
-    }
-
     bool success = true;
     // UserTaskSnapshotList? queue;
 
@@ -260,47 +228,46 @@ class AppTaskController {
       // queue = UserTaskSnapshotList.fromJson(
       //     json.decode(jsonString) as Map<String, dynamic>);
 
-      List<UserTaskSnapshot> snapshots =
-          await Persistence().getUserTasks(deployment!.studyDeploymentId);
+      final snapshots = await Persistence().getUserTasks();
 
       // now create new AppTaskExecutors, initialize them, and add them to the queue
       for (var snapshot in snapshots) {
         AppTaskExecutor executor = AppTaskExecutor();
 
-        // // find the deployment
-        // SmartphoneDeployment? deployment;
-        // if (snapshot.studyDeploymentId != null &&
-        //     snapshot.deviceRoleName != null) {
-        //   deployment = SmartPhoneClientManager()
-        //       .lookupStudyRuntime(
-        //         snapshot.studyDeploymentId!,
-        //         snapshot.deviceRoleName!,
-        //       )
-        //       ?.deployment;
-        // }
-        // if (deployment == null) {
-        //   warning(
-        //       '$runtimeType - Could not find deployment information based on snapshot: $snapshot');
-        // }
-
-        executor.initialize(snapshot.task, deployment);
-
-        // now put the restored task back on the queue
-        if (_userTaskFactories[executor.task.type] == null) {
+        // find the deployment
+        SmartphoneDeployment? deployment;
+        if (snapshot.studyDeploymentId != null &&
+            snapshot.deviceRoleName != null) {
+          deployment = SmartPhoneClientManager()
+              .lookupStudyRuntime(
+                snapshot.studyDeploymentId!,
+                snapshot.deviceRoleName!,
+              )
+              ?.deployment;
+        }
+        if (deployment == null) {
           warning(
-              'Could not enqueue AppTask. Could not find a factory for creating '
-              "a UserTask for type '${executor.task.type}'");
+              '$runtimeType - Could not find deployment information based on snapshot: $snapshot');
         } else {
-          UserTask userTask =
-              _userTaskFactories[executor.task.type]!.create(executor);
-          userTask.id = snapshot.id;
-          userTask.state = snapshot.state;
-          userTask.enqueued = snapshot.enqueued;
-          userTask.triggerTime = snapshot.triggerTime;
+          executor.initialize(snapshot.task, deployment);
 
-          _userTaskMap[userTask.id] = userTask;
-          debug(
-              '$runtimeType - Enqueued UserTask from loaded task queue: $userTask');
+          // now put the restored task back on the queue
+          if (_userTaskFactories[executor.task.type] == null) {
+            warning(
+                'Could not enqueue AppTask. Could not find a factory for creating '
+                "a UserTask for type '${executor.task.type}'");
+          } else {
+            UserTask userTask =
+                _userTaskFactories[executor.task.type]!.create(executor);
+            userTask.id = snapshot.id;
+            userTask.state = snapshot.state;
+            userTask.enqueued = snapshot.enqueued;
+            userTask.triggerTime = snapshot.triggerTime;
+
+            _userTaskMap[userTask.id] = userTask;
+            debug(
+                '$runtimeType - Enqueued UserTask from loaded task queue: $userTask');
+          }
         }
       }
     } catch (exception) {

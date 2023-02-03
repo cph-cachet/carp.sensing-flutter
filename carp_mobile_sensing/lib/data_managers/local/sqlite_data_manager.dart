@@ -7,6 +7,14 @@
 
 part of data_managers;
 
+class SQLiteDataManagerFactory implements DataManagerFactory {
+  @override
+  String get type => DataEndPointTypes.SQLITE;
+
+  @override
+  DataManager create() => SQLiteDataManager();
+}
+
 /// Stores meta data about the running [SmartphoneDeployment] and all
 /// collected [Measurement] json objects in an SQLite database on the device's
 /// local storage media.
@@ -51,13 +59,13 @@ class SQLiteDataManager extends AbstractDataManager {
 
   @override
   Future<void> initialize(
-    SmartphoneDeployment deployment,
     DataEndPoint dataEndPoint,
+    SmartphoneDeployment deployment,
     Stream<Measurement> measurements,
   ) async {
     assert(dataEndPoint is SQLiteDataEndPoint);
     info('Initializing $runtimeType...');
-    await super.initialize(deployment, dataEndPoint, measurements);
+    await super.initialize(dataEndPoint, deployment, measurements);
 
     _databasePath ??= await getDatabasesPath();
 
@@ -104,6 +112,8 @@ class SQLiteDataManager extends AbstractDataManager {
   }
 
   @override
-  Future<void> onError(Object? error) async => await onMeasurement(
-      Measurement.fromData(Error(message: error.toString())));
+  Future<void> close() async {
+    await database?.close();
+    await super.close();
+  }
 }

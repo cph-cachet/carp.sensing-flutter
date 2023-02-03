@@ -118,7 +118,7 @@ class Sensing {
 
   /// Initialize sensing.
   Future<void> init() async {
-    Settings().debugLevel = DebugLevel.DEBUG;
+    Settings().debugLevel = DebugLevel.debug;
 
     // Get the local protocol.
     StudyProtocol protocol =

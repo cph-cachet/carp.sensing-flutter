@@ -67,7 +67,7 @@ abstract class DeviceManager<TDeviceRegistration extends DeviceRegistration,
 
   /// Ask this [DeviceManager] to start connecting to the device.
   ///
-  /// Returns true if successful, false if not.
+  /// Returns the [DeviceStatus] of the device.
   @nonVirtual
   Future<DeviceStatus> connect() async {
     if (!isInitialized) {

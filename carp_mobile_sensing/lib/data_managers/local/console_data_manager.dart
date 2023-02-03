@@ -16,13 +16,12 @@ class ConsoleDataManager extends AbstractDataManager {
   @override
   Future<void> onMeasurement(Measurement measurement) async =>
       print(jsonEncode(measurement));
+}
+
+class ConsoleDataManagerFactory implements DataManagerFactory {
+  @override
+  String get type => DataEndPointTypes.PRINT;
 
   @override
-  Future<void> onDone() async {}
-
-  @override
-  Future<void> onError(error) async => print('ERROR >> $error');
-
-  @override
-  String toString() => 'JSON Print Data Manager';
+  DataManager create() => ConsoleDataManager();
 }

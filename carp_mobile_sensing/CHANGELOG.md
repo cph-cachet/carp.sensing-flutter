@@ -10,6 +10,38 @@
   
 * The new [`data`](https://github.com/imotions/carp.core-kotlin/blob/develop/docs/carp-data.md) sub-system has been implemented in CAMS. This entails:
 
+## 0.40.12
+
+* Better support for removing a study deployment from a client manager
+  * Refactor of `DataManager` interfaces; file, sqlite, etc. to support multiple deployments on the same client.
+  * NotificationController now cancels notifications for a study which is removed.
+  * Removal of tasks from the AppTaskController.
+* Support for local caching of files while keeping sampled data
+
+## 0.40.11
+
+* Fix of issue [#305](https://github.com/cph-cachet/carp.sensing-flutter/issues/305).
+
+## 0.40.10
+
+* Adding `dispose`, `pause`, and `remove` life cycle methods to the `DeploymentController`
+* Support for deleting cached runtime information (deployment and task list)
+* Fix of bug in `getTaskExecutor` method
+
+## 0.40.7
+
+* Fix of `BufferingUserAccelerometerProbe` error.
+
+## 0.40.6
+
+* Addition of `USER_ACCELEROMETER` measure (issue [#283](https://github.com/cph-cachet/carp.sensing-flutter/issues/283)).
+* Added the `FunctionTask` task type which can executed a Dart function when resumed (issue [#284](https://github.com/cph-cachet/carp.sensing-flutter/issues/284)).
+* Support for application-specific data / configuration in the `SmartphoneStudyProtocol` (issue [#285](https://github.com/cph-cachet/carp.sensing-flutter/issues/285)).
+
+## 0.40.5
+
+* Fix of issue [#280](https://github.com/cph-cachet/carp.sensing-flutter/issues/280).
+
 ## 0.40.4+1
 
 * Added convenience method `addStudyProtocol` to `SmartPhoneClientManager` and updated examples accordingly.

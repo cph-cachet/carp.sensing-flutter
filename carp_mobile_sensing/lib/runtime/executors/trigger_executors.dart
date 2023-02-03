@@ -84,7 +84,7 @@ class OneTimeTriggerExecutor extends TriggerExecutor<OneTimeTrigger> {
       configuration!.triggerTimestamp = DateTime.now();
       onTrigger();
     } else {
-      info(
+      warning(
           "$runtimeType - one time trigger already occurred at: ${configuration?.triggerTimestamp}. "
           'Will not trigger now.');
       return false;

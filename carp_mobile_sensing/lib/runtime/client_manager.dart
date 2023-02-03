@@ -13,6 +13,9 @@ class SmartPhoneClientManager
   static final SmartPhoneClientManager _instance = SmartPhoneClientManager._();
   NotificationController? _notificationController;
 
+  /// The permissions granted to this client from the OS.
+  Map<Permission, PermissionStatus>? permissions;
+
   SmartPhoneClientManager._() {
     WidgetsFlutterBinding.ensureInitialized();
     WidgetsBinding.instance.addObserver(this);
@@ -57,6 +60,8 @@ class SmartPhoneClientManager
     Smartphone? configuration,
     SmartphoneDeviceRegistration? registration,
     NotificationController? notificationController,
+    bool enableNotifications = true,
+    bool askForPermissions = true,
   }) async {
     // initialize misc device settings
     await DeviceInfo().init();
@@ -64,9 +69,9 @@ class SmartPhoneClientManager
     await Persistence().init();
 
     // create and register the built-in data managers
-    DataManagerRegistry().register(ConsoleDataManager());
-    DataManagerRegistry().register(FileDataManager());
-    DataManagerRegistry().register(SQLiteDataManager());
+    DataManagerRegistry().register(ConsoleDataManagerFactory());
+    DataManagerRegistry().register(FileDataManagerFactory());
+    DataManagerRegistry().register(SQLiteDataManagerFactory());
 
     // create the device registration using the DeviceInfo
     registration ??= SmartphoneDeviceRegistration(
@@ -88,6 +93,13 @@ class SmartPhoneClientManager
     deploymentService ??= SmartphoneDeploymentService();
     deviceController ??= DeviceController();
 
+    // initialize the app task controller singleton
+    await AppTaskController()
+        .initialize(enableNotifications: enableNotifications);
+
+    // setting up permissions
+    if (askForPermissions) await askForAllPermissions();
+
     super.configure(
       deploymentService: deploymentService,
       deviceController: deviceController,
@@ -102,11 +114,11 @@ class SmartPhoneClientManager
     print('  CARP Mobile Sensing (CAMS) - $runtimeType');
     print('===========================================================');
     print('              device : ${registration.deviceDisplayName}');
+    print('  deployment service : ${this.deploymentService}');
     print('   device controller : ${this.deviceController}');
     print('   available devices : ${this.deviceController.devicesToString()}');
     print(
         '         persistence : ${Persistence().databaseName.split('/').last}');
-    print('  deployment service : ${this.deploymentService}');
     print('===========================================================');
   }
 
@@ -121,7 +133,8 @@ class SmartPhoneClientManager
     );
     info('Adding study to $runtimeType - $study');
 
-    SmartphoneDeploymentController controller =
+    // always create a new controller
+    final controller =
         SmartphoneDeploymentController(deploymentService!, deviceController);
     repository[study] = controller;
 
@@ -155,6 +168,30 @@ class SmartPhoneClientManager
   SmartphoneDeploymentController? getStudyRuntime(Study study) =>
       repository[study] as SmartphoneDeploymentController;
 
+  @override
+  Future<void> removeStudy(Study study) async {
+    info('Removing study from $runtimeType - $study');
+    AppTaskController().removeStudyDeployment(study.studyDeploymentId);
+    await deviceController.disconnectAllConnectedDevices();
+    await super.removeStudy(study);
+  }
+
+  /// Asking for all permissions needed for the included sampling packages.
+  ///
+  /// Should be called before sensing is started, if not already done as part of
+  /// [configure].
+  Future<void> askForAllPermissions() async {
+    if (SamplingPackageRegistry().permissions.isNotEmpty) {
+      info('Asking for permission for all measure types.');
+      permissions = await SamplingPackageRegistry().permissions.request();
+
+      for (var permission in SamplingPackageRegistry().permissions) {
+        PermissionStatus status = await permission.status;
+        info('Permissions for $permission : $status');
+      }
+    }
+  }
+
   /// Called when this client manager is being (re-)activated by the OS
   ///
   /// Implementations of this method should start with a call to the inherited
@@ -176,6 +213,29 @@ class SmartPhoneClientManager
     }
   }
 
+  /// Called when this client is disposed permanently.
+  ///
+  /// When this method is called, the client is never used again. It is an error
+  /// to call any of the [start] or [stop] methods at this point.
+  ///
+  /// Subclasses should override this method to release any resources retained
+  /// by this client.
+  /// Implementations of this method should end with a call to the inherited
+  /// method, as in `super.dispose()`.
+  ///
+  /// See also:
+  ///
+  ///  * [deactivate], which is called prior to [dispose].
+  @protected
+  @mustCallSuper
+  void dispose() {
+    deactivate();
+    for (var study in repository.keys) {
+      getStudyRuntime(study)?.dispose();
+    }
+    Persistence().close();
+  }
+
   /// Called when the system puts the app in the background or returns
   /// the app to the foreground.
   @override
@@ -191,23 +251,5 @@ class SmartPhoneClientManager
         activate();
         break;
     }
-  }
-
-  /// Called when this client is disposed permanently.
-  ///
-  /// When this method is called, the client is never used again. It is an error
-  /// to call any of the [start] or [stop] methods at this point.
-  ///
-  /// Subclasses should override this method to release any resources retained
-  /// by this client.
-  /// Implementations of this method should end with a call to the inherited
-  /// method, as in `super.dispose()`.
-  @protected
-  @mustCallSuper
-  void dispose() {
-    for (var study in repository.keys) {
-      getStudyRuntime(study)?.dispose();
-    }
-    Persistence().close();
   }
 }

@@ -15,9 +15,6 @@ abstract class UserTaskFactory {
 
   /// Create a [UserTask] that wraps [executor].
   UserTask create(AppTaskExecutor executor);
-
-  // /// Create a [UserTask] of type [type].
-  // UserTask create(String type);
 }
 
 /// A [UserTaskFactory] that can create the non-UI sensing tasks:

@@ -202,21 +202,16 @@ class StudyRuntime {
   @mustCallSuper
   void start() => _status = StudyStatus.Running;
 
-  /// Permanently stop collecting data for this [StudyRuntime].
-  ///
-  /// This entails stopping this study at the [deploymentService].
-  /// Once a runtime is stopped it **cannot** be (re)started.
+  /// Called when this [StudyRuntime] is disposed.
+  /// This entails stopping and disposing all data sampling and storage.
   @mustCallSuper
-  Future<void> stop() async {
-    // Early out in case study has already been stopped.
-    if (status == StudyStatus.Stopped) return;
-
-    // Stop study deployment.
-    await deploymentService.stop(study!.studyDeploymentId);
-    _status = StudyStatus.Stopped;
-  }
+  void dispose() {}
 
   /// Called when this [StudyRuntime] is removed from a [ClientManager].
   @mustCallSuper
   Future<void> remove() async {}
+
+  /// Stop collecting data for this [StudyRuntime].
+  @mustCallSuper
+  Future<void> stop() async => _status = StudyStatus.Stopped;
 }

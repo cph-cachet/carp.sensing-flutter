@@ -22,7 +22,7 @@ class DataStreamsConfiguration {
   Map<String, dynamic> toJson() => _$DataStreamsConfigurationToJson(this);
 }
 
-/// The expected data type for a device with a rolename.
+/// The expected data type for a device with a role name.
 @JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
 class ExpectedDataStream {
   String deviceRoleName;

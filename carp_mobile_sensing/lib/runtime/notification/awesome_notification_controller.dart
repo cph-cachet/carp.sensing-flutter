@@ -11,11 +11,6 @@ class AwesomeNotificationController implements NotificationController {
   factory AwesomeNotificationController() => _instance;
 
   @override
-  void cancelNotification(UserTask task) async {
-    await AwesomeNotifications().cancelAllSchedules();
-  }
-
-  @override
   Future<void> initialize() async {
     AwesomeNotifications().initialize(
       null,
@@ -105,6 +100,14 @@ class AwesomeNotificationController implements NotificationController {
           wakeUpScreen: true,
           notificationLayout: NotificationLayout.Default),
     );
+  }
+
+  @override
+  Future<void> cancelNotification(UserTask task) async {
+    if (task.notification) {
+      await AwesomeNotifications().cancel(task.id.hashCode);
+      info('$runtimeType - Notification canceled for $task');
+    }
   }
 
   /// Callback method when the user taps on a notification or action button.

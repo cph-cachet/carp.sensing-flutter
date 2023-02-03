@@ -42,7 +42,7 @@ class Persistence {
         await db.execute(
             'CREATE TABLE $DEPLOYMENT_TABLE_NAME (deployment_id TEXT PRIMARY KEY, updated_at TEXT, deployed_at TEXT, user_id TEXT, deployment TEXT)');
         await db.execute(
-            'CREATE TABLE $TASK_QUEUE_TABLE_NAME (deployment_id TEXT PRIMARY KEY, task_id TEXT, task TEXT)');
+            'CREATE TABLE $TASK_QUEUE_TABLE_NAME (id INTEGER PRIMARY KEY, deployment_id TEXT PRIMARY KEY, task_id TEXT, task TEXT)');
 
         debug('$runtimeType - $databaseName DB created');
       },
@@ -110,6 +110,20 @@ class Persistence {
     return deployment;
   }
 
+  /// Erase the [SmartphoneDeployment] with the [deploymentId] from local cache.
+  Future<void> eraseDeployment(String deploymentId) async {
+    info("$runtimeType - Restoring deployment, deploymentId: $deploymentId");
+    try {
+      await database?.delete(
+        DEPLOYMENT_TABLE_NAME,
+        where: 'deployment_id = ?',
+        whereArgs: [deploymentId],
+      );
+    } catch (exception) {
+      warning('$runtimeType - Failed to erase deployment - $exception');
+    }
+  }
+
   /// Update or delete a task queue entry.
   Future<void> saveUserTask(UserTask task) async {
     debug("$runtimeType - Saving task to database '$task'.");
@@ -145,17 +159,13 @@ class Persistence {
     }
   }
 
-  /// Get the list of [UserTaskSnapshot] for [studyDeploymentId].
-  Future<List<UserTaskSnapshot>> getUserTasks(
-    String studyDeploymentId,
-  ) async {
+  /// Get the entire list of [UserTaskSnapshot].
+  Future<List<UserTaskSnapshot>> getUserTasks() async {
     List<UserTaskSnapshot> result = [];
     try {
       final List<Map<String, Object?>>? list = await database?.query(
         TASK_QUEUE_TABLE_NAME,
         columns: ['user_task'],
-        where: 'deployment_id = ?',
-        whereArgs: [studyDeploymentId],
       );
       debug('$runtimeType - list: $list');
       if (list != null && list.isNotEmpty) {

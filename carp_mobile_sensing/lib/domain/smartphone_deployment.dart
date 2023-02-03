@@ -47,24 +47,25 @@ class SmartphoneDeployment extends PrimaryDeviceDeployment
     super.taskControls,
     super.expectedParticipantData,
     this.userId,
-    StudyDescription? protocolDescription,
+    StudyDescription? studyDescription,
     DataEndPoint? dataEndPoint,
+    Map<String, dynamic>? applicationData,
   }) {
     _studyDeploymentId = studyDeploymentId ?? Uuid().v1();
     _data = SmartphoneApplicationData(
-      studyDescription: protocolDescription,
+      studyDescription: studyDescription,
       dataEndPoint: dataEndPoint,
+      applicationData: applicationData,
     );
   }
 
-  /// Create a [SmartphoneDeployment] that combines a [PrimaryDeviceDeployment] and
-  /// a [SmartphoneStudyProtocol].
+  /// Create a [SmartphoneDeployment] based on a [PrimaryDeviceDeployment].
   SmartphoneDeployment.fromPrimaryDeviceDeployment({
-    String? studyDeploymentId,
-    this.userId,
     required PrimaryDeviceDeployment primaryDeviceDeployment,
-    required SmartphoneStudyProtocol protocol,
-  }) : super(
+    String? studyDeploymentId,
+    String? userId,
+  }) : this(
+          studyDeploymentId: studyDeploymentId,
           deviceConfiguration: primaryDeviceDeployment.deviceConfiguration,
           registration: primaryDeviceDeployment.registration,
           connectedDevices: primaryDeviceDeployment.connectedDevices,
@@ -75,22 +76,44 @@ class SmartphoneDeployment extends PrimaryDeviceDeployment
           taskControls: primaryDeviceDeployment.taskControls,
           expectedParticipantData:
               primaryDeviceDeployment.expectedParticipantData,
-        ) {
-    _studyDeploymentId = studyDeploymentId ?? Uuid().v1();
-    _data.studyDescription = protocol.studyDescription;
-    _data.dataEndPoint = protocol.dataEndPoint;
-    _data.applicationData = protocol._data.applicationData;
-  }
+          userId: userId,
+        );
+
+  /// Create a [SmartphoneDeployment] that combines a [PrimaryDeviceDeployment] and
+  /// a [SmartphoneStudyProtocol].
+  SmartphoneDeployment.fromMasterDeviceDeploymentAndSmartphoneStudyProtocol({
+    required PrimaryDeviceDeployment deployment,
+    required SmartphoneStudyProtocol protocol,
+    String? studyDeploymentId,
+    String? userId,
+  }) : this(
+          studyDeploymentId: studyDeploymentId,
+          deviceConfiguration: deployment.deviceConfiguration,
+          registration: deployment.registration,
+          connectedDevices:
+              protocol.connectedDevices ?? deployment.connectedDevices,
+          connectedDeviceRegistrations: deployment.connectedDeviceRegistrations,
+          tasks: protocol.tasks,
+          triggers: protocol.triggers,
+          taskControls: protocol.taskControls,
+          expectedParticipantData: protocol.expectedParticipantData ??
+              deployment.expectedParticipantData,
+          userId: userId,
+          studyDescription: protocol.studyDescription,
+          dataEndPoint: protocol.dataEndPoint,
+          applicationData: protocol._data.applicationData,
+        );
 
   /// Create a [SmartphoneDeployment] based on a [SmartphoneStudyProtocol].
   /// This method basically makes a 1:1 mapping between a protocol and
   /// a deployment.
   SmartphoneDeployment.fromSmartphoneStudyProtocol({
     String? studyDeploymentId,
-    this.userId,
+    String? userId,
     required String primaryDeviceRoleName,
     required SmartphoneStudyProtocol protocol,
-  }) : super(
+  }) : this(
+          studyDeploymentId: studyDeploymentId,
           deviceConfiguration: Smartphone(roleName: primaryDeviceRoleName),
           registration: DeviceRegistration(),
           connectedDevices: protocol.connectedDevices ?? {},
@@ -99,12 +122,11 @@ class SmartphoneDeployment extends PrimaryDeviceDeployment
           triggers: protocol.triggers,
           taskControls: protocol.taskControls,
           expectedParticipantData: protocol.expectedParticipantData ?? {},
-        ) {
-    _studyDeploymentId = studyDeploymentId ?? Uuid().v1();
-    _data.studyDescription = protocol.studyDescription;
-    _data.dataEndPoint = protocol.dataEndPoint;
-    _data.applicationData = protocol._data.applicationData;
-  }
+          userId: userId,
+          studyDescription: protocol.studyDescription,
+          dataEndPoint: protocol.dataEndPoint,
+          applicationData: protocol._data.applicationData,
+        );
 
   /// Get the list of all measures in this study deployment.
   List<Measure> get measures {

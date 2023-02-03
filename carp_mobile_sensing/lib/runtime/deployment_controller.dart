@@ -38,9 +38,6 @@ class SmartphoneDeploymentController extends StudyRuntime {
   /// The transformer used to transform data before upload.
   DataTransformer get transformer => _transformer;
 
-  /// The permissions granted to this study from the OS.
-  Map<Permission, PermissionStatus>? permissions;
-
   /// The stream of all sampled measurements.
   ///
   /// Measures in the [measurements] stream are transformed in the following order:
@@ -87,9 +84,10 @@ class SmartphoneDeploymentController extends StudyRuntime {
         'Cannot deploy without a valid study deployment id and device role name. '
         "Call 'initialize()' first.");
 
-    // check cache
     if (useCached) {
+      // restore the deployment and app task queue
       bool success = await restoreDeployment();
+      await AppTaskController().restoreQueue();
       if (success) {
         status = StudyStatus.Deployed;
         return status;
@@ -121,6 +119,21 @@ class SmartphoneDeploymentController extends StudyRuntime {
           null
       : false;
 
+  /// Erase study deployment information cached locally on this phone.
+  Future<void> eraseDeployment() async {
+    if (studyDeploymentId == null) return;
+
+    try {
+      info("Erasing deployment cache for deployment '$studyDeploymentId'.");
+      await Persistence().eraseDeployment(studyDeploymentId!);
+
+      final name = await Settings().getCacheBasePath(studyDeploymentId!);
+      await File(name).delete(recursive: true);
+    } catch (exception) {
+      warning('Failed to delete deployment - $exception');
+    }
+  }
+
   /// Configure this [SmartphoneDeploymentController].
   ///
   /// Must be called after a deployment is ready using [tryDeployment] and
@@ -131,7 +144,7 @@ class SmartphoneDeploymentController extends StudyRuntime {
   /// A number of optional parameters can be specified:
   ///
   ///    * [dataEndPoint] - A specific [DataEndPoint] specifying where to save or upload data.
-  ///      If not specified, the [MasterDeviceDeployment.dataEndPoint] is used.
+  ///      If not specified, the [deployment.dataEndPoint] is used.
   ///      If no data endpoint is found, then no data management
   ///      is done, but sensing can still be started. This is useful for apps
   ///      which wants to use the framework for in-app consumption of sensing
@@ -142,18 +155,10 @@ class SmartphoneDeploymentController extends StudyRuntime {
   ///    * [transformer] - a generic [DataTransformer] function which transform
   ///      each collected data item. If not specified, a 1:1 mapping is done,
   ///      i.e. no transformation.
-  ///    * [askForPermissions] - automatically ask for permissions for all sampling
-  ///      packages at once. Default to `true`. If you want the app to handle
-  ///      permissions, set this to `false`.
-  ///    * [enableNotifications] - should notification be enabled and send to the user
-  ///      when an app task is triggered?
-  ///
   Future<void> configure({
     DataEndPoint? dataEndPoint,
     String privacySchemaName = NameSpace.CARP,
     DataTransformer? transformer,
-    bool askForPermissions = true,
-    bool enableNotifications = true,
   }) async {
     assert(deployment != null,
         'Cannot configure a StudyDeploymentController without a deployment.');
@@ -164,10 +169,6 @@ class SmartphoneDeploymentController extends StudyRuntime {
     // initialize all devices from the primary deployment, incl. this smartphone.
     deviceRegistry.initializeDevices(deployment!);
 
-    // initialize the app task controller singleton
-    await AppTaskController()
-        .initialize(deployment!, enableNotifications: enableNotifications);
-
     _executor = SmartphoneDeploymentExecutor();
 
     // initialize optional parameters
@@ -176,16 +177,13 @@ class SmartphoneDeploymentController extends StudyRuntime {
     _transformer = transformer ?? ((data) => data);
 
     if (_dataEndPoint != null) {
-      _dataManager = DataManagerRegistry().lookup(_dataEndPoint!.type);
+      _dataManager = DataManagerRegistry().create(_dataEndPoint!.type);
     }
 
     if (_dataManager == null) {
       warning(
           "No data manager for the specified data endpoint found: '${deployment?.dataEndPoint}'.");
     }
-
-    // setting up permissions
-    if (askForPermissions) await askForAllPermissions();
 
     // initialize the data manager, device registry, and study executor
     await _dataManager?.initialize(
@@ -211,8 +209,8 @@ class SmartphoneDeploymentController extends StudyRuntime {
     print('       user id : ${deployment!.userId}');
     print('      platform : ${DeviceInfo().platform.toString()}');
     print('     device ID : ${DeviceInfo().deviceID.toString()}');
-    print('  data manager : $_dataManager');
     print(' data endpoint : $_dataEndPoint');
+    print('  data manager : $_dataManager');
     print('        status : ${status.toString().split('.').last}');
     print('===============================================================');
   }
@@ -247,22 +245,6 @@ class SmartphoneDeploymentController extends StudyRuntime {
   // /// Disable power-aware sensing.
   // void disablePowerAwareness() => _battery.stop();
 
-  /// Asking for all permissions needed for the included sampling packages.
-  ///
-  /// Should be called before sensing is started, if not already done as part of
-  /// [configure].
-  Future<void> askForAllPermissions() async {
-    if (SamplingPackageRegistry().permissions.isNotEmpty) {
-      info('Asking for permission for all measure types.');
-      permissions = await SamplingPackageRegistry().permissions.request();
-
-      for (var permission in SamplingPackageRegistry().permissions) {
-        PermissionStatus status = await permission.status;
-        info('Permissions for $permission : $status');
-      }
-    }
-  }
-
   /// Start this controller and if [start] is true, start data collection
   /// according to the parameters specified in [configure].
   ///
@@ -274,17 +256,41 @@ class SmartphoneDeploymentController extends StudyRuntime {
         '$runtimeType - Cannot start this controller, since the the runtime is not initialized. '
         'Call the configure() method first.');
 
-    info('$runtimeType - Starting data sampling ...');
+    info('$runtimeType - Starting data sampling...');
     super.start();
     if (start) _executor!.start();
   }
 
   /// Stop the sampling.
   @override
-  void stop() {
-    info('$runtimeType - Stopping data sampling ...');
+  Future<void> stop() async {
+    info('$runtimeType - Stopping data sampling...');
     _executor!.stop();
     super.stop();
+  }
+
+  /// Remove a study from this [SmartphoneDeploymentController].
+  ///
+  /// This entails:
+  ///   * stopping data sampling
+  ///   * closing the data manager (e.g., flushing data to a file)
+  ///   * erasing any locally cached deployment information
+  ///
+  /// Note that only cached deployment information is deleted. Any data sampled
+  /// from this deployment will remain on the phone.
+  ///
+  /// If the same deployment is deployed again, it will start on a fresh start
+  /// and not use old deployment information. This means, for example,
+  /// that any [OneTimeTrigger] will trigger again, since it is considered to
+  /// be a new deployment.
+  @override
+  Future<void> remove() async {
+    info('$runtimeType - Removing deployment from this smartphone...');
+    executor?.stop();
+    await dataManager?.close();
+
+    await eraseDeployment();
+    await super.remove();
   }
 
   /// Called when this controller is disposed permanently.
@@ -293,11 +299,12 @@ class SmartphoneDeploymentController extends StudyRuntime {
   /// to call any of the [start] or [stop] methods at this point.
   @protected
   @mustCallSuper
+  @override
   void dispose() {
     info('$runtimeType - Disposing ...');
     saveDeployment();
-    stop();
-    dataManager?.close();
+    executor?.stop();
+    dataManager?.close().then((_) => super.dispose());
   }
 }
 

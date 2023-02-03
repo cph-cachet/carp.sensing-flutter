@@ -7,7 +7,15 @@
 
 part of data_managers;
 
-/// Stores [DataPoint] json objects on the device's local storage media.
+class FileDataManagerFactory implements DataManagerFactory {
+  @override
+  String get type => DataEndPointTypes.FILE;
+
+  @override
+  DataManager create() => FileDataManager();
+}
+
+/// Stores [Measurement] objects on the device's local storage media.
 /// Supports compression (zip) and encryption.
 ///
 /// The path and filename format is
@@ -24,10 +32,7 @@ part of data_managers;
 /// located in the `data/data/<package_name>/app_flutter` folder.
 /// Files can be accessed via AndroidStudio.
 class FileDataManager extends AbstractDataManager {
-  @override
-  String get type => DataEndPointTypes.FILE;
-
-  late FileDataEndPoint _fileDataEndPoint;
+  // late FileDataEndPoint _fileDataEndPoint;
   String? _path;
   String? _filename;
   File? _file;
@@ -36,21 +41,27 @@ class FileDataManager extends AbstractDataManager {
   int _flushingSink = 0;
 
   @override
+  String get type => DataEndPointTypes.FILE;
+
+  FileDataEndPoint get fileDataEndPoint =>
+      super.dataEndPoint! as FileDataEndPoint;
+
+  @override
   Future<void> initialize(
-    SmartphoneDeployment deployment,
     DataEndPoint dataEndPoint,
+    SmartphoneDeployment deployment,
     Stream<Measurement> measurements,
   ) async {
     assert(dataEndPoint is FileDataEndPoint);
-    await super.initialize(deployment, dataEndPoint, measurements);
+    await super.initialize(dataEndPoint, deployment, measurements);
 
-    _fileDataEndPoint = dataEndPoint as FileDataEndPoint;
+    // _fileDataEndPoint = dataEndPoint as FileDataEndPoint;
     await Settings().getDeploymentBasePath(studyDeploymentId);
 
-    if (_fileDataEndPoint.encrypt) {
-      assert(_fileDataEndPoint.publicKey != null,
+    if (fileDataEndPoint.encrypt) {
+      assert(fileDataEndPoint.publicKey != null,
           'A public key is required if files are to be encrypted.');
-      assert(_fileDataEndPoint.publicKey!.isNotEmpty,
+      assert(fileDataEndPoint.publicKey!.isNotEmpty,
           'A non-empty public key is required if files are to be encrypted.');
     }
 
@@ -61,16 +72,12 @@ class FileDataManager extends AbstractDataManager {
 
     info('Initializing FileDataManager...');
     info('Data file path : $_path');
-    info('Buffer size    : ${_fileDataEndPoint.bufferSize.toString()} bytes');
+    info('Buffer size    : ${fileDataEndPoint.bufferSize.toString()} bytes');
   }
 
   @override
   Future<void> onMeasurement(Measurement measurement) async =>
       await write(measurement);
-
-  @override
-  Future<void> onError(Object? error) async =>
-      await write(Measurement.fromData(Error(message: error.toString())));
 
   @override
   Future<void> onDone() async => await close();
@@ -131,7 +138,7 @@ class FileDataManager extends AbstractDataManager {
   }
 
   /// Writes a JSON encoded [measurement] to the file.
-  Future<bool> write(Measurement measurement) async {
+  Future<void> write(Measurement measurement) async {
     // Check if the sink is ready for writing...
     if (!_initialized) {
       info('File sink not ready -- delaying for 2 sec...');
@@ -143,31 +150,28 @@ class FileDataManager extends AbstractDataManager {
 
     await sink.then((activeSink) async {
       try {
-        activeSink.write(json);
+        // always add a comma directly after json
+        activeSink.write('$json\n,\n');
         debug(
             'Writing measurement to file - type: ${measurement.dataType.toString()}');
 
         await file.then((activeFile) async {
           await activeFile.length().then((len) {
-            if (len > _fileDataEndPoint.bufferSize) {
+            if (len > fileDataEndPoint.bufferSize) {
               flush(activeFile, activeSink);
-            } else {
-              activeSink.write('\n,\n'); // write a ',' to separate json objects
             }
           });
         });
-      } catch (err) {
-        warning('Error writing to file - $err');
+      } catch (error) {
+        warning('Error writing to file - $error');
         _initialized = false;
-        return write(measurement);
+        write(measurement);
       }
     });
-
-    return true;
   }
 
   /// Flushes data to the file, compress, encrypt, and close it.
-  void flush(File flushFile, IOSink flushSink) {
+  Future<void> flush(File flushFile, IOSink flushSink) async {
     // fast exit if we're already flushing this file/sink
     if (flushSink.hashCode == _flushingSink) return;
 
@@ -179,9 +183,6 @@ class FileDataManager extends AbstractDataManager {
     _initialized = false;
     _filename = null;
     _file = null;
-    // Start creating a new sink (and file) to be used in parallel
-    // to flushing this file.
-    sink.then((_) {});
 
     final jsonFilePath = flushFile.path;
     var finalFilePath = jsonFilePath;
@@ -191,7 +192,7 @@ class FileDataManager extends AbstractDataManager {
 
     // once finished closing the file, then zip and encrypt it
     flushSink.close().then((value) {
-      if (_fileDataEndPoint.zip) {
+      if (fileDataEndPoint.zip) {
         // create a new zip file and add the JSON file to this zip file
         final encoder = ZipFileEncoder();
         final jsonFile = File(jsonFilePath);
@@ -205,7 +206,7 @@ class FileDataManager extends AbstractDataManager {
       }
 
       // encrypt the zip file
-      if (_fileDataEndPoint.encrypt) {
+      if (fileDataEndPoint.encrypt) {
         //TODO : implement encryption
         // if the encrypted file gets another name, remember to
         // update _jsonFilePath
@@ -221,12 +222,12 @@ class FileDataManager extends AbstractDataManager {
   @override
   Future<void> close() async {
     _initialized = false;
-    await file.then((activeFile) {
-      sink.then((activeSink) {
-        flush(activeFile, activeSink);
+    await file.then((activeFile) async {
+      sink.then((activeSink) async {
+        await flush(activeFile, activeSink);
+        await super.close();
       });
     });
-    await super.close();
   }
 }
 
@@ -245,15 +246,8 @@ class FileDataManagerEvent extends DataManagerEvent {
 
 /// An enumeration of file data manager event types
 class FileDataManagerEventTypes extends DataManagerEventTypes {
-  /// FILE CREATED event
   static const String FILE_CREATED = 'file_created';
-
-  /// FILE CLOSED event
   static const String FILE_CLOSED = 'file_closed';
-
-  /// FILE DELETE event
   static const String FILE_DELETED = 'file_deleted';
-
-  /// FILE ENCRYPTED event
   static const String FILE_ENCRYPTED = 'file_encrypted';
 }

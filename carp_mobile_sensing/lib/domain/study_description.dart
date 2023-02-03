@@ -50,7 +50,7 @@ class StudyDescription extends Serializable {
 }
 
 /// A person who is responsible for a [StudyProtocol].
-/// Typically the Principal Investigator (PI) who is reposnibile for the study.
+/// Typically the Principal Investigator (PI) who is responsible for the study.
 @JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
 class StudyResponsible extends Serializable {
   String id;

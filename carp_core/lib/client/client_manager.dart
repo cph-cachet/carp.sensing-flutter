@@ -126,26 +126,19 @@ class ClientManager<TPrimaryDevice extends PrimaryDeviceConfiguration,
   /// Once a study is stopped it cannot be deployed anymore since it will
   /// be marked as permanently stopped in the [DeploymentService] via the [stop]
   /// method.
+  ///
+  /// If you only want to remove the study from this client, use the
+  /// [removeStudy] method instead.
   @mustCallSuper
   Future<void> stopStudy(Study study) async {
-    await repository[study]?.stop();
-    await removeStudy(study);
+    var runtime = repository[study];
+
+    if (runtime != null) {
+      await runtime.stop();
+      await removeStudy(study);
+
+      // Permanently stop this study deployment on the deployment service.
+      await deploymentService?.stop(study.studyDeploymentId);
+    }
   }
-
-  // /// Once a connected device has been registered, this returns a manager
-  // /// which provides access to the status of the [registeredDevice].
-  // ConnectedDeviceManager getConnectedDeviceManager( DeviceRegistrationStatus registeredDevice )
-  // {
-
-  //   var dataCollector = deviceCollectorFactory.createConnectedDataCollector();
-
-  //     val dataCollector = dataListener.tryGetConnectedDataCollector(
-  //         registeredDevice.device::class,
-  //         registeredDevice.registration )
-
-  //     // `tryDeployment`, through which registeredDevice is obtained, would have failed if data collector could not be created.
-  //     checkNotNull( dataCollector )
-
-  //     return ConnectedDeviceManager( registeredDevice.registration, dataCollector )
-  // }
 }

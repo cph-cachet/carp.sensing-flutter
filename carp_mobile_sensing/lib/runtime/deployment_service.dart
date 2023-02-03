@@ -116,9 +116,10 @@ class SmartphoneDeploymentService implements DeploymentService {
     PrimaryDeviceDeployment deviceDeployment =
         deployment.getDeviceDeploymentFor(device as PrimaryDeviceConfiguration);
 
-    return SmartphoneDeployment.fromPrimaryDeviceDeployment(
+    return SmartphoneDeployment
+        .fromMasterDeviceDeploymentAndSmartphoneStudyProtocol(
       studyDeploymentId: studyDeploymentId,
-      primaryDeviceDeployment: deviceDeployment,
+      deployment: deviceDeployment,
       protocol: deployment.protocol as SmartphoneStudyProtocol,
     );
   }
