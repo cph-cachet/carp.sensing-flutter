@@ -49,45 +49,45 @@ class SmartphoneDeployment extends PrimaryDeviceDeployment
     this.userId,
     StudyDescription? studyDescription,
     DataEndPoint? dataEndPoint,
-    Map<String, dynamic>? applicationData,
   }) {
     _studyDeploymentId = studyDeploymentId ?? Uuid().v1();
     _data = SmartphoneApplicationData(
       studyDescription: studyDescription,
       dataEndPoint: dataEndPoint,
-      applicationData: applicationData,
     );
   }
 
   /// Create a [SmartphoneDeployment] based on a [PrimaryDeviceDeployment].
   SmartphoneDeployment.fromPrimaryDeviceDeployment({
-    required PrimaryDeviceDeployment primaryDeviceDeployment,
     String? studyDeploymentId,
     String? userId,
+    required PrimaryDeviceDeployment deployment,
   }) : this(
           studyDeploymentId: studyDeploymentId,
-          deviceConfiguration: primaryDeviceDeployment.deviceConfiguration,
-          registration: primaryDeviceDeployment.registration,
-          connectedDevices: primaryDeviceDeployment.connectedDevices,
-          connectedDeviceRegistrations:
-              primaryDeviceDeployment.connectedDeviceRegistrations,
-          tasks: primaryDeviceDeployment.tasks,
-          triggers: primaryDeviceDeployment.triggers,
-          taskControls: primaryDeviceDeployment.taskControls,
-          expectedParticipantData:
-              primaryDeviceDeployment.expectedParticipantData,
+          deviceConfiguration: deployment.deviceConfiguration,
+          registration: deployment.registration,
+          connectedDevices: deployment.connectedDevices,
+          connectedDeviceRegistrations: deployment.connectedDeviceRegistrations,
+          tasks: deployment.tasks,
+          triggers: deployment.triggers,
+          taskControls: deployment.taskControls,
+          expectedParticipantData: deployment.expectedParticipantData,
           userId: userId,
         );
 
   /// Create a [SmartphoneDeployment] that combines a [PrimaryDeviceDeployment] and
   /// a [SmartphoneStudyProtocol].
-  SmartphoneDeployment.fromMasterDeviceDeploymentAndSmartphoneStudyProtocol({
-    required PrimaryDeviceDeployment deployment,
-    required SmartphoneStudyProtocol protocol,
+  ///
+  /// It takes the deployment information from the [deployment] (such as device
+  /// configuration, device registration, and what devices are connected) and
+  /// takes the data collection configuration from the [protocol] (such as
+  /// task, triggers, task controls, and expected participant data).
+  SmartphoneDeployment.fromPrimaryDeviceDeploymentAndSmartphoneStudyProtocol({
     String? studyDeploymentId,
     String? userId,
-  }) : this(
-          studyDeploymentId: studyDeploymentId,
+    required PrimaryDeviceDeployment deployment,
+    required SmartphoneStudyProtocol protocol,
+  }) : super(
           deviceConfiguration: deployment.deviceConfiguration,
           registration: deployment.registration,
           connectedDevices:
@@ -98,22 +98,23 @@ class SmartphoneDeployment extends PrimaryDeviceDeployment
           taskControls: protocol.taskControls,
           expectedParticipantData: protocol.expectedParticipantData ??
               deployment.expectedParticipantData,
-          userId: userId,
-          studyDescription: protocol.studyDescription,
-          dataEndPoint: protocol.dataEndPoint,
-          applicationData: protocol._data.applicationData,
-        );
+        ) {
+    _studyDeploymentId = studyDeploymentId ?? Uuid().v1();
+    _data.studyDescription = protocol.studyDescription;
+    _data.dataEndPoint = protocol.dataEndPoint;
+    _data.applicationData = protocol._data.applicationData;
+  }
 
   /// Create a [SmartphoneDeployment] based on a [SmartphoneStudyProtocol].
-  /// This method basically makes a 1:1 mapping between a protocol and
-  /// a deployment.
+  /// This method basically makes a 1:1 mapping from the [protocol] to the
+  /// deployment using a [Smartphone] as the primary device with the
+  /// specified [primaryDeviceRoleName].
   SmartphoneDeployment.fromSmartphoneStudyProtocol({
     String? studyDeploymentId,
     String? userId,
     required String primaryDeviceRoleName,
     required SmartphoneStudyProtocol protocol,
-  }) : this(
-          studyDeploymentId: studyDeploymentId,
+  }) : super(
           deviceConfiguration: Smartphone(roleName: primaryDeviceRoleName),
           registration: DeviceRegistration(),
           connectedDevices: protocol.connectedDevices ?? {},
@@ -122,11 +123,12 @@ class SmartphoneDeployment extends PrimaryDeviceDeployment
           triggers: protocol.triggers,
           taskControls: protocol.taskControls,
           expectedParticipantData: protocol.expectedParticipantData ?? {},
-          userId: userId,
-          studyDescription: protocol.studyDescription,
-          dataEndPoint: protocol.dataEndPoint,
-          applicationData: protocol._data.applicationData,
-        );
+        ) {
+    _studyDeploymentId = studyDeploymentId ?? Uuid().v1();
+    _data.studyDescription = protocol.studyDescription;
+    _data.dataEndPoint = protocol.dataEndPoint;
+    _data.applicationData = protocol._data.applicationData;
+  }
 
   /// Get the list of all measures in this study deployment.
   List<Measure> get measures {

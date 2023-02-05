@@ -297,6 +297,8 @@ void example_3() async {
   // use flutter_local_notification for notifications
   await client.configure(
     notificationController: FlutterLocalNotificationController(),
+    askForPermissions: false,
+    enableNotifications: false,
   );
 
   // add and deploy the protocol
@@ -306,8 +308,6 @@ void example_3() async {
   // configure the controller
   controller?.configure(
     dataEndPoint: FileDataEndPoint(bufferSize: 50 * 1000, encrypt: false),
-    askForPermissions: false,
-    enableNotifications: false,
     transformer: (data) => data,
   );
 }

@@ -152,9 +152,7 @@ class Sensing {
     // However, nothing will happen when you click on them.
     // See the PulmonaryMonitor demo app for a full-scale example of how to use
     // the App Task model.
-    await controller?.configure(
-      enableNotifications: true,
-    );
+    await controller?.configure();
 
     // Listening on the data stream and print them as json.
     controller?.measurements.listen((data) => print(toJsonString(data)));

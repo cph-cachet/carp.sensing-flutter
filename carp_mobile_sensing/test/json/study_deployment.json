@@ -2,26 +2,38 @@
     "deviceConfiguration": {
         "__type": "dk.cachet.carp.common.application.devices.Smartphone",
         "roleName": "phone",
-        "isOptional": true,
         "defaultSamplingConfiguration": {},
         "isPrimaryDevice": true
     },
     "registration": {
         "__type": "dk.cachet.carp.common.application.devices.DeviceRegistration",
-        "deviceId": "55e35080-6a97-11ed-805c-31218c1d93e6",
+        "deviceId": "40d09830-a537-11ed-9fde-55785092ba38",
         "deviceDisplayName": null,
-        "registrationCreatedOn": "2022-11-22T18:56:13.192910Z"
+        "registrationCreatedOn": "2023-02-05T09:27:04.755429Z"
     },
     "connectedDevices": [
         {
             "__type": "dk.cachet.carp.common.application.devices.DeviceConfiguration",
             "roleName": "esense",
-            "isOptional": false,
             "defaultSamplingConfiguration": {}
         }
     ],
     "connectedDeviceRegistrations": {},
     "tasks": [
+        {
+            "__type": "dk.cachet.carp.common.application.tasks.BackgroundTask",
+            "name": "Task #6",
+            "measures": [
+                {
+                    "__type": "dk.cachet.carp.common.application.tasks.Measure.DataStream",
+                    "type": "dk.cachet.carp.triggeredtask"
+                },
+                {
+                    "__type": "dk.cachet.carp.common.application.tasks.Measure.DataStream",
+                    "type": "dk.cachet.carp.completedtask"
+                }
+            ]
+        },
         {
             "__type": "dk.cachet.carp.common.application.tasks.BackgroundTask",
             "name": "Start measures",
@@ -42,7 +54,7 @@
         },
         {
             "__type": "dk.cachet.carp.common.application.tasks.BackgroundTask",
-            "name": "Task #5",
+            "name": "Task #7",
             "measures": [
                 {
                     "__type": "dk.cachet.carp.common.application.tasks.Measure.DataStream",
@@ -66,11 +78,19 @@
                 },
                 {
                     "__type": "dk.cachet.carp.common.application.tasks.Measure.DataStream",
+                    "type": "dk.cachet.carp.nongravitationalacceleration"
+                },
+                {
+                    "__type": "dk.cachet.carp.common.application.tasks.Measure.DataStream",
                     "type": "dk.cachet.carp.rotation"
                 },
                 {
                     "__type": "dk.cachet.carp.common.application.tasks.Measure.DataStream",
                     "type": "dk.cachet.carp.stepcount"
+                },
+                {
+                    "__type": "dk.cachet.carp.common.application.tasks.Measure.DataStream",
+                    "type": "dk.cachet.carp.magneticfield"
                 },
                 {
                     "__type": "dk.cachet.carp.common.application.tasks.Measure.DataStream",
@@ -80,7 +100,7 @@
         },
         {
             "__type": "dk.cachet.carp.common.application.tasks.BackgroundTask",
-            "name": "Task #6",
+            "name": "Task #8",
             "measures": [
                 {
                     "__type": "dk.cachet.carp.common.application.tasks.Measure.DataStream",
@@ -90,7 +110,7 @@
         },
         {
             "__type": "dk.cachet.carp.common.application.tasks.AppTask",
-            "name": "Task #7",
+            "name": "Task #9",
             "measures": [
                 {
                     "__type": "dk.cachet.carp.common.application.tasks.Measure.DataStream",
@@ -109,7 +129,7 @@
         },
         {
             "__type": "dk.cachet.carp.common.application.tasks.BackgroundTask",
-            "name": "Task #8",
+            "name": "Task #10",
             "measures": [
                 {
                     "__type": "dk.cachet.carp.common.application.tasks.Measure.DataStream",
@@ -124,60 +144,76 @@
     ],
     "triggers": {
         "0": {
-            "__type": "dk.cachet.carp.common.application.triggers.TriggerConfiguration"
+            "__type": "dk.cachet.carp.common.application.triggers.ImmediateTrigger",
+            "sourceDeviceRoleName": "primaryphone"
         },
         "1": {
-            "__type": "dk.cachet.carp.common.application.triggers.ImmediateTrigger"
+            "__type": "dk.cachet.carp.common.application.triggers.TriggerConfiguration",
+            "sourceDeviceRoleName": "primaryphone"
         },
         "2": {
-            "__type": "dk.cachet.carp.common.application.triggers.OneTimeTrigger"
+            "__type": "dk.cachet.carp.common.application.triggers.ImmediateTrigger",
+            "sourceDeviceRoleName": "primaryphone"
         },
         "3": {
-            "__type": "dk.cachet.carp.common.application.triggers.ImmediateTrigger"
+            "__type": "dk.cachet.carp.common.application.triggers.OneTimeTrigger",
+            "sourceDeviceRoleName": "primaryphone"
         },
         "4": {
-            "__type": "dk.cachet.carp.common.application.triggers.UserTaskTrigger",
-            "taskName": "Task #7",
-            "triggerCondition": "done"
+            "__type": "dk.cachet.carp.common.application.triggers.ImmediateTrigger",
+            "sourceDeviceRoleName": "primaryphone"
         },
         "5": {
-            "__type": "dk.cachet.carp.common.application.triggers.ImmediateTrigger"
+            "__type": "dk.cachet.carp.common.application.triggers.UserTaskTrigger",
+            "sourceDeviceRoleName": "primaryphone",
+            "taskName": "Task #9",
+            "triggerCondition": "done"
+        },
+        "6": {
+            "__type": "dk.cachet.carp.common.application.triggers.ImmediateTrigger",
+            "sourceDeviceRoleName": "primaryphone"
         }
     },
     "taskControls": [
         {
             "triggerId": 0,
-            "taskName": "Start measures",
-            "destinationDeviceRoleName": "primaryphone",
-            "control": "Start"
-        },
-        {
-            "triggerId": 1,
-            "taskName": "Task #5",
-            "destinationDeviceRoleName": "primaryphone",
-            "control": "Start"
-        },
-        {
-            "triggerId": 2,
             "taskName": "Task #6",
             "destinationDeviceRoleName": "primaryphone",
             "control": "Start"
         },
         {
-            "triggerId": 3,
+            "triggerId": 1,
+            "taskName": "Start measures",
+            "destinationDeviceRoleName": "primaryphone",
+            "control": "Start"
+        },
+        {
+            "triggerId": 2,
             "taskName": "Task #7",
+            "destinationDeviceRoleName": "primaryphone",
+            "control": "Start"
+        },
+        {
+            "triggerId": 3,
+            "taskName": "Task #8",
             "destinationDeviceRoleName": "primaryphone",
             "control": "Start"
         },
         {
             "triggerId": 4,
-            "taskName": "Task #7",
+            "taskName": "Task #9",
             "destinationDeviceRoleName": "primaryphone",
             "control": "Start"
         },
         {
             "triggerId": 5,
-            "taskName": "Task #8",
+            "taskName": "Task #9",
+            "destinationDeviceRoleName": "primaryphone",
+            "control": "Start"
+        },
+        {
+            "triggerId": 6,
+            "taskName": "Task #10",
             "destinationDeviceRoleName": "esense",
             "control": "Start"
         }
@@ -196,7 +232,7 @@
             }
         }
     ],
-    "lastUpdateDate": "2022-11-22T19:56:13.193911",
+    "studyDeploymentId": "1234",
     "applicationData": {
         "studyDescription": {
             "__type": "StudyDescription",
@@ -212,6 +248,5 @@
         "applicationData": {
             "uiTheme": "black"
         }
-    },
-    "studyDeploymentId": "1234"
+    }
 }

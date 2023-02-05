@@ -136,7 +136,6 @@ void main() {
   test(
       'SmartphoneStudyProtocol -> JSON -> SmartphoneStudyProtocol :: deep assert',
       () async {
-    // print('#1 : $primaryProtocol');
     print(toJsonString(primaryProtocol));
     final studyJson = toJsonString(primaryProtocol);
 
@@ -144,11 +143,9 @@ void main() {
         json.decode(studyJson) as Map<String, dynamic>);
     print(toJsonString(protocolFromJson));
     expect(toJsonString(protocolFromJson), equals(studyJson));
-    // print('#2 : $protocolFromJson');
   });
 
   test('JSON File -> SmartphoneStudyProtocol', () async {
-    // Read the study protocol from json file
     String plainJson = File('test/json/study_protocol.json').readAsStringSync();
 
     SmartphoneStudyProtocol protocol = SmartphoneStudyProtocol.fromJson(
@@ -157,11 +154,15 @@ void main() {
     expect(protocol.ownerId, primaryProtocol.ownerId);
     expect(protocol.primaryDevices.first.roleName,
         SmartphoneDeploymentService().thisPhone.roleName);
+    expect(protocol.dataEndPoint?.type, DataEndPointTypes.SQLITE);
+    expect(protocol.expectedParticipantData?.length, 1);
+    expect(protocol.getApplicationData('uiTheme'), 'black');
+
     print(toJsonString(protocol));
   });
 
   test('SmartphoneDeployment -> JSON', () async {
-    var deployment = SmartphoneDeployment.fromSmartphoneStudyProtocol(
+    final deployment = SmartphoneDeployment.fromSmartphoneStudyProtocol(
       studyDeploymentId: '1234',
       primaryDeviceRoleName: 'phone',
       protocol: primaryProtocol,
@@ -181,36 +182,38 @@ void main() {
 
   test('SmartphoneDeployment -> JSON -> SmartphoneDeployment :: deep assert',
       () async {
-    var deployment = SmartphoneDeployment.fromSmartphoneStudyProtocol(
+    final deployment = SmartphoneDeployment.fromSmartphoneStudyProtocol(
       studyDeploymentId: '1234',
       primaryDeviceRoleName: 'phone',
       protocol: primaryProtocol,
     );
     print(toJsonString(deployment));
+    expect(deployment.dataEndPoint?.type, DataEndPointTypes.SQLITE);
+    expect(deployment.expectedParticipantData.length, 1);
+    expect(deployment.getApplicationData('uiTheme'), 'black');
 
     final studyJson = toJsonString(deployment);
-    SmartphoneDeployment deploymentFromJson = SmartphoneDeployment.fromJson(
+    final deploymentFromJson = SmartphoneDeployment.fromJson(
         json.decode(studyJson) as Map<String, dynamic>);
     print(toJsonString(deploymentFromJson));
     expect(toJsonString(deploymentFromJson), equals(studyJson));
-    // print('#2 : $protocolFromJson');
   });
 
   test('JSON File -> SmartphoneDeployment', () async {
-    // Read the deployment protocol from json file
-    String plainJson =
+    final plainJson =
         File('test/json/study_deployment.json').readAsStringSync();
 
-    SmartphoneDeployment deployment = SmartphoneDeployment.fromJson(
+    final deployment = SmartphoneDeployment.fromJson(
         json.decode(plainJson) as Map<String, dynamic>);
 
     print(toJsonString(deployment));
+
     expect(deployment.deviceConfiguration.roleName, 'phone');
     expect(deployment.connectedDevices.length, 1);
-    expect(deployment.triggers.length, 6);
+    expect(deployment.triggers.length, 7);
     expect(deployment.triggers.keys.first, '0');
-    expect(deployment.tasks.length, 5);
-    expect(deployment.taskControls.length, 6);
+    expect(deployment.tasks.length, 6);
+    expect(deployment.taskControls.length, 7);
     expect(deployment.dataEndPoint?.type, DataEndPointTypes.SQLITE);
     expect(deployment.expectedParticipantData.length, 1);
     expect(deployment.getApplicationData('uiTheme'), 'black');

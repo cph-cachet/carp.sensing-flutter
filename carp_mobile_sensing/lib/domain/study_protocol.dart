@@ -1,5 +1,5 @@
 /*
- * Copyright 2018-2022 Copenhagen Center for Health Technology (CACHET) at the
+ * Copyright 2018-2023 Copenhagen Center for Health Technology (CACHET) at the
  * Technical University of Denmark (DTU).
  * Use of this source code is governed by a MIT-style license that can be
  * found in the LICENSE file.
@@ -7,7 +7,8 @@
 
 part of domain;
 
-/// A mixin holding specific data for smartphone study protocols and deployments.
+/// A mixin holding smartphone-specific data for a [SmartphoneStudyProtocol] and
+/// [SmartphoneDeployment].
 mixin SmartphoneProtocolExtension {
   SmartphoneApplicationData _data = SmartphoneApplicationData();
 

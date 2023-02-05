@@ -409,10 +409,11 @@ SmartphoneDeployment _$SmartphoneDeploymentFromJson(
               .toSet() ??
           const {},
       userId: json['userId'] as String?,
-      applicationData: json['applicationData'] as Map<String, dynamic>?,
-    )..deployed = json['deployed'] == null
-        ? null
-        : DateTime.parse(json['deployed'] as String);
+    )
+      ..applicationData = json['applicationData'] as Map<String, dynamic>
+      ..deployed = json['deployed'] == null
+          ? null
+          : DateTime.parse(json['deployed'] as String);
 
 Map<String, dynamic> _$SmartphoneDeploymentToJson(
     SmartphoneDeployment instance) {
