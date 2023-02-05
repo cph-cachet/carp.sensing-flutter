@@ -42,7 +42,7 @@ class Persistence {
         await db.execute(
             'CREATE TABLE $DEPLOYMENT_TABLE_NAME (deployment_id TEXT PRIMARY KEY, updated_at TEXT, deployed_at TEXT, user_id TEXT, deployment TEXT)');
         await db.execute(
-            'CREATE TABLE $TASK_QUEUE_TABLE_NAME (id INTEGER PRIMARY KEY, deployment_id TEXT PRIMARY KEY, task_id TEXT, task TEXT)');
+            'CREATE TABLE $TASK_QUEUE_TABLE_NAME (id INTEGER PRIMARY KEY, deployment_id TEXT, task_id TEXT, task TEXT)');
 
         debug('$runtimeType - $databaseName DB created');
       },
