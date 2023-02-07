@@ -9,7 +9,7 @@ part of carp_core_protocols;
 /// Application service which allows managing (multiple versions of)
 /// [StudyProtocol]s.
 abstract class ProtocolService {
-  static const String API_VERSION = "1.1";
+  static const String API_VERSION = "1.0";
 
   /// Add the specified study [protocol].
   ///
@@ -52,7 +52,7 @@ abstract class ProtocolService {
 
 /// Factory methods to create a [StudyProtocol] according to predefined templates.
 abstract class ProtocolFactoryService {
-  static const String API_VERSION = "1.1";
+  static const String API_VERSION = "1.0";
 
   /// Create a study protocol to be deployed to a single device which has its
   /// own way of describing study protocols that deviates from the CARP core

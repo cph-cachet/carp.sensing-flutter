@@ -199,7 +199,8 @@ Map<String, dynamic> _$ParticipantDataToJson(ParticipantData instance) =>
 RoleData _$RoleDataFromJson(Map<String, dynamic> json) => RoleData(
       roleName: json['roleName'] as String,
       data: (json['data'] as Map<String, dynamic>?)?.map(
-            (k, e) => MapEntry(k, Data.fromJson(e as Map<String, dynamic>)),
+            (k, e) => MapEntry(
+                k, e == null ? null : Data.fromJson(e as Map<String, dynamic>)),
           ) ??
           const {},
     );

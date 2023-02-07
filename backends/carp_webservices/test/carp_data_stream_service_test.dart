@@ -19,7 +19,7 @@ void main() {
 
   /// Runs once before all tests.
   setUpAll(() async {
-    Settings().debugLevel = DebugLevel.DEBUG;
+    Settings().debugLevel = DebugLevel.debug;
 
     // Initialization of serialization
     CarpMobileSensing();

@@ -36,7 +36,7 @@ class RoleData {
   String roleName;
 
   /// Data that is related to everyone in the study deployment.
-  Map<String, Data> data;
+  Map<String, Data?> data;
 
   RoleData({
     required this.roleName,
@@ -54,7 +54,7 @@ abstract class AccountIdentity extends Serializable {
   String get jsonType => 'dk.cachet.carp.common.users.$runtimeType';
 }
 
-/// Identifies an [AccountIdentity] using an email adress.
+/// Identifies an [AccountIdentity] using an email address.
 @JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
 class EmailAccountIdentity extends AccountIdentity {
   String emailAddress;

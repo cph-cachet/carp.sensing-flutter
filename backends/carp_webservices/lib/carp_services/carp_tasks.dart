@@ -69,19 +69,17 @@ class FileUploadTask extends CarpServiceTask {
     metadata['size'] = (await file.length()).toString();
     request.fields['metadata'] = json.encode(metadata);
 
-    request.files.add(new http.MultipartFile.fromBytes(
-      'file',
-      file.readAsBytesSync(),
-      filename: name,
-    ));
+    request.files.add(MultipartFileRecreatable.fromFileSync(file.path));
+
+    print('files # : ${request.files.length}');
 
     httpr.send(request).then((http.StreamedResponse response) {
       response.stream.toStringStream().first.then((body) {
         final int httpStatusCode = response.statusCode;
+        print("httpStatusCode: $httpStatusCode");
+        print("response:\n$response");
+        print("body:\n$body");
         final Map<String, dynamic> map = json.decode(body);
-        // print("httpStatusCode: $httpStatusCode");
-        // print("response:\n$response");
-        // print("body:\n$body");
 
         switch (httpStatusCode) {
           // CARP web service returns "201 Created" when a file is created on the server.

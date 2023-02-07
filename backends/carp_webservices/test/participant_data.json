@@ -1,0 +1,12 @@
+{
+    "studyDeploymentId": "413cb92a-65c5-4bb3-a9d7-eabf34da6873",
+    "common": {},
+    "roles": [
+        {
+            "roleName": "Participant",
+            "data": {
+                "dk.cachet.carp.input.sex": null
+            }
+        }
+    ]
+}

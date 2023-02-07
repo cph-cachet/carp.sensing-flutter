@@ -57,12 +57,7 @@ class DataPointReference extends CarpReference {
     request.headers['Content-Type'] = 'multipart/form-data';
     request.headers['cache-control'] = 'no-cache';
 
-    request.files.add(http.MultipartFile.fromBytes(
-      'file',
-      file.readAsBytesSync(),
-      filename: file.path,
-      contentType: MediaType('application', 'json'),
-    ));
+    request.files.add(MultipartFileRecreatable.fromFileSync(file.path));
 
     // sending the request using the retry approach
     httpr.send(request).then((response) async {

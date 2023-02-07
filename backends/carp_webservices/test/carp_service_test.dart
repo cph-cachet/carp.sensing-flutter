@@ -37,7 +37,7 @@ void main() {
   /// Setup CARP and authenticate.
   /// Runs once before all tests.
   setUpAll(() async {
-    Settings().debugLevel = DebugLevel.DEBUG;
+    Settings().debugLevel = DebugLevel.debug;
 
     // Create a new study protocol.
     protocol = StudyProtocol(
@@ -442,12 +442,12 @@ void main() {
 
     test(' - update document', () async {
       // first create a document
-      // var document = await CarpService()
-      //     .collection(collectionName)
-      //     .document(userId)
-      //     .setData({'email': userId, 'role': 'Administrator'});
+      var document = await CarpService()
+          .collection(collectionName)
+          .document(userId)
+          .setData({'email': userId, 'role': 'Administrator'});
 
-      // expect(document, isNotNull);
+      expect(document, isNotNull);
 
       // create a document reference
       final reference =
@@ -458,9 +458,6 @@ void main() {
       print(_encode(original?.data));
 
       // updating the role to super user
-      // DocumentSnapshot updated = await CarpService()
-      //     .collection(collectionName)
-      //     .document(userId)
       final updated =
           await reference.updateData({'email': userId, 'role': 'Super User'});
 
@@ -555,6 +552,8 @@ void main() {
 //       assert(serverDocument.data.length == document.data.length);
 //     }, skip: true);
 
+    // NOTE :: In order to run the following two tests (query) you need to be
+    // authenticated as a researcher (and not as a participant).
     test(' - get documents by query', () async {
       var document = await CarpService()
           .collection(collectionName)
@@ -702,6 +701,8 @@ void main() {
           .delete();
     });
 
+    // NOTE :: In order to run the following two tests (rename & delete)
+    // you need to be authenticated as a researcher.
     test(' - rename collection', () async {
       CollectionReference collection =
           await CarpService().collection(collectionName).get();
@@ -765,15 +766,16 @@ void main() {
     test('- upload', () async {
       final File myFile = File("test/img.jpg");
 
-      final FileUploadTask uploadTask = CarpService()
-          .getFileStorageReference()
-          .upload(myFile, {
-        'content-type': 'image/jpg',
-        'content-language': 'en',
-        'activity': 'test'
-      });
+      final uploadTask = CarpService().getFileStorageReference().upload(
+        myFile,
+        {
+          'content-type': 'image/jpg',
+          'content-language': 'en',
+          'activity': 'test'
+        },
+      );
 
-      CarpFileResponse response = await uploadTask.onComplete;
+      final response = await uploadTask.onComplete;
       expect(response.id, greaterThan(0));
 
       print('response.storageName : ${response.storageName}');

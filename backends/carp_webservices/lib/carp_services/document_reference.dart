@@ -80,7 +80,9 @@ class DocumentReference extends CarpReference {
   Future<DocumentSnapshot> updateData(Map<String, dynamic> data) async {
     // if we don't have the document ID, get it first.
     if (id == null) _id = (await this.get())?.id;
-    if (_id == null) // early out if this document does not exist
+
+    // early out if this document does not exist
+    if (_id == null)
       throw CarpServiceException(message: 'No valid document id found.');
 
     Map<String, dynamic> payload = {'name': name, 'data': data};
@@ -96,6 +98,10 @@ class DocumentReference extends CarpReference {
 
     if (httpStatusCode == HttpStatus.ok)
       return DocumentSnapshot._(path, responseJson);
+
+    print('$httpStatusCode - ${response.reasonPhrase}');
+    print(responseJson["message"]);
+    print(responseJson["path"]);
 
     throw CarpServiceException(
       httpStatus: HTTPStatus(httpStatusCode, response.reasonPhrase),

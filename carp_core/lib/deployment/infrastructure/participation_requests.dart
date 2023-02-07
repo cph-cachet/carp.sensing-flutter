@@ -21,7 +21,7 @@ abstract class ParticipationServiceRequest extends DeploymentServiceRequest {
       'dk.cachet.carp.deployments.infrastructure.ParticipationServiceRequest';
 
   @override
-  String apiVersion = "1.0";
+  String get apiVersion => ParticipationService.API_VERSION;
 
   ParticipationServiceRequest([super.studyDeploymentId]);
 

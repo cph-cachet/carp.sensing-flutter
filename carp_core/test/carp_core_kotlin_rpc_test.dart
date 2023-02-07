@@ -5,7 +5,8 @@ import 'package:carp_core/carp_core.dart';
 import 'package:carp_serializable/carp_serializable.dart';
 
 void main() {
-  const String path = 'test/json/carp.core-kotlin/1.1.1';
+  const String apiVersion = '1.0.0';
+  const String path = 'test/json/carp.core-kotlin/$apiVersion';
 
   setUp(() {
     Core();
@@ -270,8 +271,8 @@ void main() {
       var m1 = Measurement(
           sensorStartTime: 1642505045000000,
           data: Geolocation(
-              latitude: 55.68061908805645, longitude: 12.582050313435703)
-            ..sensorSpecificData = SignalStrength(rssi: 0));
+              latitude: 55.68061908805645, longitude: 12.582050313435703));
+      // ..sensorSpecificData = SignalStrength(rssi: 0));
       var m2 = Measurement(
           sensorStartTime: 1642505144000000,
           data: Geolocation(

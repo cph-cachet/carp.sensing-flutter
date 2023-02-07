@@ -194,12 +194,13 @@ void main() {
       firstSequenceId: 0,
       measurements: [
         Measurement(
-          sensorStartTime: DateTime.now().millisecondsSinceEpoch,
-          data: Geolocation(
-            latitude: 55.68061908805645,
-            longitude: 12.582050313435703,
-          )..sensorSpecificData = SignalStrength(rssi: 23),
-        ),
+            sensorStartTime: DateTime.now().millisecondsSinceEpoch,
+            data: Geolocation(
+              latitude: 55.68061908805645,
+              longitude: 12.582050313435703,
+            )
+            // ..sensorSpecificData = SignalStrength(rssi: 23),
+            ),
         Measurement(
           sensorStartTime: DateTime.now().millisecondsSinceEpoch,
           data: Geolocation(
