@@ -8,11 +8,10 @@ import 'package:carp_webservices/carp_services/carp_services.dart';
 void main() async {
   final String username = 'researcher';
   final Uri uri = Uri(
-    scheme: 'https',
-    host: 'cans.cachet.dk',
-    port: 443,
-    pathSegments: ['portal', 'dev']
-  );
+      scheme: 'https',
+      host: 'cans.cachet.dk',
+      port: 443,
+      pathSegments: ['portal', 'dev']);
 
   CarpApp app;
   StudyProtocol protocol;
@@ -33,7 +32,7 @@ void main() async {
     name: 'any_display_friendly_name_is_fine',
     studyId: 'the_study_id',
     studyDeploymentId: 'the_study_deployment_id',
-    uri: uri,
+    baseUri: uri,
     oauth: OAuthEndPoint(
       clientID: 'the_client_id',
       clientSecret: 'the_client_secret',

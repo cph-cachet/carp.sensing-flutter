@@ -66,7 +66,7 @@ class CarpParticipationService extends CarpBaseService
   /// or if the user closes the dialog (if [allowClose] is true).
   ///
   /// If the user is invited to more than one study and [showInvitations] is `true`,
-  /// a user-interface dialog for selecting amongs the invitations is shown.
+  /// a user-interface dialog for selecting among the invitations is shown.
   /// If not, the study id of the first invitation is returned.
   ///
   /// [allowClose] specifies whether the user can close the window.

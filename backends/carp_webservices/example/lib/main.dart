@@ -84,11 +84,12 @@ class _HomePageState extends State<HomePage> {
 }
 
 class AppBLoC {
+  static const environment = 'test';
+
   final Uri uri = Uri(
     scheme: 'https',
     host: 'cans.cachet.dk',
-    port: 443,
-    pathSegments: ['portal', 'test'],
+    path: environment,
   );
   ActiveParticipationInvitation? _invitation;
   String? get studyId => _invitation?.studyId;
@@ -100,7 +101,7 @@ class AppBLoC {
   Future init() async {
     _app = CarpApp(
       name: 'carp_backend_example_app',
-      uri: uri,
+      baseUri: uri,
       oauth: OAuthEndPoint(clientID: 'carp', clientSecret: 'carp'),
     );
 

@@ -42,20 +42,17 @@ class CarpService extends CarpBaseService {
   /// The fomat is `https://cans.cachet.dk/forgotten` for the production host
   /// and `https://cans.cachet.dk/portal/stage/forgotten` for the stage, test,
   /// and dev hosts.
-  String get authEndpointUri => "${_app!.uri}${_app!.oauth.path}";
-
-  /// The authentication environment (prod, dev, stage, test) endpoint for this [CarpService].
-  String? get environment => _app!.uri.path == '' ? null : _app!.uri.pathSegments[1];
+  String get authEndpointUri => "${_app!.baseUri}${_app!.oauth.path}";
 
   /// The URI for the reset password page for this [CarpService].
   /// The format is `https://cans.cachet.dk/forgotten` for the production host
-  Uri get resetPasswordURI =>
-      _app!.uri.replace(pathSegments: _app!.uri.pathSegments + ['forgotten']);
+  Uri get resetPasswordURI => _app!.baseUri.replace(
+      pathSegments: ['portal'] + _app!.baseUri.pathSegments + ['forgotten']);
 
   /// The URL for the reset password page for this [CarpService].
   @Deprecated("Use [resetPasswordURI] instead, which will return a Uri object.")
   String get resetPasswordUrl {
-    String url = "${_app!.uri}";
+    String url = "${_app!.baseUri}";
     String host = '';
     if (url.contains('dev')) host = 'dev';
     if (url.contains('test')) host = 'test';
@@ -189,7 +186,7 @@ class CarpService extends CarpBaseService {
     CarpUser? user = await showDialog<CarpUser>(
         context: context,
         barrierDismissible: allowClose,
-          barrierColor: Theme.of(context).dialogBackgroundColor,
+        barrierColor: Theme.of(context).dialogBackgroundColor,
         builder: (BuildContext context) => AuthenticationDialog().build(
               context,
               username: username,
@@ -243,7 +240,7 @@ class CarpService extends CarpBaseService {
 
   /// The URL for sending email about a forgotten password.
   String get forgottenPasswordEmailUri =>
-      "${_app!.uri.toString()}/api/users/forgotten-password/send";
+      "${_app!.baseUri}/api/users/forgotten-password/send";
 
   /// Triggers the CARP backend to send a password-reset email to the given
   /// email address, which must correspond to an existing user of the current [app].
@@ -290,10 +287,10 @@ class CarpService extends CarpBaseService {
 
   /// The URL for the current user end point for this [CarpService].
   String get currentUserEndpointUri =>
-      "${_app!.uri.toString()}/api/users/current";
+      "${_app!.baseUri.toString()}/api/users/current";
 
   /// The URL for the user endpoint for this [CarpService].
-  String get userEndpointUri => "${_app!.uri.toString()}/api/users";
+  String get userEndpointUri => "${_app!.baseUri.toString()}/api/users";
 
   /// The headers for any authenticated HTTP REST call to this [CarpService].
   Map<String, String> get headers {
@@ -387,7 +384,7 @@ class CarpService extends CarpBaseService {
 
   /// The URL for the consent document end point for this [CarpService].
   String get consentDocumentEndpointUri =>
-      "${_app!.uri.toString()}/api/deployments/${_app!.studyDeploymentId}/consent-documents";
+      "${_app!.baseUri.toString()}/api/deployments/${_app!.studyDeploymentId}/consent-documents";
 
   /// Create a new (signed) consent document for this user.
   /// Returns the created [ConsentDocument] if the document is uploaded correctly.
@@ -450,7 +447,7 @@ class CarpService extends CarpBaseService {
 
   /// The URL for the file end point for this [CarpService].
   String get fileEndpointUri =>
-      "${_app!.uri.toString()}/api/studies/${_app!.studyId}/files";
+      "${_app!.baseUri.toString()}/api/studies/${_app!.studyId}/files";
 
   /// Get a [FileStorageReference] that reference a file at the current
   /// CarpService storage location.
@@ -525,7 +522,7 @@ class CarpService extends CarpBaseService {
 
   /// The URL for the document end point for this [CarpService].
   String get documentEndpointUri =>
-      "${_app!.uri.toString()}/api/studies/${_app!.studyId}/documents";
+      "${_app!.baseUri.toString()}/api/studies/${_app!.studyId}/documents";
 
   /// Get a list documents from a query.
   ///

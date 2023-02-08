@@ -48,7 +48,8 @@ abstract class CarpBaseService {
   ///
   /// Typically on the form:
   /// `{{PROTOCOL}}://{{SERVER_HOST}}:{{SERVER_PORT}}/api/...`
-  String get rpcEndpointUri => "${app!.uri.toString()}/api/$rpcEndpointName";
+  String get rpcEndpointUri =>
+      "${app!.baseUri.toString()}/api/$rpcEndpointName";
 
   /// The headers for any authenticated HTTP REST call to a [CarpBaseService].
   Map<String, String> get headers {

@@ -32,7 +32,7 @@ class AuthenticationDialog {
                         _getForm(username: username),
                         _getLoginButton(context),
                         _getResetPasswordButton(context),
-                        if (CarpService().environment != null)
+                        if (CarpService()._app!.baseUri.path.isNotEmpty)
                           _getEnvironmentText(context),
                       ],
                     ),
@@ -132,6 +132,7 @@ class AuthenticationDialog {
         child: TextButton(
           onPressed: () async {
             try {
+              if (!_formkey.currentState!.validate()) return;
               CarpUser user = await CarpService()
                   .authenticate(username: _username!, password: _password!);
               Navigator.pop(context, user);
@@ -165,8 +166,7 @@ class AuthenticationDialog {
       );
 
   Text _getEnvironmentText(BuildContext context) => Text(
-        'Environment: ${CarpService().environment}',
+        'Environment: ${CarpService()._app!.baseUri}',
         style: TextStyle(fontSize: 12, color: Colors.grey),
       );
-
 }
