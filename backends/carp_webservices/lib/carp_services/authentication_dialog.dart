@@ -18,29 +18,38 @@ class AuthenticationDialog {
     context, {
     String? username,
   }) =>
-      Dialog(child: Builder(
-          // Create an inner BuildContext so that the onPressed methods
-          // can refer to the Scaffold with Scaffold.of().
-          builder: (BuildContext context) {
-        return Container(
-          padding: EdgeInsets.all(16.0),
-          child: ListView(
-            shrinkWrap: true,
-            children: <Widget>[
-              _getHeader(),
-              _getForm(username: username),
-              _getLoginButton(context),
-              _getResetPasswordButton(context),
-            ],
-          ),
-        );
-      }));
+      Dialog.fullscreen(
+          child: Builder(
+              // Create an inner BuildContext so that the onPressed methods
+              // can refer to the Scaffold with Scaffold.of().
+              builder: (BuildContext context) => Padding(
+                    padding: const EdgeInsets.all(16.0),
+                    child: ListView(
+                      shrinkWrap: true,
+                      children: <Widget>[
+                        _getHeader(),
+                        SizedBox(height: 150),
+                        _getForm(username: username),
+                        _getLoginButton(context),
+                        _getResetPasswordButton(context),
+                        if (CarpService().environment != null)
+                          _getEnvironmentText(context),
+                      ],
+                    ),
+                  )));
 
-  Widget _getHeader() => Padding(
-        padding: const EdgeInsets.fromLTRB(32, 32, 32, 64),
-        child: Image.asset(
-          'asset/images/carp_logo.png',
-          package: 'carp_webservices',
+  Widget _getHeader() => Container(
+        height: 150.0,
+        width: 190.0,
+        padding: EdgeInsets.only(top: 40),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(200),
+        ),
+        child: Center(
+          child: Image.asset(
+            'asset/images/carp_logo.png',
+            package: 'carp_webservices',
+          ),
         ),
       );
 
@@ -50,44 +59,55 @@ class AuthenticationDialog {
       child: AutofillGroup(
         child: Column(
           children: <Widget>[
-            TextFormField(
-              key: _usernameKey,
-              autocorrect: false,
-              initialValue: username,
-              maxLines: 1,
-              keyboardType: TextInputType.emailAddress,
-              validator: MultiValidator([
-                RequiredValidator(errorText: "Required"),
-                CARPEmailValidator(errorText: "Enter valid email."),
-              ]),
-              decoration: InputDecoration(
-                icon: Icon(Icons.account_circle),
-                labelText: 'Username',
-                hintText: 'Enter email as abc@cachet.dk',
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: TextFormField(
+                key: _usernameKey,
+                autocorrect: false,
+                initialValue: username,
+                maxLines: 1,
+                keyboardType: TextInputType.emailAddress,
+                validator: MultiValidator([
+                  RequiredValidator(errorText: "Required"),
+                  CARPEmailValidator(errorText: "Enter valid email."),
+                ]),
+                decoration: InputDecoration(
+                  border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(16)),
+                  prefixIcon: Icon(Icons.account_circle_outlined),
+                  labelText: 'Username',
+                  hintText: 'Enter email as abc@cachet.dk',
+                ),
+                autofillHints: [
+                  AutofillHints.email,
+                  AutofillHints.username,
+                ],
               ),
-              autofillHints: [
-                AutofillHints.email,
-                AutofillHints.username,
-              ],
-            ),
-            TextFormField(
-              key: _passwordKey,
-              validator: MultiValidator([
-                RequiredValidator(errorText: "Required"),
-                MinLengthValidator(8, errorText: "At least 8 characters."),
-              ]),
-              obscureText: true,
-              decoration: InputDecoration(
-                icon: Icon(Icons.lock),
-                labelText: 'Password',
-                hintText: 'Enter password',
-              ),
-              autofillHints: [
-                AutofillHints.password,
-              ],
             ),
             Padding(
-              padding: const EdgeInsets.fromLTRB(0.0, 15.0, 0.0, 0.0),
+              padding: const EdgeInsets.all(8.0),
+              child: TextFormField(
+                key: _passwordKey,
+                validator: MultiValidator([
+                  RequiredValidator(errorText: "Required"),
+                  MinLengthValidator(8, errorText: "At least 8 characters."),
+                ]),
+                obscureText: true,
+                decoration: InputDecoration(
+                  fillColor: Colors.grey[200],
+                  border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(16)),
+                  prefixIcon: Icon(Icons.lock_outline_rounded),
+                  labelText: 'Password',
+                  hintText: 'Enter password',
+                ),
+                autofillHints: [
+                  AutofillHints.password,
+                ],
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.all(8.0),
               child: StreamBuilder(
                   stream: CarpService().authStateChanges,
                   builder: (BuildContext context,
@@ -97,43 +117,56 @@ class AuthenticationDialog {
                               'Sign in failed. Please retry.',
                               style: TextStyle(fontSize: 12, color: Colors.red),
                             )
-                          : Text('')),
+                          : Text(' ')),
             ),
           ],
         ),
       ));
 
-  OutlinedButton _getLoginButton(BuildContext context) => OutlinedButton(
-        onPressed: () async {
-          try {
-            CarpUser user = await CarpService()
-                .authenticate(username: _username!, password: _password!);
-            Navigator.pop(context, user);
-          } catch (exception) {
-            warning('Exception in authentication - $exception');
-          }
-        },
-        style: ElevatedButton.styleFrom(backgroundColor: Colors.blue[900]),
-        child: Text(
-          "Sign in",
-          style: const TextStyle(color: Colors.white, fontSize: 20),
+  Widget _getLoginButton(BuildContext context) => Container(
+        margin: const EdgeInsets.fromLTRB(48, 16, 48, 8),
+        decoration: BoxDecoration(
+          color: Color.fromARGB(255, 0, 99, 152),
+          borderRadius: BorderRadius.circular(16),
+        ),
+        child: TextButton(
+          onPressed: () async {
+            try {
+              CarpUser user = await CarpService()
+                  .authenticate(username: _username!, password: _password!);
+              Navigator.pop(context, user);
+            } catch (exception) {
+              warning('Exception in authentication - $exception');
+            }
+          },
+          child: Text(
+            "Sign in",
+            style: const TextStyle(color: Colors.white, fontSize: 20),
+          ),
         ),
       );
 
-  TextButton _getResetPasswordButton(BuildContext context) {
-    return TextButton(
-      onPressed: () async {
-        try {
-          info("Reset password at url: '${CarpService().resetPasswordUrl}'");
-          await launchUrl(Uri(path: CarpService().resetPasswordUrl));
-        } catch (exception) {
-          warning('Exception in launching Reset Password URL - $exception');
-        }
-      },
-      child: Text(
-        "Reset Password",
-        style: const TextStyle(color: Colors.grey),
-      ),
-    );
-  }
+  TextButton _getResetPasswordButton(BuildContext context) => TextButton(
+        onPressed: () async {
+          try {
+            info("Reset password at url: '${CarpService().resetPasswordURI}'");
+            await launchUrl(
+              CarpService().resetPasswordURI,
+              mode: LaunchMode.inAppWebView,
+            );
+          } catch (exception) {
+            warning('Exception in launching Reset Password URL - $exception');
+          }
+        },
+        child: Text(
+          "Reset password",
+          style: const TextStyle(color: Colors.grey),
+        ),
+      );
+
+  Text _getEnvironmentText(BuildContext context) => Text(
+        'Environment: ${CarpService().environment}',
+        style: TextStyle(fontSize: 12, color: Colors.grey),
+      );
+
 }

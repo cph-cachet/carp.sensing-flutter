@@ -44,7 +44,16 @@ class CarpService extends CarpBaseService {
   /// and dev hosts.
   String get authEndpointUri => "${_app!.uri}${_app!.oauth.path}";
 
+  /// The authentication environment (prod, dev, stage, test) endpoint for this [CarpService].
+  String? get environment => _app!.uri.path == '' ? null : _app!.uri.pathSegments[1];
+
+  /// The URI for the reset password page for this [CarpService].
+  /// The format is `https://cans.cachet.dk/forgotten` for the production host
+  Uri get resetPasswordURI =>
+      _app!.uri.replace(pathSegments: _app!.uri.pathSegments + ['forgotten']);
+
   /// The URL for the reset password page for this [CarpService].
+  @Deprecated("Use [resetPasswordURI] instead, which will return a Uri object.")
   String get resetPasswordUrl {
     String url = "${_app!.uri}";
     String host = '';
@@ -55,11 +64,7 @@ class CarpService extends CarpBaseService {
       String rawUri = url.substring(0, url.indexOf(host));
       url = rawUri + 'portal/$host';
     }
-    url += '/forgotten';
-
-    print('url = $url');
-
-    return url;
+    return url + 'forgotten';
   }
 
   /// The HTTP header for the authentication requests.
@@ -184,6 +189,7 @@ class CarpService extends CarpBaseService {
     CarpUser? user = await showDialog<CarpUser>(
         context: context,
         barrierDismissible: allowClose,
+          barrierColor: Theme.of(context).dialogBackgroundColor,
         builder: (BuildContext context) => AuthenticationDialog().build(
               context,
               username: username,
