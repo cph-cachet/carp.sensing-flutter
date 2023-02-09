@@ -146,7 +146,7 @@ class CarpService extends CarpBaseService {
   /// Return the signed in user (with an [OAuthToken] access token), if successful.
   /// Throws a [CarpServiceException] if not successful.
   Future<CarpUser> authenticateWithToken({
-    required String username,
+    String? username,
     required OAuthToken token,
   }) async {
     _currentUser = CarpUser(username: username)..authenticated(token);
@@ -318,6 +318,7 @@ class CarpService extends CarpBaseService {
 
     if (httpStatusCode == HttpStatus.ok) {
       return _currentUser!
+        ..username = responseJson['username']
         ..id = responseJson['id']
         ..accountId = responseJson['accountId']
         ..isActivated = responseJson['isActivated'] as bool?

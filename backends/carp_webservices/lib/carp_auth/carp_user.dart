@@ -11,7 +11,7 @@ part of carp_auth;
 @JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)
 class CarpUser {
   /// Unique CARP username
-  String username;
+  String? username;
 
   /// Unique CARP ID
   int? id;
@@ -54,7 +54,7 @@ class CarpUser {
   OAuthToken? token;
 
   CarpUser({
-    required this.username,
+    this.username,
     this.id,
     this.accountId,
     this.firstName,
