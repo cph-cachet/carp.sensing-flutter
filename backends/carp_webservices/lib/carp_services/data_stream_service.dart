@@ -53,9 +53,11 @@ class CarpDataStreamService extends CarpBaseService
     ));
 
     // we expect a list of 'items'
-    return responseJson['items']
-        .map((item) => DataStreamBatch.fromJson(item))
-        .toList();
+    List<dynamic> items = responseJson['items'];
+
+    return (items.length == 0)
+        ? []
+        : items.map((item) => DataStreamBatch.fromJson(item)).toList();
   }
 
   @override

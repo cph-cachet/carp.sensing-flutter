@@ -37,8 +37,7 @@ part 'message_manager.dart';
 /// Specify a CARP Service endpoint for uploading data.
 @JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
 class CarpDataEndPoint extends DataEndPoint {
-  /// The method used to upload to CARP.
-  /// See [CarpUploadMethod] for options.
+  /// The method used to upload to CARP. See [CarpUploadMethod] for options.
   CarpUploadMethod uploadMethod;
 
   /// The name of the CARP endpoint. Can be anything, but its recommended
@@ -62,12 +61,15 @@ class CarpDataEndPoint extends DataEndPoint {
   /// Note that the password is in **clear text** and should hence only be used
   /// if the study is created locally on the phone in Dart.
   ///
-  /// If the study deployment is downloaded from CARP (i.e., via the
+  /// If the study deployment is downloaded from CAWS (i.e., via the
   /// [CarpDeploymentService]), then the authentication used for downloading
-  /// is used and the [email] and [password] may be `null`.
+  /// is used and the [email] and [password] may be null.
   String? password;
 
-  /// When uploading to CARP using file in the [CarpUploadMethod.DATA_STREAM]
+  /// Only upload when connected via WiFi network?
+  bool onlyUploadOnWiFi = false;
+
+  /// When uploading to CAWS using file in the [CarpUploadMethod.DATA_STREAM]
   /// or [CarpUploadMethod.FILE] methods, specifies if the local buffered data on the phone
   /// should be deleted once uploaded.
   bool deleteWhenUploaded = true;
@@ -81,6 +83,7 @@ class CarpDataEndPoint extends DataEndPoint {
     this.clientSecret,
     this.email,
     this.password,
+    this.onlyUploadOnWiFi = false,
     this.deleteWhenUploaded = true,
     super.dataFormat,
   }) : super(
@@ -92,6 +95,7 @@ class CarpDataEndPoint extends DataEndPoint {
     CarpUploadMethod uploadMethod = CarpUploadMethod.DATA_STREAM,
     String name = 'CARP Web Services',
     String? collection,
+    bool onlyUploadOnWiFi = false,
     bool deleteWhenUploaded = true,
     String dataFormat = NameSpace.CARP,
     required CarpApp app,
@@ -102,6 +106,7 @@ class CarpDataEndPoint extends DataEndPoint {
           clientId: app.oauth.clientID,
           clientSecret: app.oauth.clientSecret,
           dataFormat: dataFormat,
+          onlyUploadOnWiFi: onlyUploadOnWiFi,
           deleteWhenUploaded: deleteWhenUploaded,
         );
 
@@ -153,6 +158,3 @@ class CarpBackendException implements Exception {
   CarpBackendException([this.message]);
   String toString() => "$runtimeType - ${message ?? ""}";
 }
-
-// String _encode(Object? object) =>
-//     const JsonEncoder.withIndent(' ').convert(object);

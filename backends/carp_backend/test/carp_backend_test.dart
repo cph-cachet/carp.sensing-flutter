@@ -42,7 +42,7 @@ void main() {
   /// Runs once before all tests.
   setUpAll(() async {
     Settings().saveAppTaskQueue = false;
-    Settings().debugLevel = DebugLevel.DEBUG;
+    Settings().debugLevel = DebugLevel.debug;
 
     StudyProtocol(ownerId: 'user@dtu.dk', name: 'ignored'); // ...
 

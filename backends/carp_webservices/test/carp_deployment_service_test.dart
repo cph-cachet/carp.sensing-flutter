@@ -179,13 +179,15 @@ void main() {
       print(status);
       expect(status.primaryDeviceStatus!.device, isNotNull);
       print(status.primaryDeviceStatus!.device);
-      status = await CarpDeploymentService().registerDevice(testDeploymentId,
-          status.primaryDeviceStatus!.device.roleName, DeviceRegistration());
+      status = await CarpDeploymentService().registerDevice(
+          testDeploymentId,
+          status.primaryDeviceStatus!.device.roleName,
+          DefaultDeviceRegistration(deviceDisplayName: 'Samsung A10'));
       print(status);
       expect(status.studyDeploymentId, testDeploymentId);
     }, skip: false);
 
-    test('- get master device deployment', () async {
+    test('- get primary device deployment', () async {
       StudyDeploymentStatus status = await CarpDeploymentService()
           .getStudyDeploymentStatus(testDeploymentId);
       print(status);
@@ -204,7 +206,7 @@ void main() {
       expect(deployment.registration.deviceId, isNotNull);
     }, skip: false);
 
-    test('- deployment success', () async {
+    test('- device deployed', () async {
       StudyDeploymentStatus status_1 = await CarpDeploymentService()
           .getStudyDeploymentStatus(testDeploymentId);
       print(status_1);

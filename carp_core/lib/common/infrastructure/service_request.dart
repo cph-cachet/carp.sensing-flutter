@@ -10,5 +10,5 @@ part of carp_core_common;
 /// An abstract base class for all RPC requests to CARP.
 abstract class ServiceRequest extends Serializable {
   @protected
-  String apiVersion = "1.0";
+  String apiVersion = "1.0"; // base version is 1.0
 }

@@ -12,7 +12,7 @@ class DataStreamBuffer {
   static const String DATABASE_NAME = 'carp-data-stream-buffer';
 
   static const String ID_COLUMN = 'id';
-  // static const String MEASUREMENT_TABLE_NAME = 'measurements';
+
   // SQLite does not have a separate Boolean storage class. Instead,
   // Boolean values are stored as integers 0 (false) and 1 (true).
   static const String UPLOADED_COLUMN = 'uploaded';

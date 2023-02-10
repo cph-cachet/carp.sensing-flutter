@@ -1,5 +1,5 @@
 /*
- * Copyright 2018-2022 Copenhagen Center for Health Technology (CACHET) at the
+ * Copyright 2018-2023 Copenhagen Center for Health Technology (CACHET) at the
  * Technical University of Denmark (DTU).
  * Use of this source code is governed by a MIT-style license that can be
  * found in the LICENSE file.
@@ -7,12 +7,26 @@
 
 part of carp_backend;
 
-/// Stores CAMS data points in the CARP backend.
+class CarpDataManagerFactory implements DataManagerFactory {
+  @override
+  String get type => DataEndPointTypes.CAWS;
+
+  @override
+  DataManager create() => CarpDataManager();
+}
+
+/// Stores CAMS data points in the CARP Web Services (CAWS) backend.
 ///
-/// Every time a CARP json data object is created, it is uploaded to CARP.
-/// Hence, this interface only works when the device is online.
-/// If offline data storage and forward is needed, use the [CarpUploadMethod.FILE]
-/// or [CarpUploadMethod.BATCH_DATA_POINT] instead. These methods will buffer files for upload, if offline.
+/// Upload of data to CAWS can happen in three ways, as specified in
+/// [CarpUploadMethod]:
+///
+///   * [CarpUploadMethod.DATA_STREAM] - Upload data as data streams (the default method).
+///   * [CarpUploadMethod.DATA_POINT] - Upload each data point separately using
+///        the old DataPoint endpoint in CAWS. Note that every time a CARP json measurement
+///        object is created, it is uploaded to CARP. Hence, this method only works
+///        when the device is online.
+///   * [CarpUploadMethod.FILE] - Collect measurements in a SQLite DB file and
+///        upload as a `db` file
 class CarpDataManager extends AbstractDataManager {
   bool _initialized = false;
   late CarpDataEndPoint carpEndPoint;
@@ -37,11 +51,11 @@ class CarpDataManager extends AbstractDataManager {
 
   @override
   Future initialize(
-    SmartphoneDeployment deployment,
     DataEndPoint dataEndPoint,
+    SmartphoneDeployment deployment,
     Stream<Measurement> data,
   ) async {
-    super.initialize(deployment, dataEndPoint, data);
+    super.initialize(dataEndPoint, deployment, data);
     assert(dataEndPoint is CarpDataEndPoint);
     carpEndPoint = dataEndPoint as CarpDataEndPoint;
 
@@ -69,7 +83,7 @@ class CarpDataManager extends AbstractDataManager {
 
       // set up a timer that uploads data on a regular basis
       uploadTimer =
-          Timer.periodic(Duration(minutes: 1), (_) => _uploadMeasurements());
+          Timer.periodic(Duration(minutes: 10), (_) => _uploadMeasurements());
     }
     _initialized = true;
     await user; // This will trigger authentication to the CARP server
@@ -135,6 +149,7 @@ class CarpDataManager extends AbstractDataManager {
       warning('User is not authenticated - username: ${carpEndPoint.email}');
       return false;
     } else {
+      // TODO - move this to upload method - we might be offline???
       // first check if this is a measurement that has a separate file to be uploaded
       if (measurement.data is FileData) {
         var fileData = measurement.data as FileData;
@@ -150,15 +165,17 @@ class CarpDataManager extends AbstractDataManager {
           return true;
         case CarpUploadMethod.DATA_POINT:
           return await _uploadMeasurementAsDataPoint(measurement);
-        // case CarpUploadMethod.BATCH_DATA_POINT:
-        //   // Forward to [FileDataManager] for buffering data
-        //   return await fileDataManager.write(measurement);
       }
     }
   }
 
   /// Upload buffered measurements to CAWS.
   Future<void> _uploadMeasurements() async =>
+      // TODO
+      //  - only upload when online
+      //  - only upload when on WiFi
+      //  - upload file attachements
+
       CarpDataStreamService().appendToDataStreams(
         studyDeploymentId,
         await buffer.getDataStreamBatches(),

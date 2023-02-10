@@ -95,8 +95,8 @@ void main() async {
   // DIFFERENT WAYS TO UPLOAD DATA TO CARP
   // -----------------------------------------------
 
-  // first register the CARP data manager
-  DataManagerRegistry().register(CarpDataManager());
+  // first register the CARP data manager factory
+  DataManagerRegistry().register(CarpDataManagerFactory());
 
   // using the (default) data stream batch upload method
   CarpDataEndPoint cdep_3 = CarpDataEndPoint(

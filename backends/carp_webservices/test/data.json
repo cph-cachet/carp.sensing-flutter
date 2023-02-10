@@ -1,7 +1,7 @@
 [
     {
         "sequenceId": 0,
-        "studyDeploymentId": "f803ce90-cae3-4f23-9b79-b1c865ed1b03",
+        "studyDeploymentId": "413cb92a-65c5-4bb3-a9d7-eabf34da6873",
         "deviceRoleName": "smartphone",
         "measurement": {
             "sensorStartTime": 1642505045000000,
@@ -20,7 +20,7 @@
             "relativeClockSpeed": 1.0
         },
         "dataStream": {
-            "studyDeploymentId": "f803ce90-cae3-4f23-9b79-b1c865ed1b03",
+            "studyDeploymentId": "413cb92a-65c5-4bb3-a9d7-eabf34da6873",
             "deviceRoleName": "smartphone",
             "dataType": {
                 "namespace": "dk.cachet.carp",
@@ -30,7 +30,7 @@
     },
     {
         "sequenceId": 1,
-        "studyDeploymentId": "f803ce90-cae3-4f23-9b79-b1c865ed1b03",
+        "studyDeploymentId": "413cb92a-65c5-4bb3-a9d7-eabf34da6873",
         "deviceRoleName": "smartphone",
         "measurement": {
             "sensorStartTime": 1642505144000000,
@@ -49,7 +49,7 @@
             "relativeClockSpeed": 1.0
         },
         "dataStream": {
-            "studyDeploymentId": "f803ce90-cae3-4f23-9b79-b1c865ed1b03",
+            "studyDeploymentId": "413cb92a-65c5-4bb3-a9d7-eabf34da6873",
             "deviceRoleName": "smartphone",
             "dataType": {
                 "namespace": "dk.cachet.carp",
