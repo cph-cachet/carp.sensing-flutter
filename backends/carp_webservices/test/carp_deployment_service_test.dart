@@ -223,7 +223,7 @@ void main() {
           await CarpDeploymentService().deviceDeployed(
         testDeploymentId,
         status_1.primaryDeviceStatus!.device.roleName,
-        deployment.lastUpdateDate!,
+        deployment.lastUpdateDate,
       );
       print(status_2);
       expect(status_1.studyDeploymentId, status_2.studyDeploymentId);
