@@ -45,11 +45,7 @@ PolarAccelerometer _$PolarAccelerometerFromJson(Map<String, dynamic> json) =>
       (json['samples'] as List<dynamic>)
           .map((e) => PolarXYZ.fromJson(e as Map<String, dynamic>))
           .toList(),
-    )
-      ..$type = json['__type'] as String?
-      ..sensorSpecificData = json['sensorSpecificData'] == null
-          ? null
-          : Data.fromJson(json['sensorSpecificData'] as Map<String, dynamic>);
+    )..$type = json['__type'] as String?;
 
 Map<String, dynamic> _$PolarAccelerometerToJson(PolarAccelerometer instance) {
   final val = <String, dynamic>{};
@@ -61,7 +57,6 @@ Map<String, dynamic> _$PolarAccelerometerToJson(PolarAccelerometer instance) {
   }
 
   writeNotNull('__type', instance.$type);
-  writeNotNull('sensorSpecificData', instance.sensorSpecificData);
   val['deviceIdentifier'] = instance.deviceIdentifier;
   writeNotNull('deviceTimestamp', instance.deviceTimestamp);
   val['samples'] = instance.samples;
@@ -75,11 +70,7 @@ PolarGyroscope _$PolarGyroscopeFromJson(Map<String, dynamic> json) =>
       (json['samples'] as List<dynamic>)
           .map((e) => PolarXYZ.fromJson(e as Map<String, dynamic>))
           .toList(),
-    )
-      ..$type = json['__type'] as String?
-      ..sensorSpecificData = json['sensorSpecificData'] == null
-          ? null
-          : Data.fromJson(json['sensorSpecificData'] as Map<String, dynamic>);
+    )..$type = json['__type'] as String?;
 
 Map<String, dynamic> _$PolarGyroscopeToJson(PolarGyroscope instance) {
   final val = <String, dynamic>{};
@@ -91,7 +82,6 @@ Map<String, dynamic> _$PolarGyroscopeToJson(PolarGyroscope instance) {
   }
 
   writeNotNull('__type', instance.$type);
-  writeNotNull('sensorSpecificData', instance.sensorSpecificData);
   val['deviceIdentifier'] = instance.deviceIdentifier;
   writeNotNull('deviceTimestamp', instance.deviceTimestamp);
   val['samples'] = instance.samples;
@@ -105,11 +95,7 @@ PolarMagnetometer _$PolarMagnetometerFromJson(Map<String, dynamic> json) =>
       (json['samples'] as List<dynamic>)
           .map((e) => PolarXYZ.fromJson(e as Map<String, dynamic>))
           .toList(),
-    )
-      ..$type = json['__type'] as String?
-      ..sensorSpecificData = json['sensorSpecificData'] == null
-          ? null
-          : Data.fromJson(json['sensorSpecificData'] as Map<String, dynamic>);
+    )..$type = json['__type'] as String?;
 
 Map<String, dynamic> _$PolarMagnetometerToJson(PolarMagnetometer instance) {
   final val = <String, dynamic>{};
@@ -121,7 +107,6 @@ Map<String, dynamic> _$PolarMagnetometerToJson(PolarMagnetometer instance) {
   }
 
   writeNotNull('__type', instance.$type);
-  writeNotNull('sensorSpecificData', instance.sensorSpecificData);
   val['deviceIdentifier'] = instance.deviceIdentifier;
   writeNotNull('deviceTimestamp', instance.deviceTimestamp);
   val['samples'] = instance.samples;
@@ -132,11 +117,7 @@ PolarECG _$PolarECGFromJson(Map<String, dynamic> json) => PolarECG(
       json['deviceIdentifier'] as String,
       json['deviceTimestamp'] as int?,
       (json['samples'] as List<dynamic>).map((e) => e as int).toList(),
-    )
-      ..$type = json['__type'] as String?
-      ..sensorSpecificData = json['sensorSpecificData'] == null
-          ? null
-          : Data.fromJson(json['sensorSpecificData'] as Map<String, dynamic>);
+    )..$type = json['__type'] as String?;
 
 Map<String, dynamic> _$PolarECGToJson(PolarECG instance) {
   final val = <String, dynamic>{};
@@ -148,7 +129,6 @@ Map<String, dynamic> _$PolarECGToJson(PolarECG instance) {
   }
 
   writeNotNull('__type', instance.$type);
-  writeNotNull('sensorSpecificData', instance.sensorSpecificData);
   val['deviceIdentifier'] = instance.deviceIdentifier;
   writeNotNull('deviceTimestamp', instance.deviceTimestamp);
   val['samples'] = instance.samples;
@@ -162,11 +142,7 @@ PolarPPG _$PolarPPGFromJson(Map<String, dynamic> json) => PolarPPG(
       (json['samples'] as List<dynamic>)
           .map((e) => (e as List<dynamic>).map((e) => e as int).toList())
           .toList(),
-    )
-      ..$type = json['__type'] as String?
-      ..sensorSpecificData = json['sensorSpecificData'] == null
-          ? null
-          : Data.fromJson(json['sensorSpecificData'] as Map<String, dynamic>);
+    )..$type = json['__type'] as String?;
 
 Map<String, dynamic> _$PolarPPGToJson(PolarPPG instance) {
   final val = <String, dynamic>{};
@@ -178,7 +154,6 @@ Map<String, dynamic> _$PolarPPGToJson(PolarPPG instance) {
   }
 
   writeNotNull('__type', instance.$type);
-  writeNotNull('sensorSpecificData', instance.sensorSpecificData);
   val['deviceIdentifier'] = instance.deviceIdentifier;
   writeNotNull('deviceTimestamp', instance.deviceTimestamp);
   val['type'] = _$OhrDataTypeEnumMap[instance.type]!;
@@ -197,11 +172,7 @@ PolarPPI _$PolarPPIFromJson(Map<String, dynamic> json) => PolarPPI(
       (json['samples'] as List<dynamic>)
           .map((e) => PolarPPISample.fromJson(e as Map<String, dynamic>))
           .toList(),
-    )
-      ..$type = json['__type'] as String?
-      ..sensorSpecificData = json['sensorSpecificData'] == null
-          ? null
-          : Data.fromJson(json['sensorSpecificData'] as Map<String, dynamic>);
+    )..$type = json['__type'] as String?;
 
 Map<String, dynamic> _$PolarPPIToJson(PolarPPI instance) {
   final val = <String, dynamic>{};
@@ -213,7 +184,6 @@ Map<String, dynamic> _$PolarPPIToJson(PolarPPI instance) {
   }
 
   writeNotNull('__type', instance.$type);
-  writeNotNull('sensorSpecificData', instance.sensorSpecificData);
   val['deviceIdentifier'] = instance.deviceIdentifier;
   writeNotNull('deviceTimestamp', instance.deviceTimestamp);
   val['samples'] = instance.samples;
@@ -228,11 +198,7 @@ PolarHR _$PolarHRFromJson(Map<String, dynamic> json) => PolarHR(
       (json['rrsMs'] as List<dynamic>).map((e) => e as int).toList(),
       json['contactStatus'] as bool,
       json['contactStatusSupported'] as bool,
-    )
-      ..$type = json['__type'] as String?
-      ..sensorSpecificData = json['sensorSpecificData'] == null
-          ? null
-          : Data.fromJson(json['sensorSpecificData'] as Map<String, dynamic>);
+    )..$type = json['__type'] as String?;
 
 Map<String, dynamic> _$PolarHRToJson(PolarHR instance) {
   final val = <String, dynamic>{};
@@ -244,7 +210,6 @@ Map<String, dynamic> _$PolarHRToJson(PolarHR instance) {
   }
 
   writeNotNull('__type', instance.$type);
-  writeNotNull('sensorSpecificData', instance.sensorSpecificData);
   val['deviceIdentifier'] = instance.deviceIdentifier;
   writeNotNull('deviceTimestamp', instance.deviceTimestamp);
   val['hr'] = instance.hr;

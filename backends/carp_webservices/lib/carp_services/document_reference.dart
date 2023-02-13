@@ -111,7 +111,7 @@ class DocumentReference extends CarpReference {
   }
 
   /// Renames the document referred to by this [DocumentReference].
-  @Deprecated('Documents cannot be renamed in CANS.')
+  @Deprecated('Documents cannot be renamed in CAWS.')
   Future<DocumentSnapshot> rename(String name) async {
     assert(name.length > 0, 'Document path names cannot be empty.');
     assert(RegExp(r'^[a-zA-Z0-9_-]+$').hasMatch(name),

@@ -26,8 +26,8 @@ class CarpDeploymentService extends CarpBaseService
   DeploymentReference deployment([String? studyDeploymentId]) =>
       DeploymentReference._(this, studyDeploymentId ?? app!.studyDeploymentId!);
 
-  /// Create a new deployment in CANS based on a [StudyProtocol].
-  /// The [studyDeploymentId] is ignored, since CANS generated its own
+  /// Create a new deployment in CAWS based on a [StudyProtocol].
+  /// The [studyDeploymentId] is ignored, since CAWS generated its own
   /// study deployment id.
   @override
   Future<StudyDeploymentStatus> createStudyDeployment(
@@ -88,9 +88,9 @@ class CarpDeploymentService extends CarpBaseService
 
   @override
   Future<PrimaryDeviceDeployment> getDeviceDeploymentFor(
-          String studyDeploymentId, String masterDeviceRoleName) async =>
+          String studyDeploymentId, String primaryDeviceRoleName) async =>
       PrimaryDeviceDeployment.fromJson(await _rpc(
-          GetDeviceDeploymentFor(studyDeploymentId, masterDeviceRoleName)));
+          GetDeviceDeploymentFor(studyDeploymentId, primaryDeviceRoleName)));
 
   @override
   Future<StudyDeploymentStatus> deviceDeployed(

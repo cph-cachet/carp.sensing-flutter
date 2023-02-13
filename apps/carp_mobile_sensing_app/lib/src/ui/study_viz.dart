@@ -136,9 +136,10 @@ class StudyDeploymentPageState extends State<StudyDeploymentPage> {
                                 heading: 'State');
                           }
                         }),
-                    StreamBuilder<DataPoint>(
-                        stream: studyDeploymentModel.data,
-                        builder: (context, AsyncSnapshot<DataPoint> snapshot) {
+                    StreamBuilder<Measurement>(
+                        stream: studyDeploymentModel.measurements,
+                        builder:
+                            (context, AsyncSnapshot<Measurement> snapshot) {
                           return _StudyControllerLine(
                               '${studyDeploymentModel.samplingSize}',
                               heading: 'Sample Size');
@@ -185,14 +186,15 @@ class _StudyControllerLine extends StatelessWidget {
 class _TaskPanel extends StatelessWidget {
   _TaskPanel({Key? key, this.task}) : super(key: key);
 
-  final TaskDescriptor? task;
+  final TaskConfiguration? task;
 
   @override
   Widget build(BuildContext context) {
     final ThemeData themeData = Theme.of(context);
     final List<Widget> children = task!.measures
-        .map((measure) => _MeasureLine(measure: measure))
-        .toList();
+            ?.map((measure) => _MeasureLine(measure: measure))
+            .toList() ??
+        [];
 
     return Container(
       padding: const EdgeInsets.symmetric(vertical: 16.0),
@@ -225,8 +227,7 @@ class _MeasureLine extends StatelessWidget {
     final ThemeData themeData = Theme.of(context);
     final Icon icon = (ProbeDescription.probeTypeIcon[measure!.type] != null)
         ? Icon(ProbeDescription.probeTypeIcon[measure!.type]!.icon, size: 25)
-        : Icon(ProbeDescription.probeTypeIcon[DataType.UNKNOWN as String]!.icon,
-            size: 25);
+        : Icon(Icons.error, size: 25);
 
     final String name = ProbeDescription.descriptors[measure?.type]?.name ??
         measure.runtimeType.toString();

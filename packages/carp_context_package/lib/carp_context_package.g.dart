@@ -45,11 +45,7 @@ Location _$LocationFromJson(Map<String, dynamic> json) => Location(
       speedAccuracy: (json['speedAccuracy'] as num?)?.toDouble(),
       time:
           json['time'] == null ? null : DateTime.parse(json['time'] as String),
-    )
-      ..$type = json['__type'] as String?
-      ..sensorSpecificData = json['sensorSpecificData'] == null
-          ? null
-          : Data.fromJson(json['sensorSpecificData'] as Map<String, dynamic>);
+    )..$type = json['__type'] as String?;
 
 Map<String, dynamic> _$LocationToJson(Location instance) {
   final val = <String, dynamic>{};
@@ -61,7 +57,6 @@ Map<String, dynamic> _$LocationToJson(Location instance) {
   }
 
   writeNotNull('__type', instance.$type);
-  writeNotNull('sensorSpecificData', instance.sensorSpecificData);
   val['latitude'] = instance.latitude;
   val['longitude'] = instance.longitude;
   writeNotNull('altitude', instance.altitude);

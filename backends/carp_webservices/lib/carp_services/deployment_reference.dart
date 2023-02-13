@@ -12,10 +12,10 @@ part of carp_services;
 /// According to CARP core, the protocol for using the
 /// [deployment sub-system](https://github.com/cph-cachet/carp.core-kotlin/blob/develop/docs/carp-deployment.md) is:
 ///
-///   - [status()] - get the study deployment status of this deployment.
+///   - [getStatus()] - get the study deployment status of this deployment.
 ///   - [registerDevice()] - register this device - and connected devices - in this deployment
 ///   - [get()] - get the deployment for this master device
-///   - [success()] - report the deployment as successful
+///   - [deployed()] - report the deployment as deployed
 ///   - [unRegisterDevice()] - unregister this - or other - device if no longer used
 class DeploymentReference extends RPCCarpReference {
   /// The CARP study deployment ID.
@@ -27,12 +27,12 @@ class DeploymentReference extends RPCCarpReference {
   PrimaryDeviceDeployment? _deployment;
   StudyDeploymentStatus? _status;
 
-  /// The latest deployment status for this master device fetched from the server.
-  /// Returns `null` if status is not yet fetched.
+  /// The latest deployment status for this master device fetched from CAWS.
+  /// Returns `null` if status is not yet known.
   StudyDeploymentStatus? get status => _status;
 
-  /// The deployment for this master device, once fetched from the server.
-  /// Returns `null` if the deployment is not yet fetched.
+  /// The deployment for this master device, once fetched from CAWS.
+  /// Returns `null` if the deployment is not yet known.
   PrimaryDeviceDeployment? get deployment => _deployment;
 
   /// The URL for the deployment endpoint.
@@ -84,7 +84,7 @@ class DeploymentReference extends RPCCarpReference {
   Future<StudyDeploymentStatus> registerPrimaryDevice() async {
     assert(
         status != null,
-        'The status of a deployment must be know before a master device can be registered. '
+        'The status of a deployment must be know before a primary device can be registered. '
         'Use the getStatus() method to get the deployment status');
     return registerDevice(
         deviceRoleName: status!.primaryDeviceStatus!.device.roleName,
@@ -105,13 +105,11 @@ class DeploymentReference extends RPCCarpReference {
           await _rpc(UnregisterDevice(studyDeploymentId, deviceRoleName)));
 
   /// Get the deployment for this [DeploymentReference] for the specified
-  /// [masterDeviceRoleName].
-  /// If [masterDeviceRoleName] is not specified, the previously used name is used.
+  /// [studyDeploymentId].
   Future<PrimaryDeviceDeployment> get() async {
-    assert(
-        status != null,
-        'The status of a deployment must be know before a master device can be registered. '
-        'Use the getStatus() method to get the deployment status.');
+    if (status == null) {
+      await getStatus();
+    }
     return _deployment = PrimaryDeviceDeployment.fromJson(await _rpc(
         GetDeviceDeploymentFor(
             studyDeploymentId, status!.primaryDeviceStatus!.device.roleName)));
@@ -124,8 +122,8 @@ class DeploymentReference extends RPCCarpReference {
   Future<StudyDeploymentStatus> deployed() async {
     assert(
         deployment != null,
-        'The deployment needs to be fetched before a master device can mark it successful. '
-        'Use the get() method to get the master device deployment.');
+        'The deployment needs to be fetched before marking it as deployed. '
+        'Use the get() method to get the primary device deployment.');
 
     return _status = StudyDeploymentStatus.fromJson(await _rpc(DeviceDeployed(
       studyDeploymentId,

@@ -40,7 +40,7 @@ class SensingBLoC {
   SmartphoneDeployment? get deployment => Sensing().controller?.deployment;
 
   /// What kind of deployment are we running - local or CARP?
-  DeploymentMode deploymentMode = DeploymentMode.LOCAL;
+  DeploymentMode deploymentMode = DeploymentMode.local;
 
   /// The preferred format of the data to be uploaded according to
   /// [NameSpace]. Default using the [NameSpace.CARP].
@@ -62,13 +62,13 @@ class SensingBLoC {
 
   /// Initialize the BLoC.
   Future<void> initialize({
-    DeploymentMode deploymentMode = DeploymentMode.LOCAL,
+    DeploymentMode deploymentMode = DeploymentMode.local,
     String dataFormat = NameSpace.CARP,
     bool useCachedStudyDeployment = true,
     bool resumeSensingOnStartup = false,
   }) async {
     await Settings().init();
-    Settings().debugLevel = DebugLevel.DEBUG;
+    Settings().debugLevel = DebugLevel.debug;
     this.deploymentMode = deploymentMode;
     this.dataFormat = dataFormat;
     _resumeSensingOnStartup = resumeSensingOnStartup;
@@ -81,26 +81,25 @@ class SensingBLoC {
   void connectToDevice(DeviceModel device) =>
       Sensing().client?.deviceController.devices[device.type!]!.connect();
 
-  void resume() async => Sensing().controller?.executor?.resume();
-  void pause() => Sensing().controller?.executor?.pause();
-  void stop() async => Sensing().controller?.stop();
+  void start() async => Sensing().controller?.executor?.start();
+  void stop() async => Sensing().controller?.executor?.stop();
 
-  /// Is sensing running, i.e. has the study executor been resumed?
+  /// Is sensing running, i.e. has the study executor been started?
   bool get isRunning =>
       (Sensing().controller != null) &&
-      Sensing().controller!.executor!.state == ExecutorState.resumed;
+      Sensing().controller!.executor!.state == ExecutorState.started;
 }
 
 final bloc = SensingBLoC();
 
 /// How to deploy a study.
 enum DeploymentMode {
-  /// Use a local study protocol & deployment and store data locally in a file.
-  LOCAL,
+  /// Use a local study protocol & deployment and store data locally on the phone.
+  local,
 
-  /// Use the CARP production server to get the study deployment and store data.
-  CARP_PRODUCTION,
+  /// Use the CAWS production server to get the study deployment and store data.
+  production,
 
-  /// Use the CARP staging server to get the study deployment and store data.
-  CARP_STAGING,
+  /// Use the CAWS staging server to get the study deployment and store data.
+  staging,
 }

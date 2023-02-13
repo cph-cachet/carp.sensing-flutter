@@ -22,7 +22,7 @@ class LocalStudyProtocolManager implements StudyProtocolManager {
       name: protocolId,
     );
 
-    protocol.protocolDescription = StudyDescription(
+    protocol.studyDescription = StudyDescription(
         title: 'CAMS App - Sensing Coverage Study',
         description:
             'The default study testing coverage of most measures. Used in the coverage tests.',
@@ -36,7 +36,7 @@ class LocalStudyProtocolManager implements StudyProtocolManager {
           name: 'Alex B. Christensen',
         ));
 
-    protocol.dataEndPoint = (bloc.deploymentMode == DeploymentMode.LOCAL)
+    protocol.dataEndPoint = (bloc.deploymentMode == DeploymentMode.local)
         ? SQLiteDataEndPoint()
         : CarpDataEndPoint(
             uploadMethod: CarpUploadMethod.DATA_POINT,
@@ -48,23 +48,22 @@ class LocalStudyProtocolManager implements StudyProtocolManager {
 
     // define the master device
     Smartphone phone = Smartphone();
-    protocol.addMasterDevice(phone);
+    protocol.addPrimaryDevice(phone);
 
     // build-in measure from sensor and device sampling packages
-    protocol.addTriggeredTask(
+    protocol.addTaskControl(
         ImmediateTrigger(),
-        BackgroundTask()
-          ..addMeasures([
-            Measure(type: SensorSamplingPackage.PEDOMETER),
-            Measure(type: SensorSamplingPackage.LIGHT),
-            Measure(type: DeviceSamplingPackage.SCREEN),
-            Measure(type: DeviceSamplingPackage.MEMORY),
-            Measure(type: DeviceSamplingPackage.BATTERY),
-          ]),
+        BackgroundTask(measures: [
+          Measure(type: SensorSamplingPackage.STEP_COUNT),
+          Measure(type: SensorSamplingPackage.AMBIENT_LIGHT),
+          Measure(type: DeviceSamplingPackage.SCREEN_EVENT),
+          Measure(type: DeviceSamplingPackage.FREE_MEMORY),
+          Measure(type: DeviceSamplingPackage.BATTERY_STATE),
+        ]),
         phone);
 
     // a random trigger - 3-8 times during time period of 8-20
-    protocol.addTriggeredTask(
+    protocol.addTaskControl(
         RandomRecurrentTrigger(
           startTime: TimeOfDay(hour: 8),
           endTime: TimeOfDay(hour: 20),
@@ -72,11 +71,11 @@ class LocalStudyProtocolManager implements StudyProtocolManager {
           maxNumberOfTriggers: 8,
         ),
         BackgroundTask()
-          ..addMeasure(Measure(type: DeviceSamplingPackage.DEVICE)),
+          ..addMeasure(Measure(type: DeviceSamplingPackage.DEVICE_INFORMATION)),
         phone);
 
     // activity measure using the phone
-    protocol.addTriggeredTask(
+    protocol.addTaskControl(
         ImmediateTrigger(),
         BackgroundTask()
           ..addMeasure(Measure(type: ContextSamplingPackage.ACTIVITY)),
@@ -87,17 +86,17 @@ class LocalStudyProtocolManager implements StudyProtocolManager {
     protocol.addConnectedDevice(locationService);
 
     // Add a background task that collects location on a regular basis
-    protocol.addTriggeredTask(
-        IntervalTrigger(period: Duration(minutes: 5)),
+    protocol.addTaskControl(
+        PeriodicTrigger(period: Duration(minutes: 5)),
         BackgroundTask()
           ..addMeasure(Measure(type: ContextSamplingPackage.LOCATION)),
         locationService);
 
-    // Add a background task that continously collects geolocation and mobility
-    protocol.addTriggeredTask(
+    // Add a background task that continuously collects location and mobility
+    protocol.addTaskControl(
         ImmediateTrigger(),
         BackgroundTask()
-          ..addMeasure(Measure(type: ContextSamplingPackage.GEOLOCATION))
+          ..addMeasure(Measure(type: ContextSamplingPackage.LOCATION))
           ..addMeasure(Measure(type: ContextSamplingPackage.MOBILITY)),
         locationService);
 
@@ -106,9 +105,9 @@ class LocalStudyProtocolManager implements StudyProtocolManager {
         WeatherService(apiKey: '12b6e28582eb9298577c734a31ba9f4f');
     protocol.addConnectedDevice(weatherService);
 
-    // Add a background task that collects weather every 30 miutes.
-    protocol.addTriggeredTask(
-        IntervalTrigger(period: Duration(minutes: 30)),
+    // Add a background task that collects weather every 30 minutes.
+    protocol.addTaskControl(
+        PeriodicTrigger(period: Duration(minutes: 30)),
         BackgroundTask()
           ..addMeasure(Measure(type: ContextSamplingPackage.WEATHER)),
         weatherService);
@@ -118,19 +117,19 @@ class LocalStudyProtocolManager implements StudyProtocolManager {
         AirQualityService(apiKey: '9e538456b2b85c92647d8b65090e29f957638c77');
     protocol.addConnectedDevice(airQualityService);
 
-    // Add a background task that air quality every 30 miutes.
-    protocol.addTriggeredTask(
-        IntervalTrigger(period: Duration(minutes: 30)),
+    // Add a background task that air quality every 30 minutes.
+    protocol.addTaskControl(
+        PeriodicTrigger(period: Duration(minutes: 30)),
         BackgroundTask()
           ..addMeasure(Measure(type: ContextSamplingPackage.AIR_QUALITY)),
         airQualityService);
 
-    protocol.addTriggeredTask(
+    protocol.addTaskControl(
         ImmediateTrigger(),
         BackgroundTask()..addMeasure(Measure(type: MediaSamplingPackage.NOISE)),
         phone);
 
-    protocol.addTriggeredTask(
+    protocol.addTaskControl(
         ImmediateTrigger(),
         BackgroundTask()
           ..addMeasures([
@@ -141,7 +140,7 @@ class LocalStudyProtocolManager implements StudyProtocolManager {
         phone);
 
     // // Add an automatic task that collects SMS messages in/out
-    // protocol.addTriggeredTask(
+    // protocol.addTaskControl(
     //     ImmediateTrigger(),
     //     AutomaticTask()
     //       ..addMeasures(SamplingPackageRegistry().common.getMeasureList(
@@ -155,7 +154,7 @@ class LocalStudyProtocolManager implements StudyProtocolManager {
     // //  * in/out SMS
     // //  * in/out phone calls
     // //  * calendar entries
-    // protocol.addTriggeredTask(
+    // protocol.addTaskControl(
     //     ImmediateTrigger(),
     //     AutomaticTask()
     //       ..addMeasures(SamplingPackageRegistry().common.getMeasureList(
@@ -169,7 +168,7 @@ class LocalStudyProtocolManager implements StudyProtocolManager {
 
     // // Add an automatic task that collects the list of installed apps
     // // and a log of app usage activity
-    // protocol.addTriggeredTask(
+    // protocol.addTaskControl(
     //     PeriodicTrigger(
     //       period: const Duration(minutes: 1),
     //       duration: const Duration(seconds: 10),
@@ -190,7 +189,7 @@ class LocalStudyProtocolManager implements StudyProtocolManager {
     // );
     // protocol.addConnectedDevice(eSense);
 
-    // protocol.addTriggeredTask(
+    // protocol.addTaskControl(
     //     ImmediateTrigger(),
     //     BackgroundTask()
     //       ..addMeasure(Measure(type: ESenseSamplingPackage.ESENSE_BUTTON))
@@ -213,17 +212,17 @@ class LocalStudyProtocolManager implements StudyProtocolManager {
 
     protocol.addConnectedDevice(polar);
 
-    protocol.addTriggeredTask(
+    protocol.addTaskControl(
         ImmediateTrigger(),
         BackgroundTask()
-          ..addMeasure(Measure(type: PolarSamplingPackage.POLAR_HR))
-          ..addMeasure(Measure(type: PolarSamplingPackage.POLAR_ECG))
-          ..addMeasure(Measure(type: PolarSamplingPackage.POLAR_PPG))
-          ..addMeasure(Measure(type: PolarSamplingPackage.POLAR_PPI)),
+          ..addMeasure(Measure(type: PolarSamplingPackage.HR))
+          ..addMeasure(Measure(type: PolarSamplingPackage.ECG))
+          ..addMeasure(Measure(type: PolarSamplingPackage.PPG))
+          ..addMeasure(Measure(type: PolarSamplingPackage.PPI)),
         polar);
 
     // // add a measure for ECG monitoring using the Movisens device
-    // protocol.addTriggeredTask(
+    // protocol.addTaskControl(
     //   ImmediateTrigger(),
     //   AutomaticTask()
     //     ..addMeasure(MovisensMeasure(
@@ -241,7 +240,7 @@ class LocalStudyProtocolManager implements StudyProtocolManager {
     // );
 
     // // add measures to collect data from Apple Health / Google Fit
-    // protocol.addTriggeredTask(
+    // protocol.addTaskControl(
     //     PeriodicTrigger(
     //       period: Duration(minutes: 60),
     //       duration: Duration(minutes: 10),
@@ -262,10 +261,10 @@ class LocalStudyProtocolManager implements StudyProtocolManager {
 
   DataEndPoint getDataEndPoint() {
     switch (bloc.deploymentMode) {
-      case DeploymentMode.LOCAL:
+      case DeploymentMode.local:
         return SQLiteDataEndPoint();
-      case DeploymentMode.CARP_PRODUCTION:
-      case DeploymentMode.CARP_STAGING:
+      case DeploymentMode.production:
+      case DeploymentMode.staging:
         return CarpDataEndPoint(
           uploadMethod: CarpUploadMethod.DATA_POINT,
           name: 'CARP Server',

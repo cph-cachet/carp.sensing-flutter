@@ -37,6 +37,9 @@ void main() {
     SamplingPackageRegistry().register(AppsSamplingPackage());
     SamplingPackageRegistry().register(ESenseSamplingPackage());
 
+    // Initialization of serialization
+    CarpMobileSensing();
+
     // create a data manager in order to register the json functions
     CarpDataManager();
 
@@ -49,7 +52,7 @@ void main() {
   group("Local Study Protocol Manager", () {
     setUp(() async {
       // Configure the BLOC w. deployment and data format
-      bloc.deploymentMode = DeploymentMode.CARP_STAGING;
+      bloc.deploymentMode = DeploymentMode.staging;
       bloc.dataFormat = NameSpace.CARP;
 
       // generate the protocol
@@ -64,14 +67,14 @@ void main() {
     });
 
     test('StudyProtocol -> JSON -> StudyProtocol :: deep assert', () async {
-      print('#1 : $protocol');
+      print(toJsonString(protocol!));
       final studyJson = toJsonString(protocol!);
 
       SmartphoneStudyProtocol protocolFromJson =
           SmartphoneStudyProtocol.fromJson(
               json.decode(studyJson) as Map<String, dynamic>);
+      print(toJsonString(protocolFromJson));
       expect(toJsonString(protocolFromJson), equals(studyJson));
-      print('#2 : $protocolFromJson');
     });
 
     test('JSON File -> StudyProtocol', () async {
@@ -83,29 +86,16 @@ void main() {
           json.decode(plainJson) as Map<String, dynamic>);
 
       expect(protocol.ownerId, 'abc@dtu.dk');
-      expect(protocol.masterDevices.first.roleName, phone.roleName);
-      expect(protocol.connectedDevices.first.roleName, loc.roleName);
-      expect(protocol.connectedDevices.last.roleName, eSense.roleName);
+      expect(protocol.primaryDevice.roleName, phone.roleName);
+      expect(protocol.connectedDevices?.first.roleName, loc.roleName);
+      expect(protocol.connectedDevices?.last.roleName, eSense.roleName);
       print(toJsonString(protocol));
-    });
-  });
-
-  group("Data points", () {
-    test(' -> JSON', () async {
-      ESenseButtonDatum datum =
-          ESenseButtonDatum(pressed: true, deviceName: 'eSense-123');
-
-      final DataPoint data = DataPoint.fromData(datum);
-      expect(data.carpHeader.dataFormat.namespace,
-          ESenseSamplingPackage.ESENSE_NAMESPACE);
-
-      print(_encode(data.toJson()));
     });
   });
 
   CarpApp app;
   late CarpUser user;
-  CarpStudyProtocolManager manager = CarpStudyProtocolManager();
+  // CarpStudyProtocolManager manager = CarpStudyProtocolManager();
 
   group("CARP Study Protocol Manager", () {
     setUp(() async {
@@ -116,7 +106,6 @@ void main() {
       );
 
       CarpService().configure(app);
-      await manager.initialize();
 
       user = await CarpService().authenticate(
         username: username,
@@ -124,6 +113,7 @@ void main() {
       );
 
       CarpParticipationService().configureFrom(CarpService());
+      CarpDeploymentService().configureFrom(CarpService());
 
       // make sure that the json functions are loaded
       CarpMobileSensing();
@@ -135,9 +125,8 @@ void main() {
       // expect(user.accountId, accountId);
     });
 
-    test('- get study protocol', () async {
-      SmartphoneStudyProtocol study =
-          await manager.getStudyProtocol(testDeploymentId);
+    test('- get study deployment', () async {
+      final study = CarpDeploymentService().deployment(testDeploymentId).get();
       print('study: $study');
       print(_encode(study));
     }, skip: false);

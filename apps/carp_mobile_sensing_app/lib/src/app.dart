@@ -21,7 +21,7 @@ class LoadingPage extends StatelessWidget {
   ///  * start sensing
   Future<bool> init(BuildContext context) async {
     // only initialize the CARP backend bloc, if needed
-    if (bloc.deploymentMode != DeploymentMode.LOCAL) {
+    if (bloc.deploymentMode != DeploymentMode.local) {
       await CarpBackend().initialize();
       await CarpBackend().authenticate(context, username: 'jakob@bardram.net');
 
@@ -106,9 +106,9 @@ class CarpMobileSensingAppState extends State<CarpMobileSensingApp> {
   void restart() {
     setState(() {
       if (bloc.isRunning) {
-        bloc.pause();
+        bloc.stop();
       } else {
-        bloc.resume();
+        bloc.start();
       }
     });
   }

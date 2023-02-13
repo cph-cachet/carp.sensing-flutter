@@ -28,7 +28,7 @@ class Sensing {
   StudyDeploymentStatus? get status => _status;
 
   /// The role name of this device in the deployed study
-  String? get deviceRolename => _status?.masterDeviceStatus?.device.roleName;
+  String? get deviceRolename => _status?.primaryDeviceStatus?.device.roleName;
 
   /// The study runtime controller for this deployment
   SmartphoneDeploymentController? get controller => _controller;
@@ -62,7 +62,7 @@ class Sensing {
     info('Initializing $runtimeType - mode: ${bloc.deploymentMode}');
 
     switch (bloc.deploymentMode) {
-      case DeploymentMode.LOCAL:
+      case DeploymentMode.local:
         // use the local, phone-based deployment service
         deploymentService = SmartphoneDeploymentService();
 
@@ -82,17 +82,17 @@ class Sensing {
         bloc.studyDeploymentId = _status!.studyDeploymentId;
 
         break;
-      case DeploymentMode.CARP_PRODUCTION:
-      case DeploymentMode.CARP_STAGING:
+      case DeploymentMode.production:
+      case DeploymentMode.staging:
 
         // use the CARP deployment service that knows how to download a
-        // custom protocol
-        deploymentService = CustomProtocolDeploymentService();
+        // protocol from CAWS
+        deploymentService = CarpDeploymentService();
 
         // get the study deployment status based on the studyDeploymentId
         if (bloc.studyDeploymentId != null) {
-          _status = await CustomProtocolDeploymentService()
-              .getStudyDeploymentStatus(bloc.studyDeploymentId!);
+          _status = await deploymentService
+              ?.getStudyDeploymentStatus(bloc.studyDeploymentId!);
         } else {
           warning(
               '$runtimeType - no study deployment ID has been specified....?');
@@ -104,7 +104,7 @@ class Sensing {
     // Register the CARP data manager for uploading data back to CARP.
     // This is needed in both LOCAL and CARP deployments, since a local study
     // protocol may still upload to CARP
-    DataManagerRegistry().register(CarpDataManager());
+    DataManagerRegistry().register(CarpDataManagerFactory());
 
     // Create and configure a client manager for this phone
     client = SmartPhoneClientManager();
@@ -114,11 +114,7 @@ class Sensing {
     );
 
     // Define the study and add it to the client.
-    study = Study(
-      bloc.studyDeploymentId!,
-      deviceRolename!,
-    );
-    await client?.addStudy(study!);
+    study = await client?.addStudy(bloc.studyDeploymentId!, deviceRolename!);
 
     // Get the study controller and try to deploy the study.
     //
@@ -133,11 +129,12 @@ class Sensing {
     // Configure the controller
     await controller?.configure();
 
-    // Start samplling
+    // Start sampling
     controller?.start(bloc.resumeSensingOnStartup);
 
     // Listening on the data stream and print them as json to the debug console
-    controller?.data.listen((data) => print(toJsonString(data)));
+    controller?.measurements
+        .listen((measurement) => print(toJsonString(measurement)));
 
     info('$runtimeType initialized');
   }

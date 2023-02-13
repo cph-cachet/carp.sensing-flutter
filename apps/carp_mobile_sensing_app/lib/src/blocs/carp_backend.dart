@@ -21,11 +21,11 @@ class CarpBackend {
   /// The username of the signed in user.
   String? get username => CarpService().currentUser?.username;
 
-  String get uri => (bloc.deploymentMode == DeploymentMode.CARP_PRODUCTION)
+  String get uri => (bloc.deploymentMode == DeploymentMode.production)
       ? PROD_URI
       : STAGING_URI;
 
-  String get name => (bloc.deploymentMode == DeploymentMode.CARP_PRODUCTION)
+  String get name => (bloc.deploymentMode == DeploymentMode.production)
       ? "CANS Production @ DTU"
       : "CANS Staging @ DTU";
 
@@ -42,7 +42,7 @@ class CarpBackend {
     CarpService().configure(app!);
 
     // register CARP as a data backend where data can be uploaded
-    DataManagerRegistry().register(CarpDataManager());
+    DataManagerRegistry().register(CarpDataManagerFactory());
 
     info('$runtimeType initialized');
   }
