@@ -2,10 +2,11 @@
 
 * The first stable release of CARP cores which follows the [carp.core-kotlin](https://github.com/imotions/carp.core-kotlin) v. 1.1.0 domain model.
 
-## 0.40.7
+## 0.40.8
 
 * refactor of `DataManager` interface to support multiple deployment on the `ClientManager`.
 * adding `pause`, `remove`, and `dispose` life cycle methods to the `StudyRuntime`
+* fix of JsonKey annotations
 
 ## 0.40.3
 
@@ -65,7 +66,7 @@
 
 ## 0.21.5
 
-* Removed unnecesary JSON object from `CreateStudyDeployment` request ([PR#200](https://github.com/cph-cachet/carp.sensing-flutter/pull/200)).
+* Removed unnecessary JSON object from `CreateStudyDeployment` request ([PR#200](https://github.com/cph-cachet/carp.sensing-flutter/pull/200)).
 
 ## 0.21.4+3
 

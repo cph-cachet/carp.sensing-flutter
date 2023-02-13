@@ -14,7 +14,6 @@ export 'common/carp_core_common.dart';
 export 'data/carp_core_data.dart';
 export 'deployment/carp_core_deployment.dart';
 export 'protocols/carp_core_protocols.dart';
-export 'data/carp_core_data.dart';
 
 part 'carp_core.json.dart';
 

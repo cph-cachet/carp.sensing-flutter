@@ -14,7 +14,7 @@ class FileData extends Data {
   /// The local path to the attached file on the phone where it is sampled.
   /// This is used by e.g. a data manager to get and manage the file on
   /// the phone.
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   String? path;
 
   /// The name to the attached file.

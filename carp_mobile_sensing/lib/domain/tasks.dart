@@ -23,7 +23,7 @@ typedef VoidFunction = void Function();
 @JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
 class FunctionTask extends TaskConfiguration {
   /// The function to execute when this task is resumed.
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   VoidFunction? function;
 
   /// Create a function task that executed [function] when resumed.

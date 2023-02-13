@@ -30,6 +30,14 @@ class DeviceSamplingPackage extends SmartphoneSamplingPackage {
   static const String SCREEN_EVENT =
       '${CarpDataTypes.CARP_NAMESPACE}.screenevent';
 
+  /// Measure type for collection of the time zone of the device.
+  /// See [List of tz database time zones](https://en.wikipedia.org/wiki/List_of_tz_database_time_zones)
+  /// for an overview of timezones.
+  ///  * One-time measure.
+  ///  * Uses the [Smartphone] master device for data collection.
+  ///  * No sampling configuration needed.
+  static const String TIMEZONE = '${CarpDataTypes.CARP_NAMESPACE}.timezone';
+
   @override
   List<DataTypeMetaData> get dataTypes => [
         DataTypeMetaData(
@@ -52,6 +60,11 @@ class DeviceSamplingPackage extends SmartphoneSamplingPackage {
           displayName: "Screen Events",
           timeType: DataTimeType.POINT,
         ),
+        DataTypeMetaData(
+          type: SCREEN_EVENT,
+          displayName: "Device Timezone",
+          timeType: DataTimeType.POINT,
+        ),
       ];
 
   @override
@@ -63,6 +76,8 @@ class DeviceSamplingPackage extends SmartphoneSamplingPackage {
         return MemoryProbe();
       case BATTERY_STATE:
         return BatteryProbe();
+      case TIMEZONE:
+        return TimezoneProbe();
       case SCREEN_EVENT:
         return (Platform.isAndroid) ? ScreenProbe() : null;
       default:
@@ -76,6 +91,7 @@ class DeviceSamplingPackage extends SmartphoneSamplingPackage {
     FromJsonFactory().register(BatteryState());
     FromJsonFactory().register(FreeMemory());
     FromJsonFactory().register(ScreenEvent());
+    FromJsonFactory().register(Timezone(''));
   }
 
   @override

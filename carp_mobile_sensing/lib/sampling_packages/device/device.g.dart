@@ -99,3 +99,21 @@ Map<String, dynamic> _$ScreenEventToJson(ScreenEvent instance) {
   writeNotNull('screenEvent', instance.screenEvent);
   return val;
 }
+
+Timezone _$TimezoneFromJson(Map<String, dynamic> json) => Timezone(
+      json['timezone'] as String,
+    )..$type = json['__type'] as String?;
+
+Map<String, dynamic> _$TimezoneToJson(Timezone instance) {
+  final val = <String, dynamic>{};
+
+  void writeNotNull(String key, dynamic value) {
+    if (value != null) {
+      val[key] = value;
+    }
+  }
+
+  writeNotNull('__type', instance.$type);
+  val['timezone'] = instance.timezone;
+  return val;
+}

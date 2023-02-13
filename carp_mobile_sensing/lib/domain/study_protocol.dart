@@ -20,7 +20,7 @@ mixin SmartphoneProtocolExtension {
 
   /// The description of this study protocol containing the title, description,
   /// purpose, and the responsible researcher for this study.
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   StudyDescription? get studyDescription => _data.studyDescription;
   set studyDescription(StudyDescription? description) =>
       _data.studyDescription = description;
@@ -28,13 +28,13 @@ mixin SmartphoneProtocolExtension {
   String get description => studyDescription?.description ?? '';
 
   /// The PI responsible for this protocol.
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   StudyResponsible? get responsible => studyDescription?.responsible;
 
   /// Specifies where and how to stored or upload the data collected from this
   /// deployment. If `null`, the sensed data is not stored, but may still be
   /// used in the app.
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   DataEndPoint? get dataEndPoint => _data.dataEndPoint;
   set dataEndPoint(DataEndPoint? dataEndPoint) =>
       _data.dataEndPoint = dataEndPoint;

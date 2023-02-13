@@ -102,11 +102,11 @@ class Measurement {
   int? sensorEndTime;
 
   /// The type of the [data].
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   DataType get dataType => data.format;
 
   /// The [TaskControl] which triggered the collection of this measurement.
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   TaskControl? taskControl;
 
   /// The [Data] collected in this measurement.

@@ -18,11 +18,9 @@ library carp_core_client;
 
 import 'dart:async';
 import 'package:meta/meta.dart';
-import 'package:json_annotation/json_annotation.dart';
 
 import '../common/carp_core_common.dart';
 import '../deployment/carp_core_deployment.dart';
-import '../data/carp_core_data.dart';
 
 export 'carp_core_client.dart';
 

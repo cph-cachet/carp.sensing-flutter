@@ -16,7 +16,7 @@ class DeviceConfiguration extends Serializable {
   static const DEVICE_NAMESPACE = 'dk.cachet.carp.common.application.devices';
 
   /// The device type identifier
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   String get type => jsonType;
 
   /// A name which describes how the device participates within the study protocol;

@@ -1,5 +1,5 @@
 /// Maps the information specified in a study protocol to runtime configurations
-/// used by the 'clients' subystem to run the protocol on concrete devices
+/// used by the 'clients' subsystem to run the protocol on concrete devices
 /// (e.g., a smartphone) and allow researchers to monitor their state.
 /// To start collecting data, participants need to be invited, devices need to
 /// be registered, and consent needs to be given to collect the requested data.

@@ -15,7 +15,7 @@ part of carp_core_common;
 @JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
 class Data extends Serializable {
   /// The format of this data as a [DataType].
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   DataType get format => DataType.fromString(jsonType);
 
   Data() : super();

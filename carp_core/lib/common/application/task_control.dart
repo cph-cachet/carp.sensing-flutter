@@ -29,10 +29,10 @@ class TaskControl {
   /// Mainly used when scheduling a series of tasks for this trigger.
   DateTime? hasBeenScheduledUntil;
 
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   TaskConfiguration? task;
 
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   DeviceConfiguration? targetDevice;
 
   /// Create a [TaskControl].

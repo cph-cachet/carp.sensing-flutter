@@ -129,7 +129,7 @@ class DeviceDeploymentStatus extends Serializable {
   /// * Registered
   /// * Deployed
   /// * NeedsRedeployment
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   DeviceDeploymentStatusTypes get status {
     // if this object has been created locally, then we know the status
     if (_status != null) return _status!;

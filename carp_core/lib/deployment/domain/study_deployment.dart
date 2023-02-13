@@ -255,7 +255,7 @@ class StudyDeploymentStatus extends Serializable {
   /// * DeployingDevices
   /// * DeploymentReady
   /// * Stopped
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   StudyDeploymentStatusTypes status = StudyDeploymentStatusTypes.Invited;
 
   /// The time when the deployment was created.

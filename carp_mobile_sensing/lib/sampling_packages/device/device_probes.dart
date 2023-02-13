@@ -93,3 +93,10 @@ class DeviceProbe extends MeasurementProbe {
         hardware: DeviceInfo().hardware,
       ));
 }
+
+/// A probe that collects the device's current timezone.
+class TimezoneProbe extends MeasurementProbe {
+  @override
+  Future<Measurement?> getMeasurement() async =>
+      Measurement.fromData(Timezone(await FlutterTimezone.getLocalTimezone()));
+}

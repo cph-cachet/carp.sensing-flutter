@@ -200,3 +200,30 @@ class ScreenEvent extends Data {
   @override
   String toString() => '${super.toString()}, screenEvent: $screenEvent';
 }
+
+/// Holds timezone information about the mobile device.
+///
+/// See [List of tz database time zones](https://en.wikipedia.org/wiki/List_of_tz_database_time_zones)
+/// for an overview of timezones.
+@JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)
+class Timezone extends Data {
+  static const dataType = DeviceSamplingPackage.TIMEZONE;
+
+  /// The timezone as a string.
+  String timezone;
+
+  Timezone(this.timezone) : super();
+
+  /// Returns `true` if the [timezone] is equal.
+  @override
+  bool equivalentTo(Data other) =>
+      (other is Timezone) ? timezone == other.timezone : false;
+
+  factory Timezone.fromJson(Map<String, dynamic> json) =>
+      _$TimezoneFromJson(json);
+  @override
+  Map<String, dynamic> toJson() => _$TimezoneToJson(this);
+
+  @override
+  String toString() => '${super.toString()}, timezone: $timezone';
+}

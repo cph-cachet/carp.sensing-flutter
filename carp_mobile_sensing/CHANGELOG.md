@@ -10,6 +10,11 @@
   
 * The new [`data`](https://github.com/imotions/carp.core-kotlin/blob/develop/docs/carp-data.md) sub-system has been implemented in CAMS. This entails:
 
+## 0.40.13
+
+* Added support for `timezone` data type (issue [#301](https://github.com/cph-cachet/carp.sensing-flutter/issues/301)).
+* fix of JsonKey annotations
+
 ## 0.40.12
 
 * Better support for removing a study deployment from a client manager
@@ -17,6 +22,7 @@
   * NotificationController now cancels notifications for a study which is removed.
   * Removal of tasks from the AppTaskController.
 * Support for local caching of files while keeping sampled data
+* fix of JsonKey annotations
 
 ## 0.40.11
 

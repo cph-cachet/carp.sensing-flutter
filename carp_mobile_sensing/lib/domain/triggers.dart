@@ -51,7 +51,7 @@ class PassiveTrigger extends TriggerConfiguration {
   /// Create a trigger that triggers when the [trigger] method is called.
   PassiveTrigger() : super();
 
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   late TriggerExecutor executor;
 
   /// Called when this trigger is to be triggered.
@@ -481,7 +481,7 @@ class ConditionalSamplingEventTrigger extends TriggerConfiguration {
 
   /// The [ConditionalEventEvaluator] function evaluating if the event
   /// condition is meet for triggering this trigger
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   ConditionalEventEvaluator? triggerCondition;
 
   /// Create a trigger that triggers when a measure of [measureType] is collected,
@@ -523,7 +523,7 @@ class ConditionalPeriodicTrigger extends TriggerConfiguration {
 
   /// The [ConditionalEventEvaluator] function evaluating if the event
   /// condition is meet for triggering this trigger
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   ConditionalEvaluator? triggerCondition;
 
   /// Create a [ConditionalSamplingEventTrigger].

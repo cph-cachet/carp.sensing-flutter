@@ -21,7 +21,7 @@ class TriggerConfiguration extends Serializable {
   /// device ([PrimaryDeviceConfiguration]).
   /// For example, this is the case when the trigger is time bound and needs
   /// to be evaluated by a task scheduler running on a primary device.
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   bool? requiresPrimaryDevice;
 
   /// Create a trigger.
@@ -124,7 +124,7 @@ class ScheduledTrigger extends TriggerConfiguration implements Schedulable {
   /// The time of the day to trigger.
   TimeOfDay time;
 
-  /// Reccurrence rule according to the
+  /// Recurrence rule according to the
   /// [iCalendar RFC 5545 standard](https://tools.ietf.org/html/rfc5545#section-3.3.10).
   RecurrenceRule recurrenceRule;
 

@@ -1,8 +1,6 @@
 /// Contains common CARP domain classes which are used across the libraries.
 library carp_core_common;
 
-import 'dart:convert';
-
 import 'package:meta/meta.dart';
 import 'package:iso_duration_parser/iso_duration_parser.dart';
 import 'package:json_annotation/json_annotation.dart';
