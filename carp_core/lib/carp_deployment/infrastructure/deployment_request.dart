@@ -38,7 +38,7 @@ class CreateStudyDeployment extends DeploymentServiceRequest {
   StudyProtocol protocol;
 
   @override
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   // ignore: overridden_fields
   String? studyDeploymentId;
 

@@ -11,7 +11,7 @@ part of domain;
 class Datum extends Data {
   /// The [DataFormat] of this type of [Datum].
   @override
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   DataFormat get format => DataFormat.fromString(CAMSDataType.DATUM);
 
   /// An identifier for this [Datum], unique across all data generated.
@@ -49,7 +49,7 @@ class Datum extends Data {
 @JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)
 class StringDatum extends Datum {
   @override
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   DataFormat get format => DataFormat.fromString(CAMSDataType.STRING);
 
   /// The string data for this Datum.
@@ -72,7 +72,7 @@ class StringDatum extends Datum {
 @JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)
 class MapDatum extends Datum {
   @override
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   DataFormat get format => DataFormat.fromString(CAMSDataType.MAP);
 
   /// The data map.
@@ -93,7 +93,7 @@ class MapDatum extends Datum {
 @JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)
 class ErrorDatum extends Datum {
   @override
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   DataFormat get format => DataFormat.fromString(CAMSDataType.ERROR);
 
   /// The original error message returned from the probe, if available.
@@ -116,13 +116,13 @@ class ErrorDatum extends Datum {
 @JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)
 class FileDatum extends Datum {
   @override
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   DataFormat get format => DataFormat.fromString(CAMSDataType.FILE);
 
   /// The local path to the attached file on the phone where it is sampled.
   /// This is used by e.g. a data manager to get and manage the file on
   /// the phone.
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   String? path;
 
   /// The name to the attached file.
@@ -163,7 +163,7 @@ class MultiDatum extends Datum {
   MultiDatum() : super();
 
   @override
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   DataFormat get format => (data.isNotEmpty)
       ? data.first.format
       : DataFormat.fromString(CAMSDataType.UNKNOWN);

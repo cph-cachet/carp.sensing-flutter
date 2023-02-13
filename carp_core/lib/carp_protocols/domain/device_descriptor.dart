@@ -16,7 +16,7 @@ class DeviceDescriptor extends Serializable {
   static const DEVICE_NAMESPACE = 'dk.cachet.carp.protocols.domain.devices';
 
   /// The device type identifier
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   String get type => jsonType;
 
   /// Is this the master device?
@@ -70,7 +70,7 @@ class MasterDeviceDescriptor extends DeviceDescriptor {
   Map<String, dynamic> toJson() => _$MasterDeviceDescriptorToJson(this);
 }
 
-/// A general-purpose master device for custom protols.
+/// A general-purpose master device for custom protocols.
 /// Only used when downloading custom protocols from the CARP web service.
 @JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
 class CustomProtocolDevice extends MasterDeviceDescriptor {

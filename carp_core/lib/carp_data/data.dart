@@ -11,7 +11,7 @@ part of carp_core_data;
 @JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)
 class Data {
   /// The [DataFormat] of this [Data].
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   DataFormat format;
 
   Data([this.format = DataFormat.UNKNOWN]);
