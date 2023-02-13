@@ -1,3 +1,7 @@
+## 0.40.13
+
+* Added support for `timezone` data type (issue [#301](https://github.com/cph-cachet/carp.sensing-flutter/issues/301)).
+
 ## 0.40.12
 
 * Better support for removing a study deployment from a client manager

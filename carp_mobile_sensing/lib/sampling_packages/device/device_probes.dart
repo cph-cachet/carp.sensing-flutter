@@ -89,3 +89,10 @@ class DeviceProbe extends DatumProbe {
         hardware: DeviceInfo().hardware,
       );
 }
+
+/// A probe that collects the device's current timezone.
+class TimezoneProbe extends DatumProbe {
+  @override
+  Future<Datum?> getDatum() async =>
+      TimezoneDatum(await FlutterTimezone.getLocalTimezone());
+}

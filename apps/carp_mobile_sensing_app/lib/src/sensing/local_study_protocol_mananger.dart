@@ -111,7 +111,7 @@ class LocalStudyProtocolManager implements StudyProtocolManager {
     //       ..addMeasure(Measure(type: ContextSamplingPackage.LOCATION)),
     //     locationService);
 
-    // // Add a background task that continously collects geolocation and mobility
+    // // Add a background task that continuously collects geolocation and mobility
     // protocol.addTriggeredTask(
     //     ImmediateTrigger(),
     //     BackgroundTask()
@@ -119,24 +119,24 @@ class LocalStudyProtocolManager implements StudyProtocolManager {
     //       ..addMeasure(Measure(type: ContextSamplingPackage.MOBILITY)),
     //     locationService);
 
-    // // Define the online weather service and add it as a 'device'
-    // WeatherService weatherService =
-    //     WeatherService(apiKey: '12b6e28582eb9298577c734a31ba9f4f');
-    // protocol.addConnectedDevice(weatherService);
+    // Define the online weather service and add it as a 'device'
+    WeatherService weatherService =
+        WeatherService(apiKey: '12b6e28582eb9298577c734a31ba9f4f');
+    protocol.addConnectedDevice(weatherService);
 
-    // // Add a background task that collects weather every 30 miutes.
-    // protocol.addTriggeredTask(
-    //     IntervalTrigger(period: Duration(minutes: 30)),
-    //     BackgroundTask()
-    //       ..addMeasure(Measure(type: ContextSamplingPackage.WEATHER)),
-    //     weatherService);
+    // Add a background task that collects weather every 30 minutes.
+    protocol.addTriggeredTask(
+        IntervalTrigger(period: Duration(seconds: 30)),
+        BackgroundTask()
+          ..addMeasure(Measure(type: ContextSamplingPackage.WEATHER)),
+        weatherService);
 
     // // Define the online air quality service and add it as a 'device'
     // AirQualityService airQualityService =
     //     AirQualityService(apiKey: '9e538456b2b85c92647d8b65090e29f957638c77');
     // protocol.addConnectedDevice(airQualityService);
 
-    // // Add a background task that air quality every 30 miutes.
+    // // Add a background task that air quality every 30 minutes.
     // protocol.addTriggeredTask(
     //     IntervalTrigger(period: Duration(minutes: 30)),
     //     BackgroundTask()
