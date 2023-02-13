@@ -47,7 +47,7 @@ class _HomePageState extends State<HomePage> {
             child: TextButton.icon(
               onPressed: () => bloc.authenticate(
                 context,
-                username: 'user@dtu.dk',
+                // username: 'user@dtu.dk',
               ),
               icon: Icon(Icons.login),
               label: Text(
@@ -84,7 +84,13 @@ class _HomePageState extends State<HomePage> {
 }
 
 class AppBLoC {
-  final String uri = "https://cans.cachet.dk/";
+  static const environment = 'test';
+
+  final Uri uri = Uri(
+    scheme: 'https',
+    host: 'cans.cachet.dk',
+    path: environment,
+  );
   ActiveParticipationInvitation? _invitation;
   String? get studyId => _invitation?.studyId;
   String? get studyDeploymentId => _invitation?.studyDeploymentId;
@@ -95,7 +101,7 @@ class AppBLoC {
   Future init() async {
     _app = CarpApp(
       name: 'carp_backend_example_app',
-      uri: Uri.parse(uri),
+      baseUri: uri,
       oauth: OAuthEndPoint(clientID: 'carp', clientSecret: 'carp'),
     );
 

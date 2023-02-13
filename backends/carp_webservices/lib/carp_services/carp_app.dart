@@ -12,7 +12,7 @@ class CarpApp {
   final String name;
 
   /// URI of the CARP web service
-  final Uri uri;
+  final Uri baseUri;
 
   /// The OAuth 2.0 endpoint.
   final OAuthEndPoint oauth;
@@ -25,14 +25,14 @@ class CarpApp {
 
   /// Create a [CarpApp] which know how to access a CARP backend.
   ///
-  /// [name], [uri], and [oauth] are required parameters in order to identify,
+  /// [name], [baseUri], and [oauth] are required parameters in order to identify,
   /// address, and authenticate this client.
   ///
   /// A [studyDeploymentId] and a [study] may be specified, if known at the
   /// creation time.
   CarpApp({
     required this.name,
-    required this.uri,
+    required this.baseUri,
     required this.oauth,
     this.studyDeploymentId,
     this.studyId,
@@ -43,5 +43,5 @@ class CarpApp {
   bool operator ==(other) => name == other;
 
   String toString() =>
-      'CarpApp - name: $name, uri: $uri, studyDeploymentId: $studyDeploymentId, studyId: $studyId';
+      'CarpApp - name: $name, uri: $baseUri, studyDeploymentId: $studyDeploymentId, studyId: $studyId';
 }
