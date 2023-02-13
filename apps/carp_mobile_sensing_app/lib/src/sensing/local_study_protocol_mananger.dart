@@ -22,7 +22,7 @@ class LocalStudyProtocolManager implements StudyProtocolManager {
       name: protocolId,
     );
 
-    protocol.protocolDescription = StudyDescription(
+    protocol.studyDescription = StudyDescription(
         title: 'CAMS App - Sensing Coverage Study',
         description:
             'The default study testing coverage of most measures. Used in the coverage tests.',
@@ -126,22 +126,22 @@ class LocalStudyProtocolManager implements StudyProtocolManager {
 
     // Add a background task that collects weather every 30 minutes.
     protocol.addTriggeredTask(
-        IntervalTrigger(period: Duration(seconds: 30)),
+        IntervalTrigger(period: Duration(seconds: 20)),
         BackgroundTask()
           ..addMeasure(Measure(type: ContextSamplingPackage.WEATHER)),
         weatherService);
 
-    // // Define the online air quality service and add it as a 'device'
-    // AirQualityService airQualityService =
-    //     AirQualityService(apiKey: '9e538456b2b85c92647d8b65090e29f957638c77');
-    // protocol.addConnectedDevice(airQualityService);
+    // Define the online air quality service and add it as a 'device'
+    AirQualityService airQualityService =
+        AirQualityService(apiKey: '9e538456b2b85c92647d8b65090e29f957638c77');
+    protocol.addConnectedDevice(airQualityService);
 
-    // // Add a background task that air quality every 30 minutes.
-    // protocol.addTriggeredTask(
-    //     IntervalTrigger(period: Duration(minutes: 30)),
-    //     BackgroundTask()
-    //       ..addMeasure(Measure(type: ContextSamplingPackage.AIR_QUALITY)),
-    //     airQualityService);
+    // Add a background task that air quality every 30 minutes.
+    protocol.addTriggeredTask(
+        IntervalTrigger(period: Duration(seconds: 30)),
+        BackgroundTask()
+          ..addMeasure(Measure(type: ContextSamplingPackage.AIR_QUALITY)),
+        airQualityService);
 
     // protocol.addTriggeredTask(
     //     ImmediateTrigger(),

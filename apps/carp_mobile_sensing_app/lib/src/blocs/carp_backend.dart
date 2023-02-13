@@ -42,7 +42,7 @@ class CarpBackend {
     CarpService().configure(app!);
 
     // register CARP as a data backend where data can be uploaded
-    DataManagerRegistry().register(CarpDataManager());
+    DataManagerRegistry().register(CarpDataManagerFactory());
 
     info('$runtimeType initialized');
   }
