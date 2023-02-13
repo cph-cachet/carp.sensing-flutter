@@ -1,7 +1,8 @@
-## 0.40.7
+## 0.40.8
 
 * refactor of `DataManager` interface to support multiple deployment on the `ClientManager`.
 * adding `pause`, `remove`, and `dispose` life cycle methods to the `StudyRuntime`
+* fix of JsonKey annotations
 
 ## 0.40.3
 

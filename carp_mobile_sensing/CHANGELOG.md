@@ -1,6 +1,7 @@
 ## 0.40.13
 
 * Added support for `timezone` data type (issue [#301](https://github.com/cph-cachet/carp.sensing-flutter/issues/301)).
+* fix of JsonKey annotations
 
 ## 0.40.12
 
