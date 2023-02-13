@@ -202,6 +202,14 @@ class LocalStudyProtocolManager implements StudyProtocolManager {
     var phone = Smartphone();
     protocol.addMasterDevice(phone);
 
+    // Collect timezone info every time the app restarts.
+    protocol.addTriggeredTask(
+        ImmediateTrigger(),
+        BackgroundTask(measures: [
+          Measure(type: DeviceSamplingPackage.TIMEZONE),
+        ]),
+        phone);
+
     // // // Add measures from the [DeviceSamplingPackage] and [SensorSamplingPackage]
     // // // sampling packages.
     // protocol.addTriggeredTask(
@@ -273,15 +281,19 @@ class LocalStudyProtocolManager implements StudyProtocolManager {
     // on the phone. However, nothing will happen when you click on it.
     // See the PulmonaryMonitor demo app for a full-scale example of how to use
     // the App Task model.
+    //
+    // Note also that the timezone measure is added. This entails that timezone
+    // information is collected when the user 'executes' this app task.
     protocol.addTriggeredTask(
         ElapsedTimeTrigger(
           elapsedTime: const Duration(minutes: 2),
         ),
         AppTask(
+          measures: [Measure(type: DeviceSamplingPackage.TIMEZONE)],
           type: BackgroundSensingUserTask.ONE_TIME_SENSING_TYPE,
           title: "Elapsed Time - 2 minutes",
           notification: true,
-        )..addMeasure(Measure(type: DeviceSamplingPackage.DEVICE)),
+        ),
         phone);
 
     // // add an app task at exact date & time
