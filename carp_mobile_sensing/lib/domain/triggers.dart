@@ -55,7 +55,7 @@ class PassiveTrigger extends Trigger {
   /// called.
   PassiveTrigger() : super();
 
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   late TriggerExecutor executor;
 
   /// Called when data sampling in this trigger is to be resumed.
@@ -565,7 +565,7 @@ class ConditionalSamplingEventTrigger extends Trigger {
 
   /// The [ConditionalEventEvaluator] function evaluating if the event
   /// condition is meet for resuming this trigger
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   ConditionalEventEvaluator? resumeCondition;
 
   /// The [ConditionalEventEvaluator] function evaluating if the event
@@ -573,7 +573,7 @@ class ConditionalSamplingEventTrigger extends Trigger {
   ///
   /// If [pauseCondition] is not specified (`null`), sampling is never paused
   /// and hence runs forever (unless paused manually).
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   ConditionalEventEvaluator? pauseCondition;
 
   /// Create a trigger that triggers when a measure of [measureType] is collected,
@@ -616,7 +616,7 @@ class ConditionalPeriodicTrigger extends Trigger {
 
   /// The [ConditionalEventEvaluator] function evaluating if the event
   /// condition is meet for resuming this trigger
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   ConditionalEvaluator? resumeCondition;
 
   /// The [ConditionalEventEvaluator] function evaluating if the event
@@ -624,7 +624,7 @@ class ConditionalPeriodicTrigger extends Trigger {
   ///
   /// If [pauseCondition] is not specified (`null`), sampling is never paused
   /// and hence runs forever (unless paused manually).
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   ConditionalEvaluator? pauseCondition;
 
   /// Create a [ConditionalSamplingEventTrigger].

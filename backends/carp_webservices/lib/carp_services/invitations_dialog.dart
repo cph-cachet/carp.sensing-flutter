@@ -35,12 +35,13 @@ class ActiveParticipationInvitationDialog {
           child: ListTile(
             isThreeLine: true,
             leading: Icon(
-              Icons.mail,
-              color: Color.fromRGBO(234, 91, 12, 1.0),
+              Icons.mail_outline_rounded,
             ),
-            title: Text(invitation.invitation.name),
+            title: invitation.invitation.name.isNotEmpty
+                ? Text(invitation.invitation.name)
+                : Text('No name was provided.'),
             subtitle: (invitation.invitation.description.isEmpty)
-                ? Text('No description provided...')
+                ? Text('No description was provided.')
                 : Text(
                     shortStudyDescription(invitation.invitation.description)),
           ));

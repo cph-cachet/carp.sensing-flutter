@@ -31,7 +31,7 @@ class GetActiveParticipationInvitations extends ParticipationServiceRequest {
   GetActiveParticipationInvitations(this.accountId) : super();
 
   @override
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   // ignore: overridden_fields
   String? studyDeploymentId;
 
@@ -64,7 +64,7 @@ class GetParticipantData extends ParticipationServiceRequest {
   Map<String, dynamic> toJson() => _$GetParticipantDataToJson(this);
 }
 
-/// A request for getting the list of partication data for this a list
+/// A request for getting the list of participation data for this a list
 /// of [studyDeploymentIds].
 @JsonSerializable(fieldRename: FieldRename.none, includeIfNull: true)
 class GetParticipantDataList extends ParticipationServiceRequest {
@@ -92,7 +92,7 @@ class SetParticipantData extends ParticipationServiceRequest {
   String inputDataType;
 
   /// The data to be set.
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   ParticipantData? participantData;
 
   set data(Map<String, dynamic> data) {

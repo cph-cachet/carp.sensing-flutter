@@ -26,12 +26,21 @@ class DeviceSamplingPackage extends SmartphoneSamplingPackage {
   ///  * No sampling configuration needed.
   static const String SCREEN = 'dk.cachet.carp.screen';
 
+  /// Measure type for collection of the time zone of the device.
+  /// See [List of tz database time zones](https://en.wikipedia.org/wiki/List_of_tz_database_time_zones)
+  /// for an overview of timezones.
+  ///  * One-time measure.
+  ///  * Uses the [Smartphone] master device for data collection.
+  ///  * No sampling configuration needed.
+  static const String TIMEZONE = 'dk.cachet.carp.timezone';
+
   @override
   List<String> get dataTypes => [
         DEVICE,
         MEMORY,
         BATTERY,
         SCREEN,
+        TIMEZONE,
       ];
 
   @override
@@ -45,6 +54,8 @@ class DeviceSamplingPackage extends SmartphoneSamplingPackage {
         return BatteryProbe();
       case SCREEN:
         return (Platform.isAndroid) ? ScreenProbe() : null;
+      case TIMEZONE:
+        return TimezoneProbe();
       default:
         return null;
     }

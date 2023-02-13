@@ -21,7 +21,7 @@ class Trigger extends Serializable {
   /// device ([MasterDeviceDescriptor]).
   /// For example, this is the case when the trigger is time bound and needs
   /// to be evaluated by a task scheduler running on a master device.
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   bool? requiresMasterDevice;
 
   /// Create a trigger.
@@ -110,7 +110,7 @@ class ScheduledTrigger extends Trigger implements Scheduleable {
   /// The time of the day to trigger.
   TimeOfDay time;
 
-  /// Reccurrence rule according to the
+  /// Recurrence rule according to the
   /// [iCalendar RFC 5545 standard](https://tools.ietf.org/html/rfc5545#section-3.3.10).
   RecurrenceRule recurrenceRule;
 

@@ -225,7 +225,7 @@ class FileDataManager extends AbstractDataManager {
     await file.then((activeFile) async {
       sink.then((activeSink) async {
         await flush(activeFile, activeSink);
-        // await _sink?.close();
+        await _sink?.close();
         await super.close();
       });
     });

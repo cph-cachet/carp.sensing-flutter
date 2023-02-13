@@ -110,3 +110,25 @@ Map<String, dynamic> _$ScreenDatumToJson(ScreenDatum instance) {
   writeNotNull('screen_event', instance.screenEvent);
   return val;
 }
+
+TimezoneDatum _$TimezoneDatumFromJson(Map<String, dynamic> json) =>
+    TimezoneDatum(
+      json['timezone'] as String,
+    )
+      ..id = json['id'] as String?
+      ..timestamp = DateTime.parse(json['timestamp'] as String);
+
+Map<String, dynamic> _$TimezoneDatumToJson(TimezoneDatum instance) {
+  final val = <String, dynamic>{};
+
+  void writeNotNull(String key, dynamic value) {
+    if (value != null) {
+      val[key] = value;
+    }
+  }
+
+  writeNotNull('id', instance.id);
+  val['timestamp'] = instance.timestamp.toIso8601String();
+  val['timezone'] = instance.timezone;
+  return val;
+}

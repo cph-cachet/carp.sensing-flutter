@@ -27,10 +27,10 @@ class TriggeredTask {
   /// Mainly used when scheduling a series of tasks for this trigger.
   DateTime? hasBeenScheduledUntil;
 
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   TaskDescriptor? task;
 
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   DeviceDescriptor? targetDevice;
 
   TriggeredTask(

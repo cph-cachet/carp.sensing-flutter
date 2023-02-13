@@ -14,7 +14,7 @@ class Measure extends Serializable {
   String type;
 
   /// The type of measure as a [DataType].
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   DataType get dataType => DataType.fromString(type);
 
   /// Optionally, override the default configuration on how to sample the data

@@ -104,7 +104,7 @@ class Sensing {
     // Register the CARP data manager for uploading data back to CARP.
     // This is needed in both LOCAL and CARP deployments, since a local study
     // protocol may still upload to CARP
-    DataManagerRegistry().register(CarpDataManager());
+    DataManagerRegistry().register(CarpDataManagerFactory());
 
     // Create and configure a client manager for this phone
     client = SmartPhoneClientManager();

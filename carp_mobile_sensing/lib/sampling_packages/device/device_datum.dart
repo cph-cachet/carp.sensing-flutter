@@ -193,3 +193,31 @@ class ScreenDatum extends Datum {
   @override
   String toString() => '${super.toString()}, screenEvent: $screenEvent';
 }
+
+/// Holds timezone information about the mobile device.
+///
+/// See [List of tz database time zones](https://en.wikipedia.org/wiki/List_of_tz_database_time_zones)
+/// for an overview of timezones.
+@JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)
+class TimezoneDatum extends Datum {
+  @override
+  DataFormat get format =>
+      DataFormat.fromString(DeviceSamplingPackage.TIMEZONE);
+
+  /// The timezone as a string.
+  String timezone;
+
+  TimezoneDatum(this.timezone) : super();
+
+  /// Returns `true` if the [deviceId] is equal.
+  @override
+  bool equivalentTo(ConditionalEvent? event) => timezone == event!['timezone'];
+
+  factory TimezoneDatum.fromJson(Map<String, dynamic> json) =>
+      _$TimezoneDatumFromJson(json);
+  @override
+  Map<String, dynamic> toJson() => _$TimezoneDatumToJson(this);
+
+  @override
+  String toString() => '${super.toString()}, timezone: $timezone';
+}
