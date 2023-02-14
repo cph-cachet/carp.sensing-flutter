@@ -1,12 +1,14 @@
 import 'dart:convert';
 import 'dart:io';
-import 'package:test/test.dart';
+// import 'package:test/test.dart';
+import 'package:flutter_test/flutter_test.dart';
 
 import 'package:carp_serializable/carp_serializable.dart';
 import 'package:carp_core/carp_core.dart';
 import 'package:carp_mobile_sensing/carp_mobile_sensing.dart';
 import 'package:carp_connectivity_package/connectivity.dart';
 import 'package:carp_esense_package/esense.dart';
+import 'package:carp_polar_package/carp_polar_package.dart';
 import 'package:carp_context_package/carp_context_package.dart';
 import 'package:carp_audio_package/media.dart';
 // import 'package:carp_communication_package/communication.dart';
@@ -18,15 +20,10 @@ import 'package:carp_webservices/carp_services/carp_services.dart';
 import '../lib/main.dart';
 import 'credentials.dart';
 
-String _encode(Object object) =>
-    const JsonEncoder.withIndent(' ').convert(object);
-
 void main() {
-  // creating an empty protocol to initialize json serialization
-  StudyProtocol? protocol;
-  late Smartphone phone;
-  late ESenseDevice eSense;
-  late LocationService loc;
+  TestWidgetsFlutterBinding.ensureInitialized();
+
+  late StudyProtocol protocol;
 
   setUp(() async {
     // register the different sampling package since we're using measures from them
@@ -36,17 +33,13 @@ void main() {
     // SamplingPackageRegistry().register(CommunicationSamplingPackage());
     SamplingPackageRegistry().register(AppsSamplingPackage());
     SamplingPackageRegistry().register(ESenseSamplingPackage());
+    SamplingPackageRegistry().register(PolarSamplingPackage());
 
     // Initialization of serialization
     CarpMobileSensing();
 
     // create a data manager in order to register the json functions
     CarpDataManager();
-
-    // Define which devices are used for data collection.
-    phone = Smartphone();
-    eSense = ESenseDevice();
-    loc = LocationService();
   });
 
   group("Local Study Protocol Manager", () {
@@ -57,18 +50,18 @@ void main() {
 
       // generate the protocol
       protocol = await LocalStudyProtocolManager()
-          .getStudyProtocol('CAMS App v 0.33.0');
+          .getStudyProtocol('CAMS App v 0.40.0');
     });
 
     test('CAMSStudyProtocol -> JSON', () async {
       print(protocol);
-      print(toJsonString(protocol!));
-      expect(protocol?.ownerId, 'abc@dtu.dk');
+      print(toJsonString(protocol));
+      expect(protocol.ownerId, 'abc@dtu.dk');
     });
 
     test('StudyProtocol -> JSON -> StudyProtocol :: deep assert', () async {
-      print(toJsonString(protocol!));
-      final studyJson = toJsonString(protocol!);
+      print(toJsonString(protocol));
+      final studyJson = toJsonString(protocol);
 
       SmartphoneStudyProtocol protocolFromJson =
           SmartphoneStudyProtocol.fromJson(
@@ -78,72 +71,20 @@ void main() {
     });
 
     test('JSON File -> StudyProtocol', () async {
-      // Read the study protocol from json file
-      String plainJson =
+      final plainJson =
           File('test/json/cams_study_protocol.json').readAsStringSync();
 
-      StudyProtocol protocol = StudyProtocol.fromJson(
+      final p = StudyProtocol.fromJson(
           json.decode(plainJson) as Map<String, dynamic>);
 
-      expect(protocol.ownerId, 'abc@dtu.dk');
-      expect(protocol.primaryDevice.roleName, phone.roleName);
-      expect(protocol.connectedDevices?.first.roleName, loc.roleName);
-      expect(protocol.connectedDevices?.last.roleName, eSense.roleName);
-      print(toJsonString(protocol));
+      expect(p.ownerId, 'abc@dtu.dk');
+      expect(p.primaryDevice.roleName, protocol.primaryDevice.roleName);
+      expect(p.connectedDevices?.first.roleName,
+          protocol.connectedDevices?.first.roleName);
+      expect(p.connectedDevices?.last.roleName,
+          protocol.connectedDevices?.last.roleName);
+      print(toJsonString(p));
     });
-  });
-
-  CarpApp app;
-  late CarpUser user;
-  // CarpStudyProtocolManager manager = CarpStudyProtocolManager();
-
-  group("CARP Study Protocol Manager", () {
-    setUp(() async {
-      app = CarpApp(
-        name: "Test",
-        uri: Uri.parse(uri),
-        oauth: OAuthEndPoint(clientID: clientID, clientSecret: clientSecret),
-      );
-
-      CarpService().configure(app);
-
-      user = await CarpService().authenticate(
-        username: username,
-        password: password,
-      );
-
-      CarpParticipationService().configureFrom(CarpService());
-      CarpDeploymentService().configureFrom(CarpService());
-
-      // make sure that the json functions are loaded
-      CarpMobileSensing();
-    });
-
-    test('- authentication', () async {
-      print('CarpService : ${CarpService().app}');
-      print(" - signed in as: $user");
-      // expect(user.accountId, accountId);
-    });
-
-    test('- get study deployment', () async {
-      final study = CarpDeploymentService().deployment(testDeploymentId).get();
-      print('study: $study');
-      print(_encode(study));
-    }, skip: false);
-
-    test(
-      '- get invitations',
-      () async {
-        List<ActiveParticipationInvitation> invitations =
-            await CarpParticipationService()
-                .getActiveParticipationInvitations();
-
-        for (var invitation in invitations) {
-          print(invitation);
-        }
-      },
-      skip: false,
-    );
   });
 
   group("Resource Generator Scripts", () {

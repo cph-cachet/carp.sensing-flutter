@@ -30,5 +30,5 @@ class CarpMobileSensing {
   /// Returns a the singleton instance of [CarpMobileSensing].
   /// If it has not yet been initialized, this call makes sure to create and
   /// initialize it.
-  CarpMobileSensing ensureInitialized() => _instance;
+  static CarpMobileSensing ensureInitialized() => _instance;
 }

@@ -20,10 +20,17 @@ void main() {
       ownerId: 'user@dtu.dk',
       name: 'patient_tracking',
       studyDescription: StudyDescription(
-        title: 'A Test',
-        purpose: 'Testing',
-        description: 'A testing protocol',
-      ),
+          title: 'A Test',
+          purpose: 'Testing',
+          description: 'A testing protocol',
+          responsible: StudyResponsible(
+            id: 'abc',
+            title: 'professor',
+            address: 'Ørsteds Plads',
+            affiliation: 'Technical University of Denmark',
+            email: 'abc@dtu.dk',
+            name: 'Alex B. Christensen',
+          )),
       dataEndPoint: SQLiteDataEndPoint(),
     );
 

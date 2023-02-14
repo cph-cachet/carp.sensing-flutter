@@ -25,8 +25,8 @@
         },
         "applicationData": {}
     },
-    "id": "2ff20730-abe3-11ed-8c3d-c598274dccba",
-    "createdOn": "2023-02-13T21:12:56.867643Z",
+    "id": "2d14c250-ac5b-11ed-83b0-3328cf59e371",
+    "createdOn": "2023-02-14T11:31:51.669075Z",
     "description": "The default study testing coverage of most measures. Used in the coverage tests.",
     "ownerId": "abc@dtu.dk",
     "name": "CAMS App v 0.33.0",
