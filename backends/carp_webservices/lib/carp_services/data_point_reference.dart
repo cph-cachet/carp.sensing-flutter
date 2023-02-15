@@ -18,10 +18,10 @@ class DataPointReference extends CarpReference {
   String get dataEndpointUri =>
       "${service.app!.uri.toString()}/api/deployments/${service.app!.studyDeploymentId}/data-points";
 
-  /// Upload a [CARPDataPoint] to the CARP backend using HTTP POST.
+  /// Uploads [data] to the CARP backend using HTTP POST.
   ///
   /// Returns the server-generated ID for this data point.
-  Future<int> postDataPoint(DataPoint data) async {
+  Future<int> post(DataPoint data) async {
     final String url = "$dataEndpointUri";
 
     // POST the data point to the CARP web service
@@ -49,7 +49,7 @@ class DataPointReference extends CarpReference {
   /// Note that the file should be raw JSON, and hence _not_ zipped.
   ///
   /// Returns when successful. Throws an [CarpServiceException] if not.
-  Future batchPostDataPoint(File file) async {
+  Future upload(File file) async {
     final String url = "$dataEndpointUri/batch";
 
     var request = http.MultipartRequest("POST", Uri.parse(url));
@@ -80,7 +80,7 @@ class DataPointReference extends CarpReference {
   }
 
   /// Get a [DataPoint] from the CARP backend using HTTP GET
-  Future<DataPoint> getDataPoint(int id) async {
+  Future<DataPoint> get(int id) async {
     String url = "$dataEndpointUri/$id";
 
     // GET the data point from the CARP web service
@@ -105,7 +105,7 @@ class DataPointReference extends CarpReference {
   ///
   /// Be careful using this method - this might potential return an enormous
   /// amount of data.
-  Future<List<DataPoint>> getAllDataPoint() async => queryDataPoint('');
+  Future<List<DataPoint>> getAll() async => query('');
 
   /// Query for [DataPoint]s from the CARP backend using
   /// [REST SQL (RSQL)](https://github.com/jirutka/rsql-parser).
@@ -186,7 +186,7 @@ class DataPointReference extends CarpReference {
   ///  }
   /// ````
   ///
-  Future<List<DataPoint>> queryDataPoint(String query) async {
+  Future<List<DataPoint>> query(String query) async {
     String url =
         (query.length == 0) ? dataEndpointUri : "$dataEndpointUri?query=$query";
 
@@ -242,7 +242,7 @@ class DataPointReference extends CarpReference {
   /// Delete a data point with the given [id].
   /// Returns on success.
   /// Throws an exception if data point is not found or otherwise unsuccessful.
-  Future deleteDataPoint(int id) async {
+  Future delete(int id) async {
     String url = "$dataEndpointUri/$id";
 
     http.Response response =

@@ -77,7 +77,7 @@ class BluetoothProbe extends BufferingPeriodicStreamProbe {
   @override
   void onSamplingEnd() {
     FlutterBluePlus.instance.stopScan();
-    (_data as Bluetooth).endScan = DateTime.now();
+    if (_data is Bluetooth) (_data as Bluetooth).endScan = DateTime.now();
   }
 
   @override

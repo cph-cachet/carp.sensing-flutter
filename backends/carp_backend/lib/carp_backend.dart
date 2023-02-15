@@ -15,6 +15,7 @@ import 'package:flutter/material.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:uuid/uuid.dart';
 import 'package:sqflite/sqflite.dart';
+import 'package:connectivity_plus/connectivity_plus.dart';
 
 import 'package:carp_serializable/carp_serializable.dart';
 import 'package:carp_core/carp_core.dart';
@@ -34,7 +35,7 @@ part 'carp_backend.g.dart';
 part 'carp_deployment_service.dart';
 part 'message_manager.dart';
 
-/// Specify a CARP Service endpoint for uploading data.
+/// Specify a CARP Web Service (CAWS) endpoint for uploading data.
 @JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
 class CarpDataEndPoint extends DataEndPoint {
   /// The method used to upload to CARP. See [CarpUploadMethod] for options.
@@ -47,10 +48,10 @@ class CarpDataEndPoint extends DataEndPoint {
   /// The URI of the CARP endpoint.
   String? uri;
 
-  /// The CARP web service client ID
+  /// The CARP web service client ID.
   String? clientId;
 
-  /// The CARP web service client secret
+  /// The CARP web service client secret.
   String? clientSecret;
 
   /// Email used as username in password authentication.
@@ -70,8 +71,16 @@ class CarpDataEndPoint extends DataEndPoint {
   bool onlyUploadOnWiFi = false;
 
   /// When uploading to CAWS using file in the [CarpUploadMethod.DATA_STREAM]
-  /// or [CarpUploadMethod.FILE] methods, specifies if the local buffered data on the phone
-  /// should be deleted once uploaded.
+  /// or [CarpUploadMethod.FILE] methods, specifies how often should data be
+  /// uploaded. In minutes.
+  int uploadInterval = 10;
+
+  /// When uploading to CAWS using file in the [CarpUploadMethod.DATA_STREAM]
+  /// or [CarpUploadMethod.FILE] methods, specifies if the local buffered data
+  /// on the phone should be deleted once uploaded.
+  ///
+  /// If using the [CarpUploadMethod.FILE] method, this should definitely be
+  /// true in order to delete already uploaded records from the database.
   bool deleteWhenUploaded = true;
 
   /// Creates a [CarpDataEndPoint].
@@ -84,6 +93,7 @@ class CarpDataEndPoint extends DataEndPoint {
     this.email,
     this.password,
     this.onlyUploadOnWiFi = false,
+    this.uploadInterval = 10,
     this.deleteWhenUploaded = true,
     super.dataFormat,
   }) : super(
@@ -96,6 +106,7 @@ class CarpDataEndPoint extends DataEndPoint {
     String name = 'CARP Web Services',
     String? collection,
     bool onlyUploadOnWiFi = false,
+    int uploadInterval = 10,
     bool deleteWhenUploaded = true,
     String dataFormat = NameSpace.CARP,
     required CarpApp app,
@@ -107,6 +118,7 @@ class CarpDataEndPoint extends DataEndPoint {
           clientSecret: app.oauth.clientSecret,
           dataFormat: dataFormat,
           onlyUploadOnWiFi: onlyUploadOnWiFi,
+          uploadInterval: uploadInterval,
           deleteWhenUploaded: deleteWhenUploaded,
         );
 
@@ -120,7 +132,7 @@ class CarpDataEndPoint extends DataEndPoint {
       '$runtimeType [$name] - method: ${uploadMethod.toString().split('.').last}';
 }
 
-/// A enumeration of upload methods to CARP
+/// A enumeration of upload methods to CAWS
 enum CarpUploadMethod {
   /// Upload data as data streams (the default method).
   DATA_STREAM,

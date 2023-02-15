@@ -17,6 +17,8 @@ CarpDataEndPoint _$CarpDataEndPointFromJson(Map<String, dynamic> json) =>
       clientSecret: json['clientSecret'] as String?,
       email: json['email'] as String?,
       password: json['password'] as String?,
+      onlyUploadOnWiFi: json['onlyUploadOnWiFi'] as bool? ?? false,
+      uploadInterval: json['uploadInterval'] as int? ?? 10,
       deleteWhenUploaded: json['deleteWhenUploaded'] as bool? ?? true,
       dataFormat: json['dataFormat'] as String? ?? NameSpace.CARP,
     )
@@ -42,6 +44,8 @@ Map<String, dynamic> _$CarpDataEndPointToJson(CarpDataEndPoint instance) {
   writeNotNull('clientSecret', instance.clientSecret);
   writeNotNull('email', instance.email);
   writeNotNull('password', instance.password);
+  val['onlyUploadOnWiFi'] = instance.onlyUploadOnWiFi;
+  val['uploadInterval'] = instance.uploadInterval;
   val['deleteWhenUploaded'] = instance.deleteWhenUploaded;
   return val;
 }

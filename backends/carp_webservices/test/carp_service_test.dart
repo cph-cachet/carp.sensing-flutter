@@ -225,7 +225,7 @@ void main() {
         print(_encode(data.toJson()));
 
         int dataPointId =
-            await CarpService().getDataPointReference().postDataPoint(data);
+            await CarpService().getDataPointReference().post(data);
 
         assert(dataPointId > 0);
         print("data_point_id : $dataPointId");
@@ -246,7 +246,7 @@ void main() {
         print(_encode(data.toJson()));
 
         int dataPointId =
-            await CarpService().getDataPointReference().postDataPoint(data);
+            await CarpService().getDataPointReference().post(data);
 
         assert(dataPointId > 0);
         print("data_point_id : $dataPointId");
@@ -254,7 +254,7 @@ void main() {
 
       test('- batch', () async {
         final File file = File("test/batch-correct-test.json");
-        await CarpService().getDataPointReference().batchPostDataPoint(file);
+        await CarpService().getDataPointReference().upload(file);
 
         // wait for the batch requests to finish
         await Future.delayed(const Duration(seconds: 2), () {});
@@ -263,7 +263,7 @@ void main() {
         print("query : $query");
 
         List<DataPoint> data =
-            await CarpService().getDataPointReference().queryDataPoint(query);
+            await CarpService().getDataPointReference().query(query);
 
         print('N=${data.length}');
         // data.forEach((datapoint) => print(_encode((datapoint.toJson()))));
@@ -275,7 +275,7 @@ void main() {
         String query = 'carp_header.data_format.namespace==test';
         print("query : $query");
         List<DataPoint> data =
-            await CarpService().getDataPointReference().queryDataPoint(query);
+            await CarpService().getDataPointReference().query(query);
 
         print('N=${data.length}');
         // data.forEach((datapoint) => print(_encode((datapoint.toJson()))));
@@ -296,15 +296,13 @@ void main() {
         String query = 'carp_header.data_format.namespace==test';
         print("query : $query");
         List<DataPoint> data =
-            await CarpService().getDataPointReference().queryDataPoint(query);
+            await CarpService().getDataPointReference().query(query);
 
         print('N=${data.length}');
         print('deleting...');
         data.forEach((datapoint) async {
           print(' ${datapoint.id}');
-          await CarpService()
-              .getDataPointReference()
-              .deleteDataPoint(datapoint.id!);
+          await CarpService().getDataPointReference().delete(datapoint.id!);
         });
       });
 
@@ -317,13 +315,12 @@ void main() {
         print(_encode(dataPost.toJson()));
 
         int dataPointId =
-            await CarpService().getDataPointReference().postDataPoint(dataPost);
+            await CarpService().getDataPointReference().post(dataPost);
 
         assert(dataPointId > 0);
 
-        DataPoint dataGet = await CarpService()
-            .getDataPointReference()
-            .getDataPoint(dataPointId);
+        DataPoint dataGet =
+            await CarpService().getDataPointReference().get(dataPointId);
 
         print(_encode(dataGet.toJson()));
         assert(dataGet.id == dataPointId);
@@ -333,7 +330,7 @@ void main() {
         '- get all',
         () async {
           List<DataPoint> data =
-              await CarpService().getDataPointReference().getAllDataPoint();
+              await CarpService().getDataPointReference().getAll();
 
           //data.forEach((datapoint) => print(_encode((datapoint.toJson()))));
           assert(data.length >= 0);
@@ -345,12 +342,12 @@ void main() {
       test('- query', () async {
         await CarpService()
             .getDataPointReference()
-            .postDataPoint(DataPoint.fromData(lightData)
+            .post(DataPoint.fromData(lightData)
               ..carpHeader.studyId = studyId
               ..carpHeader.userId = userId);
         await CarpService()
             .getDataPointReference()
-            .postDataPoint(DataPoint.fromData(deviceData)
+            .post(DataPoint.fromData(deviceData)
               ..carpHeader.studyId = studyId
               ..carpHeader.userId = userId);
 
@@ -363,7 +360,7 @@ void main() {
         //String query = 'carp_header.data_format.namespace=in=(carp,omh)';
         print("query : $query");
         List<DataPoint> data =
-            await CarpService().getDataPointReference().queryDataPoint(query);
+            await CarpService().getDataPointReference().query(query);
 
         assert(data.length >= 0);
         print('N=${data.length}');
@@ -377,35 +374,31 @@ void main() {
       test('- delete', () async {
         int dataPointId = await CarpService()
             .getDataPointReference()
-            .postDataPoint(DataPoint.fromData(lightData)
+            .post(DataPoint.fromData(lightData)
               ..carpHeader.studyId = studyId
               ..carpHeader.userId = userId);
         print("DELETE data_point_id : $dataPointId");
-        await CarpService()
-            .getDataPointReference()
-            .deleteDataPoint(dataPointId);
+        await CarpService().getDataPointReference().delete(dataPointId);
       });
 
       test(
         '- delete all',
         () async {
           List<DataPoint> data =
-              await CarpService().getDataPointReference().getAllDataPoint();
+              await CarpService().getDataPointReference().getAll();
 
           print('N=${data.length}');
           print('deleting...');
           data.forEach((datapoint) async {
             print(' ${datapoint.id}');
-            await CarpService()
-                .getDataPointReference()
-                .deleteDataPoint(datapoint.id!);
+            await CarpService().getDataPointReference().delete(datapoint.id!);
           });
 
           // wait for the delete requests to finish
           await Future.delayed(const Duration(seconds: 2), () {});
 
           List<DataPoint> empty =
-              await CarpService().getDataPointReference().getAllDataPoint();
+              await CarpService().getDataPointReference().getAll();
 
           print('N=${empty.length}');
           assert(empty.length == 0);

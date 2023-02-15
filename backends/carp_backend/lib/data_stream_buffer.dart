@@ -33,6 +33,8 @@ class DataStreamBuffer {
   factory DataStreamBuffer() => _instance;
   DataStreamBuffer._();
 
+  /// Initialize this buffer by specifying which [deployment] it handles
+  /// and the stream of [measurements] to buffer.
   Future<void> initialize(
     SmartphoneDeployment deployment,
     Stream<Measurement> measurements,
@@ -61,9 +63,11 @@ class DataStreamBuffer {
     );
   }
 
+  /// The name of the table in SQLite to use for buffering.
   String getTableName(ExpectedDataStream stream) =>
       '${stream.deviceRoleName}_${stream.dataType}';
 
+  /// Called whenever a new [measurement] needs to be added to this buffer.
   Future<void> onMeasurement(Measurement measurement) async {
     String? roleName = measurement.taskControl?.targetDevice?.roleName;
     String dataType = measurement.dataType.toString();
@@ -90,6 +94,9 @@ class DataStreamBuffer {
   Future<void> onError(Object? error) async => await onMeasurement(
       Measurement.fromData(Error(message: error.toString())));
 
+  /// Get the list of [DataStreamBatch] which has not yet been uploaded.
+  ///
+  /// If [delete] is true, the data will be deleted from this buffer.
   Future<List<DataStreamBatch>> getDataStreamBatches([
     bool delete = false,
   ]) async {
@@ -100,6 +107,10 @@ class DataStreamBuffer {
     return batches;
   }
 
+  /// Get a [DataStreamBatch] of all data which has not been uploaded yet
+  /// for the the [stream].
+  ///
+  /// If [delete] is true, the data will be deleted from this buffer.
   Future<DataStreamBatch> getDataStreamBatch(
     ExpectedDataStream stream, [
     bool delete = false,
@@ -180,6 +191,7 @@ class DataStreamBuffer {
     );
   }
 
+  /// Close this buffer. No more data can be added.
   Future<void> close() async {
     await database?.close();
   }

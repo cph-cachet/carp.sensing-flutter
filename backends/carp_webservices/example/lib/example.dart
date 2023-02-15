@@ -114,20 +114,19 @@ void main() async {
   final DataPoint data = DataPoint.fromData(lightData);
 
   // post it to the CARP server, which returns the ID of the data point
-  int dataPointId =
-      await CarpService().getDataPointReference().postDataPoint(data);
+  int dataPointId = await CarpService().getDataPointReference().post(data);
 
   // get the data point back from the server
   DataPoint dataPoint =
-      await CarpService().getDataPointReference().getDataPoint(dataPointId);
+      await CarpService().getDataPointReference().get(dataPointId);
   print(dataPoint);
 
   // batch upload a list of raw json data points in a file
   final File file = File('test/batch.json');
-  await CarpService().getDataPointReference().batchPostDataPoint(file);
+  await CarpService().getDataPointReference().upload(file);
 
   // delete the data point
-  await CarpService().getDataPointReference().deleteDataPoint(dataPointId);
+  await CarpService().getDataPointReference().delete(dataPointId);
 
   // ------------------- COLLECTIONS AND DOCUMENTS --------------------------------
 
