@@ -79,14 +79,14 @@ class CarpDataManager extends AbstractDataManager {
       uploadTimer = Timer.periodic(
           Duration(minutes: carpEndPoint.uploadInterval),
           (_) => uploadBufferedMeasurements());
-
-      // listen to connectivity events
-      Connectivity()
-          .onConnectivityChanged
-          .listen((status) => connectivity = status);
     }
+
+    // listen to connectivity events
+    Connectivity()
+        .onConnectivityChanged
+        .listen((status) => connectivity = status);
+
     _initialized = true;
-    // await user; // This will trigger authentication to CAWS
   }
 
   /// The currently signed in user.

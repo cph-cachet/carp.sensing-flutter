@@ -34,10 +34,9 @@ abstract class Snapshot {
   /// The date when the object represented by this snapshot was created.
   late DateTime createdOn;
 
-  // TODO - this is part of version 1.1.0 upgrade
-  // /// The number of edits made to the object represented by this snapshot,
-  // /// indicating its version number.
-  // int? version;
+  /// The number of edits made to the object represented by this snapshot,
+  /// indicating its version number.
+  int? version;
 
   Snapshot([String? id]) {
     this.id = id ?? const Uuid().v1();

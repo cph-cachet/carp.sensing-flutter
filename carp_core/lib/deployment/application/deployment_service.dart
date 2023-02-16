@@ -10,7 +10,7 @@ part of carp_core_deployment;
 /// and retrieving [PrimaryDeviceDeployment]'s for participating primary devices
 /// as defined in the protocol.
 abstract class DeploymentService {
-  static const String API_VERSION = "1.0";
+  static const String API_VERSION = "1.1";
 
   /// Create a new [StudyDeployment] based on a [StudyProtocol].
   /// [studyDeploymentId] specifies the study deployment id.

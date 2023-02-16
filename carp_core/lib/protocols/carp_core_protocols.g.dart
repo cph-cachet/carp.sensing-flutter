@@ -14,6 +14,7 @@ StudyProtocol _$StudyProtocolFromJson(Map<String, dynamic> json) =>
     )
       ..id = json['id'] as String
       ..createdOn = DateTime.parse(json['createdOn'] as String)
+      ..version = json['version'] as int?
       ..primaryDevices = (json['primaryDevices'] as List<dynamic>)
           .map((e) =>
               PrimaryDeviceConfiguration.fromJson(e as Map<String, dynamic>))
@@ -53,8 +54,6 @@ Map<String, dynamic> _$StudyProtocolToJson(StudyProtocol instance) {
   final val = <String, dynamic>{
     'id': instance.id,
     'createdOn': instance.createdOn.toIso8601String(),
-    'ownerId': instance.ownerId,
-    'name': instance.name,
   };
 
   void writeNotNull(String key, dynamic value) {
@@ -63,6 +62,9 @@ Map<String, dynamic> _$StudyProtocolToJson(StudyProtocol instance) {
     }
   }
 
+  writeNotNull('version', instance.version);
+  val['ownerId'] = instance.ownerId;
+  val['name'] = instance.name;
   writeNotNull('description', instance.description);
   val['primaryDevices'] = instance.primaryDevices.toList();
   writeNotNull('connectedDevices', instance.connectedDevices?.toList());

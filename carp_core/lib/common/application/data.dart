@@ -41,11 +41,10 @@ class Data extends Serializable {
 /// Holds data for a [DataType] collected by a sensor which may include additional
 /// [sensorSpecificData].
 abstract class SensorData extends Data {
-  // TODO - part of apiVersion 1.1.0
-  // /// Additional sensor-specific data pertaining to this data point.
-  // /// This can be used to append highly-specific sensor data to an otherwise
-  // /// common data type.
-  // Data? sensorSpecificData;
+  /// Additional sensor-specific data pertaining to this data point.
+  /// This can be used to append highly-specific sensor data to an otherwise
+  /// common data type.
+  Data? sensorSpecificData;
 }
 
 /// Change in velocity, including gravity, along perpendicular

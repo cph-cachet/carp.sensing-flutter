@@ -21,7 +21,7 @@ class FileData extends Data {
   String filename;
 
   /// Should the file also be uploaded, or only this meta data?
-  /// Default is [true].
+  /// Default is true.
   bool upload = true;
 
   /// Metadata for this file as a map of string key-value pairs.

@@ -41,11 +41,11 @@ class CarpDataEndPoint extends DataEndPoint {
   /// The method used to upload to CARP. See [CarpUploadMethod] for options.
   CarpUploadMethod uploadMethod;
 
-  /// The name of the CARP endpoint. Can be anything, but its recommended
-  /// to name it according to the CARP service name.
+  /// The name of the CAWS endpoint. Can be anything, but its recommended
+  /// to name it according to the CAWS service name.
   String name;
 
-  /// The URI of the CARP endpoint.
+  /// The URI of the CARP Web Service.
   String? uri;
 
   /// The CARP web service client ID.
@@ -64,7 +64,8 @@ class CarpDataEndPoint extends DataEndPoint {
   ///
   /// If the study deployment is downloaded from CAWS (i.e., via the
   /// [CarpDeploymentService]), then the authentication used for downloading
-  /// is used and the [email] and [password] may be null.
+  /// is used, and the [clientId], [clientSecret], [email] and [password]
+  /// need not to be specified.
   String? password;
 
   /// Only upload when connected via WiFi network?

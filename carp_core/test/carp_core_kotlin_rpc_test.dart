@@ -5,8 +5,9 @@ import 'package:carp_core/carp_core.dart';
 import 'package:carp_serializable/carp_serializable.dart';
 
 void main() {
-  const String apiVersion = '1.0.0';
+  const String apiVersion = '1.1.1';
   const String path = 'test/json/carp.core-kotlin/$apiVersion';
+  const testDeploymentId = 'c9cc5317-48da-45f2-958e-58bc07f34681';
 
   setUp(() {
     Core();
@@ -201,7 +202,7 @@ void main() {
         '491f03fc-964b-4783-86a6-a528bbfe4e94',
         'Fictional Company study',
         "Collect heartrate and GPS using Fictional Company's software.",
-        '{\"collect-data\": \"heartrate, gps\"}',
+        '{"collect-data": "heartrate, gps"}',
       );
 
       print(toJsonString(request));
@@ -271,8 +272,8 @@ void main() {
       var m1 = Measurement(
           sensorStartTime: 1642505045000000,
           data: Geolocation(
-              latitude: 55.68061908805645, longitude: 12.582050313435703));
-      // ..sensorSpecificData = SignalStrength(rssi: 0));
+              latitude: 55.68061908805645, longitude: 12.582050313435703)
+            ..sensorSpecificData = SignalStrength(rssi: 0));
       var m2 = Measurement(
           sensorStartTime: 1642505144000000,
           data: Geolocation(
@@ -528,12 +529,12 @@ void main() {
               '$path/deployments/DeploymentService/getStudyDeploymentStatus.json')
           .readAsStringSync();
 
-      var expected = GetStudyDeploymentStatus.fromJson(
+      final expected = GetStudyDeploymentStatus.fromJson(
           json.decode(rpcString) as Map<String, dynamic>);
-      var request =
-          GetStudyDeploymentStatus('c9cc5317-48da-45f2-958e-58bc07f34681');
+      final request = GetStudyDeploymentStatus(testDeploymentId);
 
-      expect(expected.toJson(), request.toJson());
+      // expect(expected.toJson(), request.toJson());
+      expect(toJsonString(request), toJsonString(expected));
       print(toJsonString(request));
     });
 
@@ -544,7 +545,7 @@ void main() {
 
       StudyDeploymentStatus status = StudyDeploymentStatus.fromJson(
           json.decode(plainJson) as Map<String, dynamic>);
-      expect(status.studyDeploymentId, 'c9cc5317-48da-45f2-958e-58bc07f34681');
+      expect(status.studyDeploymentId, testDeploymentId);
       expect(status.status, StudyDeploymentStatusTypes.Invited);
       print(toJsonString(status));
     });
@@ -557,7 +558,7 @@ void main() {
           json.decode(rpcString) as Map<String, dynamic>);
 
       var request = RegisterDevice(
-          'c9cc5317-48da-45f2-958e-58bc07f34681',
+          testDeploymentId,
           "Participant's phone",
           DefaultDeviceRegistration(
             deviceId: 'fc7b41b0-e9e2-4b5d-8c3d-5119b556a3f0',
@@ -576,7 +577,7 @@ void main() {
 
       StudyDeploymentStatus status = StudyDeploymentStatus.fromJson(
           json.decode(plainJson) as Map<String, dynamic>);
-      expect(status.studyDeploymentId, 'c9cc5317-48da-45f2-958e-58bc07f34681');
+      expect(status.studyDeploymentId, testDeploymentId);
       expect(status.status, StudyDeploymentStatusTypes.DeployingDevices);
       print(toJsonString(status));
     });
@@ -590,7 +591,7 @@ void main() {
           json.decode(rpcString) as Map<String, dynamic>);
 
       var request = UnregisterDevice(
-        'c9cc5317-48da-45f2-958e-58bc07f34681',
+        testDeploymentId,
         "Participant's phone",
       );
       print(toJsonString(request));
@@ -606,7 +607,7 @@ void main() {
 
       StudyDeploymentStatus status = StudyDeploymentStatus.fromJson(
           json.decode(plainJson) as Map<String, dynamic>);
-      expect(status.studyDeploymentId, 'c9cc5317-48da-45f2-958e-58bc07f34681');
+      expect(status.studyDeploymentId, testDeploymentId);
       expect(status.status, StudyDeploymentStatusTypes.Invited);
       print(toJsonString(status));
     });
@@ -620,7 +621,7 @@ void main() {
           json.decode(rpcString) as Map<String, dynamic>);
 
       var request = GetDeviceDeploymentFor(
-        'c9cc5317-48da-45f2-958e-58bc07f34681',
+        testDeploymentId,
         "Participant's phone",
       );
       print(toJsonString(request));
@@ -641,6 +642,7 @@ void main() {
       expect(deployment.deviceConfiguration.roleName, "Participant's phone");
       print(toJsonString(deployment));
     });
+
     test('DeviceDeployed - Request', () async {
       String rpcString =
           File('$path/deployments/DeploymentService/deviceDeployed.json')
@@ -650,7 +652,7 @@ void main() {
           json.decode(rpcString) as Map<String, dynamic>);
 
       var request = DeviceDeployed(
-        'c9cc5317-48da-45f2-958e-58bc07f34681',
+        testDeploymentId,
         "Participant's phone",
         DateTime.tryParse('2022-01-18T13:55:10Z')!,
       );
@@ -667,7 +669,7 @@ void main() {
 
       StudyDeploymentStatus status = StudyDeploymentStatus.fromJson(
           json.decode(plainJson) as Map<String, dynamic>);
-      expect(status.studyDeploymentId, 'c9cc5317-48da-45f2-958e-58bc07f34681');
+      expect(status.studyDeploymentId, testDeploymentId);
       expect(status.status, StudyDeploymentStatusTypes.Invited);
       print(toJsonString(status));
     });
