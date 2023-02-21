@@ -36,9 +36,10 @@ abstract class Snapshot {
 
   /// The number of edits made to the object represented by this snapshot,
   /// indicating its version number.
-  int? version;
+  late int version;
 
   Snapshot([String? id]) {
+    this.version = 0;
     this.id = id ?? const Uuid().v1();
     createdOn = DateTime.now().toUtc();
   }

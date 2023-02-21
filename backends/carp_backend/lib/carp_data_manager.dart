@@ -170,6 +170,9 @@ class CarpDataManager extends AbstractDataManager {
       return;
     }
 
+    // TODO - if the upload fails, we should not delete now
+    // TODO - need to make a try-catch clause
+
     final batches = await buffer.getDataStreamBatches(
       carpEndPoint.deleteWhenUploaded,
     );

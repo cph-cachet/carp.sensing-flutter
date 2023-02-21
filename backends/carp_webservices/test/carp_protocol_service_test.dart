@@ -17,12 +17,9 @@ void main() {
   late StudyProtocol protocol;
   late Smartphone phone;
 
-  /// Runs once before all tests.
   setUpAll(() async {
     Settings().debugLevel = DebugLevel.debug;
-
-    // Initialization of serialization
-    CarpMobileSensing();
+    CarpMobileSensing.ensureInitialized();
 
     app = new CarpApp(
       studyId: testStudyId,
@@ -46,7 +43,7 @@ void main() {
     // the study protocol from the json from core
     protocol = StudyProtocol(
         ownerId: ownerId!,
-        name: 'Nonmotorized transport study II',
+        name: 'Nonmotorized transport study',
         description:
             'Track how much nonmotorized movement participants perform.')
       ..addPrimaryDevice(phone)
@@ -117,7 +114,10 @@ void main() {
       '- addVersion',
       () async {
         protocol.id = testProtocolId;
-        await CarpProtocolService().addVersion(protocol);
+        await CarpProtocolService().addVersion(
+          protocol,
+          testProtocolVersion,
+        );
       },
     );
 

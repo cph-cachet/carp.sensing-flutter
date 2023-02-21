@@ -97,6 +97,11 @@ void main() {
     });
 
     test('- refresh token', () async {
+      await CarpService().authenticate(
+        username: username,
+        password: password,
+      );
+
       print('expiring token...');
       CarpService().currentUser!.token!.expire();
 

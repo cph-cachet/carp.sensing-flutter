@@ -12,7 +12,7 @@ import 'package:iso_duration_parser/iso_duration_parser.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  CarpMobileSensing().ensureInitialized();
+  CarpMobileSensing.ensureInitialized();
   runApp(CARPMobileSensingApp());
 }
 
