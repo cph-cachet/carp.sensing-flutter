@@ -124,7 +124,7 @@ void main() {
       expect(newStatus.studyDeploymentId, testDeploymentId);
     }, skip: false);
 
-    test('- get master device deployment', () async {
+    test('- get primary device deployment', () async {
       final reference = CarpDeploymentService().deployment(testDeploymentId);
       final status = await reference.getStatus();
       print(status);

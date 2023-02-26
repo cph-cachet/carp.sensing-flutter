@@ -97,9 +97,12 @@ enum DeploymentMode {
   /// Use a local study protocol & deployment and store data locally on the phone.
   local,
 
-  /// Use the CAWS production server to get the study deployment and store data.
+  /// Use the CAWS PROD server to get the study deployment and store data.
   production,
 
   /// Use the CAWS staging server to get the study deployment and store data.
   staging,
+
+  /// Use the CAWS DEV server to get the study deployment and store data.
+  development,
 }

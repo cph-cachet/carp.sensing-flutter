@@ -45,7 +45,19 @@ Location _$LocationFromJson(Map<String, dynamic> json) => Location(
       speedAccuracy: (json['speedAccuracy'] as num?)?.toDouble(),
       time:
           json['time'] == null ? null : DateTime.parse(json['time'] as String),
-    )..$type = json['__type'] as String?;
+      isMock: json['isMock'] as bool?,
+      headingAccuracy: (json['headingAccuracy'] as num?)?.toDouble(),
+      elapsedRealtimeNanos: (json['elapsedRealtimeNanos'] as num?)?.toDouble(),
+      elapsedRealtimeUncertaintyNanos:
+          (json['elapsedRealtimeUncertaintyNanos'] as num?)?.toDouble(),
+      satelliteNumber: json['satelliteNumber'] as int?,
+      provider: json['provider'] as String?,
+    )
+      ..$type = json['__type'] as String?
+      ..sensorSpecificData = json['sensorSpecificData'] == null
+          ? null
+          : Data.fromJson(json['sensorSpecificData'] as Map<String, dynamic>)
+      ..verticalAccuracy = (json['verticalAccuracy'] as num?)?.toDouble();
 
 Map<String, dynamic> _$LocationToJson(Location instance) {
   final val = <String, dynamic>{};
@@ -57,14 +69,23 @@ Map<String, dynamic> _$LocationToJson(Location instance) {
   }
 
   writeNotNull('__type', instance.$type);
+  writeNotNull('sensorSpecificData', instance.sensorSpecificData);
   val['latitude'] = instance.latitude;
   val['longitude'] = instance.longitude;
   writeNotNull('altitude', instance.altitude);
   writeNotNull('accuracy', instance.accuracy);
+  writeNotNull('verticalAccuracy', instance.verticalAccuracy);
   writeNotNull('speed', instance.speed);
   writeNotNull('speedAccuracy', instance.speedAccuracy);
   writeNotNull('heading', instance.heading);
   writeNotNull('time', instance.time?.toIso8601String());
+  writeNotNull('isMock', instance.isMock);
+  writeNotNull('headingAccuracy', instance.headingAccuracy);
+  writeNotNull('elapsedRealtimeNanos', instance.elapsedRealtimeNanos);
+  writeNotNull('elapsedRealtimeUncertaintyNanos',
+      instance.elapsedRealtimeUncertaintyNanos);
+  writeNotNull('satelliteNumber', instance.satelliteNumber);
+  writeNotNull('provider', instance.provider);
   return val;
 }
 

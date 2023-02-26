@@ -108,7 +108,7 @@ class DataStreamBuffer {
   }
 
   /// Get a [DataStreamBatch] of all data which has not been uploaded yet
-  /// for the the [stream].
+  /// for the [stream].
   ///
   /// If [delete] is true, the data will be deleted from this buffer.
   Future<DataStreamBatch> getDataStreamBatch(
@@ -140,31 +140,12 @@ class DataStreamBuffer {
       int? triggerId = int.tryParse(element[TRIGGER_ID_COLUMN].toString());
       if (triggerId != null) triggerIds.add(triggerId);
 
-      String jsonString = element[MEASUREMENT_COLUMN] as String;
-      var measurement =
+      final jsonString = element[MEASUREMENT_COLUMN] as String;
+      final measurement =
           Measurement.fromJson(json.decode(jsonString) as Map<String, dynamic>);
       measurements.add(measurement);
     }
     firstSequenceId = rows.reduce(min);
-
-    // for (var row in rows) {
-    //   if (delete) {
-    //     database?.delete(
-    //       getTableName(stream),
-    //       where: '$ID_COLUMN = ?',
-    //       whereArgs: [row],
-    //     );
-    //   } else {
-    //     database?.update(
-    //       getTableName(stream),
-    //       {
-    //         UPLOADED_COLUMN: 1,
-    //       },
-    //       where: '$ID_COLUMN = ?',
-    //       whereArgs: [row],
-    //     );
-    //   }
-    // }
 
     if (delete) {
       database?.delete(
@@ -192,7 +173,27 @@ class DataStreamBuffer {
   }
 
   /// Close this buffer. No more data can be added.
-  Future<void> close() async {
-    await database?.close();
-  }
+  Future<void> close() async => await database?.close();
+
+  // /// Get a [DataStreamBufferTransaction] for this buffer.
+  // DataStreamBufferTransaction get transaction =>
+  //     DataStreamBufferTransaction(this);
 }
+
+// class DataStreamBufferTransaction {
+//   DataStreamBuffer buffer;
+//   bool deleteOnUpload = false;
+//   Set<int> affectedRows = {};
+
+//   DataStreamBufferTransaction(this.buffer);
+
+//   Future<List<DataStreamBatch>> getDataStreamBatches([
+//     bool delete = false,
+//   ]) async {
+//     deleteOnUpload = delete;
+//     return buffer.getDataStreamBatches();
+//   }
+
+//   Future<void> commit() async {}
+//   Future<void> rollback() async {}
+// }

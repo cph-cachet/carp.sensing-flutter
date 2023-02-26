@@ -39,14 +39,13 @@ class LocalStudyProtocolManager implements StudyProtocolManager {
     protocol.dataEndPoint = (bloc.deploymentMode == DeploymentMode.local)
         ? SQLiteDataEndPoint()
         : CarpDataEndPoint(
-            uploadMethod: CarpUploadMethod.DATA_POINT,
-            name: 'CARP Server',
+            uploadMethod: CarpUploadMethod.DATA_STREAM,
           );
 
     // set the format of the data to upload - e.g. Open mHealth
     protocol.dataEndPoint!.dataFormat = bloc.dataFormat;
 
-    // define the master device
+    // define the primary device
     Smartphone phone = Smartphone();
     protocol.addPrimaryDevice(phone);
 
@@ -88,8 +87,9 @@ class LocalStudyProtocolManager implements StudyProtocolManager {
     // Add a background task that collects location on a regular basis
     protocol.addTaskControl(
         PeriodicTrigger(period: Duration(minutes: 5)),
-        BackgroundTask()
-          ..addMeasure(Measure(type: ContextSamplingPackage.LOCATION)),
+        BackgroundTask(measures: [
+          Measure(type: ContextSamplingPackage.CURRENT_LOCATION),
+        ]),
         locationService);
 
     // Add a background task that continuously collects location and mobility
@@ -257,19 +257,6 @@ class LocalStudyProtocolManager implements StudyProtocolManager {
     //     phone);
 
     return protocol;
-  }
-
-  DataEndPoint getDataEndPoint() {
-    switch (bloc.deploymentMode) {
-      case DeploymentMode.local:
-        return SQLiteDataEndPoint();
-      case DeploymentMode.production:
-      case DeploymentMode.staging:
-        return CarpDataEndPoint(
-          uploadMethod: CarpUploadMethod.DATA_POINT,
-          name: 'CARP Server',
-        );
-    }
   }
 
   @override

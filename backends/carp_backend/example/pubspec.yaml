@@ -19,8 +19,8 @@ dependencies:
     path: ../../../carp_mobile_sensing
   carp_webservices:
     path: ../../carp_webservices
-  # research_package:
-  #   path: ../../../../../research.package/
+  research_package:
+    path: ../../../../../research.package/
   carp_backend:
     path: ../
 

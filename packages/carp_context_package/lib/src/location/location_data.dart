@@ -12,25 +12,59 @@ part of carp_context_package;
 class Location extends Geolocation {
   static const dataType = ContextSamplingPackage.LOCATION;
 
-  /// Altitude in GPS coordinates.
+  /// In meters above the WGS 84 reference ellipsoid.
+  /// Derived from GPS information.
   double? altitude;
 
-  /// Accuracy in absolute measures.
+  /// Estimated horizontal accuracy of this location, radial, in meters
   double? accuracy;
 
+  /// Estimated vertical accuracy of this location, in meters.
+  double? verticalAccuracy;
+
   /// Estimated movement speed.
+  /// In meters/second
   double? speed;
 
   /// Accuracy in speed estimation.
-  ///
-  /// Will always be 0 on iOS
+  /// In meters/second
   double? speedAccuracy;
 
-  /// Heading in degrees
+  /// Heading is the horizontal direction of travel of this device, in degrees
   double? heading;
 
   /// The time when this location was collected.
   DateTime? time;
+
+  /// Is the location currently mocked
+  ///
+  /// Always false on iOS
+  bool? isMock;
+
+  /// Get the estimated bearing accuracy of this location, in degrees.
+  /// Only available on Android
+  /// https://developer.android.com/reference/android/location/Location#getBearingAccuracyDegrees()
+  double? headingAccuracy;
+
+  /// Return the time of this fix, in elapsed real-time since system boot.
+  /// Only available on Android
+  /// https://developer.android.com/reference/android/location/Location#getElapsedRealtimeNanos()
+  double? elapsedRealtimeNanos;
+
+  /// Get estimate of the relative precision of the alignment of the ElapsedRealtimeNanos timestamp.
+  /// Only available on Android
+  /// https://developer.android.com/reference/android/location/Location#getElapsedRealtimeUncertaintyNanos()
+  double? elapsedRealtimeUncertaintyNanos;
+
+  /// The number of satellites used to derive the fix.
+  /// Only available on Android
+  /// https://developer.android.com/reference/android/location/Location#getExtras()
+  int? satelliteNumber;
+
+  /// The name of the provider that generated this fix.
+  /// Only available on Android
+  /// https://developer.android.com/reference/android/location/Location#getProvider()
+  String? provider;
 
   Location({
     super.latitude,
@@ -41,6 +75,12 @@ class Location extends Geolocation {
     this.speed,
     this.speedAccuracy,
     this.time,
+    this.isMock,
+    this.headingAccuracy,
+    this.elapsedRealtimeNanos,
+    this.elapsedRealtimeUncertaintyNanos,
+    this.satelliteNumber,
+    this.provider,
   }) : super();
 
   Location.fromLocation(location.LocationData location) : super() {
@@ -54,6 +94,12 @@ class Location extends Geolocation {
     time = (location.time != null)
         ? DateTime.fromMillisecondsSinceEpoch(location.time!.toInt())
         : null;
+    isMock = location.isMock;
+    headingAccuracy = location.headingAccuracy;
+    elapsedRealtimeNanos = location.elapsedRealtimeNanos;
+    elapsedRealtimeUncertaintyNanos = location.elapsedRealtimeUncertaintyNanos;
+    satelliteNumber = location.satelliteNumber;
+    provider = location.provider;
   }
 
   factory Location.fromJson(Map<String, dynamic> json) =>
@@ -64,5 +110,5 @@ class Location extends Geolocation {
 
   @override
   String toString() =>
-      '${super.toString()}, latitude: $latitude, longitude: $longitude, accuracy; $accuracy, altitude: $altitude, speed: $speed, speed_accuracy: $speedAccuracy, heading: $heading, time: $time';
+      '$runtimeType -  latitude: $latitude, longitude: $longitude, altitude: $altitude, speed: $speed, time: $time';
 }

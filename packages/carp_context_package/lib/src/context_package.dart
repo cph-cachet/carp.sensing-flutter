@@ -22,6 +22,12 @@ class ContextSamplingPackage extends SmartphoneSamplingPackage {
   ///  * No sampling configuration needed.
   static const String ACTIVITY = "${NameSpace.CARP}.activity";
 
+  /// Measure type for one-time collection of current location.
+  ///  * One-time measure.
+  ///  * Uses the [LocationService] connected device for data collection.
+  ///  * No sampling configuration needed.
+  static const String CURRENT_LOCATION = "${NameSpace.CARP}.currentlocation";
+
   /// Measure type for continuos collection of location data.
   ///  * Event-based measure.
   ///  * Uses the [LocationService] connected device for data collection.
@@ -110,7 +116,8 @@ class ContextSamplingPackage extends SmartphoneSamplingPackage {
       [Permission.locationAlways, Permission.activityRecognition];
 
   /// Default samplings schema for:
-  ///  * [MOBILITY] - place radius on 50 meters, stop radius on 5 meters, and stop duration at 30 seconds.
+  ///  * [MOBILITY] - place radius on 50 meters, stop radius on 5 meters,
+  ///     and stop duration at 30 seconds.
   @override
   SamplingSchema get samplingSchema => SamplingSchema()
     ..addConfiguration(
@@ -128,6 +135,11 @@ class LocationSamplingPackage extends SmartphoneSamplingPackage {
 
   @override
   List<DataTypeMetaData> get dataTypes => [
+        DataTypeMetaData(
+          type: ContextSamplingPackage.CURRENT_LOCATION,
+          displayName: "Location",
+          timeType: DataTimeType.POINT,
+        ),
         DataTypeMetaData(
           type: ContextSamplingPackage.LOCATION,
           displayName: "Location",
@@ -148,6 +160,8 @@ class LocationSamplingPackage extends SmartphoneSamplingPackage {
   @override
   Probe? create(String type) {
     switch (type) {
+      case ContextSamplingPackage.CURRENT_LOCATION:
+        return CurrentLocationProbe();
       case ContextSamplingPackage.LOCATION:
         return LocationProbe();
       case ContextSamplingPackage.GEOFENCE:

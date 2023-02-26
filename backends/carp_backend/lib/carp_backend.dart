@@ -145,26 +145,6 @@ enum CarpUploadMethod {
   FILE,
 }
 
-// enum CarpBackendEvents {
-//   /// The CarpBackend is successfully initialized.
-//   Initialized,
-
-//   /// The status of the deployment has successfully been downloaded from the CARP server.
-//   DeploymentStatusRetrieved,
-
-//   /// The study protocol has successfully been downloaded from the CARP server.
-//   ProtocolRetrieved,
-
-//   /// The deployment has successfully been downloaded from the CARP server.
-//   DeploymentRetrieved,
-
-//   /// The deployment has been marked as successfully at the CARP server.
-//   DeploymentSuccessful,
-
-//   /// An error occurred in the communication with the CARP server.
-//   Error,
-// }
-
 /// Exception for CARP backend communication.
 class CarpBackendException implements Exception {
   String? message;
