@@ -13,7 +13,7 @@ dependencies:
 
   carp_serializable: ^1.0.0
   carp_core: ^0.40.7
-  carp_mobile_sensing: ^0.40.12  
+  carp_mobile_sensing: ^0.40.12
 
   http: ^0.13.3
   http_parser: ^4.0.0
@@ -43,4 +43,3 @@ flutter:
   uses-material-design: true
   assets:
     - asset/images/
-

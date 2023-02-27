@@ -307,18 +307,29 @@ class CarpService extends CarpBaseService {
   }
 
   /// Asynchronously gets the CARP profile of the current user.
-  Future<CarpUser> getCurrentUserProfile() async {
+  /// Uses accessToken if provided, otherwise uses the current user's token.
+  Future<CarpUser> getCurrentUserProfile({String? accessToken}) async {
     if (currentUser == null || !currentUser!.isAuthenticated)
       throw CarpServiceException(message: 'No user is authenticated.');
 
-    http.Response response = await httpr
-        .get(Uri.encodeFull('$userEndpointUri/current'), headers: headers);
+    
+    var headersWithToken = accessToken == null
+        ? headers
+        : {
+            "Content-Type": "application/json",
+            "Authorization": "bearer ${_currentUser!.token!.accessToken}",
+            "cache-control": "no-cache"
+          };
+
+    http.Response response = await httpr.get(
+        Uri.encodeFull('$currentUserEndpointUri'),
+        headers: headersWithToken);
     int httpStatusCode = response.statusCode;
     Map<String, dynamic> responseJson = json.decode(response.body);
 
     if (httpStatusCode == HttpStatus.ok) {
       return _currentUser!
-        ..username = responseJson['username']
+        ..username = responseJson['email']
         ..id = responseJson['id']
         ..accountId = responseJson['accountId']
         ..isActivated = responseJson['isActivated'] as bool?
