@@ -40,7 +40,7 @@ void main() {
 
     primaryProtocol
       ..addPrimaryDevice(primaryPhone)
-      ..addConnectedDevice(eSense);
+      ..addConnectedDevice(eSense, primaryPhone);
 
     // Define what needs to be measured, on which device, when.
     List<Measure> measures = [
@@ -155,12 +155,11 @@ void main() {
   test('JSON File -> SmartphoneStudyProtocol', () async {
     String plainJson = File('test/json/study_protocol.json').readAsStringSync();
 
-    SmartphoneStudyProtocol protocol = SmartphoneStudyProtocol.fromJson(
+    final protocol = SmartphoneStudyProtocol.fromJson(
         json.decode(plainJson) as Map<String, dynamic>);
 
     expect(protocol.ownerId, primaryProtocol.ownerId);
-    expect(protocol.primaryDevices.first.roleName,
-        SmartphoneDeploymentService().thisPhone.roleName);
+    expect(protocol.primaryDevices.first.roleName, Smartphone.DEFAULT_ROLENAME);
     expect(protocol.dataEndPoint?.type, DataEndPointTypes.SQLITE);
     expect(protocol.expectedParticipantData?.length, 1);
     expect(protocol.getApplicationData('uiTheme'), 'black');

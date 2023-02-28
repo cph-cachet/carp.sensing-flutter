@@ -82,7 +82,7 @@ class LocalStudyProtocolManager implements StudyProtocolManager {
 
     // Define the online location service and add it as a 'device'
     LocationService locationService = LocationService();
-    protocol.addConnectedDevice(locationService);
+    protocol.addConnectedDevice(locationService, phone);
 
     // Add a background task that collects location on a regular basis
     protocol.addTaskControl(
@@ -104,7 +104,7 @@ class LocalStudyProtocolManager implements StudyProtocolManager {
     // Define the online weather service and add it as a 'device'
     WeatherService weatherService =
         WeatherService(apiKey: '12b6e28582eb9298577c734a31ba9f4f');
-    protocol.addConnectedDevice(weatherService);
+    protocol.addConnectedDevice(weatherService, phone);
 
     // Add a background task that collects weather every 30 minutes.
     protocol.addTaskControl(
@@ -116,7 +116,7 @@ class LocalStudyProtocolManager implements StudyProtocolManager {
     // Define the online air quality service and add it as a 'device'
     AirQualityService airQualityService =
         AirQualityService(apiKey: '9e538456b2b85c92647d8b65090e29f957638c77');
-    protocol.addConnectedDevice(airQualityService);
+    protocol.addConnectedDevice(airQualityService, phone);
 
     // Add a background task that air quality every 30 minutes.
     protocol.addTaskControl(
@@ -200,9 +200,9 @@ class LocalStudyProtocolManager implements StudyProtocolManager {
     // define the Polar device and add its measures
     PolarDevice polar = PolarDevice(
       identifier: 'B5FC172F',
-      name: 'Polar H10',
+      name: 'Polar H10 HR Monitor',
       polarDeviceType: PolarDeviceType.H10,
-      roleName: 'polar-h10-device',
+      roleName: 'Polar H10',
     );
     // PolarDevice polar = PolarDevice(
     //   identifier: 'B36B5B21',
@@ -211,7 +211,7 @@ class LocalStudyProtocolManager implements StudyProtocolManager {
     //   roleName: 'polar-pvs-device',
     // );
 
-    protocol.addConnectedDevice(polar);
+    protocol.addConnectedDevice(polar, phone);
 
     protocol.addTaskControl(
         ImmediateTrigger(),

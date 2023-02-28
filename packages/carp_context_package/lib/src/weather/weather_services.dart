@@ -15,7 +15,7 @@ class WeatherService extends OnlineService {
       '${DeviceConfiguration.DEVICE_NAMESPACE}.WeatherService';
 
   /// The default rolename for a air quality service.
-  static const String DEFAULT_ROLENAME = 'weather_service';
+  static const String DEFAULT_ROLENAME = 'Weather Service';
 
   /// API key for the WAQI API.
   String apiKey;

@@ -14,8 +14,8 @@ class AirQualityService extends OnlineService {
   static const String DEVICE_TYPE =
       '${DeviceConfiguration.DEVICE_NAMESPACE}.AirQualityService';
 
-  /// The default rolename for a air quality service.
-  static const String DEFAULT_ROLENAME = 'air_quality_service';
+  /// The default rolename for an air quality service.
+  static const String DEFAULT_ROLENAME = 'Air Quality Service';
 
   /// API key for the WAQI API.
   String apiKey;

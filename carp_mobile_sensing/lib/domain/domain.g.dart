@@ -31,7 +31,7 @@ Map<String, dynamic> _$SmartphoneApplicationDataToJson(
 
   writeNotNull('studyDescription', instance.studyDescription);
   writeNotNull('dataEndPoint', instance.dataEndPoint);
-  val['applicationData'] = instance.applicationData;
+  writeNotNull('applicationData', instance.applicationData);
   return val;
 }
 
@@ -41,7 +41,7 @@ SmartphoneStudyProtocol _$SmartphoneStudyProtocolFromJson(
       ownerId: json['ownerId'] as String,
       name: json['name'] as String,
     )
-      ..applicationData = json['applicationData'] as Map<String, dynamic>
+      ..applicationData = json['applicationData'] as Map<String, dynamic>?
       ..id = json['id'] as String
       ..createdOn = DateTime.parse(json['createdOn'] as String)
       ..version = json['version'] as int
@@ -82,16 +82,7 @@ SmartphoneStudyProtocol _$SmartphoneStudyProtocolFromJson(
 
 Map<String, dynamic> _$SmartphoneStudyProtocolToJson(
     SmartphoneStudyProtocol instance) {
-  final val = <String, dynamic>{
-    'applicationData': instance.applicationData,
-    'id': instance.id,
-    'createdOn': instance.createdOn.toIso8601String(),
-    'version': instance.version,
-    'description': instance.description,
-    'ownerId': instance.ownerId,
-    'name': instance.name,
-    'primaryDevices': instance.primaryDevices.toList(),
-  };
+  final val = <String, dynamic>{};
 
   void writeNotNull(String key, dynamic value) {
     if (value != null) {
@@ -99,6 +90,14 @@ Map<String, dynamic> _$SmartphoneStudyProtocolToJson(
     }
   }
 
+  writeNotNull('applicationData', instance.applicationData);
+  val['id'] = instance.id;
+  val['createdOn'] = instance.createdOn.toIso8601String();
+  val['version'] = instance.version;
+  val['description'] = instance.description;
+  val['ownerId'] = instance.ownerId;
+  val['name'] = instance.name;
+  val['primaryDevices'] = instance.primaryDevices.toList();
   writeNotNull('connectedDevices', instance.connectedDevices?.toList());
   writeNotNull('connections', instance.connections);
   val['tasks'] = instance.tasks.toList();
@@ -410,25 +409,14 @@ SmartphoneDeployment _$SmartphoneDeploymentFromJson(
           const {},
       userId: json['userId'] as String?,
     )
-      ..applicationData = json['applicationData'] as Map<String, dynamic>
+      ..applicationData = json['applicationData'] as Map<String, dynamic>?
       ..deployed = json['deployed'] == null
           ? null
           : DateTime.parse(json['deployed'] as String);
 
 Map<String, dynamic> _$SmartphoneDeploymentToJson(
     SmartphoneDeployment instance) {
-  final val = <String, dynamic>{
-    'applicationData': instance.applicationData,
-    'deviceConfiguration': instance.deviceConfiguration,
-    'registration': instance.registration,
-    'connectedDevices': instance.connectedDevices.toList(),
-    'connectedDeviceRegistrations': instance.connectedDeviceRegistrations,
-    'tasks': instance.tasks.toList(),
-    'triggers': instance.triggers,
-    'taskControls': instance.taskControls.toList(),
-    'expectedParticipantData': instance.expectedParticipantData.toList(),
-    'studyDeploymentId': instance.studyDeploymentId,
-  };
+  final val = <String, dynamic>{};
 
   void writeNotNull(String key, dynamic value) {
     if (value != null) {
@@ -436,6 +424,16 @@ Map<String, dynamic> _$SmartphoneDeploymentToJson(
     }
   }
 
+  writeNotNull('applicationData', instance.applicationData);
+  val['deviceConfiguration'] = instance.deviceConfiguration;
+  val['registration'] = instance.registration;
+  val['connectedDevices'] = instance.connectedDevices.toList();
+  val['connectedDeviceRegistrations'] = instance.connectedDeviceRegistrations;
+  val['tasks'] = instance.tasks.toList();
+  val['triggers'] = instance.triggers;
+  val['taskControls'] = instance.taskControls.toList();
+  val['expectedParticipantData'] = instance.expectedParticipantData.toList();
+  val['studyDeploymentId'] = instance.studyDeploymentId;
   writeNotNull('deployed', instance.deployed?.toIso8601String());
   writeNotNull('userId', instance.userId);
   return val;

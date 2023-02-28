@@ -49,7 +49,7 @@ void main() {
 
       // generate the protocol
       protocol = await LocalStudyProtocolManager()
-          .getStudyProtocol('CAMS App v 0.40.0');
+          .getStudyProtocol('CAMS App v 1.1.0');
     });
 
     test('CAMSStudyProtocol -> JSON', () async {

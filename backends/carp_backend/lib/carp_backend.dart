@@ -26,13 +26,11 @@ import 'package:research_package/model.dart';
 
 part 'carp_data_manager.dart';
 part 'data_stream_buffer.dart';
-part 'carp_study_manager.dart';
 part 'localization_manager.dart';
 part 'informed_consent_manager.dart';
 part 'carp_resource_manager.dart';
 part 'carp_localization.dart';
 part 'carp_backend.g.dart';
-part 'carp_deployment_service.dart';
 part 'message_manager.dart';
 
 /// Specify a CARP Web Service (CAWS) endpoint for uploading data.

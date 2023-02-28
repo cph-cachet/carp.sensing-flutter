@@ -45,12 +45,6 @@ class StudyProtocol extends Snapshot {
     Set<DeviceConfiguration> set = {...primaryDevices, ...connectedDevices!};
     return set;
   }
-  //     (Set.from(primaryDevices)..addAll(connectedDevices ?? {})).toSet()
-  //         as Set<DeviceConfiguration>;
-  // //   Set<DeviceConfiguration> devices = primaryDevices;
-  //   devices.addAll(connectedDevices ?? {});
-  //   return devices;
-  // }
 
   /// The set of devices which are responsible for aggregating and synchronizing
   /// incoming data.
@@ -130,8 +124,26 @@ class StudyProtocol extends Snapshot {
   ///
   /// Returns true if the [device] has been added; false if it is already connected
   /// to the specified [primaryDevice].
-  bool addConnectedDevice(DeviceConfiguration device) =>
-      connectedDevices!.add(device);
+  bool addConnectedDevice(
+      DeviceConfiguration device, PrimaryDeviceConfiguration primaryDevice) {
+    connections ??= [];
+    connections?.add(DeviceConnection(device.roleName, primaryDevice.roleName));
+    return connectedDevices!.add(device);
+  }
+
+  /// Gets all devices configured to be connected to [primaryDevice].
+  List<DeviceConfiguration> getConnectedDevice(
+      PrimaryDeviceConfiguration primaryDevice) {
+    final List<DeviceConfiguration> devices = [];
+    connections?.forEach((connection) {
+      if (connection.roleName == primaryDevice.roleName) {
+        var connectedDevice = connectedDevices?.firstWhere(
+            (device) => device.roleName == connection.connectedToRoleName);
+        if (connectedDevice != null) devices.add(connectedDevice);
+      }
+    });
+    return devices;
+  }
 
   /// Add the [trigger] to this protocol.
   void addTrigger(TriggerConfiguration trigger) {

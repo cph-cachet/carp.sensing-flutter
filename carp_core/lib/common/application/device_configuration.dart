@@ -108,7 +108,7 @@ class Smartphone extends PrimaryDeviceConfiguration {
       '${DeviceConfiguration.DEVICE_NAMESPACE}.Smartphone';
 
   /// The default role name for a smartphone primary device.
-  static const String DEFAULT_ROLENAME = 'primaryphone';
+  static const String DEFAULT_ROLENAME = 'Primary Phone';
 
   /// Create a new Smartphone device descriptor.
   /// If [roleName] is not specified, then the [DEFAULT_ROLENAME] is used.

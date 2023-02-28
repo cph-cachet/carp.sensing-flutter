@@ -1,6 +1,6 @@
 name: carp_study_generator
 description: Utilities for generating CARP Mobile Sensing studies
-version: 0.40.0
+version: 1.1.0
 homepage: https://github.com/cph-cachet/carp.sensing-flutter
 
 environment:
@@ -10,7 +10,7 @@ dependencies:
   flutter:
     sdk: flutter
 
-  carp_serializable: ^1.0.0
+  # carp_serializable: ^1.0.0
   # carp_core: ^0.40.0
   # carp_mobile_sensing: ^0.40.0
   # carp_webservices: ^0.40.0
@@ -24,107 +24,111 @@ dependencies:
   # # carp_communication_package: ^0.40.0
   # carp_connectivity_package: ^0.40.0
 
-  research_package: ^1.2.0
-  cognition_package: ^1.3.2
+  # research_package: ^1.2.0
+  # cognition_package: ^1.3.2
 
   yaml: ^3.1.0
   meta: ^1.3.0
 
 # Overriding carp libraries to use the local copy
 # Remove this before release of package
-# dependency_overrides:
-  # carp_core:
-  #   path: ../../carp_core/
-  # carp_mobile_sensing:
-  #   path: ../../carp_mobile_sensing/
-  # carp_webservices:
-  #   path: ../../backends/carp_webservices/
-  # carp_backend:
-  #   path: ../../backends/carp_backend/
-  # carp_apps_package:
-  #   path: ../../packages/carp_apps_package/
-  # carp_connectivity_package:
-  #   path: ../../packages/carp_connectivity_package/
-  # carp_communication_package:
-  #   path: ../../packages/carp_communication_package/
-  # carp_context_package:
-  #   path: ../../packages/carp_context_package/
-  # carp_audio_package:
-  #   path: ../../packages/carp_audio_package/
-  # carp_esense_package:
-  #   path: ../../packages/carp_esense_package/
-  # carp_survey_package:
-  #   path: ../../packages/carp_survey_package/
-  # carp_health_package:
-  #   path: ../../packages/carp_health_package/
-  # research_package: 
-  #   path: ../../../../research.package
+dependency_overrides:
+  carp_serializable:
+    path: ../../carp_serializable/
+  carp_core:
+    path: ../../carp_core/
+  carp_mobile_sensing:
+    path: ../../carp_mobile_sensing/
+  carp_webservices:
+    path: ../../backends/carp_webservices/
+  carp_backend:
+    path: ../../backends/carp_backend/
+  carp_apps_package:
+    path: ../../packages/carp_apps_package/
+  carp_connectivity_package:
+    path: ../../packages/carp_connectivity_package/
+  carp_communication_package:
+    path: ../../packages/carp_communication_package/
+  carp_context_package:
+    path: ../../packages/carp_context_package/
+  carp_audio_package:
+    path: ../../packages/carp_audio_package/
+  carp_esense_package:
+    path: ../../packages/carp_esense_package/
+  carp_polar_package:
+    path: ../../packages/carp_polar_package/
+  carp_survey_package:
+    path: ../../packages/carp_survey_package/
+  carp_health_package:
+    path: ../../packages/carp_health_package/
+  research_package: 
+    path: ../../../../research.package
 
 # Overriding carp libraries to use github branch
 #
 # NOTE - you need to run "flutter pub upgrade" and "flutter pub get" in order to download the lastest
 # versions from Github.
-dependency_overrides:  
-  carp_core:
-    git:
-      url: https://github.com/cph-cachet/carp.sensing-flutter.git
-      ref: develop
-      path: carp_core
-  carp_mobile_sensing:
-    git:
-      url: https://github.com/cph-cachet/carp.sensing-flutter.git
-      ref: develop
-      path: carp_mobile_sensing
-  carp_context_package:
-    git:
-      url: https://github.com/cph-cachet/carp.sensing-flutter.git
-      ref: develop
-      path: packages/carp_context_package/
-  carp_survey_package:
-    git:
-      url: https://github.com/cph-cachet/carp.sensing-flutter.git
-      ref: develop
-      path: packages/carp_survey_package/
+# dependency_overrides:  
+#   carp_core:
+#     git:
+#       url: https://github.com/cph-cachet/carp.sensing-flutter.git
+#       ref: develop
+#       path: carp_core
+#   carp_mobile_sensing:
+#     git:
+#       url: https://github.com/cph-cachet/carp.sensing-flutter.git
+#       ref: develop
+#       path: carp_mobile_sensing
+#   carp_context_package:
+#     git:
+#       url: https://github.com/cph-cachet/carp.sensing-flutter.git
+#       ref: develop
+#       path: packages/carp_context_package/
+#   carp_survey_package:
+#     git:
+#       url: https://github.com/cph-cachet/carp.sensing-flutter.git
+#       ref: develop
+#       path: packages/carp_survey_package/
   # # carp_connectivity_package:
   # #   git:
   # #     url: https://github.com/cph-cachet/carp.sensing-flutter.git
   # #     ref: develop
   # #     path: packages/carp_connectivity_package/
-  carp_audio_package:
-    git:
-      url: https://github.com/cph-cachet/carp.sensing-flutter.git
-      ref: develop
-      path: packages/carp_audio_package/
-  carp_apps_package:
-    git:
-      url: https://github.com/cph-cachet/carp.sensing-flutter.git
-      ref: develop
-      path: packages/carp_apps_package/
-  carp_health_package:
-    git:
-      url: https://github.com/cph-cachet/carp.sensing-flutter.git
-      ref: develop
-      path: packages/carp_health_package/
-  carp_esense_package:
-    git:
-      url: https://github.com/cph-cachet/carp.sensing-flutter.git
-      ref: develop
-      path: packages/carp_esense_package/
-  carp_polar_package:
-    git:
-      url: https://github.com/cph-cachet/carp.sensing-flutter.git
-      ref: develop
-      path: packages/carp_polar_package/
-  carp_backend:
-    git:
-      url: https://github.com/cph-cachet/carp.sensing-flutter.git
-      ref: develop
-      path: backends/carp_backend/
-  carp_webservices:
-    git:
-      url: https://github.com/cph-cachet/carp.sensing-flutter.git
-      ref: develop
-      path: backends/carp_webservices/
+  # carp_audio_package:
+  #   git:
+  #     url: https://github.com/cph-cachet/carp.sensing-flutter.git
+  #     ref: develop
+  #     path: packages/carp_audio_package/
+  # carp_apps_package:
+  #   git:
+  #     url: https://github.com/cph-cachet/carp.sensing-flutter.git
+  #     ref: develop
+  #     path: packages/carp_apps_package/
+  # carp_health_package:
+  #   git:
+  #     url: https://github.com/cph-cachet/carp.sensing-flutter.git
+  #     ref: develop
+  #     path: packages/carp_health_package/
+  # carp_esense_package:
+  #   git:
+  #     url: https://github.com/cph-cachet/carp.sensing-flutter.git
+  #     ref: develop
+  #     path: packages/carp_esense_package/
+  # carp_polar_package:
+  #   git:
+  #     url: https://github.com/cph-cachet/carp.sensing-flutter.git
+  #     ref: develop
+  #     path: packages/carp_polar_package/
+  # carp_backend:
+  #   git:
+  #     url: https://github.com/cph-cachet/carp.sensing-flutter.git
+  #     ref: develop
+  #     path: backends/carp_backend/
+  # carp_webservices:
+  #   git:
+  #     url: https://github.com/cph-cachet/carp.sensing-flutter.git
+  #     ref: develop
+  #     path: backends/carp_webservices/
   # research_package: 
   #   git:
   #     url: https://github.com/cph-cachet/research.package.git

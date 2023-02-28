@@ -12,7 +12,7 @@ part of domain;
 mixin SmartphoneProtocolExtension {
   SmartphoneApplicationData _data = SmartphoneApplicationData();
 
-  Map<String, dynamic> get applicationData => _data.toJson();
+  Map<String, dynamic>? get applicationData => _data.toJson();
 
   set applicationData(Map<String, dynamic>? data) => _data = (data != null)
       ? SmartphoneApplicationData.fromJson(data)
@@ -39,12 +39,14 @@ mixin SmartphoneProtocolExtension {
   set dataEndPoint(DataEndPoint? dataEndPoint) =>
       _data.dataEndPoint = dataEndPoint;
 
-  void addApplicationData(String key, dynamic value) =>
-      _data.applicationData[key] = value;
+  void addApplicationData(String key, dynamic value) {
+    _data.applicationData ??= {};
+    _data.applicationData?[key] = value;
+  }
 
-  dynamic getApplicationData(String key) => _data.applicationData[key];
+  dynamic getApplicationData(String key) => _data.applicationData?[key];
 
-  void removeApplicationData(String key) => _data.applicationData.remove(key);
+  void removeApplicationData(String key) => _data.applicationData?.remove(key);
 }
 
 /// Holds application-specific data for a [SmartphoneStudyProtocol].
@@ -61,15 +63,13 @@ class SmartphoneApplicationData {
 
   /// Application-specific data to be stored as part of the study protocol
   /// which will be included in all deployments of this study protocol.
-  Map<String, dynamic> applicationData = {};
+  Map<String, dynamic>? applicationData;
 
   SmartphoneApplicationData({
     this.studyDescription,
     this.dataEndPoint,
-    Map<String, dynamic>? applicationData,
-  }) : super() {
-    this.applicationData = applicationData ?? {};
-  }
+    this.applicationData,
+  }) : super();
 
   factory SmartphoneApplicationData.fromJson(Map<String, dynamic> json) =>
       _$SmartphoneApplicationDataFromJson(json);

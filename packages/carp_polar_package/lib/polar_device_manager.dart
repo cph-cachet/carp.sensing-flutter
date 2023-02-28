@@ -33,7 +33,7 @@ class PolarDevice extends DeviceConfiguration {
       '${DeviceConfiguration.DEVICE_NAMESPACE}.PolarDevice';
 
   /// The default role name for a Polar device.
-  static const String DEFAULT_ROLENAME = 'polar';
+  static const String DEFAULT_ROLENAME = 'Polar HR Device';
 
   /// The polar sensor settings.
   /// This is know only **after** a polar device is connected.

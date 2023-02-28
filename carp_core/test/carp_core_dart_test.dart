@@ -27,8 +27,8 @@ void main() {
 
     protocol
       ..addPrimaryDevice(phone)
-      ..addConnectedDevice(hr_monitor)
-      ..addConnectedDevice(bike);
+      ..addConnectedDevice(hr_monitor, phone)
+      ..addConnectedDevice(bike, phone);
 
     protocol.addTaskControl(
       // TriggerConfiguration(sourceDeviceRoleName: phone.roleName),

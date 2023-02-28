@@ -1,7 +1,7 @@
 import 'dart:io';
 import 'dart:convert';
-import 'package:cognition_package/cognition_package.dart';
-import 'package:test/test.dart';
+// import 'package:cognition_package/cognition_package.dart';
+import 'package:flutter_test/flutter_test.dart';
 import 'package:carp_core/carp_core.dart';
 import 'package:carp_mobile_sensing/carp_mobile_sensing.dart';
 import 'package:research_package/model.dart';
@@ -10,15 +10,18 @@ import 'package:carp_apps_package/apps.dart';
 import 'package:carp_context_package/carp_context_package.dart';
 import 'package:carp_audio_package/media.dart';
 import 'package:carp_esense_package/esense.dart';
+import 'package:carp_polar_package/carp_polar_package.dart';
 import 'package:carp_survey_package/survey.dart';
 import 'package:carp_health_package/health_package.dart';
 
 void main() {
+  TestWidgetsFlutterBinding.ensureInitialized();
+
   setUp(() {
     // Initialization of serialization
     CarpMobileSensing();
     ResearchPackage();
-    CognitionPackage();
+    // CognitionPackage();
 
     // register the sampling packages
     // this is used to be able to deserialize the json protocol
@@ -27,6 +30,7 @@ void main() {
     SamplingPackageRegistry().register(ContextSamplingPackage());
     SamplingPackageRegistry().register(MediaSamplingPackage());
     SamplingPackageRegistry().register(ESenseSamplingPackage());
+    SamplingPackageRegistry().register(PolarSamplingPackage());
     SamplingPackageRegistry().register(SurveySamplingPackage());
     SamplingPackageRegistry().register(HealthSamplingPackage());
   });

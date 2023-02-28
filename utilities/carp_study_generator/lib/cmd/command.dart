@@ -35,13 +35,11 @@ abstract class AbstractCommand implements Command {
   AbstractCommand() {
     WidgetsFlutterBinding.ensureInitialized();
 
-    // Settings().debugLevel = DebugLevel.DEBUG;
-
     // Initialization of serialization
     CarpMobileSensing();
     CarpDataManager();
     ResearchPackage();
-    CognitionPackage();
+    // CognitionPackage();
 
     // make sure not to mess with CAMS
     Settings().saveAppTaskQueue = false;
@@ -93,6 +91,6 @@ abstract class AbstractCommand implements Command {
     print('Authenticating to the CARP Server...');
     await CarpService().authenticate(username: username, password: password);
     print("Authenticated as user: '$username'");
-    CANSProtocolService().configureFrom(CarpService());
+    CarpProtocolService().configureFrom(CarpService());
   }
 }

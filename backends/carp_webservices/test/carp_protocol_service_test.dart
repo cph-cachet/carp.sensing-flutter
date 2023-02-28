@@ -16,7 +16,6 @@ void main() {
   CarpUser? user;
   String? ownerId;
   late StudyProtocol protocol;
-  late Smartphone phone;
 
   setUpAll(() async {
     Settings().debugLevel = DebugLevel.debug;
@@ -39,18 +38,30 @@ void main() {
 
     CarpProtocolService().configureFrom(CarpService());
     ownerId = CarpService().currentUser!.accountId;
-    phone = Smartphone(roleName: 'smartphone');
+    var phone = Smartphone(roleName: "Participant's phone");
+    phone.defaultSamplingConfiguration?.addAll({
+      Geolocation.dataType: BatteryAwareSamplingConfiguration(
+          normal: GranularitySamplingConfiguration(Granularity.Detailed),
+          low: GranularitySamplingConfiguration(Granularity.Coarse)),
+    });
 
-    // the study protocol from the json from core
+    final bike = AltBeacon(roleName: "Participant's bike");
+
+    // a study protocol mimicking the protocol from core
     protocol = StudyProtocol(
         ownerId: ownerId!,
-        name: 'Nonmotorized transport study',
+        name: 'Non-motorized transport study',
         description:
-            'Track how much nonmotorized movement participants perform.')
+            'Track how much non-motorized movement participants perform.')
       ..addPrimaryDevice(phone)
-      ..addConnectedDevice(AltBeacon(roleName: "Participant's bike"));
+      ..addConnectedDevice(bike, phone);
 
     var trigger = ElapsedTimeTrigger(elapsedTime: IsoDuration.tryParse('PT0S'));
+
+    Measure measure = Measure(type: 'dk.cachet.carp.steps');
+    measure.overrideSamplingConfiguration = BatteryAwareSamplingConfiguration(
+        normal: GranularitySamplingConfiguration(Granularity.Detailed),
+        low: GranularitySamplingConfiguration(Granularity.Balanced));
 
     protocol
       ..addTaskControl(
@@ -60,7 +71,13 @@ void main() {
             description: 'Track step count and geolocation for one week.',
             duration: IsoDuration.tryParse('PT168H'),
             measures: [
-              Measure(type: 'dk.cachet.carp.geolocation'),
+              Measure(type: 'dk.cachet.carp.geolocation')
+                ..overrideSamplingConfiguration =
+                    BatteryAwareSamplingConfiguration(
+                        normal: GranularitySamplingConfiguration(
+                            Granularity.Detailed),
+                        low: GranularitySamplingConfiguration(
+                            Granularity.Balanced)),
               Measure(type: 'dk.cachet.carp.stepcount'),
             ]),
         phone,
@@ -69,12 +86,12 @@ void main() {
         trigger,
         BackgroundTask(
             name: 'Monitor proximity to bike',
-            description: 'rack step count and geolocation for one week.',
+            description: 'Track step count and geolocation for one week.',
             duration: IsoDuration.tryParse('PT168H'),
             measures: [
               Measure(type: 'dk.cachet.carp.signalstrength'),
             ]),
-        phone,
+        bike,
       );
 
     protocol.addParticipantRole(ParticipantRole('Participant'));
@@ -97,16 +114,21 @@ void main() {
     test('- authentication', () async {
       print('CarpService : ${CarpService().app}');
       print(" - signed in as: $user");
-      //expect(user.accountId, testParticipantId);
     });
   });
 
   /// To test the Protocol Service you must be authenticated as a RESEARCHER
   group("Protocol", () {
     test(
+      '- define',
+      () async {
+        print(toJsonString(protocol));
+      },
+    );
+
+    test(
       '- add',
       () async {
-        // print(toJsonString(protocol));
         await CarpProtocolService().add(protocol);
       },
     );

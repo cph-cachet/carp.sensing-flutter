@@ -7,7 +7,7 @@
 
 part of carp_backend;
 
-/// Handles retriving and storing langunage localization mappings.
+/// Handles retrieving and storing language localization mappings.
 abstract class LocalizationManager {
   Future initialize() async {}
 
@@ -16,7 +16,7 @@ abstract class LocalizationManager {
   /// Locale json is named according to the [locale] languageCode.
   /// For example, the Danish translation is named `da`
   ///
-  /// If there is no language resouce, `null` is returned.
+  /// If there is no language resource, `null` is returned.
   Future<Map<String, String>?> getLocalizations(Locale locale);
 
   /// Set localization mapping for the specified [locale].

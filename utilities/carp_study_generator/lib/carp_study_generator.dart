@@ -23,7 +23,7 @@ import 'package:carp_esense_package/esense.dart';
 import 'package:carp_polar_package/carp_polar_package.dart';
 
 import 'package:research_package/model.dart';
-import 'package:cognition_package/model.dart';
+// import 'package:cognition_package/model.dart';
 
 part 'cmd/command.dart';
 part 'cmd/help.dart';

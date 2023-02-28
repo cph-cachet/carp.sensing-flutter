@@ -15,7 +15,7 @@ class LocationService extends OnlineService {
       '${DeviceConfiguration.DEVICE_NAMESPACE}.LocationService';
 
   /// The default rolename for a location service.
-  static const String DEFAULT_ROLENAME = 'location_service';
+  static const String DEFAULT_ROLENAME = 'Location Service';
 
   /// Defines the desired accuracy that should be used to determine the location
   /// data. Default value is [GeolocationAccuracy.balanced].

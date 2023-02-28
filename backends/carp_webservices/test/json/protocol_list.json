@@ -1,0 +1,217 @@
+[
+    {
+        "id": "24f45a10-ae25-11ed-9d8a-f37a675e7b0c",
+        "createdOn": "2023-02-16T18:16:12.933714Z",
+        "version": 0,
+        "ownerId": "01dc52c4-b33b-4304-b265-8118c69f5935",
+        "name": "Nonmotorized transport study",
+        "description": "Track how much nonmotorized movement participants perform.",
+        "primaryDevices": [
+            {
+                "__type": "dk.cachet.carp.common.application.devices.Smartphone",
+                "roleName": "smartphone",
+                "isPrimaryDevice": true
+            }
+        ],
+        "tasks": [
+            {
+                "__type": "dk.cachet.carp.common.application.tasks.BackgroundTask",
+                "name": "Monitor movement",
+                "description": "Track step count and geolocation for one week.",
+                "measures": [
+                    {
+                        "__type": "dk.cachet.carp.common.application.tasks.Measure.DataStream",
+                        "type": "dk.cachet.carp.geolocation"
+                    },
+                    {
+                        "__type": "dk.cachet.carp.common.application.tasks.Measure.DataStream",
+                        "type": "dk.cachet.carp.stepcount"
+                    }
+                ],
+                "duration": "PT168H"
+            },
+            {
+                "__type": "dk.cachet.carp.common.application.tasks.BackgroundTask",
+                "name": "Monitor proximity to bike",
+                "description": "rack step count and geolocation for one week.",
+                "measures": [
+                    {
+                        "__type": "dk.cachet.carp.common.application.tasks.Measure.DataStream",
+                        "type": "dk.cachet.carp.signalstrength"
+                    }
+                ],
+                "duration": "PT168H"
+            }
+        ],
+        "triggers": {
+            "0": {
+                "__type": "dk.cachet.carp.common.application.triggers.ElapsedTimeTrigger",
+                "sourceDeviceRoleName": "smartphone",
+                "elapsedTime": "PT0S"
+            }
+        },
+        "taskControls": [
+            {
+                "triggerId": 0,
+                "taskName": "Monitor movement",
+                "destinationDeviceRoleName": "smartphone",
+                "control": "Start"
+            },
+            {
+                "triggerId": 0,
+                "taskName": "Monitor proximity to bike",
+                "destinationDeviceRoleName": "smartphone",
+                "control": "Start"
+            }
+        ],
+        "participantRoles": [
+            {
+                "role": "Participant",
+                "isOptional": false
+            }
+        ],
+        "expectedParticipantData": [
+            {
+                "attribute": {
+                    "__type": "dk.cachet.carp.common.application.users.ParticipantAttribute.DefaultParticipantAttribute",
+                    "inputDataType": "dk.cachet.carp.input.sex"
+                },
+                "assignedTo": {
+                    "__type": "dk.cachet.carp.common.application.users.AssignedTo.Roles",
+                    "roleNames": [
+                        "Participant"
+                    ]
+                }
+            }
+        ],
+        "applicationData": {
+            "uiTheme": "black"
+        }
+    },
+    {
+        "id": "d3bc5100-b7ae-11ed-9005-d3d4c15e0eea",
+        "createdOn": "2023-02-28T21:28:22.288525Z",
+        "version": 0,
+        "ownerId": "01dc52c4-b33b-4304-b265-8118c69f5935",
+        "name": "Non-motorized transport study",
+        "description": "Track how much non-motorized movement participants perform.",
+        "primaryDevices": [
+            {
+                "__type": "dk.cachet.carp.common.application.devices.Smartphone",
+                "roleName": "Participant's phone",
+                "defaultSamplingConfiguration": {
+                    "dk.cachet.carp.geolocation": {
+                        "__type": "dk.cachet.carp.common.application.sampling.BatteryAwareSamplingConfiguration",
+                        "normal": {
+                            "__type": "dk.cachet.carp.common.application.sampling.GranularitySamplingConfiguration",
+                            "granularity": "Detailed"
+                        },
+                        "low": {
+                            "__type": "dk.cachet.carp.common.application.sampling.GranularitySamplingConfiguration",
+                            "granularity": "Coarse"
+                        }
+                    }
+                },
+                "isPrimaryDevice": true
+            }
+        ],
+        "connectedDevices": [
+            {
+                "__type": "dk.cachet.carp.common.application.devices.AltBeacon",
+                "roleName": "Participant's bike",
+                "isOptional": true
+            }
+        ],
+        "connections": [
+            {
+                "roleName": "Participant's bike",
+                "connectedToRoleName": "Participant's phone"
+            }
+        ],
+        "tasks": [
+            {
+                "__type": "dk.cachet.carp.common.application.tasks.BackgroundTask",
+                "name": "Monitor movement",
+                "description": "Track step count and geolocation for one week.",
+                "measures": [
+                    {
+                        "__type": "dk.cachet.carp.common.application.tasks.Measure.DataStream",
+                        "type": "dk.cachet.carp.geolocation",
+                        "overrideSamplingConfiguration": {
+                            "__type": "dk.cachet.carp.common.application.sampling.BatteryAwareSamplingConfiguration",
+                            "normal": {
+                                "__type": "dk.cachet.carp.common.application.sampling.GranularitySamplingConfiguration",
+                                "granularity": "Detailed"
+                            },
+                            "low": {
+                                "__type": "dk.cachet.carp.common.application.sampling.GranularitySamplingConfiguration",
+                                "granularity": "Balanced"
+                            }
+                        }
+                    },
+                    {
+                        "__type": "dk.cachet.carp.common.application.tasks.Measure.DataStream",
+                        "type": "dk.cachet.carp.stepcount"
+                    }
+                ],
+                "duration": "PT168H"
+            },
+            {
+                "__type": "dk.cachet.carp.common.application.tasks.BackgroundTask",
+                "name": "Monitor proximity to bike",
+                "description": "Track step count and geolocation for one week.",
+                "measures": [
+                    {
+                        "__type": "dk.cachet.carp.common.application.tasks.Measure.DataStream",
+                        "type": "dk.cachet.carp.signalstrength"
+                    }
+                ],
+                "duration": "PT168H"
+            }
+        ],
+        "triggers": {
+            "0": {
+                "__type": "dk.cachet.carp.common.application.triggers.ElapsedTimeTrigger",
+                "sourceDeviceRoleName": "Participant's phone",
+                "elapsedTime": "PT0S"
+            }
+        },
+        "taskControls": [
+            {
+                "triggerId": 0,
+                "taskName": "Monitor movement",
+                "destinationDeviceRoleName": "Participant's phone",
+                "control": "Start"
+            },
+            {
+                "triggerId": 0,
+                "taskName": "Monitor proximity to bike",
+                "destinationDeviceRoleName": "Participant's bike",
+                "control": "Start"
+            }
+        ],
+        "participantRoles": [
+            {
+                "role": "Participant",
+                "isOptional": false
+            }
+        ],
+        "expectedParticipantData": [
+            {
+                "attribute": {
+                    "__type": "dk.cachet.carp.common.application.users.ParticipantAttribute.DefaultParticipantAttribute",
+                    "inputDataType": "dk.cachet.carp.input.sex"
+                },
+                "assignedTo": {
+                    "__type": "dk.cachet.carp.common.application.users.AssignedTo.Roles",
+                    "roleNames": [
+                        "Participant"
+                    ]
+                }
+            }
+        ],
+        "applicationData": {
+            "uiTheme": "black"
+        }
+    }
+]
