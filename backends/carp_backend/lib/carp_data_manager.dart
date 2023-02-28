@@ -152,39 +152,44 @@ class CarpDataManager extends AbstractDataManager {
       return;
     }
 
-    // fast exit if not authenticated to CAWS
-    if (await user == null) {
-      warning('User is not authenticated - username: ${carpEndPoint.email}');
-      return;
-    }
+    // now start trying to upload data...
+    try {
+      // authenticated to CAWS and fast exit if not successful
+      if (await user == null) {
+        warning(
+            'User cannot be authenticated - username: ${carpEndPoint.email}');
+        return;
+      }
 
-    // TODO - if the upload fails, we should not delete now
-    // TODO - need to make a try-catch clause
-    // TODO - make a transaction mechanism
-
-    final batches = await buffer.getDataStreamBatches(
-      carpEndPoint.deleteWhenUploaded,
-    );
-
-    if (carpEndPoint.uploadMethod == CarpUploadMethod.DATA_STREAM) {
-      CarpDataStreamService().appendToDataStreams(
-        studyDeploymentId,
-        batches,
+      final batches = await buffer.getDataStreamBatches(
+        carpEndPoint.deleteWhenUploaded,
       );
-    }
 
-    for (var batch in batches) {
-      for (var measurement in batch.measurements) {
-        if (carpEndPoint.uploadMethod == CarpUploadMethod.DATA_POINT) {
-          uploadMeasurementAsDataPoint(measurement);
-        }
+      if (carpEndPoint.uploadMethod == CarpUploadMethod.DATA_STREAM) {
+        CarpDataStreamService().appendToDataStreams(
+          studyDeploymentId,
+          batches,
+        );
+      }
 
-        // check if this measurement that has a separate file to be uploaded
-        if (measurement.data is FileData) {
-          var fileData = measurement.data as FileData;
-          if (fileData.upload) uploadFile(fileData);
+      for (var batch in batches) {
+        for (var measurement in batch.measurements) {
+          if (carpEndPoint.uploadMethod == CarpUploadMethod.DATA_POINT) {
+            uploadMeasurementAsDataPoint(measurement);
+          }
+
+          // check if this measurement has a separate file to be uploaded
+          if (measurement.data is FileData) {
+            var fileData = measurement.data as FileData;
+            if (fileData.upload) uploadFile(fileData);
+          }
         }
       }
+
+      // if everything is uploaded successfully, then commit the transaction
+      buffer.commit();
+    } catch (error) {
+      warning('$runtimeType - data upload failed - $error');
     }
   }
 

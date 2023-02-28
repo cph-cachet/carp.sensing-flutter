@@ -39,7 +39,7 @@ class LocalStudyProtocolManager implements StudyProtocolManager {
     protocol.dataEndPoint = (bloc.deploymentMode == DeploymentMode.local)
         ? SQLiteDataEndPoint()
         : CarpDataEndPoint(
-            uploadMethod: CarpUploadMethod.DATA_STREAM,
+            uploadMethod: CarpUploadMethod.DATA_POINT,
           );
 
     // set the format of the data to upload - e.g. Open mHealth
@@ -95,9 +95,10 @@ class LocalStudyProtocolManager implements StudyProtocolManager {
     // Add a background task that continuously collects location and mobility
     protocol.addTaskControl(
         ImmediateTrigger(),
-        BackgroundTask()
-          ..addMeasure(Measure(type: ContextSamplingPackage.LOCATION))
-          ..addMeasure(Measure(type: ContextSamplingPackage.MOBILITY)),
+        BackgroundTask(measures: [
+          Measure(type: ContextSamplingPackage.LOCATION),
+          Measure(type: ContextSamplingPackage.MOBILITY),
+        ]),
         locationService);
 
     // Define the online weather service and add it as a 'device'

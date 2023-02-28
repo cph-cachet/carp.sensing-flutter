@@ -44,9 +44,11 @@ void main() async {
   // see also >> https://stackoverflow.com/questions/63873338/what-does-widgetsflutterbinding-ensureinitialized-do/63873689
   WidgetsFlutterBinding.ensureInitialized();
 
+  CarpMobileSensing.ensureInitialized();
+
   // initialize the bloc, setting the deployment mode:
   await bloc.initialize(
-    deploymentMode: DeploymentMode.local,
+    deploymentMode: DeploymentMode.development,
     useCachedStudyDeployment: false,
     resumeSensingOnStartup: false,
   );

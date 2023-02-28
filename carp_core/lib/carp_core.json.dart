@@ -88,7 +88,7 @@ void _registerFromJsonFunctions() {
   FromJsonFactory().register(DeviceConfiguration(roleName: ''),
       type:
           'dk.cachet.carp.protocols.infrastructure.test.StubDeviceConfiguration');
-  FromJsonFactory().register(ParticipantAttribute(inputDataType: 'ignored'));
+  FromJsonFactory().register(ParticipantAttribute(inputDataType: ''));
   FromJsonFactory().register(AssignedTo());
 
   // REQUESTS

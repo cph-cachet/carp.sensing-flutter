@@ -28,6 +28,7 @@ class DataStreamBuffer {
   String get databaseName => '$_databasePath/$DATABASE_NAME.db';
   SmartphoneDeployment get deployment => _deployment;
   Database? database;
+  Batch? batch;
 
   static final DataStreamBuffer _instance = DataStreamBuffer._();
   factory DataStreamBuffer() => _instance;
@@ -101,9 +102,17 @@ class DataStreamBuffer {
     bool delete = false,
   ]) async {
     List<DataStreamBatch> batches = [];
-    for (var stream in deployment.expectedDataStreams) {
-      batches.add(await getDataStreamBatch(stream, delete));
-    }
+
+    await database?.transaction((txn) async {
+      for (var stream in deployment.expectedDataStreams) {
+        batches.add(await _getDataStreamBatch(
+          txn,
+          stream,
+          delete,
+        ));
+      }
+    });
+
     return batches;
   }
 
@@ -111,7 +120,8 @@ class DataStreamBuffer {
   /// for the [stream].
   ///
   /// If [delete] is true, the data will be deleted from this buffer.
-  Future<DataStreamBatch> getDataStreamBatch(
+  Future<DataStreamBatch> _getDataStreamBatch(
+    Transaction transaction,
     ExpectedDataStream stream, [
     bool delete = false,
   ]) async {
@@ -127,12 +137,11 @@ class DataStreamBuffer {
     Set<int> rows = {};
 
     // get all measurement not uploaded yet
-    final List<Map<String, dynamic>> maps = await database?.query(
-          getTableName(stream),
-          where: '$UPLOADED_COLUMN = ?',
-          whereArgs: [0],
-        ) ??
-        [];
+    final List<Map<String, dynamic>> maps = await transaction.query(
+      getTableName(stream),
+      where: '$UPLOADED_COLUMN = ?',
+      whereArgs: [0],
+    );
 
     for (var element in maps) {
       int row = int.tryParse(element[ID_COLUMN].toString()) ?? 0;
@@ -147,14 +156,15 @@ class DataStreamBuffer {
     }
     firstSequenceId = rows.reduce(min);
 
+    batch = transaction.batch();
     if (delete) {
-      database?.delete(
+      batch?.delete(
         getTableName(stream),
         where: '$ID_COLUMN = ?',
         whereArgs: rows.toList(),
       );
     } else {
-      database?.update(
+      batch?.update(
         getTableName(stream),
         {
           UPLOADED_COLUMN: 1,
@@ -171,6 +181,11 @@ class DataStreamBuffer {
       triggerIds: triggerIds,
     );
   }
+
+  /// Commit any changes made to this buffer.
+  /// Typically called after buffered data has been fetched via the
+  /// [getDataStreamBatches] method and successfully uploaded
+  Future<void> commit() async => batch?.commit();
 
   /// Close this buffer. No more data can be added.
   Future<void> close() async => await database?.close();

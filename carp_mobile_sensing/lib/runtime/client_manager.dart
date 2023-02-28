@@ -82,7 +82,7 @@ class SmartPhoneClientManager
       deviceName: DeviceInfo().deviceName,
       deviceManufacturer: DeviceInfo().deviceManufacturer,
       deviceModel: DeviceInfo().deviceModel,
-      operatingSystem: DeviceInfo().operatingSystem,
+      operatingSystem: DeviceInfo().operatingSystemName,
       sdk: DeviceInfo().sdk,
       release: DeviceInfo().release,
     );

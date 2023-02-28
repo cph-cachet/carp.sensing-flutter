@@ -84,12 +84,13 @@ class DeviceProbe extends MeasurementProbe {
   @override
   Future<Measurement?> getMeasurement() async =>
       Measurement.fromData(DeviceInformation(
+        deviceData: DeviceInfo().deviceData,
         platform: DeviceInfo().platform,
         deviceId: DeviceInfo().deviceID,
         deviceName: DeviceInfo().deviceName,
         deviceModel: DeviceInfo().deviceModel,
         deviceManufacturer: DeviceInfo().deviceManufacturer,
-        operatingSystem: DeviceInfo().operatingSystem,
+        operatingSystem: DeviceInfo().operatingSystemName,
         hardware: DeviceInfo().hardware,
       ));
 }

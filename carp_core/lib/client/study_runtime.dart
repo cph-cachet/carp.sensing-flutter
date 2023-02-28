@@ -123,12 +123,18 @@ class StudyRuntime {
       );
       _status = StudyStatus.DeviceDeploymentReceived;
 
-      // Register the primary device this study runs on for the given study deployment.
-      deploymentStatus = await deploymentService.registerDevice(
-        study!.studyDeploymentId,
-        study!.deviceRoleName,
-        deviceRegistration!,
-      );
+      // register the primary device for the given study deployment
+      try {
+        deploymentStatus = await deploymentService.registerDevice(
+          study!.studyDeploymentId,
+          study!.deviceRoleName,
+          deviceRegistration!,
+        );
+      } catch (error) {
+        // we only print a warning - this device may already be registered
+        print(
+            "$runtimeType - Error registering '${study!.deviceRoleName}' as primary device.\n$error");
+      }
 
       // TODO - set _remainingDevicesToRegister
 

@@ -452,7 +452,7 @@ void main() {
         deployment?.taskControls.length, primaryProtocol.taskControls.length);
 
     StudyDeploymentStatus? status_3 = await SmartphoneDeploymentService()
-        .deploymentSuccessful(status_1.studyDeploymentId);
+        .deployed(status_1.studyDeploymentId);
     expect(status_3?.status, StudyDeploymentStatusTypes.DeploymentReady);
     expect(status_3?.studyDeploymentId, status_1.studyDeploymentId);
     print(status_3);

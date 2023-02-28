@@ -60,10 +60,9 @@ class SmartphoneDeployment extends PrimaryDeviceDeployment
   /// Create a [SmartphoneDeployment] based on a [PrimaryDeviceDeployment].
   SmartphoneDeployment.fromPrimaryDeviceDeployment({
     String? studyDeploymentId,
-    String? userId,
+    this.userId,
     required PrimaryDeviceDeployment deployment,
-  }) : this(
-          studyDeploymentId: studyDeploymentId,
+  }) : super(
           deviceConfiguration: deployment.deviceConfiguration,
           registration: deployment.registration,
           connectedDevices: deployment.connectedDevices,
@@ -72,8 +71,22 @@ class SmartphoneDeployment extends PrimaryDeviceDeployment
           triggers: deployment.triggers,
           taskControls: deployment.taskControls,
           expectedParticipantData: deployment.expectedParticipantData,
-          userId: userId,
-        );
+        ) {
+    _studyDeploymentId = studyDeploymentId ?? Uuid().v1();
+
+    // check if this deployment has mapped study description in the application
+    // data, i.e., a protocol generated from CAMS
+    if (deployment.applicationData != null &&
+        deployment.applicationData!.containsKey('studyDescription')) {
+      var data =
+          SmartphoneApplicationData.fromJson(deployment.applicationData!);
+      _data.studyDescription = data.studyDescription;
+      _data.dataEndPoint = data.dataEndPoint;
+      _data.applicationData = data.applicationData;
+    } else {
+      _data.applicationData = deployment.applicationData ?? {};
+    }
+  }
 
   /// Create a [SmartphoneDeployment] that combines a [PrimaryDeviceDeployment] and
   /// a [SmartphoneStudyProtocol].
@@ -84,7 +97,7 @@ class SmartphoneDeployment extends PrimaryDeviceDeployment
   /// task, triggers, task controls, and expected participant data).
   SmartphoneDeployment.fromPrimaryDeviceDeploymentAndSmartphoneStudyProtocol({
     String? studyDeploymentId,
-    String? userId,
+    this.userId,
     required PrimaryDeviceDeployment deployment,
     required SmartphoneStudyProtocol protocol,
   }) : super(
@@ -111,7 +124,7 @@ class SmartphoneDeployment extends PrimaryDeviceDeployment
   /// specified [primaryDeviceRoleName].
   SmartphoneDeployment.fromSmartphoneStudyProtocol({
     String? studyDeploymentId,
-    String? userId,
+    this.userId,
     required String primaryDeviceRoleName,
     required SmartphoneStudyProtocol protocol,
   }) : super(

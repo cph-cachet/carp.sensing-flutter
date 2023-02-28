@@ -4,10 +4,16 @@ part of mobile_sensing_app;
 class CarpBackend {
   static const String PROD_URI = "https://cans.cachet.dk";
   static const String STAGING_URI = "https://cans.cachet.dk/stage";
-  // static const String TEST_URI = "https://cans.cachet.dk:443/test"; // The testing server
-  // static const String DEV_URI = "https://cans.cachet.dk:443/dev"; // The development server
+  static const String TEST_URI = "https://cans.cachet.dk/test";
+  static const String DEV_URI = "https://cans.cachet.dk/dev";
   static const String CLIENT_ID = "carp";
   static const String CLIENT_SECRET = "carp";
+
+  final Map<DeploymentMode, String> uris = {
+    DeploymentMode.production: PROD_URI,
+    DeploymentMode.staging: STAGING_URI,
+    DeploymentMode.development: DEV_URI,
+  };
 
   static final CarpBackend _instance = CarpBackend._();
   CarpApp? _app;
@@ -21,19 +27,13 @@ class CarpBackend {
   /// The username of the signed in user.
   String? get username => CarpService().currentUser?.username;
 
-  String get uri => (bloc.deploymentMode == DeploymentMode.production)
-      ? PROD_URI
-      : STAGING_URI;
-
-  String get name => (bloc.deploymentMode == DeploymentMode.production)
-      ? "CANS Production @ DTU"
-      : "CANS Staging @ DTU";
+  String get uri => uris[bloc.deploymentMode] ?? PROD_URI;
 
   CarpApp? get app => _app;
 
   Future<void> initialize() async {
     _app = CarpApp(
-      name: name,
+      name: 'CAWS -${bloc.deploymentMode.name}',
       uri: Uri.parse(uri),
       oauth: OAuthEndPoint(clientID: CLIENT_ID, clientSecret: CLIENT_SECRET),
     );

@@ -18,17 +18,29 @@ class DeviceInfo {
   factory DeviceInfo() => _instance;
   DeviceInfo._();
 
+  String? name;
+
   String? platform;
   String? hardware;
   String? deviceID;
   String? deviceName;
   String? deviceManufacturer;
   String? deviceModel;
-  String? operatingSystem;
+
+  /// The name of the current operating system.
+  String? operatingSystemName;
+
+  /// The current operating system version.
+  String? operatingSystemVersion;
+
+  /// SDK level.
   String? sdk;
+
+  /// Release level.
   String? release;
 
-  /// The device info for this device.
+  /// The full device info for this device.
+  /// See [BaseDeviceInfo.data].
   Map<String, dynamic> deviceData = {};
 
   /// Initialize the device info using the [DeviceInfoPlugin].
@@ -59,9 +71,12 @@ class DeviceInfo {
     deviceName = info.device;
     deviceManufacturer = info.manufacturer;
     deviceModel = info.model;
-    operatingSystem = info.version.codename;
+    operatingSystemName = info.version.codename;
+    operatingSystemVersion = info.version.baseOS;
     sdk = info.version.sdkInt.toString();
     release = info.version.release;
+
+    return info.data;
 
     return <String, dynamic>{
       'platform': 'Android',
@@ -100,9 +115,12 @@ class DeviceInfo {
     deviceName = info.name;
     deviceManufacturer = 'Apple';
     deviceModel = info.model;
-    operatingSystem = info.systemName;
+    operatingSystemName = info.systemName;
+    operatingSystemVersion = info.systemVersion;
     sdk = info.utsname.release;
     release = info.utsname.version;
+
+    return info.data;
 
     return <String, dynamic>{
       'platform': 'iOS',

@@ -84,9 +84,11 @@ class Sensing {
         break;
       case DeploymentMode.production:
       case DeploymentMode.staging:
+      case DeploymentMode.development:
 
         // use the CARP deployment service that knows how to download a
         // protocol from CAWS
+        CarpDeploymentService().configureFrom(CarpService());
         deploymentService = CarpDeploymentService();
 
         // get the study deployment status based on the studyDeploymentId

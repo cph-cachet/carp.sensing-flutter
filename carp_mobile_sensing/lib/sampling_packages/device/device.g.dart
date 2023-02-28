@@ -8,6 +8,7 @@ part of device;
 
 DeviceInformation _$DeviceInformationFromJson(Map<String, dynamic> json) =>
     DeviceInformation(
+      deviceData: json['deviceData'] as Map<String, dynamic>? ?? const {},
       platform: json['platform'] as String?,
       deviceId: json['deviceId'] as String?,
       deviceName: json['deviceName'] as String?,
@@ -39,6 +40,7 @@ Map<String, dynamic> _$DeviceInformationToJson(DeviceInformation instance) {
   writeNotNull('operatingSystem', instance.operatingSystem);
   writeNotNull('sdk', instance.sdk);
   writeNotNull('release', instance.release);
+  val['deviceData'] = instance.deviceData;
   return val;
 }
 

@@ -46,8 +46,12 @@ class DeviceInformation extends Data {
   /// The OS release.
   String? release;
 
+  /// The full device info for this device.
+  Map<String, dynamic> deviceData = {};
+
   DeviceInformation(
-      {this.platform,
+      {this.deviceData = const {},
+      this.platform,
       this.deviceId,
       this.deviceName,
       this.deviceModel,

@@ -124,10 +124,8 @@ class SmartphoneDeploymentService implements DeploymentService {
     );
   }
 
-  /// Get a smartphone deployment configuration for [studyDeploymentId].
-  ///
-  /// The default data endpoint is set to a [FileDataEndPoint], i.e. storing
-  /// the data locally on the phone as zipped files.
+  /// Get a smartphone deployment configuration for [studyDeploymentId] for
+  /// this phone.
   Future<SmartphoneDeployment?> getDeviceDeployment(
           String studyDeploymentId) async =>
       await getDeviceDeploymentFor(studyDeploymentId, thisPhone.roleName);
@@ -158,7 +156,7 @@ class SmartphoneDeploymentService implements DeploymentService {
   /// Mark the study deployment with [studyDeploymentId] as deployed successfully
   /// to this primary device (phone), i.e., that the study deployment was loaded
   /// on the device and that the necessary runtime is available to run it.
-  Future<StudyDeploymentStatus?> deploymentSuccessful(
+  Future<StudyDeploymentStatus?> deployed(
     String studyDeploymentId, {
     DateTime? deviceDeploymentLastUpdateDate,
   }) async =>

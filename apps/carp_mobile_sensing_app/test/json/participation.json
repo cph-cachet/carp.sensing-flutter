@@ -1,0 +1,34 @@
+[
+    {
+        "participation": {
+            "studyDeploymentId": "482c9579-f2b1-4175-aab1-4a723faf73e2",
+            "assignedRoles": {
+                "__type": "dk.cachet.carp.common.application.users.AssignedTo.Roles",
+                "roleNames": [
+                    "Participant"
+                ]
+            },
+            "participantId": "fdd448fa-531e-41a9-a78e-8646a376b87d"
+        },
+        "invitation": {
+            "name": "carp_webservices unit test I",
+            "description": "carp_webservices unit test I",
+            "applicationData": "a5466d8b-782e-4fd3-9f77-662108906582"
+        },
+        "assignedDevices": [
+            {
+                "device": {
+                    "__type": "dk.cachet.carp.common.application.devices.Smartphone",
+                    "isPrimaryDevice": true,
+                    "roleName": "smartphone"
+                },
+                "registration": {
+                    "__type": "dk.cachet.carp.common.application.devices.DefaultDeviceRegistration",
+                    "registrationCreatedOn": "2023-02-21T11:32:37.953925Z",
+                    "deviceDisplayName": "null - null null [SDK null]",
+                    "deviceId": "718f6310-b1db-11ed-927a-1fccc1067ead"
+                }
+            }
+        ]
+    }
+]

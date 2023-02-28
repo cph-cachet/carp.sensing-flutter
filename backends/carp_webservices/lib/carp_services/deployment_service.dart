@@ -87,10 +87,20 @@ class CarpDeploymentService extends CarpBaseService
           await _rpc(UnregisterDevice(studyDeploymentId, deviceRoleName)));
 
   @override
-  Future<PrimaryDeviceDeployment> getDeviceDeploymentFor(
-          String studyDeploymentId, String primaryDeviceRoleName) async =>
-      PrimaryDeviceDeployment.fromJson(await _rpc(
-          GetDeviceDeploymentFor(studyDeploymentId, primaryDeviceRoleName)));
+  Future<SmartphoneDeployment> getDeviceDeploymentFor(
+    String studyDeploymentId,
+    String primaryDeviceRoleName,
+  ) async {
+    // downloading a PrimaryDeviceDeployment
+    var deployment = PrimaryDeviceDeployment.fromJson(await _rpc(
+        GetDeviceDeploymentFor(studyDeploymentId, primaryDeviceRoleName)));
+
+    // but converting it to a SmartphoneDeployment
+    return SmartphoneDeployment.fromPrimaryDeviceDeployment(
+      studyDeploymentId: studyDeploymentId,
+      deployment: deployment,
+    );
+  }
 
   @override
   Future<StudyDeploymentStatus> deviceDeployed(

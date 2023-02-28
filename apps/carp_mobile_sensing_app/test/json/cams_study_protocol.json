@@ -20,16 +20,19 @@
             "type": "CAWS",
             "dataFormat": "dk.cachet.carp",
             "uploadMethod": "DATA_POINT",
-            "name": "CARP Server",
+            "name": "CARP Web Services",
+            "onlyUploadOnWiFi": false,
+            "uploadInterval": 10,
             "deleteWhenUploaded": true
         },
         "applicationData": {}
     },
-    "id": "2d14c250-ac5b-11ed-83b0-3328cf59e371",
-    "createdOn": "2023-02-14T11:31:51.669075Z",
+    "id": "64c9c420-b773-11ed-8dec-af3579fa8bd7",
+    "createdOn": "2023-02-28T14:22:55.842294Z",
+    "version": 0,
     "description": "The default study testing coverage of most measures. Used in the coverage tests.",
     "ownerId": "abc@dtu.dk",
-    "name": "CAMS App v 0.33.0",
+    "name": "CAMS App v 0.40.0",
     "primaryDevices": [
         {
             "__type": "dk.cachet.carp.common.application.devices.Smartphone",
@@ -146,7 +149,7 @@
             "measures": [
                 {
                     "__type": "dk.cachet.carp.common.application.tasks.Measure.DataStream",
-                    "type": "dk.cachet.carp.location"
+                    "type": "dk.cachet.carp.currentlocation"
                 }
             ]
         },
