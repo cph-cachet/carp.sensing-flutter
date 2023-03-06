@@ -309,15 +309,15 @@ class CarpService extends CarpBaseService {
   /// Asynchronously gets the CARP profile of the current user.
   /// Uses accessToken if provided, otherwise uses the current user's token.
   Future<CarpUser> getCurrentUserProfile({String? accessToken}) async {
-    if (currentUser == null || !currentUser!.isAuthenticated)
+    if (accessToken == null &&
+        (currentUser == null || !currentUser!.isAuthenticated))
       throw CarpServiceException(message: 'No user is authenticated.');
 
-    
     var headersWithToken = accessToken == null
         ? headers
         : {
             "Content-Type": "application/json",
-            "Authorization": "bearer ${_currentUser!.token!.accessToken}",
+            "Authorization": "bearer $accessToken",
             "cache-control": "no-cache"
           };
 
