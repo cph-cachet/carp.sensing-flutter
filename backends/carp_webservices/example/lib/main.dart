@@ -101,7 +101,7 @@ class AppBLoC {
   Future init() async {
     _app = CarpApp(
       name: 'carp_backend_example_app',
-      baseUri: uri,
+      uri: uri,
       oauth: OAuthEndPoint(clientID: 'carp', clientSecret: 'carp'),
     );
 

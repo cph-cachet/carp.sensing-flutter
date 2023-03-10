@@ -29,7 +29,7 @@ class ParticipationReference extends RPCCarpReference {
   /// {{PROTOCOL}}://{{SERVER_HOST}}:{{SERVER_PORT}}/api/participation-service
   @override
   String get rpcEndpointUri =>
-      "${service.app!.baseUri.toString()}/api/participation-service";
+      "${service.app!.uri.toString()}/api/participation-service";
 
   /// Get currently set data for all expected participant data in this study
   /// deployment with [studyDeploymentId].

@@ -53,11 +53,11 @@ class CollectionReference extends CarpReference {
       '/api/studies/${service.app!.studyId}/collections/$path';
 
   /// The full URI for the collection endpoint for this [CollectionReference].
-  String get collectionUri => "${service.app!.baseUri.toString()}$carpPath";
+  String get collectionUri => "${service.app!.uri.toString()}$carpPath";
 
   /// The full URI for the collection endpoint for this [CollectionReference] by its unique [id].
   String get collectionUriByID =>
-      '${service.app!.baseUri.toString()}/api/studies/${service.app!.studyId}/collections/id/$id';
+      '${service.app!.uri.toString()}/api/studies/${service.app!.studyId}/collections/id/$id';
 
   /// Reads the collection referenced by this [CollectionReference] from the server.
   ///

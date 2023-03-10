@@ -32,7 +32,7 @@ void main() async {
     name: 'any_display_friendly_name_is_fine',
     studyId: 'the_study_id',
     studyDeploymentId: 'the_study_deployment_id',
-    baseUri: uri,
+    uri: uri,
     oauth: OAuthEndPoint(
       clientID: 'the_client_id',
       clientSecret: 'the_client_secret',

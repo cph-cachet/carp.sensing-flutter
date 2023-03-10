@@ -32,7 +32,7 @@ class AuthenticationDialog {
                         _getForm(username: username),
                         _getLoginButton(context),
                         _getResetPasswordButton(context),
-                        if (CarpService()._app!.baseUri.path.isNotEmpty)
+                        if (CarpService()._app!.uri.path.isNotEmpty)
                           _getEnvironmentText(context),
                       ],
                     ),
@@ -166,7 +166,7 @@ class AuthenticationDialog {
       );
 
   Text _getEnvironmentText(BuildContext context) => Text(
-        'Environment: ${CarpService()._app!.baseUri}',
+        'Environment: ${CarpService()._app!.uri}',
         style: TextStyle(fontSize: 12, color: Colors.grey),
       );
 }

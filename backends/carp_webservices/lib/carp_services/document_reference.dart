@@ -42,7 +42,7 @@ class DocumentReference extends CarpReference {
       : "/api/studies/${service.app!.studyId}/collections/$path";
 
   /// The full URI for the document endpoint for this document.
-  String get documentUri => "${service.app!.baseUri.toString()}$carpPath";
+  String get documentUri => "${service.app!.uri.toString()}$carpPath";
 
   /// Writes to the document referred to by this [DocumentReference].
   ///

@@ -57,7 +57,7 @@ void main() {
       name: "Test",
       studyId: testStudyId,
       studyDeploymentId: testDeploymentId,
-      baseUri: Uri.parse(uri),
+      uri: Uri.parse(uri),
       oauth: OAuthEndPoint(clientID: clientID, clientSecret: clientSecret),
     );
 
