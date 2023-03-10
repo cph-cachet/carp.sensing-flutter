@@ -1,5 +1,5 @@
 /*
- * Copyright 2018-2022 Copenhagen Center for Health Technology (CACHET) at the
+ * Copyright 2018-2023 Copenhagen Center for Health Technology (CACHET) at the
  * Technical University of Denmark (DTU).
  * Use of this source code is governed by a MIT-style license that can be
  * found in the LICENSE file.
@@ -139,8 +139,6 @@ class SmartphoneDeploymentController extends StudyRuntime {
   /// Must be called after a deployment is ready using [tryDeployment] and
   /// before [start] is called.
   ///
-  /// Can request permissions for all [SamplingPackage]s' permissions.
-  ///
   /// A number of optional parameters can be specified:
   ///
   ///    * [dataEndPoint] - A specific [DataEndPoint] specifying where to save or upload data.
@@ -155,10 +153,14 @@ class SmartphoneDeploymentController extends StudyRuntime {
   ///    * [transformer] - a generic [DataTransformer] function which transform
   ///      each collected data item. If not specified, a 1:1 mapping is done,
   ///      i.e. no transformation.
+  ///    * [coverageFrequence] - a [Coverage] data point will be uploaded with
+  ///      the specified frequency in minutes. Default is every 5 minutes.
+  ///      Set to -1 to disable coverage monitoring.
   Future<void> configure({
     DataEndPoint? dataEndPoint,
     String privacySchemaName = NameSpace.CARP,
     DataTransformer? transformer,
+    int coverageFrequence = 5,
   }) async {
     assert(deployment != null,
         'Cannot configure a StudyDeploymentController without a deployment.');
@@ -198,6 +200,14 @@ class SmartphoneDeploymentController extends StudyRuntime {
     _executor!.initialize(deployment!, deployment!);
     // await enablePowerAwareness();
     measurements.listen((dataPoint) => _samplingSize++);
+
+    // set up coverage heart beat measurements
+    if (coverageFrequence > 0) {
+      Timer.periodic(
+          Duration(minutes: coverageFrequence),
+          (_) => executor?.addMeasurement(
+              Measurement.fromData(Coverage(frequency: coverageFrequence))));
+    }
 
     status = StudyStatus.Deployed;
 
@@ -306,6 +316,25 @@ class SmartphoneDeploymentController extends StudyRuntime {
     executor?.stop();
     dataManager?.close().then((_) => super.dispose());
   }
+}
+
+/// Reflects a heart beat data send every [frequency].
+/// Useful for calculating sampling coverage over time.
+@JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
+class Coverage extends Data {
+  static const dataType = '${CarpDataTypes.CARP_NAMESPACE}.coverage';
+
+  /// The expected coverage frequency
+  int frequency;
+
+  Coverage({required this.frequency}) : super();
+
+  @override
+  Function get fromJsonFunction => _$CoverageFromJson;
+  factory Coverage.fromJson(Map<String, dynamic> json) =>
+      FromJsonFactory().fromJson(json) as Coverage;
+  @override
+  Map<String, dynamic> toJson() => _$CoverageToJson(this);
 }
 
 // /// This default power-awareness schema operates with four power states:

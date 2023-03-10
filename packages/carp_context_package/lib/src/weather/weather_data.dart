@@ -55,9 +55,10 @@ class Weather extends Data {
         tempMax = weather.tempMax!.celsius,
         super();
 
+  @override
+  Function get fromJsonFunction => _$WeatherFromJson;
   factory Weather.fromJson(Map<String, dynamic> json) =>
-      _$WeatherFromJson(json);
-
+      FromJsonFactory().fromJson(json) as Weather;
   @override
   Map<String, dynamic> toJson() => _$WeatherToJson(this);
 

@@ -258,7 +258,34 @@ void main() {
       });
 
       test('- batch', () async {
-        final File file = File("test/batch-correct-test.json");
+        List<DataPoint> batch = [];
+        batch.addAll([
+          DataPoint.fromData(lightData),
+          DataPoint.fromData(lightData),
+          DataPoint.fromData(deviceData),
+          DataPoint.fromData(deviceData),
+          DataPoint.fromData(deviceData),
+        ]);
+
+        var reference = CarpService().getDataPointReference();
+
+        // test two consecutive batch uploads
+        await reference.batch(batch);
+        await reference.batch(batch);
+
+        // wait for the batch requests to finish
+        await Future.delayed(const Duration(seconds: 2), () {});
+
+        List<DataPoint> data =
+            await CarpService().getDataPointReference().getAll();
+        print('N=${data.length}');
+        // data.forEach((datapoint) => print(_encode((datapoint.toJson()))));
+
+        assert(data.length >= 5);
+      });
+
+      test('- upload', () async {
+        final File file = File("test/json/batch-correct-test.json");
         await CarpService().getDataPointReference().upload(file);
 
         // wait for the batch requests to finish

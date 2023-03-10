@@ -6,6 +6,8 @@ import 'package:carp_serializable/carp_serializable.dart';
 import 'package:carp_core/carp_core.dart';
 import 'package:carp_mobile_sensing/domain/domain.dart';
 import 'package:carp_mobile_sensing/runtime/runtime.dart';
+import 'sampling_packages/device/device.dart';
+import 'sampling_packages/sensors/sensors.dart';
 
 export 'data_managers/data_managers.dart';
 export 'domain/domain.dart';
@@ -15,11 +17,17 @@ export 'sampling_packages/sensors/sensors.dart';
 
 part 'carp_mobile_sensing.json.dart';
 
+/// Base class for the carp_mobile_sensing library.
+///
+/// In order to ensure initialization of json serialization, call:
+///
+///    CarpMobileSensing.ensureInitialized();
+///
 class CarpMobileSensing {
   static final _instance = CarpMobileSensing._();
 
   CarpMobileSensing._() {
-    Core();
+    Core.ensureInitialized();
     CAMSDataType();
     _registerFromJsonFunctions();
   }

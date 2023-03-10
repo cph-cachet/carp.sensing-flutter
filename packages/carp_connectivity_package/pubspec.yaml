@@ -15,7 +15,7 @@ dependencies:
   # carp_core: ^1.1.0
   # carp_mobile_sensing: ^1.1.0
  
-  json_annotation: ^4.4.0
+  json_annotation: ^4.7.0
   permission_handler: ^10.0.0  
   connectivity_plus: ^3.0.0    # connectivity events
   network_info_plus: ^3.0.0    # wifi ssid name
@@ -33,7 +33,7 @@ dependency_overrides:
     path: ../../carp_mobile_sensing/
 
 dev_dependencies:
-  lints: any
+  flutter_lints: any
   build_runner: any
   json_serializable: any
   test: any

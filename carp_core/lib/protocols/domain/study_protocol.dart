@@ -125,7 +125,9 @@ class StudyProtocol extends Snapshot {
   /// Returns true if the [device] has been added; false if it is already connected
   /// to the specified [primaryDevice].
   bool addConnectedDevice(
-      DeviceConfiguration device, PrimaryDeviceConfiguration primaryDevice) {
+    DeviceConfiguration device,
+    PrimaryDeviceConfiguration primaryDevice,
+  ) {
     connections ??= [];
     connections?.add(DeviceConnection(device.roleName, primaryDevice.roleName));
     return connectedDevices!.add(device);

@@ -44,7 +44,7 @@ void main() {
         accuracy: GeolocationAccuracy.low,
         distance: 10,
         interval: const Duration(minutes: 5));
-    protocol.addConnectedDevice(locationService);
+    protocol.addConnectedDevice(locationService, phone);
 
     // Add a background task that collects location on a regular basis
     protocol.addTaskControl(
@@ -78,7 +78,7 @@ void main() {
     // Define the online weather service and add it as a 'device'
     WeatherService weatherService =
         WeatherService(apiKey: 'OW_API_key_goes_here');
-    protocol.addConnectedDevice(weatherService);
+    protocol.addConnectedDevice(weatherService, phone);
 
     // Add a background task that collects weather every 30 minutes.
     protocol.addTaskControl(
@@ -90,7 +90,7 @@ void main() {
     // Define the online air quality service and add it as a 'device'
     AirQualityService airQualityService =
         AirQualityService(apiKey: 'WAQI_API_key_goes_here');
-    protocol.addConnectedDevice(airQualityService);
+    protocol.addConnectedDevice(airQualityService, phone);
 
     // Add a background task that air quality every 30 minutes.
     protocol.addTaskControl(

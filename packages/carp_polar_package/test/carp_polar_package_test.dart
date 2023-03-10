@@ -43,7 +43,7 @@ void main() {
 
     protocol
       ..addPrimaryDevice(phone)
-      ..addConnectedDevice(polar);
+      ..addConnectedDevice(polar, phone);
 
     // adding all available measures to one one trigger and one task
     protocol.addTaskControl(

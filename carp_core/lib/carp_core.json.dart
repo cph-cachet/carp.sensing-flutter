@@ -10,10 +10,10 @@ void _registerFromJsonFunctions() {
   final DeviceConfiguration device = DeviceConfiguration(roleName: '');
 
   FromJsonFactory().register(DeviceRegistration());
-  // FromJsonFactory().register(DefaultDeviceRegistration());
   FromJsonFactory().register(DeviceRegistration(),
       type:
           'dk.cachet.carp.common.application.devices.DefaultDeviceRegistration');
+  FromJsonFactory().register(DefaultDeviceRegistration());
   FromJsonFactory().register(AltBeaconDeviceRegistration());
 
   FromJsonFactory().register(DeviceDeploymentStatus(device: device));
@@ -36,7 +36,7 @@ void _registerFromJsonFunctions() {
       type:
           'dk.cachet.carp.deployments.application.DeviceDeploymentStatus.NeedsRedeployment');
 
-  // StudyDeploymentStatus
+  // StudyDeploymentStatus - note that this can have different sub-types
   FromJsonFactory().register(StudyDeploymentStatus(studyDeploymentId: ''));
   FromJsonFactory().register(StudyDeploymentStatus(studyDeploymentId: ''),
       type:
@@ -55,92 +55,109 @@ void _registerFromJsonFunctions() {
           'dk.cachet.carp.deployments.application.StudyDeploymentStatus.Stopped');
 
   // PROTOCOL
-  // register(StudyProtocol());
-  FromJsonFactory().register(TriggerConfiguration());
-  FromJsonFactory()
-      .register(ElapsedTimeTrigger(elapsedTime: const IsoDuration()));
-  FromJsonFactory().register(ManualTrigger());
-  FromJsonFactory().register(ScheduledTrigger(
-      recurrenceRule: RecurrenceRule(Frequency.DAILY),
-      time: const TimeOfDay()));
-
-  FromJsonFactory().register(TaskConfiguration());
-  FromJsonFactory().register(BackgroundTask());
-  FromJsonFactory().register(CustomProtocolTask(studyProtocol: 'ignored'));
-  FromJsonFactory().register(Measure(type: 'ignored'));
   final config = SamplingConfiguration();
-  FromJsonFactory().register(config);
-  FromJsonFactory().register(NoOptionsSamplingConfiguration());
-  FromJsonFactory().register(BatteryAwareSamplingConfiguration(
-      critical: config, low: config, normal: config));
-  FromJsonFactory()
-      .register(GranularitySamplingConfiguration(Granularity.Balanced));
 
+  FromJsonFactory().registerAll([
+    TriggerConfiguration(),
+    ElapsedTimeTrigger(elapsedTime: const IsoDuration()),
+    ManualTrigger(),
+    ScheduledTrigger(
+        recurrenceRule: RecurrenceRule(Frequency.DAILY),
+        time: const TimeOfDay()),
+    TaskConfiguration(),
+    BackgroundTask(),
+    CustomProtocolTask(studyProtocol: ''),
+    Measure(type: ''),
+    SamplingConfiguration(),
+    NoOptionsSamplingConfiguration(),
+    BatteryAwareSamplingConfiguration(
+        critical: config, low: config, normal: config),
+    GranularitySamplingConfiguration(Granularity.Balanced),
+    PrimaryDeviceConfiguration(roleName: ''),
+    CustomProtocolDevice(),
+    Smartphone(),
+    AltBeacon(),
+    ParticipantAttribute(inputDataType: ''),
+    AssignedTo()
+  ]);
+
+  // DeviceConfiguration with different sub-types
   FromJsonFactory().register(DeviceConfiguration(roleName: ''));
-  // FromJsonFactory().register(DeviceConnection());
-  FromJsonFactory().register(PrimaryDeviceConfiguration(roleName: ''));
-  FromJsonFactory().register(CustomProtocolDevice());
-  FromJsonFactory().register(Smartphone());
-  FromJsonFactory().register(AltBeacon());
   FromJsonFactory().register(DeviceConfiguration(roleName: ''),
       type:
           'dk.cachet.carp.protocols.infrastructure.test.StubMasterDeviceConfiguration');
   FromJsonFactory().register(DeviceConfiguration(roleName: ''),
       type:
           'dk.cachet.carp.protocols.infrastructure.test.StubDeviceConfiguration');
-  FromJsonFactory().register(ParticipantAttribute(inputDataType: ''));
-  FromJsonFactory().register(AssignedTo());
 
   // REQUESTS
-  FromJsonFactory().register(GetActiveParticipationInvitations(''));
-  FromJsonFactory().register(GetParticipantData(''));
-  FromJsonFactory().register(GetParticipantDataList(['']));
-  FromJsonFactory().register(SetParticipantData(''));
-  FromJsonFactory().register(GetStudyDeploymentStatus(''));
-  FromJsonFactory().register(GetStudyDeploymentStatusList(['']));
-  FromJsonFactory().register(RegisterDevice('', '', DeviceRegistration()));
-  FromJsonFactory().register(UnregisterDevice('', ''));
-  FromJsonFactory().register(GetDeviceDeploymentFor('', ''));
-  FromJsonFactory().register(DeviceDeployed('', '', DateTime.now()));
-  FromJsonFactory().register(Stop(''));
-  FromJsonFactory().register(Add(StudyProtocol(ownerId: '', name: ''), ''));
-  FromJsonFactory()
-      .register(AddVersion(StudyProtocol(ownerId: '', name: ''), ''));
-  FromJsonFactory()
-      .register(UpdateParticipantDataConfiguration('', null, null));
-  FromJsonFactory().register(GetBy('', null));
-  FromJsonFactory().register(GetAllForOwner(''));
-  FromJsonFactory().register(GetVersionHistoryFor(''));
-  FromJsonFactory().register(CreateCustomProtocol('', '', '', ''));
-  FromJsonFactory().register(OpenDataStreams(DataStreamsConfiguration(
-      studyDeploymentId: '', expectedDataStreams: {})));
-  FromJsonFactory().register(AppendToDataStreams('', []));
-  FromJsonFactory().register(GetDataStream(
-      DataStreamId(studyDeploymentId: '', deviceRoleName: '', dataType: ''),
-      0));
-  FromJsonFactory().register(CloseDataStreams([]));
-  FromJsonFactory().register(RemoveDataStreams([]));
+  FromJsonFactory().registerAll([
+    GetActiveParticipationInvitations(''),
+    GetParticipantData(''),
+    GetParticipantDataList(['']),
+    SetParticipantData(''),
+    GetStudyDeploymentStatus(''),
+    GetStudyDeploymentStatusList(['']),
+    RegisterDevice('', '', DeviceRegistration()),
+    UnregisterDevice('', ''),
+    GetDeviceDeploymentFor('', ''),
+    DeviceDeployed('', '', DateTime.now()),
+    Stop(''),
+    Add(StudyProtocol(ownerId: '', name: ''), ''),
+    AddVersion(StudyProtocol(ownerId: '', name: ''), ''),
+    UpdateParticipantDataConfiguration('', null, null),
+    GetBy('', null),
+    GetAllForOwner(''),
+    GetVersionHistoryFor(''),
+    CreateCustomProtocol('', '', '', ''),
+    OpenDataStreams(DataStreamsConfiguration(
+      studyDeploymentId: '',
+      expectedDataStreams: {},
+    )),
+    AppendToDataStreams('', []),
+    GetDataStream(
+        DataStreamId(
+          studyDeploymentId: '',
+          deviceRoleName: '',
+          dataType: '',
+        ),
+        0),
+    CloseDataStreams([]),
+    RemoveDataStreams([])
+  ]);
 
   // DATA TYPES
-  FromJsonFactory().register(Acceleration());
-  FromJsonFactory().register(Geolocation());
-  FromJsonFactory().register(SignalStrength());
-  FromJsonFactory().register(StepCount());
-  FromJsonFactory().register(HeartRate());
-  FromJsonFactory().register(ECG());
-  FromJsonFactory().register(EDA());
-  FromJsonFactory().register(CompletedTask(taskName: ''));
-  FromJsonFactory().register(TriggeredTask(
-      triggerId: 0,
-      taskName: '',
-      destinationDeviceRoleName: '',
-      control: Control.Start));
+
+  FromJsonFactory().registerAll([
+    Data(),
+    // SensorData(),
+    Acceleration(),
+    Rotation(),
+    MagneticField(),
+    Geolocation(),
+    SignalStrength(),
+    StepCount(),
+    HeartRate(),
+    ECG(),
+    EDA(),
+    CompletedTask(taskName: ''),
+    TriggeredTask(
+        triggerId: 0,
+        taskName: '',
+        destinationDeviceRoleName: '',
+        control: Control.Start),
+    Error(message: '')
+  ]);
 
   // INPUT DATA TYPES
-  FromJsonFactory().register(CustomInput('ignored'),
-      type: CustomInput.CUSTOM_INPUT_TYPE_NAME);
-  FromJsonFactory().register(SexCustomInput(Sex.Female),
-      type: SexCustomInput.SEX_INPUT_TYPE_NAME);
+  FromJsonFactory().register(
+    CustomInput(''),
+    type: CustomInput.CUSTOM_INPUT_TYPE_NAME,
+  );
+  FromJsonFactory().register(
+    SexCustomInput(Sex.Female),
+    type: SexCustomInput.SEX_INPUT_TYPE_NAME,
+  );
 
   _fromJsonFunctionsRegistrered = true;
 }

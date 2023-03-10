@@ -74,7 +74,12 @@ class MediaSamplingPackage extends SmartphoneSamplingPackage {
   }
 
   @override
-  void onRegister() {}
+  void onRegister() {
+    FromJsonFactory().registerAll([
+      Media(filename: 'filename', mediaType: MediaType.audio),
+      Noise(meanDecibel: 0, stdDecibel: 0, minDecibel: 0, maxDecibel: 0),
+    ]);
+  }
 
   @override
   List<Permission> get permissions =>

@@ -29,7 +29,7 @@ void main() async {
 
   protocol
     ..addPrimaryDevice(phone)
-    ..addConnectedDevice(eSense);
+    ..addConnectedDevice(eSense, phone);
 
   // Add a background task that immediately starts collecting step counts,
   //ambient light, screen activity, and battery level from the phone.

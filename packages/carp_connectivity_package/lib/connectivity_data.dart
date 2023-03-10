@@ -7,16 +7,37 @@
 
 part of connectivity;
 
-/// A [Datum] that holds connectivity status of the phone.
+/// Connection status of a device.
+enum ConnectivityStatus {
+  /// Device connected via Bluetooth.
+  bluetooth,
+
+  /// Device connected via WiFi.
+  wifi,
+
+  /// Device connected to ethernet network.
+  ethernet,
+
+  /// Device connected to cellular network.
+  mobile,
+
+  /// Device not connected to any network.
+  none,
+
+  /// Device connected to a VPN.
+  vpn,
+
+  /// Unknown connectivity status.
+  unknown,
+}
+
+/// Holds connectivity status of the phone.
 @JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
 class Connectivity extends Data {
   static const dataType = ConnectivitySamplingPackage.CONNECTIVITY;
 
   /// The status of the connectivity.
-  /// - WiFi: Device connected via Wi-Fi
-  /// - Mobile: Device connected to cellular network
-  /// - None: Device not connected to any network
-  String connectivityStatus = "unknown";
+  ConnectivityStatus connectivityStatus = ConnectivityStatus.unknown;
 
   Connectivity() : super();
 
@@ -24,28 +45,36 @@ class Connectivity extends Data {
       : connectivityStatus = _parseConnectivityStatus(result),
         super();
 
+  @override
+  Function get fromJsonFunction => _$ConnectivityFromJson;
   factory Connectivity.fromJson(Map<String, dynamic> json) =>
-      _$ConnectivityFromJson(json);
+      FromJsonFactory().fromJson(json) as Connectivity;
   @override
   Map<String, dynamic> toJson() => _$ConnectivityToJson(this);
 
-  static String _parseConnectivityStatus(
+  static ConnectivityStatus _parseConnectivityStatus(
       connectivity.ConnectivityResult result) {
     switch (result) {
+      case connectivity.ConnectivityResult.bluetooth:
+        return ConnectivityStatus.bluetooth;
       case connectivity.ConnectivityResult.wifi:
-        return "wifi";
+        return ConnectivityStatus.wifi;
       case connectivity.ConnectivityResult.mobile:
-        return "mobile";
+        return ConnectivityStatus.mobile;
+      case connectivity.ConnectivityResult.ethernet:
+        return ConnectivityStatus.ethernet;
+      case connectivity.ConnectivityResult.vpn:
+        return ConnectivityStatus.vpn;
       case connectivity.ConnectivityResult.none:
-        return "none";
+        return ConnectivityStatus.none;
       default:
-        return "unknown";
+        return ConnectivityStatus.unknown;
     }
   }
 
   @override
   String toString() =>
-      '${super.toString()}, connectivityStatus: $connectivityStatus';
+      '${super.toString()}, connectivityStatus: ${connectivityStatus.name}';
 }
 
 /// A [Datum] that holds information of nearby Bluetooth devices.
@@ -83,8 +112,10 @@ class Bluetooth extends Data {
   //   ..scanResult =
   //       results.map((r) => BluetoothDevice.fromScanResult(r)).toList();
 
+  @override
+  Function get fromJsonFunction => _$BluetoothFromJson;
   factory Bluetooth.fromJson(Map<String, dynamic> json) =>
-      _$BluetoothFromJson(json);
+      FromJsonFactory().fromJson(json) as Bluetooth;
   @override
   Map<String, dynamic> toJson() => _$BluetoothToJson(this);
 
@@ -191,7 +222,10 @@ class Wifi extends Data {
     this.ip,
   }) : super();
 
-  factory Wifi.fromJson(Map<String, dynamic> json) => _$WifiFromJson(json);
+  @override
+  Function get fromJsonFunction => _$WifiFromJson;
+  factory Wifi.fromJson(Map<String, dynamic> json) =>
+      FromJsonFactory().fromJson(json) as Wifi;
   @override
   Map<String, dynamic> toJson() => _$WifiToJson(this);
 

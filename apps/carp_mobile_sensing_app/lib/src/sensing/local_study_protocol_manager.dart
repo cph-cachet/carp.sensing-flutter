@@ -1,3 +1,4 @@
+
 /*
  * Copyright 2019-2022 Copenhagen Center for Health Technology (CACHET) at the
  * Technical University of Denmark (DTU).
@@ -36,11 +37,22 @@ class LocalStudyProtocolManager implements StudyProtocolManager {
           name: 'Alex B. Christensen',
         ));
 
-    protocol.dataEndPoint = (bloc.deploymentMode == DeploymentMode.local)
-        ? SQLiteDataEndPoint()
-        : CarpDataEndPoint(
-            uploadMethod: CarpUploadMethod.DATA_POINT,
-          );
+    // protocol.dataEndPoint = (bloc.deploymentMode == DeploymentMode.local)
+    //     ? SQLiteDataEndPoint()
+    //     : CarpDataEndPoint(
+    //         uploadMethod: CarpUploadMethod.DATA_POINT,
+    //       );
+
+    // TODO - for testing - remove later
+    protocol.dataEndPoint = CarpDataEndPoint(
+      uploadMethod: CarpUploadMethod.DATA_POINT,
+      uri: uri,
+      clientId: clientID,
+      clientSecret: clientSecret,
+      email: username,
+      password: password,
+      uploadInterval: 1,
+    );
 
     // set the format of the data to upload - e.g. Open mHealth
     protocol.dataEndPoint!.dataFormat = bloc.dataFormat;
@@ -102,8 +114,7 @@ class LocalStudyProtocolManager implements StudyProtocolManager {
         locationService);
 
     // Define the online weather service and add it as a 'device'
-    WeatherService weatherService =
-        WeatherService(apiKey: '12b6e28582eb9298577c734a31ba9f4f');
+    WeatherService weatherService = WeatherService(apiKey: openWeatherApiKey);
     protocol.addConnectedDevice(weatherService, phone);
 
     // Add a background task that collects weather every 30 minutes.
@@ -115,7 +126,7 @@ class LocalStudyProtocolManager implements StudyProtocolManager {
 
     // Define the online air quality service and add it as a 'device'
     AirQualityService airQualityService =
-        AirQualityService(apiKey: '9e538456b2b85c92647d8b65090e29f957638c77');
+        AirQualityService(apiKey: airQualityApiKey);
     protocol.addConnectedDevice(airQualityService, phone);
 
     // Add a background task that air quality every 30 minutes.

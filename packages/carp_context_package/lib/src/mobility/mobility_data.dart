@@ -54,9 +54,10 @@ class Mobility extends Data {
     ..homeStay = context.homeStay
     ..distanceTraveled = context.distanceTravelled;
 
+  @override
+  Function get fromJsonFunction => _$MobilityFromJson;
   factory Mobility.fromJson(Map<String, dynamic> json) =>
-      _$MobilityFromJson(json);
-
+      FromJsonFactory().fromJson(json) as Mobility;
   @override
   Map<String, dynamic> toJson() => _$MobilityToJson(this);
 

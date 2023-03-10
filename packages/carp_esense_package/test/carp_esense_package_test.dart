@@ -37,7 +37,7 @@ void main() {
 
     protocol
       ..addPrimaryDevice(phone)
-      ..addConnectedDevice(eSense);
+      ..addConnectedDevice(eSense, phone);
 
     // adding all available measures to one one trigger and one task
     protocol.addTaskControl(

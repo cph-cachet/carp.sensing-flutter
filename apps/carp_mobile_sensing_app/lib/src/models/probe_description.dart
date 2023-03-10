@@ -83,8 +83,12 @@ class ProbeDescription {
           'Screen',
           'Collecting screen events (on/off/unlock).',
         ),
+        ContextSamplingPackage.CURRENT_LOCATION: ProbeDescriptor(
+          'Current Location',
+          'Collecting location information.',
+        ),
         ContextSamplingPackage.LOCATION: ProbeDescriptor(
-          'Location',
+          'Location Tracking',
           'Collecting location information.',
         ),
         ContextSamplingPackage.ACTIVITY: ProbeDescriptor(
@@ -184,6 +188,8 @@ class ProbeDescription {
         //     Icon(Icons.event, size: 50, color: CACHET.CYAN),
         DeviceSamplingPackage.SCREEN_EVENT: Icon(Icons.screen_lock_portrait,
             size: 50, color: CACHET.LIGHT_PURPLE),
+        ContextSamplingPackage.CURRENT_LOCATION:
+            Icon(Icons.location_searching, size: 50, color: CACHET.GREY_1),
         ContextSamplingPackage.LOCATION:
             Icon(Icons.location_searching, size: 50, color: CACHET.CYAN),
         ContextSamplingPackage.ACTIVITY:

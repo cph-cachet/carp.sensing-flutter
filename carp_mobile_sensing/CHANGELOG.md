@@ -3,8 +3,9 @@
 * The first stable release of CARP Mobile Sensing which follows the [carp.core-kotlin](https://github.com/imotions/carp.core-kotlin) v. 1.1.0 domain model, which again is implemented in the [carp_core](https://pub.dev/packages/carp_core) v. 1.1.0 Dart Domain model.
 
 * This entails a set of **breaking** changes to the domain model:
-  * CARP cores now comes with a range of pre-defined Measure Types (e.g., `geolocation`, `stepcount`, etc.). These CARP Core measures has replaced the previous CAMS versions of these.
-  * An important new measure type is the `TriggeredTask` and `CompletedTask` which now automatically collected data on when and how a trigger and task are done.
+  * CARP cores now comes with a range of pre-defined Measure Types (e.g., `geolocation`, `stepcount`, etc.). These CARP Core measures has replaced the previous CAMS versions of these. However, most of the "old" measures are kept, so there should be backward compatibility.
+  * Important new measures type is the `TriggeredTask`, `CompletedTask`, which now automatically collected data on when and how a trigger and task are done.
+  * The measure `Coverage` has been added which is a heartbeat measure that sends a measure every 5 minutes. This can be used to retrospectively check if sampling has been running (typically used in our so-called [Coverage tests](https://carp.cachet.dk/sampling-coverage-in-mobile-sensing-on-android-11/)).
   * In the protocol, triggering is now controlled by the `Control` class, which basically states if sampling should be started or stopped. So, instead of adding a `TriggeredTask` to a protocol you now add a `TaskControl` instead.
   * As part of this, the states of sampling has changed from "resumed" and "paused" to "started" and "stopped" (to reflect the `Control` state of a `TaskControl`).
   

@@ -38,9 +38,10 @@ class SQLiteDataManager extends AbstractDataManager {
   static const String DATABASE_NAME = 'carp-data';
 
   static const String MEASUREMENT_TABLE_NAME = 'measurements';
-  // // SQLite does not have a separate Boolean storage class. Instead,
-  // // Boolean values are stored as integers 0 (false) and 1 (true).
-  // static const String UPLOADED_COLUMN = 'uploaded';
+  static const String ID_COLUMN = 'id';
+  // SQLite does not have a separate Boolean storage class. Instead,
+  // Boolean values are stored as integers 0 (false) and 1 (true).
+  static const String UPLOADED_COLUMN = 'uploaded';
   static const String DEPLOYMENT_ID_COLUMN = 'deployment_id';
   static const String TRIGGER_ID_COLUMN = 'trigger_id';
   static const String ROLE_NAME_COLUMN = 'device_rolename';
@@ -64,8 +65,9 @@ class SQLiteDataManager extends AbstractDataManager {
     Stream<Measurement> measurements,
   ) async {
     assert(dataEndPoint is SQLiteDataEndPoint);
-    info('Initializing $runtimeType...');
     await super.initialize(dataEndPoint, deployment, measurements);
+
+    info('Initializing $runtimeType...');
 
     _databasePath ??= await getDatabasesPath();
 
@@ -77,8 +79,14 @@ class SQLiteDataManager extends AbstractDataManager {
       onCreate: (Database db, int version) async {
         // when creating the database, create the measurements table
         debug("$runtimeType - Creating '$MEASUREMENT_TABLE_NAME' table");
-        await db.execute(
-            'CREATE TABLE $MEASUREMENT_TABLE_NAME (id INTEGER PRIMARY KEY, $DEPLOYMENT_ID_COLUMN TEXT, $TRIGGER_ID_COLUMN INTEGER, $ROLE_NAME_COLUMN TEXT, $DATATYPE_COLUMN TEXT, $MEASUREMENT_COLUMN TEXT)');
+        await db.execute('CREATE TABLE $MEASUREMENT_TABLE_NAME ('
+            '$ID_COLUMN INTEGER PRIMARY KEY AUTOINCREMENT, '
+            '$UPLOADED_COLUMN INTEGER, '
+            '$DEPLOYMENT_ID_COLUMN TEXT, '
+            '$TRIGGER_ID_COLUMN INTEGER, '
+            '$ROLE_NAME_COLUMN TEXT, '
+            '$DATATYPE_COLUMN TEXT, '
+            '$MEASUREMENT_COLUMN TEXT)');
 
         debug("$runtimeType - '$databaseName' DB created");
       },
@@ -88,6 +96,7 @@ class SQLiteDataManager extends AbstractDataManager {
   @override
   Future<void> onMeasurement(Measurement measurement) async {
     final Map<String, dynamic> map = {
+      UPLOADED_COLUMN: 0,
       DEPLOYMENT_ID_COLUMN: deployment.studyDeploymentId,
       TRIGGER_ID_COLUMN: measurement.taskControl?.triggerId ?? 0,
       ROLE_NAME_COLUMN: measurement.taskControl?.targetDevice?.roleName ??

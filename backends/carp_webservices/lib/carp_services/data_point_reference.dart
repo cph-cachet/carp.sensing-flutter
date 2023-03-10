@@ -6,11 +6,13 @@
  */
 part of carp_services;
 
-/// Provide a data endpoint reference to a CARP web service. Used to:
-/// - post [DataPoint]s
-/// - get a [DataPoint]s
+/// Provide a data endpoint reference to a CARP Web Service.
+/// Used to:
+/// - post (upload) a [DataPoint]
+/// - batch upload a list or file of [DataPoint]s
+/// - get a [DataPoint]
 /// - query for [DataPoint]s
-/// - delete [DataPoint]s
+/// - delete a [DataPoint]
 class DataPointReference extends CarpReference {
   DataPointReference._(CarpService service) : super._(service);
 
@@ -18,7 +20,7 @@ class DataPointReference extends CarpReference {
   String get dataEndpointUri =>
       "${service.app!.uri.toString()}/api/deployments/${service.app!.studyDeploymentId}/data-points";
 
-  /// Uploads [data] to the CARP backend using HTTP POST.
+  /// Uploads [data].
   ///
   /// Returns the server-generated ID for this data point.
   Future<int> post(DataPoint data) async {
@@ -42,6 +44,47 @@ class DataPointReference extends CarpReference {
     );
   }
 
+  int _counter = 0;
+  String? _fileCachePath;
+
+  /// The base path for storing all file cache to be uploaded.
+  Future<String> get fileCachePath async {
+    if (_fileCachePath == null) {
+      var path = 'cache';
+
+      if (Settings().initialized) {
+        final deploymentId = service.app?.studyDeploymentId ?? 'tmp';
+        path = await Settings().getCacheBasePath(deploymentId);
+      }
+      final directory = await Directory('$path/upload').create(recursive: true);
+      _fileCachePath = directory.path;
+    }
+
+    return _fileCachePath!;
+  }
+
+  // TODO - Delete cached file when uploaded.
+  // Something like:
+  //
+  //   .then((file) => upload(file).then((_) => file.delete()));
+  //
+  // But this does not work, since this will delete the file before it is
+  // uploaded, especially if there is a long retry cycle.
+  // Need to listen to some sort of event that the file is successfully
+  // uploaded, and then delete it.
+
+  /// Batch upload a list of [DataPoint]s.
+  ///
+  /// Returns when successful. Throws an [CarpServiceException] if not.
+  Future<void> batch(List<DataPoint> batch) async {
+    if (batch.isEmpty) return;
+
+    await File('${await fileCachePath}/batch-${_counter++}.json')
+        .create(recursive: true)
+        .then((file) => file.writeAsString(toJsonString(batch), flush: true))
+        .then((file) => upload(file));
+  }
+
   /// Batch upload a file with [DataPoint]s to the CARP backend using
   /// HTTP POST.
   ///
@@ -49,7 +92,7 @@ class DataPointReference extends CarpReference {
   /// Note that the file should be raw JSON, and hence _not_ zipped.
   ///
   /// Returns when successful. Throws an [CarpServiceException] if not.
-  Future upload(File file) async {
+  Future<void> upload(File file) async {
     final String url = "$dataEndpointUri/batch";
 
     var request = http.MultipartRequest("POST", Uri.parse(url));
@@ -57,7 +100,7 @@ class DataPointReference extends CarpReference {
     request.headers['Content-Type'] = 'multipart/form-data';
     request.headers['cache-control'] = 'no-cache';
 
-    request.files.add(MultipartFileRecreatable.fromFileSync(file.path));
+    request.files.add(ClonableMultipartFile.fromFileSync(file.path));
 
     // sending the request using the retry approach
     httpr.send(request).then((response) async {
@@ -242,7 +285,7 @@ class DataPointReference extends CarpReference {
   /// Delete a data point with the given [id].
   /// Returns on success.
   /// Throws an exception if data point is not found or otherwise unsuccessful.
-  Future delete(int id) async {
+  Future<void> delete(int id) async {
     String url = "$dataEndpointUri/$id";
 
     http.Response response =

@@ -63,6 +63,7 @@ class SensingBLoC {
   /// Initialize the BLoC.
   Future<void> initialize({
     DeploymentMode deploymentMode = DeploymentMode.local,
+    String? deploymentId,
     String dataFormat = NameSpace.CARP,
     bool useCachedStudyDeployment = true,
     bool resumeSensingOnStartup = false,
@@ -70,6 +71,7 @@ class SensingBLoC {
     await Settings().init();
     Settings().debugLevel = DebugLevel.debug;
     this.deploymentMode = deploymentMode;
+    if (deploymentId != null) studyDeploymentId = deploymentId;
     this.dataFormat = dataFormat;
     _resumeSensingOnStartup = resumeSensingOnStartup;
     _useCached = useCachedStudyDeployment;

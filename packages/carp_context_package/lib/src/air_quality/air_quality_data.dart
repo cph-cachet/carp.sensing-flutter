@@ -37,9 +37,10 @@ class AirQuality extends Data {
             AirQualityLevel.values[airQualityData.airQualityLevel.index],
         super();
 
+  @override
+  Function get fromJsonFunction => _$AirQualityFromJson;
   factory AirQuality.fromJson(Map<String, dynamic> json) =>
-      _$AirQualityFromJson(json);
-
+      FromJsonFactory().fromJson(json) as AirQuality;
   @override
   Map<String, dynamic> toJson() => _$AirQualityToJson(this);
 

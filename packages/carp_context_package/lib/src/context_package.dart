@@ -84,19 +84,28 @@ class ContextSamplingPackage extends SmartphoneSamplingPackage {
   @override
   void onRegister() {
     // first register all configurations to be de/serializable
-    FromJsonFactory()
-      ..register(AirQualityService(apiKey: ''))
-      ..register(
-        GeofenceSamplingConfiguration(
-            name: '',
-            center: GeoPosition(1.1, 1.1),
-            dwell: const Duration(),
-            radius: 1.0),
-      )
-      ..register(LocationService())
-      ..register(WeatherService(apiKey: ''))
-      ..register(AirQualityService(apiKey: ''))
-      ..register(GeoPosition(1.1, 1.1));
+    FromJsonFactory().registerAll([
+      AirQualityService(apiKey: ''),
+      GeofenceSamplingConfiguration(
+          name: '',
+          center: GeoPosition(1.1, 1.1),
+          dwell: const Duration(),
+          radius: 1.0),
+      LocationService(),
+      WeatherService(apiKey: ''),
+      AirQualityService(apiKey: ''),
+      GeoPosition(1.1, 1.1)
+    ]);
+
+    // register all data types
+    FromJsonFactory().registerAll([
+      Activity(type: ActivityType.UNKNOWN, confidence: 0),
+      AirQuality(airQualityIndex: 0, latitude: 0, longitude: 0),
+      Geofence(type: GeofenceType.DWELL, name: ''),
+      Location(),
+      Mobility(),
+      Weather()
+    ]);
 
     // registering the transformers from CARP to OMH for geolocation and physical activity
     // we assume that there is an OMH schema registered already...

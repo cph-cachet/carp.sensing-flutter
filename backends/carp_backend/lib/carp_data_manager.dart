@@ -30,7 +30,7 @@ class CarpDataManagerFactory implements DataManagerFactory {
 class CarpDataManager extends AbstractDataManager {
   bool _initialized = false;
   late CarpDataEndPoint carpEndPoint;
-  late DataStreamBuffer buffer;
+  DataStreamBuffer buffer = DataStreamBuffer();
   Timer? uploadTimer;
   ConnectivityResult _connectivity = ConnectivityResult.none;
 
@@ -52,39 +52,25 @@ class CarpDataManager extends AbstractDataManager {
   Future<void> initialize(
     DataEndPoint dataEndPoint,
     SmartphoneDeployment deployment,
-    Stream<Measurement> data,
+    Stream<Measurement> measurements,
   ) async {
     assert(dataEndPoint is CarpDataEndPoint);
-    await super.initialize(dataEndPoint, deployment, data);
+    await super.initialize(dataEndPoint, deployment, measurements);
     carpEndPoint = dataEndPoint as CarpDataEndPoint;
 
-    if ((carpEndPoint.uploadMethod == CarpUploadMethod.DATA_STREAM) ||
-        (carpEndPoint.uploadMethod == CarpUploadMethod.FILE)) {
-      buffer = DataStreamBuffer();
+    buffer.initialize(deployment, measurements);
 
-      // merge the file data manager's events into this CARP data manager's event stream
-      // fileDataManager.events.listen((event) => addEvent(event));
-
-      // listen to data manager events, but only those from the file manager and only closing events
-      // on a close event, upload the file to CARP
-      // fileDataManager.events
-      //     .where((event) => event.runtimeType == FileDataManagerEvent)
-      //     .where((event) => event.type == FileDataManagerEventTypes.FILE_CLOSED)
-      //     .listen((event) =>
-      //         _uploadDatumFileToCarp((event as FileDataManagerEvent).path));
-
-      buffer.initialize(deployment, data);
-
-      // set up a timer that uploads data on a regular basis
-      uploadTimer = Timer.periodic(
-          Duration(minutes: carpEndPoint.uploadInterval),
-          (_) => uploadBufferedMeasurements());
-    }
+    // set up a timer that uploads data on a regular basis
+    uploadTimer = Timer.periodic(Duration(minutes: carpEndPoint.uploadInterval),
+        (_) => uploadBufferedMeasurements());
 
     // listen to connectivity events
     Connectivity()
         .onConnectivityChanged
         .listen((status) => connectivity = status);
+
+    if (!CarpDataStreamService().isConfigured)
+      CarpDataStreamService().configureFrom(CarpService());
 
     _initialized = true;
   }
@@ -101,40 +87,34 @@ class CarpDataManager extends AbstractDataManager {
     // check if the CARP web service has already been configured and the user is logged in.
     if (!CarpService().authenticated) {
       info('$runtimeType - No user is authenticated. '
-          'Trying to authenticate based on configuration and credentials specified in the carpEndPoint.');
-      if (!CarpService().isConfigured) {
-        CarpService().configure(CarpApp(
-          studyDeploymentId: studyDeploymentId,
-          name: carpEndPoint.name,
-          uri: Uri.parse(carpEndPoint.uri.toString()),
-          oauth: OAuthEndPoint(
-              clientID: carpEndPoint.clientId.toString(),
-              clientSecret: carpEndPoint.clientSecret.toString()),
-        ));
-      }
-      await CarpService().authenticate(
-        username: carpEndPoint.email.toString(),
-        password: carpEndPoint.password.toString(),
-      );
-      info("$runtimeType - signed in user: ${CarpService().currentUser}");
-    }
+          'Trying to authenticate based on configuration and credentials specified in the endpoint configuration.');
 
-    if (!CarpDataStreamService().isConfigured)
-      CarpDataStreamService().configureFrom(CarpService());
+      try {
+        if (!CarpService().isConfigured) {
+          CarpService().configure(CarpApp(
+            studyDeploymentId: studyDeploymentId,
+            name: carpEndPoint.name,
+            uri: Uri.parse(carpEndPoint.uri.toString()),
+            oauth: OAuthEndPoint(
+                clientID: carpEndPoint.clientId.toString(),
+                clientSecret: carpEndPoint.clientSecret.toString()),
+          ));
+        }
+        await CarpService().authenticate(
+          username: carpEndPoint.email.toString(),
+          password: carpEndPoint.password.toString(),
+        );
+        info("$runtimeType - signed in user: ${CarpService().currentUser}");
+      } catch (error) {
+        warning('$runtimeType - cannot authenticate user');
+      }
+    }
 
     return CarpService().currentUser;
   }
 
   @override
-  Future<void> onMeasurement(Measurement measurement) =>
-      buffer.onMeasurement(measurement);
-
-  @override
-  Future<void> onError(Object? error) => buffer
-      .onMeasurement(Measurement.fromData(Error(message: error.toString())));
-
-  @override
-  Future<void> onDone() => close();
+  Future<void> onMeasurement(Measurement measurement) async {}
 
   /// Upload buffered measurements to CAWS.
   Future<void> uploadBufferedMeasurements() async {
@@ -153,68 +133,90 @@ class CarpDataManager extends AbstractDataManager {
     }
 
     // now start trying to upload data...
-    try {
-      // authenticated to CAWS and fast exit if not successful
-      if (await user == null) {
-        warning(
-            'User cannot be authenticated - username: ${carpEndPoint.email}');
-        return;
-      }
-
-      final batches = await buffer.getDataStreamBatches(
-        carpEndPoint.deleteWhenUploaded,
-      );
-
-      if (carpEndPoint.uploadMethod == CarpUploadMethod.DATA_STREAM) {
-        CarpDataStreamService().appendToDataStreams(
-          studyDeploymentId,
-          batches,
-        );
-      }
-
-      for (var batch in batches) {
-        for (var measurement in batch.measurements) {
-          if (carpEndPoint.uploadMethod == CarpUploadMethod.DATA_POINT) {
-            uploadMeasurementAsDataPoint(measurement);
-          }
-
-          // check if this measurement has a separate file to be uploaded
-          if (measurement.data is FileData) {
-            var fileData = measurement.data as FileData;
-            if (fileData.upload) uploadFile(fileData);
-          }
-        }
-      }
-
-      // if everything is uploaded successfully, then commit the transaction
-      buffer.commit();
-    } catch (error) {
-      warning('$runtimeType - data upload failed - $error');
+    // try {
+    // authenticated to CAWS and fast exit if not successful
+    if (await user == null) {
+      warning('User cannot be authenticated - username: ${carpEndPoint.email}');
+      // return;
     }
-  }
 
-  /// Transform [measurement] to a [DataPoint] and upload it to CAWS using the
-  /// DataPoint endpoint.
-  Future<void> uploadMeasurementAsDataPoint(Measurement measurement) async {
-    final dataPoint = DataPoint(
-      DataPointHeader(
-        studyId: deployment.studyDeploymentId,
-        userId: deployment.userId,
-        dataFormat: measurement.dataType,
-        deviceRoleName: measurement.taskControl?.targetDevice?.roleName ??
-            deployment.deviceConfiguration.roleName,
-        triggerId: measurement.taskControl?.triggerId.toString() ?? '0',
-        startTime:
-            DateTime.fromMicrosecondsSinceEpoch(measurement.sensorStartTime),
-        endTime: measurement.sensorEndTime == null
-            ? null
-            : DateTime.fromMicrosecondsSinceEpoch(measurement.sensorEndTime!),
-      ),
-      measurement.data,
+    final batches = await buffer.getDataStreamBatches(
+      carpEndPoint.deleteWhenUploaded,
     );
 
-    info('Uploading data point to CAWS - ${dataPoint.carpHeader.dataFormat}');
-    CarpService().getDataPointReference().post(dataPoint);
+    if (carpEndPoint.uploadMethod == CarpUploadMethod.DATA_STREAM) {
+      CarpDataStreamService().appendToDataStreams(
+        studyDeploymentId,
+        batches,
+      );
+      addEvent(
+          DataManagerEvent(CarpDataManagerEventTypes.data_stream_appended));
+    } else if (carpEndPoint.uploadMethod == CarpUploadMethod.DATA_POINT) {
+      uploadDataStreamBatchesAsDataPoint(
+        batches,
+      );
+      addEvent(DataManagerEvent(
+          CarpDataManagerEventTypes.data_points_batch_uploaded));
+    }
+
+    // check if any measurement has a separate file to be uploaded
+    for (var batch in batches) {
+      for (var measurement in batch.measurements) {
+        if (measurement.data is FileData) {
+          var fileData = measurement.data as FileData;
+          if (fileData.upload) uploadFile(fileData);
+        }
+      }
+    }
+
+    // if everything is uploaded successfully, then commit the transaction
+    await buffer.commit();
+
+    // } catch (error) {
+    //   warning('$runtimeType - data upload failed - $error');
+    // }
+  }
+
+  DataPointReference? _datePointReference;
+  DataPointReference get datePointReference {
+    if (_datePointReference == null)
+      _datePointReference = CarpService().getDataPointReference();
+    return _datePointReference!;
+  }
+
+  /// Transform all measurements in all [batches] to [DataPoint]s and upload
+  /// them to CAWS using the DataPoint batch upload endpoint.
+  Future<void> uploadDataStreamBatchesAsDataPoint(
+    List<DataStreamBatch> batches,
+  ) async {
+    final List<DataPoint> dataPoints = [];
+    for (var batch in batches) {
+      for (var measurement in batch.measurements) {
+        var dataPoint = DataPoint(
+          DataPointHeader(
+            studyId: deployment.studyDeploymentId,
+            userId: deployment.userId,
+            dataFormat: measurement.dataType,
+            deviceRoleName: measurement.taskControl?.targetDevice?.roleName ??
+                deployment.deviceConfiguration.roleName,
+            triggerId: measurement.taskControl?.triggerId.toString() ?? '0',
+            startTime:
+                DateTime.fromMicrosecondsSinceEpoch(measurement.sensorStartTime)
+                    .toUtc(),
+            endTime: measurement.sensorEndTime == null
+                ? null
+                : DateTime.fromMicrosecondsSinceEpoch(
+                        measurement.sensorEndTime!)
+                    .toUtc(),
+          ),
+          measurement.data,
+        );
+        dataPoints.add(dataPoint);
+      }
+    }
+
+    info('Batch uploading data points to CAWS - N=${dataPoints.length}');
+    datePointReference.batch(dataPoints);
   }
 
   /// Upload a file attachment to CAWS, i.e. one that is referenced
@@ -246,8 +248,10 @@ class CarpDataManager extends AbstractDataManager {
       CarpFileResponse response = await uploadTask.onComplete;
       int id = response.id;
 
-      addEvent(CarpDataManagerEvent(CarpDataManagerEventTypes.file_uploaded,
-          file.path, id, uploadTask.reference.fileEndpointUri));
+      addEvent(DataManagerEvent(
+        CarpDataManagerEventTypes.file_uploaded,
+        file.path,
+      ));
       info("$runtimeType - File upload to CAWS finished - server id : $id ");
 
       // delete the local file once uploaded?
@@ -265,26 +269,28 @@ class CarpDataManager extends AbstractDataManager {
   }
 }
 
-/// A status event for this CARP data manager.
-/// See [CarpDataManagerEventTypes] for a list of possible event types.
-class CarpDataManagerEvent extends DataManagerEvent {
-  /// The full path and filename for the file on the device.
-  String path;
+// /// A status event for this CARP data manager.
+// /// See [CarpDataManagerEventTypes] for a list of possible event types.
+// class CarpDataManagerEvent extends DataManagerEvent {
+//   /// The full path and filename for the file on the device.
+//   String path;
 
-  /// The ID of the file on the CARP server, if provided.
-  /// `null` if not available from the server.
-  int? id;
+//   /// The ID of the file on the CARP server, if provided.
+//   /// `null` if not available from the server.
+//   int? id;
 
-  /// The URI of the file on the CARP server.
-  String fileEndpointUri;
+//   /// The URI of the file on the CARP server.
+//   String fileEndpointUri;
 
-  CarpDataManagerEvent(super.type, this.path, this.id, this.fileEndpointUri);
+//   CarpDataManagerEvent(super.type, this.path, this.id, this.fileEndpointUri);
 
-  String toString() =>
-      'CarpDataManagerEvent - type: $type, path: $path, id: $id, fileEndpointUri: $fileEndpointUri';
-}
+//   String toString() =>
+//       'CarpDataManagerEvent - type: $type, path: $path, id: $id, fileEndpointUri: $fileEndpointUri';
+// }
 
 /// An enumeration of file data manager event types
-class CarpDataManagerEventTypes extends FileDataManagerEventTypes {
+class CarpDataManagerEventTypes extends DataManagerEventTypes {
+  static const String data_points_batch_uploaded = 'data_points_batch_uploaded';
+  static const String data_stream_appended = 'data_stream_appended';
   static const String file_uploaded = 'file_uploaded';
 }

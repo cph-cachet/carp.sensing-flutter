@@ -1,0 +1,79 @@
+[
+ {
+  "carp_header": {
+   "start_time": "2023-03-10T09:48:10.106490Z",
+   "data_format": {
+    "namespace": "dk.cachet.carp",
+    "name": "ambientlight"
+   }
+  },
+  "carp_body": {
+   "__type": "dk.cachet.carp.ambientlight",
+   "meanLux": 23,
+   "stdLux": 0.4,
+   "minLux": 0.3,
+   "maxLux": 12
+  }
+ },
+ {
+  "carp_header": {
+   "start_time": "2023-03-10T09:48:10.106834Z",
+   "data_format": {
+    "namespace": "dk.cachet.carp",
+    "name": "ambientlight"
+   }
+  },
+  "carp_body": {
+   "__type": "dk.cachet.carp.ambientlight",
+   "meanLux": 23,
+   "stdLux": 0.4,
+   "minLux": 0.3,
+   "maxLux": 12
+  }
+ },
+ {
+  "carp_header": {
+   "start_time": "2023-03-10T09:48:10.106847Z",
+   "data_format": {
+    "namespace": "dk.cachet.carp",
+    "name": "deviceinformation"
+   }
+  },
+  "carp_body": {
+   "__type": "dk.cachet.carp.deviceinformation",
+   "platform": "Android",
+   "deviceId": "12345jE",
+   "deviceData": {}
+  }
+ },
+ {
+  "carp_header": {
+   "start_time": "2023-03-10T09:48:10.106851Z",
+   "data_format": {
+    "namespace": "dk.cachet.carp",
+    "name": "deviceinformation"
+   }
+  },
+  "carp_body": {
+   "__type": "dk.cachet.carp.deviceinformation",
+   "platform": "Android",
+   "deviceId": "12345jE",
+   "deviceData": {}
+  }
+ },
+ {
+  "carp_header": {
+   "start_time": "2023-03-10T09:48:10.106855Z",
+   "data_format": {
+    "namespace": "dk.cachet.carp",
+    "name": "deviceinformation"
+   }
+  },
+  "carp_body": {
+   "__type": "dk.cachet.carp.deviceinformation",
+   "platform": "Android",
+   "deviceId": "12345jE",
+   "deviceData": {}
+  }
+ }
+]

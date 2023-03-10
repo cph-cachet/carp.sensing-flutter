@@ -502,6 +502,24 @@ Map<String, dynamic> _$FunctionTaskToJson(FunctionTask instance) {
   return val;
 }
 
+NoOpTrigger _$NoOpTriggerFromJson(Map<String, dynamic> json) => NoOpTrigger()
+  ..$type = json['__type'] as String?
+  ..sourceDeviceRoleName = json['sourceDeviceRoleName'] as String?;
+
+Map<String, dynamic> _$NoOpTriggerToJson(NoOpTrigger instance) {
+  final val = <String, dynamic>{};
+
+  void writeNotNull(String key, dynamic value) {
+    if (value != null) {
+      val[key] = value;
+    }
+  }
+
+  writeNotNull('__type', instance.$type);
+  writeNotNull('sourceDeviceRoleName', instance.sourceDeviceRoleName);
+  return val;
+}
+
 ImmediateTrigger _$ImmediateTriggerFromJson(Map<String, dynamic> json) =>
     ImmediateTrigger()
       ..$type = json['__type'] as String?

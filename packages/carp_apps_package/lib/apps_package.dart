@@ -44,7 +44,12 @@ class AppsSamplingPackage extends SmartphoneSamplingPackage {
   List<Permission> get permissions => []; // no permission needed
 
   @override
-  void onRegister() {} // does nothing for this device sampling package
+  void onRegister() {
+    FromJsonFactory().registerAll([
+      Apps([]),
+      AppUsage(DateTime.now(), DateTime.now()),
+    ]);
+  }
 
   /// Default samplings schema for:
   ///  * [APP_USAGE] - one day back in time.

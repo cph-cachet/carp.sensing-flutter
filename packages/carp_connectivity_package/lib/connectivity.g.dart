@@ -8,7 +8,8 @@ part of connectivity;
 
 Connectivity _$ConnectivityFromJson(Map<String, dynamic> json) => Connectivity()
   ..$type = json['__type'] as String?
-  ..connectivityStatus = json['connectivityStatus'] as String;
+  ..connectivityStatus =
+      $enumDecode(_$ConnectivityStatusEnumMap, json['connectivityStatus']);
 
 Map<String, dynamic> _$ConnectivityToJson(Connectivity instance) {
   final val = <String, dynamic>{};
@@ -20,9 +21,20 @@ Map<String, dynamic> _$ConnectivityToJson(Connectivity instance) {
   }
 
   writeNotNull('__type', instance.$type);
-  val['connectivityStatus'] = instance.connectivityStatus;
+  val['connectivityStatus'] =
+      _$ConnectivityStatusEnumMap[instance.connectivityStatus]!;
   return val;
 }
+
+const _$ConnectivityStatusEnumMap = {
+  ConnectivityStatus.bluetooth: 'bluetooth',
+  ConnectivityStatus.wifi: 'wifi',
+  ConnectivityStatus.ethernet: 'ethernet',
+  ConnectivityStatus.mobile: 'mobile',
+  ConnectivityStatus.none: 'none',
+  ConnectivityStatus.vpn: 'vpn',
+  ConnectivityStatus.unknown: 'unknown',
+};
 
 Bluetooth _$BluetoothFromJson(Map<String, dynamic> json) => Bluetooth(
       startScan: json['startScan'] == null

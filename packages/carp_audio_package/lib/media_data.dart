@@ -37,8 +37,10 @@ class Media extends FileData {
     id = Uuid().v1();
   }
 
-  factory Media.fromJson(Map<String, dynamic> json) => _$MediaFromJson(json);
-
+  @override
+  Function get fromJsonFunction => _$MediaFromJson;
+  factory Media.fromJson(Map<String, dynamic> json) =>
+      FromJsonFactory().fromJson(json) as Media;
   @override
   Map<String, dynamic> toJson() => _$MediaToJson(this);
 
@@ -73,8 +75,10 @@ class Noise extends Data {
     required this.maxDecibel,
   }) : super();
 
-  factory Noise.fromJson(Map<String, dynamic> json) => _$NoiseFromJson(json);
-
+  @override
+  Function get fromJsonFunction => _$NoiseFromJson;
+  factory Noise.fromJson(Map<String, dynamic> json) =>
+      FromJsonFactory().fromJson(json) as Noise;
   @override
   Map<String, dynamic> toJson() => _$NoiseToJson(this);
 

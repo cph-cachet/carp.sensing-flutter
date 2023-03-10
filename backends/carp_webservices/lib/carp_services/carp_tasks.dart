@@ -69,7 +69,7 @@ class FileUploadTask extends CarpServiceTask {
     metadata['size'] = (await file.length()).toString();
     request.fields['metadata'] = json.encode(metadata);
 
-    request.files.add(MultipartFileRecreatable.fromFileSync(file.path));
+    request.files.add(ClonableMultipartFile.fromFileSync(file.path));
 
     print('files # : ${request.files.length}');
 

@@ -54,6 +54,9 @@ class ExecutorFactory {
               "Using an 'ImmediateTriggerExecutor' instead.");
           executor = ImmediateTriggerExecutor();
           break;
+        case NoOpTrigger:
+          executor = NoOpTriggerExecutor();
+          break;
         case ImmediateTrigger:
           executor = ImmediateTriggerExecutor();
           break;

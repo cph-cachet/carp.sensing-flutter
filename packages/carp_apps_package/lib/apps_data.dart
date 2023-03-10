@@ -16,8 +16,10 @@ class Apps extends Data {
 
   Apps(this.installedApps) : super();
 
-  factory Apps.fromJson(Map<String, dynamic> json) => _$AppsFromJson(json);
-
+  @override
+  Function get fromJsonFunction => _$AppsFromJson;
+  factory Apps.fromJson(Map<String, dynamic> json) =>
+      FromJsonFactory().fromJson(json) as Apps;
   @override
   Map<String, dynamic> toJson() => _$AppsToJson(this);
 
@@ -131,9 +133,10 @@ class AppUsage extends Data {
 
   AppUsage(this.start, this.end, [this.usage = const {}]) : super();
 
+  @override
+  Function get fromJsonFunction => _$AppUsageFromJson;
   factory AppUsage.fromJson(Map<String, dynamic> json) =>
-      _$AppUsageFromJson(json);
-
+      FromJsonFactory().fromJson(json) as AppUsage;
   @override
   Map<String, dynamic> toJson() => _$AppUsageToJson(this);
 

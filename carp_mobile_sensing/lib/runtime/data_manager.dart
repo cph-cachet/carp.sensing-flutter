@@ -57,11 +57,14 @@ class DataManagerEvent {
   /// The event type, see [DataManagerEventTypes].
   String type;
 
+  /// What is this event about?
+  String? message;
+
   /// Create a [DataManagerEvent].
-  DataManagerEvent(this.type);
+  DataManagerEvent(this.type, [this.message]);
 
   @override
-  String toString() => 'DataManagerEvent - type: $type';
+  String toString() => 'DataManagerEvent - type: $type, message: $message';
 }
 
 /// An enumeration of data manager event types.

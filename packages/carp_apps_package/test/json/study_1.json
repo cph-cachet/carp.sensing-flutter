@@ -1,12 +1,13 @@
 {
-  "id": "bd5e1f60-8220-11ed-8d71-190419919ffd",
-  "createdOn": "2022-12-22T17:47:44.598993Z",
+  "id": "58fd0a30-be76-11ed-a68a-a540167fb0ec",
+  "createdOn": "2023-03-09T12:31:42.675250Z",
+  "version": 0,
   "ownerId": "alex@uni.dk",
   "name": "Apps package test",
   "primaryDevices": [
     {
       "__type": "dk.cachet.carp.common.application.devices.Smartphone",
-      "roleName": "primaryphone",
+      "roleName": "Primary Phone",
       "defaultSamplingConfiguration": {},
       "isPrimaryDevice": true
     }
@@ -16,7 +17,7 @@
   "tasks": [
     {
       "__type": "dk.cachet.carp.common.application.tasks.BackgroundTask",
-      "name": "Task #5",
+      "name": "Task #6",
       "measures": [
         {
           "__type": "dk.cachet.carp.common.application.tasks.Measure.DataStream",
@@ -29,6 +30,10 @@
         {
           "__type": "dk.cachet.carp.common.application.tasks.Measure.DataStream",
           "type": "dk.cachet.carp.batterystate"
+        },
+        {
+          "__type": "dk.cachet.carp.common.application.tasks.Measure.DataStream",
+          "type": "dk.cachet.carp.screenevent"
         },
         {
           "__type": "dk.cachet.carp.common.application.tasks.Measure.DataStream",
@@ -72,14 +77,14 @@
   "triggers": {
     "0": {
       "__type": "dk.cachet.carp.common.application.triggers.ImmediateTrigger",
-      "sourceDeviceRoleName": "primaryphone"
+      "sourceDeviceRoleName": "Primary Phone"
     }
   },
   "taskControls": [
     {
       "triggerId": 0,
-      "taskName": "Task #5",
-      "destinationDeviceRoleName": "primaryphone",
+      "taskName": "Task #6",
+      "destinationDeviceRoleName": "Primary Phone",
       "control": "Start"
     }
   ],

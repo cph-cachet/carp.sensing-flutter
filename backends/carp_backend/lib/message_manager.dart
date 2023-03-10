@@ -37,7 +37,7 @@ class Message {
   ///
   /// * URL - if the image path starts with http(s)://... the image is loaded
   ///         from the internet using the `Image.network()` constructor.
-  /// * Asset - othervise, it is assumed that this is the path to a local image
+  /// * Asset - otherwise, it is assumed that this is the path to a local image
   ///           asset and the image is loaded from the asset bundle using the
   ///           `Image.asset()` constructor.
   String? imagePath;

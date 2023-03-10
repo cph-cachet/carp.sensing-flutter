@@ -25,9 +25,10 @@ class Activity extends Data {
         confidence: _confidenceLevelMap[activity.confidence] ?? 0,
       );
 
+  @override
+  Function get fromJsonFunction => _$ActivityFromJson;
   factory Activity.fromJson(Map<String, dynamic> json) =>
-      _$ActivityFromJson(json);
-
+      FromJsonFactory().fromJson(json) as Activity;
   @override
   Map<String, dynamic> toJson() => _$ActivityToJson(this);
 

@@ -102,9 +102,10 @@ class Location extends Geolocation {
     provider = location.provider;
   }
 
+  @override
+  Function get fromJsonFunction => _$LocationFromJson;
   factory Location.fromJson(Map<String, dynamic> json) =>
-      _$LocationFromJson(json);
-
+      FromJsonFactory().fromJson(json) as Location;
   @override
   Map<String, dynamic> toJson() => _$LocationToJson(this);
 

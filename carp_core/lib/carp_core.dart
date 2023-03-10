@@ -17,9 +17,11 @@ export 'protocols/carp_core_protocols.dart';
 
 part 'carp_core.json.dart';
 
-/// Start class for this carp_core library. Just create a singleton instance:
+/// Base class for the carp_core library.
 ///
-///    Core();
+/// In order to ensure initialization of json serialization, call:
+///
+///    Core.ensureInitialized();
 ///
 class Core {
   static final _instance = Core._();
@@ -27,4 +29,9 @@ class Core {
   Core._() {
     _registerFromJsonFunctions();
   }
+
+  /// Returns a the singleton instance of [CarpMobileSensing].
+  /// If it has not yet been initialized, this call makes sure to create and
+  /// initialize it.
+  static Core ensureInitialized() => _instance;
 }

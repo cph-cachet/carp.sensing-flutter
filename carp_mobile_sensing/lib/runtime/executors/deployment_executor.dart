@@ -29,14 +29,11 @@ class SmartphoneDeploymentExecutor
     group.add(_manualMeasurementController.stream);
 
     for (var taskControl in configuration!.taskControls) {
-      // get the trigger based on the trigger id
-      TriggerConfiguration trigger =
-          configuration!.triggers['${taskControl.triggerId}']!;
-      // get the task based on the task name
-      TaskConfiguration task =
-          configuration!.getTaskByName(taskControl.taskName)!;
+      // get the trigger and task based on the trigger id and task name
+      final trigger = configuration!.triggers['${taskControl.triggerId}']!;
+      final task = configuration!.getTaskByName(taskControl.taskName)!;
 
-      TaskControlExecutor executor = ExecutorFactory().getTaskControlExecutor(
+      final executor = ExecutorFactory().getTaskControlExecutor(
         taskControl,
         trigger,
         task,
@@ -62,22 +59,11 @@ class SmartphoneDeploymentExecutor
     return true;
   }
 
-  // /// Get the aggregated stream of [DataPoint] data sampled by all executors
-  // /// and probes in this study deployment.
-  // ///
-  // /// Ensures that the `userId` and `studyId` is correctly set in the
-  // /// [DataPointHeader] based on the [deployment] configuration.
-  // @override
-  // Stream<Measurements> get measurements => group.stream;
-  // .map((measurement) => measurement
-  //   ..carpHeader.studyId = deployment?.studyDeploymentId
-  //   ..carpHeader.userId = deployment?.userId);
-
-  /// Add a [DataPoint] object to the stream of events.
+  /// Add [measurement] to the stream of [measurements].
   void addMeasurement(Measurement measurement) =>
       _manualMeasurementController.add(measurement);
 
-  /// Add a error to the stream of events.
+  /// Add error to the stream of [measurements].
   void addError(Object error, [StackTrace? stacktrace]) =>
       _manualMeasurementController.addError(error, stacktrace);
 

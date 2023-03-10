@@ -78,6 +78,12 @@ class ESenseSamplingPackage implements SamplingPackage {
   @override
   void onRegister() {
     FromJsonFactory().register(ESenseDevice());
+
+    // register all data types
+    FromJsonFactory().registerAll([
+      ESenseButton(deviceName: 'deviceName', pressed: true),
+      ESenseSensor(deviceName: 'deviceName'),
+    ]);
   }
 
   @override

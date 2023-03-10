@@ -6,6 +6,20 @@
  */
 part of domain;
 
+/// A trigger that does nothing.
+@JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
+class NoOpTrigger extends TriggerConfiguration {
+  /// Create a trigger that starts sampling immediately and never stops.
+  NoOpTrigger() : super();
+
+  @override
+  Function get fromJsonFunction => _$NoOpTriggerFromJson;
+  factory NoOpTrigger.fromJson(Map<String, dynamic> json) =>
+      FromJsonFactory().fromJson(json) as NoOpTrigger;
+  @override
+  Map<String, dynamic> toJson() => _$NoOpTriggerToJson(this);
+}
+
 /// A trigger that starts sampling immediately and never stops.
 @JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
 class ImmediateTrigger extends TriggerConfiguration {

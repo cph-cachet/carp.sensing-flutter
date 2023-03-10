@@ -38,9 +38,10 @@ class ESenseButton extends ESenseData {
           String deviceName, ButtonEventChanged event) =>
       ESenseButton(deviceName: '', pressed: event.pressed);
 
+  @override
+  Function get fromJsonFunction => _$ESenseButtonFromJson;
   factory ESenseButton.fromJson(Map<String, dynamic> json) =>
-      _$ESenseButtonFromJson(json);
-
+      FromJsonFactory().fromJson(json) as ESenseButton;
   @override
   Map<String, dynamic> toJson() => _$ESenseButtonToJson(this);
 
@@ -87,9 +88,10 @@ class ESenseSensor extends ESenseData {
           gyro: event.gyro,
           accel: event.accel);
 
+  @override
+  Function get fromJsonFunction => _$ESenseSensorFromJson;
   factory ESenseSensor.fromJson(Map<String, dynamic> json) =>
-      _$ESenseSensorFromJson(json);
-
+      FromJsonFactory().fromJson(json) as ESenseSensor;
   @override
   Map<String, dynamic> toJson() => _$ESenseSensorToJson(this);
 

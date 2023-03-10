@@ -55,6 +55,13 @@ class ConnectivitySamplingPackage extends SmartphoneSamplingPackage {
 
   @override
   void onRegister() {
+    // register all data types
+    FromJsonFactory().registerAll([
+      Connectivity(),
+      Bluetooth(),
+      Wifi(),
+    ]);
+
     // registering default privacy functions
     TransformerSchemaRegistry()
         .lookup(PrivacySchema.DEFAULT)!

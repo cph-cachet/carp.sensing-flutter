@@ -25,14 +25,7 @@ abstract class PolarData extends SensorData {
 /// Polar (x,y,z) values.
 @JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
 class PolarXYZ {
-  ///  value
-  final double x;
-
-  /// Y value
-  final double y;
-
-  /// Z value
-  final double z;
+  final double x, y, z;
 
   PolarXYZ(this.x, this.y, this.z);
 
@@ -94,7 +87,7 @@ class PolarPPISample {
         super();
 
   factory PolarPPISample.fromJson(Map<String, dynamic> json) =>
-      _$PolarPPISampleFromJson(json);
+      FromJsonFactory().fromJson(json) as PolarPPISample;
   Map<String, dynamic> toJson() => _$PolarPPISampleToJson(this);
 }
 
@@ -118,9 +111,10 @@ class PolarAccelerometer extends PolarData {
             data.samples.map((xyz) => PolarXYZ.fromPolarData(xyz)).toList(),
         super.fromPolarData(data.identifier, data.timeStamp);
 
+  @override
+  Function get fromJsonFunction => _$PolarAccelerometerFromJson;
   factory PolarAccelerometer.fromJson(Map<String, dynamic> json) =>
-      _$PolarAccelerometerFromJson(json);
-
+      FromJsonFactory().fromJson(json) as PolarAccelerometer;
   @override
   Map<String, dynamic> toJson() => _$PolarAccelerometerToJson(this);
 
@@ -148,9 +142,10 @@ class PolarGyroscope extends PolarData {
             data.samples.map((xyz) => PolarXYZ.fromPolarData(xyz)).toList(),
         super.fromPolarData(data.identifier, data.timeStamp);
 
+  @override
+  Function get fromJsonFunction => _$PolarGyroscopeFromJson;
   factory PolarGyroscope.fromJson(Map<String, dynamic> json) =>
-      _$PolarGyroscopeFromJson(json);
-
+      FromJsonFactory().fromJson(json) as PolarGyroscope;
   @override
   Map<String, dynamic> toJson() => _$PolarGyroscopeToJson(this);
 
@@ -175,9 +170,10 @@ class PolarMagnetometer extends PolarData {
             data.samples.map((xyz) => PolarXYZ.fromPolarData(xyz)).toList(),
         super.fromPolarData(data.identifier, data.timeStamp);
 
+  @override
+  Function get fromJsonFunction => _$PolarMagnetometerFromJson;
   factory PolarMagnetometer.fromJson(Map<String, dynamic> json) =>
-      _$PolarMagnetometerFromJson(json);
-
+      FromJsonFactory().fromJson(json) as PolarMagnetometer;
   @override
   Map<String, dynamic> toJson() => _$PolarMagnetometerToJson(this);
 
@@ -200,9 +196,10 @@ class PolarECG extends PolarData {
       : samples = data.samples,
         super.fromPolarData(data.identifier, data.timeStamp);
 
+  @override
+  Function get fromJsonFunction => _$PolarECGFromJson;
   factory PolarECG.fromJson(Map<String, dynamic> json) =>
-      _$PolarECGFromJson(json);
-
+      FromJsonFactory().fromJson(json) as PolarECG;
   @override
   Map<String, dynamic> toJson() => _$PolarECGToJson(this);
 
@@ -234,9 +231,10 @@ class PolarPPG extends PolarData {
         type = data.type,
         super.fromPolarData(data.identifier, data.timeStamp);
 
+  @override
+  Function get fromJsonFunction => _$PolarPPGFromJson;
   factory PolarPPG.fromJson(Map<String, dynamic> json) =>
-      _$PolarPPGFromJson(json);
-
+      FromJsonFactory().fromJson(json) as PolarPPG;
   @override
   Map<String, dynamic> toJson() => _$PolarPPGToJson(this);
 
@@ -262,9 +260,10 @@ class PolarPPI extends PolarData {
             .toList(),
         super.fromPolarData(data.identifier, data.timeStamp);
 
+  @override
+  Function get fromJsonFunction => _$PolarPPIFromJson;
   factory PolarPPI.fromJson(Map<String, dynamic> json) =>
-      _$PolarPPIFromJson(json);
-
+      FromJsonFactory().fromJson(json) as PolarPPI;
   @override
   Map<String, dynamic> toJson() => _$PolarPPIToJson(this);
 
@@ -313,9 +312,10 @@ class PolarHR extends PolarData {
         contactStatusSupported = data.contactStatusSupported,
         super.fromPolarData(identifier);
 
+  @override
+  Function get fromJsonFunction => _$PolarHRFromJson;
   factory PolarHR.fromJson(Map<String, dynamic> json) =>
-      _$PolarHRFromJson(json);
-
+      FromJsonFactory().fromJson(json) as PolarHR;
   @override
   Map<String, dynamic> toJson() => _$PolarHRToJson(this);
 

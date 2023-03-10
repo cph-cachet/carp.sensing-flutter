@@ -66,6 +66,9 @@ abstract class SchedulableTriggerExecutor<TConfig extends TriggerConfiguration>
   List<DateTime> getSchedule(DateTime from, DateTime to, [int max]);
 }
 
+/// Executes an [NoOpTrigger], i.e. does nothing.
+class NoOpTriggerExecutor extends TriggerExecutor<TriggerConfiguration> {}
+
 /// Executes an [ImmediateTrigger], i.e. starts sampling immediately.
 class ImmediateTriggerExecutor extends TriggerExecutor<TriggerConfiguration> {
   @override

@@ -11,10 +11,10 @@ final HTTPRetry httpr = HTTPRetry();
 
 /// A MultipartFile class which support cloning of the file for re-submission
 /// of POST request.
-class MultipartFileRecreatable extends http.MultipartFile {
+class ClonableMultipartFile extends http.MultipartFile {
   final String filePath;
 
-  MultipartFileRecreatable(
+  ClonableMultipartFile(
     this.filePath,
     super.field,
     super.stream,
@@ -23,15 +23,15 @@ class MultipartFileRecreatable extends http.MultipartFile {
     super.contentType,
   });
 
-  /// Creates a new [MultipartFileRecreatable] from a file specified by
+  /// Creates a new [ClonableMultipartFile] from a file specified by
   /// the [filePath].
-  factory MultipartFileRecreatable.fromFileSync(String filePath) {
+  factory ClonableMultipartFile.fromFileSync(String filePath) {
     final file = File(filePath);
     final length = file.lengthSync();
     final stream = file.openRead();
     var name = file.path.split('/').last;
 
-    return MultipartFileRecreatable(
+    return ClonableMultipartFile(
       filePath,
       'file',
       stream,
@@ -40,9 +40,26 @@ class MultipartFileRecreatable extends http.MultipartFile {
     );
   }
 
-  /// Make a clone of this [MultipartFileRecreatable].
-  MultipartFileRecreatable clone() =>
-      MultipartFileRecreatable.fromFileSync(filePath);
+  // /// Creates a new [MultipartFile] from a string.
+  // ///
+  // /// The encoding to use when translating [value] into bytes is taken from
+  // /// [contentType] if it has a charset set. Otherwise, it defaults to UTF-8.
+  // /// [contentType] currently defaults to `text/plain; charset=utf-8`, but in
+  // /// the future may be inferred from [filename].
+  // factory MultipartFileRecreatable.fromString(String field, String value) {
+  //   contentType ??= MediaType('text', 'plain');
+  //   var encoding = encodingForCharset(contentType.parameters['charset'], utf8);
+  //   contentType = contentType.change(parameters: {'charset': encoding.name});
+
+  //   return MultipartFile.fromBytes(field, encoding.encode(value),
+  //       filename: filename, contentType: contentType);
+  // }
+
+  /// Make a clone of this [ClonableMultipartFile].
+  ClonableMultipartFile clone() => ClonableMultipartFile.fromFileSync(filePath);
+
+  /// Cleanup this [ClonableMultipartFile], i.e., deleting the buffer.
+  void cleanup() => File(filePath).deleteSync();
 }
 
 /// A class wrapping all HTTP operations (GET, POST, PUT, DELETE) in a retry manner.
@@ -74,7 +91,7 @@ class HTTPRetry {
         sending.fields.addAll(request.fields);
 
         request.files.forEach((file) {
-          if (file is MultipartFileRecreatable) {
+          if (file is ClonableMultipartFile) {
             sending.files.add(file.clone());
           }
         });

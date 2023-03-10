@@ -32,7 +32,7 @@ void main() async {
 
   protocol
     ..addPrimaryDevice(phone)
-    ..addConnectedDevice(polar);
+    ..addConnectedDevice(polar, phone);
 
   // Add a background task that immediately starts collecting step counts,
   //ambient light, screen activity, and battery level from the phone.

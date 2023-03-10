@@ -2,76 +2,87 @@ part of carp_mobile_sensing;
 
 bool _fromJsonFunctionsRegistrered = false;
 
-// Register all the fromJson functions for the domain classes.
+/// Register all the fromJson functions for the domain classes.
 void _registerFromJsonFunctions() {
   if (_fromJsonFunctionsRegistrered) return;
 
   // Protocol classes
-  FromJsonFactory().register(StudyResponsible(
-    id: '',
-    title: '',
-    address: '',
-    affiliation: '',
-    email: '',
-    name: '',
-  ));
-  FromJsonFactory().register(DataEndPoint(type: ''));
-  FromJsonFactory().register(FileDataEndPoint());
-  FromJsonFactory().register(SQLiteDataEndPoint());
-  FromJsonFactory().register(StudyDescription(
-    title: '',
-    description: '',
-    purpose: '',
-  ));
+  FromJsonFactory().registerAll([
+    StudyResponsible(
+      id: '',
+      title: '',
+      address: '',
+      affiliation: '',
+      email: '',
+      name: '',
+    ),
+    DataEndPoint(type: ''),
+    FileDataEndPoint(),
+    SQLiteDataEndPoint(),
+    StudyDescription(
+      title: '',
+      description: '',
+      purpose: '',
+    )
+  ]);
 
   // Task classes
-  FromJsonFactory().register(AppTask(type: 'ignored'));
-  FromJsonFactory().register(FunctionTask());
+  FromJsonFactory().registerAll([AppTask(type: ''), FunctionTask()]);
 
   // Trigger classes
-  FromJsonFactory().register(ImmediateTrigger());
-  FromJsonFactory().register(OneTimeTrigger());
-  FromJsonFactory().register(DelayedTrigger(delay: Duration()));
-  FromJsonFactory().register(PeriodicTrigger(period: Duration()));
-  // FromJsonFactory().register(PeriodicTrigger(
-  //   period: Duration(),
-  //   duration: Duration(),
-  // ));
-  FromJsonFactory().register(DateTimeTrigger(schedule: DateTime.now()));
-  FromJsonFactory().register(RecurrentScheduledTrigger(
-    type: RecurrentType.daily,
-    time: TimeOfDay(),
-  ));
-  FromJsonFactory().register(SamplingEventTrigger(measureType: ''));
-  FromJsonFactory().register(ConditionalPeriodicTrigger(period: Duration()));
-  FromJsonFactory().register(ConditionalSamplingEventTrigger(measureType: ''));
-  FromJsonFactory().register(CronScheduledTrigger());
-  FromJsonFactory().register(RandomRecurrentTrigger(
-    startTime: TimeOfDay(hour: 1),
-    endTime: TimeOfDay(hour: 2),
-  ));
-  FromJsonFactory().register(UserTaskTrigger(
-    taskName: 'ignored',
-    triggerCondition: UserTaskState.done,
-  ));
+  FromJsonFactory().registerAll([
+    NoOpTrigger(),
+    ImmediateTrigger(),
+    OneTimeTrigger(),
+    DelayedTrigger(delay: Duration()),
+    PeriodicTrigger(period: Duration()),
+    DateTimeTrigger(schedule: DateTime.now()),
+    RecurrentScheduledTrigger(
+      type: RecurrentType.daily,
+      time: TimeOfDay(),
+    ),
+    SamplingEventTrigger(measureType: ''),
+    ConditionalPeriodicTrigger(period: Duration()),
+    ConditionalSamplingEventTrigger(measureType: ''),
+    CronScheduledTrigger(),
+    RandomRecurrentTrigger(
+      startTime: TimeOfDay(hour: 1),
+      endTime: TimeOfDay(hour: 2),
+    ),
+    UserTaskTrigger(
+      taskName: 'ignored',
+      triggerCondition: UserTaskState.done,
+    )
+  ]);
 
   // Data classes
-  FromJsonFactory().register(Acceleration());
+  FromJsonFactory().registerAll([
+    Coverage(frequency: 1),
+    DeviceInformation(),
+    BatteryState(),
+    FreeMemory(),
+    ScreenEvent(),
+    Timezone(''),
+    AmbientLight()
+  ]);
 
   // Sampling Configuration classes
-  FromJsonFactory().register(PersistentSamplingConfiguration());
-  FromJsonFactory().register(HistoricSamplingConfiguration());
-  FromJsonFactory()
-      .register(IntervalSamplingConfiguration(interval: Duration.zero));
-  FromJsonFactory().register(PeriodicSamplingConfiguration(
-    interval: Duration.zero,
-    duration: Duration.zero,
-  ));
-  FromJsonFactory().register(BatteryAwareSamplingConfiguration(
-    normal: PersistentSamplingConfiguration(),
-    low: PersistentSamplingConfiguration(),
-    critical: PersistentSamplingConfiguration(),
-  ));
+  FromJsonFactory().registerAll([
+    PersistentSamplingConfiguration(),
+    HistoricSamplingConfiguration(),
+    IntervalSamplingConfiguration(
+      interval: Duration.zero,
+    ),
+    PeriodicSamplingConfiguration(
+      interval: Duration.zero,
+      duration: Duration.zero,
+    ),
+    BatteryAwareSamplingConfiguration(
+      normal: PersistentSamplingConfiguration(),
+      low: PersistentSamplingConfiguration(),
+      critical: PersistentSamplingConfiguration(),
+    )
+  ]);
 
   // AppTaskController classes
   // FromJsonFactory().register(UserTaskSnapshotList());
@@ -85,5 +96,6 @@ void _registerFromJsonFunctions() {
     '',
     '',
   ));
+
   _fromJsonFunctionsRegistrered = true;
 }

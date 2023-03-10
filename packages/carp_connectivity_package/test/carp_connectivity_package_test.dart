@@ -89,7 +89,8 @@ void main() {
     print(toJsonString(measurement));
   });
   test('Connectivity  -> JSON', () async {
-    Connectivity data = Connectivity()..connectivityStatus = "WiFi";
+    Connectivity data = Connectivity()
+      ..connectivityStatus = ConnectivityStatus.bluetooth;
 
     final measurement = Measurement.fromData(data);
 

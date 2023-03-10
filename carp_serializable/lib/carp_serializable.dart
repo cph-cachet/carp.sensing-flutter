@@ -182,7 +182,9 @@ class FromJsonFactory {
     if (!_registry.containsKey(type)) {
       throw SerializationException(
           "A 'fromJson' function was not found in the FromJsonFactory for the type '$type'. "
-          "Register a Serializable class using the 'FromJsonFactory().register()' method.");
+          "Register a Serializable class using the 'FromJsonFactory().register()' method."
+          "\nIf you are using CARP Mobile Sensing, you can ensure json initialization by calling"
+          "'CarpMobileSensing.ensureInitialized()' as part of your main method.");
     }
     var fromJson = Function.apply(_registry[type!]!, [json]);
     if (fromJson is Serializable) {
