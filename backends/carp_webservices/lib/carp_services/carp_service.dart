@@ -238,6 +238,33 @@ class CarpService extends CarpBaseService {
     );
   }
 
+  Future<OAuthToken> authenticateByRefreshToken(String refreshToken) async {
+    final loginBody = {
+      "refresh_token": "$refreshToken",
+      "grant_type": "refresh_token",
+    };
+
+    final http.Response response = await httpr.post(
+      Uri.encodeFull(authEndpointUri),
+      headers: _authenticationHeader,
+      body: loginBody,
+    );
+
+    int httpStatusCode = response.statusCode;
+    Map<String, dynamic> responseJson = json.decode(response.body);
+    if (httpStatusCode == HttpStatus.ok) {
+      OAuthToken refreshedToken = OAuthToken.fromMap(responseJson);
+      _authEventController.add(AuthEvent.refreshed);
+      return refreshedToken;
+    }
+
+    _authEventController.add(AuthEvent.failed);
+    throw CarpServiceException(
+      httpStatus: HTTPStatus(httpStatusCode, response.reasonPhrase),
+      message: responseJson["error_description"],
+    );
+  }
+
   /// The URL for sending email about a forgotten password.
   String get forgottenPasswordEmailUri =>
       "${_app!.uri}/api/users/forgotten-password/send";
@@ -332,7 +359,6 @@ class CarpService extends CarpBaseService {
       message: responseJson["error_description"],
     );
   }
-
 
   /// Change the password of the current user.
   ///
