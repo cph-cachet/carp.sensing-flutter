@@ -20,7 +20,7 @@ class A extends Serializable {
   Map<String, dynamic> toJson() => _$AToJson(this);
 }
 
-/// Another example class that inherets from A.
+/// Another example class that inherits from A.
 @JsonSerializable()
 class B extends A {
   String? str;

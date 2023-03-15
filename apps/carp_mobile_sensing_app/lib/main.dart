@@ -51,7 +51,7 @@ void main() async {
   // Initialize the bloc, setting the deployment mode.
   await bloc.initialize(
     deploymentMode: DeploymentMode.local,
-    deploymentId: testDeploymentId,
+    // deploymentId: testDeploymentId,
     useCachedStudyDeployment: false,
     resumeSensingOnStartup: false,
   );

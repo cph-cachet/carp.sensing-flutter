@@ -72,7 +72,7 @@ The `fromJsonFunction` must be registered on app startup (before use of de-seria
  FromJsonFactory().register(A());
 ```
 
-For this purpose it is helpful to have an empty constructor, but any constructur will work, since only the `fromJsonFunction` function is used.
+For this purpose it is helpful to have an empty constructor, but any constructor will work, since only the `fromJsonFunction` function is used.
 
 Polymorphic serialization is handled by setting the `__type` property in the `Serializable` class. Per default, an object's `runtimeType` is used as the
  `__type` for an object. Hence, the json of object of type `A` and `B` would

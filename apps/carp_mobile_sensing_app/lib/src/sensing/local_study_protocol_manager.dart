@@ -1,4 +1,3 @@
-
 /*
  * Copyright 2019-2022 Copenhagen Center for Health Technology (CACHET) at the
  * Technical University of Denmark (DTU).
@@ -37,22 +36,22 @@ class LocalStudyProtocolManager implements StudyProtocolManager {
           name: 'Alex B. Christensen',
         ));
 
-    // protocol.dataEndPoint = (bloc.deploymentMode == DeploymentMode.local)
-    //     ? SQLiteDataEndPoint()
-    //     : CarpDataEndPoint(
-    //         uploadMethod: CarpUploadMethod.DATA_POINT,
-    //       );
+    protocol.dataEndPoint = (bloc.deploymentMode == DeploymentMode.local)
+        ? SQLiteDataEndPoint()
+        : CarpDataEndPoint(
+            uploadMethod: CarpUploadMethod.DATA_POINT,
+          );
 
     // TODO - for testing - remove later
-    protocol.dataEndPoint = CarpDataEndPoint(
-      uploadMethod: CarpUploadMethod.DATA_POINT,
-      uri: uri,
-      clientId: clientID,
-      clientSecret: clientSecret,
-      email: username,
-      password: password,
-      uploadInterval: 1,
-    );
+    // protocol.dataEndPoint = CarpDataEndPoint(
+    //   uploadMethod: CarpUploadMethod.DATA_POINT,
+    //   uri: uri,
+    //   clientId: clientID,
+    //   clientSecret: clientSecret,
+    //   email: username,
+    //   password: password,
+    //   uploadInterval: 1,
+    // );
 
     // set the format of the data to upload - e.g. Open mHealth
     protocol.dataEndPoint!.dataFormat = bloc.dataFormat;

@@ -119,14 +119,11 @@ import 'package:json_annotation/json_annotation.dart';
 ///
 abstract class Serializable {
   /// The identifier of the class type in JSON serialization.
-  static const String CLASS_IDENTIFIER = '\__type';
-
-  // was used in carp_core v. < 1.0.0
-  // static const String CLASS_IDENTIFIER = '\$type';
+  static const String CLASS_IDENTIFIER = '__type';
 
   /// The runtime class name (type) of this object.
   /// Used for deserialization from JSON objects.
-  @JsonKey(name: '__type')
+  @JsonKey(name: CLASS_IDENTIFIER)
   String? $type;
 
   /// Create an object that can be serialized to JSON.
