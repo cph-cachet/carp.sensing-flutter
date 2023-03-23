@@ -92,7 +92,7 @@ class PrimaryDeviceDeployment {
   /// The time when this device deployment was last updated.
   /// This corresponds to the most recent device registration as part of this
   /// device deployment.
-  DateTime get lastUpdateDate => registration.registrationCreatedOn;
+  DateTime get lastUpdatedOn => registration.registrationCreatedOn;
 
   factory PrimaryDeviceDeployment.fromJson(Map<String, dynamic> json) =>
       _$PrimaryDeviceDeploymentFromJson(json);
@@ -115,6 +115,16 @@ class DeviceDeploymentStatus extends Serializable {
   /// Determines whether the device can be deployed by retrieving [PrimaryDeviceDeployment].
   /// Not all primary devices necessarily need deployment; chained primary devices do not.
   bool? canBeDeployed = false;
+
+  /// Determines whether the device requires a device deployment, and if so,
+  /// whether the deployment configuration (to initialize the device environment)
+  /// can be obtained.
+  /// This requires the specified device and all other primary devices it depends
+  /// on to be registered.
+  bool get canObtainDeviceDeployment =>
+      (_status == DeviceDeploymentStatusTypes.Deployed ||
+          (_status == DeviceDeploymentStatusTypes.NotDeployed &&
+              remainingDevicesToRegisterToObtainDeployment!.isEmpty));
 
   /// The role names of devices which need to be registered before the deployment
   /// information for this device can be obtained.
@@ -174,6 +184,9 @@ class DeviceDeploymentStatus extends Serializable {
 
 /// The types of device deployment status.
 enum DeviceDeploymentStatusTypes {
+  /// A device deployment status which indicates the correct deployment has not been deployed yet.
+  NotDeployed,
+
   /// Device deployment status for when a device has not been registered.
   Unregistered,
 

@@ -12,15 +12,29 @@ part of carp_core_deployment;
 abstract class DeploymentService {
   static const String API_VERSION = "1.1";
 
-  /// Create a new [StudyDeployment] based on a [StudyProtocol].
-  /// [studyDeploymentId] specifies the study deployment id.
-  /// If not specified, an UUID v1 id is generated.
+  /// Instantiate a study deployment for a given [StudyProtocol] with participants
+  /// defined in [invitations].
+  ///
+  /// The identities specified in the invitations are used to invite and authenticate
+  /// the participants. In case no account is associated to an identity, a new
+  /// account is created for it.
+  /// An invitation (and account details) is delivered to the person managing
+  /// the identity, or should be handed out manually to the relevant participant
+  /// by the person managing the identity.
+  ///
+  /// [id] specifies the study deployment id. If not specified, an UUID v1 id
+  /// is generated.
+  /// [connectedDevicePreregistrations] lists optional pre-registrations for
+  /// connected devices in the study [protocol].
   Future<StudyDeploymentStatus> createStudyDeployment(
-    StudyProtocol protocol, [
-    String? studyDeploymentId,
+    StudyProtocol protocol,
+    List<ParticipantInvitation> invitations, [
+    String? id,
+    Map<String, DeviceRegistration>? connectedDevicePreregistrations,
   ]);
 
   /// Remove study deployments with the given [studyDeploymentIds].
+  /// This also removes all data related to the study deployments.
   ///
   /// Returns the IDs of study deployments which were removed (empty set
   /// if none were removed).
@@ -34,7 +48,8 @@ abstract class DeploymentService {
 
   /// Get the statuses for a set of deployments with the specified [studyDeploymentIds].
   Future<List<StudyDeploymentStatus>> getStudyDeploymentStatusList(
-      List<String> studyDeploymentIds);
+    List<String> studyDeploymentIds,
+  );
 
   /// Register the device with the specified [deviceRoleName] for the study
   /// deployment with [studyDeploymentId].
@@ -83,6 +98,7 @@ abstract class DeploymentService {
   );
 
   /// Permanently stop the study deployment with the specified [studyDeploymentId].
+  ///
   /// No further changes to this deployment will be allowed and no more data
   /// can be collected and uploaded to a [DataStreamService].
   /// Returns null if [studyDeploymentId] is not found.

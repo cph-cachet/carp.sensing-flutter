@@ -9,6 +9,7 @@ import 'package:uuid/uuid.dart';
 
 export 'carp_core_common.dart';
 
+part 'application/account.dart';
 part 'infrastructure/service_request.dart';
 part 'application/users.dart';
 part 'application/measure.dart';

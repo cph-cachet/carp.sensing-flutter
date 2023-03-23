@@ -69,7 +69,7 @@ class DataType {
 /// and uploading [Data].
 ///
 /// Currently know namespaces include:
-/// * `dk.cachet.carp`   : CACHET Research Platform (CARP)
+/// * `dk.cachet.carp`   : Copenhagen Research Platform (CARP)
 /// * `org.openmhealth`  : Open mHealth (OMH)
 /// * `org.hl7.fhir`     : Health Level 7 Fast Healthcare Interoperability Resources (HL7 FHIR)
 class NameSpace {

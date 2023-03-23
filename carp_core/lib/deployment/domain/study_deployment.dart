@@ -274,6 +274,10 @@ class StudyDeploymentStatus extends Serializable {
   /// time (all devices deployed); null otherwise.
   DateTime? startedOn;
 
+  /// Get the status of a [device] in this study deployment.
+  DeviceDeploymentStatus getDeviceStatus(DeviceConfiguration device) =>
+      deviceStatusList.firstWhere((status) => status.device == device);
+
   /// The [DeviceDeploymentStatus] for the primary device of this deployment,
   /// which is typically this phone.
   ///

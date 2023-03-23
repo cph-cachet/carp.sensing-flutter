@@ -39,6 +39,10 @@ enum StudyStatus {
   /// The study deployment process hasn't been started yet.
   DeploymentNotStarted,
 
+  /// Once a deployment for this study has started, and [StudyRuntime.status] is
+  /// available, regardless of whether the deployment is now [Running] or [Stopped].
+  DeploymentStatusAvailable,
+
   /// The study deployment process is ongoing, but not yet completed.
   Deploying,
 
@@ -66,4 +70,7 @@ enum StudyStatus {
 
   /// The study has been stopped, either by this client or researcher.
   Stopped,
+
+  /// The study deployment is not available.
+  DeploymentNotAvailable,
 }

@@ -6,6 +6,75 @@ part of carp_core_common;
 // JsonSerializableGenerator
 // **************************************************************************
 
+Account _$AccountFromJson(Map<String, dynamic> json) => Account(
+      id: json['id'] as String?,
+      identity:
+          AccountIdentity.fromJson(json['identity'] as Map<String, dynamic>),
+    );
+
+Map<String, dynamic> _$AccountToJson(Account instance) => <String, dynamic>{
+      'identity': instance.identity,
+      'id': instance.id,
+    };
+
+AccountIdentity _$AccountIdentityFromJson(Map<String, dynamic> json) =>
+    AccountIdentity()..$type = json['__type'] as String?;
+
+Map<String, dynamic> _$AccountIdentityToJson(AccountIdentity instance) {
+  final val = <String, dynamic>{};
+
+  void writeNotNull(String key, dynamic value) {
+    if (value != null) {
+      val[key] = value;
+    }
+  }
+
+  writeNotNull('__type', instance.$type);
+  return val;
+}
+
+EmailAccountIdentity _$EmailAccountIdentityFromJson(
+        Map<String, dynamic> json) =>
+    EmailAccountIdentity(
+      json['emailAddress'] as String,
+    )..$type = json['__type'] as String?;
+
+Map<String, dynamic> _$EmailAccountIdentityToJson(
+    EmailAccountIdentity instance) {
+  final val = <String, dynamic>{};
+
+  void writeNotNull(String key, dynamic value) {
+    if (value != null) {
+      val[key] = value;
+    }
+  }
+
+  writeNotNull('__type', instance.$type);
+  val['emailAddress'] = instance.emailAddress;
+  return val;
+}
+
+UsernameAccountIdentity _$UsernameAccountIdentityFromJson(
+        Map<String, dynamic> json) =>
+    UsernameAccountIdentity(
+      json['username'] as String,
+    )..$type = json['__type'] as String?;
+
+Map<String, dynamic> _$UsernameAccountIdentityToJson(
+    UsernameAccountIdentity instance) {
+  final val = <String, dynamic>{};
+
+  void writeNotNull(String key, dynamic value) {
+    if (value != null) {
+      val[key] = value;
+    }
+  }
+
+  writeNotNull('__type', instance.$type);
+  val['username'] = instance.username;
+  return val;
+}
+
 ParticipantRole _$ParticipantRoleFromJson(Map<String, dynamic> json) =>
     ParticipantRole(
       json['role'] as String,
@@ -228,8 +297,9 @@ const _$ControlEnumMap = {
   Control.Stop: 'Stop',
 };
 
-DeviceConfiguration _$DeviceConfigurationFromJson(Map<String, dynamic> json) =>
-    DeviceConfiguration(
+DeviceConfiguration<TRegistration> _$DeviceConfigurationFromJson<
+        TRegistration extends DeviceRegistration>(Map<String, dynamic> json) =>
+    DeviceConfiguration<TRegistration>(
       roleName: json['roleName'] as String,
       isOptional: json['isOptional'] as bool?,
       supportedDataTypes: (json['supportedDataTypes'] as List<dynamic>?)
@@ -243,7 +313,9 @@ DeviceConfiguration _$DeviceConfigurationFromJson(Map<String, dynamic> json) =>
             k, SamplingConfiguration.fromJson(e as Map<String, dynamic>)),
       );
 
-Map<String, dynamic> _$DeviceConfigurationToJson(DeviceConfiguration instance) {
+Map<String, dynamic>
+    _$DeviceConfigurationToJson<TRegistration extends DeviceRegistration>(
+        DeviceConfiguration<TRegistration> instance) {
   final val = <String, dynamic>{};
 
   void writeNotNull(String key, dynamic value) {
@@ -261,9 +333,9 @@ Map<String, dynamic> _$DeviceConfigurationToJson(DeviceConfiguration instance) {
   return val;
 }
 
-PrimaryDeviceConfiguration _$PrimaryDeviceConfigurationFromJson(
-        Map<String, dynamic> json) =>
-    PrimaryDeviceConfiguration(
+PrimaryDeviceConfiguration<TRegistration> _$PrimaryDeviceConfigurationFromJson<
+        TRegistration extends DeviceRegistration>(Map<String, dynamic> json) =>
+    PrimaryDeviceConfiguration<TRegistration>(
       roleName: json['roleName'] as String,
       supportedDataTypes: (json['supportedDataTypes'] as List<dynamic>?)
           ?.map((e) => e as String)
@@ -278,8 +350,9 @@ PrimaryDeviceConfiguration _$PrimaryDeviceConfigurationFromJson(
       )
       ..isPrimaryDevice = json['isPrimaryDevice'] as bool;
 
-Map<String, dynamic> _$PrimaryDeviceConfigurationToJson(
-    PrimaryDeviceConfiguration instance) {
+Map<String, dynamic> _$PrimaryDeviceConfigurationToJson<
+        TRegistration extends DeviceRegistration>(
+    PrimaryDeviceConfiguration<TRegistration> instance) {
   final val = <String, dynamic>{};
 
   void writeNotNull(String key, dynamic value) {

@@ -1,6 +1,7 @@
 ## 1.1.0 - BREAKING
 
-* The first stable release of CARP cores which follows the [carp.core-kotlin](https://github.com/imotions/carp.core-kotlin) v. 1.1.0 domain model.
+* the first stable release of CARP cores which follows the [carp.core-kotlin](https://github.com/imotions/carp.core-kotlin) v. 1.1.0 domain model.
+* upgrade to [carp_serializable](https://pub.dev/packages/carp_serializable) v. 1.1.0
 
 ## 0.40.8
 

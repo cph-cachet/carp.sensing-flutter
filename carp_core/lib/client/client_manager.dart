@@ -8,8 +8,12 @@
 part of carp_core_client;
 
 /// Allows managing [StudyRuntime]s on a client device.
-class ClientManager<TPrimaryDevice extends PrimaryDeviceConfiguration,
+abstract class ClientManager<
+    TPrimaryDevice extends PrimaryDeviceConfiguration<TRegistration>,
     TRegistration extends DeviceRegistration> {
+  DeploymentService? _deploymentService;
+  DeviceDataCollectorFactory? _deviceController;
+
   /// Repository of [StudyRuntime] mapped to a [Study].
   Map<Study, StudyRuntime> repository = {};
 
@@ -21,12 +25,12 @@ class ClientManager<TPrimaryDevice extends PrimaryDeviceConfiguration,
 
   /// The application service through which study deployments, to be run on
   /// this client, can be managed and retrieved.
-  DeploymentService? deploymentService;
+  DeploymentService? get deploymentService => _deploymentService;
 
   /// The controller of connected devices used to collect data locally on
   /// this primary device. Also works as a factory which is used to create
   /// [DeviceDataCollector] instances for connected devices.
-  DeviceDataCollectorFactory? deviceController;
+  DeviceDataCollectorFactory? get deviceController => _deviceController;
 
   /// Determines whether a [DeviceRegistration] has been configured for this client,
   /// which is necessary to start adding [StudyRuntime]s.
@@ -34,8 +38,6 @@ class ClientManager<TPrimaryDevice extends PrimaryDeviceConfiguration,
       (deploymentService != null) &&
       (deviceController != null) &&
       (registration != null);
-
-  ClientManager();
 
   /// Configure this [ClientManager] by specifying:
   ///  * [deploymentService] - where to get study deployments
@@ -49,8 +51,8 @@ class ClientManager<TPrimaryDevice extends PrimaryDeviceConfiguration,
     TPrimaryDevice? configuration,
     TRegistration? registration,
   }) async {
-    this.deploymentService = deploymentService;
-    this.deviceController = deviceController;
+    this._deploymentService = deploymentService;
+    this._deviceController = deviceController;
     this.configuration = configuration;
     this.registration = registration;
   }
@@ -141,4 +143,11 @@ class ClientManager<TPrimaryDevice extends PrimaryDeviceConfiguration,
       await deploymentService?.stop(study.studyDeploymentId);
     }
   }
+}
+
+/// Allows managing studies on a smartphone.
+class SmartphoneClient extends ClientManager<
+    PrimaryDeviceConfiguration<SmartphoneDeviceRegistration>,
+    SmartphoneDeviceRegistration> {
+  SmartphoneClient();
 }

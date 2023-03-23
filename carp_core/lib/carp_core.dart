@@ -30,7 +30,7 @@ class Core {
     _registerFromJsonFunctions();
   }
 
-  /// Returns a the singleton instance of [CarpMobileSensing].
+  /// Returns the singleton instance of [Core].
   /// If it has not yet been initialized, this call makes sure to create and
   /// initialize it.
   static Core ensureInitialized() => _instance;

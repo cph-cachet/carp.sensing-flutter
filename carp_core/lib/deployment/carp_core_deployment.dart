@@ -4,7 +4,6 @@
 /// To start collecting data, participants need to be invited, devices need to
 /// be registered, and consent needs to be given to collect the requested data.
 ///
-///
 /// Contains the core deployment classes like [PrimaryDeviceDeployment], [StudyDeployment],
 /// [ParticipantData], and [DeploymentService].
 ///

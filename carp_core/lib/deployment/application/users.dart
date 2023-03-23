@@ -7,6 +7,35 @@
 
 part of carp_core_deployment;
 
+/// The information which needs to be provided when inviting a participant to a deployment.
+@JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
+class ParticipantInvitation {
+  // An ID for the participant, uniquely assigned by the calling service.
+  late String participantId;
+
+  /// The participant roles in the study protocol which the participant is assigned to.
+  AssignedTo assignedRoles;
+
+  /// The identity used to authenticate and invite the participant.
+  AccountIdentity identity;
+
+  /// A description of the study which is shared with the participant.
+  StudyInvitation invitation;
+
+  ParticipantInvitation({
+    String? participantId,
+    required this.assignedRoles,
+    required this.identity,
+    required this.invitation,
+  }) : super() {
+    this.participantId = participantId ?? const Uuid().v1();
+  }
+
+  factory ParticipantInvitation.fromJson(Map<String, dynamic> json) =>
+      _$ParticipantInvitationFromJson(json);
+  Map<String, dynamic> toJson() => _$ParticipantInvitationToJson(this);
+}
+
 /// Uniquely identifies the participation of an account in a study deployment.
 @JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
 class Participation {

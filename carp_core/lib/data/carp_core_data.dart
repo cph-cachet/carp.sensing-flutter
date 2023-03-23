@@ -1,8 +1,11 @@
-/// Contains the core data classes like [Data], [DataPoint],
-/// [DataFormat], and [DataType].
+/// Contains all pseudonymized data. When combined with the original study protocol,
+/// the full provenance of the data (when/why it was collected) is known.
 ///
-/// The the `carp.data` sub-system is not yet defined in the Kotlin implementation of
-/// carp_core.
+/// Contains the core data classes like [Measurement], [DataStreamBatch],
+/// [DataStreamId], and defines the API of a [DataStreamService].
+///
+/// See the [`carp-data`](https://github.com/cph-cachet/carp.core-kotlin/blob/develop/docs/carp-data.md)
+/// definition in Kotlin.
 library carp_core_data;
 
 import 'package:carp_core/common/carp_core_common.dart';

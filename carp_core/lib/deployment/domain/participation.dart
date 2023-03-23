@@ -47,26 +47,3 @@ class RoleData {
       _$RoleDataFromJson(json);
   Map<String, dynamic> toJson() => _$RoleDataToJson(this);
 }
-
-/// Identifies an [Account].
-abstract class AccountIdentity extends Serializable {
-  @override
-  String get jsonType => 'dk.cachet.carp.common.users.$runtimeType';
-}
-
-/// Identifies an [AccountIdentity] using an email address.
-@JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
-class EmailAccountIdentity extends AccountIdentity {
-  String emailAddress;
-  EmailAccountIdentity(this.emailAddress);
-
-  @override
-  Function get fromJsonFunction => _$EmailAccountIdentityFromJson;
-  factory EmailAccountIdentity.fromJson(Map<String, dynamic> json) =>
-      FromJsonFactory().fromJson(json) as EmailAccountIdentity;
-  @override
-  Map<String, dynamic> toJson() => _$EmailAccountIdentityToJson(this);
-
-  @override
-  String toString() => '$runtimeType - emailAddress: $emailAddress';
-}

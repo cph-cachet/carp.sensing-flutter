@@ -16,11 +16,12 @@ StudyProtocol _$StudyProtocolFromJson(Map<String, dynamic> json) =>
       ..createdOn = DateTime.parse(json['createdOn'] as String)
       ..version = json['version'] as int
       ..primaryDevices = (json['primaryDevices'] as List<dynamic>)
-          .map((e) =>
-              PrimaryDeviceConfiguration.fromJson(e as Map<String, dynamic>))
+          .map((e) => PrimaryDeviceConfiguration<DeviceRegistration>.fromJson(
+              e as Map<String, dynamic>))
           .toSet()
       ..connectedDevices = (json['connectedDevices'] as List<dynamic>?)
-          ?.map((e) => DeviceConfiguration.fromJson(e as Map<String, dynamic>))
+          ?.map((e) => DeviceConfiguration<DeviceRegistration>.fromJson(
+              e as Map<String, dynamic>))
           .toSet()
       ..connections = (json['connections'] as List<dynamic>?)
           ?.map((e) => DeviceConnection.fromJson(e as Map<String, dynamic>))

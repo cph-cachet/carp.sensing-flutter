@@ -95,7 +95,7 @@ class CarpDeploymentService extends CarpBaseService
     var deployment = PrimaryDeviceDeployment.fromJson(await _rpc(
         GetDeviceDeploymentFor(studyDeploymentId, primaryDeviceRoleName)));
 
-    // but converting it to a SmartphoneDeployment
+    // converting it to a SmartphoneDeployment
     return SmartphoneDeployment.fromPrimaryDeviceDeployment(
       studyDeploymentId: studyDeploymentId,
       deployment: deployment,

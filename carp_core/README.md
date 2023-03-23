@@ -15,4 +15,4 @@ This package does nothing on its own.
 
 * For documentation on how to use CAMS, see the [CAMS wiki](https://github.com/cph-cachet/carp.sensing-flutter/wiki).
 
-* For a thorough description of the CARP Core domain model, see the [carp.core-kotlin](https://github.com/cph-cachet/carp.core-kotlin) reprository. The [`example.dart`](https://pub.dev/packages/carp_core/example) of this package illustrates how the [Kotlin examples](https://github.com/cph-cachet/carp.core-kotlin#example) are implemented using Dart.
+* For a thorough description of the CARP Core domain model, see the [carp.core-kotlin](https://github.com/cph-cachet/carp.core-kotlin) repository. The [`example.dart`](https://pub.dev/packages/carp_core/example) of this package illustrates how the [Kotlin examples](https://github.com/cph-cachet/carp.core-kotlin#example) are implemented using Dart.

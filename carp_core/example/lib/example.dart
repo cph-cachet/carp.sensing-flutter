@@ -1,3 +1,5 @@
+import 'package:uuid/uuid.dart';
+
 import 'package:carp_core/carp_core.dart';
 import 'package:carp_serializable/carp_serializable.dart';
 
@@ -15,38 +17,45 @@ import 'package:carp_serializable/carp_serializable.dart';
 /// Example of how to use the **protocol** sub-system domain models
 void carpCoreProtocolExample() async {
   // Create a new study protocol.
-  StudyProtocol protocol = StudyProtocol(
+  var protocol = StudyProtocol(
     ownerId: 'owner@dtu.dk',
     name: 'Track patient movement',
   );
 
   // Define which devices are used for data collection.
-  Smartphone phone = Smartphone(roleName: 'phone');
+  var phone = Smartphone(roleName: "Patient's phone")
+    ..defaultSamplingConfiguration?[CarpDataTypes.GEOLOCATION_TYPE_NAME] =
+        GranularitySamplingConfiguration(Granularity.Balanced);
+
   protocol.addPrimaryDevice(phone);
 
   // Define what needs to be measured, on which device, when.
-  List<Measure> measures = [
-    Measure(type: Geolocation.dataType),
-    Measure(type: StepCount.dataType),
-  ];
-
-  TaskConfiguration startMeasures = BackgroundTask(
-    name: "Start measures",
-    measures: measures,
+  var trackMovement = BackgroundTask(
+    name: "Track movement",
+    measures: [
+      Measure(type: Geolocation.dataType),
+      Measure(type: StepCount.dataType),
+    ],
+    description: "Track activity level and number of places visited per day.",
   );
+
   protocol.addTaskControl(
-    TriggerConfiguration(sourceDeviceRoleName: phone.roleName),
-    startMeasures,
+    phone.atStartOfStudy,
+    trackMovement,
     phone,
     Control.Start,
   );
 
-  // JSON output of the study protocol, compatible with the rest of the CARP infrastructure.
-  String json = toJsonString(protocol.toJson());
-  print(json);
+  // JSON output of the study protocol, compatible with the rest of the
+  // CARP infrastructure.
+  var json = toJsonString(protocol.toJson());
 }
 
-/// Example of how to use the **deployment** sub-system domain models
+/// Example of how to use the **deployment** sub-system domain models.
+///
+/// Most calls to this subsystem are abstracted away by the 'studies' and
+/// 'clients' subsystems, so you wouldn't call its endpoints directly.
+/// Example code which is called when a study is created and accessed by a client.
 void carpCoreDeploymentExample() async {
   DeploymentService? deploymentService;
   StudyProtocol trackPatientStudy = StudyProtocol(
@@ -57,34 +66,53 @@ void carpCoreDeploymentExample() async {
       trackPatientStudy.primaryDevices.first as Smartphone;
 
   // This is called by `StudyService` when deploying a participant group.
-  StudyDeploymentStatus? status =
-      await deploymentService?.createStudyDeployment(trackPatientStudy);
-  String studyDeploymentId = status!.studyDeploymentId;
+  var invitation = ParticipantInvitation(
+      participantId: const Uuid().v1(),
+      assignedRoles: AssignedTo.all(),
+      identity: EmailAccountIdentity("test@test.com"),
+      invitation: StudyInvitation(
+          "Movement study", "This study tracks your movements."));
+
+  String studyDeploymentId = const Uuid().v1();
+  await deploymentService?.createStudyDeployment(
+    trackPatientStudy,
+    [invitation],
+    studyDeploymentId,
+  );
 
   // What comes after is similar to what is called by the client in `carp.client`:
-  // - Register the device to be deployed.
-  var registration = DeviceRegistration();
-  status = await deploymentService?.registerDevice(
-      studyDeploymentId, patientPhone.roleName, registration);
 
-  // - Retrieve information on what to run and indicate the device is ready to
-  //   collect the requested data.
-  DeviceDeploymentStatus? patientPhoneStatus = status?.primaryDeviceStatus;
-  if (patientPhoneStatus!.remainingDevicesToRegisterBeforeDeployment!
-      .isEmpty) // True since there are no dependent devices.
+  // Register the device to be deployed.
+  var registration = patientPhone.createRegistration(
+    deviceId: "xxxxxxxxx",
+    deviceDisplayName: "Pixel 6 Pro (Android 12)",
+  );
+  StudyDeploymentStatus? status = await deploymentService?.registerDevice(
+    studyDeploymentId,
+    patientPhone.roleName,
+    registration,
+  );
+
+  // Retrieve information on what to run and indicate the device is ready to
+  // collect the requested data.
+  DeviceDeploymentStatus? patientPhoneStatus =
+      status?.getDeviceStatus(patientPhone);
+
+  if (patientPhoneStatus!
+      .canObtainDeviceDeployment) // True since there are no dependent devices.
   {
     PrimaryDeviceDeployment? deploymentInformation = await deploymentService
         ?.getDeviceDeploymentFor(studyDeploymentId, patientPhone.roleName);
-    DateTime deploymentDate =
-        deploymentInformation!.lastUpdateDate ?? DateTime.now();
-    await deploymentService?.deviceDeployed(
-        studyDeploymentId, patientPhone.roleName, deploymentDate);
+
+    DateTime? deployedOn =
+        deploymentInformation?.lastUpdatedOn; // To verify correct deployment.
+    deploymentService?.deviceDeployed(
+        studyDeploymentId, patientPhone.roleName, deployedOn!);
   }
 
   // Now that all devices have been registered and deployed, the deployment is ready.
   status = await deploymentService?.getStudyDeploymentStatus(studyDeploymentId);
   var isReady = status?.status == StudyDeploymentStatusTypes.DeploymentReady;
-  assert(isReady, true);
 }
 
 /// Example of how to use the **data** sub-system domain models.
@@ -134,27 +162,28 @@ void carpCoreDataExample() async {
 /// Example of how to use the **client** sub-system domain models.
 ///
 /// Example initialization of a smartphone client for the participant that got
-/// invited to the study in the 'studies' code sample above:
+/// invited to a study.
 void carpCoreClientExample() async {
   ParticipationService? participationService;
   DeploymentService? deploymentService;
   DeviceDataCollectorFactory? deviceRegistry;
 
   // Retrieve invitation to participate in the study using a specific device.
+  Account account = Account.withEmailIdentity('jakba@dtu.dk');
   ActiveParticipationInvitation? invitation = (await participationService
-          ?.getActiveParticipationInvitations('accountId'))
+          ?.getActiveParticipationInvitations(account.id))
       ?.first;
   String? studyDeploymentId = invitation?.studyDeploymentId;
   String? deviceToUse = invitation?.assignedDevices?.first.device.roleName;
 
   // Create a study runtime for the study.
-  var client = ClientManager();
+  var client = SmartphoneClient();
   // Configure the client by specifying the deployment service, the device controller,
   // and a unique device id.
   client.configure(
       deploymentService: deploymentService!,
       deviceController: deviceRegistry!,
-      registration: DeviceRegistration(
+      registration: SmartphoneDeviceRegistration(
         deviceId: 'xxxxx',
         deviceDisplayName: "Pixel 6 Pro (Android 12)",
       ));

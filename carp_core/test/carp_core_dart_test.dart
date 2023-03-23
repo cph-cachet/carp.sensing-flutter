@@ -165,6 +165,25 @@ void main() {
   //   assert(dataPoint.carpBody != null);
   // });
 
+  test('Deployment', () async {
+    String studyDeploymentId = "c9cc5317-48da-45f2-958e-58bc07f34681";
+    DataStreamsConfiguration configuration = DataStreamsConfiguration(
+        studyDeploymentId: studyDeploymentId,
+        expectedDataStreams: {
+          ExpectedDataStream(
+            deviceRoleName: 'phone',
+            dataType: 'dk.cachet.carp.geolocation',
+          ),
+          ExpectedDataStream(
+            deviceRoleName: 'phone',
+            dataType: 'dk.cachet.carp.stepcount',
+          ),
+        });
+
+    print(toJsonString(configuration));
+    expect(configuration.expectedDataStreams, isNotEmpty);
+  });
+
   test('DataStreamsConfiguration -> JSON', () async {
     String studyDeploymentId = "c9cc5317-48da-45f2-958e-58bc07f34681";
     DataStreamsConfiguration configuration = DataStreamsConfiguration(

@@ -6,8 +6,9 @@
 /// from sensing logic.
 ///
 /// [ClientManager] is the main entry point into this subsystem.
-/// Concrete devices extend on it, e.g., the SmartphoneClient manages data collection on
-/// a smartphone and is implemented in [CARP Mobile Sensing](https://pub.dev/packages/carp_mobile_sensing).
+/// Concrete devices extend on it, e.g., the SmartphoneClient manages data
+/// collection on a smartphone and is implemented in
+/// [CARP Mobile Sensing](https://pub.dev/packages/carp_mobile_sensing).
 ///
 /// Contains the core client classes like [ClientManager], [DeviceDataCollectorFactory],
 /// [DeviceDataCollector], and [StudyRuntime].
@@ -27,7 +28,4 @@ export 'carp_core_client.dart';
 part 'client_manager.dart';
 part 'study_runtime.dart';
 part 'study.dart';
-part 'device_manager.dart';
-part 'datapoint.dart';
-
-// part 'carp_core_client.g.dart';
+part 'device_data_collector.dart';

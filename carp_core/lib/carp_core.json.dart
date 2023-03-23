@@ -98,7 +98,7 @@ void _registerFromJsonFunctions() {
     SetParticipantData(''),
     GetStudyDeploymentStatus(''),
     GetStudyDeploymentStatusList(['']),
-    RegisterDevice('', '', DeviceRegistration()),
+    RegisterDevice('', '', DefaultDeviceRegistration()),
     UnregisterDevice('', ''),
     GetDeviceDeploymentFor('', ''),
     DeviceDeployed('', '', DateTime.now()),

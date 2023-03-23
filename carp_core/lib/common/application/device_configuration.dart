@@ -12,7 +12,8 @@ part of carp_core_common;
 /// into the platform after it has been processed by a primary device (potentially itself).
 /// Optionally, a device can present output and receive user input.
 @JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
-class DeviceConfiguration extends Serializable {
+class DeviceConfiguration<TRegistration extends DeviceRegistration>
+    extends Serializable {
   static const DEVICE_NAMESPACE = 'dk.cachet.carp.common.application.devices';
 
   /// The device type identifier
@@ -20,8 +21,7 @@ class DeviceConfiguration extends Serializable {
   String get type => jsonType;
 
   /// A name which describes how the device participates within the study protocol;
-  /// it's 'role'.
-  /// For example, 'Parent's phone' or 'Child phone'.
+  /// it's 'role'. For example, 'Parent's phone' or 'Child phone'.
   String roleName;
 
   /// Determines whether device registration for this device is optional prior to
@@ -41,6 +41,20 @@ class DeviceConfiguration extends Serializable {
     this.supportedDataTypes,
   }) : super();
 
+  TRegistration? _registration = DefaultDeviceRegistration() as TRegistration;
+
+  /// Create a [DeviceRegistration] which can be used to configure this device
+  /// for deployment.
+  ///
+  /// Override this method to configure device-specific registration options, if any.
+  TRegistration createRegistration({
+    String? deviceId,
+    String? deviceDisplayName,
+  }) =>
+      DefaultDeviceRegistration(
+          deviceId: deviceId,
+          deviceDisplayName: deviceDisplayName) as TRegistration;
+
   @override
   String toString() =>
       '$runtimeType - roleName: $roleName, isOptional: $isOptional';
@@ -48,7 +62,7 @@ class DeviceConfiguration extends Serializable {
   @override
   Function get fromJsonFunction => _$DeviceConfigurationFromJson;
   factory DeviceConfiguration.fromJson(Map<String, dynamic> json) =>
-      FromJsonFactory().fromJson(json) as DeviceConfiguration;
+      FromJsonFactory().fromJson(json) as DeviceConfiguration<TRegistration>;
   @override
   Map<String, dynamic> toJson() => _$DeviceConfigurationToJson(this);
   @override
@@ -58,7 +72,8 @@ class DeviceConfiguration extends Serializable {
 /// A device which aggregates, synchronizes, and optionally uploads incoming
 /// data received from one or more connected devices (potentially just itself).
 @JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
-class PrimaryDeviceConfiguration extends DeviceConfiguration {
+class PrimaryDeviceConfiguration<TRegistration extends DeviceRegistration>
+    extends DeviceConfiguration<TRegistration> {
   PrimaryDeviceConfiguration({
     required super.roleName,
     super.supportedDataTypes,
@@ -69,10 +84,17 @@ class PrimaryDeviceConfiguration extends DeviceConfiguration {
   // devices or not (in the case of 'DeviceConfiguration' collections).
   bool isPrimaryDevice = true;
 
+  /// A trigger which fires immediately at the start of a study deployment.
+  TriggerConfiguration get atStartOfStudy => ElapsedTimeTrigger(
+        sourceDeviceRoleName: this.roleName,
+        elapsedTime: IsoDuration(),
+      );
+
   @override
   Function get fromJsonFunction => _$PrimaryDeviceConfigurationFromJson;
   factory PrimaryDeviceConfiguration.fromJson(Map<String, dynamic> json) =>
-      FromJsonFactory().fromJson(json) as PrimaryDeviceConfiguration;
+      FromJsonFactory().fromJson(json)
+          as PrimaryDeviceConfiguration<TRegistration>;
   @override
   Map<String, dynamic> toJson() => _$PrimaryDeviceConfigurationToJson(this);
 }
@@ -81,7 +103,7 @@ class PrimaryDeviceConfiguration extends DeviceConfiguration {
 /// Only used when downloading custom protocols from the CARP web service.
 @JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
 class CustomProtocolDevice extends PrimaryDeviceConfiguration {
-  /// The default rolename for a custom protocol device.
+  /// The default role name for a custom protocol device.
   static const String DEFAULT_ROLENAME = 'Custom device';
 
   /// Create a new [CustomProtocolDevice] device descriptor.
@@ -102,7 +124,8 @@ class CustomProtocolDevice extends PrimaryDeviceConfiguration {
 /// An internet-connected phone with built-in sensors.
 /// Typically this phone for a [StudyProtocol] running on this phone.
 @JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
-class Smartphone extends PrimaryDeviceConfiguration {
+class Smartphone
+    extends PrimaryDeviceConfiguration<SmartphoneDeviceRegistration> {
   /// The type of a smartphone primary device.
   static const String DEVICE_TYPE =
       '${DeviceConfiguration.DEVICE_NAMESPACE}.Smartphone';

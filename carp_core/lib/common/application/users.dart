@@ -65,10 +65,13 @@ class ParticipantAttribute extends Serializable {
 @JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
 class AssignedTo extends Serializable {
   /// Assign this to the specified [roleNames] in the study protocol.
-  /// If empty,  assign this to all participants in the study protocol.
+  /// If empty, assign this to all participants in the study protocol.
   Set<String> roleNames = {};
 
   AssignedTo({this.roleNames = const {}}) : super();
+
+  /// Assign to all participants in the study protocol.
+  AssignedTo.all() : this();
 
   @override
   Function get fromJsonFunction => _$AssignedToFromJson;

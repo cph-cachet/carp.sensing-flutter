@@ -9,13 +9,14 @@ part of carp_core_deployment;
 PrimaryDeviceDeployment _$PrimaryDeviceDeploymentFromJson(
         Map<String, dynamic> json) =>
     PrimaryDeviceDeployment(
-      deviceConfiguration: PrimaryDeviceConfiguration.fromJson(
-          json['deviceConfiguration'] as Map<String, dynamic>),
+      deviceConfiguration:
+          PrimaryDeviceConfiguration<DeviceRegistration>.fromJson(
+              json['deviceConfiguration'] as Map<String, dynamic>),
       registration: DeviceRegistration.fromJson(
           json['registration'] as Map<String, dynamic>),
       connectedDevices: (json['connectedDevices'] as List<dynamic>?)
-              ?.map((e) =>
-                  DeviceConfiguration.fromJson(e as Map<String, dynamic>))
+              ?.map((e) => DeviceConfiguration<DeviceRegistration>.fromJson(
+                  e as Map<String, dynamic>))
               .toSet() ??
           const {},
       connectedDeviceRegistrations: (json['connectedDeviceRegistrations']
@@ -76,8 +77,8 @@ Map<String, dynamic> _$PrimaryDeviceDeploymentToJson(
 DeviceDeploymentStatus _$DeviceDeploymentStatusFromJson(
         Map<String, dynamic> json) =>
     DeviceDeploymentStatus(
-      device:
-          DeviceConfiguration.fromJson(json['device'] as Map<String, dynamic>),
+      device: DeviceConfiguration<DeviceRegistration>.fromJson(
+          json['device'] as Map<String, dynamic>),
     )
       ..$type = json['__type'] as String?
       ..canBeDeployed = json['canBeDeployed'] as bool?
@@ -114,7 +115,7 @@ Map<String, dynamic> _$DeviceDeploymentStatusToJson(
 AssignedPrimaryDevice _$AssignedPrimaryDeviceFromJson(
         Map<String, dynamic> json) =>
     AssignedPrimaryDevice(
-      device: PrimaryDeviceConfiguration.fromJson(
+      device: PrimaryDeviceConfiguration<DeviceRegistration>.fromJson(
           json['device'] as Map<String, dynamic>),
       registration: json['registration'] == null
           ? null
@@ -210,26 +211,26 @@ Map<String, dynamic> _$RoleDataToJson(RoleData instance) => <String, dynamic>{
       'data': instance.data,
     };
 
-EmailAccountIdentity _$EmailAccountIdentityFromJson(
+ParticipantInvitation _$ParticipantInvitationFromJson(
         Map<String, dynamic> json) =>
-    EmailAccountIdentity(
-      json['emailAddress'] as String,
-    )..$type = json['__type'] as String?;
+    ParticipantInvitation(
+      participantId: json['participantId'] as String?,
+      assignedRoles:
+          AssignedTo.fromJson(json['assignedRoles'] as Map<String, dynamic>),
+      identity:
+          AccountIdentity.fromJson(json['identity'] as Map<String, dynamic>),
+      invitation:
+          StudyInvitation.fromJson(json['invitation'] as Map<String, dynamic>),
+    );
 
-Map<String, dynamic> _$EmailAccountIdentityToJson(
-    EmailAccountIdentity instance) {
-  final val = <String, dynamic>{};
-
-  void writeNotNull(String key, dynamic value) {
-    if (value != null) {
-      val[key] = value;
-    }
-  }
-
-  writeNotNull('__type', instance.$type);
-  val['emailAddress'] = instance.emailAddress;
-  return val;
-}
+Map<String, dynamic> _$ParticipantInvitationToJson(
+        ParticipantInvitation instance) =>
+    <String, dynamic>{
+      'participantId': instance.participantId,
+      'assignedRoles': instance.assignedRoles,
+      'identity': instance.identity,
+      'invitation': instance.invitation,
+    };
 
 Participation _$ParticipationFromJson(Map<String, dynamic> json) =>
     Participation(
