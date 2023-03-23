@@ -17,7 +17,8 @@ class StudyRuntime {
   final StreamController<StudyStatus> _statusEventsController =
       StreamController();
 
-  /// The unique device registration for this device. Set in the [configure] method.
+  /// The unique device registration for this device.
+  /// Set in the [configure] method.
   DeviceRegistration? get deviceRegistration => _deviceRegistration;
 
   /// The study for this study runtime.
@@ -74,14 +75,14 @@ class StudyRuntime {
   /// [deviceRegistry] to handle the devices used in this study deployment.
   StudyRuntime(this.deploymentService, this.deviceRegistry);
 
-  /// Configure this study runtime by specifying its [study] and [deviceRegistration].
+  /// Adds [study] this study runtime by specifying its [study] and [deviceRegistration].
   ///
   /// [deviceRegistration] is the device configuration for the device this study
-  /// runtime runs on, identified by [deviceRoleName] in the study deployment
-  /// with [studyDeploymentId].
+  /// runtime runs on, identified by [Study.deviceRoleName] in the study deployment
+  /// with [Study.studyDeploymentId].
   ///
   /// Call [tryDeployment] to subsequently deploy the study.
-  Future<void> configure(
+  Future<void> addStudy(
     Study study,
     DeviceRegistration deviceRegistration,
   ) async {

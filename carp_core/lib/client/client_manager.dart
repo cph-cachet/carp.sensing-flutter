@@ -17,9 +17,6 @@ abstract class ClientManager<
   /// Repository of [StudyRuntime] mapped to a [Study].
   Map<Study, StudyRuntime> repository = {};
 
-  /// The device configuration of this client.
-  TPrimaryDevice? configuration;
-
   /// The registration of this client.
   TRegistration? registration;
 
@@ -42,18 +39,15 @@ abstract class ClientManager<
   /// Configure this [ClientManager] by specifying:
   ///  * [deploymentService] - where to get study deployments
   ///  * [deviceController] that handles devices connected to this client
-  ///  * [configuration] - the primary device configuration for this client
   ///  * [registration] - a unique device registration for this client device
   @mustCallSuper
   Future<void> configure({
     required DeploymentService deploymentService,
     required DeviceDataCollectorFactory deviceController,
-    TPrimaryDevice? configuration,
     TRegistration? registration,
   }) async {
     this._deploymentService = deploymentService;
     this._deviceController = deviceController;
-    this.configuration = configuration;
     this.registration = registration;
   }
 
@@ -146,8 +140,7 @@ abstract class ClientManager<
 }
 
 /// Allows managing studies on a smartphone.
-class SmartphoneClient extends ClientManager<
-    PrimaryDeviceConfiguration<SmartphoneDeviceRegistration>,
-    SmartphoneDeviceRegistration> {
+class SmartphoneClient
+    extends ClientManager<Smartphone, SmartphoneDeviceRegistration> {
   SmartphoneClient();
 }

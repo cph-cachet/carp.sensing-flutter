@@ -27,8 +27,8 @@ abstract class DeploymentService {
   /// [connectedDevicePreregistrations] lists optional pre-registrations for
   /// connected devices in the study [protocol].
   Future<StudyDeploymentStatus> createStudyDeployment(
-    StudyProtocol protocol,
-    List<ParticipantInvitation> invitations, [
+    StudyProtocol protocol, [
+    List<ParticipantInvitation> invitations = const [],
     String? id,
     Map<String, DeviceRegistration>? connectedDevicePreregistrations,
   ]);

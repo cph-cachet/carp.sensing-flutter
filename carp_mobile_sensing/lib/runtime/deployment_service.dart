@@ -23,22 +23,21 @@ class SmartphoneDeploymentService implements DeploymentService {
   /// The device description for this phone.
   Smartphone thisPhone = Smartphone();
 
-  /// Create a new [StudyDeployment] based on a [StudyProtocol].
-  /// [studyDeploymentId] specifies the study deployment id.
-  /// If not specified, an UUID v1 id is generated.
   @override
   Future<StudyDeploymentStatus> createStudyDeployment(
     StudyProtocol protocol, [
-    String? studyDeploymentId,
+    List<ParticipantInvitation> invitations = const [],
+    String? id,
+    Map<String, DeviceRegistration>? connectedDevicePreregistrations,
   ]) async {
     assert(protocol is SmartphoneStudyProtocol,
         "$runtimeType only supports the deployment of protocols of type 'SmartphoneStudyProtocol'");
 
-    StudyDeployment deployment = StudyDeployment(protocol, studyDeploymentId);
+    StudyDeployment deployment = StudyDeployment(protocol, id);
     _repository[deployment.studyDeploymentId] = deployment;
 
-    // make sure to register this phone as a primary device
-    deployment.registerDevice(thisPhone, DeviceRegistration());
+    // always register this phone as a primary device
+    deployment.registerDevice(thisPhone, SmartphoneDeviceRegistration());
 
     // set the deployment status to "invited" as the initial status.
     deployment.status.status = StudyDeploymentStatusTypes.Invited;

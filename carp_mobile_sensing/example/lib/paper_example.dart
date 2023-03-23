@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:uuid/uuid.dart';
 import 'package:carp_serializable/carp_serializable.dart';
 import 'package:carp_core/carp_core.dart';
 import 'package:carp_mobile_sensing/carp_mobile_sensing.dart';
@@ -32,9 +33,16 @@ void sensing() async {
     Control.Start,
   );
 
+  var invitation = ParticipantInvitation(
+      participantId: const Uuid().v1(),
+      assignedRoles: AssignedTo.all(),
+      identity: EmailAccountIdentity("test@test.com"),
+      invitation: StudyInvitation(
+          "Movement study", "This study tracks your movements."));
+
   // deploy this protocol using the on-phone deployment service
-  StudyDeploymentStatus status =
-      await SmartphoneDeploymentService().createStudyDeployment(protocol);
+  StudyDeploymentStatus status = await SmartphoneDeploymentService()
+      .createStudyDeployment(protocol, [invitation]);
 
   // create and configure a client manager for this phone
   SmartPhoneClientManager client = SmartPhoneClientManager();

@@ -7,8 +7,7 @@
 
 part of runtime;
 
-class SmartPhoneClientManager
-    extends ClientManager<Smartphone, SmartphoneDeviceRegistration>
+class SmartPhoneClientManager extends SmartphoneClient
     with WidgetsBindingObserver {
   static final SmartPhoneClientManager _instance = SmartPhoneClientManager._();
   NotificationController? _notificationController;
@@ -44,20 +43,24 @@ class SmartPhoneClientManager
           as SmartphoneDeploymentController;
 
   /// Configure this [SmartPhoneClientManager] by specifying:
-  ///  * [deviceId] - this device's id in study deployments.
-  ///      If not specified, the OS's device id is used.
   ///  * [deploymentService] - where to get study deployments.
-  ///      If not specified, the [SmartphoneDeploymentService] will be used.
+  ///      If not specified, the local [SmartphoneDeploymentService] will be used.
   ///  * [deviceController] that handles devices connected to this client.
   ///      If not specified, the default [DeviceController] is used.
+  ///  * [registration] - a unique device registration for this client device.
+  ///      If not specified, a [SmartphoneDeviceRegistration] is created and used.
   ///  * [notificationController] - what [NotificationController] to use for notifications.
   ///     Two alternatives exists; [FlutterLocalNotificationController] or [AwesomeNotificationController].
   ///     If not specified, the [AwesomeNotificationController] is used.
+  ///  * [enableNotifications] - should notification be enabled and send to the
+  ///      user when an app task is triggered? Default is true.
+  ///  * [askForPermissions] - automatically ask for permissions for all sampling
+  ///      packages at once. Default to true. If you want the app to handle
+  ///      permissions, set this to false.
   @override
   Future<void> configure({
     DeploymentService? deploymentService,
     DeviceDataCollectorFactory? deviceController,
-    Smartphone? configuration,
     SmartphoneDeviceRegistration? registration,
     NotificationController? notificationController,
     bool enableNotifications = true,
@@ -103,7 +106,6 @@ class SmartPhoneClientManager
     super.configure(
       deploymentService: deploymentService,
       deviceController: deviceController,
-      configuration: configuration,
       registration: registration,
     );
 
@@ -138,7 +140,7 @@ class SmartPhoneClientManager
         SmartphoneDeploymentController(deploymentService!, deviceController);
     repository[study] = controller;
 
-    await controller.initialize(
+    await controller.addStudy(
       study,
       registration!,
     );

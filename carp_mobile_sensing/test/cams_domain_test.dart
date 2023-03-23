@@ -36,7 +36,7 @@ void main() {
 
     // Define which devices are used for data collection.
     primaryPhone = Smartphone();
-    eSense = DeviceConfiguration(roleName: 'esense');
+    eSense = DefaultDeviceConfiguration(roleName: 'eSense');
 
     primaryProtocol
       ..addPrimaryDevice(primaryPhone)
@@ -133,10 +133,10 @@ void main() {
     expect(primaryProtocol.ownerId, 'user@dtu.dk');
     expect(primaryProtocol.primaryDevices.length, 1);
     expect(primaryProtocol.connectedDevices?.length, 1);
-    expect(primaryProtocol.triggers.length, 7);
+    expect(primaryProtocol.triggers.length, 8);
     expect(primaryProtocol.triggers.keys.first, '0');
-    expect(primaryProtocol.tasks.length, 6);
-    expect(primaryProtocol.taskControls.length, 7);
+    expect(primaryProtocol.tasks.length, 7);
+    expect(primaryProtocol.taskControls.length, 8);
     expect(primaryProtocol.expectedParticipantData?.length, 1);
   });
 
@@ -177,10 +177,10 @@ void main() {
     print(toJsonString(deployment));
     expect(deployment.deviceConfiguration.roleName, 'phone');
     expect(deployment.connectedDevices.length, 1);
-    expect(deployment.triggers.length, 7);
+    expect(deployment.triggers.length, 8);
     expect(deployment.triggers.keys.first, '0');
-    expect(deployment.tasks.length, 6);
-    expect(deployment.taskControls.length, 7);
+    expect(deployment.tasks.length, 7);
+    expect(deployment.taskControls.length, 8);
     expect(deployment.dataEndPoint?.type, DataEndPointTypes.SQLITE);
     expect(deployment.expectedParticipantData.length, 1);
     expect(deployment.getApplicationData('uiTheme'), 'black');
@@ -216,10 +216,10 @@ void main() {
 
     expect(deployment.deviceConfiguration.roleName, 'phone');
     expect(deployment.connectedDevices.length, 1);
-    expect(deployment.triggers.length, 7);
+    expect(deployment.triggers.length, 8);
     expect(deployment.triggers.keys.first, '0');
-    expect(deployment.tasks.length, 6);
-    expect(deployment.taskControls.length, 7);
+    expect(deployment.tasks.length, 7);
+    expect(deployment.taskControls.length, 8);
     expect(deployment.dataEndPoint?.type, DataEndPointTypes.SQLITE);
     expect(deployment.expectedParticipantData.length, 1);
     expect(deployment.getApplicationData('uiTheme'), 'black');
@@ -413,30 +413,30 @@ void main() {
     StudyDeploymentStatus status_1 = await SmartphoneDeploymentService()
         .createStudyDeployment(primaryProtocol);
 
-    print(status_1);
     print(toJsonString(status_1));
-    // we expect the phone and esense devices
+    // we expect the phone and eSense devices
     expect(status_1.deviceStatusList.length, 2);
     expect(status_1.status, StudyDeploymentStatusTypes.Invited);
     expect(status_1.deviceStatusList[0].device.roleName,
         Smartphone.DEFAULT_ROLENAME);
-    // the phone as a primary device is always registred by the CAMSDeploymentService
+    // the phone as a primary device is always registered by the SmartphoneDeploymentService
     expect(status_1.deviceStatusList[0].status,
         DeviceDeploymentStatusTypes.Registered);
-    // but we do not expect the esense device to be registrered (yet)
-    expect(status_1.deviceStatusList[1].device.roleName, 'esense');
+    // but we do not expect the eSense device to be registered (yet)
+    expect(status_1.deviceStatusList[1].device.roleName, 'eSense');
     expect(status_1.deviceStatusList[1].status,
         DeviceDeploymentStatusTypes.Unregistered);
 
+    // now register the eSense device
     StudyDeploymentStatus? status_2 = await SmartphoneDeploymentService()
         .registerDevice(
-            status_1.studyDeploymentId, 'esense', DeviceRegistration());
+            status_1.studyDeploymentId, 'eSense', DefaultDeviceRegistration());
 
-    print(status_2);
     print(toJsonString(status_2));
     expect(status_2?.studyDeploymentId, status_1.studyDeploymentId);
-    expect(status_1.deviceStatusList[1].device.roleName, 'esense');
-    // now we expect the esense device to be registred
+    expect(status_1.deviceStatusList[1].device.roleName, 'eSense');
+
+    // now we expect the eSense device to be registered
     expect(status_1.deviceStatusList[1].status,
         DeviceDeploymentStatusTypes.Registered);
 
@@ -454,7 +454,6 @@ void main() {
         .deployed(status_1.studyDeploymentId);
     expect(status_3?.status, StudyDeploymentStatusTypes.DeploymentReady);
     expect(status_3?.studyDeploymentId, status_1.studyDeploymentId);
-    print(status_3);
     print(toJsonString(status_3));
     expect(
       status_3?.deviceStatusList[0].status,

@@ -7,39 +7,35 @@ void _registerFromJsonFunctions() {
   if (_fromJsonFunctionsRegistered) return;
 
   // DEPLOYMENT
+  FromJsonFactory().registerAll([
+    DefaultDeviceRegistration(),
+    AltBeaconDeviceRegistration(),
+    SmartphoneDeviceRegistration(),
+  ]);
+
+  // register all the different device deployment status types - see [DeviceDeploymentStatusTypes]
   final device = DefaultDeviceConfiguration(roleName: '');
-
-  // FromJsonFactory().register(DeviceConfiguration(roleName: ''));
-  // FromJsonFactory().register(device);
-  // FromJsonFactory().register(DeviceRegistration());
-  // FromJsonFactory().register(DeviceRegistration(),
-  //     type:
-  //         'dk.cachet.carp.common.application.devices.DefaultDeviceRegistration');
-  FromJsonFactory().register(DefaultDeviceRegistration());
-  FromJsonFactory().register(AltBeaconDeviceRegistration());
-  FromJsonFactory().register(SmartphoneDeviceRegistration());
-
   FromJsonFactory().register(DeviceDeploymentStatus(device: device));
-  FromJsonFactory().register(
-    DeviceDeploymentStatus(device: device),
-    type:
-        'dk.cachet.carp.deployments.application.DeviceDeploymentStatus.Unregistered',
-  );
-  FromJsonFactory().register(
-    DeviceDeploymentStatus(device: device),
-    type:
-        'dk.cachet.carp.deployments.application.DeviceDeploymentStatus.Registered',
-  );
-  FromJsonFactory().register(
-    DeviceDeploymentStatus(device: device),
-    type:
-        'dk.cachet.carp.deployments.application.DeviceDeploymentStatus.Deployed',
-  );
+  FromJsonFactory().register(DeviceDeploymentStatus(device: device),
+      type:
+          'dk.cachet.carp.deployments.application.DeviceDeploymentStatus.NotDeployed');
+  FromJsonFactory().register(DeviceDeploymentStatus(device: device),
+      type:
+          'dk.cachet.carp.deployments.application.DeviceDeploymentStatus.Unregistered');
+  FromJsonFactory().register(DeviceDeploymentStatus(device: device),
+      type:
+          'dk.cachet.carp.deployments.application.DeviceDeploymentStatus.Registered');
+  FromJsonFactory().register(DeviceDeploymentStatus(device: device),
+      type:
+          'dk.cachet.carp.deployments.application.DeviceDeploymentStatus.Deployed');
+  FromJsonFactory().register(DeviceDeploymentStatus(device: device),
+      type:
+          'dk.cachet.carp.deployments.application.DeviceDeploymentStatus.Running');
   FromJsonFactory().register(DeviceDeploymentStatus(device: device),
       type:
           'dk.cachet.carp.deployments.application.DeviceDeploymentStatus.NeedsRedeployment');
 
-  // StudyDeploymentStatus - note that this can have different sub-types
+  // register all the different study deployment status types - see [StudyDeploymentStatus]
   FromJsonFactory().register(StudyDeploymentStatus(studyDeploymentId: ''));
   FromJsonFactory().register(StudyDeploymentStatus(studyDeploymentId: ''),
       type:
@@ -131,7 +127,6 @@ void _registerFromJsonFunctions() {
   ]);
 
   // DATA TYPES
-
   FromJsonFactory().registerAll([
     Data(),
     // SensorData(),

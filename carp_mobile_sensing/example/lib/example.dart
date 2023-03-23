@@ -194,7 +194,8 @@ void example_2() async {
   // use the on-phone deployment service
   DeploymentService deploymentService = SmartphoneDeploymentService();
 
-  // create a study deployment using the protocol
+  // create a study deployment based on the protocol
+  // no need for any invitation when deploying locally
   StudyDeploymentStatus status =
       await deploymentService.createStudyDeployment(protocol);
 

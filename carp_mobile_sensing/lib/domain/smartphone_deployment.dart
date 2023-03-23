@@ -129,7 +129,7 @@ class SmartphoneDeployment extends PrimaryDeviceDeployment
     required SmartphoneStudyProtocol protocol,
   }) : super(
           deviceConfiguration: Smartphone(roleName: primaryDeviceRoleName),
-          registration: DeviceRegistration(),
+          registration: DefaultDeviceRegistration(),
           connectedDevices: protocol.connectedDevices ?? {},
           connectedDeviceRegistrations: {},
           tasks: protocol.tasks,

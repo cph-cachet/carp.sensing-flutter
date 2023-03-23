@@ -47,11 +47,12 @@ SmartphoneStudyProtocol _$SmartphoneStudyProtocolFromJson(
       ..version = json['version'] as int
       ..description = json['description'] as String
       ..primaryDevices = (json['primaryDevices'] as List<dynamic>)
-          .map((e) =>
-              PrimaryDeviceConfiguration.fromJson(e as Map<String, dynamic>))
+          .map((e) => PrimaryDeviceConfiguration<DeviceRegistration>.fromJson(
+              e as Map<String, dynamic>))
           .toSet()
       ..connectedDevices = (json['connectedDevices'] as List<dynamic>?)
-          ?.map((e) => DeviceConfiguration.fromJson(e as Map<String, dynamic>))
+          ?.map((e) => DeviceConfiguration<DeviceRegistration>.fromJson(
+              e as Map<String, dynamic>))
           .toSet()
       ..connections = (json['connections'] as List<dynamic>?)
           ?.map((e) => DeviceConnection.fromJson(e as Map<String, dynamic>))
@@ -331,8 +332,9 @@ Map<String, dynamic> _$PeriodicSamplingConfigurationToJson(
   return val;
 }
 
-OnlineService _$OnlineServiceFromJson(Map<String, dynamic> json) =>
-    OnlineService(
+OnlineService<TRegistration> _$OnlineServiceFromJson<
+        TRegistration extends DeviceRegistration>(Map<String, dynamic> json) =>
+    OnlineService<TRegistration>(
       roleName: json['roleName'] as String,
       isOptional: json['isOptional'] as bool?,
       supportedDataTypes: (json['supportedDataTypes'] as List<dynamic>?)
@@ -346,7 +348,9 @@ OnlineService _$OnlineServiceFromJson(Map<String, dynamic> json) =>
             k, SamplingConfiguration.fromJson(e as Map<String, dynamic>)),
       );
 
-Map<String, dynamic> _$OnlineServiceToJson(OnlineService instance) {
+Map<String, dynamic>
+    _$OnlineServiceToJson<TRegistration extends DeviceRegistration>(
+        OnlineService<TRegistration> instance) {
   final val = <String, dynamic>{};
 
   void writeNotNull(String key, dynamic value) {
@@ -368,13 +372,14 @@ SmartphoneDeployment _$SmartphoneDeploymentFromJson(
         Map<String, dynamic> json) =>
     SmartphoneDeployment(
       studyDeploymentId: json['studyDeploymentId'] as String?,
-      deviceConfiguration: PrimaryDeviceConfiguration.fromJson(
-          json['deviceConfiguration'] as Map<String, dynamic>),
+      deviceConfiguration:
+          PrimaryDeviceConfiguration<DeviceRegistration>.fromJson(
+              json['deviceConfiguration'] as Map<String, dynamic>),
       registration: DeviceRegistration.fromJson(
           json['registration'] as Map<String, dynamic>),
       connectedDevices: (json['connectedDevices'] as List<dynamic>?)
-              ?.map((e) =>
-                  DeviceConfiguration.fromJson(e as Map<String, dynamic>))
+              ?.map((e) => DeviceConfiguration<DeviceRegistration>.fromJson(
+                  e as Map<String, dynamic>))
               .toSet() ??
           const {},
       connectedDeviceRegistrations: (json['connectedDeviceRegistrations']

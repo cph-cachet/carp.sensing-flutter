@@ -9,7 +9,8 @@ part of domain;
 
 /// An online service which works as a "software device" in a protocol.
 @JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
-class OnlineService extends DeviceConfiguration {
+class OnlineService<TRegistration extends DeviceRegistration>
+    extends DeviceConfiguration<TRegistration> {
   OnlineService({
     required super.roleName,
     super.isOptional,
@@ -19,7 +20,7 @@ class OnlineService extends DeviceConfiguration {
   Function get fromJsonFunction => _$OnlineServiceFromJson;
 
   factory OnlineService.fromJson(Map<String, dynamic> json) =>
-      FromJsonFactory().fromJson(json) as OnlineService;
+      FromJsonFactory().fromJson(json) as OnlineService<TRegistration>;
 
   @override
   Map<String, dynamic> toJson() => _$OnlineServiceToJson(this);
