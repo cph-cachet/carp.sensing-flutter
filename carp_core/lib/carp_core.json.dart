@@ -1,20 +1,23 @@
 part of carp_core;
 
-bool _fromJsonFunctionsRegistrered = false;
+bool _fromJsonFunctionsRegistered = false;
 
 // Register all the fromJson functions for the domain classes.
 void _registerFromJsonFunctions() {
-  if (_fromJsonFunctionsRegistrered) return;
+  if (_fromJsonFunctionsRegistered) return;
 
   // DEPLOYMENT
-  final DeviceConfiguration device = DeviceConfiguration(roleName: '');
+  final device = DefaultDeviceConfiguration(roleName: '');
 
-  FromJsonFactory().register(DeviceRegistration());
-  FromJsonFactory().register(DeviceRegistration(),
-      type:
-          'dk.cachet.carp.common.application.devices.DefaultDeviceRegistration');
+  // FromJsonFactory().register(DeviceConfiguration(roleName: ''));
+  // FromJsonFactory().register(device);
+  // FromJsonFactory().register(DeviceRegistration());
+  // FromJsonFactory().register(DeviceRegistration(),
+  //     type:
+  //         'dk.cachet.carp.common.application.devices.DefaultDeviceRegistration');
   FromJsonFactory().register(DefaultDeviceRegistration());
   FromJsonFactory().register(AltBeaconDeviceRegistration());
+  FromJsonFactory().register(SmartphoneDeviceRegistration());
 
   FromJsonFactory().register(DeviceDeploymentStatus(device: device));
   FromJsonFactory().register(
@@ -73,6 +76,7 @@ void _registerFromJsonFunctions() {
     BatteryAwareSamplingConfiguration(
         critical: config, low: config, normal: config),
     GranularitySamplingConfiguration(Granularity.Balanced),
+    DefaultDeviceConfiguration(roleName: ''),
     PrimaryDeviceConfiguration(roleName: ''),
     CustomProtocolDevice(),
     Smartphone(),
@@ -159,5 +163,5 @@ void _registerFromJsonFunctions() {
     type: SexCustomInput.SEX_INPUT_TYPE_NAME,
   );
 
-  _fromJsonFunctionsRegistrered = true;
+  _fromJsonFunctionsRegistered = true;
 }

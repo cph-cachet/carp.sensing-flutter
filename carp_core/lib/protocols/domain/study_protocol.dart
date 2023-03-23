@@ -53,6 +53,7 @@ class StudyProtocol extends Snapshot {
   /// The devices this device needs to connect to.
   Set<DeviceConfiguration>? connectedDevices = {};
 
+  /// The connections between [primaryDevices] and [connectedDevices].
   List<DeviceConnection>? connections = [];
 
   /// The tasks which measure data and/or present output on a device.

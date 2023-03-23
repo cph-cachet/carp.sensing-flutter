@@ -35,13 +35,12 @@ class DeviceConfiguration<TRegistration extends DeviceRegistration>
   /// data types available on this device.
   Map<String, SamplingConfiguration>? defaultSamplingConfiguration = {};
 
+  // @Deprecated('Use DefaultDeviceConfiguration instead.')
   DeviceConfiguration({
     required this.roleName,
     this.isOptional,
     this.supportedDataTypes,
   }) : super();
-
-  TRegistration? _registration = DefaultDeviceRegistration() as TRegistration;
 
   /// Create a [DeviceRegistration] which can be used to configure this device
   /// for deployment.
@@ -63,10 +62,37 @@ class DeviceConfiguration<TRegistration extends DeviceRegistration>
   Function get fromJsonFunction => _$DeviceConfigurationFromJson;
   factory DeviceConfiguration.fromJson(Map<String, dynamic> json) =>
       FromJsonFactory().fromJson(json) as DeviceConfiguration<TRegistration>;
+
   @override
   Map<String, dynamic> toJson() => _$DeviceConfigurationToJson(this);
   @override
   String get jsonType => '$DEVICE_NAMESPACE.$runtimeType';
+}
+
+/// A default device configuration just implementing the basics.
+@JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
+class DefaultDeviceConfiguration
+    extends DeviceConfiguration<DefaultDeviceRegistration> {
+  DefaultDeviceConfiguration({
+    required super.roleName,
+    super.isOptional,
+    super.supportedDataTypes,
+  });
+
+  @override
+  DefaultDeviceRegistration createRegistration({
+    String? deviceId,
+    String? deviceDisplayName,
+  }) =>
+      DefaultDeviceRegistration(
+          deviceId: deviceId, deviceDisplayName: deviceDisplayName);
+
+  @override
+  Function get fromJsonFunction => _$DefaultDeviceConfigurationFromJson;
+  factory DefaultDeviceConfiguration.fromJson(Map<String, dynamic> json) =>
+      FromJsonFactory().fromJson(json) as DefaultDeviceConfiguration;
+  @override
+  Map<String, dynamic> toJson() => _$DefaultDeviceConfigurationToJson(this);
 }
 
 /// A device which aggregates, synchronizes, and optionally uploads incoming
@@ -86,8 +112,8 @@ class PrimaryDeviceConfiguration<TRegistration extends DeviceRegistration>
 
   /// A trigger which fires immediately at the start of a study deployment.
   TriggerConfiguration get atStartOfStudy => ElapsedTimeTrigger(
-        sourceDeviceRoleName: this.roleName,
-        elapsedTime: IsoDuration(),
+        sourceDeviceRoleName: roleName,
+        elapsedTime: const IsoDuration(),
       );
 
   @override
@@ -141,6 +167,14 @@ class Smartphone
   });
 
   @override
+  SmartphoneDeviceRegistration createRegistration({
+    String? deviceId,
+    String? deviceDisplayName,
+  }) =>
+      SmartphoneDeviceRegistration(
+          deviceId: deviceId, deviceDisplayName: deviceDisplayName);
+
+  @override
   Function get fromJsonFunction => _$SmartphoneFromJson;
   factory Smartphone.fromJson(Map<String, dynamic> json) =>
       FromJsonFactory().fromJson(json) as Smartphone;
@@ -150,11 +184,19 @@ class Smartphone
 
 /// A beacon meeting the open AltBeacon standard.
 @JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
-class AltBeacon extends DeviceConfiguration {
+class AltBeacon extends DeviceConfiguration<AltBeaconDeviceRegistration> {
   AltBeacon({
     super.roleName = 'AltBeacon',
     super.supportedDataTypes,
   }) : super(isOptional: true);
+
+  @override
+  AltBeaconDeviceRegistration createRegistration({
+    String? deviceId,
+    String? deviceDisplayName,
+  }) =>
+      AltBeaconDeviceRegistration(
+          deviceId: deviceId, deviceDisplayName: deviceDisplayName);
 
   @override
   Function get fromJsonFunction => _$AltBeaconFromJson;

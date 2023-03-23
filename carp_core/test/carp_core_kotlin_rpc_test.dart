@@ -21,8 +21,8 @@ void main() {
       var expected =
           Add.fromJson(json.decode(rpcString) as Map<String, dynamic>);
 
-      String plainJson = File('test/json/carp.core-kotlin/study_protocol.json')
-          .readAsStringSync();
+      String plainJson =
+          File('$path/protocols/study_protocol.json').readAsStringSync();
       StudyProtocol protocol = StudyProtocol.fromJson(
           json.decode(plainJson) as Map<String, dynamic>);
       var request = Add(protocol, 'Version 1');
@@ -46,8 +46,8 @@ void main() {
       var expected =
           AddVersion.fromJson(json.decode(rpcString) as Map<String, dynamic>);
 
-      String plainJson = File('test/json/carp.core-kotlin/study_protocol.json')
-          .readAsStringSync();
+      String plainJson =
+          File('$path/protocols/study_protocol.json').readAsStringSync();
       StudyProtocol protocol = StudyProtocol.fromJson(
           json.decode(plainJson) as Map<String, dynamic>);
 

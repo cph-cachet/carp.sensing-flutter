@@ -28,13 +28,7 @@ class DeviceRegistration extends Serializable {
   /// The registration time in zulu time.
   late DateTime registrationCreatedOn;
 
-  /// Create a new [DeviceRegistration]
-  ///  * [deviceId] - a unique id for this device.
-  ///    If not specified, a unique id will be generated.
-  ///  * [deviceDisplayName] - An optional concise textual representation for display
-  ///    purposes describing the key specifications of the device.
-  ///  * [registrationCreatedOn] - the timestamp in zulu when this registration was created.
-  ///    If not specified, the time of creation will be used.
+  @Deprecated('Use DefaultDeviceRegistration instead.')
   DeviceRegistration({
     String? deviceId,
     this.deviceDisplayName,
@@ -64,6 +58,13 @@ class DeviceRegistration extends Serializable {
 /// and nothing else.
 @JsonSerializable(fieldRename: FieldRename.none, includeIfNull: true)
 class DefaultDeviceRegistration extends DeviceRegistration {
+  /// Create a new [DefaultDeviceRegistration]
+  ///  * [deviceId] - a unique id for this device.
+  ///    If not specified, a unique id will be generated.
+  ///  * [deviceDisplayName] - An optional concise textual representation for display
+  ///    purposes describing the key specifications of the device.
+  ///  * [registrationCreatedOn] - the timestamp in zulu when this registration was created.
+  ///    If not specified, the time of creation will be used.
   DefaultDeviceRegistration({
     super.deviceId,
     super.deviceDisplayName,

@@ -1,6 +1,6 @@
 {
-    "id": "95b63820-6403-11ed-8165-b3f2e573f9ef",
-    "createdOn": "2022-11-14T10:03:27.778167Z",
+    "id": "624a96d0-c99c-11ed-a766-1b9dafd90371",
+    "createdOn": "2023-03-23T17:01:41.949257Z",
     "version": 0,
     "ownerId": "xyz@dtu.dk",
     "name": "Test Study Protocol",
@@ -9,26 +9,38 @@
         {
             "__type": "dk.cachet.carp.common.application.devices.Smartphone",
             "roleName": "phone",
-            "isOptional": true,
+            "defaultSamplingConfiguration": {},
+            "isPrimaryDevice": true
+        },
+        {
+            "__type": "dk.cachet.carp.common.application.devices.Smartphone",
+            "roleName": "phone_2",
             "defaultSamplingConfiguration": {},
             "isPrimaryDevice": true
         }
     ],
     "connectedDevices": [
         {
-            "__type": "dk.cachet.carp.common.application.devices.DeviceConfiguration",
-            "roleName": "connected_device",
-            "isOptional": false,
+            "__type": "dk.cachet.carp.common.application.devices.DefaultDeviceConfiguration",
+            "roleName": "hr_monitor",
             "defaultSamplingConfiguration": {}
         },
         {
-            "__type": "dk.cachet.carp.common.application.devices.DeviceConfiguration",
-            "roleName": "connected_device",
-            "isOptional": false,
+            "__type": "dk.cachet.carp.common.application.devices.DefaultDeviceConfiguration",
+            "roleName": "bike",
             "defaultSamplingConfiguration": {}
         }
     ],
-    "connections": [],
+    "connections": [
+        {
+            "roleName": "hr_monitor",
+            "connectedToRoleName": "phone"
+        },
+        {
+            "roleName": "bike",
+            "connectedToRoleName": "phone"
+        }
+    ],
     "tasks": [
         {
             "__type": "dk.cachet.carp.common.application.tasks.BackgroundTask",
@@ -44,6 +56,17 @@
                 },
                 {
                     "__type": "dk.cachet.carp.common.application.tasks.Measure.DataStream",
+                    "type": "dk.cachet.carp.stepcount"
+                }
+            ],
+            "duration": "PT1H"
+        },
+        {
+            "__type": "dk.cachet.carp.common.application.tasks.BackgroundTask",
+            "name": "Start Heart Monitor",
+            "measures": [
+                {
+                    "__type": "dk.cachet.carp.common.application.tasks.Measure.DataStream",
                     "type": "dk.cachet.carp.ecg"
                 },
                 {
@@ -52,11 +75,18 @@
                 },
                 {
                     "__type": "dk.cachet.carp.common.application.tasks.Measure.DataStream",
-                    "type": "dk.cachet.carp.stepcount"
-                },
+                    "type": "dk.cachet.carp.heartrate"
+                }
+            ],
+            "duration": "PT1H"
+        },
+        {
+            "__type": "dk.cachet.carp.common.application.tasks.BackgroundTask",
+            "name": "Start Heart Monitor",
+            "measures": [
                 {
                     "__type": "dk.cachet.carp.common.application.tasks.Measure.DataStream",
-                    "type": "dk.cachet.carp.heartrate"
+                    "type": "dk.cachet.carp.acceleration"
                 },
                 {
                     "__type": "dk.cachet.carp.common.application.tasks.Measure.DataStream",
@@ -102,7 +132,13 @@
             "elapsedTime": "PT1H"
         },
         "2": {
-            "__type": "dk.cachet.carp.common.application.triggers.ManualTrigger"
+            "__type": "dk.cachet.carp.common.application.triggers.ElapsedTimeTrigger",
+            "sourceDeviceRoleName": "phone",
+            "elapsedTime": "PT1H"
+        },
+        "3": {
+            "__type": "dk.cachet.carp.common.application.triggers.ManualTrigger",
+            "sourceDeviceRoleName": "phone"
         }
     },
     "taskControls": [
@@ -114,12 +150,18 @@
         },
         {
             "triggerId": 1,
-            "taskName": "Start measures",
-            "destinationDeviceRoleName": "phone",
+            "taskName": "Start Heart Monitor",
+            "destinationDeviceRoleName": "hr_monitor",
             "control": "Start"
         },
         {
             "triggerId": 2,
+            "taskName": "Start Heart Monitor",
+            "destinationDeviceRoleName": "bike",
+            "control": "Start"
+        },
+        {
+            "triggerId": 3,
             "taskName": "Task #3",
             "destinationDeviceRoleName": "phone",
             "control": "Start"

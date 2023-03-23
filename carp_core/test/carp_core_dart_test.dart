@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
+import 'package:uuid/uuid.dart';
 import 'package:test/test.dart';
 import 'package:carp_core/carp_core.dart';
 import 'package:carp_serializable/carp_serializable.dart';
@@ -18,16 +19,16 @@ void main() {
     );
 
     Smartphone phone = Smartphone(roleName: 'phone');
-    DeviceConfiguration hr_monitor = DeviceConfiguration(
-      roleName: 'hr_monitor',
-    );
-    DeviceConfiguration bike = DeviceConfiguration(
-      roleName: 'bike',
-    );
+    Smartphone phone_2 = Smartphone(roleName: 'phone_2');
+    final monitor = DefaultDeviceConfiguration(roleName: 'hr_monitor');
+    final bike = DefaultDeviceConfiguration(roleName: 'bike');
+    // final monitor = AltBeacon(roleName: 'hr_monitor');
+    // final bike = AltBeacon(roleName: 'bike');
 
     protocol
       ..addPrimaryDevice(phone)
-      ..addConnectedDevice(hr_monitor, phone)
+      ..addPrimaryDevice(phone_2)
+      ..addConnectedDevice(monitor, phone)
       ..addConnectedDevice(bike, phone);
 
     protocol.addTaskControl(
@@ -58,7 +59,7 @@ void main() {
             Measure(type: EDA.dataType),
             Measure(type: HeartRate.dataType),
           ]),
-      hr_monitor,
+      monitor,
       Control.Start,
     );
 
@@ -166,22 +167,33 @@ void main() {
   // });
 
   test('Deployment', () async {
-    String studyDeploymentId = "c9cc5317-48da-45f2-958e-58bc07f34681";
-    DataStreamsConfiguration configuration = DataStreamsConfiguration(
-        studyDeploymentId: studyDeploymentId,
-        expectedDataStreams: {
-          ExpectedDataStream(
-            deviceRoleName: 'phone',
-            dataType: 'dk.cachet.carp.geolocation',
-          ),
-          ExpectedDataStream(
-            deviceRoleName: 'phone',
-            dataType: 'dk.cachet.carp.stepcount',
-          ),
-        });
+    StudyProtocol trackPatientStudy = StudyProtocol(
+      ownerId: 'abc@dtu.dk',
+      name: 'Tracking',
+    )..addPrimaryDevice(Smartphone());
 
-    print(toJsonString(configuration));
-    expect(configuration.expectedDataStreams, isNotEmpty);
+    print(toJsonString(trackPatientStudy));
+
+    Smartphone patientPhone =
+        trackPatientStudy.primaryDevices.first as Smartphone;
+
+    // This is called by `StudyService` when deploying a participant group.
+    var invitation = ParticipantInvitation(
+        participantId: const Uuid().v1(),
+        assignedRoles: AssignedTo.all(),
+        identity: EmailAccountIdentity("test@test.com"),
+        invitation: StudyInvitation(
+            "Movement study", "This study tracks your movements."));
+
+    print(toJsonString(invitation));
+
+    var registration = patientPhone.createRegistration(
+      deviceId: "xxxxxxxxx",
+      deviceDisplayName: "Pixel 6 Pro (Android 12)",
+    );
+    expect(registration, isNotNull);
+
+    print(toJsonString(registration));
   });
 
   test('DataStreamsConfiguration -> JSON', () async {

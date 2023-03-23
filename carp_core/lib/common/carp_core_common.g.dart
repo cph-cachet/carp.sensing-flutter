@@ -333,6 +333,41 @@ Map<String, dynamic>
   return val;
 }
 
+DefaultDeviceConfiguration _$DefaultDeviceConfigurationFromJson(
+        Map<String, dynamic> json) =>
+    DefaultDeviceConfiguration(
+      roleName: json['roleName'] as String,
+      isOptional: json['isOptional'] as bool?,
+      supportedDataTypes: (json['supportedDataTypes'] as List<dynamic>?)
+          ?.map((e) => e as String)
+          .toList(),
+    )
+      ..$type = json['__type'] as String?
+      ..defaultSamplingConfiguration =
+          (json['defaultSamplingConfiguration'] as Map<String, dynamic>?)?.map(
+        (k, e) => MapEntry(
+            k, SamplingConfiguration.fromJson(e as Map<String, dynamic>)),
+      );
+
+Map<String, dynamic> _$DefaultDeviceConfigurationToJson(
+    DefaultDeviceConfiguration instance) {
+  final val = <String, dynamic>{};
+
+  void writeNotNull(String key, dynamic value) {
+    if (value != null) {
+      val[key] = value;
+    }
+  }
+
+  writeNotNull('__type', instance.$type);
+  val['roleName'] = instance.roleName;
+  writeNotNull('isOptional', instance.isOptional);
+  writeNotNull('supportedDataTypes', instance.supportedDataTypes);
+  writeNotNull(
+      'defaultSamplingConfiguration', instance.defaultSamplingConfiguration);
+  return val;
+}
+
 PrimaryDeviceConfiguration<TRegistration> _$PrimaryDeviceConfigurationFromJson<
         TRegistration extends DeviceRegistration>(Map<String, dynamic> json) =>
     PrimaryDeviceConfiguration<TRegistration>(
