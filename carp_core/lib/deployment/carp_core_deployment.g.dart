@@ -312,26 +312,6 @@ Map<String, dynamic> _$ParticipantStatusToJson(ParticipantStatus instance) =>
           instance.assignedPrimaryDeviceRoleNames.toList(),
     };
 
-DataEndPoint _$DataEndPointFromJson(Map<String, dynamic> json) => DataEndPoint(
-      type: json['type'] as String,
-      dataFormat: json['dataFormat'] as String? ?? NameSpace.CARP,
-    )..$type = json['__type'] as String?;
-
-Map<String, dynamic> _$DataEndPointToJson(DataEndPoint instance) {
-  final val = <String, dynamic>{};
-
-  void writeNotNull(String key, dynamic value) {
-    if (value != null) {
-      val[key] = value;
-    }
-  }
-
-  writeNotNull('__type', instance.$type);
-  val['type'] = instance.type;
-  val['dataFormat'] = instance.dataFormat;
-  return val;
-}
-
 CreateStudyDeployment _$CreateStudyDeploymentFromJson(
         Map<String, dynamic> json) =>
     CreateStudyDeployment(

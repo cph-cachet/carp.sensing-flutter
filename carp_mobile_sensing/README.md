@@ -6,7 +6,7 @@
 [![MIT License](https://img.shields.io/badge/license-MIT-purple.svg)](https://opensource.org/licenses/MIT)
 [![arXiv](https://img.shields.io/badge/arXiv-2006.11904-green.svg)](https://arxiv.org/abs/2006.11904)
 
-This library contains the core Flutter package for the CARP Mobile Sensing (CAMS) framework.
+This library contains the core Flutter package for the [CARP Mobile Sensing (CAMS)](https://carp.cachet.dk/cams/) framework.
 Supports cross-platform (iOS and Android) mobile sensing.
 
 For an overview of all CAMS packages, see [CARP Mobile Sensing in Flutter](https://github.com/cph-cachet/carp.sensing-flutter).
@@ -45,7 +45,7 @@ The pedometer (step count) probe needs permission to `ACTIVITY_RECOGNITION`.
 Add the following to your app's `manifest.xml` file located in `android/app/src/main`:
 
 ````xml
-    <uses-permission android:name="android.permission.ACTIVITY_RECOGNITION"/>
+<uses-permission android:name="android.permission.ACTIVITY_RECOGNITION"/>
 ````
 
 ### iOS Integration
@@ -53,8 +53,8 @@ Add the following to your app's `manifest.xml` file located in `android/app/src/
 The pedometer (step count) probe uses `NSMotion` on iOS and the `NSMotionUsageDescription` needs to be specified in the app's `Info.plist` file located in `ios/Runner`:
 
 ```xml
-  <key>NSMotionUsageDescription</key>
-  <string>Collecting step count.</string>
+<key>NSMotionUsageDescription</key>
+<string>Collecting step count.</string>
 ```
 
 > **NOTE:** Other CAMS sampling packages require additional permissions in the `manifest.xml` or `Info.plist` files.
@@ -66,13 +66,14 @@ The [Dart API doc](https://pub.dartlang.org/documentation/carp_mobile_sensing/la
 
 The [wiki](https://github.com/cph-cachet/carp.sensing/wiki) contains detailed documentation on the CARP Mobile Sensing Framework, including
 the [domain model](https://github.com/cph-cachet/carp.sensing-flutter/wiki/2.-Domain-Model),
-how to use it by create a [Study configuration](https://github.com/cph-cachet/carp.sensing-flutter/wiki/3.-Using-CARP-Mobile-Sensing),
-how to [extend](https://github.com/cph-cachet/carp.sensing-flutter/wiki/4.-Extending-CARP-Mobile-Sensing) it, and
-an overview of the different [Measure types available](https://github.com/cph-cachet/carp.sensing-flutter/wiki/A.-Measure-Types).
+how to use it by create a [study configuration](https://github.com/cph-cachet/carp.sensing-flutter/wiki/3.-Using-CARP-Mobile-Sensing),
+how to [extend](https://github.com/cph-cachet/carp.sensing-flutter/wiki/5.-Extending-CARP-Mobile-Sensing) it, and
+an overview of the available [measure types](https://github.com/cph-cachet/carp.sensing-flutter/wiki/A.-Measure-Types).
 
-A more scientific documentation of CAMS is available at [arxiv.org](https://arxiv.org/abs/2006.11904):
+More scientific documentation of CAMS is available in the following papers:
 
-* Bardram, Jakob E. "The CARP Mobile Sensing Framework--A Cross-platform, Reactive, Programming Framework and Runtime Environment for Digital Phenotyping." arXiv preprint arXiv:2006.11904 (2020). [[pdf](https://arxiv.org/pdf/2006.11904.pdf)]
+* Bardram, Jakob E. "[The CARP Mobile Sensing Framework--A Cross-platform, Reactive, Programming Framework and Runtime Environment for Digital Phenotyping.](https://arxiv.org/abs/2006.11904)" arXiv preprint arXiv:2006.11904 (2020). [[pdf](https://arxiv.org/pdf/2006.11904.pdf)]
+* Bardram, Jakob E. "[Software Architecture Patterns for Extending Sensing Capabilities and Data Formatting in Mobile Sensing.](https://www.mdpi.com/1424-8220/22/7/2813)" Sensors 22.7 (2022). [[pdf]](https://www.mdpi.com/1424-8220/22/7/2813/pdf).
 
 ```latex
 @article{bardram2020carp,
@@ -81,9 +82,19 @@ A more scientific documentation of CAMS is available at [arxiv.org](https://arxi
   journal={arXiv preprint arXiv:2006.11904},
   year={2020}
 }
+
+@article{bardram2022software,
+  title={Software Architecture Patterns for Extending Sensing Capabilities and Data Formatting in Mobile Sensing},
+  author={Bardram, Jakob E},
+  journal={Sensors},
+  volume={22},
+  number={7},
+  year={2022},
+  publisher={MDPI}
+}
 ```
 
-Please use this as a reference in any scientific papers using CAMS.
+Please use these references in any scientific papers using CAMS.
 
 ## Examples of configuring and using CAMS
 
@@ -97,66 +108,57 @@ Below is a small primer in the use of CAMS.
 
 Following [`carp_core`](https://pub.dev/documentation/carp_core/latest/), a CAMS study can be configured, deployed, executed, and used in different steps:
 
-1. Define a [`StudyProtcol`](https://pub.dev/documentation/carp_core/latest/carp_core_protocols/StudyProtocol-class.html).
+1. Define a [`SmartphoneStudyProtocol`](https://pub.dev/documentation/carp_mobile_sensing/latest/domain/SmartphoneStudyProtocol-class.html).
 2. Deploy this protocol to a [`DeploymentService`](https://pub.dev/documentation/carp_core/latest/carp_core_deployment/DeploymentService-class.html).
 3. Get a study deployment for the phone and start executing this study deployment using a [`SmartPhoneClientManager`](https://pub.dev/documentation/carp_mobile_sensing/latest/runtime/SmartPhoneClientManager-class.html).
-4. Use the generated data locally in the app or specify how and where to store or upload it using a [`DataEndPoint`](https://pub.dev/documentation/carp_core/latest/carp_core_deployment/DataEndPoint-class.html).
+4. Use the generated data locally in the app or specify how and where to store or upload it using a [`DataEndPoint`](https://pub.dev/documentation/carp_mobile_sensing/latest/domain/DataEndPoint-class.html).
 
-Note that as a mobile sensing framework running on a phone, CAMS could be limited to support 3-4. However, to support the 'full cycle', CAMS also supports 1-2. This allows for local creation, deployment, and execution of study protocols (which in many [applications](https://carp.cachet.dk/#applications) have shown to be useful).
+As a mobile sensing framework running on a phone, CAMS could be limited to support only step 3 and 4. However, to support the 'full cycle', CAMS also supports 1-2. This allows for local creation, deployment, and execution of study protocols (which in many [applications](https://carp.cachet.dk/#applications) have shown to be useful).
 
-### Defining a `StudyProtcol`
+### Defining a `SmartphoneStudyProtocol`
 
-In CAMS, a sensing protocol is configured in a [`StudyProtocol`](https://pub.dev/documentation/carp_core/latest/carp_core_protocols/StudyProtocol-class.html).
-Below is a simple example of how to set up a protocol that sense step counts (`pedometer`), ambient light (`light`), screen activity (`screen`), and power consumption (`battery`).
+In CAMS, a sensing protocol is configured in a [`SmartphoneStudyProtocol`](https://pub.dev/documentation/carp_mobile_sensing/latest/domain/SmartphoneStudyProtocol-class.html).
+Below is a simple example of how to set up a protocol that samples step counts, ambient light, screen events, and battery events.
 
 ```dart
-// import packages
-import 'package:carp_core/carp_core.dart';
-import 'package:carp_mobile_sensing/carp_mobile_sensing.dart';
+// Create a study protocol storing data in a local SQLite database.
+SmartphoneStudyProtocol protocol = SmartphoneStudyProtocol(
+  ownerId: 'abc@dtu.dk',
+  name: 'Track patient movement',
+  dataEndPoint: SQLiteDataEndPoint(),
+);
 
-void example() async {
-  // create a study protocol storing data in files
-  SmartphoneStudyProtocol protocol = SmartphoneStudyProtocol(
-    ownerId: 'AB',
-    name: 'Track patient movement',
-    dataEndPoint: FileDataEndPoint(
-      bufferSize: 500 * 1000,
-      zip: true,
-      encrypt: false,
-    ),
-  );
+// Define which devices are used for data collection.
+// In this case, its only this smartphone.
+Smartphone phone = Smartphone();
+protocol.addPrimaryDevice(phone);
 
-  // Define which devices are used for data collection.
-  // In this case, its only this smartphone.
-  Smartphone phone = Smartphone();
-  protocol.addMasterDevice(phone);
-
-  // Add a background task that immediately starts collecting step counts,
-  // ambient light, screen activity, and battery level.
-  protocol.addTriggeredTask(
-      ImmediateTrigger(),
-      BackgroundTask()
-        ..addMeasures([
-          Measure(type: SensorSamplingPackage.PEDOMETER),
-          Measure(type: SensorSamplingPackage.LIGHT),
-          Measure(type: DeviceSamplingPackage.SCREEN),
-          Measure(type: DeviceSamplingPackage.BATTERY),
-        ]),
-      phone);
+// Automatically collect step count, ambient light, screen activity, and
+// battery level. Sampling is delaying by 10 seconds.
+protocol.addTaskControl(
+  ImmediateTrigger(),
+  BackgroundTask(measures: [
+    Measure(type: SensorSamplingPackage.STEP_COUNT),
+    Measure(type: SensorSamplingPackage.AMBIENT_LIGHT),
+    Measure(type: DeviceSamplingPackage.SCREEN_EVENT),
+    Measure(type: DeviceSamplingPackage.BATTERY_STATE),
+  ]),
+  phone,
+);
 ```
 
-The above example defines a simple [`SmartphoneStudyProtocol`](https://pub.dev/documentation/carp_mobile_sensing/latest/domain/SmartphoneStudyProtocol-class.html) which will store data in a file locally on the phone using a [`FileDataEndPoint`](https://pub.dev/documentation/carp_mobile_sensing/latest/domain/FileDataEndPoint-class.html).
-Sampling is configured by adding a [`TriggeredTask`](https://pub.dev/documentation/carp_mobile_sensing/latest/domain/TriggeredTask-class.html) to the protocol using an [`ImmediateTrigger`](https://pub.dev/documentation/carp_mobile_sensing/latest/domain/ImmediateTrigger-class.html) which triggers a [`BackgroundTask`](https://pub.dev/documentation/carp_mobile_sensing/latest/domain/BackgroundTask-class.html) containing four different [`Measure`](https://pub.dev/documentation/carp_core/latest/carp_core_protocols/Measure-class.html).
+The above example defines a simple [`SmartphoneStudyProtocol`](https://pub.dev/documentation/carp_mobile_sensing/latest/domain/SmartphoneStudyProtocol-class.html) which will store data in a SQLite database locally on the phone using a [`SQLiteDataEndPoint`](https://pub.dev/documentation/carp_mobile_sensing/latest/domain/SQLiteDataEndPoint-class.html).
+Sampling is configured by adding a `TaskControl` to the protocol using an [`ImmediateTrigger`](https://pub.dev/documentation/carp_mobile_sensing/latest/domain/ImmediateTrigger-class.html) which triggers a [`BackgroundTask`](https://pub.dev/documentation/carp_mobile_sensing/latest/domain/BackgroundTask-class.html) containing four different [`Measure`](https://pub.dev/documentation/carp_core/latest/carp_core_protocols/Measure-class.html)s.
 
 Sampling can be configured in a very sophisticated ways, by specifying different types of devices, triggers, tasks, measures and sampling configurations.
 See the CAMS [wiki](https://github.com/cph-cachet/carp.sensing-flutter/wiki/) for an overview.
 
-You can write your own `DataEndPoint` definitions and coresponding `DataManager`s for uploading data to your own data endpoint. See the wiki on how to [add a new data manager](https://github.com/cph-cachet/carp.sensing-flutter/wiki/4.3-Adding-a-New-Data-Manager).
+You can write your own `DataEndPoint` definitions and corresponding `DataManager`s for uploading data to your own data endpoint. See the wiki on how to [add a new data manager](https://github.com/cph-cachet/carp.sensing-flutter/wiki/5.-Extending-CARP-Mobile-Sensing#adding-a-new-data-manager).
 
 ### Using a `DeploymentService`
 
 A device deployment specifies how a study protocol is executed on a specific device - in this case a smartphone.
-A `StudyProtocol` can be deployed to a `DeploymentService` which handles the deployment of protocols for different devices. CAMS comes with a simple deployment service (the `SmartphoneDeploymentService`) which runs locally on the phone. This can be used to deploy a protocol and get back a [`MasterDeviceDeployment`](https://pub.dev/documentation/carp_core/latest/carp_core_deployment/MasterDeviceDeployment-class.html), which can be executed on the phone.
+According to the [CARP Core domain model](https://github.com/cph-cachet/carp.core-kotlin/blob/develop/docs/carp-deployments.md), a `StudyProtocol` can be deployed to a `DeploymentService` which handles the deployment of protocols for different devices. CAMS comes with a simple deployment service (the `SmartphoneDeploymentService`) which runs locally on the phone. This can be used to deploy a protocol and get back a [`MasterDeviceDeployment`](https://pub.dev/documentation/carp_core/latest/carp_core_deployment/MasterDeviceDeployment-class.html), which can be executed on the phone.
 
 ```dart
 ...
@@ -165,30 +167,27 @@ A `StudyProtocol` can be deployed to a `DeploymentService` which handles the dep
 DeploymentService deploymentService = SmartphoneDeploymentService();
 
 // Create a study deployment using the protocol
-StudyDeploymentStatus status =
-    await deploymentService.createStudyDeployment(protocol);
+var status = await deploymentService.createStudyDeployment(protocol);
 ```
 
-### Running a `SmartphoneDeploymentController`
+### Creating a `SmartPhoneClientManager` and  Running a `SmartphoneDeploymentController`
 
 A study deployment for a phone (master device) is handled by a [`SmartPhoneClientManager`](https://pub.dev/documentation/carp_mobile_sensing/latest/runtime/SmartPhoneClientManager-class.html).
-This client manager controls the execution of a study deployment using a [`SmartphoneDeploymentController`](https://pub.dev/documentation/carp_mobile_sensing/latest/runtime/SmartphoneDeploymentController-class.html).
+This client manager controls the execution of one or more study deployments using a [`SmartphoneDeploymentController`](https://pub.dev/documentation/carp_mobile_sensing/latest/runtime/SmartphoneDeploymentController-class.html).
 
 ```dart
 ...
 
 String studyDeploymentId = ... // any id obtained e.g. from an invitation
-String deviceRolename = ... // the rolename of this phone in the protocol;
+String roleName = ... // the role name of this phone in the protocol
 
 // Create and configure a client manager for this phone
 SmartPhoneClientManager client = SmartPhoneClientManager();
 await client.configure(deploymentService: deploymentService);
 
-// Create a study object based on the deployment id and the rolename
-Study study = Study(studyDeploymentId, deviceRoleName);
-
-// Add the study to the client manager and get a study runtime to control this deployment.
-await client.addStudy(study);
+// Add the study to the client manager and get a study runtime to
+// control this deployment
+Study study = await client.addStudy(studyDeploymentId, roleName);
 SmartphoneDeploymentController? controller = client.getStudyRuntime(study);
 
 // Deploy the study on this phone.
@@ -201,7 +200,7 @@ controller?.start();
 
 ### Using the generated data
 
-The generated data can be accessed and used in the app. Access to data is done by listening on the `data` streams from the study deployment controller or some of its underlying executors or probes. Below are a few examples on how to listen on data streams.
+The generated data can be accessed and used in the app. Access to data is done by listening on the `measurements` streams from the study deployment controller or some of its underlying executors or probes. Below are a few examples on how to listen on data streams.
 
 ```dart
 ...

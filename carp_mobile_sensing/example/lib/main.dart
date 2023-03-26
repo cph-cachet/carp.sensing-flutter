@@ -127,13 +127,8 @@ class Sensing {
     // Create and configure a client manager for this phone, and
     // create a study based on the protocol.
     client = SmartPhoneClientManager();
-    await client?.configure(
-      notificationController: FlutterLocalNotificationController(),
-    );
-
+    await client?.configure();
     study = await client?.addStudyProtocol(protocol);
-    // study = Study('723bbe80-72f7-11ed-b085-d1a8db32944b', 'primaryphone');
-    // await client.addStudy(study!);
 
     // Get the study controller and try to deploy the study.
     //
@@ -178,8 +173,8 @@ class Sensing {
 
 /// This is a simple local [StudyProtocolManager].
 ///
-/// This class shows how to configure a [StudyProtocol] with Triggers,
-/// Tasks and Measures.
+/// This class shows how to configure a [StudyProtocol] with devices,
+/// triggers, tasks, measures, and task controls.
 class LocalStudyProtocolManager implements StudyProtocolManager {
   @override
   Future<void> initialize() async {}
@@ -210,60 +205,65 @@ class LocalStudyProtocolManager implements StudyProtocolManager {
         ]),
         phone);
 
-    // // Add background measures from the [DeviceSamplingPackage] and
-    // // [SensorSamplingPackage] sampling packages.
-    // protocol.addTaskControl(
-    //   ImmediateTrigger(),
-    //   BackgroundTask(measures: [
-    //     Measure(type: DeviceSamplingPackage.FREE_MEMORY_TYPE_NAME),
-    //     Measure(type: DeviceSamplingPackage.BATTERY_STATE_TYPE_NAME),
-    //     Measure(type: DeviceSamplingPackage.SCREEN_EVENT_TYPE_NAME),
-    //     Measure(type: CarpDataTypes.STEP_COUNT_TYPE_NAME),
-    //     Measure(type: SensorSamplingPackage.AMBIENT_LIGHT_TYPE_NAME)
-    //   ]),
-    //   phone,
-    //   Control.Start,
-    // );
+    // Add background measures from the [DeviceSamplingPackage] and
+    // [SensorSamplingPackage] sampling packages.
+    protocol.addTaskControl(
+      ImmediateTrigger(),
+      BackgroundTask(measures: [
+        Measure(type: DeviceSamplingPackage.FREE_MEMORY),
+        Measure(type: DeviceSamplingPackage.BATTERY_STATE),
+        Measure(type: DeviceSamplingPackage.SCREEN_EVENT),
+        Measure(type: CarpDataTypes.STEP_COUNT_TYPE_NAME),
+        Measure(type: SensorSamplingPackage.AMBIENT_LIGHT)
+      ]),
+      phone,
+    );
 
-    // // Collect IMU data every 10 secs for 1 sec.
-    // protocol.addTaskControl(
-    //   PeriodicTrigger(period: Duration(seconds: 10)),
-    //   BackgroundTask(
-    //     measures: [
-    //       Measure(type: CarpDataTypes.ACCELERATION_TYPE_NAME),
-    //       Measure(type: CarpDataTypes.ROTATION_TYPE_NAME),
-    //     ],
-    //     duration: IsoDuration(seconds: 1),
-    //   ),
-    //   phone,
-    //   Control.Start,
-    // );
+    // Collect IMU data every 10 secs for 1 sec.
+    protocol.addTaskControl(
+      PeriodicTrigger(period: Duration(seconds: 10)),
+      BackgroundTask(
+        measures: [
+          Measure(type: CarpDataTypes.ACCELERATION_TYPE_NAME),
+          Measure(type: CarpDataTypes.ROTATION_TYPE_NAME),
+        ],
+        duration: IsoDuration(seconds: 1),
+      ),
+      phone,
+    );
 
-    // // Collect device info only once
-    // protocol.addTaskControl(
-    //   OneTimeTrigger(),
-    //   BackgroundTask()
-    //     ..addMeasure(
-    //         Measure(type: DeviceSamplingPackage.DEVICE_INFORMATION_TYPE_NAME)),
-    //   phone,
-    //   Control.Start,
-    // );
+    // Collect device info only once
+    protocol.addTaskControl(
+      OneTimeTrigger(),
+      BackgroundTask()
+        ..addMeasure(Measure(type: DeviceSamplingPackage.DEVICE_INFORMATION)),
+      phone,
+    );
 
-    // // Collect device info
-    // protocol.addTaskControl(
-    //   ImmediateTrigger(),
-    //   BackgroundTask(measures: [
-    //     Measure(type: DeviceSamplingPackage.DEVICE_INFORMATION_TYPE_NAME)
-    //   ]),
-    //   phone,
-    //   Control.Start,
-    // );
+    // Collect device info periodically
+    protocol.addTaskControl(
+      PeriodicTrigger(period: Duration(seconds: 5)),
+      BackgroundTask(
+          measures: [Measure(type: DeviceSamplingPackage.DEVICE_INFORMATION)]),
+      phone,
+    );
 
+    // add a cron job every day at 11:45
+    protocol.addTaskControl(
+        CronScheduledTrigger.parse(cronExpression: '45 11 * * *'),
+        AppTask(
+          type: BackgroundSensingUserTask.ONE_TIME_SENSING_TYPE,
+          title: "Cron - every day at 11:45",
+          notification: true,
+        )..addMeasure(Measure(type: DeviceSamplingPackage.DEVICE_INFORMATION)),
+        phone);
+
+    // Example of how to start and stop sampling using the Control.Start and
+    // Control.Stop method
     var task_1 = BackgroundTask(
       measures: [
-        // Measure(type: CarpDataTypes.STEP_COUNT_TYPE_NAME),
         Measure(type: CarpDataTypes.ACCELERATION_TYPE_NAME),
-        // Measure(type: CarpDataTypes.ROTATION_TYPE_NAME),
+        Measure(type: CarpDataTypes.ROTATION_TYPE_NAME),
       ],
     );
 
@@ -289,41 +289,29 @@ class LocalStudyProtocolManager implements StudyProtocolManager {
       Control.Stop,
     );
 
-    // // Collect device info periodically
-    // protocol.addTaskControl(
-    //   PeriodicTrigger(period: Duration(seconds: 5)),
-    //   BackgroundTask(measures: [
-    //     Measure(type: DeviceSamplingPackage.DEVICE_INFORMATION_TYPE_NAME)
-    //   ]),
-    //   phone,
-    //   Control.Start,
-    // );
+    // add a random trigger to collect device info at random times
+    protocol.addTaskControl(
+      RandomRecurrentTrigger(
+        startTime: TimeOfDay(hour: 07, minute: 45),
+        endTime: TimeOfDay(hour: 22, minute: 30),
+        minNumberOfTriggers: 2,
+        maxNumberOfTriggers: 8,
+      ),
+      BackgroundTask()
+        ..addMeasure(Measure(type: DeviceSamplingPackage.DEVICE_INFORMATION)),
+      phone,
+      Control.Start,
+    );
 
-    // // add a random trigger to collect device info at random times
-    // protocol.addTaskControl(
-    //   RandomRecurrentTrigger(
-    //     startTime: TimeOfDay(hour: 07, minute: 45),
-    //     endTime: TimeOfDay(hour: 22, minute: 30),
-    //     minNumberOfTriggers: 2,
-    //     maxNumberOfTriggers: 8,
-    //   ),
-    //   BackgroundTask()
-    //     ..addMeasure(
-    //         Measure(type: DeviceSamplingPackage.DEVICE_INFORMATION_TYPE_NAME)),
-    //   phone,
-    //   Control.Start,
-    // );
-
-    // // add a ConditionalPeriodicTrigger to check periodically
-    // protocol.addTaskControl(
-    //     ConditionalPeriodicTrigger(
-    //         period: Duration(seconds: 20),
-    //         triggerCondition: () => ('jakob'.length == 5)),
-    //     BackgroundTask()
-    //       ..addMeasure(Measure(
-    //           type: DeviceSamplingPackage.DEVICE_INFORMATION_TYPE_NAME)),
-    //     phone,
-    //     Control.Start);
+    // add a ConditionalPeriodicTrigger to check periodically
+    protocol.addTaskControl(
+        ConditionalPeriodicTrigger(
+            period: Duration(seconds: 20),
+            triggerCondition: () => ('jakob'.length == 5)),
+        BackgroundTask()
+          ..addMeasure(Measure(type: DeviceSamplingPackage.DEVICE_INFORMATION)),
+        phone,
+        Control.Start);
 
     // Add an app task 1 minute after deployment and make a notification.
     //
@@ -346,51 +334,6 @@ class LocalStudyProtocolManager implements StudyProtocolManager {
       ),
       phone,
     );
-
-    // // add an app task at exact date & time
-    // protocol.addTriggeredTask(
-    //     DateTimeTrigger(schedule: DateTime(2022, 5, 15, 21, 00)),
-    //     AppTask(
-    //       type: BackgroundSensingUserTask.ONE_TIME_SENSING_TYPE,
-    //       title: "DateTime - 15/5 2022 at 21:00",
-    //       notification: true,
-    //     )..addMeasure(Measure(type: DeviceSamplingPackage.DEVICE)),
-    //     phone);
-
-    // // add an app task every hour
-    // protocol.addTriggeredTask(
-    //     IntervalTrigger(period: const Duration(hours: 1)),
-    //     AppTask(
-    //       type: BackgroundSensingUserTask.ONE_TIME_SENSING_TYPE,
-    //       title: "Interval - Every hour",
-    //       notification: true,
-    //     )..addMeasure(Measure(type: DeviceSamplingPackage.DEVICE)),
-    //     phone);
-
-    // // add a cron job every day at 11:45
-    // protocol.addTriggeredTask(
-    //     CronScheduledTrigger.parse(cronExpression: '45 11 * * *'),
-    //     AppTask(
-    //       type: BackgroundSensingUserTask.ONE_TIME_SENSING_TYPE,
-    //       title: "Cron - every day at 11:45",
-    //       notification: true,
-    //     )..addMeasure(Measure(type: DeviceSamplingPackage.DEVICE)),
-    //     phone);
-
-    // // add a random app task
-    // protocol.addTriggeredTask(
-    //     RandomRecurrentTrigger(
-    //       startTime: TimeOfDay(hour: 8),
-    //       endTime: TimeOfDay(hour: 20),
-    //       minNumberOfTriggers: 2,
-    //       maxNumberOfTriggers: 8,
-    //     ),
-    //     AppTask(
-    //       type: BackgroundSensingUserTask.ONE_TIME_SENSING_TYPE,
-    //       title: "Random - 2-8 times at 08:00-20:00",
-    //       notification: true,
-    //     )..addMeasure(Measure(type: DeviceSamplingPackage.DEVICE)),
-    //     phone);
 
     return protocol;
   }

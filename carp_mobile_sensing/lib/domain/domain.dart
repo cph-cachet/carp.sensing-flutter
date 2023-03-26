@@ -9,6 +9,7 @@ import 'dart:convert';
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:uuid/uuid.dart';
+import 'package:meta/meta.dart';
 
 import 'package:carp_core/carp_core.dart';
 import 'package:carp_serializable/carp_serializable.dart';

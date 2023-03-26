@@ -173,6 +173,26 @@ Map<String, dynamic> _$StudyResponsibleToJson(StudyResponsible instance) {
   return val;
 }
 
+DataEndPoint _$DataEndPointFromJson(Map<String, dynamic> json) => DataEndPoint(
+      type: json['type'] as String,
+      dataFormat: json['dataFormat'] as String? ?? NameSpace.CARP,
+    )..$type = json['__type'] as String?;
+
+Map<String, dynamic> _$DataEndPointToJson(DataEndPoint instance) {
+  final val = <String, dynamic>{};
+
+  void writeNotNull(String key, dynamic value) {
+    if (value != null) {
+      val[key] = value;
+    }
+  }
+
+  writeNotNull('__type', instance.$type);
+  val['type'] = instance.type;
+  val['dataFormat'] = instance.dataFormat;
+  return val;
+}
+
 FileDataEndPoint _$FileDataEndPointFromJson(Map<String, dynamic> json) =>
     FileDataEndPoint(
       type: json['type'] as String? ?? DataEndPointTypes.FILE,

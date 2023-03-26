@@ -31,13 +31,12 @@ Future<void> example_0() async {
   // battery level. Sampling is delaying by 10 seconds.
   protocol.addTaskControl(
     DelayedTrigger(delay: Duration(seconds: 10)),
-    BackgroundTask(name: 'Sensor Task')
-      ..addMeasures([
-        Measure(type: CarpDataTypes.STEP_COUNT_TYPE_NAME),
-        Measure(type: SensorSamplingPackage.AMBIENT_LIGHT),
-        Measure(type: DeviceSamplingPackage.SCREEN_EVENT),
-        Measure(type: DeviceSamplingPackage.BATTERY_STATE),
-      ]),
+    BackgroundTask(measures: [
+      Measure(type: SensorSamplingPackage.STEP_COUNT),
+      Measure(type: SensorSamplingPackage.AMBIENT_LIGHT),
+      Measure(type: DeviceSamplingPackage.SCREEN_EVENT),
+      Measure(type: DeviceSamplingPackage.BATTERY_STATE),
+    ]),
     phone,
     Control.Start,
   );
@@ -68,20 +67,15 @@ Future<void> example_0() async {
 
 /// This is an example of how to set up a study.
 /// This protocol uses the default sampling configuration and stores
-/// collected data in buffered files.
+/// collected data in a local SQLite database.
 ///
 /// Used in the README file.
 void example_1() async {
-  // Create a study protocol storing data in files.
+  // Create a study protocol storing data in a local SQLite database.
   SmartphoneStudyProtocol protocol = SmartphoneStudyProtocol(
-    ownerId: 'AB',
+    ownerId: 'abc@dtu.dk',
     name: 'Track patient movement',
-    dataEndPoint: FileDataEndPoint(
-      bufferSize: 500 * 1000,
-      zip: true,
-      encrypt: false,
-      dataFormat: NameSpace.OMH,
-    ),
+    dataEndPoint: SQLiteDataEndPoint(),
   );
 
   // Define which devices are used for data collection.
@@ -89,33 +83,31 @@ void example_1() async {
   Smartphone phone = Smartphone();
   protocol.addPrimaryDevice(phone);
 
-  // Add a background task that immediately starts collecting step counts,
-  // ambient light, screen activity, and battery level.
+  // Automatically collect step count, ambient light, screen activity, and
+  // battery level. Sampling is delaying by 10 seconds.
   protocol.addTaskControl(
     ImmediateTrigger(),
-    BackgroundTask()
-      ..addMeasures([
-        Measure(type: CarpDataTypes.STEP_COUNT_TYPE_NAME),
-        Measure(type: SensorSamplingPackage.AMBIENT_LIGHT),
-        Measure(type: DeviceSamplingPackage.SCREEN_EVENT),
-        Measure(type: DeviceSamplingPackage.BATTERY_STATE),
-      ]),
+    BackgroundTask(measures: [
+      Measure(type: SensorSamplingPackage.STEP_COUNT),
+      Measure(type: SensorSamplingPackage.AMBIENT_LIGHT),
+      Measure(type: DeviceSamplingPackage.SCREEN_EVENT),
+      Measure(type: DeviceSamplingPackage.BATTERY_STATE),
+    ]),
     phone,
-    Control.Start,
   );
 
   // Use the on-phone deployment service.
   DeploymentService deploymentService = SmartphoneDeploymentService();
 
-  // Create a study deployment using the protocol.
-  StudyDeploymentStatus status =
-      await deploymentService.createStudyDeployment(protocol);
+  // Create a study deployment using the protocol
+  var status = await deploymentService.createStudyDeployment(protocol);
 
   // Create and configure a client manager for this phone.
   SmartPhoneClientManager client = SmartPhoneClientManager();
   await client.configure(deploymentService: deploymentService);
 
-  // Add the study to the client manager and get a study runtime to control this deployment
+  // Add the study to the client manager and get a study runtime to
+  // control this deployment
   Study study = await client.addStudy(
     status.studyDeploymentId,
     status.primaryDeviceStatus!.device.roleName,
