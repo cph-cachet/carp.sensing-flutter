@@ -26,17 +26,18 @@ class CarpDeploymentService extends CarpBaseService
   DeploymentReference deployment([String? studyDeploymentId]) =>
       DeploymentReference._(this, studyDeploymentId ?? app!.studyDeploymentId!);
 
-  /// Create a new deployment in CAWS based on a [StudyProtocol].
-  /// The [studyDeploymentId] is ignored, since CAWS generated its own
-  /// study deployment id.
   @override
   Future<StudyDeploymentStatus> createStudyDeployment(
     StudyProtocol protocol, [
-    String? studyDeploymentId,
-  ]) async {
-    return StudyDeploymentStatus.fromJson(
-        await _rpc(CreateStudyDeployment(protocol)));
-  }
+    List<ParticipantInvitation> invitations = const [],
+    String? id,
+    Map<String, DeviceRegistration>? connectedDevicePreregistrations,
+  ]) async =>
+      StudyDeploymentStatus.fromJson(await _rpc(CreateStudyDeployment(
+        protocol,
+        invitations,
+        connectedDevicePreregistrations,
+      )));
 
   @override
   Future<Set<String>> removeStudyDeployments(Set<String> studyDeploymentIds) =>

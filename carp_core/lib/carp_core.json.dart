@@ -78,7 +78,10 @@ void _registerFromJsonFunctions() {
     Smartphone(),
     AltBeacon(),
     ParticipantAttribute(inputDataType: ''),
-    AssignedTo()
+    AssignedTo(),
+    AccountIdentity(),
+    EmailAccountIdentity(''),
+    UsernameAccountIdentity(''),
   ]);
 
   // DeviceConfiguration with different sub-types
@@ -96,6 +99,7 @@ void _registerFromJsonFunctions() {
     GetParticipantData(''),
     GetParticipantDataList(['']),
     SetParticipantData(''),
+    CreateStudyDeployment(StudyProtocol(name: '', ownerId: ''), []),
     GetStudyDeploymentStatus(''),
     GetStudyDeploymentStatusList(['']),
     RegisterDevice('', '', DefaultDeviceRegistration()),

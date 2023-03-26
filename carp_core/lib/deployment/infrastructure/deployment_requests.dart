@@ -40,13 +40,19 @@ abstract class DeploymentServiceRequest extends ServiceRequest {
 @JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
 class CreateStudyDeployment extends DeploymentServiceRequest {
   StudyProtocol protocol;
+  List<ParticipantInvitation> invitations;
+  Map<String, DeviceRegistration>? connectedDevicePreregistrations;
 
   @override
   @JsonKey(includeFromJson: false, includeToJson: false)
   // ignore: overridden_fields
   String? studyDeploymentId;
 
-  CreateStudyDeployment(this.protocol) : super();
+  CreateStudyDeployment(
+    this.protocol,
+    this.invitations, [
+    this.connectedDevicePreregistrations,
+  ]) : super();
 
   @override
   Function get fromJsonFunction => _$CreateStudyDeploymentFromJson;

@@ -76,7 +76,11 @@ class StudyInvitation {
   /// outside of scope or not yet supported by CARP core.
   String? applicationData;
 
-  StudyInvitation(this.name, [this.description]) : super();
+  StudyInvitation(
+    this.name, [
+    this.description,
+    this.applicationData,
+  ]) : super();
 
   factory StudyInvitation.fromJson(Map<String, dynamic> json) =>
       _$StudyInvitationFromJson(json);

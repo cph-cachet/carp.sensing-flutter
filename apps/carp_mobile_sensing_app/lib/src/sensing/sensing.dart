@@ -75,6 +75,7 @@ class Sensing {
         // reuse the study deployment id, if this is stored on the phone
         _status = await SmartphoneDeploymentService().createStudyDeployment(
           protocol,
+          [],
           bloc.studyDeploymentId,
         );
 

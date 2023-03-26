@@ -250,7 +250,8 @@ StudyInvitation _$StudyInvitationFromJson(Map<String, dynamic> json) =>
     StudyInvitation(
       json['name'] as String,
       json['description'] as String?,
-    )..applicationData = json['applicationData'] as String?;
+      json['applicationData'] as String?,
+    );
 
 Map<String, dynamic> _$StudyInvitationToJson(StudyInvitation instance) {
   final val = <String, dynamic>{
@@ -316,6 +317,13 @@ CreateStudyDeployment _$CreateStudyDeploymentFromJson(
         Map<String, dynamic> json) =>
     CreateStudyDeployment(
       StudyProtocol.fromJson(json['protocol'] as Map<String, dynamic>),
+      (json['invitations'] as List<dynamic>)
+          .map((e) => ParticipantInvitation.fromJson(e as Map<String, dynamic>))
+          .toList(),
+      (json['connectedDevicePreregistrations'] as Map<String, dynamic>?)?.map(
+        (k, e) =>
+            MapEntry(k, DeviceRegistration.fromJson(e as Map<String, dynamic>)),
+      ),
     )
       ..$type = json['__type'] as String?
       ..apiVersion = json['apiVersion'] as String;
@@ -333,6 +341,9 @@ Map<String, dynamic> _$CreateStudyDeploymentToJson(
   writeNotNull('__type', instance.$type);
   val['apiVersion'] = instance.apiVersion;
   val['protocol'] = instance.protocol;
+  val['invitations'] = instance.invitations;
+  writeNotNull('connectedDevicePreregistrations',
+      instance.connectedDevicePreregistrations);
   return val;
 }
 

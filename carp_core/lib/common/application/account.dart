@@ -35,7 +35,7 @@ class Account {
 class AccountIdentity extends Serializable {
   AccountIdentity() : super();
   @override
-  String get jsonType => 'dk.cachet.carp.common.users.$runtimeType';
+  String get jsonType => 'dk.cachet.carp.common.application.users.$runtimeType';
   @override
   Function get fromJsonFunction => _$AccountIdentityFromJson;
   factory AccountIdentity.fromJson(Map<String, dynamic> json) =>

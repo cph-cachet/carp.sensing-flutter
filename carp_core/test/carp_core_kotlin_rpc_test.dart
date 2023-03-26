@@ -524,6 +524,61 @@ void main() {
   });
 
   group('Deployment Service', () {
+    test('CreateStudyDeployment - Request', () async {
+      String rpcString =
+          File('$path/deployments/DeploymentService/createStudyDeployment.json')
+              .readAsStringSync();
+
+      final expected = CreateStudyDeployment.fromJson(
+          json.decode(rpcString) as Map<String, dynamic>);
+
+      String protocolJson =
+          File('$path/protocols/study_protocol.json').readAsStringSync();
+      StudyProtocol protocol = StudyProtocol.fromJson(
+          json.decode(protocolJson) as Map<String, dynamic>);
+      final request = CreateStudyDeployment(
+        protocol,
+        [
+          ParticipantInvitation(
+              participantId: '32880e82-01c9-40cf-a6ed-17ff3348f251',
+              assignedRoles: AssignedTo(roleNames: {'Participant'}),
+              identity: EmailAccountIdentity('boaty@mcboatface.com'),
+              invitation: StudyInvitation(
+                  'Copenhagen transportation study',
+                  'Participate in this study, which keeps track of how much you walk and bike!',
+                  '{"trialGroup", "A"}'))
+        ],
+        {
+          "Participant's bike": AltBeaconDeviceRegistration(
+            registrationCreatedOn: DateTime.tryParse("2022-01-18T11:06:40Z"),
+            manufacturerId: 280,
+            organizationId: "4e990957-0838-414c-bf25-2d391e2990b5",
+            majorId: 42,
+            minorId: 42,
+            referenceRssi: 0,
+            deviceDisplayName: null,
+            deviceId: "280:4e990957-0838-414c-bf25-2d391e2990b5:42:42",
+          )
+        },
+      );
+
+      // expect(expected.toJson(), request.toJson());
+      expect(toJsonString(request), toJsonString(expected));
+      print(toJsonString(request));
+    });
+
+    test('CreateStudyDeployment - Response', () async {
+      String plainJson = File(
+              '$path/deployments/DeploymentService/createStudyDeployment-response.json')
+          .readAsStringSync();
+
+      StudyDeploymentStatus status = StudyDeploymentStatus.fromJson(
+          json.decode(plainJson) as Map<String, dynamic>);
+      expect(status.studyDeploymentId, testDeploymentId);
+      expect(status.status, StudyDeploymentStatusTypes.Invited);
+      print(toJsonString(status));
+    });
+
     test('GetStudyDeploymentStatus - Request', () async {
       String rpcString = File(
               '$path/deployments/DeploymentService/getStudyDeploymentStatus.json')
@@ -549,6 +604,7 @@ void main() {
       expect(status.status, StudyDeploymentStatusTypes.Invited);
       print(toJsonString(status));
     });
+
     test('RegisterDevice - Request', () async {
       String rpcString =
           File('$path/deployments/DeploymentService/registerDevice.json')
