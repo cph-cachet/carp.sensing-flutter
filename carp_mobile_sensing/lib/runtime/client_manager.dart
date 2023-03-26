@@ -61,7 +61,7 @@ class SmartPhoneClientManager extends SmartphoneClient
   Future<void> configure({
     DeploymentService? deploymentService,
     DeviceDataCollectorFactory? deviceController,
-    SmartphoneDeviceRegistration? registration,
+    DeviceRegistration? registration,
     NotificationController? notificationController,
     bool enableNotifications = true,
     bool askForPermissions = true,
@@ -77,17 +77,9 @@ class SmartPhoneClientManager extends SmartphoneClient
     DataManagerRegistry().register(SQLiteDataManagerFactory());
 
     // create the device registration using the DeviceInfo
-    registration ??= SmartphoneDeviceRegistration(
+    registration ??= DefaultDeviceRegistration(
       deviceId: DeviceInfo().deviceID,
       deviceDisplayName: DeviceInfo().toString(),
-      platform: DeviceInfo().platform,
-      hardware: DeviceInfo().hardware,
-      deviceName: DeviceInfo().deviceName,
-      deviceManufacturer: DeviceInfo().deviceManufacturer,
-      deviceModel: DeviceInfo().deviceModel,
-      operatingSystem: DeviceInfo().operatingSystemName,
-      sdk: DeviceInfo().sdk,
-      release: DeviceInfo().release,
     );
 
     // initialize default services, if not specified

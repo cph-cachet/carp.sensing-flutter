@@ -115,10 +115,9 @@ class PolarSamplingPackage implements SamplingPackage {
 
   @override
   void onRegister() {
-    FromJsonFactory().register(PolarDevice());
-
     // register all data types
     FromJsonFactory().registerAll([
+      PolarDevice(),
       PolarAccelerometer('deviceIdentifier', 0, []),
       PolarGyroscope('', 0, []),
       PolarMagnetometer('', 0, []),

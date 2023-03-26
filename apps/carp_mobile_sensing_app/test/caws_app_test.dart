@@ -21,6 +21,7 @@ import '../lib/main.dart';
 import 'credentials.dart';
 
 void main() {
+  // TestWidgetsFlutterBinding.ensureInitialized();
   CarpMobileSensing.ensureInitialized();
 
   setUp(() async {
@@ -33,8 +34,7 @@ void main() {
     SamplingPackageRegistry().register(ESenseSamplingPackage());
     // SamplingPackageRegistry().register(PolarSamplingPackage());
 
-    // Initialization of serialization
-    // CarpMobileSensing();
+    FromJsonFactory().register(PolarDevice());
 
     // create a data manager in order to register the json functions
     CarpDataManager();
@@ -70,10 +70,19 @@ void main() {
       print(" - signed in as: $user");
     });
 
-    test('- get study deployment', () async {
-      final study =
-          await CarpDeploymentService().deployment(testDeploymentId).get();
-      print('study: $study');
+    test('- get study deployment status', () async {
+      final status = await CarpDeploymentService()
+          .getStudyDeploymentStatus(testDeploymentId);
+      print(toJsonString(status));
+    });
+
+    test('- get study deployment ', () async {
+      final status = await CarpDeploymentService()
+          .getStudyDeploymentStatus(testDeploymentId);
+
+      final study = await CarpDeploymentService().getDeviceDeploymentFor(
+          status.studyDeploymentId,
+          status.primaryDeviceStatus!.device.roleName);
       print(toJsonString(study));
     });
 

@@ -18,10 +18,11 @@ class StudyRuntime {
       StreamController();
 
   /// The unique device registration for this device.
-  /// Set in the [configure] method.
+  /// Set in the [addStudy] method.
   DeviceRegistration? get deviceRegistration => _deviceRegistration;
 
   /// The study for this study runtime.
+  /// Set in the [addStudy] method.
   Study? get study => _study;
 
   /// The study deployment id for the [study] of this controller.
@@ -56,8 +57,8 @@ class StudyRuntime {
     _statusEventsController.add(newStatus);
   }
 
-  /// Has this [StudyRuntime] been initialized?
-  bool get isInitialized => (study != null);
+  // /// Has this [StudyRuntime] been initialized?
+  // bool get isInitialized => (study != null);
 
   /// Has the device deployment been completed successfully?
   bool get isDeployed => (_status == StudyStatus.Deployed);
@@ -75,7 +76,8 @@ class StudyRuntime {
   /// [deviceRegistry] to handle the devices used in this study deployment.
   StudyRuntime(this.deploymentService, this.deviceRegistry);
 
-  /// Adds [study] this study runtime by specifying its [study] and [deviceRegistration].
+  /// Adds [study] this study runtime by specifying its [study] and
+  /// [deviceRegistration].
   ///
   /// [deviceRegistration] is the device configuration for the device this study
   /// runtime runs on, identified by [Study.deviceRoleName] in the study deployment

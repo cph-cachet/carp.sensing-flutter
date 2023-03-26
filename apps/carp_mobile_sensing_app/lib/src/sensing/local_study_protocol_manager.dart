@@ -36,6 +36,9 @@ class LocalStudyProtocolManager implements StudyProtocolManager {
           name: 'Alex B. Christensen',
         ));
 
+    // always add a participant role to the protocol
+    protocol.participantRoles?.add(ParticipantRole('Participant', false));
+
     protocol.dataEndPoint = (bloc.deploymentMode == DeploymentMode.local)
         ? SQLiteDataEndPoint()
         : CarpDataEndPoint(

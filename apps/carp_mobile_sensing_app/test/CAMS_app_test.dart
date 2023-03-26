@@ -25,6 +25,9 @@ void main() {
   late StudyProtocol protocol;
 
   setUp(() async {
+    // Initialization of serialization
+    CarpMobileSensing.ensureInitialized();
+
     // register the different sampling package since we're using measures from them
     SamplingPackageRegistry().register(ConnectivitySamplingPackage());
     SamplingPackageRegistry().register(ContextSamplingPackage());
@@ -34,26 +37,30 @@ void main() {
     SamplingPackageRegistry().register(ESenseSamplingPackage());
     SamplingPackageRegistry().register(PolarSamplingPackage());
 
-    // Initialization of serialization
-    CarpMobileSensing();
-
     // create a data manager in order to register the json functions
     CarpDataManager();
+
+    // Configure the BLOC w. deployment and data format
+    bloc.deploymentMode = DeploymentMode.local;
+    bloc.dataFormat = NameSpace.CARP;
+
+    // generate the protocol
+    protocol =
+        await LocalStudyProtocolManager().getStudyProtocol('CAMS App v 1.1.0');
   });
 
   group("Local Study Protocol Manager", () {
     setUp(() async {
-      // Configure the BLOC w. deployment and data format
-      bloc.deploymentMode = DeploymentMode.staging;
-      bloc.dataFormat = NameSpace.CARP;
+      // // Configure the BLOC w. deployment and data format
+      // bloc.deploymentMode = DeploymentMode.local;
+      // bloc.dataFormat = NameSpace.CARP;
 
-      // generate the protocol
-      protocol = await LocalStudyProtocolManager()
-          .getStudyProtocol('CAMS App v 1.1.0');
+      // // generate the protocol
+      // protocol ??= await LocalStudyProtocolManager()
+      //     .getStudyProtocol('CAMS App v 1.1.0');
     });
 
     test('CAMSStudyProtocol -> JSON', () async {
-      print(protocol);
       print(toJsonString(protocol));
       expect(protocol.ownerId, 'abc@dtu.dk');
     });
@@ -65,7 +72,7 @@ void main() {
       SmartphoneStudyProtocol protocolFromJson =
           SmartphoneStudyProtocol.fromJson(
               json.decode(studyJson) as Map<String, dynamic>);
-      print(toJsonString(protocolFromJson));
+      // print(toJsonString(protocolFromJson));
       expect(toJsonString(protocolFromJson), equals(studyJson));
     });
 
@@ -73,16 +80,14 @@ void main() {
       final plainJson =
           File('test/json/cams_study_protocol.json').readAsStringSync();
 
-      final p = StudyProtocol.fromJson(
+      final p = SmartphoneStudyProtocol.fromJson(
           json.decode(plainJson) as Map<String, dynamic>);
 
-      expect(p.ownerId, 'abc@dtu.dk');
-      expect(p.primaryDevice.roleName, protocol.primaryDevice.roleName);
-      expect(p.connectedDevices?.first.roleName,
-          protocol.connectedDevices?.first.roleName);
-      expect(p.connectedDevices?.last.roleName,
-          protocol.connectedDevices?.last.roleName);
-      print(toJsonString(p));
+      // need to set the id and date, since it is auto-generated each time.
+      p.id = protocol.id;
+      p.createdOn = protocol.createdOn;
+
+      expect(toJsonString(protocol), toJsonString(p));
     });
   });
 
@@ -95,8 +100,5 @@ void main() {
           await LocalStudyProtocolManager().getStudyProtocol('1234');
       print(toJsonString(protocol));
     });
-
-    /// Generates and prints the local informed consent as json
-    test('informed consent -> JSON', () async {});
   });
 }

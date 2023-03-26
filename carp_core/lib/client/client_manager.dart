@@ -140,7 +140,6 @@ abstract class ClientManager<
 }
 
 /// Allows managing studies on a smartphone.
-class SmartphoneClient
-    extends ClientManager<Smartphone, SmartphoneDeviceRegistration> {
+class SmartphoneClient extends ClientManager<Smartphone, DeviceRegistration> {
   SmartphoneClient();
 }
