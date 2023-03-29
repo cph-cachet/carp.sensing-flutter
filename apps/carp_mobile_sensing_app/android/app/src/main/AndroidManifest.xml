@@ -25,20 +25,20 @@
     <!-- The following permissions are used in the Connectivity Package -->
     <uses-permission android:name="android.permission.CHANGE_WIFI_STATE"/>
     <!-- Legacy Bluetooth permissions, which is needed on devices with API 30 (Android Q) or older. -->
-    <uses-permission
+    <!-- <uses-permission
         android:name="android.permission.BLUETOOTH"
         android:maxSdkVersion="30" />
     <uses-permission
         android:name="android.permission.BLUETOOTH_ADMIN"
-        android:maxSdkVersion="30" />
+        android:maxSdkVersion="30" /> -->
 
     <!-- The Connectivity package needs Bluetooth scan permission to search for BLE devices. 
     The package doesn't use the scan to decide the location so "neverForLocation" permission flag can be used.-->
     <uses-permission android:name="android.permission.BLUETOOTH_CONNECT"/>
     <uses-permission
-        android:name="android.permission.BLUETOOTH_SCAN"
+        android:name="android.permission.BLUETOOTH_SCAN" 
         android:usesPermissionFlags="neverForLocation" />
-
+    
     <!-- The following permissions are used in the Media Package -->
     <uses-permission android:name="android.permission.RECORD_AUDIO"/>
     <uses-permission android:name="android.permission.CAMERA"/>

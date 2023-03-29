@@ -69,8 +69,8 @@ class DataManagerEvent {
 
 /// An enumeration of data manager event types.
 class DataManagerEventTypes {
-  static const String INITIALIZED = 'initialized';
-  static const String CLOSED = 'closed';
+  static const String initialized = 'initialized';
+  static const String closed = 'closed';
 }
 
 /// An abstract [DataManager] implementation useful for extension.
@@ -118,7 +118,7 @@ abstract class AbstractDataManager implements DataManager {
       onError: onError,
       onDone: onDone,
     );
-    addEvent(DataManagerEvent(DataManagerEventTypes.INITIALIZED));
+    addEvent(DataManagerEvent(DataManagerEventTypes.initialized));
   }
 
   /// When the data stream closes, the [onDone] handler is called.
@@ -136,7 +136,7 @@ abstract class AbstractDataManager implements DataManager {
   @mustCallSuper
   Future<void> close() async {
     _subscription?.cancel();
-    addEvent(DataManagerEvent(DataManagerEventTypes.CLOSED));
+    addEvent(DataManagerEvent(DataManagerEventTypes.closed));
   }
 
   @override

@@ -8,15 +8,13 @@
 part of carp_core_client;
 
 /// Collects [Data] for a single device.
-abstract class DeviceDataCollector<TDeviceRegistration, TDeviceConfiguration> {
+abstract class DeviceDataCollector<
+    TDeviceConfiguration extends DeviceConfiguration> {
   /// The type of this device
   String? type;
 
-  /// The registration for this device.
-  TDeviceRegistration? deviceRegistration;
-
   /// The configuration for this device.
-  TDeviceConfiguration? deviceConfiguration;
+  TDeviceConfiguration? configuration;
 
   /// The set of data types defining which data can be collected on this device.
   Set<String> get supportedDataTypes;
@@ -24,14 +22,16 @@ abstract class DeviceDataCollector<TDeviceRegistration, TDeviceConfiguration> {
   /// Get a unique id for this device.
   String get id;
 
+  // Get a printer-friendly display name for this device.
+  String? get displayName;
+
   /// Determines whether a connection can be made at this point in time to
   /// the device.
   Future<bool> canConnect();
 
   DeviceDataCollector([
     this.type,
-    this.deviceRegistration,
-    this.deviceConfiguration,
+    this.configuration,
   ]);
 }
 

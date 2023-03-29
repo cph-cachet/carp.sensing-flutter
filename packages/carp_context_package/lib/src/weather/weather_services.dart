@@ -38,20 +38,21 @@ class WeatherService extends OnlineService {
 }
 
 /// A [DeviceManager] for the [WeatherService].
-class WeatherServiceManager
-    extends OnlineServiceManager<DeviceRegistration, WeatherService> {
+class WeatherServiceManager extends OnlineServiceManager<WeatherService> {
   weather.WeatherFactory? _service;
 
   /// A handle to the [WeatherFactory] plugin.
   weather.WeatherFactory? get service => (_service != null)
       ? _service
-      : (deviceConfiguration?.apiKey != null)
-          ? _service = weather.WeatherFactory(deviceConfiguration!.apiKey)
+      : (configuration?.apiKey != null)
+          ? _service = weather.WeatherFactory(configuration!.apiKey)
           : null;
 
   @override
-  String get id =>
-      deviceConfiguration?.roleName ?? WeatherService.DEFAULT_ROLENAME;
+  String get id => configuration!.apiKey;
+
+  @override
+  String? get displayName => 'Weather Service (OW)';
 
   @override
   // ignore: avoid_renaming_method_parameters

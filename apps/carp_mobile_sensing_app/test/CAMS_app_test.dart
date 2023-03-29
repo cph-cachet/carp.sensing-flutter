@@ -40,33 +40,25 @@ void main() {
     // create a data manager in order to register the json functions
     CarpDataManager();
 
-    // Configure the BLOC w. deployment and data format
-    bloc.deploymentMode = DeploymentMode.local;
+    // configure the BLOC w. deployment and data format
+    bloc.deploymentMode = DeploymentMode.development;
     bloc.dataFormat = NameSpace.CARP;
 
-    // generate the protocol
+    // generate the protocol to be used in testing below
     protocol =
         await LocalStudyProtocolManager().getStudyProtocol('CAMS App v 1.1.0');
   });
 
   group("Local Study Protocol Manager", () {
-    setUp(() async {
-      // // Configure the BLOC w. deployment and data format
-      // bloc.deploymentMode = DeploymentMode.local;
-      // bloc.dataFormat = NameSpace.CARP;
-
-      // // generate the protocol
-      // protocol ??= await LocalStudyProtocolManager()
-      //     .getStudyProtocol('CAMS App v 1.1.0');
-    });
+    setUp(() async {});
 
     test('CAMSStudyProtocol -> JSON', () async {
       print(toJsonString(protocol));
-      expect(protocol.ownerId, 'abc@dtu.dk');
+      expect(protocol.ownerId, accountId);
     });
 
     test('StudyProtocol -> JSON -> StudyProtocol :: deep assert', () async {
-      print(toJsonString(protocol));
+      // print(toJsonString(protocol));
       final studyJson = toJsonString(protocol);
 
       SmartphoneStudyProtocol protocolFromJson =
@@ -78,7 +70,7 @@ void main() {
 
     test('JSON File -> StudyProtocol', () async {
       final plainJson =
-          File('test/json/cams_study_protocol.json').readAsStringSync();
+          File('test/json/study_protocol.json').readAsStringSync();
 
       final p = SmartphoneStudyProtocol.fromJson(
           json.decode(plainJson) as Map<String, dynamic>);

@@ -30,7 +30,12 @@ class LoadingPage extends StatelessWidget {
       if (bloc.studyDeploymentId == null) {
         await CarpBackend().getStudyInvitation(context);
       }
+
+      // make sure that CarpService knows the study and deployment ids
+      CarpService().app?.studyId = bloc.studyId;
+      CarpService().app?.studyDeploymentId = bloc.studyDeploymentId;
     }
+
     await Sensing().initialize();
 
     return true;

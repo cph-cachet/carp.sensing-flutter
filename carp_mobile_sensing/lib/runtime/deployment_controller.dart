@@ -153,14 +153,14 @@ class SmartphoneDeploymentController extends StudyRuntime {
   ///    * [transformer] - a generic [DataTransformer] function which transform
   ///      each collected data item. If not specified, a 1:1 mapping is done,
   ///      i.e. no transformation.
-  ///    * [coverageFrequence] - a [Coverage] data point will be uploaded with
+  ///    * [coverageFrequency] - a [Coverage] data point will be uploaded with
   ///      the specified frequency in minutes. Default is every 5 minutes.
   ///      Set to -1 to disable coverage monitoring.
   Future<void> configure({
     DataEndPoint? dataEndPoint,
     String privacySchemaName = NameSpace.CARP,
     DataTransformer? transformer,
-    int coverageFrequence = 5,
+    int coverageFrequency = 5,
   }) async {
     assert(deployment != null,
         'Cannot configure a StudyDeploymentController without a deployment.');
@@ -170,6 +170,9 @@ class SmartphoneDeploymentController extends StudyRuntime {
 
     // initialize all devices from the primary deployment, incl. this smartphone.
     deviceRegistry.initializeDevices(deployment!);
+
+    // try to register relevant connected devices
+    super.tryRegisterRemainingDevicesToRegister();
 
     _executor = SmartphoneDeploymentExecutor();
 
@@ -198,15 +201,14 @@ class SmartphoneDeploymentController extends StudyRuntime {
     await deviceRegistry.connectAllConnectableDevices();
 
     _executor!.initialize(deployment!, deployment!);
-    // await enablePowerAwareness();
     measurements.listen((dataPoint) => _samplingSize++);
 
     // set up coverage heart beat measurements
-    if (coverageFrequence > 0) {
+    if (coverageFrequency > 0) {
       Timer.periodic(
-          Duration(minutes: coverageFrequence),
+          Duration(minutes: coverageFrequency),
           (_) => executor?.addMeasurement(
-              Measurement.fromData(Coverage(frequency: coverageFrequence))));
+              Measurement.fromData(Coverage(frequency: coverageFrequency))));
     }
 
     status = StudyStatus.Deployed;
@@ -216,6 +218,7 @@ class SmartphoneDeploymentController extends StudyRuntime {
     print('===============================================================');
     print(' deployment id : ${deployment!.studyDeploymentId}');
     print(' deployed time : ${deployment!.deployed}');
+    print('     role name : ${deployment!.deviceConfiguration.roleName}');
     print('       user id : ${deployment!.userId}');
     print('      platform : ${DeviceInfo().platform.toString()}');
     print('     device ID : ${DeviceInfo().deviceID.toString()}');
@@ -224,36 +227,6 @@ class SmartphoneDeploymentController extends StudyRuntime {
     print('        status : ${status.toString().split('.').last}');
     print('===============================================================');
   }
-
-  // final BatteryProbe _battery = BatteryProbe();
-
-  // /// Enable power-aware sensing in this study. See [PowerAwarenessState].
-  // Future<void> enablePowerAwareness() async {
-  //   if (_samplingSchema.powerAware) {
-  //     info('Enabling power awareness ...');
-  //     _battery.data.listen((dataPoint) {
-  //       BatteryDatum batteryState = (dataPoint.data as BatteryDatum);
-  //       if (batteryState.batteryStatus == BatteryDatum.STATE_DISCHARGING) {
-  //         // only apply power-awareness if not charging.
-  //         PowerAwarenessState newState =
-  //             powerAwarenessState.adapt(batteryState.batteryLevel);
-  //         if (newState != powerAwarenessState) {
-  //           powerAwarenessState = newState;
-  //           info(
-  //               'PowerAware: Going to $powerAwarenessState, level ${batteryState.batteryLevel}%');
-  //           deployment!.adapt(powerAwarenessState.schema);
-  //         }
-  //       }
-  //     });
-  //     _battery.initialize(Measure(
-  //         type: DataType(NameSpace.CARP, DeviceSamplingPackage.BATTERY)
-  //             .toString()));
-  //     _battery.resume();
-  //   }
-  // }
-
-  // /// Disable power-aware sensing.
-  // void disablePowerAwareness() => _battery.stop();
 
   /// Start this controller and if [start] is true, start data collection
   /// according to the parameters specified in [configure].
@@ -336,89 +309,3 @@ class Coverage extends Data {
   @override
   Map<String, dynamic> toJson() => _$CoverageToJson(this);
 }
-
-// /// This default power-awareness schema operates with four power states:
-// ///
-// ///
-// ///       0%   10%        30%        50%                         100%
-// ///       +-----+----------+----------+----------------------------+
-// ///        none   minimum     light              normal
-// ///
-// abstract class PowerAwarenessState {
-//   static const int LIGHT_SAMPLING_LEVEL = 50;
-//   static const int MINIMUM_SAMPLING_LEVEL = 30;
-//   static const int NO_SAMPLING_LEVEL = 10;
-
-//   static PowerAwarenessState? instance;
-
-//   PowerAwarenessState adapt(int? level);
-//   SamplingSchema get schema;
-// }
-
-// class NoSamplingState implements PowerAwarenessState {
-//   static NoSamplingState instance = NoSamplingState();
-
-//   PowerAwarenessState adapt(int? level) {
-//     if (level! > PowerAwarenessState.NO_SAMPLING_LEVEL) {
-//       return MinimumSamplingState.instance;
-//     } else {
-//       return NoSamplingState.instance;
-//     }
-//   }
-
-//   SamplingSchema get schema => SamplingPackageRegistry().none;
-
-//   String toString() => 'Disabled Sampling Mode';
-// }
-
-// class MinimumSamplingState implements PowerAwarenessState {
-//   static MinimumSamplingState instance = MinimumSamplingState();
-
-//   PowerAwarenessState adapt(int? level) {
-//     if (level! < PowerAwarenessState.NO_SAMPLING_LEVEL) {
-//       return NoSamplingState.instance;
-//     } else if (level > PowerAwarenessState.MINIMUM_SAMPLING_LEVEL) {
-//       return LightSamplingState.instance;
-//     } else {
-//       return MinimumSamplingState.instance;
-//     }
-//   }
-
-//   SamplingSchema get schema => SamplingPackageRegistry().minimum;
-
-//   String toString() => 'Minimun Sampling Mode';
-// }
-
-// class LightSamplingState implements PowerAwarenessState {
-//   static LightSamplingState instance = LightSamplingState();
-
-//   PowerAwarenessState adapt(int? level) {
-//     if (level! < PowerAwarenessState.MINIMUM_SAMPLING_LEVEL) {
-//       return MinimumSamplingState.instance;
-//     } else if (level > PowerAwarenessState.LIGHT_SAMPLING_LEVEL) {
-//       return NormalSamplingState.instance;
-//     } else {
-//       return LightSamplingState.instance;
-//     }
-//   }
-
-//   SamplingSchema get schema => SamplingPackageRegistry().light;
-
-//   String toString() => 'Light Sampling Mode';
-// }
-
-// class NormalSamplingState implements PowerAwarenessState {
-//   static NormalSamplingState instance = NormalSamplingState();
-
-//   PowerAwarenessState adapt(int? level) {
-//     if (level! < PowerAwarenessState.LIGHT_SAMPLING_LEVEL) {
-//       return LightSamplingState.instance;
-//     } else {
-//       return NormalSamplingState.instance;
-//     }
-//   }
-
-//   SamplingSchema get schema => SamplingSchema.normal();
-
-//   String toString() => 'Normal Sampling Mode';
-// }

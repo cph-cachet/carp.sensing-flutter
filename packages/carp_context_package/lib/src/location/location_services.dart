@@ -76,14 +76,15 @@ class LocationService extends OnlineService {
 }
 
 /// A [DeviceManager] for the location service.
-class LocationServiceManager
-    extends OnlineServiceManager<DeviceRegistration, LocationService> {
+class LocationServiceManager extends OnlineServiceManager<LocationService> {
   /// A handle to the [LocationManager].
   LocationManager manager = LocationManager();
 
   @override
-  String get id =>
-      deviceConfiguration?.roleName ?? LocationService.DEFAULT_ROLENAME;
+  String get id => manager.hashCode.toString();
+
+  @override
+  String? get displayName => 'Location Service';
 
   @override
   // ignore: avoid_renaming_method_parameters
@@ -94,7 +95,7 @@ class LocationServiceManager
 
   @override
   Future<DeviceStatus> onConnect() async {
-    await manager.configure(deviceConfiguration);
+    await manager.configure(configuration);
     return manager.enabled ? DeviceStatus.connected : DeviceStatus.disconnected;
   }
 

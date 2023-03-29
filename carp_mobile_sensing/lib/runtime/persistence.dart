@@ -40,7 +40,7 @@ class Persistence {
       onCreate: (Database db, int version) async {
         // when creating the database, create the tables
         await db.execute(
-            'CREATE TABLE $DEPLOYMENT_TABLE_NAME (deployment_id TEXT PRIMARY KEY, updated_at TEXT, deployed_at TEXT, user_id TEXT, deployment TEXT)');
+            'CREATE TABLE $DEPLOYMENT_TABLE_NAME (deployment_id TEXT PRIMARY KEY, device_rolename TEXT, updated_at TEXT, deployed_at TEXT, user_id TEXT, deployment TEXT)');
         await db.execute(
             'CREATE TABLE $TASK_QUEUE_TABLE_NAME (id INTEGER PRIMARY KEY, deployment_id TEXT, task_id TEXT, task TEXT)');
 
@@ -70,6 +70,7 @@ class Persistence {
     try {
       final Map<String, dynamic> map = {
         'deployment_id': deployment.studyDeploymentId,
+        'device_rolename': deployment.deviceConfiguration.roleName,
         'updated_at': DateTime.now().toUtc().toIso8601String(),
         'deployed_at': deployment.deployed?.toUtc().toIso8601String(),
         'user_id': deployment.userId,

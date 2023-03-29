@@ -10,7 +10,7 @@ CarpDataEndPoint _$CarpDataEndPointFromJson(Map<String, dynamic> json) =>
     CarpDataEndPoint(
       uploadMethod: $enumDecodeNullable(
               _$CarpUploadMethodEnumMap, json['uploadMethod']) ??
-          CarpUploadMethod.DATA_STREAM,
+          CarpUploadMethod.stream,
       name: json['name'] as String? ?? 'CARP Web Services',
       uri: json['uri'] as String?,
       clientId: json['clientId'] as String?,
@@ -51,9 +51,9 @@ Map<String, dynamic> _$CarpDataEndPointToJson(CarpDataEndPoint instance) {
 }
 
 const _$CarpUploadMethodEnumMap = {
-  CarpUploadMethod.DATA_STREAM: 'DATA_STREAM',
-  CarpUploadMethod.DATA_POINT: 'DATA_POINT',
-  CarpUploadMethod.FILE: 'FILE',
+  CarpUploadMethod.stream: 'stream',
+  CarpUploadMethod.datapoint: 'datapoint',
+  CarpUploadMethod.file: 'file',
 };
 
 Message _$MessageFromJson(Map<String, dynamic> json) => Message(

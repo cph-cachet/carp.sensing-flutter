@@ -94,7 +94,7 @@ void main() {
                 .getActiveParticipationInvitations();
 
         for (var invitation in invitations) {
-          print(invitation);
+          print(toJsonString(invitation));
         }
       },
     );

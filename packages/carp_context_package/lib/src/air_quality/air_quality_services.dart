@@ -14,7 +14,7 @@ class AirQualityService extends OnlineService {
   static const String DEVICE_TYPE =
       '${DeviceConfiguration.DEVICE_NAMESPACE}.AirQualityService';
 
-  /// The default rolename for an air quality service.
+  /// The default role name for an air quality service.
   static const String DEFAULT_ROLENAME = 'Air Quality Service';
 
   /// API key for the WAQI API.
@@ -38,20 +38,21 @@ class AirQualityService extends OnlineService {
 }
 
 /// A [DeviceManager] for the [AirQualityService].
-class AirQualityServiceManager
-    extends OnlineServiceManager<DeviceRegistration, AirQualityService> {
+class AirQualityServiceManager extends OnlineServiceManager<AirQualityService> {
   waqi.AirQuality? _service;
 
   /// A handle to the [AirQuality] plugin.
   waqi.AirQuality? get service => (_service != null)
       ? _service
-      : (deviceConfiguration?.apiKey != null)
-          ? _service = waqi.AirQuality(deviceConfiguration!.apiKey)
+      : (configuration?.apiKey != null)
+          ? _service = waqi.AirQuality(configuration!.apiKey)
           : null;
 
   @override
-  String get id =>
-      deviceConfiguration?.roleName ?? AirQualityService.DEFAULT_ROLENAME;
+  String get id => configuration!.apiKey;
+
+  @override
+  String? get displayName => 'Air Quality Service (WAQI)';
 
   @override
   // ignore: avoid_renaming_method_parameters

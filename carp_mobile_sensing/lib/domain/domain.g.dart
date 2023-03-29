@@ -356,7 +356,7 @@ OnlineService<TRegistration> _$OnlineServiceFromJson<
         TRegistration extends DeviceRegistration>(Map<String, dynamic> json) =>
     OnlineService<TRegistration>(
       roleName: json['roleName'] as String,
-      isOptional: json['isOptional'] as bool?,
+      isOptional: json['isOptional'] as bool? ?? true,
       supportedDataTypes: (json['supportedDataTypes'] as List<dynamic>?)
           ?.map((e) => e as String)
           .toList(),
@@ -435,6 +435,7 @@ SmartphoneDeployment _$SmartphoneDeploymentFromJson(
       userId: json['userId'] as String?,
     )
       ..applicationData = json['applicationData'] as Map<String, dynamic>?
+      ..studyId = json['studyId'] as String?
       ..deployed = json['deployed'] == null
           ? null
           : DateTime.parse(json['deployed'] as String);
@@ -458,6 +459,7 @@ Map<String, dynamic> _$SmartphoneDeploymentToJson(
   val['triggers'] = instance.triggers;
   val['taskControls'] = instance.taskControls.toList();
   val['expectedParticipantData'] = instance.expectedParticipantData.toList();
+  writeNotNull('studyId', instance.studyId);
   val['studyDeploymentId'] = instance.studyDeploymentId;
   writeNotNull('deployed', instance.deployed?.toIso8601String());
   writeNotNull('userId', instance.userId);

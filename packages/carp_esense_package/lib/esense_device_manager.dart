@@ -32,7 +32,7 @@ part of esense;
 ///
 /// There is no need for special configuration to use the microphone on the earbud.
 /// Once the earbud is paired (Bluetooth Classic interface), the host device will
-/// recognise the earbud as a new input source. The audio recorded is mono, only
+/// recognize the earbud as a new input source. The audio recorded is mono, only
 /// from the earbud paired with the host device. The same happens for calls, only
 /// the speaker and microphone on the earbud paired with the host will be used
 /// during an active call.
@@ -55,7 +55,7 @@ class ESenseDevice extends DeviceConfiguration {
       '${DeviceConfiguration.DEVICE_NAMESPACE}.ESenseDevice';
 
   /// The default rolename for a eSense device.
-  static const String DEFAULT_ROLENAME = 'esense';
+  static const String DEFAULT_ROLENAME = 'eSense';
 
   /// The name of the eSense device.
   /// Used for connecting to the eSense hardware device over BTLE.
@@ -67,10 +67,10 @@ class ESenseDevice extends DeviceConfiguration {
 
   ESenseDevice({
     super.roleName = ESenseDevice.DEFAULT_ROLENAME,
+    super.isOptional = true,
     this.deviceName,
     this.samplingRate,
   }) : super(
-          isOptional: true,
           supportedDataTypes: [
             ESenseSamplingPackage.ESENSE_BUTTON,
             ESenseSamplingPackage.ESENSE_SENSOR,
@@ -86,8 +86,7 @@ class ESenseDevice extends DeviceConfiguration {
 }
 
 /// A [DeviceManager] for the eSense device.
-class ESenseDeviceManager
-    extends BTLEDeviceManager<DeviceRegistration, ESenseDevice> {
+class ESenseDeviceManager extends BTLEDeviceManager<ESenseDevice> {
   // the last known voltage level of the eSense device
   double? _voltageLevel;
 
@@ -95,15 +94,18 @@ class ESenseDeviceManager
   ESenseManager? manager;
 
   @override
-  String get id => deviceConfiguration?.deviceName ?? 'eSense-????';
+  String get id => configuration?.deviceName ?? 'eSense-????';
 
   @override
-  String get btleName => deviceConfiguration?.deviceName ?? 'eSense-????';
+  String? get displayName => btleName;
+
+  @override
+  String get btleName => configuration?.deviceName ?? 'eSense-????';
 
   /// Set the name of this device based on the Bluetooth name.
   /// This name is used for connection.
   @override
-  set btleName(String btleName) => deviceConfiguration?.deviceName = btleName;
+  set btleName(String btleName) => configuration?.deviceName = btleName;
 
   /// A estimate of the battery level of the eSense device.
   ///
@@ -130,13 +132,15 @@ class ESenseDeviceManager
       : null;
 
   @override
-  Future<bool> canConnect() async => (deviceConfiguration?.deviceName != null &&
-      deviceConfiguration!.deviceName!.isNotEmpty);
+  Future<bool> canConnect() async => (configuration?.deviceName != null &&
+      configuration!.deviceName!.isNotEmpty);
 
   @override
   Future<DeviceStatus> onConnect() async {
-    if (deviceConfiguration?.deviceName == null ||
-        deviceConfiguration!.deviceName!.isEmpty) return DeviceStatus.error;
+    if (configuration?.deviceName == null ||
+        configuration!.deviceName!.isEmpty) {
+      return DeviceStatus.error;
+    }
 
     manager = ESenseManager(id);
 

@@ -12,27 +12,11 @@ part of carp_core_deployment;
 abstract class ParticipationService {
   static const String API_VERSION = "1.0";
 
-  /// Let the person with the specified [identity] participate in the study
-  /// deployment with [studyDeploymentId], using the primary devices with the
-  /// specified [assignedPrimaryDeviceRoleNames].
-  ///
-  /// In case no account is associated to the specified [identity], a new account
-  /// is created.
-  ///
-  /// An [invitation] (and account details) is delivered to the person managing
-  /// the [identity], or should be handed out manually to the relevant participant
-  /// by the person managing the specified [identity].
-  Future<Participation> addParticipation(
-    String studyDeploymentId,
-    Set<String> assignedPrimaryDeviceRoleNames,
-    AccountIdentity identity,
-    StudyInvitation invitation,
-  );
-
-  /// Get all participations of active study deployments the account with the
-  /// given [accountId] has been invited to.
+  /// Get all invitations of active study deployments the account
+  /// with the given [accountId] has been invited to.
   Future<List<ActiveParticipationInvitation>> getActiveParticipationInvitations(
-      String accountId);
+    String accountId,
+  );
 
   /// Get currently set data for all expected participant data in the study
   /// deployment with [studyDeploymentId].

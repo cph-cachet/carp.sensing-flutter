@@ -52,10 +52,11 @@ class PrimaryDeviceDeployment {
       _expectedDataStreams = {};
 
       for (var control in taskControls) {
+        control.task ??= getTaskByName(control.taskName);
         for (var type in control.task!.getAllExpectedDataTypes()) {
           _expectedDataStreams!.add(ExpectedDataStream(
             dataType: type,
-            deviceRoleName: control.targetDevice!.roleName,
+            deviceRoleName: control.destinationDeviceRoleName!,
           ));
         }
       }

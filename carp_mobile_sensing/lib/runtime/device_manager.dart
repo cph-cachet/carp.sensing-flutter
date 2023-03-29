@@ -9,9 +9,8 @@
 part of runtime;
 
 /// A [DeviceManager] handles a hardware device or online service on runtime.
-abstract class DeviceManager<TDeviceRegistration extends DeviceRegistration,
-        TDeviceConfiguration extends DeviceConfiguration>
-    extends DeviceDataCollector<TDeviceRegistration, TDeviceConfiguration> {
+abstract class DeviceManager<TDeviceConfiguration extends DeviceConfiguration>
+    extends DeviceDataCollector<TDeviceConfiguration> {
   final StreamController<DeviceStatus> _eventController =
       StreamController.broadcast();
   final Set<String> _supportedDataTypes = {};
@@ -21,8 +20,7 @@ abstract class DeviceManager<TDeviceRegistration extends DeviceRegistration,
 
   DeviceManager([
     super.type,
-    super.deviceRegistration,
-    super.deviceConfiguration,
+    super.configuration,
   ]);
 
   @override
@@ -54,7 +52,7 @@ abstract class DeviceManager<TDeviceRegistration extends DeviceRegistration,
   void initialize(TDeviceConfiguration configuration) {
     info(
         'Initializing device manager, type: $type, configuration: $configuration');
-    deviceConfiguration = configuration;
+    super.configuration = configuration;
     onInitialize(configuration);
     status = DeviceStatus.initialized;
   }
@@ -82,7 +80,7 @@ abstract class DeviceManager<TDeviceRegistration extends DeviceRegistration,
       status = await onConnect();
     } catch (error) {
       warning(
-          '$runtimeType - cannot connect to device $deviceConfiguration - error: $error');
+          '$runtimeType - cannot connect to device $configuration - error: $error');
     }
 
     return status;
@@ -142,34 +140,33 @@ abstract class DeviceManager<TDeviceRegistration extends DeviceRegistration,
 
   /// Callback on [disconnect].
   ///
-  /// Is to be overriden in sub-classes.
+  /// Is to be overridden in sub-classes.
   Future<bool> onDisconnect();
 }
 
 /// A [DeviceManager] for an online service, like a weather service.
-abstract class OnlineServiceManager<
-        TDeviceRegistration extends DeviceRegistration,
-        TDeviceConfiguration extends OnlineService>
-    extends DeviceManager<TDeviceRegistration, TDeviceConfiguration> {}
+abstract class OnlineServiceManager<TDeviceConfiguration extends OnlineService>
+    extends DeviceManager<TDeviceConfiguration> {}
 
 /// A [DeviceManager] for a hardware device.
 abstract class HardwareDeviceManager<
-        TDeviceRegistration extends DeviceRegistration,
         TDeviceConfiguration extends DeviceConfiguration>
-    extends DeviceManager<TDeviceRegistration, TDeviceConfiguration> {
+    extends DeviceManager<TDeviceConfiguration> {
   /// The runtime battery level of this hardware device.
   /// Returns null if unknown.
   int? get batteryLevel;
 }
 
 /// A device manager for a smartphone.
-class SmartphoneDeviceManager
-    extends HardwareDeviceManager<DeviceRegistration, Smartphone> {
+class SmartphoneDeviceManager extends HardwareDeviceManager<Smartphone> {
   int? _batteryLevel = 0;
   Battery battery = Battery();
 
   @override
   String get id => DeviceInfo().deviceID!;
+
+  @override
+  String? get displayName => DeviceInfo().toString();
 
   @override
   void onInitialize(Smartphone configuration) {
@@ -199,9 +196,9 @@ class SmartphoneDeviceManager
 }
 
 /// A device manager for a connectable bluetooth device.
-abstract class BTLEDeviceManager<TDeviceRegistration extends DeviceRegistration,
+abstract class BTLEDeviceManager<
         TDeviceConfiguration extends DeviceConfiguration>
-    extends HardwareDeviceManager<TDeviceRegistration, TDeviceConfiguration> {
+    extends HardwareDeviceManager<TDeviceConfiguration> {
   String _btleAddress = '', _btleName = '';
 
   /// The Bluetooth address of this device in the form `00:04:79:00:0F:4D`.
@@ -231,7 +228,7 @@ enum DeviceStatus {
   /// The state of the device is unknown.
   unknown,
 
-  /// The device is in an errorous state.
+  /// The device is in an error state.
   error,
 
   /// The device has been initialized.

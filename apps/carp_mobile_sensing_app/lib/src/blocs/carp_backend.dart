@@ -61,9 +61,13 @@ class CarpBackend {
   Future<void> getStudyInvitation(BuildContext context) async {
     ActiveParticipationInvitation? invitation =
         await CarpParticipationService().getStudyInvitation(context);
-    debug('CARP Study Invitation: $invitation');
+    debug('CAWS Study Invitation: $invitation');
 
+    bloc.studyId = invitation?.studyId;
     bloc.studyDeploymentId = invitation?.studyDeploymentId;
-    info('Deployment ID from invitation: ${bloc.studyDeploymentId}');
+    bloc.deviceRolename = invitation?.assignedDevices?.first.device.roleName;
+    info('Invitation received - '
+        'deployment id: ${bloc.studyDeploymentId}, '
+        'role name: ${bloc.deviceRolename}');
   }
 }

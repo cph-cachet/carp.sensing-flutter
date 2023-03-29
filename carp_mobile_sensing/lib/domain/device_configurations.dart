@@ -13,7 +13,7 @@ class OnlineService<TRegistration extends DeviceRegistration>
     extends DeviceConfiguration<TRegistration> {
   OnlineService({
     required super.roleName,
-    super.isOptional,
+    super.isOptional = true,
     super.supportedDataTypes,
   });
   @override

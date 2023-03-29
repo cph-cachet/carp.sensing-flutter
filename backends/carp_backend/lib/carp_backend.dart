@@ -69,22 +69,22 @@ class CarpDataEndPoint extends DataEndPoint {
   /// Only upload when connected via WiFi network?
   bool onlyUploadOnWiFi = false;
 
-  /// When uploading to CAWS using file in the [CarpUploadMethod.DATA_STREAM]
-  /// or [CarpUploadMethod.FILE] methods, specifies how often should data be
+  /// When uploading to CAWS using file in the [CarpUploadMethod.stream]
+  /// or [CarpUploadMethod.file] methods, specifies how often should data be
   /// uploaded. In minutes.
   int uploadInterval = 10;
 
-  /// When uploading to CAWS using file in the [CarpUploadMethod.DATA_STREAM]
-  /// or [CarpUploadMethod.FILE] methods, specifies if the local buffered data
+  /// When uploading to CAWS using file in the [CarpUploadMethod.stream]
+  /// or [CarpUploadMethod.file] methods, specifies if the local buffered data
   /// on the phone should be deleted once uploaded.
   ///
-  /// If using the [CarpUploadMethod.FILE] method, this should definitely be
+  /// If using the [CarpUploadMethod.file] method, this should definitely be
   /// true in order to delete already uploaded records from the database.
   bool deleteWhenUploaded = true;
 
   /// Creates a [CarpDataEndPoint].
   CarpDataEndPoint({
-    this.uploadMethod = CarpUploadMethod.DATA_STREAM,
+    this.uploadMethod = CarpUploadMethod.stream,
     this.name = 'CARP Web Services',
     this.uri,
     this.clientId,
@@ -101,7 +101,7 @@ class CarpDataEndPoint extends DataEndPoint {
 
   /// Creates a [CarpDataEndPoint] based on a [CarpApp] [app].
   CarpDataEndPoint.fromCarpApp({
-    CarpUploadMethod uploadMethod = CarpUploadMethod.DATA_STREAM,
+    CarpUploadMethod uploadMethod = CarpUploadMethod.stream,
     String name = 'CARP Web Services',
     String? collection,
     bool onlyUploadOnWiFi = false,
@@ -134,13 +134,13 @@ class CarpDataEndPoint extends DataEndPoint {
 /// A enumeration of upload methods to CAWS
 enum CarpUploadMethod {
   /// Upload data as data streams (the default method).
-  DATA_STREAM,
+  stream,
 
-  /// Upload each data point separately using the old DataPoint endpoint in CAWS.
-  DATA_POINT,
+  /// Upload each data point separately using the non-core DataPoint endpoint in CAWS.
+  datapoint,
 
   /// Collect measurements in a SQLite DB file and upload as a `db` file
-  FILE,
+  file,
 }
 
 /// Exception for CARP backend communication.

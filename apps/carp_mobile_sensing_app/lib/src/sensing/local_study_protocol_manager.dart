@@ -18,7 +18,7 @@ class LocalStudyProtocolManager implements StudyProtocolManager {
   @override
   Future<SmartphoneStudyProtocol> getStudyProtocol(String protocolId) async {
     SmartphoneStudyProtocol protocol = SmartphoneStudyProtocol(
-      ownerId: 'abc@dtu.dk',
+      ownerId: accountId,
       name: protocolId,
     );
 
@@ -36,13 +36,10 @@ class LocalStudyProtocolManager implements StudyProtocolManager {
           name: 'Alex B. Christensen',
         ));
 
-    // always add a participant role to the protocol
-    protocol.participantRoles?.add(ParticipantRole('Participant', false));
-
     protocol.dataEndPoint = (bloc.deploymentMode == DeploymentMode.local)
         ? SQLiteDataEndPoint()
         : CarpDataEndPoint(
-            uploadMethod: CarpUploadMethod.DATA_POINT,
+            uploadMethod: CarpUploadMethod.stream,
           );
 
     // TODO - for testing - remove later
@@ -58,6 +55,9 @@ class LocalStudyProtocolManager implements StudyProtocolManager {
 
     // set the format of the data to upload - e.g. Open mHealth
     protocol.dataEndPoint!.dataFormat = bloc.dataFormat;
+
+    // always add a participant role to the protocol
+    protocol.participantRoles?.add(ParticipantRole('Participant', false));
 
     // define the primary device
     Smartphone phone = Smartphone();
@@ -196,19 +196,19 @@ class LocalStudyProtocolManager implements StudyProtocolManager {
     //       )),
     //     phone);
 
-    // // define the sSense device and add its measures
-    // ESenseDevice eSense = ESenseDevice(
-    //   deviceName: 'eSense-0332',
-    //   samplingRate: 10,
-    // );
-    // protocol.addConnectedDevice(eSense);
+    // define the sSense device and add its measures
+    ESenseDevice eSense = ESenseDevice(
+      deviceName: 'eSense-0332',
+      samplingRate: 10,
+    );
+    protocol.addConnectedDevice(eSense, phone);
 
-    // protocol.addTaskControl(
-    //     ImmediateTrigger(),
-    //     BackgroundTask()
-    //       ..addMeasure(Measure(type: ESenseSamplingPackage.ESENSE_BUTTON))
-    //       ..addMeasure(Measure(type: ESenseSamplingPackage.ESENSE_SENSOR)),
-    //     eSense);
+    protocol.addTaskControl(
+        ImmediateTrigger(),
+        BackgroundTask()
+          ..addMeasure(Measure(type: ESenseSamplingPackage.ESENSE_BUTTON))
+          ..addMeasure(Measure(type: ESenseSamplingPackage.ESENSE_SENSOR)),
+        eSense);
 
     // define the Polar device and add its measures
     PolarDevice polar = PolarDevice(

@@ -153,7 +153,11 @@ class StudyRuntime {
     );
     status = StudyStatus.DeviceDeploymentReceived;
 
-    // TODO - set _remainingDevicesToRegister
+    deploymentStatus?.deviceStatusList.forEach((deviceStatus) {
+      if (deviceStatus.status == DeviceDeploymentStatusTypes.Unregistered) {
+        _remainingDevicesToRegister.add(deviceStatus.device);
+      }
+    });
 
     // mark this deployment as successful
     try {
@@ -175,47 +179,49 @@ class StudyRuntime {
   }
 
   /// Tries to register a connected device which is available
-  /// in this device's [deviceRegistry] as well as in the [deploymentService].
+  /// in this device's [deviceRegistry] in the [deploymentService]
   Future<void> tryRegisterConnectedDevice(DeviceConfiguration device) async {
-    assert(study != null,
-        "Cannot register a device without a valid study deployment. Call 'configure()' first.");
+    assert(
+        study != null,
+        "Cannot register a device without a valid study deployment. "
+        "Call 'configure()' first.");
 
     String deviceType = device.type;
     String? deviceRoleName = device.roleName;
 
-    // if this phone supports the device, register it locally
-    if (deviceRegistry.supportsDevice(deviceType)) {
-      await deviceRegistry.createDevice(deviceType);
-    }
-
-    // if successful, register at the deployment service
     if (deviceRegistry.hasDevice(deviceType)) {
       DeviceDataCollector deviceManager = deviceRegistry.getDevice(deviceType)!;
-      // ask the device manager for a unique id of the device
-      DeviceRegistration registration = DefaultDeviceRegistration(
+
+      // create a registration based on the device manager's unique id and name of the device
+      var registration = deviceManager.configuration!.createRegistration(
         deviceId: deviceManager.id,
+        deviceDisplayName: deviceManager.displayName,
       );
-      deviceManager.deviceRegistration = registration;
-      deploymentStatus = (await deploymentService.registerDevice(
-        study!.studyDeploymentId,
-        deviceRoleName,
-        registration,
-      ));
+
+      try {
+        deploymentStatus = (await deploymentService.registerDevice(
+          study!.studyDeploymentId,
+          deviceRoleName,
+          registration,
+        ));
+      } catch (error) {
+        print("$runtimeType - failed to register device with role name "
+            "'$deviceRoleName' for study deployment '${study!.studyDeploymentId}' "
+            "at deployment service '$deploymentService'.\n"
+            "Error: $error\n"
+            "Continuing without registration.");
+      }
     }
   }
 
-  /// Tries to register all connected devices which are available
-  /// in this device's [deviceRegistry] as well as in the [deploymentService].
-  ///
-  /// The [deploymentStatus] lists the devices needed to be deployed on this device.
+  /// Tries to register the connected devices which still need to be registered
+  /// in the [deploymentService].
   ///
   /// This is a convenient method for synchronizing the devices needed for a
   /// deployment and the available devices on this phone.
-  Future<void> tryRegisterConnectedDevices() async {
-    if (deploymentStatus != null) {
-      for (var deviceStatus in deploymentStatus!.deviceStatusList) {
-        await tryRegisterConnectedDevice(deviceStatus.device);
-      }
+  Future<void> tryRegisterRemainingDevicesToRegister() async {
+    for (var device in remainingDevicesToRegister) {
+      await tryRegisterConnectedDevice(device);
     }
   }
 

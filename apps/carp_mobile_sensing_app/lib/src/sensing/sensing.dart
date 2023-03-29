@@ -9,9 +9,10 @@ part of mobile_sensing_app;
 
 /// This class implements the sensing layer.
 ///
-/// Call [initialize] to setup a deployment, either locally or using a CARP
+/// Call [initialize] to setup a deployment, either locally or using a CAWS
 /// deployment. Once initialized, the runtime [controller] can be used to
-/// control the study execution (e.g., resume, pause, stop).
+/// control the study execution (e.g., start and stop).
+/// Collected data is available in the [measurements] stream.
 class Sensing {
   static final Sensing _instance = Sensing._();
   StudyDeploymentStatus? _status;
@@ -33,6 +34,9 @@ class Sensing {
   /// The study runtime controller for this deployment
   SmartphoneDeploymentController? get controller => _controller;
 
+  /// The stream of all sampled measurements.
+  Stream<Measurement>? get measurements => _controller?.measurements;
+
   /// the list of running - i.e. used - probes in this study.
   List<Probe> get runningProbes =>
       (_controller != null) ? _controller!.executor!.probes : [];
@@ -45,7 +49,7 @@ class Sensing {
   factory Sensing() => _instance;
 
   Sensing._() {
-    CarpMobileSensing();
+    CarpMobileSensing.ensureInitialized();
 
     // Create and register external sampling packages
     SamplingPackageRegistry().register(ConnectivitySamplingPackage());
@@ -87,19 +91,21 @@ class Sensing {
       case DeploymentMode.staging:
       case DeploymentMode.development:
 
+        // CarpService().
+
         // use the CARP deployment service that knows how to download a
         // protocol from CAWS
         CarpDeploymentService().configureFrom(CarpService());
         deploymentService = CarpDeploymentService();
 
-        // get the study deployment status based on the studyDeploymentId
-        if (bloc.studyDeploymentId != null) {
-          _status = await deploymentService
-              ?.getStudyDeploymentStatus(bloc.studyDeploymentId!);
-        } else {
-          warning(
-              '$runtimeType - no study deployment ID has been specified....?');
-        }
+        // // get the study deployment status based on the studyDeploymentId
+        // if (bloc.studyDeploymentId != null) {
+        //   _status = await deploymentService
+        //       ?.getStudyDeploymentStatus(bloc.studyDeploymentId!);
+        // } else {
+        //   warning(
+        //       '$runtimeType - no study deployment ID has been specified....?');
+        // }
 
         break;
     }
@@ -117,7 +123,10 @@ class Sensing {
     );
 
     // Define the study and add it to the client.
-    study = await client?.addStudy(bloc.studyDeploymentId!, deviceRolename!);
+    study = await client?.addStudy(
+      bloc.studyDeploymentId!,
+      bloc.deviceRolename!,
+    );
 
     // Get the study controller and try to deploy the study.
     //

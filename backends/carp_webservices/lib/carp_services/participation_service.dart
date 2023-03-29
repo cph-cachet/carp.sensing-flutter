@@ -27,16 +27,6 @@ class CarpParticipationService extends CarpBaseService
   ParticipationReference participation([String? studyDeploymentId]) =>
       ParticipationReference._(this, studyDeploymentId);
 
-  @override
-  Future<Participation> addParticipation(
-      String studyDeploymentId,
-      Set<String> assignedMasterDeviceRoleNames,
-      AccountIdentity identity,
-      StudyInvitation invitation) {
-    // TODO: implement addParticipation
-    throw UnimplementedError();
-  }
-
   /// Get the list of active participation invitations for an [accountId].
   /// This will return all deployments that this account (user) is invited to.
   ///

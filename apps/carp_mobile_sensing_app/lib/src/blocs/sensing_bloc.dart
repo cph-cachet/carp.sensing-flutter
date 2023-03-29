@@ -1,11 +1,32 @@
 part of mobile_sensing_app;
 
 class SensingBLoC {
+  static const String STUDY_ID_KEY = 'study_id';
   static const String STUDY_DEPLOYMENT_ID_KEY = 'study_deployment_id';
+  static const String DEVICE_ROLENAME_KEY = 'device_rolename';
 
+  String? _studyId;
   String? _studyDeploymentId;
+  String? _deviceRolename;
   bool _useCached = true;
   bool _resumeSensingOnStartup = false;
+
+  /// The study id for the currently running deployment.
+  /// Returns the study id cached locally on the phone (if available).
+  /// Returns `null` if no study is deployed (yet).
+  String? get studyId =>
+      (_studyId ??= Settings().preferences?.getString(STUDY_ID_KEY));
+
+  /// Set the study deployment id for the currently running deployment.
+  /// This study deployment id will be cached locally on the phone.
+  set studyId(String? id) {
+    assert(
+        id != null,
+        'Cannot set the study id to null in Settings. '
+        "Use the 'eraseStudyDeployment()' method to erase study deployment information.");
+    _studyId = id;
+    Settings().preferences?.setString(STUDY_ID_KEY, id!);
+  }
 
   /// The study deployment id for the currently running deployment.
   /// Returns the deployment id cached locally on the phone (if available).
@@ -22,6 +43,23 @@ class SensingBLoC {
         "Use the 'eraseStudyDeployment()' method to erase study deployment information.");
     _studyDeploymentId = id;
     Settings().preferences?.setString(STUDY_DEPLOYMENT_ID_KEY, id!);
+  }
+
+  /// The device role name for the currently running deployment.
+  /// Returns the role name cached locally on the phone (if available).
+  /// Returns `null` if no study is deployed (yet).
+  String? get deviceRolename => (_deviceRolename ??=
+      Settings().preferences?.getString(DEVICE_ROLENAME_KEY));
+
+  /// Set the device rolename for the currently running deployment.
+  /// This rolename will be cached locally on the phone.
+  set deviceRolename(String? rolename) {
+    assert(
+        rolename != null,
+        'Cannot set device role name to null in Settings. '
+        "Use the 'eraseStudyDeployment()' method to erase study deployment information.");
+    _deviceRolename = rolename;
+    Settings().preferences?.setString(DEVICE_ROLENAME_KEY, rolename!);
   }
 
   /// Use the cached study deployment?

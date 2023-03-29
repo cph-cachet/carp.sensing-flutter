@@ -100,7 +100,7 @@ void main() async {
 
   // using the (default) data stream batch upload method
   CarpDataEndPoint cdep_3 = CarpDataEndPoint(
-    uploadMethod: CarpUploadMethod.DATA_STREAM,
+    uploadMethod: CarpUploadMethod.stream,
     deleteWhenUploaded: true,
   );
 
@@ -109,7 +109,7 @@ void main() async {
   // create a CARP data endpoint that upload each measurement using the
   // DATA_POINT method
   CarpDataEndPoint cdep = CarpDataEndPoint(
-      uploadMethod: CarpUploadMethod.DATA_POINT,
+      uploadMethod: CarpUploadMethod.datapoint,
       name: 'CARP Staging Server',
       uri: 'http://staging.carp.cachet.dk:8080',
       clientId: 'carp',
@@ -121,7 +121,7 @@ void main() async {
 
   // using the file method would upload SQLite db files
   CarpDataEndPoint cdep_2 = CarpDataEndPoint(
-    uploadMethod: CarpUploadMethod.FILE,
+    uploadMethod: CarpUploadMethod.file,
     name: 'CARP Staging Server',
     uri: 'http://staging.carp.cachet.dk:8080',
     clientId: 'carp',

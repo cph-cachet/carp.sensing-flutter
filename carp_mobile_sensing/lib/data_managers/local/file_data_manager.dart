@@ -120,7 +120,7 @@ class FileDataManager extends AbstractDataManager {
       _file = File(newFilename);
       info("Creating file '$newFilename'");
       addEvent(FileDataManagerEvent(
-          FileDataManagerEventTypes.FILE_CREATED, newFilename));
+          FileDataManagerEventTypes.fileCreated, newFilename));
     }
     return _file!;
   }
@@ -211,11 +211,11 @@ class FileDataManager extends AbstractDataManager {
         // if the encrypted file gets another name, remember to
         // update _jsonFilePath
         addEvent(FileDataManagerEvent(
-            FileDataManagerEventTypes.FILE_ENCRYPTED, finalFilePath));
+            FileDataManagerEventTypes.fileEncrypted, finalFilePath));
       }
 
       addEvent(FileDataManagerEvent(
-          FileDataManagerEventTypes.FILE_CLOSED, finalFilePath));
+          FileDataManagerEventTypes.fileClosed, finalFilePath));
     });
   }
 
@@ -246,8 +246,8 @@ class FileDataManagerEvent extends DataManagerEvent {
 
 /// An enumeration of file data manager event types
 class FileDataManagerEventTypes extends DataManagerEventTypes {
-  static const String FILE_CREATED = 'file_created';
-  static const String FILE_CLOSED = 'file_closed';
-  static const String FILE_DELETED = 'file_deleted';
-  static const String FILE_ENCRYPTED = 'file_encrypted';
+  static const String fileCreated = 'file_created';
+  static const String fileClosed = 'file_closed';
+  static const String fileDeleted = 'file_deleted';
+  static const String fileEncrypted = 'file_encrypted';
 }

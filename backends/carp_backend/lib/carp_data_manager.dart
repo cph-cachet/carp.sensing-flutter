@@ -13,6 +13,10 @@ class CarpDataManagerFactory implements DataManagerFactory {
 
   @override
   DataManager create() => CarpDataManager();
+
+  CarpDataManagerFactory() : super() {
+    CarpDataManager();
+  }
 }
 
 /// Stores CAMS data points in the CARP Web Services (CAWS) backend.
@@ -20,15 +24,14 @@ class CarpDataManagerFactory implements DataManagerFactory {
 /// Upload of data to CAWS can happen in three ways, as specified in
 /// [CarpUploadMethod]:
 ///
-///   * [CarpUploadMethod.DATA_STREAM] - Upload data as data streams (the default method).
-///   * [CarpUploadMethod.DATA_POINT] - Upload each data point separately using
+///   * [CarpUploadMethod.stream] - Upload data as data streams (the default method).
+///   * [CarpUploadMethod.datapoint] - Upload each data point separately using
 ///        the old DataPoint endpoint in CAWS. Note that every time a CARP json measurement
 ///        object is created, it is uploaded to CARP. Hence, this method only works
 ///        when the device is online.
-///   * [CarpUploadMethod.FILE] - Collect measurements in a SQLite DB file and
+///   * [CarpUploadMethod.file] - Collect measurements in a SQLite DB file and
 ///        upload as a `db` file
 class CarpDataManager extends AbstractDataManager {
-  bool _initialized = false;
   late CarpDataEndPoint carpEndPoint;
   DataStreamBuffer buffer = DataStreamBuffer();
   Timer? uploadTimer;
@@ -71,8 +74,6 @@ class CarpDataManager extends AbstractDataManager {
 
     if (!CarpDataStreamService().isConfigured)
       CarpDataStreamService().configureFrom(CarpService());
-
-    _initialized = true;
   }
 
   /// The currently signed in user.
@@ -137,26 +138,25 @@ class CarpDataManager extends AbstractDataManager {
     // authenticated to CAWS and fast exit if not successful
     if (await user == null) {
       warning('User cannot be authenticated - username: ${carpEndPoint.email}');
-      // return;
+      return;
     }
 
     final batches = await buffer.getDataStreamBatches(
       carpEndPoint.deleteWhenUploaded,
     );
 
-    if (carpEndPoint.uploadMethod == CarpUploadMethod.DATA_STREAM) {
+    if (carpEndPoint.uploadMethod == CarpUploadMethod.stream) {
       CarpDataStreamService().appendToDataStreams(
         studyDeploymentId,
         batches,
       );
-      addEvent(
-          DataManagerEvent(CarpDataManagerEventTypes.data_stream_appended));
-    } else if (carpEndPoint.uploadMethod == CarpUploadMethod.DATA_POINT) {
+      addEvent(DataManagerEvent(CarpDataManagerEventTypes.dataStreamAppended));
+    } else if (carpEndPoint.uploadMethod == CarpUploadMethod.datapoint) {
       uploadDataStreamBatchesAsDataPoint(
         batches,
       );
-      addEvent(DataManagerEvent(
-          CarpDataManagerEventTypes.data_points_batch_uploaded));
+      addEvent(
+          DataManagerEvent(CarpDataManagerEventTypes.dataPointsBatchUploaded));
     }
 
     // check if any measurement has a separate file to be uploaded
@@ -249,7 +249,7 @@ class CarpDataManager extends AbstractDataManager {
       int id = response.id;
 
       addEvent(DataManagerEvent(
-        CarpDataManagerEventTypes.file_uploaded,
+        CarpDataManagerEventTypes.fileUploaded,
         file.path,
       ));
       info("$runtimeType - File upload to CAWS finished - server id : $id ");
@@ -258,7 +258,7 @@ class CarpDataManager extends AbstractDataManager {
       if (carpEndPoint.deleteWhenUploaded) {
         file.delete();
         addEvent(FileDataManagerEvent(
-            FileDataManagerEventTypes.FILE_DELETED, file.path));
+            FileDataManagerEventTypes.fileDeleted, file.path));
       }
     }
   }
@@ -269,28 +269,9 @@ class CarpDataManager extends AbstractDataManager {
   }
 }
 
-// /// A status event for this CARP data manager.
-// /// See [CarpDataManagerEventTypes] for a list of possible event types.
-// class CarpDataManagerEvent extends DataManagerEvent {
-//   /// The full path and filename for the file on the device.
-//   String path;
-
-//   /// The ID of the file on the CARP server, if provided.
-//   /// `null` if not available from the server.
-//   int? id;
-
-//   /// The URI of the file on the CARP server.
-//   String fileEndpointUri;
-
-//   CarpDataManagerEvent(super.type, this.path, this.id, this.fileEndpointUri);
-
-//   String toString() =>
-//       'CarpDataManagerEvent - type: $type, path: $path, id: $id, fileEndpointUri: $fileEndpointUri';
-// }
-
 /// An enumeration of file data manager event types
 class CarpDataManagerEventTypes extends DataManagerEventTypes {
-  static const String data_points_batch_uploaded = 'data_points_batch_uploaded';
-  static const String data_stream_appended = 'data_stream_appended';
-  static const String file_uploaded = 'file_uploaded';
+  static const String dataPointsBatchUploaded = 'data_points_batch_uploaded';
+  static const String dataStreamAppended = 'data_stream_appended';
+  static const String fileUploaded = 'file_uploaded';
 }

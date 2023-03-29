@@ -13,13 +13,16 @@ part of domain;
 class SmartphoneDeployment extends PrimaryDeviceDeployment
     with SmartphoneProtocolExtension {
   late String _studyDeploymentId;
-  // final List<SmartphoneDeploymentListener> _listeners = [];
+
+  /// The unique id of the study that this deployment is part of.
+  /// Is `null` if this is a local deployment running only on this phone.
+  String? studyId;
 
   /// The unique id of this study deployment.
   String get studyDeploymentId => _studyDeploymentId;
 
   /// The timestamp (in UTC) when this deployment was deployed on this smartphone.
-  /// Returns `null` if not deployed yet.
+  /// Is `null` if not deployed yet.
   DateTime? deployed;
 
   /// The unique id of the user that this deployment collects data from.
@@ -59,6 +62,7 @@ class SmartphoneDeployment extends PrimaryDeviceDeployment
 
   /// Create a [SmartphoneDeployment] based on a [PrimaryDeviceDeployment].
   SmartphoneDeployment.fromPrimaryDeviceDeployment({
+    this.studyId,
     String? studyDeploymentId,
     this.userId,
     required PrimaryDeviceDeployment deployment,
@@ -96,6 +100,7 @@ class SmartphoneDeployment extends PrimaryDeviceDeployment
   /// takes the data collection configuration from the [protocol] (such as
   /// task, triggers, task controls, and expected participant data).
   SmartphoneDeployment.fromPrimaryDeviceDeploymentAndSmartphoneStudyProtocol({
+    this.studyId,
     String? studyDeploymentId,
     this.userId,
     required PrimaryDeviceDeployment deployment,
@@ -123,6 +128,7 @@ class SmartphoneDeployment extends PrimaryDeviceDeployment
   /// deployment using a [Smartphone] as the primary device with the
   /// specified [primaryDeviceRoleName].
   SmartphoneDeployment.fromSmartphoneStudyProtocol({
+    this.studyId,
     String? studyDeploymentId,
     this.userId,
     required String primaryDeviceRoleName,
