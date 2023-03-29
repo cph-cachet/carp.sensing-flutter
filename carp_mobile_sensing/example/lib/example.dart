@@ -208,26 +208,26 @@ void example_2() async {
   // start sampling
   controller?.start();
 
-  // listening to the stream of all data events from the controller
-  controller?.measurements.listen((dataPoint) => print(dataPoint));
+  // listening to the stream of all measurements from the controller
+  controller?.measurements.listen((measurement) => print(measurement));
 
-  // listen only on CARP events
+  // listen only on CARP measurements
   controller?.measurements
       .where(
           (measurement) => measurement.data.format.namespace == NameSpace.CARP)
       .listen((event) => print(event));
 
-  // listen on LIGHT events only
+  // listen on ambient light measurements only
   controller?.measurements
       .where((measurement) =>
           measurement.data.format.toString() ==
           SensorSamplingPackage.AMBIENT_LIGHT)
-      .listen((event) => print(event));
+      .listen((measurement) => print(measurement));
 
-  // map events to JSON and then print
+  // map measurements to JSON and then print
   controller?.measurements
-      .map((dataPoint) => dataPoint.toJson())
-      .listen((event) => print(event));
+      .map((measurement) => measurement.toJson())
+      .listen((json) => print(json));
 
   // subscribe to the stream of measurements
   StreamSubscription<Measurement> subscription =
@@ -250,23 +250,18 @@ void example_2() async {
   // Note that this will only work if the protocol is created locally on the
   // phone (as in the example above)
   // If downloaded and deserialized from json, then we need to locate the
-  // measures in the deployment
+  // measure in the deployment
   lightMeasure.overrideSamplingConfiguration = PeriodicSamplingConfiguration(
     interval: const Duration(minutes: 5),
     duration: const Duration(seconds: 10),
   );
 
-  // Restart the light probe(s)
+  // Restart the light probe(s) in order to load the new configuration
   controller.executor
       ?.lookupProbe(SensorSamplingPackage.AMBIENT_LIGHT)
       .forEach((probe) => probe.restart());
 
-  // // Alternatively mark the deployment as changed - calling hasChanged()
-  // // this will force a restart of the entire sampling
-  // controller.deployment?.hasChanged();
-
   // Once the sampling has to stop, e.g. in a Flutter dispose() methods, call stop.
-  // Note that once a sampling has stopped, it cannot be restarted.
   controller.stop();
   await subscription.cancel();
 }

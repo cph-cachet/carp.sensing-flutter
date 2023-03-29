@@ -203,32 +203,32 @@ controller?.start();
 The generated data can be accessed and used in the app. Access to data is done by listening on the `measurements` streams from the study deployment controller or some of its underlying executors or probes. Below are a few examples on how to listen on data streams.
 
 ```dart
-...
+// listening to the stream of all measurements from the controller
+controller?.measurements.listen((measurement) => print(measurement));
 
-// listening to the stream of all data events from the controller
-controller.data.listen((dataPoint) => print(dataPoint));
-
-// listen only on CARP events
-controller?.data
-    .where((dataPoint) => dataPoint.data!.format.namespace == NameSpace.CARP)
+// listen only on CARP measurements
+controller?.measurements
+    .where(
+        (measurement) => measurement.data.format.namespace == NameSpace.CARP)
     .listen((event) => print(event));
 
-// listen on LIGHT events only
-controller?.data
-    .where((dataPoint) =>
-        dataPoint.data!.format.toString() == SensorSamplingPackage.LIGHT)
-    .listen((event) => print(event));
+// listen on ambient light measurements only
+controller?.measurements
+    .where((measurement) =>
+        measurement.data.format.toString() ==
+        SensorSamplingPackage.AMBIENT_LIGHT)
+    .listen((measurement) => print(measurement));
 
-// map events to JSON and then print
-controller?.data
-    .map((dataPoint) => dataPoint.toJson())
-    .listen((event) => print(event));
+// map measurements to JSON and then print
+controller?.measurements
+    .map((measurement) => measurement.toJson())
+    .listen((json) => print(json));
 
-// subscribe to the stream of data
-StreamSubscription<DataPoint> subscription =
-    controller!.data.listen((DataPoint dataPoint) {
-  // do something w. the datum, e.g. print the json
-  print(JsonEncoder.withIndent(' ').convert(dataPoint));
+// subscribe to the stream of measurements
+StreamSubscription<Measurement> subscription =
+    controller!.measurements.listen((Measurement measurement) {
+  // do something w. the measurement, e.g. print the json
+  print(JsonEncoder.withIndent(' ').convert(measurement));
 });
 ```
 
@@ -237,40 +237,33 @@ StreamSubscription<DataPoint> subscription =
 The execution of sensing can be controlled on runtime in a number of ways. For example:
 
 ```dart
-...
+// Sampling can be stopped and started
+controller.executor?.stop();
+controller.executor?.start();
 
-// Sampling can be paused and resumed
-controller.pause();
-controller.resume();
+// Stop specific probe(s)
+controller.executor
+    ?.lookupProbe(CarpDataTypes.ACCELERATION_TYPE_NAME)
+    .forEach((probe) => probe.stop());
 
-// Pause specific probe(s)
-ProbeRegistry()
-  .lookup(SensorSamplingPackage.ACCELEROMETER)
-  .forEach((probe) => probe.pause());
-
-// Adapt a measures.
+// Adapt a measure
 //
 // Note that this will only work if the protocol is created locally on the
 // phone (as in the example above)
 // If downloaded and deserialized from json, then we need to locate the
-// measures in the deployment
-lightMeasure
-  ..overrideSamplingConfiguration = PeriodicSamplingConfiguration(
-    interval: const Duration(minutes: 5),
-    duration: const Duration(seconds: 10),
-  );
+// measure in the deployment
+lightMeasure.overrideSamplingConfiguration = PeriodicSamplingConfiguration(
+  interval: const Duration(minutes: 5),
+  duration: const Duration(seconds: 10),
+);
 
-// Restart the light probe(s)
+// Restart the light probe(s) in order to load the new configuration
 controller.executor
-    ?.lookupProbe(SensorSamplingPackage.LIGHT)
+    ?.lookupProbe(SensorSamplingPackage.AMBIENT_LIGHT)
     .forEach((probe) => probe.restart());
 
-// Alternatively mark the deplyment as changed - calling hasChanged()
-// this will force a restart of the entire sampling
-controller.deployment?.hasChanged();
 
-// Once the sampling has to stop, e.g. in a Flutter dispose() methods, call stop.
-// Note that once a sampling has stopped, it cannot be restarted.
+// Once the sampling has to stop, e.g. in a Flutter dispose methods, call stop.
 controller.stop();
 await subscription.cancel();
 ```
