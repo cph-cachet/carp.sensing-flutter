@@ -18,8 +18,8 @@ abstract class DeviceManager<TDeviceConfiguration extends DeviceConfiguration>
   /// The set of executors that use this device manager.
   final Set<Executor> executors = {};
 
-  DeviceManager([
-    super.type,
+  DeviceManager(
+    super.type, [
     super.configuration,
   ]);
 
@@ -47,7 +47,7 @@ abstract class DeviceManager<TDeviceConfiguration extends DeviceConfiguration>
   /// Has this device manager been connected?
   bool get isConnected => status == DeviceStatus.connected;
 
-  /// Initialize the device manager by specifying its device [configuration].
+  /// Initialize the device manager by specifying its [configuration].
   @nonVirtual
   void initialize(TDeviceConfiguration configuration) {
     info(
@@ -146,7 +146,12 @@ abstract class DeviceManager<TDeviceConfiguration extends DeviceConfiguration>
 
 /// A [DeviceManager] for an online service, like a weather service.
 abstract class OnlineServiceManager<TDeviceConfiguration extends OnlineService>
-    extends DeviceManager<TDeviceConfiguration> {}
+    extends DeviceManager<TDeviceConfiguration> {
+  OnlineServiceManager(
+    super.type, [
+    super.configuration,
+  ]);
+}
 
 /// A [DeviceManager] for a hardware device.
 abstract class HardwareDeviceManager<
@@ -155,6 +160,11 @@ abstract class HardwareDeviceManager<
   /// The runtime battery level of this hardware device.
   /// Returns null if unknown.
   int? get batteryLevel;
+
+  HardwareDeviceManager(
+    super.type, [
+    super.configuration,
+  ]);
 }
 
 /// A device manager for a smartphone.
@@ -167,6 +177,10 @@ class SmartphoneDeviceManager extends HardwareDeviceManager<Smartphone> {
 
   @override
   String? get displayName => DeviceInfo().toString();
+
+  SmartphoneDeviceManager([
+    Smartphone? configuration,
+  ]) : super(Smartphone.DEVICE_TYPE, configuration);
 
   @override
   void onInitialize(Smartphone configuration) {
@@ -210,6 +224,11 @@ abstract class BTLEDeviceManager<
   /// Returns empty string if unknown.
   String get btleName => _btleName;
   set btleName(String btleName) => _btleName = btleName;
+
+  BTLEDeviceManager(
+    super.type, [
+    super.configuration,
+  ]);
 
   @override
   @mustCallSuper

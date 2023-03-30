@@ -155,6 +155,26 @@ class MovisensSkinTemperatureProbe extends MovisensProbe {
   }
 }
 
+/// A probe collecting Skin Temperature events ([MovisensSkinTemperature]).
+class RespirationProbe extends MovisensProbe {
+  @override
+  Stream<MovisensData>? get data =>
+      deviceManager.device?.respirationService?.respiratoryMovementEvents
+          ?.map((event) => MovisensRespiration.fromMovisensEvent(event));
+
+  @override
+  Future<bool> onStart() async {
+    await deviceManager.device?.skinTemperatureService?.enableNotify();
+    return await super.onStart();
+  }
+
+  @override
+  Future<bool> onStop() async {
+    await deviceManager.device?.skinTemperatureService?.enableNotify();
+    return await super.onStop();
+  }
+}
+
 /// A probe collecting tap marker events ([MovisensTapMarker]).
 class MovisensTapMarkerProbe extends MovisensProbe {
   @override

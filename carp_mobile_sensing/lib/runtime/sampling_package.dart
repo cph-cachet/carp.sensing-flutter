@@ -155,7 +155,7 @@ abstract class SmartphoneSamplingPackage implements SamplingPackage {
   final SmartphoneDeviceManager _deviceManager = SmartphoneDeviceManager();
 
   @override
-  String get deviceType => Smartphone.DEVICE_TYPE;
+  String get deviceType => _deviceManager.type;
 
   @override
   DeviceManager get deviceManager => _deviceManager;

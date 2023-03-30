@@ -30,7 +30,7 @@ void main() async {
 
   protocol
     ..addPrimaryDevice(phone)
-    ..addConnectedDevice(movisens);
+    ..addConnectedDevice(movisens, phone);
 
   // adding a movisens measure
   protocol.addTaskControl(

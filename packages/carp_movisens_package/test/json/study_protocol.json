@@ -1,12 +1,13 @@
 {
-  "id": "1c694fa0-8c41-11ed-9fad-d93af3661beb",
-  "createdOn": "2023-01-04T15:04:39.578457Z",
+  "id": "ae4b1e50-cee3-11ed-a249-5310ecc03c3a",
+  "createdOn": "2023-03-30T10:14:39.541404Z",
+  "version": 0,
   "ownerId": "alex@uni.dk",
   "name": "Context package test",
   "primaryDevices": [
     {
       "__type": "dk.cachet.carp.common.application.devices.Smartphone",
-      "roleName": "primaryphone",
+      "roleName": "Primary Phone",
       "defaultSamplingConfiguration": {},
       "isPrimaryDevice": true
     }
@@ -32,11 +33,16 @@
       "sex": "Male"
     }
   ],
-  "connections": [],
+  "connections": [
+    {
+      "roleName": "movisens",
+      "connectedToRoleName": "Primary Phone"
+    }
+  ],
   "tasks": [
     {
       "__type": "dk.cachet.carp.common.application.tasks.BackgroundTask",
-      "name": "Task #5",
+      "name": "Task #6",
       "measures": [
         {
           "__type": "dk.cachet.carp.common.application.tasks.Measure.DataStream",
@@ -49,6 +55,10 @@
         {
           "__type": "dk.cachet.carp.common.application.tasks.Measure.DataStream",
           "type": "dk.cachet.carp.batterystate"
+        },
+        {
+          "__type": "dk.cachet.carp.common.application.tasks.Measure.DataStream",
+          "type": "dk.cachet.carp.screenevent"
         },
         {
           "__type": "dk.cachet.carp.common.application.tasks.Measure.DataStream",
@@ -102,7 +112,7 @@
     },
     {
       "__type": "dk.cachet.carp.common.application.tasks.BackgroundTask",
-      "name": "Task #6",
+      "name": "Task #7",
       "measures": [
         {
           "__type": "dk.cachet.carp.common.application.tasks.Measure.DataStream",
@@ -130,23 +140,23 @@
   "triggers": {
     "0": {
       "__type": "dk.cachet.carp.common.application.triggers.ImmediateTrigger",
-      "sourceDeviceRoleName": "primaryphone"
+      "sourceDeviceRoleName": "Primary Phone"
     },
     "1": {
       "__type": "dk.cachet.carp.common.application.triggers.ImmediateTrigger",
-      "sourceDeviceRoleName": "primaryphone"
+      "sourceDeviceRoleName": "Primary Phone"
     }
   },
   "taskControls": [
     {
       "triggerId": 0,
-      "taskName": "Task #5",
-      "destinationDeviceRoleName": "primaryphone",
+      "taskName": "Task #6",
+      "destinationDeviceRoleName": "Primary Phone",
       "control": "Start"
     },
     {
       "triggerId": 1,
-      "taskName": "Task #6",
+      "taskName": "Task #7",
       "destinationDeviceRoleName": "movisens",
       "control": "Start"
     }

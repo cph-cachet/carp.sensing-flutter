@@ -131,6 +131,11 @@ class ESenseDeviceManager extends BTLEDeviceManager<ESenseDevice> {
       ? ((1.19 * _voltageLevel! - 3.91) * 100).toInt()
       : null;
 
+  ESenseDeviceManager(
+    super.type, [
+    super.configuration,
+  ]);
+
   @override
   Future<bool> canConnect() async => (configuration?.deviceName != null &&
       configuration!.deviceName!.isNotEmpty);

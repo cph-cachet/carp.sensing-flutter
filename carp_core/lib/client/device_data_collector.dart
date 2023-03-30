@@ -11,7 +11,7 @@ part of carp_core_client;
 abstract class DeviceDataCollector<
     TDeviceConfiguration extends DeviceConfiguration> {
   /// The type of this device
-  String? type;
+  String type;
 
   /// The configuration for this device.
   TDeviceConfiguration? configuration;
@@ -29,8 +29,8 @@ abstract class DeviceDataCollector<
   /// the device.
   Future<bool> canConnect();
 
-  DeviceDataCollector([
-    this.type,
+  DeviceDataCollector(
+    this.type, [
     this.configuration,
   ]);
 }

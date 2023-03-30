@@ -111,7 +111,8 @@ class PolarSamplingPackage implements SamplingPackage {
   static const String ECG = "$POLAR_NAMESPACE.ecg";
   static const String HR = "$POLAR_NAMESPACE.hr";
 
-  final DeviceManager _deviceManager = PolarDeviceManager();
+  final DeviceManager _deviceManager =
+      PolarDeviceManager(PolarDevice.DEVICE_TYPE);
 
   @override
   void onRegister() {

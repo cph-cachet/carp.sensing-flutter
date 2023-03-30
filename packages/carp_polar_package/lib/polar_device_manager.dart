@@ -149,6 +149,11 @@ class PolarDeviceManager extends BTLEDeviceManager<PolarDevice> {
   @override
   set btleAddress(String btleAddress) => configuration?.address = btleAddress;
 
+  PolarDeviceManager(
+    super.type, [
+    super.configuration,
+  ]);
+
   @override
   Future<bool> canConnect() async => configuration?.identifier != null;
 

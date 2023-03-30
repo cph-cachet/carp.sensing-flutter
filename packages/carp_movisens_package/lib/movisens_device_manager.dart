@@ -75,17 +75,11 @@ class MovisensDevice extends DeviceConfiguration {
 }
 
 /// A Movisens [DeviceManager].
-class MovisensDeviceManager
-    extends BTLEDeviceManager<DeviceRegistration, MovisensDevice> {
+class MovisensDeviceManager extends BTLEDeviceManager<MovisensDevice> {
   // the last known voltage level of the Movisens device
   int _batteryLevel = -1;
   String? _connectionStatus;
-  // StreamSubscription<Map<String, dynamic>>? _subscription;
   StreamSubscription<BluetoothDeviceState>? _subscription;
-
-  @override
-  MovisensDevice get deviceDescriptor =>
-      super.deviceConfiguration as MovisensDevice;
 
   /// The [Movisens] device handler.
   /// Only available after this device manger has been initialized via the
@@ -98,30 +92,24 @@ class MovisensDeviceManager
   // UserData? userData;
 
   @override
-  String get id => device?.name ?? MovisensDevice.DEVICE_TYPE;
+  String get id => device?.id ?? MovisensDevice.DEVICE_TYPE;
+
+  @override
+  String? get displayName => device?.name;
 
   String? get connectionStatus => _connectionStatus;
+
+  MovisensDeviceManager(
+    super.type, [
+    super.configuration,
+  ]);
 
   @override
   Future<void> onInitialize(MovisensDevice configuration) async {
     super.onInitialize(configuration);
     device = movisens.MovisensDevice(name: configuration.deviceName);
-
-    // // assert(descriptor is MovisensDevice,
-    // //     '$runtimeType - can only be initialized with a MovisensDevice device descriptor');
-
-    // userData = UserData(
-    //   deviceDescriptor.weight,
-    //   deviceDescriptor.height,
-    //   deviceDescriptor.gender,
-    //   deviceDescriptor.age,
-    //   deviceDescriptor.sensorLocation,
-    //   deviceDescriptor.address,
-    //   deviceDescriptor.sensorName,
-    // );
   }
 
-  /// The latest read of the battery level of the Movisens device.
   @override
   int get batteryLevel => _batteryLevel;
 
@@ -154,27 +142,29 @@ class MovisensDeviceManager
         }
       });
 
-      // TODO - how can I listen to battery information?
+      // listen for battery events
+      await device?.batteryService?.enableNotify();
 
-      // device._subscription = movisens?.movisensStream.listen((event) {
-      //   debug('$runtimeType :: Movisens event : $event');
+      device?.batteryService?.events.listen((event) {
+        debug('$runtimeType :: Movisens event : $event');
 
-      //   if (event.containsKey("BatteryLevel")) {
-      //     _batteryLevel = int.tryParse(
-      //             jsonDecode(event["BatteryLevel"].toString())[BATTERY_LEVEL]
-      //                 .toString()) ??
-      //         -1;
-      //   }
-      // });
+        _batteryLevel = (event is movisens.BatteryLevelEvent)
+            ? event.batteryLevel
+            : _batteryLevel;
+      });
 
-      // set user data parameters
-      await device?.userDataService
-          ?.setAgeFloat(deviceDescriptor.age.toDouble());
-      await device?.userDataService?.setSensorLocation(movisens
-          .SensorLocation.values[deviceDescriptor.sensorLocation.index]);
-
-      // TODO - how do I set the weight and gender of the user => https://github.com/cph-cachet/flutter-plugins/issues/648
-
+      if (configuration != null) {
+        // set user data parameters
+        await device?.userDataService
+            ?.setAgeFloat(configuration!.age.toDouble());
+        await device?.userDataService?.setSensorLocation(movisens
+            .SensorLocation.values[configuration!.sensorLocation.index]);
+        await device?.userDataService
+            ?.setWeight(configuration!.weight.toDouble());
+        await device?.userDataService?.setHeight(configuration!.height);
+        await device?.userDataService
+            ?.setGender(movisens.Gender.values[configuration!.sex.index]);
+      }
     } catch (error) {
       warning(
           "$runtimeType - could not connect to device of type '$type' - error: $error");

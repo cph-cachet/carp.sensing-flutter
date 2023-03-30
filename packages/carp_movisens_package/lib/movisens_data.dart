@@ -7,8 +7,7 @@
 part of carp_movisens_package;
 
 /// An abstract  for all Movisens data events.
-@JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
-class MovisensData extends Data {
+abstract class MovisensData extends Data {
   static const dataType = MovisensSamplingPackage.MOVISENS_NAMESPACE;
 
   static const String STEPS = "${MovisensSamplingPackage.ACTIVITY}.steps";
@@ -49,26 +48,11 @@ class MovisensData extends Data {
     this.timestamp = timestamp ?? DateTime.now();
   }
 
-  factory MovisensData.fromMovisensEvent(movisens.MovisensEvent event) =>
-      MovisensData(
-          deviceId: event.deviceId,
-          type: event.type.name,
-          timestamp: event.time);
-
   /// Make a Movisens timestamp into UTC format
   static String _movisensTimestampToUTC(String timestamp) {
     List<String> splittedTimestamp = timestamp.split(" ");
     return "${splittedTimestamp[0]}T${splittedTimestamp[1]}.000Z";
   }
-
-  factory MovisensData.fromJson(Map<String, dynamic> json) =>
-      _$MovisensDataFromJson(json);
-
-  @override
-  Map<String, dynamic> toJson() => _$MovisensDataToJson(this);
-
-  @override
-  String get jsonType => dataType;
 }
 
 /// Step counts as measured by the Movisens device.
@@ -95,8 +79,10 @@ class MovisensStepCount extends MovisensData {
         steps: event.steps,
       );
 
+  @override
+  Function get fromJsonFunction => _$MovisensStepCountFromJson;
   factory MovisensStepCount.fromJson(Map<String, dynamic> json) =>
-      _$MovisensStepCountFromJson(json);
+      FromJsonFactory().fromJson(json) as MovisensStepCount;
   @override
   Map<String, dynamic> toJson() => _$MovisensStepCountToJson(this);
   @override
@@ -127,8 +113,10 @@ class MovisensBodyPosition extends MovisensData {
         bodyPosition: event.bodyPosition.name,
       );
 
+  @override
+  Function get fromJsonFunction => _$MovisensBodyPositionFromJson;
   factory MovisensBodyPosition.fromJson(Map<String, dynamic> json) =>
-      _$MovisensBodyPositionFromJson(json);
+      FromJsonFactory().fromJson(json) as MovisensBodyPosition;
   @override
   Map<String, dynamic> toJson() => _$MovisensBodyPositionToJson(this);
   @override
@@ -171,8 +159,10 @@ class MovisensInclination extends MovisensData {
         z: event.z,
       );
 
+  @override
+  Function get fromJsonFunction => _$MovisensInclinationFromJson;
   factory MovisensInclination.fromJson(Map<String, dynamic> json) =>
-      _$MovisensInclinationFromJson(json);
+      FromJsonFactory().fromJson(json) as MovisensInclination;
   @override
   Map<String, dynamic> toJson() => _$MovisensInclinationToJson(this);
   @override
@@ -206,8 +196,10 @@ class MovisensMovementAcceleration extends MovisensData {
         movementAcceleration: event.movementAcceleration,
       );
 
+  @override
+  Function get fromJsonFunction => _$MovisensMovementAccelerationFromJson;
   factory MovisensMovementAcceleration.fromJson(Map<String, dynamic> json) =>
-      _$MovisensMovementAccelerationFromJson(json);
+      FromJsonFactory().fromJson(json) as MovisensMovementAcceleration;
   @override
   Map<String, dynamic> toJson() => _$MovisensMovementAccelerationToJson(this);
   @override
@@ -238,8 +230,10 @@ class MovisensMET extends MovisensData {
         met: event.met,
       );
 
+  @override
+  Function get fromJsonFunction => _$MovisensMETFromJson;
   factory MovisensMET.fromJson(Map<String, dynamic> json) =>
-      _$MovisensMETFromJson(json);
+      FromJsonFactory().fromJson(json) as MovisensMET;
   @override
   Map<String, dynamic> toJson() => _$MovisensMETToJson(this);
   @override
@@ -281,8 +275,10 @@ class MovisensMETLevel extends MovisensData {
         vigorous: event.vigorous,
       );
 
+  @override
+  Function get fromJsonFunction => _$MovisensMETLevelFromJson;
   factory MovisensMETLevel.fromJson(Map<String, dynamic> json) =>
-      _$MovisensMETLevelFromJson(json);
+      FromJsonFactory().fromJson(json) as MovisensMETLevel;
   @override
   Map<String, dynamic> toJson() => _$MovisensMETLevelToJson(this);
   @override
@@ -313,8 +309,10 @@ class MovisensHR extends MovisensData {
         hr: event.hrMean,
       );
 
+  @override
+  Function get fromJsonFunction => _$MovisensHRFromJson;
   factory MovisensHR.fromJson(Map<String, dynamic> json) =>
-      _$MovisensHRFromJson(json);
+      FromJsonFactory().fromJson(json) as MovisensHR;
   @override
   Map<String, dynamic> toJson() => _$MovisensHRToJson(this);
   @override
@@ -349,8 +347,10 @@ class MovisensHRV extends MovisensData {
         hrv: event.rmssd,
       );
 
+  @override
+  Function get fromJsonFunction => _$MovisensHRVFromJson;
   factory MovisensHRV.fromJson(Map<String, dynamic> json) =>
-      _$MovisensHRVFromJson(json);
+      FromJsonFactory().fromJson(json) as MovisensHRV;
   @override
   Map<String, dynamic> toJson() => _$MovisensHRVToJson(this);
   @override
@@ -381,8 +381,10 @@ class MovisensIsHrvValid extends MovisensData {
         isHrvValid: event.hrvIsValid,
       );
 
+  @override
+  Function get fromJsonFunction => _$MovisensIsHrvValidFromJson;
   factory MovisensIsHrvValid.fromJson(Map<String, dynamic> json) =>
-      _$MovisensIsHrvValidFromJson(json);
+      FromJsonFactory().fromJson(json) as MovisensIsHrvValid;
   @override
   Map<String, dynamic> toJson() => _$MovisensIsHrvValidToJson(this);
   @override
@@ -412,8 +414,10 @@ class MovisensEDA extends MovisensData {
         edaSclMean: event.edaSclMean,
       );
 
+  @override
+  Function get fromJsonFunction => _$MovisensEDAFromJson;
   factory MovisensEDA.fromJson(Map<String, dynamic> json) =>
-      _$MovisensEDAFromJson(json);
+      FromJsonFactory().fromJson(json) as MovisensEDA;
   @override
   Map<String, dynamic> toJson() => _$MovisensEDAToJson(this);
   @override
@@ -444,10 +448,47 @@ class MovisensSkinTemperature extends MovisensData {
         skinTemperature: event.skinTemperature,
       );
 
+  @override
+  Function get fromJsonFunction => _$MovisensSkinTemperatureFromJson;
   factory MovisensSkinTemperature.fromJson(Map<String, dynamic> json) =>
-      _$MovisensSkinTemperatureFromJson(json);
+      FromJsonFactory().fromJson(json) as MovisensSkinTemperature;
   @override
   Map<String, dynamic> toJson() => _$MovisensSkinTemperatureToJson(this);
+  @override
+  String get jsonType => dataType;
+}
+
+@JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
+class MovisensRespiration extends MovisensData {
+  static const dataType = MovisensSamplingPackage.RESPIRATION;
+
+  /// Respiration value derived from [movisens.RespiratoryMovementEvent].
+  /// Not documented what this is.
+  int value;
+
+  MovisensRespiration({
+    required super.deviceId,
+    required super.type,
+    super.timestamp,
+    required this.value,
+  });
+
+  @override
+  factory MovisensRespiration.fromMovisensEvent(
+          movisens.RespiratoryMovementEvent event) =>
+      MovisensRespiration(
+        deviceId: event.deviceId,
+        type: event.type.name,
+        timestamp: event.time,
+        value: event.values,
+      );
+
+  @override
+  Function get fromJsonFunction => _$MovisensRespirationFromJson;
+  factory MovisensRespiration.fromJson(Map<String, dynamic> json) =>
+      FromJsonFactory().fromJson(json) as MovisensRespiration;
+  @override
+  Map<String, dynamic> toJson() => _$MovisensRespirationToJson(this);
   @override
   String get jsonType => dataType;
 }
@@ -476,10 +517,10 @@ class MovisensTapMarker extends MovisensData {
         tapMarker: event.tapMarkerValue,
       );
 
+  @override
+  Function get fromJsonFunction => _$MovisensTapMarkerFromJson;
   factory MovisensTapMarker.fromJson(Map<String, dynamic> json) =>
-      _$MovisensTapMarkerFromJson(json);
+      FromJsonFactory().fromJson(json) as MovisensTapMarker;
   @override
   Map<String, dynamic> toJson() => _$MovisensTapMarkerToJson(this);
-  @override
-  String get jsonType => dataType;
 }

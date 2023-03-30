@@ -193,23 +193,25 @@ class StudyRuntime {
       DeviceDataCollector deviceManager = deviceRegistry.getDevice(deviceType)!;
 
       // create a registration based on the device manager's unique id and name of the device
-      var registration = deviceManager.configuration!.createRegistration(
+      var registration = deviceManager.configuration?.createRegistration(
         deviceId: deviceManager.id,
         deviceDisplayName: deviceManager.displayName,
       );
 
-      try {
-        deploymentStatus = (await deploymentService.registerDevice(
-          study!.studyDeploymentId,
-          deviceRoleName,
-          registration,
-        ));
-      } catch (error) {
-        print("$runtimeType - failed to register device with role name "
-            "'$deviceRoleName' for study deployment '${study!.studyDeploymentId}' "
-            "at deployment service '$deploymentService'.\n"
-            "Error: $error\n"
-            "Continuing without registration.");
+      if (registration != null) {
+        try {
+          deploymentStatus = (await deploymentService.registerDevice(
+            study!.studyDeploymentId,
+            deviceRoleName,
+            registration,
+          ));
+        } catch (error) {
+          print("$runtimeType - failed to register device with role name "
+              "'$deviceRoleName' for study deployment '${study!.studyDeploymentId}' "
+              "at deployment service '$deploymentService'.\n"
+              "Error: $error\n"
+              "Continuing without registration.");
+        }
       }
     }
   }

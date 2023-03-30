@@ -47,7 +47,8 @@ class ESenseSamplingPackage implements SamplingPackage {
   /// (accelorometer & gyroscope).
   static const String ESENSE_SENSOR = "$ESENSE_NAMESPACE.sensor";
 
-  final DeviceManager _deviceManager = ESenseDeviceManager();
+  final DeviceManager _deviceManager =
+      ESenseDeviceManager(ESenseDevice.DEVICE_TYPE);
 
   @override
   List<DataTypeMetaData> get dataTypes => [

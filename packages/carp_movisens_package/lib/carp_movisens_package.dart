@@ -22,7 +22,6 @@ library carp_movisens_package;
 
 import 'dart:convert';
 import 'dart:async';
-import 'dart:io' show Platform;
 import 'package:async/async.dart';
 import 'package:movisens_flutter/movisens_flutter.dart' as movisens;
 import 'package:json_annotation/json_annotation.dart';
@@ -103,38 +102,12 @@ class MovisensSamplingPackage implements SamplingPackage {
   static const String ACTIVITY = "$MOVISENS_NAMESPACE.activity";
   static const String HR = "$MOVISENS_NAMESPACE.hr";
   static const String EDA = "$MOVISENS_NAMESPACE.eda";
+  static const String RESPIRATION = "$MOVISENS_NAMESPACE.respiration";
   static const String SKIN_TEMPERATURE = "$MOVISENS_NAMESPACE.skin_temperature";
   static const String TAP_MARKER = "$MOVISENS_NAMESPACE.tap_marker";
 
-  // // EdaService
-  // static const String EDA = "$MOVISENS_NAMESPACE.eda";
-
-  // // HrvService
-  // static const String HR = "$MOVISENS_NAMESPACE.hr";
-  // static const String HRV = "$MOVISENS_NAMESPACE.hrv";
-  // static const String IS_HRV_VALID = "$MOVISENS_NAMESPACE.is_hrv_valid";
-  // static const String HR_MEAN = "$MOVISENS_NAMESPACE.hr_mean";
-  // static const String HR_RMSSD = "$MOVISENS_NAMESPACE.hr_rmssd";
-
-  // // MarkerService
-  // static const String TAP_MARKER = "$MOVISENS_NAMESPACE.tap_marker";
-
-  // // PhysicalActivityService
-  // static const String BODY_POSITION = "$MOVISENS_NAMESPACE.body_position";
-  // static const String STEPS = "$MOVISENS_NAMESPACE.steps";
-  // static const String INCLINATION = "$MOVISENS_NAMESPACE.inclination";
-  // static const String MOVEMENT_ACCELERATION =
-  //     "$MOVISENS_NAMESPACE.movement_acceleration";
-  // static const String MET = "$MOVISENS_NAMESPACE.met";
-  // static const String MET_LEVEL = "$MOVISENS_NAMESPACE.met_level";
-
-  // // RespirationService
-  // static const String EDR = "$MOVISENS_NAMESPACE.edr";
-
-  // // SkinTemperatureService
-  // static const String SKIN_TEMPERATURE = "$MOVISENS_NAMESPACE.skin_temperature";
-
-  final DeviceManager _deviceManager = MovisensDeviceManager();
+  final DeviceManager _deviceManager =
+      MovisensDeviceManager(MovisensDevice.DEVICE_TYPE);
 
   @override
   void onRegister() {
@@ -177,6 +150,8 @@ class MovisensSamplingPackage implements SamplingPackage {
         return MovisensEDAProbe();
       case SKIN_TEMPERATURE:
         return MovisensSkinTemperatureProbe();
+      case RESPIRATION:
+        return RespirationProbe();
       case TAP_MARKER:
         return MovisensTapMarkerProbe();
       default:
@@ -204,6 +179,11 @@ class MovisensSamplingPackage implements SamplingPackage {
         DataTypeMetaData(
           type: SKIN_TEMPERATURE,
           displayName: "Skin Temperature",
+          timeType: DataTimeType.POINT,
+        ),
+        DataTypeMetaData(
+          type: RESPIRATION,
+          displayName: "Respiration",
           timeType: DataTimeType.POINT,
         ),
         DataTypeMetaData(

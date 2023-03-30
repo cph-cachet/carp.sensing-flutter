@@ -6,30 +6,6 @@ part of carp_movisens_package;
 // JsonSerializableGenerator
 // **************************************************************************
 
-MovisensData _$MovisensDataFromJson(Map<String, dynamic> json) => MovisensData(
-      deviceId: json['deviceId'] as String,
-      type: json['type'] as String,
-      timestamp: json['timestamp'] == null
-          ? null
-          : DateTime.parse(json['timestamp'] as String),
-    )..$type = json['__type'] as String?;
-
-Map<String, dynamic> _$MovisensDataToJson(MovisensData instance) {
-  final val = <String, dynamic>{};
-
-  void writeNotNull(String key, dynamic value) {
-    if (value != null) {
-      val[key] = value;
-    }
-  }
-
-  writeNotNull('__type', instance.$type);
-  val['timestamp'] = instance.timestamp.toIso8601String();
-  val['deviceId'] = instance.deviceId;
-  val['type'] = instance.type;
-  return val;
-}
-
 MovisensStepCount _$MovisensStepCountFromJson(Map<String, dynamic> json) =>
     MovisensStepCount(
       deviceId: json['deviceId'] as String,
@@ -336,6 +312,33 @@ Map<String, dynamic> _$MovisensSkinTemperatureToJson(
   val['deviceId'] = instance.deviceId;
   val['type'] = instance.type;
   val['skinTemperature'] = instance.skinTemperature;
+  return val;
+}
+
+MovisensRespiration _$MovisensRespirationFromJson(Map<String, dynamic> json) =>
+    MovisensRespiration(
+      deviceId: json['deviceId'] as String,
+      type: json['type'] as String,
+      timestamp: json['timestamp'] == null
+          ? null
+          : DateTime.parse(json['timestamp'] as String),
+      value: json['value'] as int,
+    )..$type = json['__type'] as String?;
+
+Map<String, dynamic> _$MovisensRespirationToJson(MovisensRespiration instance) {
+  final val = <String, dynamic>{};
+
+  void writeNotNull(String key, dynamic value) {
+    if (value != null) {
+      val[key] = value;
+    }
+  }
+
+  writeNotNull('__type', instance.$type);
+  val['timestamp'] = instance.timestamp.toIso8601String();
+  val['deviceId'] = instance.deviceId;
+  val['type'] = instance.type;
+  val['value'] = instance.value;
   return val;
 }
 
