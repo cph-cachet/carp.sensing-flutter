@@ -54,6 +54,10 @@ class WeatherServiceManager extends OnlineServiceManager<WeatherService> {
   @override
   String? get displayName => 'Weather Service (OW)';
 
+  WeatherServiceManager([
+    WeatherService? configuration,
+  ]) : super(WeatherService.DEVICE_TYPE, configuration);
+
   @override
   // ignore: avoid_renaming_method_parameters
   void onInitialize(WeatherService service) {}

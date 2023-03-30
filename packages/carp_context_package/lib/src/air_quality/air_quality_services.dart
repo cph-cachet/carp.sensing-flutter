@@ -54,6 +54,10 @@ class AirQualityServiceManager extends OnlineServiceManager<AirQualityService> {
   @override
   String? get displayName => 'Air Quality Service (WAQI)';
 
+  AirQualityServiceManager([
+    AirQualityService? configuration,
+  ]) : super(AirQualityService.DEVICE_TYPE, configuration);
+
   @override
   // ignore: avoid_renaming_method_parameters
   void onInitialize(AirQualityService service) {}

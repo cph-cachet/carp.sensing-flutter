@@ -86,6 +86,10 @@ class LocationServiceManager extends OnlineServiceManager<LocationService> {
   @override
   String? get displayName => 'Location Service';
 
+  LocationServiceManager([
+    LocationService? configuration,
+  ]) : super(LocationService.DEVICE_TYPE, configuration);
+
   @override
   // ignore: avoid_renaming_method_parameters
   void onInitialize(LocationService service) {}
