@@ -22,7 +22,7 @@ import 'credentials.dart';
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
 
-  late StudyProtocol protocol;
+  StudyProtocol? protocol;
 
   setUp(() async {
     // Initialization of serialization
@@ -45,7 +45,7 @@ void main() {
     bloc.dataFormat = NameSpace.CARP;
 
     // generate the protocol to be used in testing below
-    protocol =
+    protocol ??=
         await LocalStudyProtocolManager().getStudyProtocol('CAMS App v 1.1.0');
   });
 
@@ -54,7 +54,7 @@ void main() {
 
     test('CAMSStudyProtocol -> JSON', () async {
       print(toJsonString(protocol));
-      expect(protocol.ownerId, accountId);
+      expect(protocol?.ownerId, accountId);
     });
 
     test('StudyProtocol -> JSON -> StudyProtocol :: deep assert', () async {
@@ -76,8 +76,8 @@ void main() {
           json.decode(plainJson) as Map<String, dynamic>);
 
       // need to set the id and date, since it is auto-generated each time.
-      p.id = protocol.id;
-      p.createdOn = protocol.createdOn;
+      p.id = protocol!.id;
+      p.createdOn = protocol!.createdOn;
 
       expect(toJsonString(protocol), toJsonString(p));
     });

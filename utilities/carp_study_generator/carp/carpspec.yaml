@@ -15,7 +15,7 @@ server:
 
 # configuration of the study ID - used for upload of informed consent and translations
 study:
-  study_id: 3af714b8-bc74-437e-a124-4ccf668418b0
+  study_id: 75b95ab5-bfc8-48ce-a5d4-d11b228ca74b
 
 # configuration of the protocol to be uploaded
 protocol:

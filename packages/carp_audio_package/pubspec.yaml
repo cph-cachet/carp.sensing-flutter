@@ -19,6 +19,7 @@ dependencies:
   permission_handler: ^10.0.0  
   flutter_sound: ^9.1.0   # audio probe
   noise_meter: ^3.1.0     # measuring noise level
+  audio_streamer: ^2.2.0
   stats: ^2.0.0
 
 # Overriding carp libraries to use the local copy
