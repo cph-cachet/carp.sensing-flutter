@@ -160,7 +160,7 @@ class CarpService extends CarpBaseService {
   /// Authenticate to this CARP service by showing a modal dialog form for the
   /// user to enter his/her username and password.
   ///
-  /// Returns the authenticated user if successful, `null` othervise.
+  /// Returns the authenticated user if successful, `null` otherwise.
   ///
   /// The [context] is required in order to show the login page in the right context.
   /// If the [username] is provide, this is shown as default in the form.
@@ -190,6 +190,36 @@ class CarpService extends CarpBaseService {
             ));
 
     return user;
+  }
+
+  /// Authenticate using a refresh token previously obtained from this CARP service.
+  ///
+  /// Returns the authenticated user if successful, `null` otherwise.
+  Future<OAuthToken> authenticateByRefreshToken(String refreshToken) async {
+    final loginBody = {
+      "refresh_token": "$refreshToken",
+      "grant_type": "refresh_token",
+    };
+
+    final http.Response response = await httpr.post(
+      Uri.encodeFull(authEndpointUri),
+      headers: _authenticationHeader,
+      body: loginBody,
+    );
+
+    int httpStatusCode = response.statusCode;
+    Map<String, dynamic> responseJson = json.decode(response.body);
+    if (httpStatusCode == HttpStatus.ok) {
+      OAuthToken refreshedToken = OAuthToken.fromMap(responseJson);
+      _authEventController.add(AuthEvent.refreshed);
+      return refreshedToken;
+    }
+
+    _authEventController.add(AuthEvent.failed);
+    throw CarpServiceException(
+      httpStatus: HTTPStatus(httpStatusCode, response.reasonPhrase),
+      message: responseJson["error_description"],
+    );
   }
 
   /// Get a new access token for the current user based on the
@@ -309,13 +339,14 @@ class CarpService extends CarpBaseService {
       throw CarpServiceException(message: 'No user is authenticated.');
 
     http.Response response = await httpr
-        .get(Uri.encodeFull('$userEndpointUri/current'), headers: headers);
+        .get(Uri.encodeFull('$currentUserEndpointUri'), headers: headers);
     int httpStatusCode = response.statusCode;
     Map<String, dynamic> responseJson = json.decode(response.body);
 
     if (httpStatusCode == HttpStatus.ok) {
       return _currentUser!
         ..id = responseJson['id']
+        ..username = responseJson['email']
         ..accountId = responseJson['accountId']
         ..isActivated = responseJson['isActivated'] as bool?
         ..firstName = responseJson['firstName']
