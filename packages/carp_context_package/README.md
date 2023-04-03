@@ -108,50 +108,53 @@ Before creating a study and running it, register this package in the [SamplingPa
 
 In order to use the context measures to a study protocol, this context package uses different "services" to collect data.
 
-The `dk.cachet.carp.activity` measure uses the phone itself and can be added like this:
+The `ACTIVITY` measure uses the phone itself and can be added like this:
 
 ```dart
-  // Create a study protocol
-  StudyProtocol protocol = StudyProtocol(
-    ownerId: 'owner@dtu.dk',
-    name: 'Context Sensing Example',
-  );
+// Create a study protocol
+StudyProtocol protocol = StudyProtocol(
+  ownerId: 'owner@dtu.dk',
+  name: 'Context Sensing Example',
+);
 
-  // Define the smartphone as the master device.
-  Smartphone phone = Smartphone();
-  protocol.addMasterDevice(phone);
+// Define the smartphone as the master device.
+Smartphone phone = Smartphone();
+protocol.addMasterDevice(phone);
 
-  // Add a background task that collects activity data from the phone
-  protocol.addTriggeredTask(
-      ImmediateTrigger(),
-      BackgroundTask()
-        ..addMeasure(Measure(type: ContextSamplingPackage.ACTIVITY)),
-      phone);
+// Add a background task that collects activity data from the phone
+protocol.addTaskControl(
+    ImmediateTrigger(),
+    BackgroundTask(measures: [
+      Measure(type: ContextSamplingPackage.ACTIVITY),
+    ]),
+    phone);
 ```
 
 All of the location-based measures;
 
-* `dk.cachet.carp.location`
-* `dk.cachet.carp.geolocation`
-* `dk.cachet.carp.geofence`
-* `dk.cachet.carp.mobility`
+* `CURRENT_LOCATION`
+* `LOCATION`
+* `GEOFENCE`
+* `MOBILITY`
 
 uses the `LocationService` service as a 'connected device' to collect data and can be added to a protocol like this:
 
 ```dart
-  // Define the online location service and add it as a 'device'
-  LocationService locationService = LocationService(
-      accuracy: GeolocationAccuracy.high,
-      distance: 10,
-      interval: const Duration(minutes: 1));
-  protocol.addConnectedDevice(locationService);
+// Define the online location service and add it as a 'device'
+final locationService = LocationService(
+    accuracy: GeolocationAccuracy.high,
+    distance: 10,
+    interval: const Duration(minutes: 1));
 
-  // Add a background task that collects location on a regular basis
-  protocol.addTriggeredTask(
-      IntervalTrigger(period: Duration(minutes: 5)),
-      BackgroundTask()
-        ..addMeasure(Measure(type: ContextSamplingPackage.LOCATION)),
-      locationService);
+protocol.addConnectedDevice(locationService, phone);
+
+// Add a background task that collects location every 5 minutes
+protocol.addTaskControl(
+    PeriodicTrigger(period: Duration(minutes: 5)),
+    BackgroundTask(measures: [
+      (Measure(type: ContextSamplingPackage.CURRENT_LOCATION)),
+    ]),
+    locationService);
 ```
 
 > Note that you would often need to balance the configuration of the `LocationService` with the measure you are collecting. For example, if only using the `mobility` measure, a lower `accuracy`, `distance`, and sampling `interval` could be used.
@@ -161,29 +164,29 @@ In order to use these service, you need to obtain an API key from each of them.
 Once you have this, these services can be configured and added to a protocol like this:
 
 ```dart
-  // Define the online weather service and add it as a 'device'
-  WeatherService weatherService =
-      WeatherService(apiKey: 'OW_API_key_goes_here');
-  protocol.addConnectedDevice(weatherService);
+// Define the online weather service and add it as a 'device'
+final weatherService = WeatherService(apiKey: 'OW_API_key_goes_here');
+protocol.addConnectedDevice(weatherService, phone);
 
-  // Add a background task that collects weather every 30 miutes.
-  protocol.addTriggeredTask(
-      IntervalTrigger(period: Duration(minutes: 30)),
-      BackgroundTask()
-        ..addMeasure(Measure(type: ContextSamplingPackage.WEATHER)),
-      weatherService);
+// Add a background task that collects weather every 30 minutes.
+protocol.addTaskControl(
+    PeriodicTrigger(period: Duration(minutes: 30)),
+    BackgroundTask(measures: [
+      Measure(type: ContextSamplingPackage.WEATHER),
+    ]),
+    weatherService);
 
-  // Define the online air quality service and add it as a 'device'
-  AirQualityService airQualityService =
-      AirQualityService(apiKey: 'WAQI_API_key_goes_here');
-  protocol.addConnectedDevice(airQualityService);
+// Define the online air quality service and add it as a 'device'
+final airQualityService = AirQualityService(apiKey: 'WAQI_API_key_goes_here');
+protocol.addConnectedDevice(airQualityService, phone);
 
-  // Add a background task that air quality every 30 miutes.
-  protocol.addTriggeredTask(
-      IntervalTrigger(period: Duration(minutes: 30)),
-      BackgroundTask()
-        ..addMeasure(Measure(type: ContextSamplingPackage.AIR_QUALITY)),
-      airQualityService);
+// Add a background task that air quality every 30 minutes.
+protocol.addTaskControl(
+    PeriodicTrigger(period: Duration(minutes: 30)),
+    BackgroundTask(measures: [
+      Measure(type: ContextSamplingPackage.AIR_QUALITY),
+    ]),
+    airQualityService);
 ```
 
-See the `example.dart` file for a full example of how to set up a CAMS study protocol for this context sampling package.
+See the `example.dart` file for more examples of how to set up a CAMS study protocol for this context sampling package.
