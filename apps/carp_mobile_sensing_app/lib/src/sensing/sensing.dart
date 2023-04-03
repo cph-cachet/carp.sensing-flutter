@@ -67,45 +67,33 @@ class Sensing {
 
     switch (bloc.deploymentMode) {
       case DeploymentMode.local:
-        // use the local, phone-based deployment service
+        // Use the local, phone-based deployment service.
         deploymentService = SmartphoneDeploymentService();
 
-        // get the protocol from the local study protocol manager
-        // note that the study id is not used
+        // Get the protocol from the local study protocol manager.
+        // Note that the study id is not used.
         StudyProtocol protocol =
             await LocalStudyProtocolManager().getStudyProtocol('');
 
-        // deploy this protocol using the on-phone deployment service
-        // reuse the study deployment id, if this is stored on the phone
+        // Deploy this protocol using the on-phone deployment service.
+        // Reuse the study deployment id, if this is stored on the phone.
         _status = await SmartphoneDeploymentService().createStudyDeployment(
           protocol,
           [],
           bloc.studyDeploymentId,
         );
 
-        // save the correct deployment id on the phone for later use
-        bloc.studyDeploymentId = _status!.studyDeploymentId;
+        // Save the correct deployment id on the phone for later use.
+        bloc.studyDeploymentId = _status?.studyDeploymentId;
+        bloc.deviceRolename = _status?.primaryDeviceStatus?.device.roleName;
 
         break;
       case DeploymentMode.production:
       case DeploymentMode.staging:
       case DeploymentMode.development:
-
-        // CarpService().
-
-        // use the CARP deployment service that knows how to download a
-        // protocol from CAWS
+        // Use the CARP deployment service which can download a protocol from CAWS
         CarpDeploymentService().configureFrom(CarpService());
         deploymentService = CarpDeploymentService();
-
-        // // get the study deployment status based on the studyDeploymentId
-        // if (bloc.studyDeploymentId != null) {
-        //   _status = await deploymentService
-        //       ?.getStudyDeploymentStatus(bloc.studyDeploymentId!);
-        // } else {
-        //   warning(
-        //       '$runtimeType - no study deployment ID has been specified....?');
-        // }
 
         break;
     }

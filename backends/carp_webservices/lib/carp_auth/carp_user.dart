@@ -54,7 +54,7 @@ class CarpUser {
   OAuthToken? token;
 
   CarpUser({
-    required this.username,
+    this.username = '',
     this.id,
     this.accountId,
     this.firstName,

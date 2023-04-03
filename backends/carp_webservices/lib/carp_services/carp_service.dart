@@ -133,8 +133,8 @@ class CarpService extends CarpBaseService {
     );
   }
 
-  /// Authenticate to this CARP web service using username and a previously
-  /// stored [OAuthToken] access token.
+  /// Authenticate to this CARP web service using [username] and a previously
+  /// stored [OAuthToken] access [token].
   ///
   /// This method can be used to re-authenticate a user if the token (and username)
   /// is known locally on the phone.
@@ -192,10 +192,11 @@ class CarpService extends CarpBaseService {
     return user;
   }
 
-  /// Authenticate using a refresh token previously obtained from this CARP service.
+  /// Authenticate using the [refreshToken] previously obtained from this CARP service.
   ///
-  /// Returns the authenticated user if successful, `null` otherwise.
-  Future<OAuthToken> authenticateByRefreshToken(String refreshToken) async {
+  /// Return the signed in user (with an [OAuthToken] access token), if successful.
+  /// Throws a [CarpServiceException] if not successful.
+  Future<CarpUser> authenticateWithRefreshToken(String refreshToken) async {
     final loginBody = {
       "refresh_token": "$refreshToken",
       "grant_type": "refresh_token",
@@ -211,11 +212,18 @@ class CarpService extends CarpBaseService {
     Map<String, dynamic> responseJson = json.decode(response.body);
     if (httpStatusCode == HttpStatus.ok) {
       OAuthToken refreshedToken = OAuthToken.fromMap(responseJson);
-      _authEventController.add(AuthEvent.refreshed);
-      return refreshedToken;
+
+      _currentUser = CarpUser()..authenticated(refreshedToken);
+      await getCurrentUserProfile();
+
+      _authEventController.add(AuthEvent.authenticated);
+      return _currentUser!;
     }
 
+    // All other cases are treated as a failed attempt and throws an error
     _authEventController.add(AuthEvent.failed);
+    _currentUser = null;
+
     throw CarpServiceException(
       httpStatus: HTTPStatus(httpStatusCode, response.reasonPhrase),
       message: responseJson["error_description"],
@@ -232,7 +240,7 @@ class CarpService extends CarpBaseService {
     if (_currentUser == null)
       throw new CarpServiceException(
           message:
-              "No user is authenticated. Call 'CarpService().autheticate()' first.");
+              "No user is authenticated. Call 'CarpService().authenticate()' first.");
 
     // --data "refresh_token=my-refresh-token&grant_type=refresh_token"
     final loginBody = {
@@ -335,7 +343,7 @@ class CarpService extends CarpBaseService {
 
   /// Asynchronously gets the CARP profile of the current user.
   Future<CarpUser> getCurrentUserProfile() async {
-    if (currentUser == null || !currentUser!.isAuthenticated)
+    if (!currentUser!.isAuthenticated)
       throw CarpServiceException(message: 'No user is authenticated.');
 
     http.Response response = await httpr
@@ -346,7 +354,8 @@ class CarpService extends CarpBaseService {
     if (httpStatusCode == HttpStatus.ok) {
       return _currentUser!
         ..id = responseJson['id']
-        ..username = responseJson['email']
+        ..username = responseJson['email'] // CAWS uses email as username
+        ..email = responseJson['email']
         ..accountId = responseJson['accountId']
         ..isActivated = responseJson['isActivated'] as bool?
         ..firstName = responseJson['firstName']
