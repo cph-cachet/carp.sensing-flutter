@@ -13,7 +13,7 @@ void main() async {
   // Create a study protocol
   StudyProtocol protocol = StudyProtocol(
     ownerId: 'owner@dtu.dk',
-    name: 'Context Sensing Example',
+    name: 'Connectivity Sensing Example',
   );
 
   // define which devices are used for data collection

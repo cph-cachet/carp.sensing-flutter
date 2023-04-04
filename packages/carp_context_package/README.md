@@ -5,7 +5,7 @@ This packages supports sampling of the following [`Measure`](https://pub.dev/doc
 
 * `dk.cachet.carp.activity`
 * `dk.cachet.carp.location`
-* `dk.cachet.carp.geolocation`
+* `dk.cachet.carp.currentlocation`
 * `dk.cachet.carp.geofence`
 * `dk.cachet.carp.mobility`
 * `dk.cachet.carp.weather`
@@ -17,7 +17,7 @@ See the [CARP Mobile Sensing App](https://github.com/cph-cachet/carp.sensing-flu
 For Flutter plugins for other CARP products, see [CARP Mobile Sensing in Flutter](https://github.com/cph-cachet/carp.sensing-flutter).
 
 If you're interested in writing you own sampling packages for CARP, see the description on
-how to [extend](https://github.com/cph-cachet/carp.sensing-flutter/wiki/4.-Extending-CARP-Mobile-Sensing) CARP on the wiki.
+how to [extend](https://github.com/cph-cachet/carp.sensing-flutter/wiki/5.-Extending-CARP-Mobile-Sensing) CARP on the wiki.
 
 ## Installing
 
@@ -132,10 +132,10 @@ protocol.addTaskControl(
 
 All of the location-based measures;
 
-* `CURRENT_LOCATION`
-* `LOCATION`
-* `GEOFENCE`
-* `MOBILITY`
+* `dk.cachet.carp.location`
+* `dk.cachet.carp.currentlocation`
+* `dk.cachet.carp.geofence`
+* `dk.cachet.carp.mobility`
 
 uses the `LocationService` service as a 'connected device' to collect data and can be added to a protocol like this:
 

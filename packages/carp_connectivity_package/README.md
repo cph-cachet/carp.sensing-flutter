@@ -15,7 +15,7 @@ There is privacy protection of wifi and bluetooth names as part of the default [
 For Flutter plugins for other CARP products, see [CARP Mobile Sensing in Flutter](https://github.com/cph-cachet/carp.sensing-flutter).
 
 If you're interested in writing you own sampling packages for CARP, see the description on
-how to [extend](https://github.com/cph-cachet/carp.sensing-flutter/wiki/4.-Extending-CARP-Mobile-Sensing) CARP on the wiki.
+how to [extend](https://github.com/cph-cachet/carp.sensing-flutter/wiki/5.-Extending-CARP-Mobile-Sensing) CARP on the wiki.
 
 ## Installing
 
@@ -54,7 +54,7 @@ Add the following to your app's `manifest.xml` file located in `android/app/src/
 </manifest>
 ````
 
-Note that connectivity changes are **not** communicated to Android apps in the background starting with Android 8 (SDK 26). Hence, connectivity status is only collected when your app is resumed.
+> Note that connectivity changes are **not** communicated to Android apps in the background starting with Android 8 (SDK 26). Hence, connectivity status is only collected when your app is resumed.
 
 ### iOS Integration
 
@@ -76,6 +76,8 @@ To enable bluetooth tracking, add these permissions in the `Info.plist` file loc
 </array>
 ````
 
+> Note that on iOS, it is [impossible to do a general Bluetooth scan when the screen is off or the app is in background](https://developer.apple.com/forums/thread/652592). This will simply result in an empty scan. Hence, bluetooth devices are only collected when the app is in the foreground.
+
 ## Using it
 
 To use this package, import it into your app together with the
@@ -91,32 +93,31 @@ Before creating a study and running it, register this package in the
 [SamplingPackageRegistry](https://pub.dartlang.org/documentation/carp_mobile_sensing/latest/runtime/SamplingPackageRegistry.html).
 
 `````dart
-  SamplingPackageRegistry().register(ConnectivitySamplingPackage());
+SamplingPackageRegistry().register(ConnectivitySamplingPackage());
 `````
 
 Collection of connectivity measures can be added to a study protocol like this.
 
 ```dart
-  // Create a study protocol
-  StudyProtocol protocol = StudyProtocol(
-    ownerId: 'owner@dtu.dk',
-    name: 'Context Sensing Example',
-  );
+// Create a study protocol
+StudyProtocol protocol = StudyProtocol(
+  ownerId: 'owner@dtu.dk',
+  name: 'Connectivity Sensing Example',
+);
 
-  // define which devices are used for data collection
-  // in this case, its only this smartphone
-  Smartphone phone = Smartphone();
-  protocol.addPrimaryDevice(phone);
+// define which devices are used for data collection
+// in this case, its only this smartphone
+Smartphone phone = Smartphone();
+protocol.addPrimaryDevice(phone);
 
-  // Add an automatic task that immediately starts collecting connectivity,
-  // nearby bluetooth devices, and wifi information.
-  protocol.addTaskControl(
-      ImmediateTrigger(),
-      BackgroundTask(measures: [
-        Measure(type: ConnectivitySamplingPackage.CONNECTIVITY),
-        Measure(type: ConnectivitySamplingPackage.BLUETOOTH),
-        Measure(type: ConnectivitySamplingPackage.WIFI),
-      ]),
-      phone);
-}
+// Add an automatic task that immediately starts collecting connectivity,
+// nearby bluetooth devices, and wifi information.
+protocol.addTaskControl(
+    ImmediateTrigger(),
+    BackgroundTask(measures: [
+      Measure(type: ConnectivitySamplingPackage.CONNECTIVITY),
+      Measure(type: ConnectivitySamplingPackage.BLUETOOTH),
+      Measure(type: ConnectivitySamplingPackage.WIFI),
+    ]),
+    phone);
 ```
