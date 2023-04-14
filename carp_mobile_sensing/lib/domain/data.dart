@@ -42,3 +42,22 @@ class FileData extends Data {
   String toString() =>
       '${super.toString()}, filename: $filename, upload: $upload';
 }
+
+/// Reflects a heart beat data send every [frequency].
+/// Useful for calculating sampling coverage over time.
+@JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
+class Coverage extends Data {
+  static const dataType = '${CarpDataTypes.CARP_NAMESPACE}.coverage';
+
+  /// The expected coverage frequency
+  int frequency;
+
+  Coverage({required this.frequency}) : super();
+
+  @override
+  Function get fromJsonFunction => _$CoverageFromJson;
+  factory Coverage.fromJson(Map<String, dynamic> json) =>
+      FromJsonFactory().fromJson(json) as Coverage;
+  @override
+  Map<String, dynamic> toJson() => _$CoverageToJson(this);
+}

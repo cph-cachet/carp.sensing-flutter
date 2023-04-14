@@ -1,7 +1,7 @@
 part of connectivity;
 
 class ConnectivitySamplingPackage extends SmartphoneSamplingPackage {
-  /// Measure type for continous collection of connectivity status of the phone
+  /// Measure type for continuous collection of connectivity status of the phone
   /// (none/mobile/wifi).
   ///  * Event-based measure.
   ///  * Uses the [Smartphone] master device for data collection.
@@ -21,23 +21,35 @@ class ConnectivitySamplingPackage extends SmartphoneSamplingPackage {
   static const String WIFI = "${NameSpace.CARP}.wifi";
 
   @override
-  List<DataTypeMetaData> get dataTypes => [
-        DataTypeMetaData(
-          type: CONNECTIVITY,
-          displayName: "Connectivity Status",
-          timeType: DataTimeType.POINT,
+  DataTypeSamplingSchemeMap get samplingSchemes =>
+      DataTypeSamplingSchemeMap.from([
+        DataTypeSamplingScheme(
+          DataTypeMetaData(
+            type: CONNECTIVITY,
+            displayName: "Connectivity Status",
+            timeType: DataTimeType.POINT,
+          ),
         ),
-        DataTypeMetaData(
-          type: BLUETOOTH,
-          displayName: "Bluetooth Scan of Nearby Devices",
-          timeType: DataTimeType.TIME_SPAN,
-        ),
-        DataTypeMetaData(
-          type: WIFI,
-          displayName: "Wifi Connectivity Status",
-          timeType: DataTimeType.POINT,
-        ),
-      ];
+        DataTypeSamplingScheme(
+            DataTypeMetaData(
+              type: BLUETOOTH,
+              displayName: "Bluetooth Scan of Nearby Devices",
+              timeType: DataTimeType.TIME_SPAN,
+            ),
+            PeriodicSamplingConfiguration(
+              interval: const Duration(minutes: 10),
+              duration: const Duration(seconds: 5),
+            )),
+        DataTypeSamplingScheme(
+            DataTypeMetaData(
+              type: WIFI,
+              displayName: "Wifi Connectivity Status",
+              timeType: DataTimeType.POINT,
+            ),
+            IntervalSamplingConfiguration(
+              interval: const Duration(minutes: 10),
+            )),
+      ]);
 
   @override
   Probe? create(String type) {
@@ -77,21 +89,4 @@ class ConnectivitySamplingPackage extends SmartphoneSamplingPackage {
         Permission.location,
         Permission.bluetoothScan,
       ];
-
-  /// Default samplings schema for:
-  ///  * [BLUETOOTH] - scanning every 10 minutes, sampling for 5 seconds
-  ///  * [WIFI] - collecting every 10 minutes
-  @override
-  SamplingSchema get samplingSchema => SamplingSchema()
-    ..addConfiguration(
-        BLUETOOTH,
-        PeriodicSamplingConfiguration(
-          interval: const Duration(minutes: 10),
-          duration: const Duration(seconds: 5),
-        ))
-    ..addConfiguration(
-        WIFI,
-        IntervalSamplingConfiguration(
-          interval: const Duration(minutes: 10),
-        ));
 }

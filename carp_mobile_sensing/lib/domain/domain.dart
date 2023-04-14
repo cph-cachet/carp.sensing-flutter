@@ -18,7 +18,6 @@ import 'package:carp_mobile_sensing/carp_mobile_sensing.dart';
 part 'study_protocol.dart';
 part 'study_description.dart';
 part 'data_endpoint.dart';
-part 'sampling_schema.dart';
 part 'sampling_configurations.dart';
 part 'device_configurations.dart';
 part 'smartphone_deployment.dart';

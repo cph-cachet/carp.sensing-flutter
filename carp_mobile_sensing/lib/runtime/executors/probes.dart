@@ -32,16 +32,26 @@ abstract class Probe extends AbstractExecutor<Measure> {
   /// The sampling configuration for this probe.
   ///
   /// Configuration is obtained in the following order:
-  ///  * as [Measure.overrideSamplingConfiguration]
-  ///  * from the [DeviceConfiguration.samplingConfiguration] of the [deployment]
-  ///  * from the [SamplingSchema.configurations] of the sampling packages
+  ///  * from the [Measure.overrideSamplingConfiguration]
+  ///  * from the [DeviceConfiguration.defaultSamplingConfiguration] of the [deployment]
+  ///  * from the [DeviceConfiguration.dataTypeSamplingSchemes] of the static device configuration
+  ///  * from the [SamplingPackage.samplingSchemes] of the sampling packages
   ///
   /// Returns `null` in case no configuration is found.
+  ///
+  /// See also the section on[Sampling schemes and configurations](https://github.com/cph-cachet/carp.core-kotlin/blob/develop/docs/carp-common.md#sampling-schemes-and-configurations)
+  /// in the CARP Core Framework. In addition to CARP Core, CARP Mobile Sensing
+  /// also supports sampling schemes in the sampling packages, which are used
+  /// as the 4th possible configuration in the list above.
   SamplingConfiguration? get samplingConfiguration =>
       measure?.overrideSamplingConfiguration ??
       deployment
           ?.deviceConfiguration.defaultSamplingConfiguration?[measure?.type] ??
-      SamplingPackageRegistry().samplingSchema.configurations[measure?.type];
+      deployment?.deviceConfiguration.dataTypeSamplingSchemes?[measure?.type]
+          ?.defaultSamplingConfiguration ??
+      SamplingPackageRegistry()
+          .samplingSchemes[measure?.type]
+          ?.defaultSamplingConfiguration;
 
   /// Add a data point to the [measurements] stream.
   @protected

@@ -66,12 +66,14 @@ void _registerFromJsonFunctions() {
     TaskConfiguration(),
     BackgroundTask(),
     CustomProtocolTask(studyProtocol: ''),
+    WebTask(url: ''),
     Measure(type: ''),
     SamplingConfiguration(),
     NoOptionsSamplingConfiguration(),
     BatteryAwareSamplingConfiguration(
         critical: config, low: config, normal: config),
     GranularitySamplingConfiguration(Granularity.Balanced),
+    DeviceConfiguration(roleName: ''),
     DefaultDeviceConfiguration(roleName: ''),
     PrimaryDeviceConfiguration(roleName: ''),
     CustomProtocolDevice(),
@@ -83,15 +85,6 @@ void _registerFromJsonFunctions() {
     EmailAccountIdentity(''),
     UsernameAccountIdentity(''),
   ]);
-
-  // DeviceConfiguration with different sub-types
-  FromJsonFactory().register(DeviceConfiguration(roleName: ''));
-  FromJsonFactory().register(DeviceConfiguration(roleName: ''),
-      type:
-          'dk.cachet.carp.protocols.infrastructure.test.StubMasterDeviceConfiguration');
-  FromJsonFactory().register(DeviceConfiguration(roleName: ''),
-      type:
-          'dk.cachet.carp.protocols.infrastructure.test.StubDeviceConfiguration');
 
   // REQUESTS
   FromJsonFactory().registerAll([

@@ -53,7 +53,6 @@ class LocationService extends OnlineService {
   ///  * interval = 1 minute
   LocationService({
     String? roleName,
-    List<String>? supportedDataTypes,
     this.accuracy = GeolocationAccuracy.balanced,
     this.distance = 0,
     Duration? interval,
@@ -62,7 +61,6 @@ class LocationService extends OnlineService {
     this.notificationDescription,
   }) : super(
           roleName: roleName ?? DEFAULT_ROLENAME,
-          supportedDataTypes: supportedDataTypes,
         ) {
     this.interval = interval ?? const Duration(minutes: 1);
   }

@@ -22,11 +22,9 @@ class WeatherService extends OnlineService {
 
   WeatherService({
     String? roleName,
-    List<String>? supportedDataTypes,
     required this.apiKey,
   }) : super(
           roleName: roleName ?? DEFAULT_ROLENAME,
-          supportedDataTypes: supportedDataTypes,
         );
 
   @override

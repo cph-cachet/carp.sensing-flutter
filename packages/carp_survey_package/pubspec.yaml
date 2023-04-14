@@ -32,6 +32,8 @@ dependency_overrides:
     path: ../../carp_mobile_sensing/
   research_package: 
     path: ../../../../research.package/
+  cognition_package: 
+    path: ../../../../cognition_package/
   
 
 dev_dependencies:

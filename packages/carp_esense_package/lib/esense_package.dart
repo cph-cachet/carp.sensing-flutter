@@ -51,18 +51,22 @@ class ESenseSamplingPackage implements SamplingPackage {
       ESenseDeviceManager(ESenseDevice.DEVICE_TYPE);
 
   @override
-  List<DataTypeMetaData> get dataTypes => [
-        DataTypeMetaData(
+  DataTypeSamplingSchemeMap get samplingSchemes =>
+      DataTypeSamplingSchemeMap.from([
+        DataTypeSamplingScheme(DataTypeMetaData(
           type: ESENSE_BUTTON,
           displayName: "eSense Button Events",
           timeType: DataTimeType.POINT,
-        ),
-        DataTypeMetaData(
+        )),
+        DataTypeSamplingScheme(DataTypeMetaData(
           type: ESENSE_SENSOR,
           displayName: "eSense Movement Events",
           timeType: DataTimeType.TIME_SPAN,
-        ),
-      ];
+        ))
+      ]);
+
+  @override
+  List<DataTypeMetaData> get dataTypes => samplingSchemes.dataTypes;
 
   @override
   Probe? create(String type) {
@@ -101,7 +105,4 @@ class ESenseSamplingPackage implements SamplingPackage {
 
   @override
   DeviceManager get deviceManager => _deviceManager;
-
-  @override
-  SamplingSchema get samplingSchema => SamplingSchema();
 }

@@ -4,7 +4,7 @@ part of runtime;
 class SamplingPackageRegistry {
   final List<SamplingPackage> _packages = [];
   final List<Permission> _permissions = [];
-  SamplingSchema? _combinedSchemas;
+  DataTypeSamplingSchemeMap? _combinedSchemas;
 
   static final SamplingPackageRegistry _instance = SamplingPackageRegistry._();
 
@@ -30,7 +30,7 @@ class SamplingPackageRegistry {
     for (var permission in package.permissions) {
       if (!_permissions.contains(permission)) _permissions.add(permission);
     }
-    CarpDataTypes().add(package.dataTypes);
+    CarpDataTypes().add(package.samplingSchemes.dataTypes);
 
     // register the package's device in the device registry
     DeviceController()
@@ -49,7 +49,7 @@ class SamplingPackageRegistry {
     final Set<SamplingPackage> supportedPackages = {};
 
     for (var package in packages) {
-      if (package.dataTypes.map((e) => e.type).contains(type)) {
+      if (package.samplingSchemes.contains(type)) {
         supportedPackages.add(package);
       }
     }
@@ -57,22 +57,22 @@ class SamplingPackageRegistry {
     return supportedPackages;
   }
 
-  /// The combined list of all measure types in all packages.
+  /// The combined list of all data types in all packages.
   List<DataTypeMetaData> get dataTypes {
     List<DataTypeMetaData> dataTypes = [];
     for (var package in packages) {
-      dataTypes.addAll(package.dataTypes);
+      dataTypes.addAll(package.samplingSchemes.dataTypes);
     }
     return dataTypes;
   }
 
-  /// The combined sampling schema for all measure types in all packages.
-  SamplingSchema get samplingSchema {
+  /// The combined sampling schemes for all measure types in all packages.
+  DataTypeSamplingSchemeMap get samplingSchemes {
     if (_combinedSchemas == null) {
-      _combinedSchemas = SamplingSchema();
+      _combinedSchemas = DataTypeSamplingSchemeMap();
       // join sampling schemas from each registered sampling package.
       for (var package in packages) {
-        _combinedSchemas!.addSamplingSchema(package.samplingSchema);
+        _combinedSchemas!.addSamplingSchema(package.samplingSchemes);
       }
     }
     return _combinedSchemas!;
@@ -106,19 +106,23 @@ class SamplingPackageRegistry {
 ///
 /// A sampling package provides information on sampling:
 ///  * [dataTypes] - the data types supported
-///  * [samplingSchema] - the default [SamplingSchema] containing a set of [SamplingConfiguration]s for each data type.
-///  * [permissions] - a list of [Permission] needed for this package
+///  * [samplingSchemes] - the default [DataTypeSamplingSchemeMap] containing
+///     a set of [SamplingConfiguration]s for each data type.
+///  * [permissions] - a list of [Permission]s needed for this package
 ///  * [deviceType] - what type of device this package supports
 ///
 /// It also contains factory methods for:
 ///  * creating a [Probe] based on a [Measure] type
 ///  * creating a [DeviceManager] based on a device type
 abstract class SamplingPackage {
+  /// The default sampling schemes for all [dataTypes] in this package.
+  ///
+  /// All sampling packages should defined a [DataTypeSamplingScheme] for each
+  /// data type.
+  DataTypeSamplingSchemeMap get samplingSchemes;
+
   /// The list of data type this package supports.
   List<DataTypeMetaData> get dataTypes;
-
-  /// The default sampling schema for all [dataTypes] in this package.
-  SamplingSchema get samplingSchema;
 
   /// The list of permissions that this package need.
   ///
@@ -151,12 +155,24 @@ abstract class SamplingPackage {
 }
 
 /// An abstract class for all sampling packages that run on the phone itself.
+///
+/// Note that the default implementation of [permissions] and [onRegister] are
+/// no-op operations and should hence be overridden in subclasses, if needed.
 abstract class SmartphoneSamplingPackage implements SamplingPackage {
-  final SmartphoneDeviceManager _deviceManager = SmartphoneDeviceManager();
+  final _deviceManager = SmartphoneDeviceManager();
+
+  // @override
+  List<DataTypeMetaData> get dataTypes => samplingSchemes.dataTypes;
 
   @override
   String get deviceType => _deviceManager.type;
 
   @override
   DeviceManager get deviceManager => _deviceManager;
+
+  @override
+  List<Permission> get permissions => [];
+
+  @override
+  void onRegister() {}
 }

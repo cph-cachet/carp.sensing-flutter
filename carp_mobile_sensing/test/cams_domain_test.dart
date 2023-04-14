@@ -1,9 +1,9 @@
 import 'dart:convert';
 import 'dart:io';
+
 import 'package:carp_core/carp_core.dart';
 import 'package:carp_mobile_sensing/carp_mobile_sensing.dart';
 import 'package:carp_serializable/carp_serializable.dart';
-
 import 'package:test/test.dart';
 
 void main() {
@@ -371,18 +371,18 @@ void main() {
     Smartphone phone = Smartphone();
 
     phone.defaultSamplingConfiguration!
-      ..addAll(DeviceSamplingPackage().samplingSchema.configurations)
-      ..addAll(SensorSamplingPackage().samplingSchema.configurations);
+      ..addAll(DeviceSamplingPackage().samplingSchemes.configurations)
+      ..addAll(SensorSamplingPackage().samplingSchemes.configurations);
 
     protocol.addPrimaryDevice(phone);
 
     expect(
         protocol.primaryDevice.defaultSamplingConfiguration?.keys.contains(
-            DeviceSamplingPackage().samplingSchema.configurations.keys.first),
+            DeviceSamplingPackage().samplingSchemes.configurations.keys.first),
         true);
     expect(
         protocol.primaryDevice.defaultSamplingConfiguration?.keys.contains(
-            SensorSamplingPackage().samplingSchema.configurations.keys.first),
+            SensorSamplingPackage().samplingSchemes.configurations.keys.first),
         true);
     print(toJsonString(protocol));
   });
@@ -395,15 +395,15 @@ void main() {
 
     StudyDeploymentStatus? status_2 = await (SmartphoneDeploymentService()
         .registerDevice(
-            status_1.studyDeploymentId, 'esense', DeviceRegistration()));
+            status_1.studyDeploymentId, 'esense', DefaultDeviceRegistration()));
     print(status_2);
     assert(status_2?.studyDeploymentId == status_1.studyDeploymentId);
     assert(status_2?.status == StudyDeploymentStatusTypes.DeployingDevices);
     assert(status_2 == status_1);
 
     StudyDeploymentStatus? status_3 = await SmartphoneDeploymentService()
-        .registerDevice(
-            status_1.studyDeploymentId, 'nonsense', DeviceRegistration());
+        .registerDevice(status_1.studyDeploymentId, 'nonsense',
+            DefaultDeviceRegistration());
     assert(status_3?.status == StudyDeploymentStatusTypes.DeployingDevices);
     assert(status_3?.studyDeploymentId == status_1.studyDeploymentId);
     print(status_3);

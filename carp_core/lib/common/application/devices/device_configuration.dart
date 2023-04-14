@@ -28,18 +28,22 @@ class DeviceConfiguration<TRegistration extends DeviceRegistration>
   /// starting a study, i.e., whether the study can run without this device or not.
   bool? isOptional;
 
-  /// The set of data types which can be collected on this device.
-  List<String>? supportedDataTypes;
-
   /// Sampling configurations which override the default configurations for
   /// data types available on this device.
   Map<String, SamplingConfiguration>? defaultSamplingConfiguration = {};
 
-  // @Deprecated('Use DefaultDeviceConfiguration instead.')
+  /// Sampling schemes for all the sensors available on this device.
+  ///
+  /// Implementations of [DeviceConfiguration] should simply return a map
+  /// of all supported sampling schemes here.
+  DataTypeSamplingSchemeMap? get dataTypeSamplingSchemes => null;
+
+  /// The set of data types which can be collected on this device.
+  Set<String>? get supportedDataTypes => dataTypeSamplingSchemes?.types;
+
   DeviceConfiguration({
     required this.roleName,
     this.isOptional,
-    this.supportedDataTypes,
   }) : super();
 
   /// Create a [DeviceRegistration] which can be used to configure this device
@@ -76,7 +80,6 @@ class DefaultDeviceConfiguration
   DefaultDeviceConfiguration({
     required super.roleName,
     super.isOptional,
-    super.supportedDataTypes,
   });
 
   @override
@@ -102,7 +105,6 @@ class PrimaryDeviceConfiguration<TRegistration extends DeviceRegistration>
     extends DeviceConfiguration<TRegistration> {
   PrimaryDeviceConfiguration({
     required super.roleName,
-    super.supportedDataTypes,
   }) : super(isOptional: null);
 
   // This property is only here for (de)serialization purposes.
@@ -136,7 +138,6 @@ class CustomProtocolDevice extends PrimaryDeviceConfiguration {
   /// If [roleName] is not specified, then the  [DEFAULT_ROLENAME] is used.
   CustomProtocolDevice({
     super.roleName = CustomProtocolDevice.DEFAULT_ROLENAME,
-    super.supportedDataTypes,
   });
 
   @override
@@ -145,63 +146,4 @@ class CustomProtocolDevice extends PrimaryDeviceConfiguration {
       FromJsonFactory().fromJson(json) as CustomProtocolDevice;
   @override
   Map<String, dynamic> toJson() => _$CustomProtocolDeviceToJson(this);
-}
-
-/// An internet-connected phone with built-in sensors.
-/// Typically this phone for a [StudyProtocol] running on this phone.
-@JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
-class Smartphone
-    extends PrimaryDeviceConfiguration<SmartphoneDeviceRegistration> {
-  /// The type of a smartphone primary device.
-  static const String DEVICE_TYPE =
-      '${DeviceConfiguration.DEVICE_NAMESPACE}.Smartphone';
-
-  /// The default role name for a smartphone primary device.
-  static const String DEFAULT_ROLENAME = 'Primary Phone';
-
-  /// Create a new Smartphone device descriptor.
-  /// If [roleName] is not specified, then the [DEFAULT_ROLENAME] is used.
-  Smartphone({
-    super.roleName = Smartphone.DEFAULT_ROLENAME,
-    super.supportedDataTypes,
-  });
-
-  @override
-  SmartphoneDeviceRegistration createRegistration({
-    String? deviceId,
-    String? deviceDisplayName,
-  }) =>
-      SmartphoneDeviceRegistration(
-          deviceId: deviceId, deviceDisplayName: deviceDisplayName);
-
-  @override
-  Function get fromJsonFunction => _$SmartphoneFromJson;
-  factory Smartphone.fromJson(Map<String, dynamic> json) =>
-      FromJsonFactory().fromJson(json) as Smartphone;
-  @override
-  Map<String, dynamic> toJson() => _$SmartphoneToJson(this);
-}
-
-/// A beacon meeting the open AltBeacon standard.
-@JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
-class AltBeacon extends DeviceConfiguration<AltBeaconDeviceRegistration> {
-  AltBeacon({
-    super.roleName = 'AltBeacon',
-    super.supportedDataTypes,
-  }) : super(isOptional: true);
-
-  @override
-  AltBeaconDeviceRegistration createRegistration({
-    String? deviceId,
-    String? deviceDisplayName,
-  }) =>
-      AltBeaconDeviceRegistration(
-          deviceId: deviceId, deviceDisplayName: deviceDisplayName);
-
-  @override
-  Function get fromJsonFunction => _$AltBeaconFromJson;
-  factory AltBeacon.fromJson(Map<String, dynamic> json) =>
-      FromJsonFactory().fromJson(json) as AltBeacon;
-  @override
-  Map<String, dynamic> toJson() => _$AltBeaconToJson(this);
 }

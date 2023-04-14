@@ -357,9 +357,6 @@ OnlineService<TRegistration> _$OnlineServiceFromJson<
     OnlineService<TRegistration>(
       roleName: json['roleName'] as String,
       isOptional: json['isOptional'] as bool? ?? true,
-      supportedDataTypes: (json['supportedDataTypes'] as List<dynamic>?)
-          ?.map((e) => e as String)
-          .toList(),
     )
       ..$type = json['__type'] as String?
       ..defaultSamplingConfiguration =
@@ -382,7 +379,6 @@ Map<String, dynamic>
   writeNotNull('__type', instance.$type);
   val['roleName'] = instance.roleName;
   writeNotNull('isOptional', instance.isOptional);
-  writeNotNull('supportedDataTypes', instance.supportedDataTypes);
   writeNotNull(
       'defaultSamplingConfiguration', instance.defaultSamplingConfiguration);
   return val;
@@ -524,8 +520,8 @@ Map<String, dynamic> _$FunctionTaskToJson(FunctionTask instance) {
 
   writeNotNull('__type', instance.$type);
   val['name'] = instance.name;
-  writeNotNull('description', instance.description);
   writeNotNull('measures', instance.measures);
+  writeNotNull('description', instance.description);
   return val;
 }
 
@@ -913,5 +909,23 @@ Map<String, dynamic> _$FileDataToJson(FileData instance) {
   val['filename'] = instance.filename;
   val['upload'] = instance.upload;
   writeNotNull('metadata', instance.metadata);
+  return val;
+}
+
+Coverage _$CoverageFromJson(Map<String, dynamic> json) => Coverage(
+      frequency: json['frequency'] as int,
+    )..$type = json['__type'] as String?;
+
+Map<String, dynamic> _$CoverageToJson(Coverage instance) {
+  final val = <String, dynamic>{};
+
+  void writeNotNull(String key, dynamic value) {
+    if (value != null) {
+      val[key] = value;
+    }
+  }
+
+  writeNotNull('__type', instance.$type);
+  val['frequency'] = instance.frequency;
   return val;
 }

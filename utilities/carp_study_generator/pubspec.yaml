@@ -63,6 +63,8 @@ dependency_overrides:
     path: ../../packages/carp_health_package/
   research_package: 
     path: ../../../../research.package
+  cognition_package: 
+    path: ../../../../cognition_package
 
 # Overriding carp libraries to use github branch
 #

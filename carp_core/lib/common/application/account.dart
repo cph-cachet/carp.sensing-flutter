@@ -28,6 +28,15 @@ class Account {
   /// Determines whether this account has the same [identity] as [otherAccount].
   bool hasSameIdentity(Account otherAccount) =>
       identity == otherAccount.identity;
+
+  @override
+  String get jsonType => 'dk.cachet.carp.common.users.$runtimeType';
+  @override
+  Function get fromJsonFunction => _$AccountFromJson;
+  factory Account.fromJson(Map<String, dynamic> json) =>
+      FromJsonFactory().fromJson(json) as Account;
+  @override
+  Map<String, dynamic> toJson() => _$AccountToJson(this);
 }
 
 /// Identifies an [Account].

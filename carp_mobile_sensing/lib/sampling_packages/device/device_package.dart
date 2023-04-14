@@ -39,33 +39,38 @@ class DeviceSamplingPackage extends SmartphoneSamplingPackage {
   static const String TIMEZONE = '${CarpDataTypes.CARP_NAMESPACE}.timezone';
 
   @override
-  List<DataTypeMetaData> get dataTypes => [
-        DataTypeMetaData(
+  DataTypeSamplingSchemeMap get samplingSchemes =>
+      DataTypeSamplingSchemeMap.from([
+        DataTypeSamplingScheme(DataTypeMetaData(
           type: DEVICE_INFORMATION,
           displayName: "Device Information",
           timeType: DataTimeType.POINT,
-        ),
-        DataTypeMetaData(
-          type: FREE_MEMORY,
-          displayName: "Free Memory",
-          timeType: DataTimeType.POINT,
-        ),
-        DataTypeMetaData(
+        )),
+        DataTypeSamplingScheme(
+            DataTypeMetaData(
+              type: FREE_MEMORY,
+              displayName: "Free Memory",
+              timeType: DataTimeType.POINT,
+            ),
+            IntervalSamplingConfiguration(
+              interval: const Duration(minutes: 1),
+            )),
+        DataTypeSamplingScheme(DataTypeMetaData(
           type: BATTERY_STATE,
           displayName: "Battery State",
           timeType: DataTimeType.POINT,
-        ),
-        DataTypeMetaData(
+        )),
+        DataTypeSamplingScheme(DataTypeMetaData(
           type: SCREEN_EVENT,
           displayName: "Screen Events",
           timeType: DataTimeType.POINT,
-        ),
-        DataTypeMetaData(
-          type: SCREEN_EVENT,
+        )),
+        DataTypeSamplingScheme(DataTypeMetaData(
+          type: TIMEZONE,
           displayName: "Device Timezone",
           timeType: DataTimeType.POINT,
-        ),
-      ];
+        )),
+      ]);
 
   @override
   Probe? create(String type) {
@@ -96,11 +101,4 @@ class DeviceSamplingPackage extends SmartphoneSamplingPackage {
 
   @override
   List<Permission> get permissions => [];
-
-  /// Default samplings schema for:
-  ///  * [FREE_MEMORY] - once pr. minute.
-  @override
-  SamplingSchema get samplingSchema => SamplingSchema()
-    ..addConfiguration(FREE_MEMORY,
-        IntervalSamplingConfiguration(interval: const Duration(minutes: 1)));
 }

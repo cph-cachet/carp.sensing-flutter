@@ -202,8 +202,8 @@ Map<String, dynamic> _$TaskConfigurationToJson(TaskConfiguration instance) {
 
   writeNotNull('__type', instance.$type);
   val['name'] = instance.name;
-  writeNotNull('description', instance.description);
   writeNotNull('measures', instance.measures);
+  writeNotNull('description', instance.description);
   return val;
 }
 
@@ -228,8 +228,8 @@ Map<String, dynamic> _$BackgroundTaskToJson(BackgroundTask instance) {
 
   writeNotNull('__type', instance.$type);
   val['name'] = instance.name;
-  writeNotNull('description', instance.description);
   writeNotNull('measures', instance.measures);
+  writeNotNull('description', instance.description);
   writeNotNull('duration', _$IsoDurationToJson(instance.duration));
   return val;
 }
@@ -256,9 +256,35 @@ Map<String, dynamic> _$CustomProtocolTaskToJson(CustomProtocolTask instance) {
 
   writeNotNull('__type', instance.$type);
   val['name'] = instance.name;
-  writeNotNull('description', instance.description);
   writeNotNull('measures', instance.measures);
+  writeNotNull('description', instance.description);
   val['studyProtocol'] = instance.studyProtocol;
+  return val;
+}
+
+WebTask _$WebTaskFromJson(Map<String, dynamic> json) => WebTask(
+      name: json['name'] as String?,
+      description: json['description'] as String?,
+      measures: (json['measures'] as List<dynamic>?)
+          ?.map((e) => Measure.fromJson(e as Map<String, dynamic>))
+          .toList(),
+      url: json['url'] as String,
+    )..$type = json['__type'] as String?;
+
+Map<String, dynamic> _$WebTaskToJson(WebTask instance) {
+  final val = <String, dynamic>{};
+
+  void writeNotNull(String key, dynamic value) {
+    if (value != null) {
+      val[key] = value;
+    }
+  }
+
+  writeNotNull('__type', instance.$type);
+  val['name'] = instance.name;
+  writeNotNull('measures', instance.measures);
+  writeNotNull('description', instance.description);
+  val['url'] = instance.url;
   return val;
 }
 
@@ -302,9 +328,6 @@ DeviceConfiguration<TRegistration> _$DeviceConfigurationFromJson<
     DeviceConfiguration<TRegistration>(
       roleName: json['roleName'] as String,
       isOptional: json['isOptional'] as bool?,
-      supportedDataTypes: (json['supportedDataTypes'] as List<dynamic>?)
-          ?.map((e) => e as String)
-          .toList(),
     )
       ..$type = json['__type'] as String?
       ..defaultSamplingConfiguration =
@@ -327,7 +350,6 @@ Map<String, dynamic>
   writeNotNull('__type', instance.$type);
   val['roleName'] = instance.roleName;
   writeNotNull('isOptional', instance.isOptional);
-  writeNotNull('supportedDataTypes', instance.supportedDataTypes);
   writeNotNull(
       'defaultSamplingConfiguration', instance.defaultSamplingConfiguration);
   return val;
@@ -338,9 +360,6 @@ DefaultDeviceConfiguration _$DefaultDeviceConfigurationFromJson(
     DefaultDeviceConfiguration(
       roleName: json['roleName'] as String,
       isOptional: json['isOptional'] as bool?,
-      supportedDataTypes: (json['supportedDataTypes'] as List<dynamic>?)
-          ?.map((e) => e as String)
-          .toList(),
     )
       ..$type = json['__type'] as String?
       ..defaultSamplingConfiguration =
@@ -362,7 +381,6 @@ Map<String, dynamic> _$DefaultDeviceConfigurationToJson(
   writeNotNull('__type', instance.$type);
   val['roleName'] = instance.roleName;
   writeNotNull('isOptional', instance.isOptional);
-  writeNotNull('supportedDataTypes', instance.supportedDataTypes);
   writeNotNull(
       'defaultSamplingConfiguration', instance.defaultSamplingConfiguration);
   return val;
@@ -372,9 +390,6 @@ PrimaryDeviceConfiguration<TRegistration> _$PrimaryDeviceConfigurationFromJson<
         TRegistration extends DeviceRegistration>(Map<String, dynamic> json) =>
     PrimaryDeviceConfiguration<TRegistration>(
       roleName: json['roleName'] as String,
-      supportedDataTypes: (json['supportedDataTypes'] as List<dynamic>?)
-          ?.map((e) => e as String)
-          .toList(),
     )
       ..$type = json['__type'] as String?
       ..isOptional = json['isOptional'] as bool?
@@ -399,7 +414,6 @@ Map<String, dynamic> _$PrimaryDeviceConfigurationToJson<
   writeNotNull('__type', instance.$type);
   val['roleName'] = instance.roleName;
   writeNotNull('isOptional', instance.isOptional);
-  writeNotNull('supportedDataTypes', instance.supportedDataTypes);
   writeNotNull(
       'defaultSamplingConfiguration', instance.defaultSamplingConfiguration);
   val['isPrimaryDevice'] = instance.isPrimaryDevice;
@@ -411,9 +425,6 @@ CustomProtocolDevice _$CustomProtocolDeviceFromJson(
     CustomProtocolDevice(
       roleName:
           json['roleName'] as String? ?? CustomProtocolDevice.DEFAULT_ROLENAME,
-      supportedDataTypes: (json['supportedDataTypes'] as List<dynamic>?)
-          ?.map((e) => e as String)
-          .toList(),
     )
       ..$type = json['__type'] as String?
       ..isOptional = json['isOptional'] as bool?
@@ -437,76 +448,9 @@ Map<String, dynamic> _$CustomProtocolDeviceToJson(
   writeNotNull('__type', instance.$type);
   val['roleName'] = instance.roleName;
   writeNotNull('isOptional', instance.isOptional);
-  writeNotNull('supportedDataTypes', instance.supportedDataTypes);
   writeNotNull(
       'defaultSamplingConfiguration', instance.defaultSamplingConfiguration);
   val['isPrimaryDevice'] = instance.isPrimaryDevice;
-  return val;
-}
-
-Smartphone _$SmartphoneFromJson(Map<String, dynamic> json) => Smartphone(
-      roleName: json['roleName'] as String? ?? Smartphone.DEFAULT_ROLENAME,
-      supportedDataTypes: (json['supportedDataTypes'] as List<dynamic>?)
-          ?.map((e) => e as String)
-          .toList(),
-    )
-      ..$type = json['__type'] as String?
-      ..isOptional = json['isOptional'] as bool?
-      ..defaultSamplingConfiguration =
-          (json['defaultSamplingConfiguration'] as Map<String, dynamic>?)?.map(
-        (k, e) => MapEntry(
-            k, SamplingConfiguration.fromJson(e as Map<String, dynamic>)),
-      )
-      ..isPrimaryDevice = json['isPrimaryDevice'] as bool;
-
-Map<String, dynamic> _$SmartphoneToJson(Smartphone instance) {
-  final val = <String, dynamic>{};
-
-  void writeNotNull(String key, dynamic value) {
-    if (value != null) {
-      val[key] = value;
-    }
-  }
-
-  writeNotNull('__type', instance.$type);
-  val['roleName'] = instance.roleName;
-  writeNotNull('isOptional', instance.isOptional);
-  writeNotNull('supportedDataTypes', instance.supportedDataTypes);
-  writeNotNull(
-      'defaultSamplingConfiguration', instance.defaultSamplingConfiguration);
-  val['isPrimaryDevice'] = instance.isPrimaryDevice;
-  return val;
-}
-
-AltBeacon _$AltBeaconFromJson(Map<String, dynamic> json) => AltBeacon(
-      roleName: json['roleName'] as String? ?? 'AltBeacon',
-      supportedDataTypes: (json['supportedDataTypes'] as List<dynamic>?)
-          ?.map((e) => e as String)
-          .toList(),
-    )
-      ..$type = json['__type'] as String?
-      ..isOptional = json['isOptional'] as bool?
-      ..defaultSamplingConfiguration =
-          (json['defaultSamplingConfiguration'] as Map<String, dynamic>?)?.map(
-        (k, e) => MapEntry(
-            k, SamplingConfiguration.fromJson(e as Map<String, dynamic>)),
-      );
-
-Map<String, dynamic> _$AltBeaconToJson(AltBeacon instance) {
-  final val = <String, dynamic>{};
-
-  void writeNotNull(String key, dynamic value) {
-    if (value != null) {
-      val[key] = value;
-    }
-  }
-
-  writeNotNull('__type', instance.$type);
-  val['roleName'] = instance.roleName;
-  writeNotNull('isOptional', instance.isOptional);
-  writeNotNull('supportedDataTypes', instance.supportedDataTypes);
-  writeNotNull(
-      'defaultSamplingConfiguration', instance.defaultSamplingConfiguration);
   return val;
 }
 
@@ -546,34 +490,56 @@ Map<String, dynamic> _$DefaultDeviceRegistrationToJson(
       'registrationCreatedOn': instance.registrationCreatedOn.toIso8601String(),
     };
 
-AltBeaconDeviceRegistration _$AltBeaconDeviceRegistrationFromJson(
+MACAddressDeviceRegistration _$MACAddressDeviceRegistrationFromJson(
         Map<String, dynamic> json) =>
-    AltBeaconDeviceRegistration(
+    MACAddressDeviceRegistration(
       deviceId: json['deviceId'] as String?,
       deviceDisplayName: json['deviceDisplayName'] as String?,
       registrationCreatedOn: json['registrationCreatedOn'] == null
           ? null
           : DateTime.parse(json['registrationCreatedOn'] as String),
-      manufacturerId: json['manufacturerId'] as int?,
-      organizationId: json['organizationId'] as String?,
-      majorId: json['majorId'] as int?,
-      minorId: json['minorId'] as int?,
-      referenceRssi: json['referenceRssi'] as int?,
+      address: json['address'] as String,
     )..$type = json['__type'] as String?;
 
-Map<String, dynamic> _$AltBeaconDeviceRegistrationToJson(
-        AltBeaconDeviceRegistration instance) =>
+Map<String, dynamic> _$MACAddressDeviceRegistrationToJson(
+        MACAddressDeviceRegistration instance) =>
     <String, dynamic>{
       '__type': instance.$type,
       'deviceId': instance.deviceId,
       'deviceDisplayName': instance.deviceDisplayName,
       'registrationCreatedOn': instance.registrationCreatedOn.toIso8601String(),
-      'manufacturerId': instance.manufacturerId,
-      'organizationId': instance.organizationId,
-      'majorId': instance.majorId,
-      'minorId': instance.minorId,
-      'referenceRssi': instance.referenceRssi,
+      'address': instance.address,
     };
+
+Smartphone _$SmartphoneFromJson(Map<String, dynamic> json) => Smartphone(
+      roleName: json['roleName'] as String? ?? Smartphone.DEFAULT_ROLENAME,
+    )
+      ..$type = json['__type'] as String?
+      ..isOptional = json['isOptional'] as bool?
+      ..defaultSamplingConfiguration =
+          (json['defaultSamplingConfiguration'] as Map<String, dynamic>?)?.map(
+        (k, e) => MapEntry(
+            k, SamplingConfiguration.fromJson(e as Map<String, dynamic>)),
+      )
+      ..isPrimaryDevice = json['isPrimaryDevice'] as bool;
+
+Map<String, dynamic> _$SmartphoneToJson(Smartphone instance) {
+  final val = <String, dynamic>{};
+
+  void writeNotNull(String key, dynamic value) {
+    if (value != null) {
+      val[key] = value;
+    }
+  }
+
+  writeNotNull('__type', instance.$type);
+  val['roleName'] = instance.roleName;
+  writeNotNull('isOptional', instance.isOptional);
+  writeNotNull(
+      'defaultSamplingConfiguration', instance.defaultSamplingConfiguration);
+  val['isPrimaryDevice'] = instance.isPrimaryDevice;
+  return val;
+}
 
 SmartphoneDeviceRegistration _$SmartphoneDeviceRegistrationFromJson(
         Map<String, dynamic> json) =>
@@ -609,6 +575,92 @@ Map<String, dynamic> _$SmartphoneDeviceRegistrationToJson(
       'sdk': instance.sdk,
       'release': instance.release,
     };
+
+AltBeacon _$AltBeaconFromJson(Map<String, dynamic> json) => AltBeacon(
+      roleName: json['roleName'] as String? ?? 'Beacon',
+    )
+      ..$type = json['__type'] as String?
+      ..isOptional = json['isOptional'] as bool?
+      ..defaultSamplingConfiguration =
+          (json['defaultSamplingConfiguration'] as Map<String, dynamic>?)?.map(
+        (k, e) => MapEntry(
+            k, SamplingConfiguration.fromJson(e as Map<String, dynamic>)),
+      );
+
+Map<String, dynamic> _$AltBeaconToJson(AltBeacon instance) {
+  final val = <String, dynamic>{};
+
+  void writeNotNull(String key, dynamic value) {
+    if (value != null) {
+      val[key] = value;
+    }
+  }
+
+  writeNotNull('__type', instance.$type);
+  val['roleName'] = instance.roleName;
+  writeNotNull('isOptional', instance.isOptional);
+  writeNotNull(
+      'defaultSamplingConfiguration', instance.defaultSamplingConfiguration);
+  return val;
+}
+
+AltBeaconDeviceRegistration _$AltBeaconDeviceRegistrationFromJson(
+        Map<String, dynamic> json) =>
+    AltBeaconDeviceRegistration(
+      deviceId: json['deviceId'] as String?,
+      deviceDisplayName: json['deviceDisplayName'] as String?,
+      registrationCreatedOn: json['registrationCreatedOn'] == null
+          ? null
+          : DateTime.parse(json['registrationCreatedOn'] as String),
+      manufacturerId: json['manufacturerId'] as int?,
+      organizationId: json['organizationId'] as String?,
+      majorId: json['majorId'] as int?,
+      minorId: json['minorId'] as int?,
+      referenceRssi: json['referenceRssi'] as int?,
+    )..$type = json['__type'] as String?;
+
+Map<String, dynamic> _$AltBeaconDeviceRegistrationToJson(
+        AltBeaconDeviceRegistration instance) =>
+    <String, dynamic>{
+      '__type': instance.$type,
+      'deviceId': instance.deviceId,
+      'deviceDisplayName': instance.deviceDisplayName,
+      'registrationCreatedOn': instance.registrationCreatedOn.toIso8601String(),
+      'manufacturerId': instance.manufacturerId,
+      'organizationId': instance.organizationId,
+      'majorId': instance.majorId,
+      'minorId': instance.minorId,
+      'referenceRssi': instance.referenceRssi,
+    };
+
+BLEHeartRateDevice _$BLEHeartRateDeviceFromJson(Map<String, dynamic> json) =>
+    BLEHeartRateDevice(
+      roleName: json['roleName'] as String,
+      isOptional: json['isOptional'] as bool? ?? true,
+    )
+      ..$type = json['__type'] as String?
+      ..defaultSamplingConfiguration =
+          (json['defaultSamplingConfiguration'] as Map<String, dynamic>?)?.map(
+        (k, e) => MapEntry(
+            k, SamplingConfiguration.fromJson(e as Map<String, dynamic>)),
+      );
+
+Map<String, dynamic> _$BLEHeartRateDeviceToJson(BLEHeartRateDevice instance) {
+  final val = <String, dynamic>{};
+
+  void writeNotNull(String key, dynamic value) {
+    if (value != null) {
+      val[key] = value;
+    }
+  }
+
+  writeNotNull('__type', instance.$type);
+  val['roleName'] = instance.roleName;
+  writeNotNull('isOptional', instance.isOptional);
+  writeNotNull(
+      'defaultSamplingConfiguration', instance.defaultSamplingConfiguration);
+  return val;
+}
 
 TriggerConfiguration _$TriggerConfigurationFromJson(
         Map<String, dynamic> json) =>

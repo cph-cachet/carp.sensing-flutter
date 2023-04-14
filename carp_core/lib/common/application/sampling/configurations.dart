@@ -55,10 +55,6 @@ class BatteryAwareSamplingConfiguration extends SamplingConfiguration {
     this.critical,
   }) : super();
 
-  // @override
-  // String get jsonType =>
-  //     'dk.cachet.carp.protocols.domain.sampling.BatteryAwareSamplingConfiguration';
-
   @override
   Function get fromJsonFunction => _$BatteryAwareSamplingConfigurationFromJson;
   @override
@@ -92,10 +88,6 @@ class GranularitySamplingConfiguration extends SamplingConfiguration {
   Granularity granularity;
   GranularitySamplingConfiguration(this.granularity);
 
-  // @override
-  // String get jsonType =>
-  //     'dk.cachet.carp.protocols.domain.sampling.GranularitySamplingConfiguration';
-
   @override
   Function get fromJsonFunction => _$GranularitySamplingConfigurationFromJson;
 
@@ -106,19 +98,4 @@ class GranularitySamplingConfiguration extends SamplingConfiguration {
   @override
   Map<String, dynamic> toJson() =>
       _$GranularitySamplingConfigurationToJson(this);
-}
-
-/// Specifies the sampling scheme for a data [type], including possible options,
-/// defaults, and constraints.
-abstract class DataTypeSamplingScheme {
-  /// The data type this sampling scheme relates to.
-  String type;
-
-  // TODO - note that this is called "default" in carp-core-kotlin.
-  // But "default" is a reserved word in Dart. May cause serialization problems.....
-  /// The default configuration to use when no other configuration is specified.
-  SamplingConfiguration defaultSamplingConfiguration;
-
-  DataTypeSamplingScheme(this.type, this.defaultSamplingConfiguration)
-      : super();
 }

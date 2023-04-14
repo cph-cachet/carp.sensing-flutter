@@ -59,14 +59,11 @@ Map<String, dynamic> _$ESenseSensorToJson(ESenseSensor instance) {
 
 ESenseDevice _$ESenseDeviceFromJson(Map<String, dynamic> json) => ESenseDevice(
       roleName: json['roleName'] as String? ?? ESenseDevice.DEFAULT_ROLENAME,
+      isOptional: json['isOptional'] as bool? ?? true,
       deviceName: json['deviceName'] as String?,
       samplingRate: json['samplingRate'] as int?,
     )
       ..$type = json['__type'] as String?
-      ..isOptional = json['isOptional'] as bool?
-      ..supportedDataTypes = (json['supportedDataTypes'] as List<dynamic>?)
-          ?.map((e) => e as String)
-          .toList()
       ..defaultSamplingConfiguration =
           (json['defaultSamplingConfiguration'] as Map<String, dynamic>?)?.map(
         (k, e) => MapEntry(
@@ -85,7 +82,6 @@ Map<String, dynamic> _$ESenseDeviceToJson(ESenseDevice instance) {
   writeNotNull('__type', instance.$type);
   val['roleName'] = instance.roleName;
   writeNotNull('isOptional', instance.isOptional);
-  writeNotNull('supportedDataTypes', instance.supportedDataTypes);
   writeNotNull(
       'defaultSamplingConfiguration', instance.defaultSamplingConfiguration);
   writeNotNull('deviceName', instance.deviceName);

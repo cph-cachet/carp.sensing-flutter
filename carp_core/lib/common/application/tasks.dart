@@ -20,11 +20,11 @@ class TaskConfiguration extends Serializable {
   /// A name which uniquely identifies the task.
   late String name;
 
-  /// A description of this task, emphasizing the reason why the data is collected.
-  String? description;
-
   /// The data which needs to be collected/measured passively as part of this task.
   List<Measure>? measures = [];
+
+  /// A description of this task, emphasizing the reason why the data is collected.
+  String? description;
 
   /// Get data types of all data which may be collected, either passively as part
   /// of task measures, or as the result of user interactions, for this task.
@@ -120,4 +120,50 @@ class CustomProtocolTask extends TaskConfiguration {
 
   @override
   String toString() => '${super.toString()}, studyProtocol: $studyProtocol';
+}
+
+/// Redirects to a web page which contains the task which needs to be performed.
+/// The passive [measures] are started when the website is opened and stopped
+/// when it is closed.
+@JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
+class WebTask extends TaskConfiguration {
+  /// The URL of the web page which contains the task to be performed.
+  ///
+  /// The URL may contain the following patterns, which will be replaced with
+  /// the corresponding values by the client runtime:
+  ///
+  ///  * `$PARTICIPANT_ID` - Uniquely identifies the participant in the study.
+  ///  * `$DEPLOYMENT_ID` - Uniquely identifies the deployment (group of participants
+  ///     and devices) of the study.
+  ///  * `$TRIGGER_ID` - Identifies the condition, defined by the study protocol,
+  ///     which caused the [WebTask] to be triggered.
+  ///
+  String url;
+
+  /// Create a task which redirects to a web page [url].
+  WebTask({
+    super.name,
+    super.description,
+    super.measures,
+    required this.url,
+  });
+
+  /// Replace the variables in [url] with the specified runtime values,
+  /// if the variables are present.
+  String getUrl(
+          String participantId, String studyDeploymentId, int triggerId) =>
+      url
+          .replaceFirst('\$PARTICIPANT_ID', participantId)
+          .replaceFirst('\$DEPLOYMENT_ID', studyDeploymentId)
+          .replaceFirst('\$TRIGGER_ID', triggerId.toString());
+
+  @override
+  Function get fromJsonFunction => _$WebTaskFromJson;
+  factory WebTask.fromJson(Map<String, dynamic> json) =>
+      FromJsonFactory().fromJson(json) as WebTask;
+  @override
+  Map<String, dynamic> toJson() => _$WebTaskToJson(this);
+
+  @override
+  String toString() => '${super.toString()}, url: $url';
 }

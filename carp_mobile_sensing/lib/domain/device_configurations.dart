@@ -14,7 +14,6 @@ class OnlineService<TRegistration extends DeviceRegistration>
   OnlineService({
     required super.roleName,
     super.isOptional = true,
-    super.supportedDataTypes,
   });
   @override
   Function get fromJsonFunction => _$OnlineServiceFromJson;

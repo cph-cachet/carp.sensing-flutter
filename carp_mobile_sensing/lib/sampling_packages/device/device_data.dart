@@ -218,7 +218,7 @@ class Timezone extends Data {
 
   Timezone(this.timezone) : super();
 
-  /// Returns `true` if the [timezone] is equal.
+  /// Returns `true` if the timezone of [other] is the same as this [timezone].
   @override
   bool equivalentTo(Data other) =>
       (other is Timezone) ? timezone == other.timezone : false;

@@ -9,17 +9,17 @@ part of carp_core_client;
 
 /// Manage data collection for a specific primary device [deployment] on a
 /// client device.
-class StudyRuntime {
+class StudyRuntime<TRegistration extends DeviceRegistration> {
   final List<DeviceConfiguration> _remainingDevicesToRegister = [];
   Study? _study;
-  DeviceRegistration? _deviceRegistration;
+  TRegistration? _deviceRegistration;
   StudyStatus _status = StudyStatus.DeploymentNotStarted;
   final StreamController<StudyStatus> _statusEventsController =
       StreamController();
 
   /// The unique device registration for this device.
   /// Set in the [addStudy] method.
-  DeviceRegistration? get deviceRegistration => _deviceRegistration;
+  TRegistration? get deviceRegistration => _deviceRegistration;
 
   /// The study for this study runtime.
   /// Set in the [addStudy] method.
@@ -48,17 +48,17 @@ class StudyRuntime {
   /// The stream of [StudyStatus] events for this controller.
   Stream<StudyStatus> get statusEvents => _statusEventsController.stream;
 
-  /// The status of this [StudyRuntime].
-  StudyStatus get status => _status;
-
-  /// Set the state of this study runtime.
-  set status(StudyStatus newStatus) {
-    _status = newStatus;
-    _statusEventsController.add(newStatus);
+  /// The status of the [study] running on this [StudyRuntime].
+  StudyStatus? get status => _study?.status;
+  set status(StudyStatus? newStatus) {
+    if (newStatus != null) {
+      _study?.status = newStatus;
+      _statusEventsController.add(newStatus);
+    }
   }
 
-  // /// Has this [StudyRuntime] been initialized?
-  // bool get isInitialized => (study != null);
+  /// Has this [StudyRuntime] been initialized?
+  bool get isInitialized => (study != null);
 
   /// Has the device deployment been completed successfully?
   bool get isDeployed => (_status == StudyStatus.Deployed);
@@ -86,7 +86,7 @@ class StudyRuntime {
   /// Call [tryDeployment] to subsequently deploy the study.
   Future<void> addStudy(
     Study study,
-    DeviceRegistration deviceRegistration,
+    TRegistration deviceRegistration,
   ) async {
     _study = study;
     _status = StudyStatus.DeploymentNotStarted;
@@ -126,10 +126,10 @@ class StudyRuntime {
         "Call 'configure()' first.");
 
     // early out if already deployed.
-    if (status.index >= StudyStatus.Deployed.index) return status;
+    if (status!.index >= StudyStatus.Deployed.index) return status!;
 
     // check the status of this deployment.
-    if (await getStudyDeploymentStatus() == null) return status;
+    if (await getStudyDeploymentStatus() == null) return status!;
 
     status = StudyStatus.Deploying;
 

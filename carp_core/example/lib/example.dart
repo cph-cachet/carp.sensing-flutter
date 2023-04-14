@@ -18,7 +18,7 @@ import 'package:carp_serializable/carp_serializable.dart';
 void carpCoreProtocolExample() async {
   // Create a new study protocol.
   var protocol = StudyProtocol(
-    ownerId: 'owner@dtu.dk',
+    ownerId: Uuid().v1(),
     name: 'Track patient movement',
   );
 
@@ -33,8 +33,8 @@ void carpCoreProtocolExample() async {
   var trackMovement = BackgroundTask(
     name: "Track movement",
     measures: [
-      Measure(type: Geolocation.dataType),
-      Measure(type: StepCount.dataType),
+      phone.dataTypeSamplingSchemes![Geolocation.dataType]!.measure,
+      phone.dataTypeSamplingSchemes![StepCount.dataType]!.measure,
     ],
     description: "Track activity level and number of places visited per day.",
   );

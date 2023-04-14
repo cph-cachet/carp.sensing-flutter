@@ -42,9 +42,9 @@ class LocalStudyProtocolManager implements StudyProtocolManager {
             uploadMethod: CarpUploadMethod.stream,
           );
 
-    // TODO - for testing - remove later
+    // // TODO - for testing - remove later
     // protocol.dataEndPoint = CarpDataEndPoint(
-    //   uploadMethod: CarpUploadMethod.DATA_POINT,
+    //   uploadMethod: CarpUploadMethod.datapoint,
     //   uri: uri,
     //   clientId: clientID,
     //   clientSecret: clientSecret,

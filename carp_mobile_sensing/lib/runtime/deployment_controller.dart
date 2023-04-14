@@ -7,7 +7,7 @@
 part of runtime;
 
 /// A [SmartphoneDeploymentController] controls the execution of a [SmartphoneDeployment].
-class SmartphoneDeploymentController extends StudyRuntime {
+class SmartphoneDeploymentController extends StudyRuntime<DeviceRegistration> {
   int _samplingSize = 0;
   DataManager? _dataManager;
   DataEndPoint? _dataEndPoint;
@@ -76,7 +76,7 @@ class SmartphoneDeploymentController extends StudyRuntime {
   /// If [useCached] is false, the [deployment] will be retrieved from the
   /// [deploymentService], based on the [study].
   ///
-  /// In case already deployed, nothing happens.
+  /// In case already deployed, nothing happens and the current [status] is returned.
   @override
   Future<StudyStatus> tryDeployment({bool useCached = true}) async {
     assert(
@@ -87,10 +87,10 @@ class SmartphoneDeploymentController extends StudyRuntime {
     if (useCached) {
       // restore the deployment and app task queue
       bool success = await restoreDeployment();
-      await AppTaskController().restoreQueue();
       if (success) {
+        await AppTaskController().restoreQueue();
         status = StudyStatus.Deployed;
-        return status;
+        return status!;
       }
     }
 
@@ -102,7 +102,7 @@ class SmartphoneDeploymentController extends StudyRuntime {
     deployment!.userId ??= await Settings().userId;
     await saveDeployment();
 
-    return status;
+    return status!;
   }
 
   /// Save the [deployment] persistently to a cache.
@@ -289,23 +289,4 @@ class SmartphoneDeploymentController extends StudyRuntime {
     executor?.stop();
     dataManager?.close().then((_) => super.dispose());
   }
-}
-
-/// Reflects a heart beat data send every [frequency].
-/// Useful for calculating sampling coverage over time.
-@JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
-class Coverage extends Data {
-  static const dataType = '${CarpDataTypes.CARP_NAMESPACE}.coverage';
-
-  /// The expected coverage frequency
-  int frequency;
-
-  Coverage({required this.frequency}) : super();
-
-  @override
-  Function get fromJsonFunction => _$CoverageFromJson;
-  factory Coverage.fromJson(Map<String, dynamic> json) =>
-      FromJsonFactory().fromJson(json) as Coverage;
-  @override
-  Map<String, dynamic> toJson() => _$CoverageToJson(this);
 }

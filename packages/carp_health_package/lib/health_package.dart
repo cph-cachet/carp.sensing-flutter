@@ -67,13 +67,17 @@ class HealthSamplingPackage extends SmartphoneSamplingPackage {
   static const String HEALTH = "${NameSpace.CARP}.health";
 
   @override
-  List<DataTypeMetaData> get dataTypes => [
-        DataTypeMetaData(
-          type: HEALTH,
-          displayName: "Health Data",
-          timeType: DataTimeType.TIME_SPAN,
-        ),
-      ];
+  DataTypeSamplingSchemeMap get samplingSchemes =>
+      DataTypeSamplingSchemeMap.from([
+        DataTypeSamplingScheme(
+            DataTypeMetaData(
+              type: HEALTH,
+              displayName: "Health Data",
+              timeType: DataTimeType.TIME_SPAN,
+            ),
+            HealthSamplingConfiguration(
+                healthDataTypes: [HealthDataType.STEPS]))
+      ]);
 
   @override
   Probe? create(String type) => type == HEALTH ? HealthProbe() : null;
@@ -93,11 +97,4 @@ class HealthSamplingPackage extends SmartphoneSamplingPackage {
   /// all [types] that are needed.
   Future<bool> requestAuthorization(List<HealthDataType> types) async =>
       _healthFactory.requestAuthorization(types);
-
-  /// Default samplings schema for sampling of health data which only collects
-  /// step count.
-  @override
-  SamplingSchema get samplingSchema => SamplingSchema()
-    ..addConfiguration(HEALTH,
-        HealthSamplingConfiguration(healthDataTypes: [HealthDataType.STEPS]));
 }

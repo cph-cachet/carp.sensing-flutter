@@ -443,7 +443,7 @@ void main() {
 
   group("Documents & Collections", () {
     test('- create document', () async {
-      // first create a document - providing userId as the document name
+      // create a document - providing userId as the document name
       // if the collection don't exist, it is created (according to David).
       var document = await CarpService()
           .collection(collectionName)

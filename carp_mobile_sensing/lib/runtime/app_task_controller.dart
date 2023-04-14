@@ -219,85 +219,57 @@ class AppTaskController {
   /// Restore the queue from a file. Returns `true` if successful.
   Future<bool> restoreQueue() async {
     bool success = true;
-    // UserTaskSnapshotList? queue;
 
-    try {
-      // String name = (await filename)!;
-      // info("$runtimeType - Restoring task queue from file '$name'.");
-      // String jsonString = File(name).readAsStringSync();
-      // queue = UserTaskSnapshotList.fromJson(
-      //     json.decode(jsonString) as Map<String, dynamic>);
+    // try {
+    final snapshots = await Persistence().getUserTasks();
 
-      final snapshots = await Persistence().getUserTasks();
+    // now create new AppTaskExecutors, initialize them, and add them to the queue
+    for (var snapshot in snapshots) {
+      AppTaskExecutor executor = AppTaskExecutor();
 
-      // now create new AppTaskExecutors, initialize them, and add them to the queue
-      for (var snapshot in snapshots) {
-        AppTaskExecutor executor = AppTaskExecutor();
+      // find the deployment
+      SmartphoneDeployment? deployment;
+      if (snapshot.studyDeploymentId != null &&
+          snapshot.deviceRoleName != null) {
+        deployment = SmartPhoneClientManager()
+            .lookupStudyRuntime(
+              snapshot.studyDeploymentId!,
+              snapshot.deviceRoleName!,
+            )
+            ?.deployment;
+      }
+      if (deployment == null) {
+        warning(
+            '$runtimeType - Could not find deployment information based on snapshot: $snapshot');
+      } else {
+        executor.initialize(snapshot.task, deployment);
 
-        // find the deployment
-        SmartphoneDeployment? deployment;
-        if (snapshot.studyDeploymentId != null &&
-            snapshot.deviceRoleName != null) {
-          deployment = SmartPhoneClientManager()
-              .lookupStudyRuntime(
-                snapshot.studyDeploymentId!,
-                snapshot.deviceRoleName!,
-              )
-              ?.deployment;
-        }
-        if (deployment == null) {
+        // now put the restored task back on the queue
+        if (_userTaskFactories[executor.task.type] == null) {
           warning(
-              '$runtimeType - Could not find deployment information based on snapshot: $snapshot');
+              'Could not enqueue AppTask. Could not find a factory for creating '
+              "a UserTask for type '${executor.task.type}'");
         } else {
-          executor.initialize(snapshot.task, deployment);
+          UserTask userTask =
+              _userTaskFactories[executor.task.type]!.create(executor);
+          userTask.id = snapshot.id;
+          userTask.state = snapshot.state;
+          userTask.enqueued = snapshot.enqueued;
+          userTask.triggerTime = snapshot.triggerTime;
 
-          // now put the restored task back on the queue
-          if (_userTaskFactories[executor.task.type] == null) {
-            warning(
-                'Could not enqueue AppTask. Could not find a factory for creating '
-                "a UserTask for type '${executor.task.type}'");
-          } else {
-            UserTask userTask =
-                _userTaskFactories[executor.task.type]!.create(executor);
-            userTask.id = snapshot.id;
-            userTask.state = snapshot.state;
-            userTask.enqueued = snapshot.enqueued;
-            userTask.triggerTime = snapshot.triggerTime;
-
-            _userTaskMap[userTask.id] = userTask;
-            debug(
-                '$runtimeType - Enqueued UserTask from loaded task queue: $userTask');
-          }
+          _userTaskMap[userTask.id] = userTask;
+          debug(
+              '$runtimeType - Enqueued UserTask from loaded task queue: $userTask');
         }
       }
-    } catch (exception) {
-      success = false;
-      warning('$runtimeType - Failed to load task queue - $exception');
     }
+    // } catch (exception) {
+    //   success = false;
+    //   warning('$runtimeType - Failed to load task queue - $exception');
+    // }
     return success;
   }
 }
-
-// @JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
-// class UserTaskSnapshotList extends Serializable {
-//   List<UserTaskSnapshot> snapshots = [];
-
-//   UserTaskSnapshotList() : super();
-//   UserTaskSnapshotList.fromUserTasks(List<UserTask> userTasks) {
-//     snapshots = userTasks
-//         .map((userTask) => UserTaskSnapshot.fromUserTask(userTask))
-//         .toList();
-//   }
-
-//   @override
-//   Function get fromJsonFunction => _$UserTaskSnapshotListFromJson;
-
-//   factory UserTaskSnapshotList.fromJson(Map<String, dynamic> json) =>
-//       FromJsonFactory().fromJson(json) as UserTaskSnapshotList;
-
-//   @override
-//   Map<String, dynamic> toJson() => _$UserTaskSnapshotListToJson(this);
-// }
 
 /// A snapshot of a [UserTask] at any given time. Used for saving user tasks
 /// persistently across app restart.

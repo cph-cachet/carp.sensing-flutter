@@ -152,9 +152,6 @@ Map<String, dynamic> _$WeatherToJson(Weather instance) {
 WeatherService _$WeatherServiceFromJson(Map<String, dynamic> json) =>
     WeatherService(
       roleName: json['roleName'] as String?,
-      supportedDataTypes: (json['supportedDataTypes'] as List<dynamic>?)
-          ?.map((e) => e as String)
-          .toList(),
       apiKey: json['apiKey'] as String,
     )
       ..$type = json['__type'] as String?
@@ -177,7 +174,6 @@ Map<String, dynamic> _$WeatherServiceToJson(WeatherService instance) {
   writeNotNull('__type', instance.$type);
   val['roleName'] = instance.roleName;
   writeNotNull('isOptional', instance.isOptional);
-  writeNotNull('supportedDataTypes', instance.supportedDataTypes);
   writeNotNull(
       'defaultSamplingConfiguration', instance.defaultSamplingConfiguration);
   val['apiKey'] = instance.apiKey;
@@ -325,9 +321,6 @@ const _$AirQualityLevelEnumMap = {
 AirQualityService _$AirQualityServiceFromJson(Map<String, dynamic> json) =>
     AirQualityService(
       roleName: json['roleName'] as String?,
-      supportedDataTypes: (json['supportedDataTypes'] as List<dynamic>?)
-          ?.map((e) => e as String)
-          .toList(),
       apiKey: json['apiKey'] as String,
     )
       ..$type = json['__type'] as String?
@@ -350,7 +343,6 @@ Map<String, dynamic> _$AirQualityServiceToJson(AirQualityService instance) {
   writeNotNull('__type', instance.$type);
   val['roleName'] = instance.roleName;
   writeNotNull('isOptional', instance.isOptional);
-  writeNotNull('supportedDataTypes', instance.supportedDataTypes);
   writeNotNull(
       'defaultSamplingConfiguration', instance.defaultSamplingConfiguration);
   val['apiKey'] = instance.apiKey;
@@ -429,9 +421,6 @@ Map<String, dynamic> _$MobilitySamplingConfigurationToJson(
 LocationService _$LocationServiceFromJson(Map<String, dynamic> json) =>
     LocationService(
       roleName: json['roleName'] as String?,
-      supportedDataTypes: (json['supportedDataTypes'] as List<dynamic>?)
-          ?.map((e) => e as String)
-          .toList(),
       accuracy:
           $enumDecodeNullable(_$GeolocationAccuracyEnumMap, json['accuracy']) ??
               GeolocationAccuracy.balanced,
@@ -463,7 +452,6 @@ Map<String, dynamic> _$LocationServiceToJson(LocationService instance) {
   writeNotNull('__type', instance.$type);
   val['roleName'] = instance.roleName;
   writeNotNull('isOptional', instance.isOptional);
-  writeNotNull('supportedDataTypes', instance.supportedDataTypes);
   writeNotNull(
       'defaultSamplingConfiguration', instance.defaultSamplingConfiguration);
   val['accuracy'] = _$GeolocationAccuracyEnumMap[instance.accuracy]!;

@@ -76,7 +76,7 @@ class SmartPhoneClientManager extends SmartphoneClient
     DataManagerRegistry().register(FileDataManagerFactory());
     DataManagerRegistry().register(SQLiteDataManagerFactory());
 
-    // create the device registration using the DeviceInfo
+    // create the device registration using the [DeviceInfo] singleton
     registration ??= DefaultDeviceRegistration(
       deviceId: DeviceInfo().deviceID,
       deviceDisplayName: DeviceInfo().toString(),
@@ -125,7 +125,6 @@ class SmartPhoneClientManager extends SmartphoneClient
       studyDeploymentId,
       deviceRoleName,
     );
-    info('Adding study to $runtimeType - $study');
 
     // always create a new controller
     final controller =
@@ -136,6 +135,7 @@ class SmartPhoneClientManager extends SmartphoneClient
       study,
       registration!,
     );
+    info('Adding study to $runtimeType - $study');
 
     return study;
   }

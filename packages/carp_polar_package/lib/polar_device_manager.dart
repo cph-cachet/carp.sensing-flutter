@@ -21,13 +21,13 @@ enum PolarDeviceType {
   SENSE,
 }
 
-/// A [deviceConfiguration] for a Polar device used in a [StudyProtocol].
+/// A [DeviceConfiguration] for a Polar device used in a [StudyProtocol].
 ///
 /// This device descriptor defined the basic configuration of the Polar
 /// device, including the [polarDeviceType], the [identifier], and the [name]
 /// of the device.
 @JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
-class PolarDevice extends DeviceConfiguration {
+class PolarDevice extends BLEHeartRateDevice {
   /// The type of a Polar device.
   static const String DEVICE_TYPE =
       '${DeviceConfiguration.DEVICE_NAMESPACE}.PolarDevice';
@@ -63,17 +63,7 @@ class PolarDevice extends DeviceConfiguration {
     this.polarDeviceType,
     this.identifier,
     this.name,
-  }) : super(
-          supportedDataTypes: [
-            PolarSamplingPackage.ACCELEROMETER,
-            PolarSamplingPackage.GYROSCOPE,
-            PolarSamplingPackage.MAGNETOMETER,
-            PolarSamplingPackage.PPG,
-            PolarSamplingPackage.PPI,
-            PolarSamplingPackage.ECG,
-            PolarSamplingPackage.HR,
-          ],
-        );
+  });
 
   @override
   Function get fromJsonFunction => _$PolarDeviceFromJson;

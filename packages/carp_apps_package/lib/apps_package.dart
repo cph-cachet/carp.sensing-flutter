@@ -15,18 +15,24 @@ class AppsSamplingPackage extends SmartphoneSamplingPackage {
   static const String APP_USAGE = "${NameSpace.CARP}.appusage";
 
   @override
-  List<DataTypeMetaData> get dataTypes => [
-        DataTypeMetaData(
+  DataTypeSamplingSchemeMap get samplingSchemes =>
+      DataTypeSamplingSchemeMap.from([
+        DataTypeSamplingScheme(DataTypeMetaData(
           type: APPS,
           displayName: "Installed Apps",
           timeType: DataTimeType.POINT,
-        ),
-        DataTypeMetaData(
-          type: APP_USAGE,
-          displayName: "App Usage",
-          timeType: DataTimeType.TIME_SPAN,
-        ),
-      ];
+        )),
+        DataTypeSamplingScheme(
+            DataTypeMetaData(
+              type: APP_USAGE,
+              displayName: "App Usage",
+              timeType: DataTimeType.TIME_SPAN,
+            ),
+            HistoricSamplingConfiguration(
+              future: Duration.zero,
+              past: Duration(days: 1),
+            ))
+      ]);
 
   @override
   Probe? create(String type) {
@@ -50,15 +56,4 @@ class AppsSamplingPackage extends SmartphoneSamplingPackage {
       AppUsage(DateTime.now(), DateTime.now()),
     ]);
   }
-
-  /// Default samplings schema for:
-  ///  * [APP_USAGE] - one day back in time.
-  @override
-  SamplingSchema get samplingSchema => SamplingSchema()
-    ..addConfiguration(
-        APP_USAGE,
-        HistoricSamplingConfiguration(
-          future: Duration.zero,
-          past: Duration(days: 1),
-        ));
 }

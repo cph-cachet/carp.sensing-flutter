@@ -14,6 +14,16 @@ class Persistence {
   static const String DEPLOYMENT_TABLE_NAME = 'deployment';
   static const String TASK_QUEUE_TABLE_NAME = 'task_queue';
 
+  static const String DEPLOYMENT_ID_COLUMN = 'deployment_id';
+  static const String ROLENAME_COLUMN = 'device_rolename';
+  static const String UPDATED_AT_COLUMN = 'updated_at';
+  static const String DEPLOYED_AT_COLUMN = 'deployed_at';
+  static const String USER_ID_COLUMN = 'user_id';
+  static const String DEPLOYMENT_COLUMN = 'deployment';
+  static const String ID_COLUMN = 'id';
+  static const String TASK_ID_COLUMN = 'task_id';
+  static const String TASK_COLUMN = 'task';
+
   static final Persistence _instance = Persistence._();
   Persistence._();
   factory Persistence() => _instance;
@@ -40,9 +50,9 @@ class Persistence {
       onCreate: (Database db, int version) async {
         // when creating the database, create the tables
         await db.execute(
-            'CREATE TABLE $DEPLOYMENT_TABLE_NAME (deployment_id TEXT PRIMARY KEY, device_rolename TEXT, updated_at TEXT, deployed_at TEXT, user_id TEXT, deployment TEXT)');
+            'CREATE TABLE $DEPLOYMENT_TABLE_NAME ($DEPLOYMENT_ID_COLUMN TEXT PRIMARY KEY, $ROLENAME_COLUMN TEXT, $UPDATED_AT_COLUMN TEXT, $DEPLOYED_AT_COLUMN TEXT, $USER_ID_COLUMN TEXT, $DEPLOYMENT_COLUMN TEXT)');
         await db.execute(
-            'CREATE TABLE $TASK_QUEUE_TABLE_NAME (id INTEGER PRIMARY KEY, deployment_id TEXT, task_id TEXT, task TEXT)');
+            'CREATE TABLE $TASK_QUEUE_TABLE_NAME ($ID_COLUMN INTEGER PRIMARY KEY, $DEPLOYMENT_ID_COLUMN TEXT, $TASK_ID_COLUMN TEXT, $TASK_COLUMN TEXT)');
 
         debug('$runtimeType - $databaseName DB created');
       },
@@ -69,12 +79,12 @@ class Persistence {
     bool success = true;
     try {
       final Map<String, dynamic> map = {
-        'deployment_id': deployment.studyDeploymentId,
-        'device_rolename': deployment.deviceConfiguration.roleName,
-        'updated_at': DateTime.now().toUtc().toIso8601String(),
-        'deployed_at': deployment.deployed?.toUtc().toIso8601String(),
-        'user_id': deployment.userId,
-        'deployment': jsonEncode(deployment),
+        DEPLOYMENT_ID_COLUMN: deployment.studyDeploymentId,
+        ROLENAME_COLUMN: deployment.deviceConfiguration.roleName,
+        UPDATED_AT_COLUMN: DateTime.now().toUtc().toIso8601String(),
+        DEPLOYED_AT_COLUMN: deployment.deployed?.toUtc().toIso8601String(),
+        USER_ID_COLUMN: deployment.userId,
+        DEPLOYMENT_COLUMN: jsonEncode(deployment),
       };
       await database?.insert(
         DEPLOYMENT_TABLE_NAME,
@@ -94,16 +104,19 @@ class Persistence {
     info("$runtimeType - Restoring deployment, deploymentId: $deploymentId");
     SmartphoneDeployment? deployment;
     try {
-      final List<Map<String, Object?>>? maps = await database?.query(
-        DEPLOYMENT_TABLE_NAME,
-        columns: ['deployment'],
-        where: 'deployment_id = ?',
-        whereArgs: [deploymentId],
-      );
+      final List<Map<String, Object?>> maps = await database?.query(
+            DEPLOYMENT_TABLE_NAME,
+            columns: [DEPLOYMENT_COLUMN],
+            where: '$DEPLOYMENT_ID_COLUMN = ?',
+            whereArgs: [deploymentId],
+          ) ??
+          [];
       // debug('$runtimeType - maps: $maps');
-      String jsonString = maps?[0]['deployment'] as String;
-      deployment = SmartphoneDeployment.fromJson(
-          json.decode(jsonString) as Map<String, dynamic>);
+      if (maps.isNotEmpty) {
+        String jsonString = maps[0][DEPLOYMENT_COLUMN] as String;
+        deployment = SmartphoneDeployment.fromJson(
+            json.decode(jsonString) as Map<String, dynamic>);
+      }
     } catch (exception) {
       warning('$runtimeType - Failed to load deployment - $exception');
     }
@@ -113,11 +126,11 @@ class Persistence {
 
   /// Erase the [SmartphoneDeployment] with the [deploymentId] from local cache.
   Future<void> eraseDeployment(String deploymentId) async {
-    info("$runtimeType - Restoring deployment, deploymentId: $deploymentId");
+    info("$runtimeType - Erasing deployment, deploymentId: $deploymentId");
     try {
       await database?.delete(
         DEPLOYMENT_TABLE_NAME,
-        where: 'deployment_id = ?',
+        where: '$DEPLOYMENT_ID_COLUMN = ?',
         whereArgs: [deploymentId],
       );
     } catch (exception) {
@@ -139,21 +152,31 @@ class Persistence {
         // all these cases we need to create or update the record
         var snapshot = UserTaskSnapshot.fromUserTask(task);
         final Map<String, dynamic> map = {
-          'deployment_id': task.studyDeploymentId,
-          'task_id': task.id,
-          'task': jsonEncode(snapshot),
+          DEPLOYMENT_ID_COLUMN: task.studyDeploymentId,
+          TASK_ID_COLUMN: task.id,
+          TASK_COLUMN: jsonEncode(snapshot),
         };
-        await database?.insert(
-          TASK_QUEUE_TABLE_NAME,
-          map,
-          conflictAlgorithm: ConflictAlgorithm.replace,
-        );
-        break;
+        int count = await database?.update(
+              TASK_QUEUE_TABLE_NAME,
+              map,
+              where: '$TASK_ID_COLUMN = ?',
+              whereArgs: [task.id],
+              conflictAlgorithm: ConflictAlgorithm.replace,
+            ) ??
+            0;
 
+        if (count == 0) {
+          await database?.insert(
+            TASK_QUEUE_TABLE_NAME,
+            map,
+            conflictAlgorithm: ConflictAlgorithm.replace,
+          );
+        }
+        break;
       case UserTaskState.dequeued:
         await database?.delete(
           TASK_QUEUE_TABLE_NAME,
-          where: 'task_id = ?',
+          where: '$TASK_ID_COLUMN = ?',
           whereArgs: [task.id],
         );
         break;
@@ -164,14 +187,17 @@ class Persistence {
   Future<List<UserTaskSnapshot>> getUserTasks() async {
     List<UserTaskSnapshot> result = [];
     try {
-      final List<Map<String, Object?>>? list = await database?.query(
-        TASK_QUEUE_TABLE_NAME,
-        columns: ['user_task'],
-      );
-      debug('$runtimeType - list: $list');
-      if (list != null && list.isNotEmpty) {
+      final List<Map<String, Object?>> list = await database?.query(
+            TASK_QUEUE_TABLE_NAME,
+            columns: [TASK_COLUMN],
+          ) ??
+          [];
+
+      if (list.isNotEmpty) {
         for (var element in list) {
-          result.add(UserTaskSnapshot.fromJson(element));
+          final jsonString = element[TASK_COLUMN] as String;
+          result.add(UserTaskSnapshot.fromJson(
+              json.decode(jsonString) as Map<String, dynamic>));
         }
       }
     } catch (exception) {

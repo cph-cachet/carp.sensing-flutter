@@ -15,10 +15,14 @@ part 'application/users.dart';
 part 'application/measure.dart';
 part 'application/tasks.dart';
 part 'application/task_control.dart';
-part 'application/device_configuration.dart';
-part 'application/device_registration.dart';
+part 'application/devices/device_configuration.dart';
+part 'application/devices/device_registration.dart';
+part 'application/devices/smartphone.dart';
+part 'application/devices/alt_beacon.dart';
+part 'application/devices/heart_rate_device.dart';
 part 'application/triggers.dart';
-part 'application/sampling.dart';
+part 'application/sampling/configurations.dart';
+part 'application/sampling/schemes.dart';
 part 'application/data_type.dart';
 part 'application/data_types.dart';
 part 'application/data.dart';
@@ -40,7 +44,7 @@ abstract class Snapshot {
   late int version;
 
   Snapshot([String? id]) {
-    this.version = 0;
+    version = 0;
     this.id = id ?? const Uuid().v1();
     createdOn = DateTime.now().toUtc();
   }

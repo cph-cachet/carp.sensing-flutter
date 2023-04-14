@@ -83,12 +83,12 @@ abstract class ClientManager<
   @mustCallSuper
   Future<StudyStatus> tryDeployment(Study study) async {
     StudyRuntime? runtime = repository[study];
-    assert(runtime != null,
+    assert(runtime != null && runtime.study != null,
         'No runtime for this study found. Has this study been added using the addStudy method?');
 
     // Early out in case this runtime has already received and validated deployment information.
-    if (runtime!.status.index >= StudyStatus.Deployed.index) {
-      return runtime.status;
+    if (runtime!.status!.index >= StudyStatus.Deployed.index) {
+      return runtime.status!;
     }
 
     return await runtime.tryDeployment();

@@ -252,4 +252,13 @@ void main() {
     print(toJsonString(streams));
     expect(streams.expectedDataStreams, isNotEmpty);
   });
+
+  test('WebTask', () async {
+    var task = WebTask(
+        url:
+            'https://cans.cachet.dk/portal/playground/studies/\$DEPLOYMENT_ID/settings?participant=\$PARTICIPANT_ID&trigger_id=\$TRIGGER_ID');
+
+    expect(task.getUrl('12345-1234', 'ecec573e-442b-4563-8e2c-62b7693011df', 1),
+        'https://cans.cachet.dk/portal/playground/studies/ecec573e-442b-4563-8e2c-62b7693011df/settings?participant=12345-1234&trigger_id=1');
+  });
 }

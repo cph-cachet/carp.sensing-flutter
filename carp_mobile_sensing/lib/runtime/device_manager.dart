@@ -13,7 +13,7 @@ abstract class DeviceManager<TDeviceConfiguration extends DeviceConfiguration>
     extends DeviceDataCollector<TDeviceConfiguration> {
   final StreamController<DeviceStatus> _eventController =
       StreamController.broadcast();
-  final Set<String> _supportedDataTypes = {};
+  // final Set<String> _supportedDataTypes = {};
 
   /// The set of executors that use this device manager.
   final Set<Executor> executors = {};
@@ -24,7 +24,7 @@ abstract class DeviceManager<TDeviceConfiguration extends DeviceConfiguration>
   ]);
 
   @override
-  Set<String> get supportedDataTypes => _supportedDataTypes;
+  Set<String> get supportedDataTypes => configuration?.supportedDataTypes ?? {};
 
   /// The stream of status events for this device.
   Stream<DeviceStatus> get statusEvents => _eventController.stream;
@@ -171,6 +171,10 @@ abstract class HardwareDeviceManager<
 class SmartphoneDeviceManager extends HardwareDeviceManager<Smartphone> {
   int? _batteryLevel = 0;
   Battery battery = Battery();
+  final Set<String> _supportedDataTypes = {};
+
+  @override
+  Set<String> get supportedDataTypes => _supportedDataTypes;
 
   @override
   String get id => DeviceInfo().deviceID!;
@@ -191,7 +195,7 @@ class SmartphoneDeviceManager extends HardwareDeviceManager<Smartphone> {
     // find the supported data types
     for (var package in SamplingPackageRegistry().packages) {
       if (package is SmartphoneSamplingPackage) {
-        _supportedDataTypes.addAll(package.dataTypes.map((e) => e.type));
+        _supportedDataTypes.addAll(package.dataTypes.map((type) => type.type));
       }
     }
   }
@@ -254,7 +258,7 @@ enum DeviceStatus {
   initialized,
 
   /// The device is paired with this phone.
-  /// Mainly used for a [BTLEDeviceManager].
+  /// Mainly used in a [BTLEDeviceManager].
   paired,
 
   /// The device is trying to connect.

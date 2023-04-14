@@ -49,21 +49,3 @@ const _$UserTaskStateEnumMap = {
   UserTaskState.expired: 'expired',
   UserTaskState.undefined: 'undefined',
 };
-
-Coverage _$CoverageFromJson(Map<String, dynamic> json) => Coverage(
-      frequency: json['frequency'] as int,
-    )..$type = json['__type'] as String?;
-
-Map<String, dynamic> _$CoverageToJson(Coverage instance) {
-  final val = <String, dynamic>{};
-
-  void writeNotNull(String key, dynamic value) {
-    if (value != null) {
-      val[key] = value;
-    }
-  }
-
-  writeNotNull('__type', instance.$type);
-  val['frequency'] = instance.frequency;
-  return val;
-}

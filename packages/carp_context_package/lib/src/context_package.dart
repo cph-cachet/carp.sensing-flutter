@@ -63,13 +63,16 @@ class ContextSamplingPackage extends SmartphoneSamplingPackage {
   static const String WEATHER = "${NameSpace.CARP}.weather";
 
   @override
-  List<DataTypeMetaData> get dataTypes => [
-        DataTypeMetaData(
-          type: ACTIVITY,
-          displayName: "Activity",
-          timeType: DataTimeType.POINT,
-        ),
-      ];
+  DataTypeSamplingSchemeMap get samplingSchemes =>
+      DataTypeSamplingSchemeMap.from([
+        DataTypeSamplingScheme(
+          DataTypeMetaData(
+            type: ACTIVITY,
+            displayName: "Activity",
+            timeType: DataTimeType.POINT,
+          ),
+        )
+      ]);
 
   @override
   Probe? create(String type) {
@@ -123,19 +126,6 @@ class ContextSamplingPackage extends SmartphoneSamplingPackage {
   @override
   List<Permission> get permissions =>
       [Permission.locationAlways, Permission.activityRecognition];
-
-  /// Default samplings schema for:
-  ///  * [MOBILITY] - place radius on 50 meters, stop radius on 5 meters,
-  ///     and stop duration at 30 seconds.
-  @override
-  SamplingSchema get samplingSchema => SamplingSchema()
-    ..addConfiguration(
-        MOBILITY,
-        MobilitySamplingConfiguration(
-            placeRadius: 50,
-            stopRadius: 5,
-            usePriorContexts: true,
-            stopDuration: Duration(seconds: 30)));
 }
 
 /// The location sampling package.
@@ -143,28 +133,35 @@ class LocationSamplingPackage extends SmartphoneSamplingPackage {
   final DeviceManager _deviceManager = LocationServiceManager();
 
   @override
-  List<DataTypeMetaData> get dataTypes => [
-        DataTypeMetaData(
+  DataTypeSamplingSchemeMap get samplingSchemes =>
+      DataTypeSamplingSchemeMap.from([
+        DataTypeSamplingScheme(DataTypeMetaData(
           type: ContextSamplingPackage.CURRENT_LOCATION,
           displayName: "Location",
           timeType: DataTimeType.POINT,
-        ),
-        DataTypeMetaData(
+        )),
+        DataTypeSamplingScheme(DataTypeMetaData(
           type: ContextSamplingPackage.LOCATION,
           displayName: "Location",
           timeType: DataTimeType.POINT,
-        ),
-        DataTypeMetaData(
+        )),
+        DataTypeSamplingScheme(DataTypeMetaData(
           type: ContextSamplingPackage.GEOFENCE,
           displayName: "Geofence",
           timeType: DataTimeType.POINT,
-        ),
-        DataTypeMetaData(
-          type: ContextSamplingPackage.MOBILITY,
-          displayName: "Mobility",
-          timeType: DataTimeType.POINT,
-        ),
-      ];
+        )),
+        DataTypeSamplingScheme(
+            DataTypeMetaData(
+              type: ContextSamplingPackage.MOBILITY,
+              displayName: "Mobility",
+              timeType: DataTimeType.POINT,
+            ),
+            MobilitySamplingConfiguration(
+                placeRadius: 50,
+                stopRadius: 5,
+                usePriorContexts: true,
+                stopDuration: Duration(seconds: 30))),
+      ]);
 
   @override
   Probe? create(String type) {
@@ -183,19 +180,10 @@ class LocationSamplingPackage extends SmartphoneSamplingPackage {
   }
 
   @override
-  void onRegister() {}
-
-  @override
-  List<Permission> get permissions => [];
-
-  @override
   String get deviceType => LocationService.DEVICE_TYPE;
 
   @override
   DeviceManager get deviceManager => _deviceManager;
-
-  @override
-  SamplingSchema get samplingSchema => SamplingSchema();
 }
 
 /// The air quality sampling package.
@@ -203,13 +191,16 @@ class AirQualitySamplingPackage extends SmartphoneSamplingPackage {
   final DeviceManager _deviceManager = AirQualityServiceManager();
 
   @override
-  List<DataTypeMetaData> get dataTypes => [
-        DataTypeMetaData(
-          type: ContextSamplingPackage.AIR_QUALITY,
-          displayName: "Air Quality",
-          timeType: DataTimeType.POINT,
-        ),
-      ];
+  DataTypeSamplingSchemeMap get samplingSchemes =>
+      DataTypeSamplingSchemeMap.from([
+        DataTypeSamplingScheme(
+          DataTypeMetaData(
+            type: ContextSamplingPackage.AIR_QUALITY,
+            displayName: "Air Quality",
+            timeType: DataTimeType.POINT,
+          ),
+        )
+      ]);
 
   @override
   Probe? create(String type) {
@@ -222,33 +213,27 @@ class AirQualitySamplingPackage extends SmartphoneSamplingPackage {
   }
 
   @override
-  void onRegister() {}
-
-  @override
-  List<Permission> get permissions => [];
-
-  @override
   String get deviceType => AirQualityService.DEVICE_TYPE;
 
   @override
   DeviceManager get deviceManager => _deviceManager;
-
-  @override
-  SamplingSchema get samplingSchema => SamplingSchema();
 }
 
-/// The air quality sampling package.
+/// The weather sampling package.
 class WeatherSamplingPackage extends SmartphoneSamplingPackage {
   final DeviceManager _deviceManager = WeatherServiceManager();
 
   @override
-  List<DataTypeMetaData> get dataTypes => [
-        DataTypeMetaData(
-          type: ContextSamplingPackage.WEATHER,
-          displayName: "Weather",
-          timeType: DataTimeType.POINT,
-        ),
-      ];
+  DataTypeSamplingSchemeMap get samplingSchemes =>
+      DataTypeSamplingSchemeMap.from([
+        DataTypeSamplingScheme(
+          DataTypeMetaData(
+            type: ContextSamplingPackage.WEATHER,
+            displayName: "Weather",
+            timeType: DataTimeType.POINT,
+          ),
+        )
+      ]);
 
   @override
   Probe? create(String type) {
@@ -261,17 +246,8 @@ class WeatherSamplingPackage extends SmartphoneSamplingPackage {
   }
 
   @override
-  void onRegister() {}
-
-  @override
-  List<Permission> get permissions => [];
-
-  @override
   String get deviceType => WeatherService.DEVICE_TYPE;
 
   @override
   DeviceManager get deviceManager => _deviceManager;
-
-  @override
-  SamplingSchema get samplingSchema => SamplingSchema();
 }

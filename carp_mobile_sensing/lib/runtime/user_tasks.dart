@@ -48,7 +48,7 @@ abstract class UserTask {
 
   String? get studyDeploymentId =>
       appTaskExecutor.deployment?.studyDeploymentId;
-  String id = Uuid().v1();
+  late String id;
   String get type => task.type;
   String get name => task.name;
   String get title => task.title;
@@ -99,6 +99,7 @@ abstract class UserTask {
   /// Create a new [UserTask] based on [executor].
   UserTask(AppTaskExecutor executor) {
     _executor = executor;
+    id = Uuid().v1();
   }
 
   /// Callback from the app when this task is to be started.

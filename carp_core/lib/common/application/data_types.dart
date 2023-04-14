@@ -14,7 +14,8 @@ class DataTypeMetaData {
   /// A name which can be used to display to the user which data is collected.
   String displayName;
 
-  /// Determines how [Data] for [type] should be stored temporally.
+  /// Determines how [Data] for [type] is stored temporally (a point in time or
+  /// as a time span).
   DataTimeType timeType;
 
   DataTypeMetaData({

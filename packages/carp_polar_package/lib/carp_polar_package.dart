@@ -115,6 +115,63 @@ class PolarSamplingPackage implements SamplingPackage {
       PolarDeviceManager(PolarDevice.DEVICE_TYPE);
 
   @override
+  DataTypeSamplingSchemeMap get samplingSchemes =>
+      DataTypeSamplingSchemeMap.from([
+        DataTypeSamplingScheme(
+          DataTypeMetaData(
+            type: ACCELEROMETER,
+            displayName: "Accelerometer",
+            timeType: DataTimeType.POINT,
+          ),
+        ),
+        DataTypeSamplingScheme(
+          DataTypeMetaData(
+            type: GYROSCOPE,
+            displayName: "Gyroscope",
+            timeType: DataTimeType.POINT,
+          ),
+        ),
+        DataTypeSamplingScheme(
+          DataTypeMetaData(
+            type: MAGNETOMETER,
+            displayName: "Magnetometer",
+            timeType: DataTimeType.POINT,
+          ),
+        ),
+        DataTypeSamplingScheme(
+          DataTypeMetaData(
+            type: ECG,
+            displayName: "Electrocardiography (ECG)",
+            timeType: DataTimeType.POINT,
+          ),
+        ),
+        DataTypeSamplingScheme(
+          DataTypeMetaData(
+            type: PPI,
+            displayName: "Peak-to-Peak Interval (PPI)",
+            timeType: DataTimeType.POINT,
+          ),
+        ),
+        DataTypeSamplingScheme(
+          DataTypeMetaData(
+            type: PPG,
+            displayName: "Photoplethysmograpy (PPG)",
+            timeType: DataTimeType.POINT,
+          ),
+        ),
+        DataTypeSamplingScheme(
+          DataTypeMetaData(
+            type: HR,
+            displayName: "Heart Rate (HR)",
+            timeType: DataTimeType.POINT,
+          ),
+        ),
+      ]);
+
+  @override
+  List<DataTypeMetaData> get dataTypes => samplingSchemes.dataTypes;
+
+  @override
   void onRegister() {
     // register all data types
     FromJsonFactory().registerAll([
@@ -164,46 +221,4 @@ class PolarSamplingPackage implements SamplingPackage {
         return null;
     }
   }
-
-  @override
-  List<DataTypeMetaData> get dataTypes => [
-        DataTypeMetaData(
-          type: ACCELEROMETER,
-          displayName: "Accelerometer",
-          timeType: DataTimeType.POINT,
-        ),
-        DataTypeMetaData(
-          type: GYROSCOPE,
-          displayName: "Gyroscope",
-          timeType: DataTimeType.POINT,
-        ),
-        DataTypeMetaData(
-          type: MAGNETOMETER,
-          displayName: "Magnetometer",
-          timeType: DataTimeType.POINT,
-        ),
-        DataTypeMetaData(
-          type: ECG,
-          displayName: "Electrocardiography (ECG)",
-          timeType: DataTimeType.POINT,
-        ),
-        DataTypeMetaData(
-          type: PPI,
-          displayName: "Peak-to-Peak Interval (PPI)",
-          timeType: DataTimeType.POINT,
-        ),
-        DataTypeMetaData(
-          type: PPG,
-          displayName: "Photoplethysmograpy (PPG)",
-          timeType: DataTimeType.POINT,
-        ),
-        DataTypeMetaData(
-          type: HR,
-          displayName: "Heart Rate (HR)",
-          timeType: DataTimeType.POINT,
-        ),
-      ];
-
-  @override
-  SamplingSchema get samplingSchema => SamplingSchema();
 }

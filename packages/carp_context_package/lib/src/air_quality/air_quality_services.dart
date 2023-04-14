@@ -22,11 +22,9 @@ class AirQualityService extends OnlineService {
 
   AirQualityService({
     String? roleName,
-    List<String>? supportedDataTypes,
     required this.apiKey,
   }) : super(
           roleName: roleName ?? DEFAULT_ROLENAME,
-          supportedDataTypes: supportedDataTypes,
         );
 
   @override

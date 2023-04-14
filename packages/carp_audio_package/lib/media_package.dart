@@ -34,28 +34,40 @@ class MediaSamplingPackage extends SmartphoneSamplingPackage {
   static const String NOISE = "${NameSpace.CARP}.noise";
 
   @override
-  List<DataTypeMetaData> get dataTypes => [
-        DataTypeMetaData(
-          type: AUDIO,
-          displayName: "Audio Recording",
-          timeType: DataTimeType.TIME_SPAN,
+  DataTypeSamplingSchemeMap get samplingSchemes =>
+      DataTypeSamplingSchemeMap.from([
+        DataTypeSamplingScheme(
+          DataTypeMetaData(
+            type: AUDIO,
+            displayName: "Audio Recording",
+            timeType: DataTimeType.TIME_SPAN,
+          ),
         ),
-        DataTypeMetaData(
-          type: VIDEO,
-          displayName: "Video Recording",
-          timeType: DataTimeType.TIME_SPAN,
+        DataTypeSamplingScheme(
+          DataTypeMetaData(
+            type: VIDEO,
+            displayName: "Video Recording",
+            timeType: DataTimeType.TIME_SPAN,
+          ),
         ),
-        DataTypeMetaData(
-          type: IMAGE,
-          displayName: "Image Capture",
-          timeType: DataTimeType.POINT,
+        DataTypeSamplingScheme(
+          DataTypeMetaData(
+            type: IMAGE,
+            displayName: "Image Capture",
+            timeType: DataTimeType.POINT,
+          ),
         ),
-        DataTypeMetaData(
-          type: NOISE,
-          displayName: "Noise Recording",
-          timeType: DataTimeType.TIME_SPAN,
-        ),
-      ];
+        DataTypeSamplingScheme(
+            DataTypeMetaData(
+              type: NOISE,
+              displayName: "Noise Recording",
+              timeType: DataTimeType.TIME_SPAN,
+            ),
+            PeriodicSamplingConfiguration(
+              interval: Duration(minutes: 5),
+              duration: Duration(seconds: 10),
+            )),
+      ]);
 
   @override
   Probe? create(String type) {
@@ -84,15 +96,4 @@ class MediaSamplingPackage extends SmartphoneSamplingPackage {
   @override
   List<Permission> get permissions =>
       [Permission.microphone, Permission.camera];
-
-  /// Default samplings schema for:
-  ///  * [NOISE] - collects every 5 minutes for 10 seconds.
-  @override
-  SamplingSchema get samplingSchema => SamplingSchema()
-    ..addConfiguration(
-        NOISE,
-        PeriodicSamplingConfiguration(
-          interval: Duration(minutes: 5),
-          duration: Duration(seconds: 10),
-        ));
 }

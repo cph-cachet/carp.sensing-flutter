@@ -16,6 +16,9 @@ class Study {
   /// The role name of the device in the deployment this study runtime participates in.
   String deviceRoleName;
 
+  /// The status of this study.
+  StudyStatus status = StudyStatus.DeploymentNotStarted;
+
   Study(this.studyDeploymentId, this.deviceRoleName);
 
   @override

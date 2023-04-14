@@ -42,19 +42,29 @@ class SensorSamplingPackage extends SmartphoneSamplingPackage {
   static const String STEP_COUNT = CarpDataTypes.STEP_COUNT_TYPE_NAME;
 
   @override
-  List<DataTypeMetaData> get dataTypes => [
-        CarpDataTypes().types[CarpDataTypes.ACCELERATION_TYPE_NAME]!,
-        CarpDataTypes()
-            .types[CarpDataTypes.NON_GRAVITATIONAL_ACCELERATION_TYPE_NAME]!,
-        CarpDataTypes().types[CarpDataTypes.ROTATION_TYPE_NAME]!,
-        CarpDataTypes().types[CarpDataTypes.STEP_COUNT_TYPE_NAME]!,
-        CarpDataTypes().types[CarpDataTypes.MAGNETIC_FIELD_TYPE_NAME]!,
-        DataTypeMetaData(
-          type: AMBIENT_LIGHT,
-          displayName: "Ambient Light",
-          timeType: DataTimeType.TIME_SPAN,
-        ),
-      ];
+  DataTypeSamplingSchemeMap get samplingSchemes =>
+      DataTypeSamplingSchemeMap.from([
+        DataTypeSamplingScheme(
+            CarpDataTypes().types[CarpDataTypes.ACCELERATION_TYPE_NAME]!),
+        DataTypeSamplingScheme(CarpDataTypes()
+            .types[CarpDataTypes.NON_GRAVITATIONAL_ACCELERATION_TYPE_NAME]!),
+        DataTypeSamplingScheme(
+            CarpDataTypes().types[CarpDataTypes.ROTATION_TYPE_NAME]!),
+        DataTypeSamplingScheme(
+            CarpDataTypes().types[CarpDataTypes.STEP_COUNT_TYPE_NAME]!),
+        DataTypeSamplingScheme(
+            CarpDataTypes().types[CarpDataTypes.MAGNETIC_FIELD_TYPE_NAME]!),
+        DataTypeSamplingScheme(
+            DataTypeMetaData(
+              type: AMBIENT_LIGHT,
+              displayName: "Ambient Light",
+              timeType: DataTimeType.TIME_SPAN,
+            ),
+            PeriodicSamplingConfiguration(
+              interval: const Duration(minutes: 5),
+              duration: const Duration(seconds: 10),
+            )),
+      ]);
 
   @override
   Probe? create(String type) {
@@ -83,15 +93,4 @@ class SensorSamplingPackage extends SmartphoneSamplingPackage {
 
   @override
   List<Permission> get permissions => [];
-
-  /// Default samplings schema for:
-  ///  * [AMBIENT_LIGHT] - every 5 minutes sampling for 10 second
-  @override
-  SamplingSchema get samplingSchema => SamplingSchema()
-    ..addConfiguration(
-        AMBIENT_LIGHT,
-        PeriodicSamplingConfiguration(
-          interval: const Duration(minutes: 5),
-          duration: const Duration(seconds: 10),
-        ));
 }

@@ -28,7 +28,7 @@ class DeviceRegistration extends Serializable {
   /// The registration time in zulu time.
   late DateTime registrationCreatedOn;
 
-  @Deprecated('Use DefaultDeviceRegistration instead.')
+  // @Deprecated('Use DefaultDeviceRegistration instead.')
   DeviceRegistration({
     String? deviceId,
     this.deviceDisplayName,
@@ -79,81 +79,31 @@ class DefaultDeviceRegistration extends DeviceRegistration {
   Map<String, dynamic> toJson() => _$DefaultDeviceRegistrationToJson(this);
 }
 
-/// A [DeviceRegistration] for [AltBeacon] specifying which beacon to listen to.
+/// A [DeviceRegistration] for devices which have a MAC address.
 ///
-/// The beacon ID is 20 bytes, made up out of the recommended subdivision
-/// [organizationId], [majorId], and [minorId].
+/// Represents an IEEE 802 48-bit media access control address (MAC address);
+/// a unique identifier assigned to a network interface controller (NIC) for
+/// use as a network address in communications within a network segment.
+///
+/// This is equivalent to the EUI-48 identifier.
 @JsonSerializable(fieldRename: FieldRename.none, includeIfNull: true)
-class AltBeaconDeviceRegistration extends DeviceRegistration {
-  /// The beacon device manufacturer's company identifier code as maintained by
-  /// the Bluetooth SIG assigned numbers database.
-  int? manufacturerId;
+class MACAddressDeviceRegistration extends DeviceRegistration {
+  /// The MAC address, represented according to the recommended IEEE 802 standard notation.
+  /// Six groups of two upper case hexadecimal digits, separate by hyphens (-).
+  String address;
 
-  /// The first 16 bytes of the beacon identifier which should be unique to the
-  /// advertiser's organizational unit.
-  String? organizationId;
-
-  /// The first 2 bytes of the beacon identifier after the [organizationId],
-  /// commonly named major ID.
-  int? majorId;
-
-  /// The last 2 bytes of the beacon identifier, commonly named minor ID.
-  int? minorId;
-
-  /// The average received signal strength at 1 meter from the beacon in
-  /// decibel-milliwatts (dBm).
-  /// This value is constrained from -127 to 0.
-  int? referenceRssi;
-
-  AltBeaconDeviceRegistration({
-    super.deviceId,
+  /// Create a new [MACAddressDeviceRegistration] with a unique MAC [address].
+  MACAddressDeviceRegistration({
+    String? deviceId,
     super.deviceDisplayName,
     super.registrationCreatedOn,
-    this.manufacturerId,
-    this.organizationId,
-    this.majorId,
-    this.minorId,
-    this.referenceRssi,
-  });
+    required this.address,
+  }) : super(deviceId: deviceId ?? address);
 
   @override
-  Function get fromJsonFunction => _$AltBeaconDeviceRegistrationFromJson;
-  factory AltBeaconDeviceRegistration.fromJson(Map<String, dynamic> json) =>
-      FromJsonFactory().fromJson(json) as AltBeaconDeviceRegistration;
+  Function get fromJsonFunction => _$MACAddressDeviceRegistrationFromJson;
+  factory MACAddressDeviceRegistration.fromJson(Map<String, dynamic> json) =>
+      FromJsonFactory().fromJson(json) as MACAddressDeviceRegistration;
   @override
-  Map<String, dynamic> toJson() => _$AltBeaconDeviceRegistrationToJson(this);
-}
-
-/// A [DeviceRegistration] for [Smartphone] specifying details of the phone.
-@JsonSerializable(fieldRename: FieldRename.none, includeIfNull: true)
-class SmartphoneDeviceRegistration extends DeviceRegistration {
-  String? platform;
-  String? hardware;
-  String? deviceName;
-  String? deviceManufacturer;
-  String? deviceModel;
-  String? operatingSystem;
-  String? sdk;
-  String? release;
-
-  SmartphoneDeviceRegistration({
-    super.deviceId,
-    super.deviceDisplayName,
-    super.registrationCreatedOn,
-    this.platform,
-    this.hardware,
-    this.deviceName,
-    this.deviceManufacturer,
-    this.deviceModel,
-    this.operatingSystem,
-    this.sdk,
-    this.release,
-  });
-
-  @override
-  Function get fromJsonFunction => _$SmartphoneDeviceRegistrationFromJson;
-  factory SmartphoneDeviceRegistration.fromJson(Map<String, dynamic> json) =>
-      FromJsonFactory().fromJson(json) as SmartphoneDeviceRegistration;
-  @override
-  Map<String, dynamic> toJson() => _$SmartphoneDeviceRegistrationToJson(this);
+  Map<String, dynamic> toJson() => _$MACAddressDeviceRegistrationToJson(this);
 }

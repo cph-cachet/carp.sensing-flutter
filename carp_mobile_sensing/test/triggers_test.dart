@@ -5,11 +5,19 @@ import 'package:carp_serializable/carp_serializable.dart';
 
 void main() {
   setUp(() {
-    // Initialization of serialization
-    CarpMobileSensing();
+    CarpMobileSensing.ensureInitialized();
   });
 
-  group('Trigger Tests', () {
+  group('Sampling Configurations', () {
+    test('Sampling Packages.', () {
+      var schemes = DeviceSamplingPackage().samplingSchemes;
+      expect(schemes.configurations.length, 5);
+
+      print(schemes);
+    });
+  });
+
+  group('Triggers', () {
     test(' - RecurrentScheduledTrigger - success', () {
       RecurrentScheduledTrigger t;
 

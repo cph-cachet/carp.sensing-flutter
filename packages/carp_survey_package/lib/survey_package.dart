@@ -19,7 +19,9 @@ class SurveySamplingPackage extends SmartphoneSamplingPackage {
 
   @override
   void onRegister() {
-    ResearchPackage();
+    ResearchPackage.ensureInitialized();
+    CognitionPackage.ensureInitialized();
+
     FromJsonFactory()
         .register(RPAppTask(type: '', rpTask: RPTask(identifier: 'ignored')));
     AppTaskController().registerUserTaskFactory(SurveyUserTaskFactory());
@@ -27,15 +29,13 @@ class SurveySamplingPackage extends SmartphoneSamplingPackage {
 
   // no data types supported in this package and hence no permissions, probes,
   // or sampling schema are needed.
+
   @override
-  List<DataTypeMetaData> get dataTypes => [];
+  DataTypeSamplingSchemeMap get samplingSchemes => DataTypeSamplingSchemeMap();
 
   @override
   List<Permission> get permissions => [];
 
   @override
   Probe? create(String type) => null;
-
-  @override
-  SamplingSchema get samplingSchema => SamplingSchema();
 }

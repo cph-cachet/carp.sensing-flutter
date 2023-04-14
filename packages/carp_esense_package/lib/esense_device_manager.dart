@@ -70,12 +70,7 @@ class ESenseDevice extends DeviceConfiguration {
     super.isOptional = true,
     this.deviceName,
     this.samplingRate,
-  }) : super(
-          supportedDataTypes: [
-            ESenseSamplingPackage.ESENSE_BUTTON,
-            ESenseSamplingPackage.ESENSE_SENSOR,
-          ],
-        );
+  });
 
   @override
   Function get fromJsonFunction => _$ESenseDeviceFromJson;
@@ -190,7 +185,15 @@ class ESenseDeviceManager extends BTLEDeviceManager<ESenseDevice> {
       }
     });
 
-    manager?.connect();
+    try {
+      // try to scan for eSense device and connect to it
+      manager?.connect();
+    } catch (error) {
+      warning(
+          '$runtimeType - Error connecting to eSense device id: $id - $error');
+      return DeviceStatus.error;
+    }
+
     return DeviceStatus.connecting;
   }
 
