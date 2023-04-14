@@ -220,53 +220,53 @@ class AppTaskController {
   Future<bool> restoreQueue() async {
     bool success = true;
 
-    // try {
-    final snapshots = await Persistence().getUserTasks();
+    try {
+      final snapshots = await Persistence().getUserTasks();
 
-    // now create new AppTaskExecutors, initialize them, and add them to the queue
-    for (var snapshot in snapshots) {
-      AppTaskExecutor executor = AppTaskExecutor();
+      // now create new AppTaskExecutors, initialize them, and add them to the queue
+      for (var snapshot in snapshots) {
+        AppTaskExecutor executor = AppTaskExecutor();
 
-      // find the deployment
-      SmartphoneDeployment? deployment;
-      if (snapshot.studyDeploymentId != null &&
-          snapshot.deviceRoleName != null) {
-        deployment = SmartPhoneClientManager()
-            .lookupStudyRuntime(
-              snapshot.studyDeploymentId!,
-              snapshot.deviceRoleName!,
-            )
-            ?.deployment;
-      }
-      if (deployment == null) {
-        warning(
-            '$runtimeType - Could not find deployment information based on snapshot: $snapshot');
-      } else {
-        executor.initialize(snapshot.task, deployment);
-
-        // now put the restored task back on the queue
-        if (_userTaskFactories[executor.task.type] == null) {
+        // find the deployment
+        SmartphoneDeployment? deployment;
+        if (snapshot.studyDeploymentId != null &&
+            snapshot.deviceRoleName != null) {
+          deployment = SmartPhoneClientManager()
+              .lookupStudyRuntime(
+                snapshot.studyDeploymentId!,
+                snapshot.deviceRoleName!,
+              )
+              ?.deployment;
+        }
+        if (deployment == null) {
           warning(
-              'Could not enqueue AppTask. Could not find a factory for creating '
-              "a UserTask for type '${executor.task.type}'");
+              '$runtimeType - Could not find deployment information based on snapshot: $snapshot');
         } else {
-          UserTask userTask =
-              _userTaskFactories[executor.task.type]!.create(executor);
-          userTask.id = snapshot.id;
-          userTask.state = snapshot.state;
-          userTask.enqueued = snapshot.enqueued;
-          userTask.triggerTime = snapshot.triggerTime;
+          executor.initialize(snapshot.task, deployment);
 
-          _userTaskMap[userTask.id] = userTask;
-          debug(
-              '$runtimeType - Enqueued UserTask from loaded task queue: $userTask');
+          // now put the restored task back on the queue
+          if (_userTaskFactories[executor.task.type] == null) {
+            warning(
+                'Could not enqueue AppTask. Could not find a factory for creating '
+                "a UserTask for type '${executor.task.type}'");
+          } else {
+            UserTask userTask =
+                _userTaskFactories[executor.task.type]!.create(executor);
+            userTask.id = snapshot.id;
+            userTask.state = snapshot.state;
+            userTask.enqueued = snapshot.enqueued;
+            userTask.triggerTime = snapshot.triggerTime;
+
+            _userTaskMap[userTask.id] = userTask;
+            debug(
+                '$runtimeType - Enqueued UserTask from loaded task queue: $userTask');
+          }
         }
       }
+    } catch (exception) {
+      success = false;
+      warning('$runtimeType - Failed to load task queue - $exception');
     }
-    // } catch (exception) {
-    //   success = false;
-    //   warning('$runtimeType - Failed to load task queue - $exception');
-    // }
     return success;
   }
 }
