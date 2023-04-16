@@ -231,7 +231,7 @@ class CarpResourceManager
       result = document?.data;
 
       if (cache && result != null) {
-        info("Saving localiztion for '$locale' to local cache.");
+        info("Saving localization for '$locale' to local cache.");
         try {
           final json = jsonEncode(result);
           File(await _cacheLocalizationFilename(locale))
