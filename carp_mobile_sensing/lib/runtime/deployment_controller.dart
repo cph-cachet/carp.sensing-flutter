@@ -11,7 +11,7 @@ class SmartphoneDeploymentController extends StudyRuntime<DeviceRegistration> {
   int _samplingSize = 0;
   DataManager? _dataManager;
   DataEndPoint? _dataEndPoint;
-  SmartphoneDeploymentExecutor? _executor;
+  final SmartphoneDeploymentExecutor _executor = SmartphoneDeploymentExecutor();
   String _privacySchemaName = NameSpace.CARP;
   late DataTransformer _transformer;
 
@@ -24,7 +24,7 @@ class SmartphoneDeploymentController extends StudyRuntime<DeviceRegistration> {
       super.deviceRegistry as DeviceController;
 
   /// The executor executing the [deployment].
-  SmartphoneDeploymentExecutor? get executor => _executor;
+  SmartphoneDeploymentExecutor get executor => _executor;
 
   /// The configuration of the data endpoint, i.e. how data is saved or uploaded.
   DataEndPoint? get dataEndPoint => _dataEndPoint;
@@ -47,7 +47,7 @@ class SmartphoneDeploymentController extends StudyRuntime<DeviceRegistration> {
   ///
   /// This is a broadcast stream and supports multiple subscribers.
   Stream<Measurement> get measurements =>
-      _executor!.measurements.map((measurement) => measurement
+      _executor.measurements.map((measurement) => measurement
         ..data = _transformer(TransformerSchemaRegistry()
             .lookup(deployment?.dataEndPoint?.dataFormat ?? NameSpace.CARP)!
             .transform(TransformerSchemaRegistry()
@@ -58,10 +58,10 @@ class SmartphoneDeploymentController extends StudyRuntime<DeviceRegistration> {
   Stream<Measurement> measurementsByType(String type) => measurements
       .where((measurement) => measurement.data.format.toString() == type);
 
-  // PowerAwarenessState powerAwarenessState = NormalSamplingState.instance;
-
   /// The sampling size of this [deployment] in terms of number of [Measurement]
-  /// that has been collected.
+  /// that has been collected since sampling was started.
+  /// Note that this number is not persistent, and the counter hence resets
+  /// across app restart.
   int get samplingSize => _samplingSize;
 
   /// Create a new [SmartphoneDeploymentController] to control the runtime behavior
@@ -90,19 +90,21 @@ class SmartphoneDeploymentController extends StudyRuntime<DeviceRegistration> {
       if (success) {
         await AppTaskController().restoreQueue();
         status = StudyStatus.Deployed;
-        return status!;
+        return status;
       }
     }
 
     // if no cache, get the deployment from the deployment service
     // and save a local cache
     status = await super.tryDeployment();
-    if (status == StudyStatus.Deployed) deployment!.deployed = DateTime.now();
-    // if no user is specified for this study, look up the local user id
-    deployment!.userId ??= await Settings().userId;
-    await saveDeployment();
+    if (status == StudyStatus.Deployed && deployment != null) {
+      deployment!.deployed = DateTime.now();
+      // if no user is specified for this study, look up the local user id
+      deployment!.userId ??= await Settings().userId;
+      await saveDeployment();
+    }
 
-    return status!;
+    return status;
   }
 
   /// Save the [deployment] persistently to a cache.
@@ -174,8 +176,6 @@ class SmartphoneDeploymentController extends StudyRuntime<DeviceRegistration> {
     // try to register relevant connected devices
     super.tryRegisterRemainingDevicesToRegister();
 
-    _executor = SmartphoneDeploymentExecutor();
-
     // initialize optional parameters
     _dataEndPoint = dataEndPoint ?? deployment!.dataEndPoint;
     _privacySchemaName = privacySchemaName;
@@ -200,14 +200,14 @@ class SmartphoneDeploymentController extends StudyRuntime<DeviceRegistration> {
     // connect to all connectable devices, incl. this phone
     await deviceRegistry.connectAllConnectableDevices();
 
-    _executor!.initialize(deployment!, deployment!);
+    _executor.initialize(deployment!, deployment!);
     measurements.listen((dataPoint) => _samplingSize++);
 
     // set up coverage heart beat measurements
     if (coverageFrequency > 0) {
       Timer.periodic(
           Duration(minutes: coverageFrequency),
-          (_) => executor?.addMeasurement(
+          (_) => executor.addMeasurement(
               Measurement.fromData(Coverage(frequency: coverageFrequency))));
     }
 
@@ -241,14 +241,14 @@ class SmartphoneDeploymentController extends StudyRuntime<DeviceRegistration> {
 
     info('$runtimeType - Starting data sampling...');
     super.start();
-    if (start) _executor!.start();
+    if (start) _executor.start();
   }
 
   /// Stop the sampling.
   @override
   Future<void> stop() async {
     info('$runtimeType - Stopping data sampling...');
-    _executor!.stop();
+    _executor.stop();
     super.stop();
   }
 
@@ -269,7 +269,7 @@ class SmartphoneDeploymentController extends StudyRuntime<DeviceRegistration> {
   @override
   Future<void> remove() async {
     info('$runtimeType - Removing deployment from this smartphone...');
-    executor?.stop();
+    executor.stop();
     await dataManager?.close();
 
     await eraseDeployment();
@@ -286,7 +286,7 @@ class SmartphoneDeploymentController extends StudyRuntime<DeviceRegistration> {
   void dispose() {
     info('$runtimeType - Disposing ...');
     saveDeployment();
-    executor?.stop();
+    executor.stop();
     dataManager?.close().then((_) => super.dispose());
   }
 }

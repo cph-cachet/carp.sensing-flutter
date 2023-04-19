@@ -13,7 +13,6 @@ class StudyRuntime<TRegistration extends DeviceRegistration> {
   final List<DeviceConfiguration> _remainingDevicesToRegister = [];
   Study? _study;
   TRegistration? _deviceRegistration;
-  StudyStatus _status = StudyStatus.DeploymentNotStarted;
   final StreamController<StudyStatus> _statusEventsController =
       StreamController();
 
@@ -21,8 +20,8 @@ class StudyRuntime<TRegistration extends DeviceRegistration> {
   /// Set in the [addStudy] method.
   TRegistration? get deviceRegistration => _deviceRegistration;
 
-  /// The study for this study runtime.
-  /// Set in the [addStudy] method.
+  /// The study for this study runtime. Set in the [addStudy] method.
+  /// `null` if no study has been added yet.
   Study? get study => _study;
 
   /// The study deployment id for the [study] of this controller.
@@ -49,22 +48,20 @@ class StudyRuntime<TRegistration extends DeviceRegistration> {
   Stream<StudyStatus> get statusEvents => _statusEventsController.stream;
 
   /// The status of the [study] running on this [StudyRuntime].
-  StudyStatus? get status => _study?.status;
-  set status(StudyStatus? newStatus) {
-    if (newStatus != null) {
-      _study?.status = newStatus;
-      _statusEventsController.add(newStatus);
-    }
+  StudyStatus get status => _study?.status ?? StudyStatus.DeploymentNotStarted;
+  set status(StudyStatus newStatus) {
+    _study?.status = newStatus;
+    _statusEventsController.add(newStatus);
   }
 
   /// Has this [StudyRuntime] been initialized?
   bool get isInitialized => (study != null);
 
   /// Has the device deployment been completed successfully?
-  bool get isDeployed => (_status == StudyStatus.Deployed);
+  bool get isDeployed => (status == StudyStatus.Deployed);
 
   /// Has the study and data collection been stopped?
-  bool get isStopped => (_status == StudyStatus.Stopped);
+  bool get isStopped => (status == StudyStatus.Stopped);
 
   /// The list of devices that still remain to be registered before all devices
   /// in this study runtime is registered.
@@ -89,7 +86,7 @@ class StudyRuntime<TRegistration extends DeviceRegistration> {
     TRegistration deviceRegistration,
   ) async {
     _study = study;
-    _status = StudyStatus.DeploymentNotStarted;
+    study.status = StudyStatus.DeploymentNotStarted;
     _deviceRegistration = deviceRegistration;
   }
 
@@ -126,10 +123,10 @@ class StudyRuntime<TRegistration extends DeviceRegistration> {
         "Call 'configure()' first.");
 
     // early out if already deployed.
-    if (status!.index >= StudyStatus.Deployed.index) return status!;
+    if (status.index >= StudyStatus.Deployed.index) return status;
 
     // check the status of this deployment.
-    if (await getStudyDeploymentStatus() == null) return status!;
+    if (await getStudyDeploymentStatus() == null) return status;
 
     status = StudyStatus.Deploying;
 
@@ -229,7 +226,7 @@ class StudyRuntime<TRegistration extends DeviceRegistration> {
 
   /// Start collecting data for this [StudyRuntime].
   @mustCallSuper
-  void start() => _status = StudyStatus.Running;
+  void start() => status = StudyStatus.Running;
 
   /// Called when this [StudyRuntime] is disposed.
   /// This entails stopping and disposing all data sampling and storage.
@@ -242,5 +239,5 @@ class StudyRuntime<TRegistration extends DeviceRegistration> {
 
   /// Stop collecting data for this [StudyRuntime].
   @mustCallSuper
-  Future<void> stop() async => _status = StudyStatus.Stopped;
+  Future<void> stop() async => status = StudyStatus.Stopped;
 }
