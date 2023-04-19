@@ -25,6 +25,8 @@ void main() {
   CarpMobileSensing.ensureInitialized();
 
   setUp(() async {
+    Settings().debugLevel = DebugLevel.debug;
+
     // register the different sampling package since we're using measures from them
     SamplingPackageRegistry().register(ConnectivitySamplingPackage());
     SamplingPackageRegistry().register(ContextSamplingPackage());
