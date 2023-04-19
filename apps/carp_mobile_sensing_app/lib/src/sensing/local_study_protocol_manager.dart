@@ -211,18 +211,18 @@ class LocalStudyProtocolManager implements StudyProtocolManager {
         eSense);
 
     // define the Polar device and add its measures
-    PolarDevice polar = PolarDevice(
-      identifier: 'B5FC172F',
-      name: 'Polar H10 HR Monitor',
-      polarDeviceType: PolarDeviceType.H10,
-      roleName: 'Polar H10',
-    );
     // PolarDevice polar = PolarDevice(
-    //   identifier: 'B36B5B21',
-    //   name: 'Polar PVS',
-    //   polarDeviceType: PolarDeviceType.PVS,
-    //   roleName: 'polar-pvs-device',
+    //   identifier: 'B5FC172F',
+    //   name: 'Polar H10 HR Monitor',
+    //   polarDeviceType: PolarDeviceType.H10,
+    //   roleName: 'Polar H10',
     // );
+    PolarDevice polar = PolarDevice(
+      identifier: 'B36B5B21',
+      name: 'Polar PVS',
+      polarDeviceType: PolarDeviceType.SENSE,
+      roleName: 'polar-pvs-device',
+    );
 
     protocol.addConnectedDevice(polar, phone);
 

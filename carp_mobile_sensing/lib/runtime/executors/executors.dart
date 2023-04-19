@@ -20,6 +20,8 @@ part of runtime;
 ///    |  +---------+    +-------------+    +---------+     +---------+ |     +-----------+
 ///    |  | created | -> | initialized | -> | started | <-> | stopped | |  -> | undefined |
 ///    |  +---------+    +-------------+    +---------+     +---------+ |     +-----------+
+///    |                                       |  ^                     |
+///    |                                       +--+                     |
 ///    +----------------------------------------------------------------+
 /// ```
 enum ExecutorState {
@@ -91,10 +93,13 @@ abstract class Executor<TConfig> {
   /// Restart the executor.
   ///
   /// This forces the executor to reload its [configuration] and initialize sampling
-  /// accordingly. Configuration must be specified via the [initialize] method
-  /// before calling restart.
+  /// accordingly. Any changes to the configuration must be specified via the
+  /// [initialize] method before calling restart.
   ///
-  /// Calling restart automatically starts the executor.
+  /// Only executors that has been started (i.e. in state [ExecutorState.started])
+  /// can be restarted.
+  ///
+  /// Calling restart automatically starts the executor if it can be restarted.
   void restart();
 
   /// Stop the executor. Stopped until [start] or [restart] is called.
@@ -176,10 +181,13 @@ abstract class AbstractExecutor<TConfig> implements Executor<TConfig> {
   @protected
   Future<bool> onStart();
 
-  /// Callback when this executor is restarted.
-  /// Returns true if successfully restarted, false otherwise.
+  /// Callback when this executor is to be restarted.
+  /// Returns true if the executor is ready to restart (default), false otherwise.
+  ///
+  /// Subclasses should override this, to implement any configuration to be
+  /// done before restarting.
   @protected
-  Future<bool> onRestart();
+  Future<bool> onRestart() async => true;
 
   /// Callback when this executor is stopped.
   /// Returns true if successfully stopped, false otherwise.
@@ -312,13 +320,6 @@ class _InitializedState extends _AbstractExecutorState
   }
 
   @override
-  void restart() {
-    executor.onRestart().then((restarted) {
-      if (restarted) executor._setState(_StartedState(executor));
-    });
-  }
-
-  @override
   String toString() => 'initialized';
 }
 
@@ -338,7 +339,7 @@ class _StartedState extends _AbstractExecutorState
   @override
   void restart() {
     executor.onRestart().then((restarted) {
-      if (restarted) executor._setState(_InitializedState(executor));
+      if (restarted) executor.start();
     });
   }
 
@@ -363,13 +364,6 @@ class _StoppedState extends _AbstractExecutorState
     executor.onStart().then((started) {
       if (started) executor._setState(_StartedState(executor));
       executor._isStarting = false;
-    });
-  }
-
-  @override
-  void restart() {
-    executor.onRestart().then((restarted) {
-      if (restarted) executor._setState(_InitializedState(executor));
     });
   }
 

@@ -13,7 +13,6 @@ abstract class DeviceManager<TDeviceConfiguration extends DeviceConfiguration>
     extends DeviceDataCollector<TDeviceConfiguration> {
   final StreamController<DeviceStatus> _eventController =
       StreamController.broadcast();
-  // final Set<String> _supportedDataTypes = {};
 
   /// The set of executors that use this device manager.
   final Set<Executor> executors = {};
@@ -101,9 +100,9 @@ abstract class DeviceManager<TDeviceConfiguration extends DeviceConfiguration>
 
     for (var executor in executors) {
       executor.restart();
-      if (executor.state == ExecutorState.started) {
-        executor.start();
-      }
+      // if (executor.state == ExecutorState.started) {
+      //   executor.start();
+      // }
     }
   }
 
