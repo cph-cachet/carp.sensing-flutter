@@ -145,18 +145,27 @@ class CarpDataManager extends AbstractDataManager {
       carpEndPoint.deleteWhenUploaded,
     );
 
-    if (carpEndPoint.uploadMethod == CarpUploadMethod.stream) {
-      CarpDataStreamService().appendToDataStreams(
-        studyDeploymentId,
-        batches,
-      );
-      addEvent(DataManagerEvent(CarpDataManagerEventTypes.dataStreamAppended));
-    } else if (carpEndPoint.uploadMethod == CarpUploadMethod.datapoint) {
-      uploadDataStreamBatchesAsDataPoint(
-        batches,
-      );
-      addEvent(
-          DataManagerEvent(CarpDataManagerEventTypes.dataPointsBatchUploaded));
+    switch (carpEndPoint.uploadMethod) {
+      case CarpUploadMethod.stream:
+        CarpDataStreamService().appendToDataStreams(
+          studyDeploymentId,
+          batches,
+        );
+        addEvent(
+            DataManagerEvent(CarpDataManagerEventTypes.dataStreamAppended));
+        break;
+      case CarpUploadMethod.datapoint:
+        uploadDataStreamBatchesAsDataPoint(
+          batches,
+        );
+        addEvent(DataManagerEvent(
+            CarpDataManagerEventTypes.dataPointsBatchUploaded));
+        break;
+      case CarpUploadMethod.file:
+        // TODO - implement file method.
+        warning('$runtimeType - CarpUploadMethod.file not supported (yet).');
+        break;
+      default:
     }
 
     // check if any measurement has a separate file to be uploaded

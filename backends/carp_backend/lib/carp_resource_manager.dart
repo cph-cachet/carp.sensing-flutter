@@ -227,7 +227,6 @@ class CarpResourceManager
 
       info('Localization downloaded : $document');
 
-      // result = (document != null) ? document.data : null;
       result = document?.data;
 
       if (cache && result != null) {

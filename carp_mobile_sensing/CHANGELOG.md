@@ -8,9 +8,16 @@
   * The measure `Coverage` has been added which is a heartbeat measure that sends a measure every 5 minutes. This can be used to retrospectively check if sampling has been running (typically used in our so-called [Coverage tests](https://carp.cachet.dk/sampling-coverage-in-mobile-sensing-on-android-11/)).
   * In the protocol, triggering is now controlled by the `Control` class, which basically states if sampling should be started or stopped. So, instead of adding a `TriggeredTask` to a protocol you now add a `TaskControl` instead.
   * As part of this, the states of sampling has changed from "resumed" and "paused" to "started" and "stopped" (to reflect the `Control` state of a `TaskControl`).
+  * Configuration of sampling is done using the `SamplingConfiguration` which can be part of a `DataTypeSamplingScheme` which again can be part of a `DataTypeSamplingSchemeMap`. A description of how this works is on the [CARP Core description of Sampling Schemes and Configuration](https://github.com/cph-cachet/carp.core-kotlin/blob/develop/docs/carp-common.md#sampling-schemes-and-configurations) section. Note that sampling configurations can be associated both with a `Measure`, with a `DeviceConfiguration` for a device, and with a `SamplingPackage`.
   
 * The new [`data`](https://github.com/imotions/carp.core-kotlin/blob/develop/docs/carp-data.md) sub-system has been implemented in CAMS. This entails:
+  * Sampled data is now stored as `Data` objects which again are stored as part of a `Measurement` (this replaces the old `DataPoint` data model).
+  * Measurements are streamed using the `measurements` stream which is accessible from the `SmartphoneDeploymentController`.
+  * Measurements can be stored or managed by a `DataManager`. CAMS comes with two build-in data managers: the `FileDataManager` and the `SQLiteDataManager`.
 
+* Other smaller changes include:
+  * Use the `CarpMobileSensing.ensureInitialized()` static method in your `main` method to ensure that CAMS is initialized before use.
+  
 ## 0.40.13
 
 * Added support for `timezone` data type (issue [#301](https://github.com/cph-cachet/carp.sensing-flutter/issues/301)).

@@ -39,8 +39,8 @@ class CarpDataEndPoint extends DataEndPoint {
   /// The method used to upload to CARP. See [CarpUploadMethod] for options.
   CarpUploadMethod uploadMethod;
 
-  /// The name of the CAWS endpoint. Can be anything, but its recommended
-  /// to name it according to the CAWS service name.
+  /// A printer-friendly name of the CAWS endpoint. Can be anything, but its
+  /// recommended to name it according to the CAWS service name.
   String name;
 
   /// The URI of the CARP Web Service.
@@ -58,7 +58,7 @@ class CarpDataEndPoint extends DataEndPoint {
   /// Password used in password authentication.
   ///
   /// Note that the password is in **clear text** and should hence only be used
-  /// if the study is created locally on the phone in Dart.
+  /// if it is collected locally on the phone.
   ///
   /// If the study deployment is downloaded from CAWS (i.e., via the
   /// [CarpDeploymentService]), then the authentication used for downloading
@@ -69,17 +69,10 @@ class CarpDataEndPoint extends DataEndPoint {
   /// Only upload when connected via WiFi network?
   bool onlyUploadOnWiFi = false;
 
-  /// When uploading to CAWS using file in the [CarpUploadMethod.stream]
-  /// or [CarpUploadMethod.file] methods, specifies how often should data be
-  /// uploaded. In minutes.
+  /// How often should data be uploaded. In minutes.
   int uploadInterval = 10;
 
-  /// When uploading to CAWS using file in the [CarpUploadMethod.stream]
-  /// or [CarpUploadMethod.file] methods, specifies if the local buffered data
-  /// on the phone should be deleted once uploaded.
-  ///
-  /// If using the [CarpUploadMethod.file] method, this should definitely be
-  /// true in order to delete already uploaded records from the database.
+  /// Should the local buffered data on the phone be deleted once uploaded?
   bool deleteWhenUploaded = true;
 
   /// Creates a [CarpDataEndPoint].
@@ -102,8 +95,6 @@ class CarpDataEndPoint extends DataEndPoint {
   /// Creates a [CarpDataEndPoint] based on a [CarpApp] [app].
   CarpDataEndPoint.fromCarpApp({
     CarpUploadMethod uploadMethod = CarpUploadMethod.stream,
-    String name = 'CARP Web Services',
-    String? collection,
     bool onlyUploadOnWiFi = false,
     int uploadInterval = 10,
     bool deleteWhenUploaded = true,
@@ -136,14 +127,14 @@ enum CarpUploadMethod {
   /// Upload data as data streams (the default method).
   stream,
 
-  /// Upload each data point separately using the non-core DataPoint endpoint in CAWS.
+  /// Upload measurements as data points using the non-core DataPoint endpoint.
   datapoint,
 
-  /// Collect measurements in a SQLite DB file and upload as a `db` file
+  /// Collect measurements in a SQLite DB file and upload as a `db` file.
   file,
 }
 
-/// Exception for CARP backend communication.
+/// Exception for CAWS communication.
 class CarpBackendException implements Exception {
   String? message;
   CarpBackendException([this.message]);

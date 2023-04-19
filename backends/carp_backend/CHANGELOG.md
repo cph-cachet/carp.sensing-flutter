@@ -1,3 +1,10 @@
+## 1.1.0
+
+* update to `carp_mobile_sensing` v. 1.1.0.
+* support for the new v. 1.1.0 streaming data model using `Measurement` objects and the streaming endpoint in CAWS.
+* still supports the "old" non-core DataPoint endpoint.
+* measurements are now buffered on the phone before upload - default buffer time is 10 minutes, but can be configured in the redesigned `CarpDataEndPoint` configuration.
+
 ## 0.40.0
 
 * update to `carp_mobile_sensing` v. 0.40.0
