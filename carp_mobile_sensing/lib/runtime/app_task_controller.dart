@@ -209,9 +209,11 @@ class AppTaskController {
   /// Removes all tasks for a study deployment from the queue and cancels
   /// all notifications generated for these tasks.
   void removeStudyDeployment(String studyDeploymentId) {
-    final userTasks = _userTaskMap.values.where((task) =>
-        task.appTaskExecutor.deployment?.studyDeploymentId ==
-        studyDeploymentId);
+    final userTasks = _userTaskMap.values
+        .where((task) =>
+            task.appTaskExecutor.deployment?.studyDeploymentId ==
+            studyDeploymentId)
+        .toList();
 
     for (var userTask in userTasks) {
       dequeue(userTask.id);
