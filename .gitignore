@@ -38,3 +38,6 @@ carp_mobile_sensing_app/ios/Flutter/Release.xcconfig
 
 .flutter-plugins-dependencies
 flutter_export_environment.sh
+apps/carp_mobile_sensing_app/lib/credentials.dart
+apps/carp_mobile_sensing_app/test/credentials.dart
+backends/carp_backend/test/credentials.dart
