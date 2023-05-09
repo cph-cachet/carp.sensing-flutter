@@ -17,7 +17,7 @@ class SurveyUserTask extends UserTask {
   static const String COGNITIVE_ASSESSMENT_TYPE = 'cognition';
   static const String INFORMED_CONSENT_TYPE = 'informed_consent';
 
-  late BuildContext _context;
+  // late BuildContext _context;
   final _controller = StreamController<Measurement>();
 
   /// The [RPAppTask] from which this user task originates from.
@@ -26,40 +26,37 @@ class SurveyUserTask extends UserTask {
   SurveyUserTask(super.executor);
 
   @override
-  void onStart(BuildContext context) {
-    // saving the build context for later use
-    _context = context;
-
-    super.onStart(context);
+  Widget? onStart() {
+    super.onStart();
     executor.group.add(_controller.stream);
     executor.start();
 
-    _onSurveyTriggered(SurveyPage(
+    return SurveyPage(
       task: rpAppTask.rpTask,
       resultCallback: _onSurveySubmit,
       onSurveyCancel: _onSurveyCancel,
-    ));
-  }
-
-  void _onSurveyTriggered(SurveyPage surveyPage) {
-    Navigator.push(
-      _context,
-      MaterialPageRoute<dynamic>(builder: (context) => surveyPage),
     );
   }
+
+  // void _onSurveyTriggered(SurveyPage surveyPage) {
+  //   Navigator.push(
+  //     _context,
+  //     MaterialPageRoute<dynamic>(builder: (context) => surveyPage),
+  //   );
+  // }
 
   void _onSurveySubmit(RPTaskResult result) {
     executor.stop();
     // when we have the survey result, add it to the data stream
     _controller.add(Measurement.fromData(RPTaskResultData(result)));
-    super.onDone(_context);
+    super.onDone();
   }
 
   void _onSurveyCancel([RPTaskResult? result]) {
     executor.stop();
     // also saved result even though it was canceled by the user
     _controller.add(Measurement.fromData(RPTaskResultData(result)));
-    super.onCancel(_context);
+    super.onCancel();
   }
 }
 

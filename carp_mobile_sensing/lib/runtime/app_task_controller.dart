@@ -68,11 +68,6 @@ class AppTaskController {
   Future<void> initialize({
     bool enableNotifications = true,
   }) async {
-    if (Settings().saveAppTaskQueue) {
-      // listen to events and save the queue every time it is modified
-      // userTaskEvents.listen((_) async => await saveQueue());
-    }
-
     // set up a timer which cleans up in the queue once an hour
     Timer.periodic(const Duration(hours: 1), (timer) {
       for (var task in userTasks) {
@@ -220,7 +215,7 @@ class AppTaskController {
     }
   }
 
-  /// Restore the queue from a file. Returns `true` if successful.
+  /// Restore the queue from persistent storage. Returns `true` if successful.
   Future<bool> restoreQueue() async {
     bool success = true;
 

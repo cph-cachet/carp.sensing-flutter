@@ -76,6 +76,11 @@ abstract class UserTask {
     _stateController.add(state);
   }
 
+  /// Is this task available to be done by the user?
+  bool get availableForUser => (_state == UserTaskState.enqueued ||
+      _state == UserTaskState.canceled ||
+      _state == UserTaskState.notified);
+
   /// Has a notification been created via a [NotificationController] in the
   /// phone's notification system?
   bool hasNotificationBeenCreated = false;
@@ -103,31 +108,31 @@ abstract class UserTask {
   }
 
   /// Callback from the app when this task is to be started.
+  /// Returns the user interface [Widget] to be shown in the app, if any.
   @mustCallSuper
-  void onStart(BuildContext context) {
+  Widget? onStart() {
     // initialize the background task which holds any measures added to the app task
     executor.initialize(task.backgroundTask, _executor.deployment);
     state = UserTaskState.started;
+    return null;
   }
 
   /// Callback from the app if this task is canceled.
   ///
   /// If [dequeue] is `true` the task is removed from the queue.
-  /// Otherwise, it it kept on the queue for later.
+  /// Otherwise, it it kept on the queue with state [UserTaskState.canceled].
   @mustCallSuper
-  void onCancel(BuildContext context, {bool dequeue = false}) {
+  void onCancel({bool dequeue = false}) {
     state = UserTaskState.canceled;
-    (dequeue)
-        ? AppTaskController().dequeue(id)
-        : state = UserTaskState.enqueued;
+    if (dequeue) AppTaskController().dequeue(id);
   }
 
-  /// Callback from the app if this task is expired.
+  /// Callback from the app if this task expires.
   ///
   /// If [dequeue] is `true` the task is removed from the queue.
-  /// Otherwise, it it kept on the queue for later.
+  /// Otherwise, it it kept on the queue with state [UserTaskState.expired].
   @mustCallSuper
-  void onExpired(BuildContext context) {
+  void onExpired() {
     state = UserTaskState.expired;
     AppTaskController().dequeue(id);
   }
@@ -137,15 +142,15 @@ abstract class UserTask {
   /// If [dequeue] is `true` the task is removed from the queue.
   /// [result] can specify the result obtained from this task, if available.
   @mustCallSuper
-  void onDone(BuildContext context, {bool dequeue = false, Data? result}) {
+  void onDone({bool dequeue = false, Data? result}) {
     this.result = result;
     state = UserTaskState.done;
     AppTaskController().done(id, result);
     if (dequeue) AppTaskController().dequeue(id);
   }
 
-  /// Callback from the OS when this task is clicked
-  /// by the user in the OS notification system.
+  /// Callback from the OS when this task is clicked by the user in the
+  /// OS notification system.
   ///
   /// Default implementation is no-op, but can be extended in sub-classes.
   @mustCallSuper
@@ -167,6 +172,9 @@ enum UserTaskState {
 
   /// Removed from the [AppTaskController] queue.
   dequeued,
+
+  /// The user has clicked on the notification based on this notification.
+  notified,
 
   /// Started by the user.
   started,
@@ -201,14 +209,15 @@ class BackgroundSensingUserTask extends UserTask {
   BackgroundSensingUserTask(super.executor);
 
   @override
-  void onStart(BuildContext context) {
-    super.onStart(context);
+  Widget? onStart() {
+    super.onStart();
     executor.start();
+    return null;
   }
 
   @override
-  void onDone(BuildContext context, {dequeue = false, Data? result}) {
-    super.onDone(context, dequeue: dequeue, result: result);
+  void onDone({dequeue = false, Data? result}) {
+    super.onDone(dequeue: dequeue, result: result);
     executor.stop();
   }
 }
@@ -223,8 +232,9 @@ class OneTimeBackgroundSensingUserTask extends BackgroundSensingUserTask {
 
   /// Start sensing for 10 seconds, whereafter it is stops automatically.
   @override
-  void onStart(BuildContext context) {
-    super.onStart(context);
-    Timer(Duration(seconds: 10), () => super.onDone(context));
+  Widget? onStart() {
+    super.onStart();
+    Timer(Duration(seconds: 10), () => super.onDone());
+    return null;
   }
 }

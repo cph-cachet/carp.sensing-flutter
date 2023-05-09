@@ -15,6 +15,8 @@
   * Measurements are streamed using the `measurements` stream which is accessible from the `SmartphoneDeploymentController`.
   * Measurements can be stored or managed by a `DataManager`. CAMS comes with two build-in data managers: the `FileDataManager` and the `SQLiteDataManager`.
 
+* The `UserTask` is no longer responsible for showing the user interface of the task. Now, instead of showing the user interface, the `onStart` methods now returns a `Widget` to be shown. In this model, the app (and not CAMS) is responsible for deciding when and how to show the user interface. This entails that the the life cycle methods of `onStart`, `onCancel`, `onExpired`, and `onDone` no longer takes the Flutter `BuildContext` as a parameter. Read more on the `AppTask` and `UserTask` model on the [CAMS wiki](https://github.com/cph-cachet/carp.sensing-flutter/wiki/4.-The-AppTask-Model).
+
 * Other smaller changes include:
   * Use the `CarpMobileSensing.ensureInitialized()` static method in your `main` method to ensure that CAMS is initialized before use.
   

@@ -130,6 +130,7 @@ void onDidReceiveNotificationResponse(NotificationResponse response) {
     UserTask? task = AppTaskController().getUserTask(payload);
     info('NotificationController - User Task notification selected - $task');
     if (task != null) {
+      task.state = UserTaskState.notified;
       task.onNotification();
     } else {
       warning(
