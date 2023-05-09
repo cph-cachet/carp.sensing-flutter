@@ -123,7 +123,7 @@ class AppTaskController {
       userTask.enqueued = DateTime.now();
       userTask.triggerTime = triggerTime ?? DateTime.now();
       _userTaskMap[userTask.id] = userTask;
-      _controller.add(userTask);
+      _controller.sink.add(userTask);
       debug('$runtimeType - Enqueued $userTask');
 
       if (notificationsEnabled && sendNotification) {
@@ -150,7 +150,7 @@ class AppTaskController {
     } else {
       userTask.state = UserTaskState.dequeued;
       _userTaskMap.remove(id);
-      _controller.add(userTask);
+      _controller.sink.add(userTask);
       info('Dequeued $userTask');
 
       if (notificationsEnabled) {
@@ -172,7 +172,7 @@ class AppTaskController {
     } else {
       userTask.state = UserTaskState.done;
       userTask.result = result;
-      _controller.add(userTask);
+      _controller.sink.add(userTask);
       info('Marked $userTask as done');
 
       SmartPhoneClientManager()
@@ -192,7 +192,7 @@ class AppTaskController {
       // only expire tasks which are not already done or expired
       if (userTask.state != UserTaskState.done) {
         userTask.state = UserTaskState.expired;
-        _controller.add(userTask);
+        _controller.sink.add(userTask);
         info('Expired $userTask');
       }
       SmartPhoneClientManager()
