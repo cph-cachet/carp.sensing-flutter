@@ -23,27 +23,24 @@ class SurveyUserTask extends UserTask {
   /// The [RPAppTask] from which this user task originates from.
   RPAppTask get rpAppTask => task as RPAppTask;
 
+  @override
+  bool get hasWidget => true;
+
   SurveyUserTask(super.executor);
 
   @override
-  Widget? onStart() {
+  Widget? get widget => SurveyPage(
+        task: rpAppTask.rpTask,
+        resultCallback: _onSurveySubmit,
+        onSurveyCancel: _onSurveyCancel,
+      );
+
+  @override
+  void onStart() {
     super.onStart();
     executor.group.add(_controller.stream);
     executor.start();
-
-    return SurveyPage(
-      task: rpAppTask.rpTask,
-      resultCallback: _onSurveySubmit,
-      onSurveyCancel: _onSurveyCancel,
-    );
   }
-
-  // void _onSurveyTriggered(SurveyPage surveyPage) {
-  //   Navigator.push(
-  //     _context,
-  //     MaterialPageRoute<dynamic>(builder: (context) => surveyPage),
-  //   );
-  // }
 
   void _onSurveySubmit(RPTaskResult result) {
     executor.stop();

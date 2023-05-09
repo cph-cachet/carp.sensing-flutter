@@ -107,14 +107,21 @@ abstract class UserTask {
     id = Uuid().v1();
   }
 
+  /// Does this user task has a user interface (`Widget`) to show to the user?
+  bool get hasWidget => false;
+
+  /// The widget to be shown to the user as part of this task, if any.
+  /// Note that the user interface may not be available before the [onStart]
+  /// method has been called.
+  Widget? get widget => null;
+
   /// Callback from the app when this task is to be started.
   /// Returns the user interface [Widget] to be shown in the app, if any.
   @mustCallSuper
-  Widget? onStart() {
+  void onStart() {
     // initialize the background task which holds any measures added to the app task
     executor.initialize(task.backgroundTask, _executor.deployment);
     state = UserTaskState.started;
-    return null;
   }
 
   /// Callback from the app if this task is canceled.

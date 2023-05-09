@@ -144,6 +144,7 @@ class Persistence {
     switch (task.state) {
       case UserTaskState.initialized:
       case UserTaskState.enqueued:
+      case UserTaskState.notified:
       case UserTaskState.started:
       case UserTaskState.canceled:
       case UserTaskState.done:
