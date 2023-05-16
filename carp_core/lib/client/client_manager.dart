@@ -87,8 +87,8 @@ abstract class ClientManager<
         'No runtime for this study found. Has this study been added using the addStudy method?');
 
     // Early out in case this runtime has already received and validated deployment information.
-    if (runtime!.status!.index >= StudyStatus.Deployed.index) {
-      return runtime.status!;
+    if (runtime!.status.index >= StudyStatus.Deployed.index) {
+      return runtime.status;
     }
 
     return await runtime.tryDeployment();

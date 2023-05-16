@@ -202,7 +202,9 @@ class StudyProtocol extends Snapshot {
             connectedDevices!.contains(destinationDevice),
         'The passed device to which the task needs to be sent is not included in this study protocol.');
 
-    // add trigger and task to ensure they are included in the protocol
+    // Add trigger and task to ensure they are included in the protocol.
+    // Set the trigger's destination device if not specified.
+    trigger.sourceDeviceRoleName ??= destinationDevice.roleName;
     addTrigger(trigger);
     addTask(task);
 
@@ -321,7 +323,39 @@ class StudyProtocol extends Snapshot {
   ///
   /// Returns true if the [role] has been added; false in case the same [role]
   /// has already been added before.
-  bool addParticipantRole(ParticipantRole role) => participantRoles!.add(role);
+  bool addParticipantRole(ParticipantRole role) =>
+      (participantRoles ??= {}).add(role);
+
+  /// Determines whether all participant roles in [assignment] are part of the
+  /// [participantRoles] in this protocol.
+  bool isValidAssignment(AssignedTo assignment) {
+    if (assignment.roleNames.isEmpty) return true; // assigned to all
+
+    for (var name in assignment.roleNames) {
+      for (var role in participantRoles!) {
+        if (role.role == name) return true;
+      }
+    }
+    return false;
+  }
+
+  /// Change who the primary [device] is [assignedTo].
+  ///
+  /// By default, primary devices are all roles.
+  /// Requires that [device] is part of this protocol and [assignedTo] contains
+  /// participant roles which are part of this protocol.
+  void changeDeviceAssignment(
+    PrimaryDeviceConfiguration device,
+    AssignedTo assignedTo,
+  ) {
+    assignedDevices ??= {};
+    assert(primaryDevices.contains(device),
+        "The device configuration is not part of this protocol.");
+    assert(isValidAssignment(assignedTo),
+        "One of the assigned participant roles is not part of this protocol.");
+
+    assignedDevices![device.roleName] = assignedTo.roleNames;
+  }
 
   /// Add expected participant data to be input by users.
   ///

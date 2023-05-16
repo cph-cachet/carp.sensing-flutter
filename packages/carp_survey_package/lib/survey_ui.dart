@@ -8,6 +8,7 @@ class SurveyPage extends StatelessWidget {
   /// The callback function which has to return an [RPTaskResult] object.
   final void Function(RPTaskResult) resultCallback;
 
+  /// The callback function if a survey is canceled by user.
   /// The [RPTaskResult] is optional and can be `null` if no results were created.
   final void Function([RPTaskResult?])? onSurveyCancel;
 
