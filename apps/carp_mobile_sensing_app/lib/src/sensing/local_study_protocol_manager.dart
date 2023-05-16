@@ -63,8 +63,8 @@ class LocalStudyProtocolManager implements StudyProtocolManager {
     final mother = 'Mother';
 
     // add participant roles
-    protocol.participantRoles?.add(ParticipantRole(father));
-    protocol.participantRoles?.add(ParticipantRole(mother));
+    protocol.addParticipantRole(ParticipantRole(father));
+    protocol.addParticipantRole(ParticipantRole(mother));
 
     // define the primary device(s)
     // Smartphone phone = Smartphone();

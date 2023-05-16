@@ -18,18 +18,22 @@ void main() {
       description: 'For testing purposes.',
     );
 
-    Smartphone phone = Smartphone(roleName: 'phone');
-    Smartphone phone_2 = Smartphone(roleName: 'phone_2');
+    final phone_1 = Smartphone(roleName: 'phone_1');
+    final phone_2 = Smartphone(roleName: 'phone_2');
     final monitor = DefaultDeviceConfiguration(roleName: 'hr_monitor');
-    final bike = DefaultDeviceConfiguration(roleName: 'bike');
+    final bike = AltBeacon(roleName: 'bike');
     // final monitor = AltBeacon(roleName: 'hr_monitor');
     // final bike = AltBeacon(roleName: 'bike');
 
     protocol
-      ..addPrimaryDevice(phone)
+      ..addParticipantRole(ParticipantRole('Runner'))
+      ..addParticipantRole(ParticipantRole('Cyclist'))
+      ..addPrimaryDevice(phone_1)
       ..addPrimaryDevice(phone_2)
-      ..addConnectedDevice(monitor, phone)
-      ..addConnectedDevice(bike, phone);
+      ..addConnectedDevice(monitor, phone_1)
+      ..addConnectedDevice(bike, phone_1)
+      ..changeDeviceAssignment(phone_1, AssignedTo(roleNames: {'Runner'}))
+      ..changeDeviceAssignment(phone_2, AssignedTo(roleNames: {'Cyclist'}));
 
     protocol.addTaskControl(
       // TriggerConfiguration(sourceDeviceRoleName: phone.roleName),
@@ -42,7 +46,7 @@ void main() {
             Measure(type: Geolocation.dataType),
             Measure(type: StepCount.dataType),
           ]),
-      phone,
+      phone_1,
       Control.Start,
     );
 
@@ -59,7 +63,7 @@ void main() {
             Measure(type: EDA.dataType),
             Measure(type: HeartRate.dataType),
           ]),
-      monitor,
+      phone_1,
       Control.Start,
     );
 
@@ -75,7 +79,7 @@ void main() {
             Measure(type: Acceleration.dataType),
             Measure(type: SignalStrength.dataType),
           ]),
-      bike,
+      phone_2,
       Control.Start,
     );
 
@@ -88,7 +92,7 @@ void main() {
     protocol.addTaskControl(
       ManualTrigger(),
       BackgroundTask()..addMeasure(measure),
-      phone,
+      phone_1,
       Control.Start,
     );
   });
@@ -101,6 +105,8 @@ void main() {
     expect(protocol.triggers.keys.first, '0');
     expect(protocol.tasks.length, 4);
     expect(protocol.taskControls.length, 4);
+    expect(protocol.participantRoles?.length, 2);
+    expect(protocol.assignedDevices?.length, 2);
   });
 
   test('Add Request -> JSON', () async {
@@ -109,16 +115,21 @@ void main() {
   });
 
   test('JSON -> StudyProtocol', () async {
-    // Read the study protocol from json file
-    String plainJson =
+    final plainJson =
         File('test/json/carp.core-dart/study_protocol.json').readAsStringSync();
 
-    StudyProtocol protocol =
+    final protocol =
         StudyProtocol.fromJson(json.decode(plainJson) as Map<String, dynamic>);
 
     expect(protocol.ownerId, 'xyz@dtu.dk');
-    expect(protocol.primaryDevices.first.roleName, 'phone');
+    expect(protocol.primaryDevices.first.roleName, 'phone_1');
     print(toJsonString(protocol));
+
+    final studyJson = toJsonString(protocol);
+
+    final protocolFromJson =
+        StudyProtocol.fromJson(json.decode(studyJson) as Map<String, dynamic>);
+    expect(toJsonString(protocolFromJson), equals(studyJson));
   });
 
   test('ScheduledTrigger', () async {
@@ -150,21 +161,6 @@ void main() {
             .toString());
     print(st);
   });
-
-  // test('DataPoint -> JSON', () async {
-  //   DataPoint dataPoint = DataPoint(
-  //     DataPointHeader(
-  //       studyId: '1234',
-  //       dataFormat: const DataType(NameSpace.CARP, 'light'),
-  //     ),
-  //     Data(),
-  //   );
-
-  //   print(dataPoint);
-  //   print(jsonEncode(dataPoint));
-  //   print(toJsonString(dataPoint));
-  //   assert(dataPoint.carpBody != null);
-  // });
 
   test('Deployment', () async {
     StudyProtocol trackPatientStudy = StudyProtocol(

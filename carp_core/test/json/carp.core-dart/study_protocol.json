@@ -1,6 +1,6 @@
 {
-    "id": "624a96d0-c99c-11ed-a766-1b9dafd90371",
-    "createdOn": "2023-03-23T17:01:41.949257Z",
+    "id": "d6a479e0-f414-11ed-9c45-9d4ff4c270d0",
+    "createdOn": "2023-05-16T18:09:45.598066Z",
     "version": 0,
     "ownerId": "xyz@dtu.dk",
     "name": "Test Study Protocol",
@@ -8,7 +8,7 @@
     "primaryDevices": [
         {
             "__type": "dk.cachet.carp.common.application.devices.Smartphone",
-            "roleName": "phone",
+            "roleName": "phone_1",
             "defaultSamplingConfiguration": {},
             "isPrimaryDevice": true
         },
@@ -26,19 +26,20 @@
             "defaultSamplingConfiguration": {}
         },
         {
-            "__type": "dk.cachet.carp.common.application.devices.DefaultDeviceConfiguration",
+            "__type": "dk.cachet.carp.common.application.devices.AltBeacon",
             "roleName": "bike",
+            "isOptional": true,
             "defaultSamplingConfiguration": {}
         }
     ],
     "connections": [
         {
             "roleName": "hr_monitor",
-            "connectedToRoleName": "phone"
+            "connectedToRoleName": "phone_1"
         },
         {
             "roleName": "bike",
-            "connectedToRoleName": "phone"
+            "connectedToRoleName": "phone_1"
         }
     ],
     "tasks": [
@@ -97,7 +98,7 @@
         },
         {
             "__type": "dk.cachet.carp.common.application.tasks.BackgroundTask",
-            "name": "Task #3",
+            "name": "Task #4",
             "measures": [
                 {
                     "__type": "dk.cachet.carp.common.application.tasks.Measure.DataStream",
@@ -124,50 +125,66 @@
     "triggers": {
         "0": {
             "__type": "dk.cachet.carp.common.application.triggers.TriggerConfiguration",
-            "sourceDeviceRoleName": "phone"
+            "sourceDeviceRoleName": "phone_1"
         },
         "1": {
             "__type": "dk.cachet.carp.common.application.triggers.ElapsedTimeTrigger",
-            "sourceDeviceRoleName": "phone",
+            "sourceDeviceRoleName": "phone_1",
             "elapsedTime": "PT1H"
         },
         "2": {
             "__type": "dk.cachet.carp.common.application.triggers.ElapsedTimeTrigger",
-            "sourceDeviceRoleName": "phone",
+            "sourceDeviceRoleName": "phone_2",
             "elapsedTime": "PT1H"
         },
         "3": {
             "__type": "dk.cachet.carp.common.application.triggers.ManualTrigger",
-            "sourceDeviceRoleName": "phone"
+            "sourceDeviceRoleName": "phone_1"
         }
     },
     "taskControls": [
         {
             "triggerId": 0,
             "taskName": "Start measures",
-            "destinationDeviceRoleName": "phone",
+            "destinationDeviceRoleName": "phone_1",
             "control": "Start"
         },
         {
             "triggerId": 1,
             "taskName": "Start Heart Monitor",
-            "destinationDeviceRoleName": "hr_monitor",
+            "destinationDeviceRoleName": "phone_1",
             "control": "Start"
         },
         {
             "triggerId": 2,
             "taskName": "Start Heart Monitor",
-            "destinationDeviceRoleName": "bike",
+            "destinationDeviceRoleName": "phone_2",
             "control": "Start"
         },
         {
             "triggerId": 3,
-            "taskName": "Task #3",
-            "destinationDeviceRoleName": "phone",
+            "taskName": "Task #4",
+            "destinationDeviceRoleName": "phone_1",
             "control": "Start"
         }
     ],
-    "participantRoles": [],
-    "assignedDevices": {},
+    "participantRoles": [
+        {
+            "role": "Runner",
+            "isOptional": false
+        },
+        {
+            "role": "Cyclist",
+            "isOptional": false
+        }
+    ],
+    "assignedDevices": {
+        "phone_1": [
+            "Runner"
+        ],
+        "phone_2": [
+            "Cyclist"
+        ]
+    },
     "expectedParticipantData": []
 }

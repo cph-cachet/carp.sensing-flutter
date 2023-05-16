@@ -68,6 +68,10 @@ class AssignedTo extends Serializable {
   /// If empty, assign this to all participants in the study protocol.
   Set<String> roleNames = {};
 
+  /// Is this role assigned to all participants?
+  bool get isAssignedToAll => roleNames.isEmpty;
+
+  /// Create a new assignment with the list of [roleNames].
   AssignedTo({this.roleNames = const {}}) : super();
 
   /// Assign to all participants in the study protocol.

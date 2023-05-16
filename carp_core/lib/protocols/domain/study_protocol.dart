@@ -120,7 +120,7 @@ class StudyProtocol extends Snapshot {
   /// the phone.
   PrimaryDeviceConfiguration get primaryDevice => primaryDevices.first;
 
-  /// Add a [device] which is connected to this [primaryDevice].
+  /// Add a [device] which is connected to the [primaryDevice].
   /// Its role name should be unique in the protocol.
   ///
   /// Returns true if the [device] has been added; false if it is already connected
@@ -135,8 +135,9 @@ class StudyProtocol extends Snapshot {
   }
 
   /// Gets all devices configured to be connected to [primaryDevice].
-  List<DeviceConfiguration> getConnectedDevice(
-      PrimaryDeviceConfiguration primaryDevice) {
+  List<DeviceConfiguration> getConnectedDevices(
+    PrimaryDeviceConfiguration primaryDevice,
+  ) {
     final List<DeviceConfiguration> devices = [];
     connections?.forEach((connection) {
       if (connection.roleName == primaryDevice.roleName) {
