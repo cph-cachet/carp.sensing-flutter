@@ -46,24 +46,24 @@ class Smartphone
     String? deviceDisplayName,
     String? platform,
     String? hardware,
-    String? deviceName,
-    String? deviceManufacturer,
+    String? computerName,
+    String? memorySize,
     String? deviceModel,
     String? operatingSystem,
     String? sdk,
-    String? release,
+    String? version,
   }) =>
       SmartphoneDeviceRegistration(
         deviceId: deviceId,
         deviceDisplayName: deviceDisplayName,
         platform: platform,
         hardware: hardware,
-        deviceName: deviceName,
-        deviceManufacturer: deviceManufacturer,
+        deviceName: computerName,
+        deviceManufacturer: memorySize,
         deviceModel: deviceModel,
         operatingSystem: operatingSystem,
         sdk: sdk,
-        release: release,
+        release: version,
       );
 
   @override
@@ -74,7 +74,12 @@ class Smartphone
   Map<String, dynamic> toJson() => _$SmartphoneToJson(this);
 }
 
-/// A [DeviceRegistration] for [Smartphone] specifying details of the phone.
+/// A [DeviceRegistration] for a [Smartphone] specifying details of the phone.
+///
+/// Takes inspiration from the device information available via the
+/// [device_info_plus](https://pub.dev/packages/device_info_plus) via the
+/// [AndroidDeviceInfo](https://pub.dev/documentation/device_info_plus/latest/device_info_plus/AndroidDeviceInfo-class.html)
+/// and [IosDeviceInfo](https://pub.dev/documentation/device_info_plus/latest/device_info_plus/IosDeviceInfo-class.html) classes.
 @JsonSerializable(fieldRename: FieldRename.none, includeIfNull: true)
 class SmartphoneDeviceRegistration extends DeviceRegistration {
   String? platform;

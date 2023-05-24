@@ -576,6 +576,130 @@ Map<String, dynamic> _$SmartphoneDeviceRegistrationToJson(
       'release': instance.release,
     };
 
+PersonalComputer _$PersonalComputerFromJson(Map<String, dynamic> json) =>
+    PersonalComputer(
+      roleName:
+          json['roleName'] as String? ?? PersonalComputer.DEFAULT_ROLENAME,
+    )
+      ..$type = json['__type'] as String?
+      ..isOptional = json['isOptional'] as bool?
+      ..defaultSamplingConfiguration =
+          (json['defaultSamplingConfiguration'] as Map<String, dynamic>?)?.map(
+        (k, e) => MapEntry(
+            k, SamplingConfiguration.fromJson(e as Map<String, dynamic>)),
+      )
+      ..isPrimaryDevice = json['isPrimaryDevice'] as bool;
+
+Map<String, dynamic> _$PersonalComputerToJson(PersonalComputer instance) {
+  final val = <String, dynamic>{};
+
+  void writeNotNull(String key, dynamic value) {
+    if (value != null) {
+      val[key] = value;
+    }
+  }
+
+  writeNotNull('__type', instance.$type);
+  val['roleName'] = instance.roleName;
+  writeNotNull('isOptional', instance.isOptional);
+  writeNotNull(
+      'defaultSamplingConfiguration', instance.defaultSamplingConfiguration);
+  val['isPrimaryDevice'] = instance.isPrimaryDevice;
+  return val;
+}
+
+PersonalComputerRegistration _$PersonalComputerRegistrationFromJson(
+        Map<String, dynamic> json) =>
+    PersonalComputerRegistration(
+      deviceId: json['deviceId'] as String?,
+      deviceDisplayName: json['deviceDisplayName'] as String?,
+      registrationCreatedOn: json['registrationCreatedOn'] == null
+          ? null
+          : DateTime.parse(json['registrationCreatedOn'] as String),
+      platform: json['platform'] as String?,
+      computerName: json['computerName'] as String?,
+      memorySize: json['memorySize'] as int?,
+      deviceModel: json['deviceModel'] as String?,
+      operatingSystem: json['operatingSystem'] as String?,
+      version: json['version'] as String?,
+    )..$type = json['__type'] as String?;
+
+Map<String, dynamic> _$PersonalComputerRegistrationToJson(
+        PersonalComputerRegistration instance) =>
+    <String, dynamic>{
+      '__type': instance.$type,
+      'deviceId': instance.deviceId,
+      'deviceDisplayName': instance.deviceDisplayName,
+      'registrationCreatedOn': instance.registrationCreatedOn.toIso8601String(),
+      'platform': instance.platform,
+      'computerName': instance.computerName,
+      'memorySize': instance.memorySize,
+      'deviceModel': instance.deviceModel,
+      'operatingSystem': instance.operatingSystem,
+      'version': instance.version,
+    };
+
+WebBrowser _$WebBrowserFromJson(Map<String, dynamic> json) => WebBrowser(
+      roleName: json['roleName'] as String? ?? WebBrowser.DEFAULT_ROLENAME,
+    )
+      ..$type = json['__type'] as String?
+      ..isOptional = json['isOptional'] as bool?
+      ..defaultSamplingConfiguration =
+          (json['defaultSamplingConfiguration'] as Map<String, dynamic>?)?.map(
+        (k, e) => MapEntry(
+            k, SamplingConfiguration.fromJson(e as Map<String, dynamic>)),
+      )
+      ..isPrimaryDevice = json['isPrimaryDevice'] as bool;
+
+Map<String, dynamic> _$WebBrowserToJson(WebBrowser instance) {
+  final val = <String, dynamic>{};
+
+  void writeNotNull(String key, dynamic value) {
+    if (value != null) {
+      val[key] = value;
+    }
+  }
+
+  writeNotNull('__type', instance.$type);
+  val['roleName'] = instance.roleName;
+  writeNotNull('isOptional', instance.isOptional);
+  writeNotNull(
+      'defaultSamplingConfiguration', instance.defaultSamplingConfiguration);
+  val['isPrimaryDevice'] = instance.isPrimaryDevice;
+  return val;
+}
+
+WebBrowserRegistration _$WebBrowserRegistrationFromJson(
+        Map<String, dynamic> json) =>
+    WebBrowserRegistration(
+      deviceId: json['deviceId'] as String?,
+      deviceDisplayName: json['deviceDisplayName'] as String?,
+      registrationCreatedOn: json['registrationCreatedOn'] == null
+          ? null
+          : DateTime.parse(json['registrationCreatedOn'] as String),
+      browserName: json['browserName'] as String?,
+      deviceMemory: json['deviceMemory'] as int?,
+      language: json['language'] as String?,
+      vendor: json['vendor'] as String?,
+      maxTouchPoints: json['maxTouchPoints'] as int?,
+      hardwareConcurrency: json['hardwareConcurrency'] as int?,
+    )..$type = json['__type'] as String?;
+
+Map<String, dynamic> _$WebBrowserRegistrationToJson(
+        WebBrowserRegistration instance) =>
+    <String, dynamic>{
+      '__type': instance.$type,
+      'deviceId': instance.deviceId,
+      'deviceDisplayName': instance.deviceDisplayName,
+      'registrationCreatedOn': instance.registrationCreatedOn.toIso8601String(),
+      'browserName': instance.browserName,
+      'deviceMemory': instance.deviceMemory,
+      'language': instance.language,
+      'vendor': instance.vendor,
+      'maxTouchPoints': instance.maxTouchPoints,
+      'hardwareConcurrency': instance.hardwareConcurrency,
+    };
+
 AltBeacon _$AltBeaconFromJson(Map<String, dynamic> json) => AltBeacon(
       roleName: json['roleName'] as String? ?? 'Beacon',
     )

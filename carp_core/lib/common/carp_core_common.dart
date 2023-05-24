@@ -18,6 +18,8 @@ part 'application/task_control.dart';
 part 'application/devices/device_configuration.dart';
 part 'application/devices/device_registration.dart';
 part 'application/devices/smartphone.dart';
+part 'application/devices/personal_computer.dart';
+part 'application/devices/web_browser.dart';
 part 'application/devices/alt_beacon.dart';
 part 'application/devices/heart_rate_device.dart';
 part 'application/triggers.dart';
