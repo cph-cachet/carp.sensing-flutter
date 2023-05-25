@@ -280,7 +280,6 @@ class SmartphoneDeploymentController extends StudyRuntime<DeviceRegistration> {
   ///
   /// When this method is called, the controller is never used again. It is an error
   /// to call any of the [start] or [stop] methods at this point.
-  @protected
   @mustCallSuper
   @override
   void dispose() {
