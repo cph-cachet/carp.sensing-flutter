@@ -147,7 +147,7 @@ void main() {
   });
 
   group("Messages", () {
-    Message _getMmessage([String? id]) => Message(
+    Message _getMessage([String? id]) => Message(
           id: id,
           type: MessageType.article,
           title: 'The importance of healthy eating',
@@ -165,12 +165,12 @@ void main() {
         );
 
     test('- create', () async {
-      Message message = _getMmessage('1');
+      Message message = _getMessage('1');
       print(_encode(message));
     });
 
     test('- set', () async {
-      Message message = _getMmessage();
+      Message message = _getMessage();
       await CarpResourceManager().setMessage(message);
       print('Message uploaded: $message');
 
@@ -179,8 +179,8 @@ void main() {
       print(_encode(messages));
     });
 
-    test('- get', () async {
-      Message message_1 = _getMmessage();
+    test('- create & get', () async {
+      Message message_1 = _getMessage();
       print(_encode(message_1));
       await CarpResourceManager().setMessage(message_1);
       Message? message_2 = await CarpResourceManager().getMessage(message_1.id);
@@ -189,13 +189,21 @@ void main() {
       expect(message_2!.id, message_1.id);
     });
 
+    test('- get specific', () async {
+      final message = await CarpResourceManager()
+          .getMessage('bca15151-2dd9-4ebf-be67-f039a3195697');
+      print(_encode(message));
+      expect(message, isNotNull);
+      // expect(message_2!.id, message_1.id);
+    });
+
     test('- get all', () async {
       List<Message> messages = await CarpResourceManager().getMessages();
       print(_encode(messages));
     });
 
     test('- delete', () async {
-      Message message = _getMmessage();
+      Message message = _getMessage();
       await CarpResourceManager().setMessage(message);
       print('Message uploaded: $message');
       await CarpResourceManager().deleteMessage(message.id);
