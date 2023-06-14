@@ -31,7 +31,7 @@ These are the available CARP Mobile Sensing Flutter components in this repositor
 | [carp_esense_package](./packages/carp_esense_package) | Sampling package for the eSense ear plug device (button pressed & movement) | [![pub package](https://img.shields.io/pub/v/carp_esense_package.svg)](https://pub.dev/packages/carp_esense_package) |
 | [carp_polar_package](./packages/carp_polar_package) | Sampling package for the [Polar heart rate monitors](https://www.polar.com/) | [![pub package](https://img.shields.io/pub/v/carp_polar_package.svg)](https://pub.dev/packages/carp_polar_package) |
 | **Backends** | **Backend data upload components** |  |
-| [carp_webservices](./backends/carp_webservices) | Flutter API for CARP web services | [![pub package](https://img.shields.io/pub/v/carp_webservices.svg)](https://pub.dev/packages/carp_webservices) |
+| [carp_webservices](./backends/carp_webservices) | Flutter API for [CARP web services](https://carp.cachet.dk/caws/) | [![pub package](https://img.shields.io/pub/v/carp_webservices.svg)](https://pub.dev/packages/carp_webservices) |
 | [carp_backend](./backends/carp_backend) | Support for downloading a study configuration (incl. protocol, informed consent, and language files) and uploading collected data a CARP data backend. | [![pub package](https://img.shields.io/pub/v/carp_backend.svg)](https://pub.dev/packages/carp_backend) |
 | [carp_firebase_backend](./backends/carp_firebase_backend) | Support for uploading data to Firebase as both zipped files and JSON data| [![pub package](https://img.shields.io/pub/v/carp_firebase_backend.svg)](https://pub.dev/packages/carp_firebase_backend) |
 | **Utilities** | **Misc. CAMS utilities** |  |
