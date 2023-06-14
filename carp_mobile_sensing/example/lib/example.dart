@@ -237,12 +237,12 @@ void example_2() async {
   });
 
   // Sampling can be stopped and started
-  controller.executor?.stop();
-  controller.executor?.start();
+  controller.executor.stop();
+  controller.executor.start();
 
   // Stop specific probe(s)
   controller.executor
-      ?.lookupProbe(CarpDataTypes.ACCELERATION_TYPE_NAME)
+      .lookupProbe(CarpDataTypes.ACCELERATION_TYPE_NAME)
       .forEach((probe) => probe.stop());
 
   // Adapt a measure
@@ -258,7 +258,7 @@ void example_2() async {
 
   // Restart the light probe(s) in order to load the new configuration
   controller.executor
-      ?.lookupProbe(SensorSamplingPackage.AMBIENT_LIGHT)
+      .lookupProbe(SensorSamplingPackage.AMBIENT_LIGHT)
       .forEach((probe) => probe.restart());
 
   // Once the sampling has to stop, e.g. in a Flutter dispose() methods, call stop.
@@ -583,8 +583,8 @@ void app_task_controller_example() async {
   AppTaskController ctrl = AppTaskController();
 
   ctrl.userTaskEvents.listen((userTask) {
-    AppTask _task = (userTask.executor.task as AppTask);
-    print('Task: ${_task.title}');
+    AppTask task = (userTask.executor.task as AppTask);
+    print('Task: ${task.title}');
     switch (userTask.state) {
       case UserTaskState.initialized:
         //

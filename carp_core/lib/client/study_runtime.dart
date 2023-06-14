@@ -150,11 +150,13 @@ class StudyRuntime<TRegistration extends DeviceRegistration> {
     );
     status = StudyStatus.DeviceDeploymentReceived;
 
-    deploymentStatus?.deviceStatusList.forEach((deviceStatus) {
-      if (deviceStatus.status == DeviceDeploymentStatusTypes.Unregistered) {
-        _remainingDevicesToRegister.add(deviceStatus.device);
+    if (deploymentStatus != null) {
+      for (var deviceStatus in deploymentStatus!.deviceStatusList) {
+        if (deviceStatus.status == DeviceDeploymentStatusTypes.Unregistered) {
+          _remainingDevicesToRegister.add(deviceStatus.device);
+        }
       }
-    });
+    }
 
     // mark this deployment as successful
     try {

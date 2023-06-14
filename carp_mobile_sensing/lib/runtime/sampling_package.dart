@@ -162,6 +162,7 @@ abstract class SmartphoneSamplingPackage implements SamplingPackage {
   final _deviceManager = SmartphoneDeviceManager();
 
   // @override
+  @override
   List<DataTypeMetaData> get dataTypes => samplingSchemes.dataTypes;
 
   @override

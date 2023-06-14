@@ -156,16 +156,16 @@ class Sensing {
   /// Is sensing running, i.e. has the study executor been started?
   bool get isRunning =>
       (controller != null) &&
-      controller!.executor!.state == ExecutorState.started;
+      controller!.executor.state == ExecutorState.started;
 
   /// Status of sensing.
   StudyStatus? get status => controller?.status;
 
   /// Start sensing
-  void start() async => controller?.executor?.start();
+  void start() async => controller?.executor.start();
 
   /// Stop sensing
-  void stop() async => controller?.executor?.stop();
+  void stop() async => controller?.executor.stop();
 
   /// Dispose sensing
   void dispose() async => client?.dispose();

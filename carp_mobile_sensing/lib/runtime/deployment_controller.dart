@@ -234,10 +234,6 @@ class SmartphoneDeploymentController extends StudyRuntime<DeviceRegistration> {
   /// [configure] must be called before starting sampling.
   @override
   void start([bool start = true]) {
-    assert(
-        _executor != null,
-        '$runtimeType - Cannot start this controller, since the the runtime is not initialized. '
-        'Call the configure() method first.');
 
     info('$runtimeType - Starting data sampling...');
     super.start();
