@@ -42,7 +42,6 @@ class TaskConfiguration extends Serializable {
   void removeMeasure(Measure measure) => measures!.remove(measure);
 
   /// Create a task. If [name] is not specified, a name is generated.
-  @mustCallSuper
   TaskConfiguration({
     String? name,
     this.description,

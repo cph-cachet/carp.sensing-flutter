@@ -20,7 +20,6 @@ class DataEndPoint extends Serializable {
   /// Creates a [DataEndPoint].
   /// [type] is defined in [DataEndPointTypes].
   /// [dataFormat] is defined in [NameSpace]. Default is [NameSpace.CARP].
-  @mustCallSuper
   DataEndPoint({
     required this.type,
     this.dataFormat = NameSpace.CARP,

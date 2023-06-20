@@ -88,7 +88,7 @@ class FlutterLocalNotificationController implements NotificationController {
         task.description,
         time,
         _platformChannelSpecifics,
-        androidAllowWhileIdle: true,
+        androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
         uiLocalNotificationDateInterpretation:
             UILocalNotificationDateInterpretation.absoluteTime,
         payload: task.id,

@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of sensors;
+part of 'sensors.dart';
 
 // **************************************************************************
 // JsonSerializableGenerator

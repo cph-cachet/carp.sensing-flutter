@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of domain;
+part of 'domain.dart';
 
 // **************************************************************************
 // JsonSerializableGenerator
@@ -880,6 +880,7 @@ const _$UserTaskStateEnumMap = {
   UserTaskState.initialized: 'initialized',
   UserTaskState.enqueued: 'enqueued',
   UserTaskState.dequeued: 'dequeued',
+  UserTaskState.notified: 'notified',
   UserTaskState.started: 'started',
   UserTaskState.canceled: 'canceled',
   UserTaskState.done: 'done',

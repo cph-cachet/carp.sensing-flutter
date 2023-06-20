@@ -328,7 +328,7 @@ void example_4() async {
     // create and register the device in the CAMS DeviceRegistry
     await DeviceController().createDevice(type);
 
-    // if the device manager is created succesfully on the phone
+    // if the device manager is created successfully on the phone
     if (DeviceController().hasDevice(type)) {
       // ask the device manager for a unique id of the device
       String deviceId = DeviceController().getDevice(type)!.id;
@@ -525,7 +525,7 @@ void recurrentScheduledTriggerExample() {
 
 /// An example of how to configure a [SmartphoneDeploymentController] with the
 /// default privacy schema.
-void study_controller_example() async {
+void studyControllerExample() async {
   // create and configure a client manager for this phone
   SmartPhoneClientManager client = SmartPhoneClientManager();
 
@@ -544,7 +544,7 @@ void study_controller_example() async {
 }
 
 /// An example of using the AppTask model
-void app_task_example() async {
+void appTaskExample() async {
   Smartphone phone = Smartphone(roleName: 'phone');
 
   StudyProtocol protocol = StudyProtocol(
@@ -579,7 +579,7 @@ void app_task_example() async {
 
 /// An example of how to listen to different [UserTask] event in the
 /// [AppTaskController].
-void app_task_controller_example() async {
+void appTaskControllerExample() async {
   AppTaskController ctrl = AppTaskController();
 
   ctrl.userTaskEvents.listen((userTask) {

@@ -36,7 +36,8 @@ import 'package:battery_plus/battery_plus.dart';
 
 import 'package:timezone/data/latest_all.dart' as tz;
 import 'package:timezone/timezone.dart' as tz;
-import 'package:flutter_native_timezone/flutter_native_timezone.dart';
+import 'package:flutter_timezone/flutter_timezone.dart';
+// import 'package:flutter_native_timezone/flutter_native_timezone.dart';
 import 'package:sqflite/sqflite.dart';
 
 part 'data_manager.dart';
@@ -73,20 +74,20 @@ class SensingException implements Exception {
   String toString() => '$runtimeType - $message';
 }
 
-/// A simple method for printing warning messages to the console.
+/// Print a warning messages to the console.
 void info(String message) =>
     (Settings().debugLevel.index >= DebugLevel.info.index)
-        ? print('[CAMS INFO] $message')
+        ? print('\x1B[32m[CAMS INFO]\x1B[0m $message')
         : 0;
 
-/// A simple method for printing warning messages to the console.
+/// Pprint a warning messages to the console.
 void warning(String message) =>
     (Settings().debugLevel.index >= DebugLevel.warning.index)
-        ? print('[CAMS WARNING]  $message')
+        ? print('\x1B[31m[CAMS WARNING]\x1B[0m  $message')
         : 0;
 
-/// A simple method for printing debug messages to the console.
+/// Print a debug messages to the console.
 void debug(String message) =>
     (Settings().debugLevel.index >= DebugLevel.debug.index)
-        ? print('[CAMS DEBUG] $message')
+        ? print('\x1B[33m[CAMS DEBUG]\x1B[0m $message')
         : 0;

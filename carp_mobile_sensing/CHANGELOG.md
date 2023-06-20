@@ -1,4 +1,6 @@
-## 1.1.0 - BREAKING
+## 1.1.0
+
+> Note: This release has breaking changes.
 
 * The first stable release of CARP Mobile Sensing which follows the [carp.core-kotlin](https://github.com/imotions/carp.core-kotlin) v. 1.1.0 domain model, which again is implemented in the [carp_core](https://pub.dev/packages/carp_core) v. 1.1.0 Dart Domain model.
 

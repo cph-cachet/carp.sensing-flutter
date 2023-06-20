@@ -349,7 +349,6 @@ class ConditionalPeriodicTriggerExecutor
 class RandomRecurrentTriggerExecutor
     extends SchedulableTriggerExecutor<RandomRecurrentTrigger> {
   final cron.Cron _cron = cron.Cron();
-  late cron.ScheduledTask _scheduledTask;
   List<Timer> _timers = [];
 
   TimeOfDay get startTime => configuration!.startTime;
@@ -443,7 +442,7 @@ class RandomRecurrentTriggerExecutor
     final cronJob = '${startTime.minute} ${startTime.hour} * * *';
     debug('$runtimeType - creating cron job : $cronJob');
 
-    _scheduledTask = _cron.schedule(cron.Schedule.parse(cronJob), () async {
+    _cron.schedule(cron.Schedule.parse(cronJob), () async {
       debug('$runtimeType - resuming cron job : ${DateTime.now().toString()}');
       _scheduleTimers();
     });

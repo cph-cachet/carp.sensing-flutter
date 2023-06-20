@@ -77,35 +77,6 @@ class DeviceInfo {
     release = info.version.release;
 
     return info.data;
-
-    return <String, dynamic>{
-      'platform': 'Android',
-      'version.securityPatch': info.version.securityPatch,
-      'version.sdkInt': info.version.sdkInt,
-      'version.release': info.version.release,
-      'version.previewSdkInt': info.version.previewSdkInt,
-      'version.incremental': info.version.incremental,
-      'version.codename': info.version.codename,
-      'version.baseOS': info.version.baseOS,
-      'board': info.board,
-      'bootloader': info.bootloader,
-      'brand': info.brand,
-      'device': info.device,
-      'display': info.display,
-      'fingerprint': info.fingerprint,
-      'hardware': info.hardware,
-      'host': info.host,
-      'id': info.id,
-      'manufacturer': info.manufacturer,
-      'model': info.model,
-      'product': info.product,
-      'supported32BitAbis': info.supported32BitAbis,
-      'supported64BitAbis': info.supported64BitAbis,
-      'supportedAbis': info.supportedAbis,
-      'tags': info.tags,
-      'type': info.type,
-      'isPhysicalDevice': info.isPhysicalDevice,
-    };
   }
 
   Map<String, dynamic> _readIosDeviceInfo(IosDeviceInfo info) {
@@ -121,21 +92,5 @@ class DeviceInfo {
     release = info.utsname.version;
 
     return info.data;
-
-    return <String, dynamic>{
-      'platform': 'iOS',
-      'name': info.name,
-      'systemName': info.systemName,
-      'systemVersion': info.systemVersion,
-      'model': info.model,
-      'localizedModel': info.localizedModel,
-      'identifierForVendor': info.identifierForVendor,
-      'isPhysicalDevice': info.isPhysicalDevice,
-      'utsname.sysname:': info.utsname.sysname,
-      'utsname.nodename:': info.utsname.nodename,
-      'utsname.release:': info.utsname.release,
-      'utsname.version:': info.utsname.version,
-      'utsname.machine:': info.utsname.machine,
-    };
   }
 }

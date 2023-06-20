@@ -220,7 +220,6 @@ class SmartPhoneClientManager extends SmartphoneClient
   /// See also:
   ///
   ///  * [deactivate], which is called prior to [dispose].
-  @protected
   @mustCallSuper
   void dispose() {
     deactivate();

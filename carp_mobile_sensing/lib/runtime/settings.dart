@@ -3,6 +3,7 @@ part of runtime;
 /// Misc. settings for CAMS.
 ///
 /// This class is a singleton, access using `Settings()`.
+/// Must be initialized using the [init] method before used.
 ///
 /// Supports:
 ///  * setting debug level - see [debugLevel]
@@ -10,6 +11,7 @@ part of runtime;
 ///  * getting shared preferences - see [preferences]
 ///  * getting app info - see [packageInfo]
 ///  * generating a unique and anonymous user id - see [userId]
+///  * getting the timezone of the app - see [timezone]
 ///
 class Settings {
   static const String USER_ID_KEY = 'user_id';
@@ -156,7 +158,7 @@ class Settings {
     // setting up time zone settings
     tz.initializeTimeZones();
     try {
-      _timezone = await FlutterNativeTimezone.getLocalTimezone();
+      _timezone = await FlutterTimezone.getLocalTimezone();
     } catch (_) {
       _timezone = tz.local.name;
       warning(

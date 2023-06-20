@@ -102,7 +102,7 @@ abstract class MeasurementProbe extends Probe {
     getMeasurement().then((measurement) {
       if (measurement != null) addMeasurement(measurement);
       stop();
-    }).catchError((Object error) => addError(error));
+    }, onError: (Object error) => addError(error));
 
     return true;
   }

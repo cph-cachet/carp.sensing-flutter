@@ -25,7 +25,6 @@ class TriggerConfiguration extends Serializable {
   bool? requiresPrimaryDevice;
 
   /// Create a trigger.
-  @mustCallSuper
   TriggerConfiguration({
     this.sourceDeviceRoleName,
     this.requiresPrimaryDevice,
