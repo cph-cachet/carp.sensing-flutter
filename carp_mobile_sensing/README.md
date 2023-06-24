@@ -24,6 +24,12 @@ dependencies:
   carp_mobile_sensing: ^latest
 `````
 
+## Configuration
+
+When you want to add CAMS to you app, there are a few things to do in terms of configuring your app.
+
+First, since CAMS rely on the [awesome_notifications](https://pub.dev/packages/awesome_notifications) plugin, you should configure your app following their [configuration guide](https://pub.dev/packages/awesome_notifications#initial-configurations) for both [Android](https://pub.dev/packages/awesome_notifications#-configuring-android) and [iOS](https://pub.dev/packages/awesome_notifications#-configuring-ios).
+
 ### Android Integration
 
 Set the minimum android SDK to 21 and Java SDK Version to 33 by setting the `minSdkVersion`, the `compileSdkVersion`, and `targetSdkVersion` in the `build.gradle` file, located in the `android/app/` folder:
@@ -56,6 +62,8 @@ The pedometer (step count) probe uses `NSMotion` on iOS and the `NSMotionUsageDe
 <key>NSMotionUsageDescription</key>
 <string>Collecting step count.</string>
 ```
+
+For notification to work in background mode, you need to configure your iOS app to be [set up for background actions](https://pub.dev/packages/awesome_notifications#-extra-ios-setup-for-background-actions).
 
 > **NOTE:** Other CAMS sampling packages require additional permissions in the `manifest.xml` or `Info.plist` files.
 > See the documentation for each package.

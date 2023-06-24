@@ -17,12 +17,12 @@ dependencies:
   json_annotation: ^4.8.0
   system_info2: ^4.0.0
   uuid: ^3.0.4
-  async: ^2.7.0
+  async: ^2.11.0
   path_provider: ^2.0.0
-  sqflite: ^2.0.0                     # For local storage in SQLite DB
-  archive: ^3.1.2
-  permission_handler: ^10.0.0  
-  shared_preferences: ^2.0.0
+  sqflite: ^2.2.8                     # For local storage in SQLite DB
+  archive: ^3.3.0
+  permission_handler: ^10.3.0  
+  shared_preferences: ^2.1.0
   package_info_plus: ^4.0.0
   flutter_local_notifications: ^14.0.0 # For sending notification on AppTask
   awesome_notifications: ^0.7.4        # For sending notification on AppTask
@@ -30,6 +30,7 @@ dependencies:
   timezone: ^0.9.0
   stats: ^2.0.0                        # For calculating statistics, ex LightProbe
   flutter_timezone: ^1.0.0             # For getting local time zone for scheduling notifications
+  ansicolor: ^2.0.0
 
   # probe-dependent plugins
   device_info_plus: ^9.0.0
@@ -38,7 +39,7 @@ dependencies:
 
   # the CACHET plugins
   pedometer: ^4.0.0       # Step count from local OS
-  light: ^2.1.0           # Light sensor 
+  light: ^3.0.0           # Light sensor 
   screen_state: ^3.0.0    # Screen LOCK/ON/OFF
 
 # Overriding carp core libraries to use the local copy

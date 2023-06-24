@@ -21,6 +21,8 @@
 
 * Other smaller changes include:
   * Use the `CarpMobileSensing.ensureInitialized()` static method in your `main` method to ensure that CAMS is initialized before use.
+  * Update of `AppDelegate.swift` in example app to handle notifications in the background.
+  * Adding info, warning, and debug information to the system log (instead of the console) using colors for better reading.
   
 ## 0.40.13
 
