@@ -173,12 +173,14 @@ class AppTaskControlExecutor extends TaskControlExecutor {
         );
       }
 
-      // save timestamp
+      // Save timestamp
       taskControl.hasBeenScheduledUntil = current;
 
-      // now stop and start again when the time has passed
-      // this in the case where the app keeps running in the background
+      // Now stop since the schedule has all been enqueued.
       stop();
+
+      // .. but start again when the scheduled time has passed.
+      // This in the case where the app keeps running in the background
       var duration = current.millisecondsSinceEpoch -
           DateTime.now().millisecondsSinceEpoch;
       Timer(Duration(milliseconds: duration), () => start());
