@@ -30,7 +30,6 @@ dependencies:
   timezone: ^0.9.0
   stats: ^2.0.0                        # For calculating statistics, ex LightProbe
   flutter_timezone: ^1.0.0             # For getting local time zone for scheduling notifications
-  ansicolor: ^2.0.0
 
   # probe-dependent plugins
   device_info_plus: ^9.0.0

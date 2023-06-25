@@ -14,8 +14,6 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:math';
 import 'dart:io';
-
-import 'package:ansicolor/ansicolor.dart';
 import 'dart:developer' as log;
 
 import 'package:flutter/cupertino.dart';
@@ -77,31 +75,20 @@ class SensingException implements Exception {
   String toString() => '$runtimeType - $message';
 }
 
-// AnsiPen pen =  AnsiPen()..white(bold: true);
-AnsiPen red = AnsiPen()..red();
-AnsiPen green = AnsiPen()..green();
-AnsiPen yellow = AnsiPen()..yellow();
-
-// print(pen("Bright white foreground") + " this text is default fg/bg");
-
 /// Add an information messages to the system log.
 void info(String message) =>
     (Settings().debugLevel.index >= DebugLevel.info.index)
-        // ? print('\x1B[32m[CAMS INFO]\x1B[0m $message')
-        // ? print(green('[CAMS INFO] ') + message)
         ? log.log('\x1B[32m[CAMS INFO]\x1B[0m $message')
         : 0;
 
 /// Add a warning messages to the system log.
 void warning(String message) =>
     (Settings().debugLevel.index >= DebugLevel.warning.index)
-        // ? print('\x1B[31m[CAMS WARNING]\x1B[0m  $message')
         ? log.log('\x1B[31m[CAMS WARNING]\x1B[0m $message')
         : 0;
 
 /// Add a debug messages to the system log.
 void debug(String message) =>
     (Settings().debugLevel.index >= DebugLevel.debug.index)
-        // ? print('\x1B[33m[CAMS DEBUG]\x1B[0m $message')
         ? log.log('\x1B[35m[CAMS DEBUG]\x1B[0m $message')
         : 0;
