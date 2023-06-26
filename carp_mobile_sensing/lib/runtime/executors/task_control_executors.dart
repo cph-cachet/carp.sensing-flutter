@@ -153,8 +153,11 @@ class AppTaskControlExecutor extends TaskControlExecutor {
     final to = from.add(Duration(days: 10)); // look 10 days ahead
     final schedule = triggerExecutor.getSchedule(from, to, 10);
 
-    if (schedule.isNotEmpty) {
-      // enqueue the first 6 (max) app tasks in the future
+    if (schedule.isEmpty) {
+      // Stop since the schedule is empty and there is not more to schedule.
+      stop();
+    } else {
+      // Enqueue the first 6 (max) app tasks in the future
       var remainingNotifications =
           NotificationController.PENDING_NOTIFICATION_LIMIT -
               (await SmartPhoneClientManager()
@@ -183,6 +186,7 @@ class AppTaskControlExecutor extends TaskControlExecutor {
       // This in the case where the app keeps running in the background
       var duration = current.millisecondsSinceEpoch -
           DateTime.now().millisecondsSinceEpoch;
+
       Timer(Duration(milliseconds: duration), () => start());
     }
 

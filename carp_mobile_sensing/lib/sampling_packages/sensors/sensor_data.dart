@@ -7,7 +7,7 @@
 part of sensors;
 
 /// Ambient light intensity in Lux.
-/// Typically collected from the light sensor on the phone.
+/// Typically collected from the light sensor on the front of the phone.
 @JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
 class AmbientLight extends SensorData {
   static const dataType = SensorSamplingPackage.AMBIENT_LIGHT;

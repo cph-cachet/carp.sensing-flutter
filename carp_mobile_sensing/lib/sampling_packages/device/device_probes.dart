@@ -63,6 +63,8 @@ class ScreenProbe extends StreamProbe {
 
 /// A probe that collects free virtual memory on a regular basis
 /// as specified in [PeriodicMeasure.frequency].
+///
+/// Only available on Android (it seems).
 class MemoryProbe extends IntervalProbe {
   @override
   bool onInitialize() {

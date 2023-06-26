@@ -205,19 +205,24 @@ class LocalStudyProtocolManager implements StudyProtocolManager {
         ]),
         phone);
 
-    // // Add background measures from the [DeviceSamplingPackage] and
-    // // [SensorSamplingPackage] sampling packages.
-    // protocol.addTaskControl(
-    //   ImmediateTrigger(),
-    //   BackgroundTask(measures: [
-    //     Measure(type: DeviceSamplingPackage.FREE_MEMORY),
-    //     Measure(type: DeviceSamplingPackage.BATTERY_STATE),
-    //     Measure(type: DeviceSamplingPackage.SCREEN_EVENT),
-    //     Measure(type: CarpDataTypes.STEP_COUNT_TYPE_NAME),
-    //     Measure(type: SensorSamplingPackage.AMBIENT_LIGHT)
-    //   ]),
-    //   phone,
-    // );
+    // Add background measures from the [DeviceSamplingPackage] and
+    // [SensorSamplingPackage] sampling packages.
+    //
+    // Note that some of these measures only works on Android:
+    //  * screen events
+    //  * ambient light
+    //  * free memory (there seems to be a bug in the underlying sysinfo plugin)
+    protocol.addTaskControl(
+      ImmediateTrigger(),
+      BackgroundTask(measures: [
+        Measure(type: DeviceSamplingPackage.FREE_MEMORY),
+        Measure(type: DeviceSamplingPackage.BATTERY_STATE),
+        Measure(type: DeviceSamplingPackage.SCREEN_EVENT),
+        Measure(type: CarpDataTypes.STEP_COUNT_TYPE_NAME),
+        Measure(type: SensorSamplingPackage.AMBIENT_LIGHT)
+      ]),
+      phone,
+    );
 
     // Collect IMU data every 10 secs for 1 sec.
     // protocol.addTaskControl(
@@ -240,13 +245,13 @@ class LocalStudyProtocolManager implements StudyProtocolManager {
     //   phone,
     // );
 
-    // // Collect device info periodically
-    // protocol.addTaskControl(
-    //   PeriodicTrigger(period: Duration(seconds: 5)),
-    //   BackgroundTask(
-    //       measures: [Measure(type: DeviceSamplingPackage.DEVICE_INFORMATION)]),
-    //   phone,
-    // );
+    // Collect device info periodically
+    protocol.addTaskControl(
+      PeriodicTrigger(period: Duration(seconds: 30)),
+      BackgroundTask(
+          measures: [Measure(type: DeviceSamplingPackage.DEVICE_INFORMATION)]),
+      phone,
+    );
 
     // // Example of how to start and stop sampling using the Control.Start and
     // // Control.Stop method
