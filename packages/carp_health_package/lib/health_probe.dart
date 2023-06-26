@@ -52,7 +52,7 @@ class HealthProbe extends StreamProbe {
       debug(
           '$runtimeType - Retrieved ${data.length} health data points of type. $healthDataTypes');
 
-      // convert HealthDataPoint to measurements and add them to the stream
+      // Convert HealthDataPoint to measurements and add them to the stream.
       for (var data in data) {
         _ctrl.add(Measurement(
             sensorStartTime: data.dateFrom.microsecondsSinceEpoch,
