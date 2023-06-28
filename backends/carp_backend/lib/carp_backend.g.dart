@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of carp_backend;
+part of 'carp_backend.dart';
 
 // **************************************************************************
 // JsonSerializableGenerator
@@ -64,7 +64,7 @@ Message _$MessageFromJson(Map<String, dynamic> json) => Message(
       subTitle: json['subTitle'] as String?,
       message: json['message'] as String?,
       url: json['url'] as String?,
-      imagePath: json['imagePath'] as String?,
+      image: json['image'] as String?,
       timestamp: json['timestamp'] == null
           ? null
           : DateTime.parse(json['timestamp'] as String),
@@ -87,7 +87,7 @@ Map<String, dynamic> _$MessageToJson(Message instance) {
   writeNotNull('subTitle', instance.subTitle);
   writeNotNull('message', instance.message);
   writeNotNull('url', instance.url);
-  writeNotNull('imagePath', instance.imagePath);
+  writeNotNull('image', instance.image);
   return val;
 }
 

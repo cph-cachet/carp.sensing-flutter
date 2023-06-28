@@ -40,7 +40,7 @@ class Message {
   /// * Asset - otherwise, it is assumed that this is the path to a local image
   ///           asset and the image is loaded from the asset bundle using the
   ///           `Image.asset()` constructor.
-  String? imagePath;
+  String? image;
 
   /// Create a new message.
   ///
@@ -52,7 +52,7 @@ class Message {
     this.subTitle,
     this.message,
     this.url,
-    this.imagePath,
+    this.image,
     DateTime? timestamp,
   }) {
     this.id = id ?? Uuid().v1();
