@@ -1,7 +1,6 @@
 import 'package:carp_core/carp_core.dart';
 import 'package:carp_mobile_sensing/carp_mobile_sensing.dart';
 import 'package:carp_polar_package/carp_polar_package.dart';
-import 'package:polar/polar.dart';
 
 /// This is a very simple example of how this sampling package is used as part
 /// of defining a study protocol in CARP Mobile Sensing (CAMS).
