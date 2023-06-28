@@ -41,7 +41,6 @@
 library carp_polar_package;
 
 import 'dart:async';
-import 'dart:math';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:polar/polar.dart';
@@ -176,13 +175,13 @@ class PolarSamplingPackage implements SamplingPackage {
     // register all data types
     FromJsonFactory().registerAll([
       PolarDevice(),
-      PolarAccelerometer('deviceIdentifier', 0, []),
-      PolarGyroscope('', 0, []),
-      PolarMagnetometer('', 0, []),
-      PolarECG('', 0, []),
-      PolarPPG('', 0, OhrDataType.unknown, []),
-      PolarPPI('', 0, []),
-      PolarHR('', 0, 0, [], [], false, false),
+      PolarAccelerometer(samples: []),
+      PolarGyroscope(samples: []),
+      PolarMagnetometer(samples: []),
+      PolarECG(samples: []),
+      PolarPPG(type: PpgDataType.unknown, samples: []),
+      PolarPPI(samples: []),
+      PolarHR(samples: []),
     ]);
   }
 

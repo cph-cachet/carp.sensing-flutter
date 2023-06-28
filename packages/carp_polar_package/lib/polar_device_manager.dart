@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 Copenhagen Center for Health Technology (CACHET) at the
+ * Copyright 2022-23 Copenhagen Center for Health Technology (CACHET) at the
  * Technical University of Denmark (DTU).
  * Use of this source code is governed by a MIT-style license that can be
  * found in the LICENSE file.
@@ -85,9 +85,11 @@ class PolarDeviceManager extends BTLEDeviceManager<PolarDevice> {
   /// The [Polar] device handler.
   final Polar polar = Polar();
 
-  /// List of [DeviceStreamingFeature]s that are ready.
+  /// List of [PolarDataType]s that are available in Polar devices for online
+  /// streaming or offline recording.
+  ///
   /// Only available **after** a Polar device is successfully connected.
-  List<DeviceStreamingFeature> features = [];
+  List<PolarDataType> features = [];
 
   @override
   String get id => configuration?.identifier ?? '?????';
@@ -158,21 +160,29 @@ class PolarDeviceManager extends BTLEDeviceManager<PolarDevice> {
     } else {
       try {
         // listen for battery  events
-        _batterySubscription = polar.batteryLevelStream.listen((event) {
+        _batterySubscription = polar.batteryLevel.listen((event) {
           debug('$runtimeType - Polar event : $event');
           _batteryLevel = event.level;
         });
 
         // listen for what features the connected Polar device supports
-        polar.streamingFeaturesReadyStream.listen((event) {
+        polar.sdkFeatureReady.listen((event) {
           debug('$runtimeType - Polar event : $event');
-          features = event.features;
-          _polarFeaturesAvailable = true;
-          status = DeviceStatus.connected;
+
+          if (configuration!.identifier == event.identifier) {
+            polar
+                .getAvailableOnlineStreamDataTypes(event.identifier)
+                .then((dataTypes) {
+              features = dataTypes.toList();
+              debug('$runtimeType - features: $features');
+              _polarFeaturesAvailable = true;
+              status = DeviceStatus.connected;
+            });
+          }
         });
 
         // listen for connection events
-        _connectingSubscription = polar.deviceConnectingStream.listen((event) {
+        _connectingSubscription = polar.deviceConnecting.listen((event) {
           debug('$runtimeType - Polar event : $event');
           status = DeviceStatus.connecting;
           configuration?.address = event.address;
@@ -180,7 +190,7 @@ class PolarDeviceManager extends BTLEDeviceManager<PolarDevice> {
           configuration?.rssi = event.rssi;
         });
 
-        _connectedSubscription = polar.deviceConnectedStream.listen((event) {
+        _connectedSubscription = polar.deviceConnected.listen((event) {
           debug('$runtimeType - Polar event : $event');
           // we do not mark the device as fully connected before the features are available
           status = DeviceStatus.connecting;
@@ -189,8 +199,7 @@ class PolarDeviceManager extends BTLEDeviceManager<PolarDevice> {
           configuration?.rssi = event.rssi;
         });
 
-        _disconnectedSubscription =
-            polar.deviceDisconnectedStream.listen((event) {
+        _disconnectedSubscription = polar.deviceDisconnected.listen((event) {
           debug('$runtimeType - Polar event : $event');
           status = DeviceStatus.disconnected;
           _batteryLevel = null;

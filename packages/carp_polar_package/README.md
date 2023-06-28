@@ -94,11 +94,11 @@ This is necessary to use BLE on Android.
 
 See the official Polar description of [iOS: Getting started](https://github.com/polarofficial/polar-ble-sdk#ios-getting-started).
 
-Requires iOS 10 or later. Hence, in your `Podfile` in the `ios` folder of your app,
-make sure that the platform is set to `13.0`.
+Requires iOS 14 or later. Hence, in your `Podfile` in the `ios` folder of your app,
+make sure that the platform is set to `14.0`.
 
 ```pod
-platform :ios, '13.0'
+platform :ios, '14.0'
 ```
 
 * In your project target settings enable Background Modes, add Uses Bluetooth LE accessories

@@ -6,46 +6,118 @@
  */
 part of carp_polar_package;
 
-/// An abstract [Data] class for all Polar data points.
-abstract class PolarData extends SensorData {
-  /// Polar device identifier.
-  String deviceIdentifier;
+// ------------------------------------------------------------------------
+//               POLAR SAMPLES
+// ------------------------------------------------------------------------
 
-  /// Sample timestamp from the Polar device in nanoseconds.
-  int? deviceTimestamp;
+/// Base class for all Polar samples.
+abstract class PolarSample {
+  /// The timestamp when this sample was taken in microseconds.
+  ///
+  /// In CARP we prefer microseconds over milliseconds for higher precision.
+  final int timeStamp;
 
-  PolarData(this.deviceIdentifier, this.deviceTimestamp) : super();
-
-  /// Create a [PolarData] based on [deviceIdentifier] and [deviceTimestamp] from
-  /// a Polar data reading.
-  PolarData.fromPolarData(this.deviceIdentifier, [this.deviceTimestamp])
-      : super();
+  PolarSample({
+    required DateTime timeStamp,
+  }) : timeStamp = timeStamp.microsecondsSinceEpoch;
 }
 
-/// Polar (x,y,z) values.
+/// Polar accelerometer sample
 @JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
-class PolarXYZ {
-  final double x, y, z;
+class PolarAccelerometerSample extends PolarSample {
+  /// x axis value in milli-G (including gravity)
+  final int x;
 
-  PolarXYZ(this.x, this.y, this.z);
+  /// y axis value in milli-G (including gravity)
+  final int y;
 
-  /// Create a [PolarXYZ] based on the original [Xyz] polar reading.
-  PolarXYZ.fromPolarData(Xyz data)
-      : x = data.x,
-        y = data.y,
-        z = data.z,
-        super();
+  /// z axis value in milli-G (including gravity)
+  final int z;
 
-  factory PolarXYZ.fromJson(Map<String, dynamic> json) =>
-      _$PolarXYZFromJson(json);
-  Map<String, dynamic> toJson() => _$PolarXYZToJson(this);
+  PolarAccelerometerSample({
+    required super.timeStamp,
+    required this.x,
+    required this.y,
+    required this.z,
+  });
+
+  factory PolarAccelerometerSample.fromJson(Map<String, dynamic> json) =>
+      _$PolarAccelerometerSampleFromJson(json);
+  Map<String, dynamic> toJson() => _$PolarAccelerometerSampleToJson(this);
+}
+
+/// Polar gyroscope sample
+@JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
+class PolarGyroscopeSample extends PolarSample {
+  /// x axis value in deg/sec
+  final double x;
+
+  /// y axis value in deg/sec
+  final double y;
+
+  /// z axis value in deg/sec
+  final double z;
+
+  PolarGyroscopeSample({
+    required super.timeStamp,
+    required this.x,
+    required this.y,
+    required this.z,
+  });
+
+  factory PolarGyroscopeSample.fromJson(Map<String, dynamic> json) =>
+      _$PolarGyroscopeSampleFromJson(json);
+  Map<String, dynamic> toJson() => _$PolarGyroscopeSampleToJson(this);
+}
+
+/// Polar magnetometer sample
+@JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
+class PolarMagnetometerSample extends PolarSample {
+  /// x axis value in Gauss
+  final double x;
+
+  /// y axis value in Gauss
+  final double y;
+
+  /// z axis value in Gauss
+  final double z;
+
+  PolarMagnetometerSample({
+    required super.timeStamp,
+    required this.x,
+    required this.y,
+    required this.z,
+  });
+
+  factory PolarMagnetometerSample.fromJson(Map<String, dynamic> json) =>
+      _$PolarMagnetometerSampleFromJson(json);
+  Map<String, dynamic> toJson() => _$PolarMagnetometerSampleToJson(this);
+}
+
+/// Polar PPG (Photoplethysmography) sample
+@JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
+class PolarPPGSample extends PolarSample {
+  /// The PPG (Photoplethysmography) raw value received from the optical sensor.
+  /// Based on [PpgDataType] the amount of channels varies. Typically ppg(n)
+  /// channel + n ambient(s).
+  final List<int> channelSamples;
+
+  /// Constructor
+  PolarPPGSample({
+    required super.timeStamp,
+    required this.channelSamples,
+  });
+
+  factory PolarPPGSample.fromJson(Map<String, dynamic> json) =>
+      _$PolarPPGSampleFromJson(json);
+  Map<String, dynamic> toJson() => _$PolarPPGSampleToJson(this);
 }
 
 /// Polar optical heart rate (OHR) pulse-to-pulse interval (PPI) sample.
 @JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
 class PolarPPISample {
   /// Pulse-to-pulse interval (PPI) in milliseconds.
-  int ppi;
+  final int ppi;
 
   /// Estimate of the expected absolute error in [ppi] in milliseconds.
   ///
@@ -53,63 +125,106 @@ class PolarPPISample {
   /// When error estimate is below 10ms [ppi] readings are probably very accurate.
   /// Error estimate values over 30ms may be caused by movement artefact or too
   /// loose sensor-skin contact. See [skinContactStatus].
-  int errorEstimate;
+  final int errorEstimate;
 
   /// Heart rate (HR) in beats pr. minute (BPM).
-  int hr;
+  final int hr;
 
   /// True if PPI measurement was invalid due to acceleration or other reasons.
-  bool blockerBit;
+  final bool blockerBit;
 
   /// False if the device detects poor or no contact with the skin.
-  bool skinContactStatus;
+  final bool skinContactStatus;
 
   /// True if the Sensor Contact feature is supported.
-  bool skinContactSupported;
+  final bool skinContactSupported;
 
-  PolarPPISample(
-    this.ppi,
-    this.errorEstimate,
-    this.hr,
-    this.blockerBit,
-    this.skinContactStatus,
-    this.skinContactSupported,
-  ) : super();
-
-  /// Create a [PolarPPISample] based on the original [PolarOhrPpiSample] reading.
-  PolarPPISample.fromPolarData(PolarOhrPpiSample data)
-      : ppi = data.ppi,
-        errorEstimate = data.errorEstimate,
-        hr = data.hr,
-        blockerBit = data.blockerBit,
-        skinContactStatus = data.skinContactStatus,
-        skinContactSupported = data.skinContactSupported,
-        super();
+  PolarPPISample({
+    required this.ppi,
+    required this.errorEstimate,
+    required this.hr,
+    required this.blockerBit,
+    required this.skinContactStatus,
+    required this.skinContactSupported,
+  });
 
   factory PolarPPISample.fromJson(Map<String, dynamic> json) =>
-      FromJsonFactory().fromJson(json) as PolarPPISample;
+      _$PolarPPISampleFromJson(json);
   Map<String, dynamic> toJson() => _$PolarPPISampleToJson(this);
+}
+
+/// Polar heart rate (HR) sample
+@JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
+class PolarHRSample {
+  /// Heart rate (HR) in BPM
+  final int hr;
+
+  /// RR interval in ms.
+  final List<int> rrsMs;
+
+  /// True if there is contact between the device and the user's skin.
+  final bool contactStatus;
+
+  /// True contact detection is supported on the device.
+  final bool contactStatusSupported;
+
+  PolarHRSample({
+    required this.hr,
+    required this.rrsMs,
+    required this.contactStatus,
+    required this.contactStatusSupported,
+  });
+
+  factory PolarHRSample.fromJson(Map<String, dynamic> json) =>
+      _$PolarHRSampleFromJson(json);
+  Map<String, dynamic> toJson() => _$PolarHRSampleToJson(this);
+}
+
+/// Polar ECG sample
+@JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
+class PolarECGSample extends PolarSample {
+  /// Voltage value in µVolts
+  final int voltage;
+
+  PolarECGSample({
+    required super.timeStamp,
+    required this.voltage,
+  });
+
+  factory PolarECGSample.fromJson(Map<String, dynamic> json) =>
+      _$PolarECGSampleFromJson(json);
+  Map<String, dynamic> toJson() => _$PolarECGSampleToJson(this);
+}
+
+// ------------------------------------------------------------------------
+//               POLAR => CARP SENSOR DATA
+// ------------------------------------------------------------------------
+
+class PolarSamples<T> extends SensorData {
+  /// Samples
+  final List<T> samples;
+
+  PolarSamples({required this.samples});
 }
 
 /// Polar accelerometer data.
 @JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
-class PolarAccelerometer extends PolarData {
+class PolarAccelerometer extends PolarSamples<PolarAccelerometerSample> {
   static const dataType = PolarSamplingPackage.ACCELEROMETER;
 
-  /// Acceleration samples list (x,y,z).
-  List<PolarXYZ> samples;
+  PolarAccelerometer({required super.samples});
 
-  PolarAccelerometer(
-    super.deviceIdentifier,
-    super.deviceTimestamp,
-    this.samples,
-  );
-
-  /// Create a [PolarAccelerometer] based on the original [PolarAccData] reading.
+  /// Create a [PolarAccelerometer] based on the original Polar device
+  /// [PolarAccData] sampling.
   PolarAccelerometer.fromPolarData(PolarAccData data)
-      : samples =
-            data.samples.map((xyz) => PolarXYZ.fromPolarData(xyz)).toList(),
-        super.fromPolarData(data.identifier, data.timeStamp);
+      : this(
+            samples: data.samples
+                .map((sample) => PolarAccelerometerSample(
+                    timeStamp: sample.timeStamp,
+                    x: sample.x,
+                    y: sample.y,
+                    z: sample.z))
+                .toList());
 
   @override
   Function get fromJsonFunction => _$PolarAccelerometerFromJson;
@@ -124,23 +239,22 @@ class PolarAccelerometer extends PolarData {
 
 /// Polar gyroscope data.
 @JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
-class PolarGyroscope extends PolarData {
+class PolarGyroscope extends PolarSamples<PolarGyroscopeSample> {
   static const dataType = PolarSamplingPackage.GYROSCOPE;
 
-  /// Gyroscope samples list (x,y,z) in °/s signed value
-  List<PolarXYZ> samples;
+  PolarGyroscope({required super.samples});
 
-  PolarGyroscope(
-    super.deviceIdentifier,
-    super.deviceTimestamp,
-    this.samples,
-  );
-
-  /// Create a [PolarGyroscope] based on the original [PolarGyroData] reading.
+  /// Create a [PolarGyroscope] based on the original Polar device
+  /// [PolarGyroData] sampling.
   PolarGyroscope.fromPolarData(PolarGyroData data)
-      : samples =
-            data.samples.map((xyz) => PolarXYZ.fromPolarData(xyz)).toList(),
-        super.fromPolarData(data.identifier, data.timeStamp);
+      : this(
+            samples: data.samples
+                .map((sample) => PolarGyroscopeSample(
+                    timeStamp: sample.timeStamp,
+                    x: sample.x,
+                    y: sample.y,
+                    z: sample.z))
+                .toList());
 
   @override
   Function get fromJsonFunction => _$PolarGyroscopeFromJson;
@@ -155,20 +269,22 @@ class PolarGyroscope extends PolarData {
 
 /// Polar magnetometer data.
 @JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
-class PolarMagnetometer extends PolarData {
+class PolarMagnetometer extends PolarSamples<PolarMagnetometerSample> {
   static const dataType = PolarSamplingPackage.MAGNETOMETER;
 
-  /// Magnetometer samples list (x,y,z) in Gauss
-  List<PolarXYZ> samples;
+  PolarMagnetometer({required super.samples});
 
-  PolarMagnetometer(
-      super.deviceIdentifier, super.deviceTimestamp, this.samples);
-
-  /// Create a [PolarMagnetometer] based on the original [PolarMagnetometerData] reading.
+  /// Create a [PolarMagnetometer] based on the original Polar device
+  /// [PolarMagnetometerData] sampling.
   PolarMagnetometer.fromPolarData(PolarMagnetometerData data)
-      : samples =
-            data.samples.map((xyz) => PolarXYZ.fromPolarData(xyz)).toList(),
-        super.fromPolarData(data.identifier, data.timeStamp);
+      : this(
+            samples: data.samples
+                .map((sample) => PolarMagnetometerSample(
+                    timeStamp: sample.timeStamp,
+                    x: sample.x,
+                    y: sample.y,
+                    z: sample.z))
+                .toList());
 
   @override
   Function get fromJsonFunction => _$PolarMagnetometerFromJson;
@@ -181,55 +297,31 @@ class PolarMagnetometer extends PolarData {
   String get jsonType => dataType;
 }
 
-/// Polar ECG data.
-@JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
-class PolarECG extends PolarData {
-  static const dataType = PolarSamplingPackage.ECG;
-
-  /// ECG sample in µVolts
-  List<int> samples;
-
-  PolarECG(super.deviceIdentifier, super.deviceTimestamp, this.samples);
-
-  /// Create a [PolarECG] based on the original [PolarEcgData] reading.
-  PolarECG.fromPolarData(PolarEcgData data)
-      : samples = data.samples,
-        super.fromPolarData(data.identifier, data.timeStamp);
-
-  @override
-  Function get fromJsonFunction => _$PolarECGFromJson;
-  factory PolarECG.fromJson(Map<String, dynamic> json) =>
-      FromJsonFactory().fromJson(json) as PolarECG;
-  @override
-  Map<String, dynamic> toJson() => _$PolarECGToJson(this);
-
-  @override
-  String get jsonType => dataType;
-}
-
 /// Polar optical heart rate (OHR) photoplethysmograpy (PPG) data.
 @JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
-class PolarPPG extends PolarData {
+class PolarPPG extends PolarSamples<PolarPPGSample> {
   static const dataType = PolarSamplingPackage.PPG;
 
-  /// Source of OHR data
-  OhrDataType type;
+  /// Type of OHR data.
+  ///
+  /// Varies based on what is type of optical sensor used in the device.
+  PpgDataType type;
 
-  /// ppg(s) and ambient(s) samples list
-  List<List<int>> samples;
+  PolarPPG({
+    required this.type,
+    required super.samples,
+  });
 
-  PolarPPG(
-    super.deviceIdentifier,
-    super.deviceTimestamp,
-    this.type,
-    this.samples,
-  );
-
-  /// Create a [PolarPPG] based on the original [PolarOhrData] reading.
-  PolarPPG.fromPolarData(PolarOhrData data)
-      : samples = data.samples,
-        type = data.type,
-        super.fromPolarData(data.identifier, data.timeStamp);
+  /// Create a [PolarPPG] based on the original [PolarPpgData] reading.
+  PolarPPG.fromPolarData(PolarPpgData data)
+      : this(
+            type: data.type,
+            samples: data.samples
+                .map((sample) => PolarPPGSample(
+                      timeStamp: sample.timeStamp,
+                      channelSamples: sample.channelSamples,
+                    ))
+                .toList());
 
   @override
   Function get fromJsonFunction => _$PolarPPGFromJson;
@@ -245,20 +337,24 @@ class PolarPPG extends PolarData {
 /// Polar PP interval (PPI) in milliseconds.
 /// Represents cardiac pulse-to-pulse interval extracted from PPG signal.
 @JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
-class PolarPPI extends PolarData {
+class PolarPPI extends PolarSamples<PolarPPISample> {
   static const dataType = PolarSamplingPackage.PPI;
 
-  /// List of PPI samples read from the Polar device.
-  List<PolarPPISample> samples;
-
-  PolarPPI(super.deviceIdentifier, super.deviceTimestamp, this.samples);
+  PolarPPI({required super.samples});
 
   /// Create a [PolarPPI] based on the original [PolarPpiData] reading.
   PolarPPI.fromPolarData(PolarPpiData data)
-      : samples = data.samples
-            .map((ppi) => PolarPPISample.fromPolarData(ppi))
-            .toList(),
-        super.fromPolarData(data.identifier, data.timeStamp);
+      : this(
+            samples: data.samples
+                .map((sample) => PolarPPISample(
+                      ppi: sample.ppi,
+                      hr: sample.hr,
+                      errorEstimate: sample.errorEstimate,
+                      blockerBit: sample.blockerBit,
+                      skinContactSupported: sample.skinContactSupported,
+                      skinContactStatus: sample.skinContactStatus,
+                    ))
+                .toList());
 
   @override
   Function get fromJsonFunction => _$PolarPPIFromJson;
@@ -271,46 +367,52 @@ class PolarPPI extends PolarData {
   String get jsonType => dataType;
 }
 
+/// Polar ECG data.
+@JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
+class PolarECG extends PolarSamples<PolarECGSample> {
+  static const dataType = PolarSamplingPackage.ECG;
+
+  PolarECG({required super.samples});
+
+  /// Create a [PolarECG] based on the original [PolarEcgData] reading.
+  PolarECG.fromPolarData(PolarEcgData data)
+      : this(
+            samples: data.samples
+                .map((sample) => PolarECGSample(
+                      timeStamp: sample.timeStamp,
+                      voltage: sample.voltage,
+                    ))
+                .toList());
+
+  @override
+  Function get fromJsonFunction => _$PolarECGFromJson;
+  factory PolarECG.fromJson(Map<String, dynamic> json) =>
+      FromJsonFactory().fromJson(json) as PolarECG;
+  @override
+  Map<String, dynamic> toJson() => _$PolarECGToJson(this);
+
+  @override
+  String get jsonType => dataType;
+}
+
 /// Polar heart rate (HR).
 @JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
-class PolarHR extends PolarData {
+class PolarHR extends PolarSamples<PolarHRSample> {
   static const dataType = PolarSamplingPackage.HR;
 
-  /// Heart rate (HR) in BPM
-  int hr;
+  PolarHR({required super.samples});
 
-  /// RR interval in 1/1024.
-  /// R is a the top highest peak in the QRS complex of the ECG wave and
-  /// RR is the interval between successive Rs.
-  List<int> rrs;
-
-  /// RR interval in ms.
-  List<int> rrsMs;
-
-  /// True if there is contact between the device and the user's skin.
-  bool contactStatus;
-
-  /// True contact detection is supported on the device.
-  bool contactStatusSupported;
-
-  PolarHR(
-    super.deviceIdentifier,
-    super.deviceTimestamp,
-    this.hr,
-    this.rrs,
-    this.rrsMs,
-    this.contactStatus,
-    this.contactStatusSupported,
-  );
-
-  /// Create a [PolarPPI] based on the original [PolarPpiData] reading.
-  PolarHR.fromPolarData(String identifier, PolarHrData data)
-      : hr = data.hr,
-        rrs = data.rrs,
-        rrsMs = data.rrsMs,
-        contactStatus = data.contactStatus,
-        contactStatusSupported = data.contactStatusSupported,
-        super.fromPolarData(identifier);
+  /// Create a [PolarHR] based on the original [PolarHrData] reading.
+  PolarHR.fromPolarData(PolarHrData data)
+      : this(
+            samples: data.samples
+                .map((sample) => PolarHRSample(
+                      hr: sample.hr,
+                      rrsMs: sample.rrsMs,
+                      contactStatusSupported: sample.contactStatusSupported,
+                      contactStatus: sample.contactStatus,
+                    ))
+                .toList());
 
   @override
   Function get fromJsonFunction => _$PolarHRFromJson;
@@ -318,7 +420,6 @@ class PolarHR extends PolarData {
       FromJsonFactory().fromJson(json) as PolarHR;
   @override
   Map<String, dynamic> toJson() => _$PolarHRToJson(this);
-
   @override
   String get jsonType => dataType;
 }

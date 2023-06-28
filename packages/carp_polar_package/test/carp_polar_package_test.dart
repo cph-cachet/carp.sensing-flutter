@@ -21,11 +21,11 @@ void main() {
   setUp(() {
     WidgetsFlutterBinding.ensureInitialized();
 
-    // register the eSense sampling package
+    // register the Polar sampling package
     SamplingPackageRegistry().register(PolarSamplingPackage());
 
     // Initialization of serialization
-    CarpMobileSensing();
+    CarpMobileSensing.ensureInitialized();
 
     // Create a new study protocol.
     protocol = StudyProtocol(
@@ -101,25 +101,18 @@ void main() {
     print(toJsonString(protocol));
   });
 
-  test('Polar Measurements -> JSON', () async {
-    List<PolarData> data = [];
+  test('Accelerometer Measurement -> JSON', () async {
+    List<PolarAccSample> samples = [];
 
-    data.add(PolarPPI(
-      deviceId,
-      DateTime.now().microsecondsSinceEpoch,
-      [PolarPPISample(1, 2, 3, true, true, true)],
-    ));
-    data.add(PolarPPG(deviceId, DateTime.now().microsecondsSinceEpoch,
-        OhrDataType.ppg3_ambient1, [
-      [1, 1],
-      [3, 2]
-    ]));
+    samples.add(PolarAccSample(timeStamp: DateTime.now(), x: 1, y: 2, z: 3));
+    samples.add(PolarAccSample(timeStamp: DateTime.now(), x: 1, y: 2, z: 3));
 
-    for (var d in data) {
-      var measurement = Measurement.fromData(d);
-      expect(measurement.dataType.toString(), measurement.data.jsonType);
+    PolarAccData data = PolarAccData(samples: samples);
 
-      print(_encode(measurement.toJson()));
-    }
+    var measurement =
+        Measurement.fromData(PolarAccelerometer.fromPolarData(data));
+    expect(measurement.dataType.toString(), measurement.data.jsonType);
+
+    print(_encode(measurement.toJson()));
   });
 }
