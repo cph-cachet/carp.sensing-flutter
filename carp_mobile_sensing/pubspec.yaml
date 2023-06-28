@@ -29,7 +29,7 @@ dependencies:
   cron: ^0.5.0                         # For scheduling / triggering cron jobs
   timezone: ^0.9.0
   stats: ^2.0.0                        # For calculating statistics, ex LightProbe
-  flutter_native_timezone: ^2.0.0      # For getting local time zone for scheduling notifications
+  flutter_timezone: ^1.0.6      # For getting local time zone for scheduling notifications
 
   # probe-dependent plugins
   device_info_plus: ^8.0.0
