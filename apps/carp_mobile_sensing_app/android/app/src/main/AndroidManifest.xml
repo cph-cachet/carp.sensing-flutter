@@ -11,6 +11,7 @@
     <!-- The following permissions are used for CARP Mobile Sensing -->
     <uses-permission android:name="android.permission.PACKAGE_USAGE_STATS" tools:ignore="ProtectedPermissions"/>
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.SCHEDULE_EXACT_ALARM" />
 
     <!-- The following permissions are used in the Context Package -->
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />

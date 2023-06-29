@@ -99,8 +99,6 @@ class App {
   }
 
   factory App.fromJson(Map<String, dynamic> json) => _$AppFromJson(json);
-
-  @override
   Map<String, dynamic> toJson() => _$AppToJson(this);
 
   @override

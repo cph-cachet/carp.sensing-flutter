@@ -7,7 +7,6 @@ import 'dart:async';
 import 'package:app_usage/app_usage.dart' as app_usage;
 import 'dart:io';
 import 'package:permission_handler/permission_handler.dart';
-import 'dart:convert';
 
 import 'package:carp_serializable/carp_serializable.dart';
 import 'package:carp_core/carp_core.dart';
@@ -17,6 +16,3 @@ part 'apps_data.dart';
 part 'app_probes.dart';
 part 'apps_package.dart';
 part 'apps.g.dart';
-
-// auto generate json code (.g files) with:
-//   flutter pub run build_runner build --delete-conflicting-outputs
