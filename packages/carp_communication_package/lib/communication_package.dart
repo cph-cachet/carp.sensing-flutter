@@ -30,7 +30,7 @@ class CommunicationSamplingPackage extends SmartphoneSamplingPackage {
   ///  * Use the [HistoricSamplingConfiguration] for configuration.
   static const String TEXT_MESSAGE_LOG = "${NameSpace.CARP}.text_message_log";
 
-  /// Measure type for collection of text message (SMS) as they are recieved.
+  /// Measure type for collection of text message (SMS) as they are received.
   ///  * Event-based measure.
   ///  * Uses the [Smartphone] master device for data collection.
   ///  * No sampling configuration needed.
@@ -43,29 +43,49 @@ class CommunicationSamplingPackage extends SmartphoneSamplingPackage {
   ///  * Use the [HistoricSamplingConfiguration] for configuration.
   static const String CALENDAR = "${NameSpace.CARP}.calendar";
 
+  /// Default samplings schema for:
+  ///  * [PHONE_LOG] - a period one day back in time and one day into the future
+  ///  * [TEXT_MESSAGE_LOG] - a period one day back in time and one day into the future
+  ///  * [CALENDAR] - a period one day back in time and one day into the future
   @override
-  List<DataTypeMetaData> get dataTypes => [
-        DataTypeMetaData(
-          type: PHONE_LOG,
-          displayName: "Phone Log",
-          timeType: DataTimeType.TIME_SPAN,
-        ),
-        DataTypeMetaData(
-          type: TEXT_MESSAGE_LOG,
-          displayName: "Text Message Log",
-          timeType: DataTimeType.POINT,
-        ),
-        DataTypeMetaData(
+  DataTypeSamplingSchemeMap get samplingSchemes =>
+      DataTypeSamplingSchemeMap.from([
+        DataTypeSamplingScheme(
+            DataTypeMetaData(
+              type: PHONE_LOG,
+              displayName: "Phone Log",
+              timeType: DataTimeType.TIME_SPAN,
+            ),
+            HistoricSamplingConfiguration(
+              past: const Duration(days: 1),
+              future: const Duration(days: 1),
+            )),
+        DataTypeSamplingScheme(
+            DataTypeMetaData(
+              type: TEXT_MESSAGE_LOG,
+              displayName: "Text Message Log",
+              timeType: DataTimeType.TIME_SPAN,
+            ),
+            HistoricSamplingConfiguration(
+              past: const Duration(days: 1),
+              future: const Duration(days: 1),
+            )),
+        DataTypeSamplingScheme(DataTypeMetaData(
           type: TEXT_MESSAGE,
           displayName: "Text Messages",
           timeType: DataTimeType.POINT,
-        ),
-        DataTypeMetaData(
-          type: CALENDAR,
-          displayName: "Calendar Entries",
-          timeType: DataTimeType.TIME_SPAN,
-        ),
-      ];
+        )),
+        DataTypeSamplingScheme(
+            DataTypeMetaData(
+              type: CALENDAR,
+              displayName: "Calendar Entries",
+              timeType: DataTimeType.TIME_SPAN,
+            ),
+            HistoricSamplingConfiguration(
+              past: const Duration(days: 1),
+              future: const Duration(days: 1),
+            )),
+      ]);
 
   @override
   Probe? create(String type) {
@@ -105,29 +125,4 @@ class CommunicationSamplingPackage extends SmartphoneSamplingPackage {
   @override
   List<Permission> get permissions =>
       [Permission.phone, Permission.sms, Permission.calendar];
-
-  /// Default samplings schema for:
-  ///  * [PHONE_LOG] - a period one day back in time and one day into the future
-  ///  * [TEXT_MESSAGE_LOG] - a period one day back in time and one day into the future
-  ///  * [CALENDAR] - a period one day back in time and one day into the future
-  @override
-  SamplingSchema get samplingSchema => SamplingSchema()
-    ..addConfiguration(
-        PHONE_LOG,
-        HistoricSamplingConfiguration(
-          past: const Duration(days: 1),
-          future: const Duration(days: 1),
-        ))
-    ..addConfiguration(
-        TEXT_MESSAGE_LOG,
-        HistoricSamplingConfiguration(
-          past: const Duration(days: 1),
-          future: const Duration(days: 1),
-        ))
-    ..addConfiguration(
-        CALENDAR,
-        HistoricSamplingConfiguration(
-          past: const Duration(days: 1),
-          future: const Duration(days: 1),
-        ));
 }

@@ -12,7 +12,6 @@ dependencies:
   flutter:
     sdk: flutter
   flutter_launcher_icons: ^0.10.0
-  # font_awesome_flutter: ^10.1.0
   
   # carp_serializable: ^1.1.0
   #carp_core: ^0.30.0      # the core CARP domain model
@@ -22,7 +21,6 @@ dependencies:
   #carp_audio_package: ^0.30.0
   #carp_communication_package: ^0.30.0
   #carp_apps_package: ^0.30.0
-  #carp_survey_package: ^0.30.0
   #carp_backend: ^0.30.0
   #carp_webservices: ^0.30.0
   #carp_health_package: ^2.0.0
@@ -46,18 +44,19 @@ dependency_overrides:
   carp_connectivity_package:
     path: ../../packages/carp_connectivity_package/
   # due to version conflict in device_calendar this cannot be included for now
-  # carp_communication_package:
-  #   path: ../../packages/carp_communication_package/
+  carp_communication_package:
+    path: ../../packages/carp_communication_package/
   carp_audio_package:
     path: ../../packages/carp_audio_package/
   carp_apps_package:
     path: ../../packages/carp_apps_package/
+  # esense_flutter:
+  #   path: ../../../../flutter-plugins/packages/esense_flutter/
   carp_esense_package:
     path: ../../packages/carp_esense_package/
   carp_polar_package:
     path: ../../packages/carp_polar_package/
-  # esense_flutter:
-  #   path: ../../../../flutter-plugins/packages/esense_flutter/
+
   carp_backend:
     path: ../../backends/carp_backend/
   carp_webservices:
