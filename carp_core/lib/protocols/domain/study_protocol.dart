@@ -103,11 +103,11 @@ class StudyProtocol extends Snapshot {
   bool addPrimaryDevice(PrimaryDeviceConfiguration primaryDevice) =>
       primaryDevices.add(primaryDevice);
 
-  /// Does this protocol have a primary device with role name [rolename]?
-  bool hasPrimaryDevice(String rolename) =>
+  /// Does this protocol have a primary device with role name [roleName]?
+  bool hasPrimaryDevice(String roleName) =>
       primaryDevices
           .firstWhere(
-            (device) => device.roleName == rolename,
+            (device) => device.roleName == roleName,
             orElse: () => PrimaryDeviceConfiguration(roleName: 'not_found'),
           )
           .roleName !=

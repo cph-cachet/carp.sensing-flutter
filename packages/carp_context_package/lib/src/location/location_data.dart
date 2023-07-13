@@ -1,5 +1,5 @@
 /*
- * Copyright 2018-2022 Copenhagen Center for Health Technology (CACHET) at the
+ * Copyright 2018-2023 Copenhagen Center for Health Technology (CACHET) at the
  * Technical University of Denmark (DTU).
  * Use of this source code is governed by a MIT-style license that can be
  * found in the LICENSE file.
@@ -30,8 +30,13 @@ class Location extends Geolocation {
   /// In meters/second
   double? speedAccuracy;
 
-  /// Heading is the horizontal direction of travel of this device, in degrees
+  /// Horizontal direction of travel of this device, in degrees.
   double? heading;
+
+  /// Estimated bearing accuracy of this location, in degrees.
+  /// Only available on Android.
+  /// https://developer.android.com/reference/android/location/Location#getBearingAccuracyDegrees()
+  double? headingAccuracy;
 
   /// The time when this location was collected.
   DateTime? time;
@@ -40,11 +45,6 @@ class Location extends Geolocation {
   ///
   /// Always false on iOS
   bool? isMock;
-
-  /// Get the estimated bearing accuracy of this location, in degrees.
-  /// Only available on Android
-  /// https://developer.android.com/reference/android/location/Location#getBearingAccuracyDegrees()
-  double? headingAccuracy;
 
   /// Return the time of this fix, in elapsed real-time since system boot.
   /// Only available on Android
@@ -59,11 +59,10 @@ class Location extends Geolocation {
   /// The number of satellites used to derive the fix.
   /// Only available on Android
   /// https://developer.android.com/reference/android/location/Location#getExtras()
-  int? satelliteNumber;
+  int? satellites;
 
-  /// The name of the provider that generated this fix.
-  /// Only available on Android
-  /// https://developer.android.com/reference/android/location/Location#getProvider()
+  /// The location provider.
+  /// Only available on Android. Deprecated in API level 31.
   String? provider;
 
   Location({
@@ -71,23 +70,26 @@ class Location extends Geolocation {
     super.longitude,
     this.altitude,
     this.accuracy,
+    this.verticalAccuracy,
     this.heading,
+    this.headingAccuracy,
     this.speed,
     this.speedAccuracy,
     this.time,
     this.isMock,
-    this.headingAccuracy,
     this.elapsedRealtimeNanos,
     this.elapsedRealtimeUncertaintyNanos,
-    this.satelliteNumber,
+    this.satellites,
     this.provider,
   }) : super();
 
-  Location.fromLocation(location.LocationData location) : super() {
+  /// Create a [Location] object based on a [LocationData] from the `location` plugin.
+  Location.fromLocationData(location.LocationData location) : super() {
     latitude = location.latitude ?? 0;
     longitude = location.longitude ?? 0;
     altitude = location.altitude;
     accuracy = location.accuracy;
+    verticalAccuracy = location.verticalAccuracy;
     speed = location.speed;
     speedAccuracy = location.speedAccuracy;
     heading = location.heading;
@@ -98,9 +100,23 @@ class Location extends Geolocation {
     headingAccuracy = location.headingAccuracy;
     elapsedRealtimeNanos = location.elapsedRealtimeNanos;
     elapsedRealtimeUncertaintyNanos = location.elapsedRealtimeUncertaintyNanos;
-    satelliteNumber = location.satelliteNumber;
-    provider = location.provider;
+    satellites = location.satelliteNumber;
   }
+
+  // /// Create a [Location] object based on a [LocationDto] from the
+  // /// `carp_background_location` plugin.
+  // Location.fromLocationDto(cbl.LocationDto location) : super() {
+  //   latitude = location.latitude;
+  //   longitude = location.longitude;
+  //   altitude = location.altitude;
+  //   accuracy = location.accuracy;
+  //   speed = location.speed;
+  //   speedAccuracy = location.speedAccuracy;
+  //   bearing = location.heading;
+  //   time = DateTime.fromMillisecondsSinceEpoch(location.time.toInt());
+  //   isMock = location.isMocked;
+  //   provider = location.provider;
+  // }
 
   @override
   Function get fromJsonFunction => _$LocationFromJson;

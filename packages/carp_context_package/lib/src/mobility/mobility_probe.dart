@@ -20,10 +20,10 @@ class MobilityProbe extends StreamProbe {
     Stream<LocationSample> locationStream = LocationManager()
         .onLocationChanged
         .map((loc) => LocationSample(
-            GeoLocation(loc.latitude!, loc.longitude!), DateTime.now()));
+            GeoLocation(loc.latitude, loc.longitude), DateTime.now()));
 
-    // feed the location data stream to the MobilityFeatures singleton
-    // which in turn produce [MobilityContext]s
+    // Feed the location data stream to the MobilityFeatures singleton
+    // which in turn produce [MobilityContext] readings.
     await MobilityFeatures().startListening(locationStream);
 
     return await super.onStart();

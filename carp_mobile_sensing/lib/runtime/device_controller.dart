@@ -12,6 +12,9 @@ class DeviceController implements DeviceDataCollectorFactory {
   static final DeviceController _instance = DeviceController._();
   final Map<String, DeviceManager> _devices = {};
 
+  /// The period of sending [Heartbeat] measurements, in minutes.
+  static const int HEARTBEAT_PERIOD = 5;
+
   /// Get the singleton [DeviceController].
   factory DeviceController() => _instance;
   DeviceController._();
@@ -96,6 +99,13 @@ class DeviceController implements DeviceDataCollectorFactory {
           "A device of type '${configuration.type}' is not available on this device. "
           "This may be because this device is not available on this operating system. "
           "Or it may be because the sampling package containing this device has not been registered in the SamplingPackageRegistry.");
+    }
+  }
+
+  /// Start heartbeat monitoring for all devices, incl. the phone.
+  void startHeartbeatMonitoring(SmartphoneDeploymentController controller) {
+    for (var device in devices.values) {
+      device.startHeartbeatMonitoring(controller);
     }
   }
 

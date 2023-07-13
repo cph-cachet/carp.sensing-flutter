@@ -15,9 +15,9 @@ class CurrentLocationProbe extends MeasurementProbe {
       super.deviceManager as LocationServiceManager;
 
   @override
-  Future<Measurement> getMeasurement() async =>
-      deviceManager.manager.getLocation().then(
-          (location) => Measurement.fromData(Location.fromLocation(location)));
+  Future<Measurement> getMeasurement() async => deviceManager.manager
+      .getLocation()
+      .then((location) => Measurement.fromData(location));
 }
 
 /// Collects location information from the underlying OS's location API.
@@ -30,5 +30,5 @@ class LocationProbe extends StreamProbe {
 
   @override
   Stream<Measurement> get stream => deviceManager.manager.onLocationChanged
-      .map((location) => Measurement.fromData(Location.fromLocation(location)));
+      .map((location) => Measurement.fromData(location));
 }

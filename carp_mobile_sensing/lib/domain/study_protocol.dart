@@ -105,12 +105,12 @@ class SmartphoneStudyProtocol extends StudyProtocol
   bool addPrimaryDevice(PrimaryDeviceConfiguration primaryDevice) {
     super.addPrimaryDevice(primaryDevice);
 
-    // add the trigger, task, error, and coverage measures to the protocol since
+    // add the trigger, task, error, and heartbeat measures to the protocol since
     // CAMS always collects and upload this data from the primary device (the phone)
     addTaskControl(
       NoOpTrigger(),
       BackgroundTask(measures: [
-        Measure(type: Coverage.dataType),
+        Measure(type: Heartbeat.dataType),
         Measure(type: Error.dataType),
         Measure(type: CarpDataTypes.TRIGGERED_TASK_TYPE_NAME),
         Measure(type: CarpDataTypes.COMPLETED_TASK_TYPE_NAME)
@@ -129,11 +129,12 @@ class SmartphoneStudyProtocol extends StudyProtocol
   ) {
     super.addConnectedDevice(device, primaryDevice);
 
-    // add the trigger and task measures to the protocol since CAMS
+    // add the trigger, task, and heartbeat measures to the protocol since CAMS
     // always collects and upload this data from any device
     addTaskControl(
       NoOpTrigger(),
       BackgroundTask(measures: [
+        Measure(type: Heartbeat.dataType),
         Measure(type: CarpDataTypes.TRIGGERED_TASK_TYPE_NAME),
         Measure(type: CarpDataTypes.COMPLETED_TASK_TYPE_NAME)
       ]),

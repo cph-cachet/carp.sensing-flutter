@@ -27,14 +27,9 @@ class GeoPosition extends Serializable {
 
   GeoPosition(this.latitude, this.longitude);
 
-  // GeoPosition.fromLocationDto(LocationDto location)
-  //     : latitude = location.latitude,
-  //       longitude = location.longitude,
-  //       super();
-
-  GeoPosition.fromLocation(location.LocationData location)
-      : latitude = location.latitude!,
-        longitude = location.longitude!,
+  GeoPosition.fromLocation(Location location)
+      : latitude = location.latitude,
+        longitude = location.longitude,
         super();
 
   /// Returns the approximate distance in meters between this location and the given location.

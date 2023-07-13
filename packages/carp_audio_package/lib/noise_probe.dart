@@ -20,7 +20,7 @@ class NoiseProbe extends BufferingPeriodicStreamProbe {
   DateTime? _startRecordingTime, _endRecordingTime;
 
   @override
-  Stream<NoiseReading> get bufferingStream => _noiseMeter.noiseStream;
+  Stream<NoiseReading> get bufferingStream => _noiseMeter.noise;
 
   @override
   void onSamplingStart() {

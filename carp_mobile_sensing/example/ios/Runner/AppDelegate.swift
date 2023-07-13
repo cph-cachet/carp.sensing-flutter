@@ -10,8 +10,6 @@ import awesome_notifications
     didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?
   ) -> Bool {
     
-    GeneratedPluginRegistrant.register(with: self)
-
     // The following adds notification support.
     //
     // Note that CAMS have implementation for BOTH flutter_local_notifications
@@ -39,6 +37,8 @@ import awesome_notifications
         SwiftAwesomeNotificationsPlugin.register(
           with: registry.registrar(forPlugin: "io.flutter.plugins.awesomenotifications.AwesomeNotificationsPlugin")!)          
     }
+
+    GeneratedPluginRegistrant.register(with: self)
 
     return super.application(application, didFinishLaunchingWithOptions: launchOptions)
   }

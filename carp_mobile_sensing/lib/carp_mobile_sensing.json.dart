@@ -57,7 +57,7 @@ void _registerFromJsonFunctions() {
 
   // Data classes
   FromJsonFactory().registerAll([
-    Coverage(frequency: 1),
+    Heartbeat(period: 1, deviceRoleName: '', deviceType: ''),
     DeviceInformation(),
     BatteryState(),
     FreeMemory(),

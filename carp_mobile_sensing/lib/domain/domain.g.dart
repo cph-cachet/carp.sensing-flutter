@@ -913,11 +913,13 @@ Map<String, dynamic> _$FileDataToJson(FileData instance) {
   return val;
 }
 
-Coverage _$CoverageFromJson(Map<String, dynamic> json) => Coverage(
-      frequency: json['frequency'] as int,
+Heartbeat _$HeartbeatFromJson(Map<String, dynamic> json) => Heartbeat(
+      period: json['period'] as int,
+      deviceType: json['deviceType'] as String,
+      deviceRoleName: json['deviceRoleName'] as String,
     )..$type = json['__type'] as String?;
 
-Map<String, dynamic> _$CoverageToJson(Coverage instance) {
+Map<String, dynamic> _$HeartbeatToJson(Heartbeat instance) {
   final val = <String, dynamic>{};
 
   void writeNotNull(String key, dynamic value) {
@@ -927,6 +929,8 @@ Map<String, dynamic> _$CoverageToJson(Coverage instance) {
   }
 
   writeNotNull('__type', instance.$type);
-  val['frequency'] = instance.frequency;
+  val['period'] = instance.period;
+  val['deviceType'] = instance.deviceType;
+  val['deviceRoleName'] = instance.deviceRoleName;
   return val;
 }

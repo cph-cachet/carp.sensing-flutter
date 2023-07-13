@@ -14,6 +14,8 @@ abstract class DeviceManager<TDeviceConfiguration extends DeviceConfiguration>
   final StreamController<DeviceStatus> _eventController =
       StreamController.broadcast();
 
+  Timer? _heartbeatTimer;
+
   /// The set of executors that use this device manager.
   final Set<Executor> executors = {};
 
@@ -53,6 +55,7 @@ abstract class DeviceManager<TDeviceConfiguration extends DeviceConfiguration>
         'Initializing device manager, type: $type, configuration: $configuration');
     super.configuration = configuration;
     onInitialize(configuration);
+
     status = DeviceStatus.initialized;
   }
 
@@ -62,11 +65,35 @@ abstract class DeviceManager<TDeviceConfiguration extends DeviceConfiguration>
   /// doing a lot of work on startup.
   void onInitialize(TDeviceConfiguration configuration);
 
+  /// Start heartbeat monitoring for this device.
+  void startHeartbeatMonitoring(SmartphoneDeploymentController controller) {
+    if (!isInitialized) {
+      warning(
+          '$runtimeType - Trying to start heartbeat monitoring before device is initialized. '
+          'Please initialize device first.');
+      return;
+    }
+    debug(
+        '$runtimeType - Setting up heartbeat monitoring for device: $configuration');
+    _heartbeatTimer = Timer.periodic(
+        Duration(minutes: DeviceController.HEARTBEAT_PERIOD),
+        (_) => (isConnected)
+            ? controller.executor.addMeasurement(Measurement.fromData(Heartbeat(
+                period: DeviceController.HEARTBEAT_PERIOD,
+                deviceType: configuration!.type,
+                deviceRoleName: configuration!.roleName)))
+            : null);
+  }
+
+  /// Stop heartbeat monitoring for this device.
+  void stopHeartbeatMonitoring() => _heartbeatTimer?.cancel();
+
   /// Ask this [DeviceManager] to start connecting to the device.
   ///
   /// Returns the [DeviceStatus] of the device.
   @nonVirtual
   Future<DeviceStatus> connect() async {
+    debug('$runtimeType >> $this');
     if (!isInitialized) {
       warning('$runtimeType has not been initialized - cannot connect to it.');
       return status;
@@ -100,9 +127,6 @@ abstract class DeviceManager<TDeviceConfiguration extends DeviceConfiguration>
 
     for (var executor in executors) {
       executor.restart();
-      // if (executor.state == ExecutorState.started) {
-      //   executor.start();
-      // }
     }
   }
 
@@ -141,6 +165,9 @@ abstract class DeviceManager<TDeviceConfiguration extends DeviceConfiguration>
   ///
   /// Is to be overridden in sub-classes.
   Future<bool> onDisconnect();
+
+  @override
+  String toString() => '$runtimeType - type: $type, id: $id, status: $status';
 }
 
 /// A [DeviceManager] for an online service, like a weather service.
@@ -212,7 +239,7 @@ class SmartphoneDeviceManager extends HardwareDeviceManager<Smartphone> {
   Future<bool> onDisconnect() async => true;
 }
 
-/// A device manager for a connectable bluetooth device.
+/// A device manager for a connectable Bluetooth device.
 abstract class BTLEDeviceManager<
         TDeviceConfiguration extends DeviceConfiguration>
     extends HardwareDeviceManager<TDeviceConfiguration> {
@@ -253,19 +280,19 @@ enum DeviceStatus {
   /// The device is in an error state.
   error,
 
-  /// The device has been initialized.
+  /// The device manager has been initialized, but not yet connected.
   initialized,
 
   /// The device is paired with this phone.
-  /// Mainly used in a [BTLEDeviceManager].
+  /// This status is mainly used in Bluetooth devices (via a [BTLEDeviceManager]).
   paired,
 
-  /// The device is trying to connect.
+  /// The phone is trying to connect to the device.
   connecting,
 
-  /// The device is connected and ready to be used.
+  /// The device is connected to the phone and ready to be used.
   connected,
 
-  /// The device is disconnected.
+  /// The device is disconnected from the phone.
   disconnected,
 }

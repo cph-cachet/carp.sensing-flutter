@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of carp_context_package;
+part of 'carp_context_package.dart';
 
 // **************************************************************************
 // JsonSerializableGenerator
@@ -40,24 +40,24 @@ Location _$LocationFromJson(Map<String, dynamic> json) => Location(
       longitude: (json['longitude'] as num?)?.toDouble() ?? 0,
       altitude: (json['altitude'] as num?)?.toDouble(),
       accuracy: (json['accuracy'] as num?)?.toDouble(),
+      verticalAccuracy: (json['verticalAccuracy'] as num?)?.toDouble(),
       heading: (json['heading'] as num?)?.toDouble(),
+      headingAccuracy: (json['headingAccuracy'] as num?)?.toDouble(),
       speed: (json['speed'] as num?)?.toDouble(),
       speedAccuracy: (json['speedAccuracy'] as num?)?.toDouble(),
       time:
           json['time'] == null ? null : DateTime.parse(json['time'] as String),
       isMock: json['isMock'] as bool?,
-      headingAccuracy: (json['headingAccuracy'] as num?)?.toDouble(),
       elapsedRealtimeNanos: (json['elapsedRealtimeNanos'] as num?)?.toDouble(),
       elapsedRealtimeUncertaintyNanos:
           (json['elapsedRealtimeUncertaintyNanos'] as num?)?.toDouble(),
-      satelliteNumber: json['satelliteNumber'] as int?,
+      satellites: json['satellites'] as int?,
       provider: json['provider'] as String?,
     )
       ..$type = json['__type'] as String?
       ..sensorSpecificData = json['sensorSpecificData'] == null
           ? null
-          : Data.fromJson(json['sensorSpecificData'] as Map<String, dynamic>)
-      ..verticalAccuracy = (json['verticalAccuracy'] as num?)?.toDouble();
+          : Data.fromJson(json['sensorSpecificData'] as Map<String, dynamic>);
 
 Map<String, dynamic> _$LocationToJson(Location instance) {
   final val = <String, dynamic>{};
@@ -78,13 +78,13 @@ Map<String, dynamic> _$LocationToJson(Location instance) {
   writeNotNull('speed', instance.speed);
   writeNotNull('speedAccuracy', instance.speedAccuracy);
   writeNotNull('heading', instance.heading);
+  writeNotNull('headingAccuracy', instance.headingAccuracy);
   writeNotNull('time', instance.time?.toIso8601String());
   writeNotNull('isMock', instance.isMock);
-  writeNotNull('headingAccuracy', instance.headingAccuracy);
   writeNotNull('elapsedRealtimeNanos', instance.elapsedRealtimeNanos);
   writeNotNull('elapsedRealtimeUncertaintyNanos',
       instance.elapsedRealtimeUncertaintyNanos);
-  writeNotNull('satelliteNumber', instance.satelliteNumber);
+  writeNotNull('satellites', instance.satellites);
   writeNotNull('provider', instance.provider);
   return val;
 }
@@ -469,5 +469,4 @@ const _$GeolocationAccuracyEnumMap = {
   GeolocationAccuracy.balanced: 'balanced',
   GeolocationAccuracy.high: 'high',
   GeolocationAccuracy.navigation: 'navigation',
-  GeolocationAccuracy.reduced: 'reduced',
 };

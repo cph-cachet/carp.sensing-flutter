@@ -155,14 +155,13 @@ class SmartphoneDeploymentController extends StudyRuntime<DeviceRegistration> {
   ///    * [transformer] - a generic [DataTransformer] function which transform
   ///      each collected data item. If not specified, a 1:1 mapping is done,
   ///      i.e. no transformation.
-  ///    * [coverageFrequency] - a [Coverage] data point will be uploaded with
-  ///      the specified frequency in minutes. Default is every 5 minutes.
-  ///      Set to -1 to disable coverage monitoring.
+  ///    * [heartbeat] - if enabled, a [Heartbeat] data point will be uploaded
+  ///       for each devices every 5 minutes.
   Future<void> configure({
     DataEndPoint? dataEndPoint,
     String privacySchemaName = NameSpace.CARP,
     DataTransformer? transformer,
-    int coverageFrequency = 5,
+    bool heartbeat = true,
   }) async {
     assert(deployment != null,
         'Cannot configure a StudyDeploymentController without a deployment.');
@@ -203,13 +202,8 @@ class SmartphoneDeploymentController extends StudyRuntime<DeviceRegistration> {
     _executor.initialize(deployment!, deployment!);
     measurements.listen((dataPoint) => _samplingSize++);
 
-    // set up coverage heart beat measurements
-    if (coverageFrequency > 0) {
-      Timer.periodic(
-          Duration(minutes: coverageFrequency),
-          (_) => executor.addMeasurement(
-              Measurement.fromData(Coverage(frequency: coverageFrequency))));
-    }
+    // start heartbeat monitoring
+    if (heartbeat) deviceRegistry.startHeartbeatMonitoring(this);
 
     status = StudyStatus.Deployed;
 
@@ -234,7 +228,6 @@ class SmartphoneDeploymentController extends StudyRuntime<DeviceRegistration> {
   /// [configure] must be called before starting sampling.
   @override
   void start([bool start = true]) {
-
     info('$runtimeType - Starting data sampling...');
     super.start();
     if (start) _executor.start();

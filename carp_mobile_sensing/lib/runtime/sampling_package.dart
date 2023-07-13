@@ -92,7 +92,8 @@ class SamplingPackageRegistry {
     if (packages.isNotEmpty) {
       if (packages.length > 1) {
         warning(
-            "$runtimeType - Creating probe, but it seems like the data type '$type' is defined in more than one sampling package.");
+            "$runtimeType - It seems like the data type '$type' is defined in more than one sampling package. "
+            "Is using the probe provided in the ${packages.first} package.");
       }
       probe = packages.first.create(type);
       probe?.deviceManager = packages.first.deviceManager;
@@ -159,7 +160,8 @@ abstract class SamplingPackage {
 /// Note that the default implementation of [permissions] and [onRegister] are
 /// no-op operations and should hence be overridden in subclasses, if needed.
 abstract class SmartphoneSamplingPackage implements SamplingPackage {
-  final _deviceManager = SmartphoneDeviceManager();
+  // all smartphone sampling packages uses the same static device manager
+  static final _deviceManager = SmartphoneDeviceManager();
 
   // @override
   @override

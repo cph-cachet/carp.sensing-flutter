@@ -43,21 +43,31 @@ class FileData extends Data {
       '${super.toString()}, filename: $filename, upload: $upload';
 }
 
-/// Reflects a heart beat data send every [frequency].
+/// Reflects a heart beat data send every [period] minute.
 /// Useful for calculating sampling coverage over time.
 @JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
-class Coverage extends Data {
-  static const dataType = '${CarpDataTypes.CARP_NAMESPACE}.coverage';
+class Heartbeat extends Data {
+  static const dataType = '${CarpDataTypes.CARP_NAMESPACE}.heartbeat';
 
-  /// The expected coverage frequency
-  int frequency;
+  /// The period of heartbeats per minute.
+  int period;
 
-  Coverage({required this.frequency}) : super();
+  /// The type of device.
+  String deviceType;
+
+  /// The role name of the device in the protocol.
+  String deviceRoleName;
+
+  Heartbeat({
+    required this.period,
+    required this.deviceType,
+    required this.deviceRoleName,
+  }) : super();
 
   @override
-  Function get fromJsonFunction => _$CoverageFromJson;
-  factory Coverage.fromJson(Map<String, dynamic> json) =>
-      FromJsonFactory().fromJson(json) as Coverage;
+  Function get fromJsonFunction => _$HeartbeatFromJson;
+  factory Heartbeat.fromJson(Map<String, dynamic> json) =>
+      FromJsonFactory().fromJson(json) as Heartbeat;
   @override
-  Map<String, dynamic> toJson() => _$CoverageToJson(this);
+  Map<String, dynamic> toJson() => _$HeartbeatToJson(this);
 }

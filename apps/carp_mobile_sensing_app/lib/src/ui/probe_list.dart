@@ -54,8 +54,8 @@ class ProbeListState extends State<ProbesList> {
           return ListTile(
             isThreeLine: true,
             leading: probe.icon,
-            title: Text(probe.name),
-            subtitle: Text(probe.description),
+            title: Text(probe.name ?? 'Unknown'),
+            subtitle: Text(probe.description ?? '...'),
 //            subtitle: Text(probe.measure.toString()),
             trailing: probe.stateIcon,
           );

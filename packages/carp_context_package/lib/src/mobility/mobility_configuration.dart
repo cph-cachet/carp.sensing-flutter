@@ -9,7 +9,7 @@ class MobilitySamplingConfiguration extends PersistentSamplingConfiguration {
   /// The radius of a stop.
   double stopRadius;
 
-  /// The radius for registring a place.
+  /// The radius for registering a place.
   double placeRadius;
 
   /// The duration of a stop (minimum).

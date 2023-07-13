@@ -67,6 +67,12 @@ Add the following to your app's `manifest.xml` file located in `android/app/src/
 
 ### iOS Integration
 
+In order to use Location, you need to set your minimum deployment target to iOS 13.0 or later. Change the second line in your `ios/Podfile` into:
+
+```ruby
+platform :ios, '13.0'
+```
+
 Add the following permissions in the `Info.plist` file located in `ios/Runner` (use your own text for explanation in the `<string>` tags):
 
 ```xml
@@ -85,7 +91,7 @@ Add the following permissions in the `Info.plist` file located in `ios/Runner` (
   </array>
 ```
 
-In app settings enable `Background Modes` and check `Location Updates`.
+You also need to activate Background mode for your Runner. Open XCode and go to "Signing & Capabilities". Add the "Background Modes" section and add "Location updates" to the list:
 
 ![iOS Setup](https://raw.githubusercontent.com/wiki/rekab-app/background_locator/images/background_location_update.png)
 

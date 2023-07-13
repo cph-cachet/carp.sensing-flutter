@@ -19,8 +19,8 @@ class WeatherProbe extends MeasurementProbe {
       try {
         final loc = await LocationManager().getLastKnownLocation();
         final w = await deviceManager.service!.currentWeatherByLocation(
-          loc.latitude!,
-          loc.longitude!,
+          loc.latitude,
+          loc.longitude,
         );
 
         return Measurement.fromData(Weather.fromWeatherData(w));

@@ -39,7 +39,7 @@ abstract class Probe extends AbstractExecutor<Measure> {
   ///
   /// Returns `null` in case no configuration is found.
   ///
-  /// See also the section on[Sampling schemes and configurations](https://github.com/cph-cachet/carp.core-kotlin/blob/develop/docs/carp-common.md#sampling-schemes-and-configurations)
+  /// See also the section on [Sampling schemes and configurations](https://github.com/cph-cachet/carp.core-kotlin/blob/develop/docs/carp-common.md#sampling-schemes-and-configurations)
   /// in the CARP Core Framework. In addition to CARP Core, CARP Mobile Sensing
   /// also supports sampling schemes in the sampling packages, which are used
   /// as the 4th possible configuration in the list above.
@@ -68,7 +68,7 @@ abstract class Probe extends AbstractExecutor<Measure> {
   @protected
   void addError(Object error) => controller.addError(error);
 
-  // default no-op implementation of callback methods
+  // default no-op implementation of callback methods below
 
   @override
   bool onInitialize() => true;

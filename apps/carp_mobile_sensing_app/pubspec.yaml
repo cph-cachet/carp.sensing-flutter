@@ -13,10 +13,10 @@ dependencies:
     sdk: flutter
   flutter_launcher_icons: ^0.10.0
   
-  # carp_serializable: ^1.1.0
-  #carp_core: ^0.30.0      # the core CARP domain model
+  carp_serializable: ^1.1.0
+  #carp_core: ^0.30.0
   #carp_mobile_sensing: ^0.30.6
-  #carp_connectivity_package: ^0.30.0  # conflict w. RP - different versions of rxdart
+  #carp_connectivity_package: ^0.30.0
   #carp_context_package: ^0.30.1
   #carp_audio_package: ^0.30.0
   #carp_communication_package: ^0.30.0
@@ -33,8 +33,8 @@ dependencies:
 
 # Overriding carp libraries to use the local copy
 dependency_overrides:
-  carp_serializable:
-    path: ../../carp_serializable/
+  # carp_serializable:
+  #   path: ../../carp_serializable/
   carp_core:
     path: ../../carp_core/
   carp_mobile_sensing:
@@ -43,33 +43,37 @@ dependency_overrides:
     path: ../../packages/carp_context_package/
   carp_connectivity_package:
     path: ../../packages/carp_connectivity_package/
-  # due to version conflict in device_calendar this cannot be included for now
   carp_communication_package:
     path: ../../packages/carp_communication_package/
   carp_audio_package:
     path: ../../packages/carp_audio_package/
   carp_apps_package:
     path: ../../packages/carp_apps_package/
-  # esense_flutter:
-  #   path: ../../../../flutter-plugins/packages/esense_flutter/
   carp_esense_package:
     path: ../../packages/carp_esense_package/
   carp_polar_package:
     path: ../../packages/carp_polar_package/
-
   carp_backend:
     path: ../../backends/carp_backend/
   carp_webservices:
     path: ../../backends/carp_webservices/
+
+  # override of specific plugins, if needed
   # research_package:
   #   path: ../../../../research.package/
-
+  # esense_flutter:
+  #   path: ../../../../flutter-plugins/packages/esense_flutter/
+  # location:
+  #   git:
+  #     url: https://github.com/fairuzmn/flutterlocation.git
+  #     ref: location-v5.5.0.0-dev.9-fix
+  #     path: packages/location
 
 dev_dependencies:
   flutter_test:
     sdk: flutter  
-  # test: any 
-  lints: any
+  test: any 
+  flutter_lints: any
   
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec

@@ -8,10 +8,10 @@ class ProbeModel {
   Stream<ExecutorState> get stateEvents => probe.stateEvents;
 
   ///A printer-friendly name for this probe.
-  String get name => ProbeDescription.descriptors[type]!.name;
+  String? get name => ProbeDescription.descriptors[type]?.name;
 
   ///A printer-friendly description of this probe.
-  String get description => ProbeDescription.descriptors[type]!.description;
+  String? get description => ProbeDescription.descriptors[type]?.description;
 
   /// The icon for this type of probe.
   Icon? get icon => ProbeDescription.probeTypeIcon[type];
