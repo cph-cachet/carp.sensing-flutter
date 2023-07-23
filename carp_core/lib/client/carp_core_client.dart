@@ -19,11 +19,8 @@ library carp_core_client;
 
 import 'dart:async';
 import 'package:meta/meta.dart';
-
-import '../common/carp_core_common.dart';
-import '../deployment/carp_core_deployment.dart';
-
-export 'carp_core_client.dart';
+import 'package:carp_core/common/carp_core_common.dart';
+import 'package:carp_core/deployment/carp_core_deployment.dart';
 
 part 'client_manager.dart';
 part 'study_runtime.dart';

@@ -141,6 +141,7 @@ void carpCoreDataExample() async {
   var configuration = DataStreamsConfiguration(
       studyDeploymentId: studyDeploymentId,
       expectedDataStreams: {geolocation, stepCount});
+
   dataStreamService?.openDataStreams(configuration);
 
   var measurement = Measurement(

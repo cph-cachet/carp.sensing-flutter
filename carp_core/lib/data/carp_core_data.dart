@@ -8,11 +8,9 @@
 /// definition in Kotlin.
 library carp_core_data;
 
-import 'package:carp_core/common/carp_core_common.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:carp_serializable/carp_serializable.dart';
-
-export 'carp_core_data.dart';
+import 'package:carp_core/common/carp_core_common.dart';
 
 part 'application/data_stream.dart';
 part 'application/data_stream_service.dart';

@@ -15,8 +15,6 @@ import 'package:json_annotation/json_annotation.dart';
 import 'package:carp_serializable/carp_serializable.dart';
 import 'package:carp_core/common/carp_core_common.dart';
 
-export 'carp_core_protocols.dart';
-
 part 'domain/study_protocol.dart';
 part 'application/protocol_classes.dart';
 part 'application/protocol_service.dart';

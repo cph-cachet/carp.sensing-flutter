@@ -1,13 +1,10 @@
 /// Contains common CARP domain classes which are used across the libraries.
 library carp_core_common;
 
-import 'package:meta/meta.dart';
 import 'package:iso_duration_parser/iso_duration_parser.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:carp_serializable/carp_serializable.dart';
 import 'package:uuid/uuid.dart';
-
-export 'carp_core_common.dart';
 
 part 'application/account.dart';
 part 'infrastructure/service_request.dart';
