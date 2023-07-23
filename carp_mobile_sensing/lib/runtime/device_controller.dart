@@ -102,7 +102,8 @@ class DeviceController implements DeviceDataCollectorFactory {
     }
   }
 
-  /// Start heartbeat monitoring for all devices, incl. the phone.
+  /// Start heartbeat monitoring for all devices, incl. the phone, for the
+  /// deployment controlled by [controller].
   void startHeartbeatMonitoring(SmartphoneDeploymentController controller) {
     for (var device in devices.values) {
       device.startHeartbeatMonitoring(controller);

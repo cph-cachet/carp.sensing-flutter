@@ -25,7 +25,7 @@ class FlutterLocalNotificationController implements NotificationController {
   /// Initialize and set up the notification controller.
   @override
   Future<void> initialize() async {
-    debug('$runtimeType initializing....');
+    info('$runtimeType initializing....');
     tz.initializeTimeZones();
 
     await FlutterLocalNotificationsPlugin().initialize(
@@ -50,6 +50,7 @@ class FlutterLocalNotificationController implements NotificationController {
     android: const AndroidNotificationDetails(
       NotificationController.CHANNEL_ID,
       NotificationController.CHANNEL_NAME,
+      channelDescription: NotificationController.CHANNEL_DESCRIPTION,
       importance: Importance.max,
       priority: Priority.max,
       ongoing: true,

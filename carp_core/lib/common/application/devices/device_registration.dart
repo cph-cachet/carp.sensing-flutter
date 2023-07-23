@@ -28,7 +28,6 @@ class DeviceRegistration extends Serializable {
   /// The registration time in zulu time.
   late DateTime registrationCreatedOn;
 
-  // @Deprecated('Use DefaultDeviceRegistration instead.')
   DeviceRegistration({
     String? deviceId,
     this.deviceDisplayName,

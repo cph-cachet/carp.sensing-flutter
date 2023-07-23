@@ -159,7 +159,7 @@ class PolarDeviceManager extends BTLEDeviceManager<PolarDevice> {
       return DeviceStatus.error;
     } else {
       try {
-        // listen for battery  events
+        // listen for battery level events
         _batterySubscription = polar.batteryLevel.listen((event) {
           debug('$runtimeType - Polar event : $event');
           _batteryLevel = event.level;

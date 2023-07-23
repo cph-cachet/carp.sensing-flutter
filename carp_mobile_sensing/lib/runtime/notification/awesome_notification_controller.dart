@@ -13,19 +13,21 @@ class AwesomeNotificationController implements NotificationController {
   @override
   Future<void> initialize() async {
     AwesomeNotifications().initialize(
+      // set the icon to null if you want to use the default app icon
       null,
       [
         NotificationChannel(
-          channelKey: 'basic_channel',
-          channelName: 'Basic Notifications',
-          channelDescription: "Basic Notifications",
+          channelKey: NotificationController.CHANNEL_ID,
+          channelName: NotificationController.CHANNEL_NAME,
+          channelDescription: NotificationController.CHANNEL_DESCRIPTION,
           importance: NotificationImportance.High,
           channelShowBadge: true,
         ),
         NotificationChannel(
-          channelKey: 'scheduled_channel',
-          channelName: 'Scheduled Notifications',
-          channelDescription: "Scheduled Notifications",
+          channelKey: NotificationController.SCHEDULED_CHANNEL_ID,
+          channelName: NotificationController.SCHEDULED_CHANNEL_NAME,
+          channelDescription:
+              NotificationController.SCHEDULED_CHANNEL_DESCRIPTION,
           locked: true,
           importance: NotificationImportance.High,
           channelShowBadge: true,
@@ -72,7 +74,7 @@ class AwesomeNotificationController implements NotificationController {
       await AwesomeNotifications().createNotification(
           content: NotificationContent(
               id: task.id.hashCode,
-              channelKey: 'scheduled_channel',
+              channelKey: NotificationController.SCHEDULED_CHANNEL_ID,
               title: task.title,
               body: task.description,
               payload: {'task_id': task.id},
@@ -93,7 +95,7 @@ class AwesomeNotificationController implements NotificationController {
     await AwesomeNotifications().createNotification(
       content: NotificationContent(
           id: task.id.hashCode,
-          channelKey: 'basic_channel',
+          channelKey: NotificationController.CHANNEL_ID,
           title: task.title,
           body: task.description,
           payload: {'task_id': task.id},

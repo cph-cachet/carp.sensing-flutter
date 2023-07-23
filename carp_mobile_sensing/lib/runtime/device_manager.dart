@@ -65,7 +65,8 @@ abstract class DeviceManager<TDeviceConfiguration extends DeviceConfiguration>
   /// doing a lot of work on startup.
   void onInitialize(TDeviceConfiguration configuration);
 
-  /// Start heartbeat monitoring for this device.
+  /// Start heartbeat monitoring for this device for the deployment controlled
+  /// by [controller].
   void startHeartbeatMonitoring(SmartphoneDeploymentController controller) {
     if (!isInitialized) {
       warning(
@@ -93,7 +94,6 @@ abstract class DeviceManager<TDeviceConfiguration extends DeviceConfiguration>
   /// Returns the [DeviceStatus] of the device.
   @nonVirtual
   Future<DeviceStatus> connect() async {
-    debug('$runtimeType >> $this');
     if (!isInitialized) {
       warning('$runtimeType has not been initialized - cannot connect to it.');
       return status;
@@ -195,7 +195,7 @@ abstract class HardwareDeviceManager<
 
 /// A device manager for a smartphone.
 class SmartphoneDeviceManager extends HardwareDeviceManager<Smartphone> {
-  int? _batteryLevel = 0;
+  int _batteryLevel = 0;
   Battery battery = Battery();
   final Set<String> _supportedDataTypes = {};
 
@@ -227,7 +227,7 @@ class SmartphoneDeviceManager extends HardwareDeviceManager<Smartphone> {
   }
 
   @override
-  int? get batteryLevel => _batteryLevel;
+  int get batteryLevel => _batteryLevel;
 
   @override
   Future<bool> canConnect() async => true; // can always connect to the phone

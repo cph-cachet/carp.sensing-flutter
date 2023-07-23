@@ -13,16 +13,29 @@ abstract class NotificationController {
   static const PENDING_NOTIFICATION_LIMIT = 64;
 
   /// The id of the notification channel.
-  static const CHANNEL_ID = 'carp_mobile_sensing_notification_user_tasks';
+  static const CHANNEL_ID = 'carp_mobile_sensing_notifications';
 
   /// The name of the notification channel as shown in the Settings
   /// on Android phones.
-  static const CHANNEL_NAME = 'User Tasks';
+  static const CHANNEL_NAME = 'CARP Basic Notifications';
 
   /// The description of the notification channel as shown in the Settings
   /// on Android phones.
   static const CHANNEL_DESCRIPTION =
       'Notifications about tasks that the user has to do.';
+
+  /// The id of the notification channel.
+  static const SCHEDULED_CHANNEL_ID =
+      'carp_mobile_sensing_scheduled_notifications';
+
+  /// The name of the notification channel as shown in the Settings
+  /// on Android phones.
+  static const SCHEDULED_CHANNEL_NAME = 'CARP Scheduled Notifications';
+
+  /// The description of the notification channel as shown in the Settings
+  /// on Android phones.
+  static const SCHEDULED_CHANNEL_DESCRIPTION =
+      'Notifications about scheduled tasks that the user has to do.';
 
   /// Initialize and set up the notification controller.
   /// Also tries to get permissions to send notifications.
