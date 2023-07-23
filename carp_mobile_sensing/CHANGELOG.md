@@ -1,4 +1,4 @@
-## 1.1.0
+## 1.1.2
 
 > Note: This release has breaking changes.
 

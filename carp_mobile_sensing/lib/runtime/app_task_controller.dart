@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Copenhagen Center for Health Technology (CACHET) at the
+ * Copyright 2020-2023 Copenhagen Center for Health Technology (CACHET) at the
  * Technical University of Denmark (DTU).
  * Use of this source code is governed by a MIT-style license that can be
  * found in the LICENSE file.
@@ -11,6 +11,7 @@ part of runtime;
 class AppTaskController {
   static final AppTaskController _instance = AppTaskController._();
   final StreamController<UserTask> _controller = StreamController.broadcast();
+  Timer? _garbageCollector;
 
   /// Should this App Task Controller send notifications to the user.
   bool notificationsEnabled = true;
@@ -60,7 +61,7 @@ class AppTaskController {
     registerUserTaskFactory(SensingUserTaskFactory());
   }
 
-  /// Initialize and set up the app controller for the [deployment].
+  /// Initialize and set up the app controller.
   ///
   /// If [enableNotifications] is true, a notification will be added to
   /// the phone's notification system when a task is enqueued via the
@@ -69,7 +70,7 @@ class AppTaskController {
     bool enableNotifications = true,
   }) async {
     // set up a timer which cleans up in the queue once an hour
-    Timer.periodic(const Duration(hours: 1), (timer) {
+    _garbageCollector = Timer.periodic(const Duration(hours: 1), (timer) {
       for (var task in userTasks) {
         if (task.expiresIn != null && task.expiresIn!.isNegative) {
           expire(task.id);
@@ -81,6 +82,14 @@ class AppTaskController {
     if (notificationsEnabled) {
       await SmartPhoneClientManager().notificationController?.initialize();
     }
+  }
+
+  /// Dispose this app task controller.
+  ///
+  /// No further app tasks can be enqueued to a closed controller.
+  void dispose() {
+    _garbageCollector?.cancel();
+    _controller.close();
   }
 
   final Map<String, UserTaskFactory> _userTaskFactories = {};

@@ -32,7 +32,6 @@ class FileDataManagerFactory implements DataManagerFactory {
 /// located in the `data/data/<package_name>/app_flutter` folder.
 /// Files can be accessed via AndroidStudio.
 class FileDataManager extends AbstractDataManager {
-  // late FileDataEndPoint _fileDataEndPoint;
   String? _path;
   String? _filename;
   File? _file;
@@ -225,6 +224,7 @@ class FileDataManager extends AbstractDataManager {
     await file.then((activeFile) async {
       sink.then((activeSink) async {
         await flush(activeFile, activeSink);
+        await _sink?.close();
         await super.close();
       });
     });
