@@ -1,6 +1,3 @@
-import 'dart:convert';
-import 'dart:io';
-
 import 'package:carp_serializable/carp_serializable.dart';
 import 'package:carp_core/carp_core.dart';
 import 'package:carp_mobile_sensing/carp_mobile_sensing.dart';
@@ -38,14 +35,14 @@ void main() {
 
     CarpProtocolService().configureFrom(CarpService());
     ownerId = CarpService().currentUser!.accountId;
-    var phone = Smartphone(roleName: "Participant's phone");
+    var phone = Smartphone(roleName: phoneRoleName);
     phone.defaultSamplingConfiguration?.addAll({
       Geolocation.dataType: BatteryAwareSamplingConfiguration(
           normal: GranularitySamplingConfiguration(Granularity.Detailed),
           low: GranularitySamplingConfiguration(Granularity.Coarse)),
     });
 
-    final bike = AltBeacon(roleName: "Participant's bike");
+    final bike = AltBeacon(roleName: bikeRoleName);
 
     // a study protocol mimicking the protocol from core
     protocol = StudyProtocol(
@@ -58,11 +55,6 @@ void main() {
 
     var trigger = ElapsedTimeTrigger(elapsedTime: IsoDuration.tryParse('PT0S'));
 
-    Measure measure = Measure(type: 'dk.cachet.carp.steps');
-    measure.overrideSamplingConfiguration = BatteryAwareSamplingConfiguration(
-        normal: GranularitySamplingConfiguration(Granularity.Detailed),
-        low: GranularitySamplingConfiguration(Granularity.Balanced));
-
     protocol
       ..addTaskControl(
         trigger,
@@ -71,25 +63,28 @@ void main() {
             description: 'Track step count and geolocation for one week.',
             duration: IsoDuration.tryParse('PT168H'),
             measures: [
-              Measure(type: 'dk.cachet.carp.geolocation')
+              Measure(type: Geolocation.dataType)
                 ..overrideSamplingConfiguration =
                     BatteryAwareSamplingConfiguration(
                         normal: GranularitySamplingConfiguration(
                             Granularity.Detailed),
                         low: GranularitySamplingConfiguration(
                             Granularity.Balanced)),
-              Measure(type: 'dk.cachet.carp.stepcount'),
+              Measure(type: StepCount.dataType),
+              // the following measures are not part of carp-core, but should still be accepted.
+              Measure(type: Heartbeat.dataType),
+              Measure(type: BatteryState.dataType),
             ]),
         phone,
       )
       ..addTaskControl(
         trigger,
         BackgroundTask(
-            name: 'Monitor proximity to bike',
-            description: 'Track step count and geolocation for one week.',
+            name: 'Bike proximity',
+            description: 'Monitor proximity to bike',
             duration: IsoDuration.tryParse('PT168H'),
             measures: [
-              Measure(type: 'dk.cachet.carp.signalstrength'),
+              Measure(type: SignalStrength.dataType),
             ]),
         bike,
       );

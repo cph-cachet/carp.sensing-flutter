@@ -45,8 +45,10 @@ void main() {
     bloc.dataFormat = NameSpace.CARP;
 
     // generate the protocol to be used in testing below
+    // setting the right accountId, if to be uploaded to CAWS
     protocol ??=
         await LocalStudyProtocolManager().getStudyProtocol('CAMS App v 1.1.0');
+    protocol?.ownerId = accountId;
   });
 
   group("Local Study Protocol Manager", () {

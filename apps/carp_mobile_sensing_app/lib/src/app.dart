@@ -20,18 +20,18 @@ class LoadingPage extends StatelessWidget {
   ///  * initialize sensing
   ///  * start sensing
   Future<bool> init(BuildContext context) async {
-    // only initialize the CARP backend bloc, if needed
+    // Initialize and use the CARP backend if not in local deployment mode
     if (bloc.deploymentMode != DeploymentMode.local) {
       await CarpBackend().initialize();
       await CarpBackend().authenticate(context, username: 'jakob@bardram.net');
 
-      // check if there is a local deployment id
-      // if not, get a deployment id based on an invitation
+      // Check if there is a local deployment id.
+      // If not, get a deployment id based on an invitation.
       if (bloc.studyDeploymentId == null) {
         await CarpBackend().getStudyInvitation(context);
       }
 
-      // make sure that CarpService knows the study and deployment ids
+      // Make sure that CarpService knows the study and deployment ids
       CarpService().app?.studyId = bloc.studyId;
       CarpService().app?.studyDeploymentId = bloc.studyDeploymentId;
     }

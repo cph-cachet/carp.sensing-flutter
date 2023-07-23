@@ -61,7 +61,7 @@ void main() async {
     });
 
     ConsentDocument downloaded =
-        await CarpService().getConsentDocument(uploaded.id!);
+        await CarpService().getConsentDocument(uploaded.id);
     print(downloaded);
   } catch (excp) {
     print(excp);

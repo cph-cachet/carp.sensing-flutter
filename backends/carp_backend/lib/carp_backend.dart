@@ -34,6 +34,11 @@ part 'carp_backend.g.dart';
 part 'message_manager.dart';
 
 /// Specify a CARP Web Service (CAWS) endpoint for uploading data.
+///
+/// If a study deployment is downloaded from CAWS (i.e., via the
+/// [CarpDeploymentService]), then the address and authentication used for downloading
+/// is used, and the [uri], [clientId], [clientSecret], [email] and [password]
+/// need not to be specified.
 @JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
 class CarpDataEndPoint extends DataEndPoint {
   /// The method used to upload to CARP. See [CarpUploadMethod] for options.
@@ -58,12 +63,7 @@ class CarpDataEndPoint extends DataEndPoint {
   /// Password used in password authentication.
   ///
   /// Note that the password is in **clear text** and should hence only be used
-  /// if it is collected locally on the phone.
-  ///
-  /// If the study deployment is downloaded from CAWS (i.e., via the
-  /// [CarpDeploymentService]), then the authentication used for downloading
-  /// is used, and the [clientId], [clientSecret], [email] and [password]
-  /// need not to be specified.
+  /// if it is entered by the user locally on the phone.
   String? password;
 
   /// Only upload when connected via WiFi network?

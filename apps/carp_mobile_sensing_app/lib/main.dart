@@ -23,7 +23,7 @@ import 'package:carp_webservices/carp_auth/carp_auth.dart';
 import 'package:carp_webservices/carp_services/carp_services.dart';
 import 'package:carp_backend/carp_backend.dart';
 
-import 'credentials.dart';
+import 'config.dart';
 
 part 'src/app.dart';
 part 'src/sensing/sensing.dart';
@@ -50,9 +50,9 @@ void main() async {
 
   // Initialize the bloc, setting the deployment mode.
   await bloc.initialize(
-    deploymentMode: DeploymentMode.local,
-    deploymentId: testDeploymentId,
-    useCachedStudyDeployment: false,
+    deploymentMode: DeploymentMode.development,
+    // deploymentId: testDeploymentId,
+    // useCachedStudyDeployment: false,
     resumeSensingOnStartup: false,
   );
 

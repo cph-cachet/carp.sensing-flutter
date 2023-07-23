@@ -107,22 +107,20 @@ class DeploymentReference extends RPCCarpReference {
   /// Get the deployment for this [DeploymentReference] for the specified
   /// [studyDeploymentId].
   Future<SmartphoneDeployment> get() async {
-    if (status == null) {
-      await getStatus();
-    }
+    if (status == null) await getStatus();
 
     // downloading a PrimaryDeviceDeployment
-    var deployment =
+    var downloaded =
         PrimaryDeviceDeployment.fromJson(await _rpc(GetDeviceDeploymentFor(
       studyDeploymentId,
       status!.primaryDeviceStatus!.device.roleName,
     )));
 
-    // converting it to a SmartphoneDeployment
-    return SmartphoneDeployment.fromPrimaryDeviceDeployment(
+    // converting it to a SmartphoneDeployment and saving it
+    return _deployment = SmartphoneDeployment.fromPrimaryDeviceDeployment(
       studyId: CarpService().app?.studyId,
       studyDeploymentId: studyDeploymentId,
-      deployment: deployment,
+      deployment: downloaded,
     );
   }
 

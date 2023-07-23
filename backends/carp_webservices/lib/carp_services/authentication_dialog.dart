@@ -104,7 +104,7 @@ class AuthenticationDialog {
             warning('Exception in authentication - $exception');
           }
         },
-        style: ElevatedButton.styleFrom(primary: Colors.blue[900]),
+        style: ElevatedButton.styleFrom(backgroundColor: Colors.blue[900]),
         child: Text(
           "LOGIN",
           style: const TextStyle(color: Colors.white, fontSize: 20),

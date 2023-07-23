@@ -1,14 +1,42 @@
 {
-    "id": "f67cc840-7cae-11ed-b4a5-0f5241a4d271",
-    "createdOn": "2022-12-15T19:44:20.487225Z",
-    "ownerId": "01dc52c4-b33b-4304-b265-8118c69f5935",
-    "name": "Nonmotorized transport study II",
-    "description": "Track how much nonmotorized movement participants perform.",
+    "id": "ace0f310-2950-11ee-b4b2-f764a9d2285f",
+    "createdOn": "2023-07-23T12:01:36.961803Z",
+    "version": 0,
+    "ownerId": "682ac0bd-d4ab-46e1-874a-19750b884220",
+    "name": "Non-motorized transport study",
+    "description": "Track how much non-motorized movement participants perform.",
     "primaryDevices": [
         {
             "__type": "dk.cachet.carp.common.application.devices.Smartphone",
-            "isPrimaryDevice": true,
-            "roleName": "smartphone"
+            "roleName": "Participant's phone",
+            "defaultSamplingConfiguration": {
+                "dk.cachet.carp.geolocation": {
+                    "__type": "dk.cachet.carp.common.application.sampling.BatteryAwareSamplingConfiguration",
+                    "normal": {
+                        "__type": "dk.cachet.carp.common.application.sampling.GranularitySamplingConfiguration",
+                        "granularity": "Detailed"
+                    },
+                    "low": {
+                        "__type": "dk.cachet.carp.common.application.sampling.GranularitySamplingConfiguration",
+                        "granularity": "Coarse"
+                    }
+                }
+            },
+            "isPrimaryDevice": true
+        }
+    ],
+    "connectedDevices": [
+        {
+            "__type": "dk.cachet.carp.common.application.devices.AltBeacon",
+            "roleName": "Participant's bike",
+            "isOptional": true,
+            "defaultSamplingConfiguration": {}
+        }
+    ],
+    "connections": [
+        {
+            "roleName": "Participant's bike",
+            "connectedToRoleName": "Participant's phone"
         }
     ],
     "tasks": [
@@ -18,11 +46,30 @@
             "measures": [
                 {
                     "__type": "dk.cachet.carp.common.application.tasks.Measure.DataStream",
-                    "type": "dk.cachet.carp.geolocation"
+                    "type": "dk.cachet.carp.geolocation",
+                    "overrideSamplingConfiguration": {
+                        "__type": "dk.cachet.carp.common.application.sampling.BatteryAwareSamplingConfiguration",
+                        "normal": {
+                            "__type": "dk.cachet.carp.common.application.sampling.GranularitySamplingConfiguration",
+                            "granularity": "Detailed"
+                        },
+                        "low": {
+                            "__type": "dk.cachet.carp.common.application.sampling.GranularitySamplingConfiguration",
+                            "granularity": "Balanced"
+                        }
+                    }
                 },
                 {
                     "__type": "dk.cachet.carp.common.application.tasks.Measure.DataStream",
                     "type": "dk.cachet.carp.stepcount"
+                },
+                {
+                    "__type": "dk.cachet.carp.common.application.tasks.Measure.DataStream",
+                    "type": "dk.cachet.carp.heartrate"
+                },
+                {
+                    "__type": "dk.cachet.carp.common.application.tasks.Measure.DataStream",
+                    "type": "dk.cachet.carp.batterystate"
                 }
             ],
             "description": "Track step count and geolocation for one week.",
@@ -37,14 +84,14 @@
                     "type": "dk.cachet.carp.signalstrength"
                 }
             ],
-            "description": "rack step count and geolocation for one week.",
+            "description": "Track step count and geolocation for one week.",
             "duration": "PT168H"
         }
     ],
     "triggers": {
         "0": {
             "__type": "dk.cachet.carp.common.application.triggers.ElapsedTimeTrigger",
-            "sourceDeviceRoleName": "smartphone",
+            "sourceDeviceRoleName": "Participant's phone",
             "elapsedTime": "PT0S"
         }
     },
@@ -52,13 +99,13 @@
         {
             "triggerId": 0,
             "taskName": "Monitor movement",
-            "destinationDeviceRoleName": "smartphone",
+            "destinationDeviceRoleName": "Participant's phone",
             "control": "Start"
         },
         {
             "triggerId": 0,
             "taskName": "Monitor proximity to bike",
-            "destinationDeviceRoleName": "smartphone",
+            "destinationDeviceRoleName": "Participant's bike",
             "control": "Start"
         }
     ],
@@ -68,6 +115,7 @@
             "isOptional": false
         }
     ],
+    "assignedDevices": {},
     "expectedParticipantData": [
         {
             "attribute": {

@@ -123,7 +123,7 @@ abstract class DeviceManager<TDeviceConfiguration extends DeviceConfiguration>
   /// type is restarted. This method is useful after the device is connected.
   @nonVirtual
   void restart() {
-    info('$runtimeType - restarting sampling...');
+    info('$runtimeType - Restarting sampling...');
 
     for (var executor in executors) {
       executor.restart();

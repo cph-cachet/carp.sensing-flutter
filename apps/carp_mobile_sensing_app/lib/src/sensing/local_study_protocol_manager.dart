@@ -39,20 +39,11 @@ class LocalStudyProtocolManager implements StudyProtocolManager {
         )
     // set the format of the data to upload - e.g. Open mHealth
     ..dataFormat = bloc.dataFormat;
-  // : CarpDataEndPoint(
-  //     uploadMethod: CarpUploadMethod.datapoint,
-  //     uri: uri,
-  //     clientId: clientID,
-  //     clientSecret: clientSecret,
-  //     email: username,
-  //     password: password,
-  //     uploadInterval: 1,
-  //   );
 
   Future<SmartphoneStudyProtocol> _getSingleUserStudyProtocol(
       String protocolId) async {
     SmartphoneStudyProtocol protocol = SmartphoneStudyProtocol(
-      ownerId: accountId,
+      ownerId: 'abc@dtu.dk',
       name: protocolId,
       studyDescription: studyDescription,
       dataEndPoint: dataEndPoint..dataFormat = bloc.dataFormat,
@@ -285,7 +276,7 @@ class LocalStudyProtocolManager implements StudyProtocolManager {
   Future<SmartphoneStudyProtocol> _getFamilyStudyProtocol(
       String protocolId) async {
     SmartphoneStudyProtocol protocol = SmartphoneStudyProtocol(
-      ownerId: accountId,
+      ownerId: 'abc@dtu.dk',
       name: protocolId,
       studyDescription: studyDescription,
       dataEndPoint: dataEndPoint..dataFormat = bloc.dataFormat,

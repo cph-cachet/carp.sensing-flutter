@@ -1,0 +1,1433 @@
+    {
+        "__type": "dk.cachet.carp.data.infrastructure.DataStreamServiceRequest.AppendToDataStreams",
+        "apiVersion": "1.1",
+        "studyDeploymentId": "3e27e1b3-5e2e-45be-95b5-7c1d2cf9559f",
+        "batch": [
+            {
+                "dataStream": {
+                    "studyDeploymentId": "3e27e1b3-5e2e-45be-95b5-7c1d2cf9559f",
+                    "deviceRoleName": "Primary Phone",
+                    "dataType": "dk.cachet.carp.heartbeat"
+                },
+                "firstSequenceId": 52,
+                "measurements": [
+                    {
+                        "sensorStartTime": 1690119679040346,
+                        "data": {
+                            "__type": "dk.cachet.carp.heartbeat",
+                            "period": 5,
+                            "deviceType": "dk.cachet.carp.common.application.devices.Smartphone",
+                            "deviceRoleName": "Primary Phone"
+                        }
+                    },
+                    {
+                        "sensorStartTime": 1690119679041563,
+                        "data": {
+                            "__type": "dk.cachet.carp.heartbeat",
+                            "period": 5,
+                            "deviceType": "dk.cachet.carp.common.application.devices.LocationService",
+                            "deviceRoleName": "Location Service"
+                        }
+                    },
+                    {
+                        "sensorStartTime": 1690119679042018,
+                        "data": {
+                            "__type": "dk.cachet.carp.heartbeat",
+                            "period": 5,
+                            "deviceType": "dk.cachet.carp.common.application.devices.AirQualityService",
+                            "deviceRoleName": "Air Quality Service"
+                        }
+                    },
+                    {
+                        "sensorStartTime": 1690119679042236,
+                        "data": {
+                            "__type": "dk.cachet.carp.heartbeat",
+                            "period": 5,
+                            "deviceType": "dk.cachet.carp.common.application.devices.WeatherService",
+                            "deviceRoleName": "Weather Service"
+                        }
+                    }
+                ],
+                "triggerIds": [
+                    0
+                ]
+            },
+            {
+                "dataStream": {
+                    "studyDeploymentId": "3e27e1b3-5e2e-45be-95b5-7c1d2cf9559f",
+                    "deviceRoleName": "Primary Phone",
+                    "dataType": "dk.cachet.carp.triggeredtask"
+                },
+                "firstSequenceId": 1,
+                "measurements": [
+                    {
+                        "sensorStartTime": 1690119388453834,
+                        "data": {
+                            "__type": "dk.cachet.carp.triggeredtask",
+                            "triggerId": 1,
+                            "taskName": "Task #24",
+                            "destinationDeviceRoleName": "Primary Phone",
+                            "control": "Start"
+                        }
+                    },
+                    {
+                        "sensorStartTime": 1690119388461379,
+                        "data": {
+                            "__type": "dk.cachet.carp.triggeredtask",
+                            "triggerId": 1,
+                            "taskName": "Task #26",
+                            "destinationDeviceRoleName": "Primary Phone",
+                            "control": "Start"
+                        }
+                    },
+                    {
+                        "sensorStartTime": 1690119388462149,
+                        "data": {
+                            "__type": "dk.cachet.carp.triggeredtask",
+                            "triggerId": 1,
+                            "taskName": "Task #33",
+                            "destinationDeviceRoleName": "Primary Phone",
+                            "control": "Start"
+                        }
+                    },
+                    {
+                        "sensorStartTime": 1690119388462595,
+                        "data": {
+                            "__type": "dk.cachet.carp.triggeredtask",
+                            "triggerId": 1,
+                            "taskName": "Task #34",
+                            "destinationDeviceRoleName": "Primary Phone",
+                            "control": "Start"
+                        }
+                    },
+                    {
+                        "sensorStartTime": 1690119388463779,
+                        "data": {
+                            "__type": "dk.cachet.carp.triggeredtask",
+                            "triggerId": 4,
+                            "taskName": "Task #28",
+                            "destinationDeviceRoleName": "Location Service",
+                            "control": "Start"
+                        }
+                    },
+                    {
+                        "sensorStartTime": 1690119388469807,
+                        "data": {
+                            "__type": "dk.cachet.carp.triggeredtask",
+                            "triggerId": 10,
+                            "taskName": "Task #36",
+                            "destinationDeviceRoleName": "eSense",
+                            "control": "Start"
+                        }
+                    },
+                    {
+                        "sensorStartTime": 1690119388471046,
+                        "data": {
+                            "__type": "dk.cachet.carp.triggeredtask",
+                            "triggerId": 12,
+                            "taskName": "Task #38",
+                            "destinationDeviceRoleName": "polar-pvs-device",
+                            "control": "Start"
+                        }
+                    },
+                    {
+                        "sensorStartTime": 1690119388485365,
+                        "data": {
+                            "__type": "dk.cachet.carp.triggeredtask",
+                            "triggerId": 2,
+                            "taskName": "Task #25",
+                            "destinationDeviceRoleName": "Primary Phone",
+                            "control": "Start"
+                        }
+                    },
+                    {
+                        "sensorStartTime": 1690119388496125,
+                        "data": {
+                            "__type": "dk.cachet.carp.triggeredtask",
+                            "triggerId": 2,
+                            "taskName": "Task #25",
+                            "destinationDeviceRoleName": "Primary Phone",
+                            "control": "Start"
+                        }
+                    },
+                    {
+                        "sensorStartTime": 1690119388502686,
+                        "data": {
+                            "__type": "dk.cachet.carp.triggeredtask",
+                            "triggerId": 2,
+                            "taskName": "Task #25",
+                            "destinationDeviceRoleName": "Primary Phone",
+                            "control": "Start"
+                        }
+                    }
+                ],
+                "triggerIds": [
+                    1,
+                    4,
+                    10,
+                    12,
+                    2
+                ]
+            },
+            {
+                "dataStream": {
+                    "studyDeploymentId": "3e27e1b3-5e2e-45be-95b5-7c1d2cf9559f",
+                    "deviceRoleName": "Primary Phone",
+                    "dataType": "dk.cachet.carp.stepcount"
+                },
+                "firstSequenceId": 14,
+                "measurements": [
+                    {
+                        "sensorStartTime": 1690119388506149,
+                        "data": {
+                            "__type": "dk.cachet.carp.stepcount",
+                            "steps": 0
+                        }
+                    }
+                ],
+                "triggerIds": [
+                    1
+                ]
+            },
+            {
+                "dataStream": {
+                    "studyDeploymentId": "3e27e1b3-5e2e-45be-95b5-7c1d2cf9559f",
+                    "deviceRoleName": "Primary Phone",
+                    "dataType": "dk.cachet.carp.ambientlight"
+                },
+                "firstSequenceId": 60,
+                "measurements": [
+                    {
+                        "sensorStartTime": 1690119688474397,
+                        "sensorEndTime": 1690119698500075,
+                        "data": {
+                            "__type": "dk.cachet.carp.ambientlight",
+                            "meanLux": 230.1875,
+                            "stdLux": 1.3331705629813464,
+                            "minLux": 227,
+                            "maxLux": 232
+                        }
+                    }
+                ],
+                "triggerIds": [
+                    1
+                ]
+            },
+            {
+                "dataStream": {
+                    "studyDeploymentId": "3e27e1b3-5e2e-45be-95b5-7c1d2cf9559f",
+                    "deviceRoleName": "Primary Phone",
+                    "dataType": "dk.cachet.carp.freememory"
+                },
+                "firstSequenceId": 22,
+                "measurements": [
+                    {
+                        "sensorStartTime": 1690119448638945,
+                        "data": {
+                            "__type": "dk.cachet.carp.freememory",
+                            "freePhysicalMemory": 154959872,
+                            "freeVirtualMemory": 3168907264
+                        }
+                    },
+                    {
+                        "sensorStartTime": 1690119508654396,
+                        "data": {
+                            "__type": "dk.cachet.carp.freememory",
+                            "freePhysicalMemory": 152322048,
+                            "freeVirtualMemory": 3167219712
+                        }
+                    },
+                    {
+                        "sensorStartTime": 1690119568666831,
+                        "data": {
+                            "__type": "dk.cachet.carp.freememory",
+                            "freePhysicalMemory": 164327424,
+                            "freeVirtualMemory": 3179814912
+                        }
+                    },
+                    {
+                        "sensorStartTime": 1690119628657609,
+                        "data": {
+                            "__type": "dk.cachet.carp.freememory",
+                            "freePhysicalMemory": 157503488,
+                            "freeVirtualMemory": 3172290560
+                        }
+                    },
+                    {
+                        "sensorStartTime": 1690119688661264,
+                        "data": {
+                            "__type": "dk.cachet.carp.freememory",
+                            "freePhysicalMemory": 147087360,
+                            "freeVirtualMemory": 3163267072
+                        }
+                    },
+                    {
+                        "sensorStartTime": 1690119748659614,
+                        "data": {
+                            "__type": "dk.cachet.carp.freememory",
+                            "freePhysicalMemory": 153083904,
+                            "freeVirtualMemory": 3169251328
+                        }
+                    },
+                    {
+                        "sensorStartTime": 1690119808677524,
+                        "data": {
+                            "__type": "dk.cachet.carp.freememory",
+                            "freePhysicalMemory": 152342528,
+                            "freeVirtualMemory": 3167768576
+                        }
+                    },
+                    {
+                        "sensorStartTime": 1690119868657966,
+                        "data": {
+                            "__type": "dk.cachet.carp.freememory",
+                            "freePhysicalMemory": 162144256,
+                            "freeVirtualMemory": 3183915008
+                        }
+                    },
+                    {
+                        "sensorStartTime": 1690119928671032,
+                        "data": {
+                            "__type": "dk.cachet.carp.freememory",
+                            "freePhysicalMemory": 139128832,
+                            "freeVirtualMemory": 3140149248
+                        }
+                    }
+                ],
+                "triggerIds": [
+                    1
+                ]
+            },
+            {
+                "dataStream": {
+                    "studyDeploymentId": "3e27e1b3-5e2e-45be-95b5-7c1d2cf9559f",
+                    "deviceRoleName": "Primary Phone",
+                    "dataType": "dk.cachet.carp.batterystate"
+                },
+                "firstSequenceId": 16,
+                "measurements": [
+                    {
+                        "sensorStartTime": 1690119390679178,
+                        "data": {
+                            "__type": "dk.cachet.carp.batterystate",
+                            "batteryLevel": 93,
+                            "batteryStatus": "charging"
+                        }
+                    },
+                    {
+                        "sensorStartTime": 1690119400873167,
+                        "data": {
+                            "__type": "dk.cachet.carp.batterystate",
+                            "batteryLevel": 94,
+                            "batteryStatus": "charging"
+                        }
+                    },
+                    {
+                        "sensorStartTime": 1690119411067983,
+                        "data": {
+                            "__type": "dk.cachet.carp.batterystate",
+                            "batteryLevel": 94,
+                            "batteryStatus": "charging"
+                        }
+                    },
+                    {
+                        "sensorStartTime": 1690119421264828,
+                        "data": {
+                            "__type": "dk.cachet.carp.batterystate",
+                            "batteryLevel": 94,
+                            "batteryStatus": "charging"
+                        }
+                    },
+                    {
+                        "sensorStartTime": 1690119431480773,
+                        "data": {
+                            "__type": "dk.cachet.carp.batterystate",
+                            "batteryLevel": 94,
+                            "batteryStatus": "charging"
+                        }
+                    },
+                    {
+                        "sensorStartTime": 1690119441706326,
+                        "data": {
+                            "__type": "dk.cachet.carp.batterystate",
+                            "batteryLevel": 94,
+                            "batteryStatus": "charging"
+                        }
+                    },
+                    {
+                        "sensorStartTime": 1690119451921146,
+                        "data": {
+                            "__type": "dk.cachet.carp.batterystate",
+                            "batteryLevel": 94,
+                            "batteryStatus": "charging"
+                        }
+                    },
+                    {
+                        "sensorStartTime": 1690119462101790,
+                        "data": {
+                            "__type": "dk.cachet.carp.batterystate",
+                            "batteryLevel": 94,
+                            "batteryStatus": "charging"
+                        }
+                    },
+                    {
+                        "sensorStartTime": 1690119472323327,
+                        "data": {
+                            "__type": "dk.cachet.carp.batterystate",
+                            "batteryLevel": 94,
+                            "batteryStatus": "charging"
+                        }
+                    },
+                    {
+                        "sensorStartTime": 1690119482536437,
+                        "data": {
+                            "__type": "dk.cachet.carp.batterystate",
+                            "batteryLevel": 94,
+                            "batteryStatus": "charging"
+                        }
+                    },
+                    {
+                        "sensorStartTime": 1690119492730724,
+                        "data": {
+                            "__type": "dk.cachet.carp.batterystate",
+                            "batteryLevel": 94,
+                            "batteryStatus": "charging"
+                        }
+                    },
+                    {
+                        "sensorStartTime": 1690119502957707,
+                        "data": {
+                            "__type": "dk.cachet.carp.batterystate",
+                            "batteryLevel": 94,
+                            "batteryStatus": "charging"
+                        }
+                    },
+                    {
+                        "sensorStartTime": 1690119513165325,
+                        "data": {
+                            "__type": "dk.cachet.carp.batterystate",
+                            "batteryLevel": 94,
+                            "batteryStatus": "charging"
+                        }
+                    },
+                    {
+                        "sensorStartTime": 1690119523395742,
+                        "data": {
+                            "__type": "dk.cachet.carp.batterystate",
+                            "batteryLevel": 94,
+                            "batteryStatus": "charging"
+                        }
+                    },
+                    {
+                        "sensorStartTime": 1690119533601915,
+                        "data": {
+                            "__type": "dk.cachet.carp.batterystate",
+                            "batteryLevel": 94,
+                            "batteryStatus": "charging"
+                        }
+                    },
+                    {
+                        "sensorStartTime": 1690119543834619,
+                        "data": {
+                            "__type": "dk.cachet.carp.batterystate",
+                            "batteryLevel": 94,
+                            "batteryStatus": "charging"
+                        }
+                    },
+                    {
+                        "sensorStartTime": 1690119554022323,
+                        "data": {
+                            "__type": "dk.cachet.carp.batterystate",
+                            "batteryLevel": 94,
+                            "batteryStatus": "charging"
+                        }
+                    },
+                    {
+                        "sensorStartTime": 1690119564252191,
+                        "data": {
+                            "__type": "dk.cachet.carp.batterystate",
+                            "batteryLevel": 94,
+                            "batteryStatus": "charging"
+                        }
+                    },
+                    {
+                        "sensorStartTime": 1690119574471542,
+                        "data": {
+                            "__type": "dk.cachet.carp.batterystate",
+                            "batteryLevel": 94,
+                            "batteryStatus": "charging"
+                        }
+                    },
+                    {
+                        "sensorStartTime": 1690119584697197,
+                        "data": {
+                            "__type": "dk.cachet.carp.batterystate",
+                            "batteryLevel": 94,
+                            "batteryStatus": "charging"
+                        }
+                    },
+                    {
+                        "sensorStartTime": 1690119594900455,
+                        "data": {
+                            "__type": "dk.cachet.carp.batterystate",
+                            "batteryLevel": 94,
+                            "batteryStatus": "charging"
+                        }
+                    },
+                    {
+                        "sensorStartTime": 1690119605118894,
+                        "data": {
+                            "__type": "dk.cachet.carp.batterystate",
+                            "batteryLevel": 94,
+                            "batteryStatus": "charging"
+                        }
+                    },
+                    {
+                        "sensorStartTime": 1690119615352223,
+                        "data": {
+                            "__type": "dk.cachet.carp.batterystate",
+                            "batteryLevel": 94,
+                            "batteryStatus": "charging"
+                        }
+                    },
+                    {
+                        "sensorStartTime": 1690119625538871,
+                        "data": {
+                            "__type": "dk.cachet.carp.batterystate",
+                            "batteryLevel": 94,
+                            "batteryStatus": "charging"
+                        }
+                    },
+                    {
+                        "sensorStartTime": 1690119635757201,
+                        "data": {
+                            "__type": "dk.cachet.carp.batterystate",
+                            "batteryLevel": 94,
+                            "batteryStatus": "charging"
+                        }
+                    },
+                    {
+                        "sensorStartTime": 1690119645959073,
+                        "data": {
+                            "__type": "dk.cachet.carp.batterystate",
+                            "batteryLevel": 94,
+                            "batteryStatus": "charging"
+                        }
+                    },
+                    {
+                        "sensorStartTime": 1690119666371730,
+                        "data": {
+                            "__type": "dk.cachet.carp.batterystate",
+                            "batteryLevel": 94,
+                            "batteryStatus": "charging"
+                        }
+                    },
+                    {
+                        "sensorStartTime": 1690119676587818,
+                        "data": {
+                            "__type": "dk.cachet.carp.batterystate",
+                            "batteryLevel": 94,
+                            "batteryStatus": "charging"
+                        }
+                    },
+                    {
+                        "sensorStartTime": 1690119686800370,
+                        "data": {
+                            "__type": "dk.cachet.carp.batterystate",
+                            "batteryLevel": 95,
+                            "batteryStatus": "charging"
+                        }
+                    },
+                    {
+                        "sensorStartTime": 1690119696995073,
+                        "data": {
+                            "__type": "dk.cachet.carp.batterystate",
+                            "batteryLevel": 95,
+                            "batteryStatus": "charging"
+                        }
+                    },
+                    {
+                        "sensorStartTime": 1690119707214633,
+                        "data": {
+                            "__type": "dk.cachet.carp.batterystate",
+                            "batteryLevel": 95,
+                            "batteryStatus": "charging"
+                        }
+                    },
+                    {
+                        "sensorStartTime": 1690119717417070,
+                        "data": {
+                            "__type": "dk.cachet.carp.batterystate",
+                            "batteryLevel": 95,
+                            "batteryStatus": "charging"
+                        }
+                    },
+                    {
+                        "sensorStartTime": 1690119727625787,
+                        "data": {
+                            "__type": "dk.cachet.carp.batterystate",
+                            "batteryLevel": 95,
+                            "batteryStatus": "charging"
+                        }
+                    },
+                    {
+                        "sensorStartTime": 1690119737881202,
+                        "data": {
+                            "__type": "dk.cachet.carp.batterystate",
+                            "batteryLevel": 95,
+                            "batteryStatus": "charging"
+                        }
+                    },
+                    {
+                        "sensorStartTime": 1690119748056269,
+                        "data": {
+                            "__type": "dk.cachet.carp.batterystate",
+                            "batteryLevel": 95,
+                            "batteryStatus": "charging"
+                        }
+                    },
+                    {
+                        "sensorStartTime": 1690119758286041,
+                        "data": {
+                            "__type": "dk.cachet.carp.batterystate",
+                            "batteryLevel": 95,
+                            "batteryStatus": "charging"
+                        }
+                    },
+                    {
+                        "sensorStartTime": 1690119768498759,
+                        "data": {
+                            "__type": "dk.cachet.carp.batterystate",
+                            "batteryLevel": 95,
+                            "batteryStatus": "charging"
+                        }
+                    },
+                    {
+                        "sensorStartTime": 1690119778692822,
+                        "data": {
+                            "__type": "dk.cachet.carp.batterystate",
+                            "batteryLevel": 95,
+                            "batteryStatus": "charging"
+                        }
+                    },
+                    {
+                        "sensorStartTime": 1690119788899205,
+                        "data": {
+                            "__type": "dk.cachet.carp.batterystate",
+                            "batteryLevel": 95,
+                            "batteryStatus": "charging"
+                        }
+                    },
+                    {
+                        "sensorStartTime": 1690119799152826,
+                        "data": {
+                            "__type": "dk.cachet.carp.batterystate",
+                            "batteryLevel": 95,
+                            "batteryStatus": "charging"
+                        }
+                    },
+                    {
+                        "sensorStartTime": 1690119809375874,
+                        "data": {
+                            "__type": "dk.cachet.carp.batterystate",
+                            "batteryLevel": 95,
+                            "batteryStatus": "charging"
+                        }
+                    },
+                    {
+                        "sensorStartTime": 1690119819592030,
+                        "data": {
+                            "__type": "dk.cachet.carp.batterystate",
+                            "batteryLevel": 95,
+                            "batteryStatus": "charging"
+                        }
+                    },
+                    {
+                        "sensorStartTime": 1690119829794662,
+                        "data": {
+                            "__type": "dk.cachet.carp.batterystate",
+                            "batteryLevel": 95,
+                            "batteryStatus": "charging"
+                        }
+                    },
+                    {
+                        "sensorStartTime": 1690119839992377,
+                        "data": {
+                            "__type": "dk.cachet.carp.batterystate",
+                            "batteryLevel": 95,
+                            "batteryStatus": "charging"
+                        }
+                    },
+                    {
+                        "sensorStartTime": 1690119850196448,
+                        "data": {
+                            "__type": "dk.cachet.carp.batterystate",
+                            "batteryLevel": 95,
+                            "batteryStatus": "charging"
+                        }
+                    },
+                    {
+                        "sensorStartTime": 1690119860400400,
+                        "data": {
+                            "__type": "dk.cachet.carp.batterystate",
+                            "batteryLevel": 95,
+                            "batteryStatus": "charging"
+                        }
+                    },
+                    {
+                        "sensorStartTime": 1690119870610476,
+                        "data": {
+                            "__type": "dk.cachet.carp.batterystate",
+                            "batteryLevel": 95,
+                            "batteryStatus": "charging"
+                        }
+                    },
+                    {
+                        "sensorStartTime": 1690119880819053,
+                        "data": {
+                            "__type": "dk.cachet.carp.batterystate",
+                            "batteryLevel": 95,
+                            "batteryStatus": "charging"
+                        }
+                    },
+                    {
+                        "sensorStartTime": 1690119891030963,
+                        "data": {
+                            "__type": "dk.cachet.carp.batterystate",
+                            "batteryLevel": 95,
+                            "batteryStatus": "charging"
+                        }
+                    },
+                    {
+                        "sensorStartTime": 1690119911427467,
+                        "data": {
+                            "__type": "dk.cachet.carp.batterystate",
+                            "batteryLevel": 95,
+                            "batteryStatus": "charging"
+                        }
+                    },
+                    {
+                        "sensorStartTime": 1690119921630834,
+                        "data": {
+                            "__type": "dk.cachet.carp.batterystate",
+                            "batteryLevel": 95,
+                            "batteryStatus": "charging"
+                        }
+                    },
+                    {
+                        "sensorStartTime": 1690119931814514,
+                        "data": {
+                            "__type": "dk.cachet.carp.batterystate",
+                            "batteryLevel": 95,
+                            "batteryStatus": "charging"
+                        }
+                    },
+                    {
+                        "sensorStartTime": 1690119942055129,
+                        "data": {
+                            "__type": "dk.cachet.carp.batterystate",
+                            "batteryLevel": 95,
+                            "batteryStatus": "charging"
+                        }
+                    },
+                    {
+                        "sensorStartTime": 1690119952234505,
+                        "data": {
+                            "__type": "dk.cachet.carp.batterystate",
+                            "batteryLevel": 95,
+                            "batteryStatus": "charging"
+                        }
+                    },
+                    {
+                        "sensorStartTime": 1690119962420458,
+                        "data": {
+                            "__type": "dk.cachet.carp.batterystate",
+                            "batteryLevel": 95,
+                            "batteryStatus": "charging"
+                        }
+                    },
+                    {
+                        "sensorStartTime": 1690119972652645,
+                        "data": {
+                            "__type": "dk.cachet.carp.batterystate",
+                            "batteryLevel": 96,
+                            "batteryStatus": "charging"
+                        }
+                    }
+                ],
+                "triggerIds": [
+                    1
+                ]
+            },
+            {
+                "dataStream": {
+                    "studyDeploymentId": "3e27e1b3-5e2e-45be-95b5-7c1d2cf9559f",
+                    "deviceRoleName": "Primary Phone",
+                    "dataType": "dk.cachet.carp.noise"
+                },
+                "firstSequenceId": 61,
+                "measurements": [
+                    {
+                        "sensorStartTime": 1690119688662223,
+                        "sensorEndTime": 1690119698677052,
+                        "data": {
+                            "__type": "dk.cachet.carp.noise",
+                            "meanDecibel": 55.806199073264374,
+                            "stdDecibel": 7.939953957350798,
+                            "minDecibel": 29.82749895304583,
+                            "maxDecibel": 73.07030401561903
+                        }
+                    }
+                ],
+                "triggerIds": [
+                    1
+                ]
+            },
+            {
+                "dataStream": {
+                    "studyDeploymentId": "3e27e1b3-5e2e-45be-95b5-7c1d2cf9559f",
+                    "deviceRoleName": "Primary Phone",
+                    "dataType": "dk.cachet.carp.deviceinformation"
+                },
+                "firstSequenceId": 9,
+                "measurements": [
+                    {
+                        "sensorStartTime": 1690119388487752,
+                        "data": {
+                            "__type": "dk.cachet.carp.deviceinformation",
+                            "platform": "Android",
+                            "deviceId": "SP1A.210812.016",
+                            "hardware": "exynos9820",
+                            "deviceName": "beyond0",
+                            "deviceManufacturer": "samsung",
+                            "deviceModel": "SM-G970F",
+                            "operatingSystem": "REL",
+                            "deviceData": {
+                                "product": "beyond0lteeea",
+                                "supportedAbis": [
+                                    "arm64-v8a",
+                                    "armeabi-v7a",
+                                    "armeabi"
+                                ],
+                                "serialNumber": "unknown",
+                                "displayMetrics": {
+                                    "xDpi": 442.45098876953125,
+                                    "widthPx": 1080.0,
+                                    "heightPx": 2280.0,
+                                    "yDpi": 438.72698974609375
+                                },
+                                "supported32BitAbis": [
+                                    "armeabi-v7a",
+                                    "armeabi"
+                                ],
+                                "display": "SP1A.210812.016.G970FXXSGHWC1",
+                                "type": "user",
+                                "isPhysicalDevice": true,
+                                "version": {
+                                    "baseOS": "samsung/beyond0lteeea/beyond0:12/SP1A.210812.016/G970FXXUGHVJ5:user/release-keys",
+                                    "securityPatch": "2023-03-01",
+                                    "sdkInt": 31,
+                                    "release": "12",
+                                    "codename": "REL",
+                                    "previewSdkInt": 0,
+                                    "incremental": "G970FXXSGHWC1"
+                                },
+                                "systemFeatures": [
+                                    "android.hardware.sensor.proximity",
+                                    "com.samsung.android.sdk.camera.processor",
+                                    "com.samsung.feature.aodservice_v09",
+                                    "com.sec.feature.motionrecognition_service",
+                                    "com.sec.feature.cover.sview",
+                                    "android.hardware.telephony.ims.singlereg",
+                                    "android.hardware.sensor.accelerometer",
+                                    "android.software.controls",
+                                    "android.hardware.faketouch",
+                                    "android.hardware.usb.accessory",
+                                    "android.software.backup",
+                                    "android.hardware.touchscreen",
+                                    "android.hardware.touchscreen.multitouch",
+                                    "android.software.print",
+                                    "android.software.activities_on_secondary_displays",
+                                    "com.sec.feature.nfc_authentication_cover",
+                                    "com.samsung.feature.SAMSUNG_EXPERIENCE",
+                                    "com.sec.feature.nfc_authentication",
+                                    "android.software.voice_recognizers",
+                                    "android.software.picture_in_picture",
+                                    "android.hardware.fingerprint",
+                                    "com.samsung.android.knox.knoxsdk",
+                                    "android.hardware.sensor.gyroscope",
+                                    "android.hardware.audio.low_latency",
+                                    "android.software.vulkan.deqp.level",
+                                    "android.software.cant_save_state",
+                                    "android.hardware.security.model.compatible",
+                                    "com.samsung.feature.device_category_phone",
+                                    "com.samsung.android.authfw.tahal",
+                                    "android.hardware.opengles.aep",
+                                    "com.sec.feature.sensorhub",
+                                    "android.hardware.bluetooth",
+                                    "android.hardware.camera.autofocus",
+                                    "android.hardware.telephony.gsm",
+                                    "android.hardware.telephony.ims",
+                                    "com.sec.feature.cocktailpanel",
+                                    "com.samsung.android.bio.face",
+                                    "android.software.sip.voip",
+                                    "android.hardware.se.omapi.ese",
+                                    "android.software.opengles.deqp.level",
+                                    "com.sec.feature.saccessorymanager",
+                                    "com.samsung.feature.samsung_experience_mobile",
+                                    "com.samsung.android.camerasdkservice",
+                                    "android.hardware.camera.concurrent",
+                                    "android.hardware.usb.host",
+                                    "android.hardware.audio.output",
+                                    "android.software.verified_boot",
+                                    "android.hardware.camera.flash",
+                                    "android.hardware.camera.front",
+                                    "android.hardware.sensor.hifi_sensors",
+                                    "android.hardware.se.omapi.uicc",
+                                    "android.hardware.screen.portrait",
+                                    "com.google.android.feature.DPS",
+                                    "android.hardware.nfc",
+                                    "com.google.android.feature.TURBO_PRELOAD",
+                                    "com.samsung.feature.ipsgeofence",
+                                    "com.nxp.mifare",
+                                    "com.sec.feature.cover.clearcover",
+                                    "android.hardware.sensor.stepdetector",
+                                    "android.software.home_screen",
+                                    "com.sec.feature.cover.ledbackcover",
+                                    "android.hardware.microphone",
+                                    "com.samsung.feature.aremoji.v2",
+                                    "android.software.autofill",
+                                    "com.samsung.android.sdk.camera.processor.effect",
+                                    "android.software.securely_removes_users",
+                                    "android.hardware.bluetooth_le",
+                                    "android.hardware.sensor.compass",
+                                    "android.hardware.touchscreen.multitouch.jazzhand",
+                                    "android.hardware.sensor.barometer",
+                                    "android.software.app_widgets",
+                                    "android.software.input_methods",
+                                    "android.hardware.sensor.light",
+                                    "android.hardware.vulkan.version",
+                                    "android.software.companion_device_setup",
+                                    "com.samsung.feature.galaxyfinder_v7",
+                                    "com.sec.feature.wirelesscharger_authentication",
+                                    "android.software.device_admin",
+                                    "android.hardware.keystore.limited_use_key",
+                                    "android.hardware.wifi.passpoint",
+                                    "android.hardware.camera",
+                                    "android.hardware.screen.landscape",
+                                    "android.hardware.ram.normal",
+                                    "com.samsung.feature.samsungpositioning.snlp",
+                                    "com.samsung.android.authfw",
+                                    "com.samsung.android.api.version.2402",
+                                    "com.samsung.android.api.version.2403",
+                                    "com.samsung.android.api.version.2501",
+                                    "com.samsung.android.api.version.2502",
+                                    "com.samsung.android.api.version.2601",
+                                    "com.samsung.android.api.version.2701",
+                                    "com.samsung.android.api.version.2801",
+                                    "com.samsung.android.api.version.2802",
+                                    "com.samsung.android.api.version.2803",
+                                    "com.samsung.android.api.version.2901",
+                                    "com.samsung.android.api.version.2902",
+                                    "com.samsung.android.api.version.2903",
+                                    "com.samsung.android.api.version.3001",
+                                    "com.samsung.android.api.version.3002",
+                                    "com.samsung.android.api.version.3101",
+                                    "com.sec.feature.cover",
+                                    "android.software.managed_users",
+                                    "com.sec.feature.nsflp",
+                                    "android.software.webview",
+                                    "android.hardware.sensor.stepcounter",
+                                    "android.hardware.camera.capability.manual_post_processing",
+                                    "android.hardware.camera.any",
+                                    "android.hardware.camera.capability.raw",
+                                    "android.hardware.vulkan.compute",
+                                    "android.software.connectionservice",
+                                    "android.hardware.touchscreen.multitouch.distinct",
+                                    "android.hardware.location.network",
+                                    "android.hardware.camera.ar",
+                                    "com.sec.android.secimaging",
+                                    "android.software.cts",
+                                    "android.software.sip",
+                                    "android.hardware.camera.capability.manual_sensor",
+                                    "android.software.app_enumeration",
+                                    "android.hardware.camera.level.full",
+                                    "com.sec.feature.usb_authentication",
+                                    "com.google.android.feature.EEA_DEVICE",
+                                    "android.hardware.wifi.direct",
+                                    "android.software.live_wallpaper",
+                                    "com.sec.feature.pocketmode",
+                                    "android.software.ipsec_tunnels",
+                                    "com.google.android.paid.chrome",
+                                    "android.software.freeform_window_management",
+                                    "android.hardware.audio.pro",
+                                    "android.hardware.nfc.hcef",
+                                    "android.hardware.nfc.uicc",
+                                    "android.hardware.location.gps",
+                                    "android.software.midi",
+                                    "com.samsung.feature.samsungpositioning",
+                                    "android.hardware.nfc.any",
+                                    "android.hardware.nfc.ese",
+                                    "android.hardware.nfc.hce",
+                                    "android.hardware.wifi",
+                                    "android.hardware.location",
+                                    "com.google.android.paid.search",
+                                    "android.hardware.vulkan.level",
+                                    "com.sec.feature.cover.flip",
+                                    "com.samsung.android.cameraxservice",
+                                    "com.samsung.android.knox.knoxsdk.api.level.33",
+                                    "com.samsung.android.knox.knoxsdk.api.level.34",
+                                    "com.samsung.android.knox.knoxsdk.api.level.35",
+                                    "android.hardware.wifi.aware",
+                                    "android.software.secure_lock_screen",
+                                    "com.sec.feature.cover.nfcledcover",
+                                    "android.hardware.telephony",
+                                    "com.sec.android.smartface.smart_stay",
+                                    "android.software.file_based_encryption"
+                                ],
+                                "manufacturer": "samsung",
+                                "tags": "release-keys",
+                                "supported64BitAbis": [
+                                    "arm64-v8a"
+                                ],
+                                "bootloader": "G970FXXSGHWC1",
+                                "fingerprint": "samsung/beyond0lteeea/beyond0:12/SP1A.210812.016/G970FXXSGHWC1:user/release-keys",
+                                "host": "21DKG923",
+                                "model": "SM-G970F",
+                                "id": "SP1A.210812.016",
+                                "brand": "samsung",
+                                "device": "beyond0",
+                                "board": "exynos9820",
+                                "hardware": "exynos9820"
+                            }
+                        }
+                    },
+                    {
+                        "sensorStartTime": 1690119388496575,
+                        "data": {
+                            "__type": "dk.cachet.carp.deviceinformation",
+                            "platform": "Android",
+                            "deviceId": "SP1A.210812.016",
+                            "hardware": "exynos9820",
+                            "deviceName": "beyond0",
+                            "deviceManufacturer": "samsung",
+                            "deviceModel": "SM-G970F",
+                            "operatingSystem": "REL",
+                            "deviceData": {
+                                "product": "beyond0lteeea",
+                                "supportedAbis": [
+                                    "arm64-v8a",
+                                    "armeabi-v7a",
+                                    "armeabi"
+                                ],
+                                "serialNumber": "unknown",
+                                "displayMetrics": {
+                                    "xDpi": 442.45098876953125,
+                                    "widthPx": 1080.0,
+                                    "heightPx": 2280.0,
+                                    "yDpi": 438.72698974609375
+                                },
+                                "supported32BitAbis": [
+                                    "armeabi-v7a",
+                                    "armeabi"
+                                ],
+                                "display": "SP1A.210812.016.G970FXXSGHWC1",
+                                "type": "user",
+                                "isPhysicalDevice": true,
+                                "version": {
+                                    "baseOS": "samsung/beyond0lteeea/beyond0:12/SP1A.210812.016/G970FXXUGHVJ5:user/release-keys",
+                                    "securityPatch": "2023-03-01",
+                                    "sdkInt": 31,
+                                    "release": "12",
+                                    "codename": "REL",
+                                    "previewSdkInt": 0,
+                                    "incremental": "G970FXXSGHWC1"
+                                },
+                                "systemFeatures": [
+                                    "android.hardware.sensor.proximity",
+                                    "com.samsung.android.sdk.camera.processor",
+                                    "com.samsung.feature.aodservice_v09",
+                                    "com.sec.feature.motionrecognition_service",
+                                    "com.sec.feature.cover.sview",
+                                    "android.hardware.telephony.ims.singlereg",
+                                    "android.hardware.sensor.accelerometer",
+                                    "android.software.controls",
+                                    "android.hardware.faketouch",
+                                    "android.hardware.usb.accessory",
+                                    "android.software.backup",
+                                    "android.hardware.touchscreen",
+                                    "android.hardware.touchscreen.multitouch",
+                                    "android.software.print",
+                                    "android.software.activities_on_secondary_displays",
+                                    "com.sec.feature.nfc_authentication_cover",
+                                    "com.samsung.feature.SAMSUNG_EXPERIENCE",
+                                    "com.sec.feature.nfc_authentication",
+                                    "android.software.voice_recognizers",
+                                    "android.software.picture_in_picture",
+                                    "android.hardware.fingerprint",
+                                    "com.samsung.android.knox.knoxsdk",
+                                    "android.hardware.sensor.gyroscope",
+                                    "android.hardware.audio.low_latency",
+                                    "android.software.vulkan.deqp.level",
+                                    "android.software.cant_save_state",
+                                    "android.hardware.security.model.compatible",
+                                    "com.samsung.feature.device_category_phone",
+                                    "com.samsung.android.authfw.tahal",
+                                    "android.hardware.opengles.aep",
+                                    "com.sec.feature.sensorhub",
+                                    "android.hardware.bluetooth",
+                                    "android.hardware.camera.autofocus",
+                                    "android.hardware.telephony.gsm",
+                                    "android.hardware.telephony.ims",
+                                    "com.sec.feature.cocktailpanel",
+                                    "com.samsung.android.bio.face",
+                                    "android.software.sip.voip",
+                                    "android.hardware.se.omapi.ese",
+                                    "android.software.opengles.deqp.level",
+                                    "com.sec.feature.saccessorymanager",
+                                    "com.samsung.feature.samsung_experience_mobile",
+                                    "com.samsung.android.camerasdkservice",
+                                    "android.hardware.camera.concurrent",
+                                    "android.hardware.usb.host",
+                                    "android.hardware.audio.output",
+                                    "android.software.verified_boot",
+                                    "android.hardware.camera.flash",
+                                    "android.hardware.camera.front",
+                                    "android.hardware.sensor.hifi_sensors",
+                                    "android.hardware.se.omapi.uicc",
+                                    "android.hardware.screen.portrait",
+                                    "com.google.android.feature.DPS",
+                                    "android.hardware.nfc",
+                                    "com.google.android.feature.TURBO_PRELOAD",
+                                    "com.samsung.feature.ipsgeofence",
+                                    "com.nxp.mifare",
+                                    "com.sec.feature.cover.clearcover",
+                                    "android.hardware.sensor.stepdetector",
+                                    "android.software.home_screen",
+                                    "com.sec.feature.cover.ledbackcover",
+                                    "android.hardware.microphone",
+                                    "com.samsung.feature.aremoji.v2",
+                                    "android.software.autofill",
+                                    "com.samsung.android.sdk.camera.processor.effect",
+                                    "android.software.securely_removes_users",
+                                    "android.hardware.bluetooth_le",
+                                    "android.hardware.sensor.compass",
+                                    "android.hardware.touchscreen.multitouch.jazzhand",
+                                    "android.hardware.sensor.barometer",
+                                    "android.software.app_widgets",
+                                    "android.software.input_methods",
+                                    "android.hardware.sensor.light",
+                                    "android.hardware.vulkan.version",
+                                    "android.software.companion_device_setup",
+                                    "com.samsung.feature.galaxyfinder_v7",
+                                    "com.sec.feature.wirelesscharger_authentication",
+                                    "android.software.device_admin",
+                                    "android.hardware.keystore.limited_use_key",
+                                    "android.hardware.wifi.passpoint",
+                                    "android.hardware.camera",
+                                    "android.hardware.screen.landscape",
+                                    "android.hardware.ram.normal",
+                                    "com.samsung.feature.samsungpositioning.snlp",
+                                    "com.samsung.android.authfw",
+                                    "com.samsung.android.api.version.2402",
+                                    "com.samsung.android.api.version.2403",
+                                    "com.samsung.android.api.version.2501",
+                                    "com.samsung.android.api.version.2502",
+                                    "com.samsung.android.api.version.2601",
+                                    "com.samsung.android.api.version.2701",
+                                    "com.samsung.android.api.version.2801",
+                                    "com.samsung.android.api.version.2802",
+                                    "com.samsung.android.api.version.2803",
+                                    "com.samsung.android.api.version.2901",
+                                    "com.samsung.android.api.version.2902",
+                                    "com.samsung.android.api.version.2903",
+                                    "com.samsung.android.api.version.3001",
+                                    "com.samsung.android.api.version.3002",
+                                    "com.samsung.android.api.version.3101",
+                                    "com.sec.feature.cover",
+                                    "android.software.managed_users",
+                                    "com.sec.feature.nsflp",
+                                    "android.software.webview",
+                                    "android.hardware.sensor.stepcounter",
+                                    "android.hardware.camera.capability.manual_post_processing",
+                                    "android.hardware.camera.any",
+                                    "android.hardware.camera.capability.raw",
+                                    "android.hardware.vulkan.compute",
+                                    "android.software.connectionservice",
+                                    "android.hardware.touchscreen.multitouch.distinct",
+                                    "android.hardware.location.network",
+                                    "android.hardware.camera.ar",
+                                    "com.sec.android.secimaging",
+                                    "android.software.cts",
+                                    "android.software.sip",
+                                    "android.hardware.camera.capability.manual_sensor",
+                                    "android.software.app_enumeration",
+                                    "android.hardware.camera.level.full",
+                                    "com.sec.feature.usb_authentication",
+                                    "com.google.android.feature.EEA_DEVICE",
+                                    "android.hardware.wifi.direct",
+                                    "android.software.live_wallpaper",
+                                    "com.sec.feature.pocketmode",
+                                    "android.software.ipsec_tunnels",
+                                    "com.google.android.paid.chrome",
+                                    "android.software.freeform_window_management",
+                                    "android.hardware.audio.pro",
+                                    "android.hardware.nfc.hcef",
+                                    "android.hardware.nfc.uicc",
+                                    "android.hardware.location.gps",
+                                    "android.software.midi",
+                                    "com.samsung.feature.samsungpositioning",
+                                    "android.hardware.nfc.any",
+                                    "android.hardware.nfc.ese",
+                                    "android.hardware.nfc.hce",
+                                    "android.hardware.wifi",
+                                    "android.hardware.location",
+                                    "com.google.android.paid.search",
+                                    "android.hardware.vulkan.level",
+                                    "com.sec.feature.cover.flip",
+                                    "com.samsung.android.cameraxservice",
+                                    "com.samsung.android.knox.knoxsdk.api.level.33",
+                                    "com.samsung.android.knox.knoxsdk.api.level.34",
+                                    "com.samsung.android.knox.knoxsdk.api.level.35",
+                                    "android.hardware.wifi.aware",
+                                    "android.software.secure_lock_screen",
+                                    "com.sec.feature.cover.nfcledcover",
+                                    "android.hardware.telephony",
+                                    "com.sec.android.smartface.smart_stay",
+                                    "android.software.file_based_encryption"
+                                ],
+                                "manufacturer": "samsung",
+                                "tags": "release-keys",
+                                "supported64BitAbis": [
+                                    "arm64-v8a"
+                                ],
+                                "bootloader": "G970FXXSGHWC1",
+                                "fingerprint": "samsung/beyond0lteeea/beyond0:12/SP1A.210812.016/G970FXXSGHWC1:user/release-keys",
+                                "host": "21DKG923",
+                                "model": "SM-G970F",
+                                "id": "SP1A.210812.016",
+                                "brand": "samsung",
+                                "device": "beyond0",
+                                "board": "exynos9820",
+                                "hardware": "exynos9820"
+                            }
+                        }
+                    },
+                    {
+                        "sensorStartTime": 1690119388503589,
+                        "data": {
+                            "__type": "dk.cachet.carp.deviceinformation",
+                            "platform": "Android",
+                            "deviceId": "SP1A.210812.016",
+                            "hardware": "exynos9820",
+                            "deviceName": "beyond0",
+                            "deviceManufacturer": "samsung",
+                            "deviceModel": "SM-G970F",
+                            "operatingSystem": "REL",
+                            "deviceData": {
+                                "product": "beyond0lteeea",
+                                "supportedAbis": [
+                                    "arm64-v8a",
+                                    "armeabi-v7a",
+                                    "armeabi"
+                                ],
+                                "serialNumber": "unknown",
+                                "displayMetrics": {
+                                    "xDpi": 442.45098876953125,
+                                    "widthPx": 1080.0,
+                                    "heightPx": 2280.0,
+                                    "yDpi": 438.72698974609375
+                                },
+                                "supported32BitAbis": [
+                                    "armeabi-v7a",
+                                    "armeabi"
+                                ],
+                                "display": "SP1A.210812.016.G970FXXSGHWC1",
+                                "type": "user",
+                                "isPhysicalDevice": true,
+                                "version": {
+                                    "baseOS": "samsung/beyond0lteeea/beyond0:12/SP1A.210812.016/G970FXXUGHVJ5:user/release-keys",
+                                    "securityPatch": "2023-03-01",
+                                    "sdkInt": 31,
+                                    "release": "12",
+                                    "codename": "REL",
+                                    "previewSdkInt": 0,
+                                    "incremental": "G970FXXSGHWC1"
+                                },
+                                "systemFeatures": [
+                                    "android.hardware.sensor.proximity",
+                                    "com.samsung.android.sdk.camera.processor",
+                                    "com.samsung.feature.aodservice_v09",
+                                    "com.sec.feature.motionrecognition_service",
+                                    "com.sec.feature.cover.sview",
+                                    "android.hardware.telephony.ims.singlereg",
+                                    "android.hardware.sensor.accelerometer",
+                                    "android.software.controls",
+                                    "android.hardware.faketouch",
+                                    "android.hardware.usb.accessory",
+                                    "android.software.backup",
+                                    "android.hardware.touchscreen",
+                                    "android.hardware.touchscreen.multitouch",
+                                    "android.software.print",
+                                    "android.software.activities_on_secondary_displays",
+                                    "com.sec.feature.nfc_authentication_cover",
+                                    "com.samsung.feature.SAMSUNG_EXPERIENCE",
+                                    "com.sec.feature.nfc_authentication",
+                                    "android.software.voice_recognizers",
+                                    "android.software.picture_in_picture",
+                                    "android.hardware.fingerprint",
+                                    "com.samsung.android.knox.knoxsdk",
+                                    "android.hardware.sensor.gyroscope",
+                                    "android.hardware.audio.low_latency",
+                                    "android.software.vulkan.deqp.level",
+                                    "android.software.cant_save_state",
+                                    "android.hardware.security.model.compatible",
+                                    "com.samsung.feature.device_category_phone",
+                                    "com.samsung.android.authfw.tahal",
+                                    "android.hardware.opengles.aep",
+                                    "com.sec.feature.sensorhub",
+                                    "android.hardware.bluetooth",
+                                    "android.hardware.camera.autofocus",
+                                    "android.hardware.telephony.gsm",
+                                    "android.hardware.telephony.ims",
+                                    "com.sec.feature.cocktailpanel",
+                                    "com.samsung.android.bio.face",
+                                    "android.software.sip.voip",
+                                    "android.hardware.se.omapi.ese",
+                                    "android.software.opengles.deqp.level",
+                                    "com.sec.feature.saccessorymanager",
+                                    "com.samsung.feature.samsung_experience_mobile",
+                                    "com.samsung.android.camerasdkservice",
+                                    "android.hardware.camera.concurrent",
+                                    "android.hardware.usb.host",
+                                    "android.hardware.audio.output",
+                                    "android.software.verified_boot",
+                                    "android.hardware.camera.flash",
+                                    "android.hardware.camera.front",
+                                    "android.hardware.sensor.hifi_sensors",
+                                    "android.hardware.se.omapi.uicc",
+                                    "android.hardware.screen.portrait",
+                                    "com.google.android.feature.DPS",
+                                    "android.hardware.nfc",
+                                    "com.google.android.feature.TURBO_PRELOAD",
+                                    "com.samsung.feature.ipsgeofence",
+                                    "com.nxp.mifare",
+                                    "com.sec.feature.cover.clearcover",
+                                    "android.hardware.sensor.stepdetector",
+                                    "android.software.home_screen",
+                                    "com.sec.feature.cover.ledbackcover",
+                                    "android.hardware.microphone",
+                                    "com.samsung.feature.aremoji.v2",
+                                    "android.software.autofill",
+                                    "com.samsung.android.sdk.camera.processor.effect",
+                                    "android.software.securely_removes_users",
+                                    "android.hardware.bluetooth_le",
+                                    "android.hardware.sensor.compass",
+                                    "android.hardware.touchscreen.multitouch.jazzhand",
+                                    "android.hardware.sensor.barometer",
+                                    "android.software.app_widgets",
+                                    "android.software.input_methods",
+                                    "android.hardware.sensor.light",
+                                    "android.hardware.vulkan.version",
+                                    "android.software.companion_device_setup",
+                                    "com.samsung.feature.galaxyfinder_v7",
+                                    "com.sec.feature.wirelesscharger_authentication",
+                                    "android.software.device_admin",
+                                    "android.hardware.keystore.limited_use_key",
+                                    "android.hardware.wifi.passpoint",
+                                    "android.hardware.camera",
+                                    "android.hardware.screen.landscape",
+                                    "android.hardware.ram.normal",
+                                    "com.samsung.feature.samsungpositioning.snlp",
+                                    "com.samsung.android.authfw",
+                                    "com.samsung.android.api.version.2402",
+                                    "com.samsung.android.api.version.2403",
+                                    "com.samsung.android.api.version.2501",
+                                    "com.samsung.android.api.version.2502",
+                                    "com.samsung.android.api.version.2601",
+                                    "com.samsung.android.api.version.2701",
+                                    "com.samsung.android.api.version.2801",
+                                    "com.samsung.android.api.version.2802",
+                                    "com.samsung.android.api.version.2803",
+                                    "com.samsung.android.api.version.2901",
+                                    "com.samsung.android.api.version.2902",
+                                    "com.samsung.android.api.version.2903",
+                                    "com.samsung.android.api.version.3001",
+                                    "com.samsung.android.api.version.3002",
+                                    "com.samsung.android.api.version.3101",
+                                    "com.sec.feature.cover",
+                                    "android.software.managed_users",
+                                    "com.sec.feature.nsflp",
+                                    "android.software.webview",
+                                    "android.hardware.sensor.stepcounter",
+                                    "android.hardware.camera.capability.manual_post_processing",
+                                    "android.hardware.camera.any",
+                                    "android.hardware.camera.capability.raw",
+                                    "android.hardware.vulkan.compute",
+                                    "android.software.connectionservice",
+                                    "android.hardware.touchscreen.multitouch.distinct",
+                                    "android.hardware.location.network",
+                                    "android.hardware.camera.ar",
+                                    "com.sec.android.secimaging",
+                                    "android.software.cts",
+                                    "android.software.sip",
+                                    "android.hardware.camera.capability.manual_sensor",
+                                    "android.software.app_enumeration",
+                                    "android.hardware.camera.level.full",
+                                    "com.sec.feature.usb_authentication",
+                                    "com.google.android.feature.EEA_DEVICE",
+                                    "android.hardware.wifi.direct",
+                                    "android.software.live_wallpaper",
+                                    "com.sec.feature.pocketmode",
+                                    "android.software.ipsec_tunnels",
+                                    "com.google.android.paid.chrome",
+                                    "android.software.freeform_window_management",
+                                    "android.hardware.audio.pro",
+                                    "android.hardware.nfc.hcef",
+                                    "android.hardware.nfc.uicc",
+                                    "android.hardware.location.gps",
+                                    "android.software.midi",
+                                    "com.samsung.feature.samsungpositioning",
+                                    "android.hardware.nfc.any",
+                                    "android.hardware.nfc.ese",
+                                    "android.hardware.nfc.hce",
+                                    "android.hardware.wifi",
+                                    "android.hardware.location",
+                                    "com.google.android.paid.search",
+                                    "android.hardware.vulkan.level",
+                                    "com.sec.feature.cover.flip",
+                                    "com.samsung.android.cameraxservice",
+                                    "com.samsung.android.knox.knoxsdk.api.level.33",
+                                    "com.samsung.android.knox.knoxsdk.api.level.34",
+                                    "com.samsung.android.knox.knoxsdk.api.level.35",
+                                    "android.hardware.wifi.aware",
+                                    "android.software.secure_lock_screen",
+                                    "com.sec.feature.cover.nfcledcover",
+                                    "android.hardware.telephony",
+                                    "com.sec.android.smartface.smart_stay",
+                                    "android.software.file_based_encryption"
+                                ],
+                                "manufacturer": "samsung",
+                                "tags": "release-keys",
+                                "supported64BitAbis": [
+                                    "arm64-v8a"
+                                ],
+                                "bootloader": "G970FXXSGHWC1",
+                                "fingerprint": "samsung/beyond0lteeea/beyond0:12/SP1A.210812.016/G970FXXSGHWC1:user/release-keys",
+                                "host": "21DKG923",
+                                "model": "SM-G970F",
+                                "id": "SP1A.210812.016",
+                                "brand": "samsung",
+                                "device": "beyond0",
+                                "board": "exynos9820",
+                                "hardware": "exynos9820"
+                            }
+                        }
+                    }
+                ],
+                "triggerIds": [
+                    2
+                ]
+            }
+        ]
+    }

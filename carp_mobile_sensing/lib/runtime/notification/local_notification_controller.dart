@@ -69,7 +69,7 @@ class FlutterLocalNotificationController implements NotificationController {
         _platformChannelSpecifics,
         payload: task.id,
       );
-      info('$runtimeType - notification created for $task');
+      info('$runtimeType - Notification created for $task');
     }
   }
 
@@ -116,7 +116,7 @@ class FlutterLocalNotificationController implements NotificationController {
   Future<void> cancelNotification(UserTask task) async {
     if (task.notification) {
       await FlutterLocalNotificationsPlugin().cancel(task.id.hashCode);
-      info('$runtimeType - notification canceled for $task');
+      info('$runtimeType - Notification canceled for $task');
     }
   }
 }

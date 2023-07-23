@@ -6,7 +6,6 @@ import 'package:carp_mobile_sensing/carp_mobile_sensing.dart';
 import 'package:carp_webservices/carp_auth/carp_auth.dart';
 import 'package:carp_webservices/carp_services/carp_services.dart';
 import 'package:test/test.dart';
-import 'package:iso_duration_parser/iso_duration_parser.dart';
 
 import 'credentials.dart';
 
@@ -54,7 +53,7 @@ void main() {
 
   group("Data Stream Service", () {
     test(
-      '- append',
+      '- append - measurements KNOWN to carp-core.kotlin',
       () async {
         var m1 = Measurement(
           sensorStartTime: 1642505045000000,
@@ -79,16 +78,66 @@ void main() {
           DataStreamBatch(
               dataStream: DataStreamId(
                   studyDeploymentId: testDeploymentId,
-                  deviceRoleName: "smartphone",
-                  dataType: "dk.cachet.carp.geolocation"),
+                  deviceRoleName: phoneRoleName,
+                  dataType: Geolocation.dataType),
               firstSequenceId: 0,
               measurements: [m1, m2],
               triggerIds: {0}),
           DataStreamBatch(
               dataStream: DataStreamId(
                   studyDeploymentId: testDeploymentId,
-                  deviceRoleName: "smartphone",
-                  dataType: "dk.cachet.carp.stepcount"),
+                  deviceRoleName: phoneRoleName,
+                  dataType: StepCount.dataType),
+              firstSequenceId: 0,
+              measurements: [m3, m4],
+              triggerIds: {0}),
+        ];
+
+        print(toJsonString(batch));
+
+        await CarpDataStreamService()
+            .appendToDataStreams(testDeploymentId, batch);
+      },
+    );
+
+    test(
+      '- append - measurements UNKNOWN to carp-core.kotlin',
+      () async {
+        var m1 = Measurement(
+            sensorStartTime: 1642505045000000,
+            data: Heartbeat(
+                period: 5,
+                deviceType: 'carp_webservices_unit_test',
+                deviceRoleName: 'smartphone'));
+        var m2 = Measurement(
+            sensorStartTime: 1642505045000000,
+            data: Heartbeat(
+                period: 5,
+                deviceType: 'carp_webservices_unit_test',
+                deviceRoleName: 'smartphone'));
+        var m3 = Measurement(
+          sensorStartTime: 1642505045000000,
+          data: BatteryState(100),
+        );
+        var m4 = Measurement(
+          sensorStartTime: 1642505045000000,
+          data: BatteryState(100),
+        );
+
+        var batch = [
+          // DataStreamBatch(
+          //     dataStream: DataStreamId(
+          //         studyDeploymentId: testDeploymentId,
+          //         deviceRoleName: phoneRoleName,
+          //         dataType: Heartbeat.dataType),
+          //     firstSequenceId: 0,
+          //     measurements: [m1, m2],
+          //     triggerIds: {0}),
+          DataStreamBatch(
+              dataStream: DataStreamId(
+                  studyDeploymentId: testDeploymentId,
+                  deviceRoleName: phoneRoleName,
+                  dataType: BatteryState.dataType),
               firstSequenceId: 0,
               measurements: [m3, m4],
               triggerIds: {0}),
@@ -107,7 +156,7 @@ void main() {
         var list = await CarpDataStreamService().getDataStream(
           DataStreamId(
             studyDeploymentId: testDeploymentId,
-            deviceRoleName: "smartphone",
+            deviceRoleName: phoneRoleName,
             dataType: 'dk.cachet.carp.geolocation',
           ),
           0,
