@@ -1,7 +1,7 @@
 # CARP Mobile Sensing Framework in Flutter
 
 [![pub package](https://img.shields.io/pub/v/carp_mobile_sensing.svg)](https://pub.dartlang.org/packages/carp_mobile_sensing)
-[![style: effective dart](https://img.shields.io/badge/style-dart_recommended_lints-40c4ff.svg)](https://pub.dev/packages/lints)
+[![pub points](https://img.shields.io/pub/points/carp_mobile_sensing?color=2E8B57&label=pub%20points)](https://pub.dev/packages/carp_mobile_sensing/score)
 [![github stars](https://img.shields.io/github/stars/cph-cachet/carp.sensing-flutter.svg?style=flat&logo=github&colorB=deeppink&label=stars)](https://github.com/cph-cachet/carp.sensing-flutter)
 [![MIT License](https://img.shields.io/badge/license-MIT-purple.svg)](https://opensource.org/licenses/MIT)
 [![arXiv](https://img.shields.io/badge/arXiv-2006.11904-green.svg)](https://arxiv.org/abs/2006.11904)
@@ -10,7 +10,7 @@ This library contains the core Flutter package for the [CARP Mobile Sensing (CAM
 Supports cross-platform (iOS and Android) mobile sensing.
 
 For an overview of all CAMS packages, see [CARP Mobile Sensing in Flutter](https://github.com/cph-cachet/carp.sensing-flutter).
-For documentation on how to use CAMS, see the [CAMS wiki](https://github.com/cph-cachet/carp.sensing-flutter/wiki).
+For documentation on how to use CAMS, see the [CAMS wiki][wiki].
 
 ## Usage
 
@@ -65,6 +65,8 @@ The pedometer (step count) probe uses `NSMotion` on iOS and the `NSMotionUsageDe
 
 For notification to work in background mode, you need to configure your iOS app to be [set up for background actions](https://pub.dev/packages/awesome_notifications#-extra-ios-setup-for-background-actions).
 
+-------------------------------------
+
 > **NOTE:** Other CAMS sampling packages require additional permissions in the `manifest.xml` or `Info.plist` files.
 > See the documentation for each package.
 
@@ -72,7 +74,7 @@ For notification to work in background mode, you need to configure your iOS app 
 
 The [Dart API doc](https://pub.dartlang.org/documentation/carp_mobile_sensing/latest/) describes the different libraries and classes.
 
-The [wiki](https://github.com/cph-cachet/carp.sensing/wiki) contains detailed documentation on the CARP Mobile Sensing Framework, including
+The CAMS [wiki][wiki]] contains detailed documentation on the CARP Mobile Sensing Framework, including
 the [domain model](https://github.com/cph-cachet/carp.sensing-flutter/wiki/2.-Domain-Model),
 how to use it by create a [study configuration](https://github.com/cph-cachet/carp.sensing-flutter/wiki/3.-Using-CARP-Mobile-Sensing),
 how to [extend](https://github.com/cph-cachet/carp.sensing-flutter/wiki/5.-Extending-CARP-Mobile-Sensing) it, and
@@ -158,8 +160,8 @@ protocol.addTaskControl(
 The above example defines a simple [`SmartphoneStudyProtocol`](https://pub.dev/documentation/carp_mobile_sensing/latest/domain/SmartphoneStudyProtocol-class.html) which will store data in a SQLite database locally on the phone using a [`SQLiteDataEndPoint`](https://pub.dev/documentation/carp_mobile_sensing/latest/domain/SQLiteDataEndPoint-class.html).
 Sampling is configured by adding a `TaskControl` to the protocol using an [`ImmediateTrigger`](https://pub.dev/documentation/carp_mobile_sensing/latest/domain/ImmediateTrigger-class.html) which triggers a [`BackgroundTask`](https://pub.dev/documentation/carp_mobile_sensing/latest/domain/BackgroundTask-class.html) containing four different [`Measure`](https://pub.dev/documentation/carp_core/latest/carp_core_protocols/Measure-class.html)s.
 
-Sampling can be configured in a very sophisticated ways, by specifying different types of devices, triggers, tasks, measures and sampling configurations.
-See the CAMS [wiki](https://github.com/cph-cachet/carp.sensing-flutter/wiki/) for an overview.
+Sampling can be configured in very sophisticated ways, by specifying different types of devices, triggers, tasks, measures and sampling configurations.
+See the CAMS [wiki][wiki] for an overview and more details.
 
 You can write your own `DataEndPoint` definitions and corresponding `DataManager`s for uploading data to your own data endpoint. See the wiki on how to [add a new data manager](https://github.com/cph-cachet/carp.sensing-flutter/wiki/5.-Extending-CARP-Mobile-Sensing#adding-a-new-data-manager).
 
@@ -271,18 +273,24 @@ controller.executor
     .forEach((probe) => probe.restart());
 
 
-// Once the sampling has to stop, e.g. in a Flutter dispose methods, call stop.
-controller.stop();
-await subscription.cancel();
+  // Once the sampling has to stop, e.g. in a Flutter dispose method,
+  // call the controller's dispose method.
+  controller.dispose();
+
+  // Cancel the subscription.
+  await subscription.cancel();
 ```
 
 ## Features and bugs
 
 Please read about existing issues and file new feature requests and bug reports at the [issue tracker][tracker].
 
-[tracker]: https://github.com/cph-cachet/carp.sensing-flutter/issues
-
 ## License
 
 This software is copyright (c) [Copenhagen Center for Health Technology (CACHET)](https://www.cachet.dk/) at the [Technical University of Denmark (DTU)](https://www.dtu.dk).
 This software is available 'as-is' under a [MIT license](https://github.com/cph-cachet/carp.sensing-flutter/blob/master/LICENSE).
+
+<!-- LINKS  -->
+
+[tracker]: https://github.com/cph-cachet/carp.sensing-flutter/issues
+[wiki]: https://github.com/cph-cachet/carp.sensing-flutter/wiki

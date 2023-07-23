@@ -261,8 +261,11 @@ void example_2() async {
       .lookupProbe(SensorSamplingPackage.AMBIENT_LIGHT)
       .forEach((probe) => probe.restart());
 
-  // Once the sampling has to stop, e.g. in a Flutter dispose() methods, call stop.
-  controller.stop();
+  // Once the sampling has to stop, e.g. in a Flutter dispose() methods,
+  // call the controller's dispose method.
+  controller.dispose();
+
+  // Cancel the subscription.
   await subscription.cancel();
 }
 
