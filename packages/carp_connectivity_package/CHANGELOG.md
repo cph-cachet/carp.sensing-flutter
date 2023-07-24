@@ -1,6 +1,7 @@
-## 1.1.0
+## 1.1.1
 
 * update to `carp_mobile_sensing` v. 1.1.0
+* fix of flutter_lints issues
 
 ## 0.40.1
 
