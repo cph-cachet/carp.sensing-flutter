@@ -31,18 +31,18 @@ These are the available CARP Mobile Sensing Flutter components in this repositor
 | [carp_esense_package](./packages/carp_esense_package) | Sampling package for the eSense ear plug device (button pressed & movement) | [![pub package](https://img.shields.io/pub/v/carp_esense_package.svg)](https://pub.dev/packages/carp_esense_package) |
 | [carp_polar_package](./packages/carp_polar_package) | Sampling package for the [Polar heart rate monitors](https://www.polar.com/) | [![pub package](https://img.shields.io/pub/v/carp_polar_package.svg)](https://pub.dev/packages/carp_polar_package) |
 | **Backends** | **Backend data upload components** |  |
-| [carp_webservices](./backends/carp_webservices) | Flutter API for [CARP web services](https://carp.cachet.dk/caws/) | [![pub package](https://img.shields.io/pub/v/carp_webservices.svg)](https://pub.dev/packages/carp_webservices) |
-| [carp_backend](./backends/carp_backend) | Support for downloading a study configuration (incl. protocol, informed consent, and language files) and uploading collected data a CARP data backend. | [![pub package](https://img.shields.io/pub/v/carp_backend.svg)](https://pub.dev/packages/carp_backend) |
+| [carp_webservices](./backends/carp_webservices) | Flutter API for [CARP web services (CAWS)](https://carp.cachet.dk/caws/) | [![pub package](https://img.shields.io/pub/v/carp_webservices.svg)](https://pub.dev/packages/carp_webservices) |
+| [carp_backend](./backends/carp_backend) | Support for downloading a study configuration (incl. protocol, informed consent, and language files) and uploading collected data to a CAWS backend. | [![pub package](https://img.shields.io/pub/v/carp_backend.svg)](https://pub.dev/packages/carp_backend) |
 | [carp_firebase_backend](./backends/carp_firebase_backend) | Support for uploading data to Firebase as both zipped files and JSON data| [![pub package](https://img.shields.io/pub/v/carp_firebase_backend.svg)](https://pub.dev/packages/carp_firebase_backend) |
 | **Utilities** | **Misc. CAMS utilities** |  |
-| [carp_study_generator](./utilities/carp_study_generator) | A simple command line interface (CLI) to upload study protocols, informed consent and localization files to the CARP backend.  | [![pub package](https://img.shields.io/pub/v/carp_study_generator.svg)](https://pub.dev/packages/carp_study_generator) |
+| [carp_study_generator](./utilities/carp_study_generator) | A simple command line interface (CLI) to upload study protocols, informed consent, and localization files to the CARP backend.  | [![pub package](https://img.shields.io/pub/v/carp_study_generator.svg)](https://pub.dev/packages/carp_study_generator) |
 | **Apps** | **Misc. mobile sensing demo apps** |  |
-| [carp_mobile_sensing_app](./apps/carp_mobile_sensing_app) | Demonstrates how basic mobile sensing can be implemented in a Flutter app using CAMS. Also demonstrates how to integrate to wearable devices over BLE connections.  |  |
+| [carp_mobile_sensing_app](./apps/carp_mobile_sensing_app) | Demonstrates how basic mobile sensing can be implemented in a Flutter app using CAMS. Also demonstrates how to integrate wearable devices over BLE connections.  |  |
 | [pulmonary_monitor_app](https://github.com/cph-cachet/pulmonary_monitor_app) | Demonstrates how user tasks (aka. [AppTask](https://pub.dev/documentation/carp_mobile_sensing/latest/domain/AppTask-class.html)) are supported in CAMS. |  |
 
 ## Documentation
 
-The overall documentation on the software architecture of CARP Mobile Sensing, and how to use and extend it is available on this github [wiki](https://github.com/cph-cachet/carp.sensing-flutter/wiki). Each of the specific packages also contain more specific documentation on how each package is used in the framework (e.g. how the [Firebase data backend package](https://pub.dev/packages/carp_firebase_backend) is to be used).
+The overall documentation on the software architecture of CARP Mobile Sensing, and how to use and extend it is available on this GitHub [wiki](https://github.com/cph-cachet/carp.sensing-flutter/wiki). Each of the specific packages also contains more specific documentation on how each package is used in the framework (e.g. how the [Firebase data backend package](https://pub.dev/packages/carp_firebase_backend) is to be configured and used).
 
 ## Issues
 
