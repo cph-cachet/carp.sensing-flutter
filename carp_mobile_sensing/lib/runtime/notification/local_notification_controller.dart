@@ -29,9 +29,9 @@ class FlutterLocalNotificationController implements NotificationController {
     tz.initializeTimeZones();
 
     await FlutterLocalNotificationsPlugin().initialize(
-      InitializationSettings(
-        android: const AndroidInitializationSettings('app_icon'),
-        iOS: const DarwinInitializationSettings(),
+      const InitializationSettings(
+        android: AndroidInitializationSettings('app_icon'),
+        iOS: DarwinInitializationSettings(),
       ),
       onDidReceiveBackgroundNotificationResponse:
           onDidReceiveNotificationResponse,
@@ -46,8 +46,8 @@ class FlutterLocalNotificationController implements NotificationController {
     }
   }
 
-  final NotificationDetails _platformChannelSpecifics = NotificationDetails(
-    android: const AndroidNotificationDetails(
+  final NotificationDetails _platformChannelSpecifics = const NotificationDetails(
+    android: AndroidNotificationDetails(
       NotificationController.CHANNEL_ID,
       NotificationController.CHANNEL_NAME,
       channelDescription: NotificationController.CHANNEL_DESCRIPTION,
@@ -55,7 +55,7 @@ class FlutterLocalNotificationController implements NotificationController {
       priority: Priority.max,
       ongoing: true,
     ),
-    iOS: const DarwinNotificationDetails(),
+    iOS: DarwinNotificationDetails(),
   );
 
   /// Send an immediate notification for a [task].

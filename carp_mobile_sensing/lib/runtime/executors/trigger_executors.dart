@@ -31,7 +31,7 @@ abstract class TriggerExecutor<TConfig extends TriggerConfiguration>
   Timer? _timer;
 
   @override
-  Stream<Measurement> get measurements => Stream.empty();
+  Stream<Measurement> get measurements => const Stream.empty();
 
   // Default operations is to do nothing in the following life-cycle methods.
   // Overridden in subclasses, if needed.
@@ -374,7 +374,7 @@ class RandomRecurrentTriggerExecutor
 
   /// Get a random time between startTime and endTime
   TimeOfDay get randomTime {
-    TimeOfDay randomTime = TimeOfDay();
+    TimeOfDay randomTime = const TimeOfDay();
     do {
       int randomHour = startTime.hour +
           ((endTime.hour - startTime.hour == 0)

@@ -160,7 +160,7 @@ class LocationSamplingPackage extends SmartphoneSamplingPackage {
                 placeRadius: 50,
                 stopRadius: 5,
                 usePriorContexts: true,
-                stopDuration: Duration(seconds: 30))),
+                stopDuration: const Duration(seconds: 30))),
       ]);
 
   @override

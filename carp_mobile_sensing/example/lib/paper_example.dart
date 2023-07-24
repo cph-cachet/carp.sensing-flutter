@@ -67,7 +67,7 @@ void sensing() async {
   // subscribe to events
   controller?.measurements.listen((Measurement measurement) {
     // do something w. the data, e.g. print the json
-    print(JsonEncoder.withIndent(' ').convert(measurement));
+    print(const JsonEncoder.withIndent(' ').convert(measurement));
   });
 
   // listening on events of a specific type

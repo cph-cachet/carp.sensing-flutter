@@ -258,7 +258,7 @@ class RecurrentScheduledTrigger extends PeriodicTrigger {
     switch (type) {
       case RecurrentType.daily:
         firstDay =
-            (start.isAfter(now)) ? start : start.add(Duration(hours: 24));
+            (start.isAfter(now)) ? start : start.add(const Duration(hours: 24));
         break;
       case RecurrentType.weekly:
         int days = dayOfWeek! - now.weekday;
@@ -266,7 +266,7 @@ class RecurrentScheduledTrigger extends PeriodicTrigger {
         firstDay = start.add(Duration(days: days));
         // check if this is the same day, but a time slot earlier this day
         firstDay = (firstDay.isBefore(now))
-            ? firstDay.add(Duration(days: daysPerWeek))
+            ? firstDay.add(const Duration(days: daysPerWeek))
             : firstDay;
         break;
       case RecurrentType.monthly:

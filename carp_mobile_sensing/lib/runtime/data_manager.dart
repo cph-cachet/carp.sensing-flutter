@@ -80,7 +80,7 @@ class DataManagerEventTypes {
 abstract class AbstractDataManager implements DataManager {
   late SmartphoneDeployment _deployment;
   DataEndPoint? _dataEndPoint;
-  StreamSubscription? _subscription;
+  StreamSubscription<Measurement>? _subscription;
   final StreamController<DataManagerEvent> _controller =
       StreamController.broadcast();
 

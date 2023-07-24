@@ -16,8 +16,8 @@ abstract class DeviceManager<TDeviceConfiguration extends DeviceConfiguration>
 
   Timer? _heartbeatTimer;
 
-  /// The set of executors that use this device manager.
-  final Set<Executor> executors = {};
+  /// The set of task control executors that use this device manager.
+  final Set<TaskControlExecutor> executors = {};
 
   DeviceManager(
     super.type, [
@@ -77,7 +77,7 @@ abstract class DeviceManager<TDeviceConfiguration extends DeviceConfiguration>
     debug(
         '$runtimeType - Setting up heartbeat monitoring for device: $configuration');
     _heartbeatTimer = Timer.periodic(
-        Duration(minutes: DeviceController.HEARTBEAT_PERIOD),
+        const Duration(minutes: DeviceController.HEARTBEAT_PERIOD),
         (_) => (isConnected)
             ? controller.executor.addMeasurement(Measurement.fromData(Heartbeat(
                 period: DeviceController.HEARTBEAT_PERIOD,

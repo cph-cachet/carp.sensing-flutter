@@ -150,7 +150,7 @@ class AppTaskControlExecutor extends TaskControlExecutor {
   @override
   Future<bool> onStart() async {
     final from = taskControl.hasBeenScheduledUntil ?? DateTime.now();
-    final to = from.add(Duration(days: 10)); // look 10 days ahead
+    final to = from.add(const Duration(days: 10)); // look 10 days ahead
     final schedule = triggerExecutor.getSchedule(from, to, 10);
 
     if (schedule.isEmpty) {

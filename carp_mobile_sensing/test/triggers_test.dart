@@ -24,7 +24,7 @@ void main() {
       // collect every day at 13:30
       t = RecurrentScheduledTrigger(
         type: RecurrentType.daily,
-        time: TimeOfDay(hour: 13, minute: 30),
+        time: const TimeOfDay(hour: 13, minute: 30),
       );
       //print(toJsonString(t));
       print('${t.firstOccurrence} - ${t.period}');
@@ -33,8 +33,8 @@ void main() {
       // collect every day at 22:30
       t = RecurrentScheduledTrigger(
         type: RecurrentType.daily,
-        time: TimeOfDay(hour: 22, minute: 30),
-        duration: Duration(seconds: 1),
+        time: const TimeOfDay(hour: 22, minute: 30),
+        duration: const Duration(seconds: 1),
       );
       print('${t.firstOccurrence} - ${t.period}');
       expect(t.period.inHours, 24);
@@ -43,8 +43,8 @@ void main() {
       t = RecurrentScheduledTrigger(
         type: RecurrentType.daily,
         separationCount: 1,
-        time: TimeOfDay(hour: 13, minute: 30),
-        duration: Duration(seconds: 1),
+        time: const TimeOfDay(hour: 13, minute: 30),
+        duration: const Duration(seconds: 1),
       );
       print('${t.firstOccurrence} - ${t.period}');
       expect(t.period.inDays, 2);
@@ -53,8 +53,8 @@ void main() {
       t = RecurrentScheduledTrigger(
         type: RecurrentType.weekly,
         dayOfWeek: DateTime.wednesday,
-        time: TimeOfDay(hour: 12, minute: 23),
-        duration: Duration(seconds: 1),
+        time: const TimeOfDay(hour: 12, minute: 23),
+        duration: const Duration(seconds: 1),
       );
       print('${t.firstOccurrence} - ${t.period}');
       expect(t.period.inDays, 7);
@@ -63,8 +63,8 @@ void main() {
       t = RecurrentScheduledTrigger(
         type: RecurrentType.weekly,
         dayOfWeek: DateTime.thursday,
-        time: TimeOfDay(hour: 14, minute: 23),
-        duration: Duration(seconds: 1),
+        time: const TimeOfDay(hour: 14, minute: 23),
+        duration: const Duration(seconds: 1),
       );
       print('${t.firstOccurrence} - ${t.period}');
       expect(t.period.inDays, 7);
@@ -74,8 +74,8 @@ void main() {
         type: RecurrentType.weekly,
         dayOfWeek: DateTime.thursday,
         separationCount: 1,
-        time: TimeOfDay(hour: 14, minute: 00),
-        duration: Duration(seconds: 1),
+        time: const TimeOfDay(hour: 14, minute: 00),
+        duration: const Duration(seconds: 1),
       );
       print(
           'weekly, Thursday at 14:00 :: first : ${t.firstOccurrence} - period : ${t.period.inDays}');
@@ -85,8 +85,8 @@ void main() {
       t = RecurrentScheduledTrigger(
         type: RecurrentType.monthly,
         dayOfMonth: 1,
-        time: TimeOfDay(hour: 18),
-        duration: Duration(seconds: 1),
+        time: const TimeOfDay(hour: 18),
+        duration: const Duration(seconds: 1),
       );
       print(
           'monthly, 1st day of month at 18:00 :: first : ${t.firstOccurrence} - period : ${t.period.inDays}');
@@ -98,8 +98,8 @@ void main() {
         type: RecurrentType.monthly,
         dayOfMonth: 11,
         separationCount: 2,
-        time: TimeOfDay(hour: 21, minute: 30),
-        duration: Duration(seconds: 1),
+        time: const TimeOfDay(hour: 21, minute: 30),
+        duration: const Duration(seconds: 1),
       );
       print(
           'quarterly, 11th day of month at 21:30 :: first : ${t.firstOccurrence} - period : ${t.period.inDays}');
@@ -110,8 +110,8 @@ void main() {
         type: RecurrentType.monthly,
         weekOfMonth: 2,
         dayOfWeek: DateTime.tuesday,
-        time: TimeOfDay(hour: 14, minute: 30),
-        duration: Duration(seconds: 1),
+        time: const TimeOfDay(hour: 14, minute: 30),
+        duration: const Duration(seconds: 1),
       );
       print(
           'monthly, 2nd week of month on Tuesday at 14:30 :: first : ${t.firstOccurrence} - period : ${t.period.inDays}');
@@ -123,8 +123,8 @@ void main() {
         type: RecurrentType.monthly,
         dayOfMonth: 11,
         separationCount: 2,
-        time: TimeOfDay(hour: 21, minute: 30),
-        duration: Duration(seconds: 1),
+        time: const TimeOfDay(hour: 21, minute: 30),
+        duration: const Duration(seconds: 1),
       );
       print(
           'quarterly, 11th day of month at 21:30 :: first : ${t.firstOccurrence} - period : ${t.period.inDays}');
@@ -137,8 +137,8 @@ void main() {
       // collect every day at 13:30
       t = RecurrentScheduledTrigger(
         type: RecurrentType.daily,
-        time: TimeOfDay(hour: 13, minute: 30),
-        duration: Duration(seconds: 1),
+        time: const TimeOfDay(hour: 13, minute: 30),
+        duration: const Duration(seconds: 1),
       );
       //print(toJsonString(t));
       print(t);
@@ -164,8 +164,8 @@ void main() {
       t = RecurrentScheduledTrigger(
         type: RecurrentType.weekly,
         dayOfWeek: DateTime.wednesday,
-        time: TimeOfDay(hour: 12, minute: 23),
-        duration: Duration(seconds: 1),
+        time: const TimeOfDay(hour: 12, minute: 23),
+        duration: const Duration(seconds: 1),
       );
       print(t);
       print('${t.firstOccurrence} - ${t.period}');
@@ -188,41 +188,41 @@ void main() {
       // all of the following should fail due to assert
       RecurrentScheduledTrigger(
         type: RecurrentType.daily,
-        time: TimeOfDay(hour: 13, minute: 30),
-        duration: Duration(seconds: 1),
+        time: const TimeOfDay(hour: 13, minute: 30),
+        duration: const Duration(seconds: 1),
       );
       RecurrentScheduledTrigger(
         type: RecurrentType.daily,
         separationCount: -1,
-        time: TimeOfDay(hour: 13, minute: 30),
-        duration: Duration(seconds: 1),
+        time: const TimeOfDay(hour: 13, minute: 30),
+        duration: const Duration(seconds: 1),
       );
 
       RecurrentScheduledTrigger(
         type: RecurrentType.weekly,
-        time: TimeOfDay(hour: 12, minute: 23),
-        duration: Duration(seconds: 1),
+        time: const TimeOfDay(hour: 12, minute: 23),
+        duration: const Duration(seconds: 1),
       );
 
       RecurrentScheduledTrigger(
         type: RecurrentType.monthly,
         dayOfWeek: DateTime.monday,
-        time: TimeOfDay(hour: 14, minute: 30),
-        duration: Duration(seconds: 1),
+        time: const TimeOfDay(hour: 14, minute: 30),
+        duration: const Duration(seconds: 1),
       );
       RecurrentScheduledTrigger(
         type: RecurrentType.monthly,
         dayOfMonth: 43,
         separationCount: 2,
-        time: TimeOfDay(hour: 21, minute: 30),
-        duration: Duration(seconds: 1),
+        time: const TimeOfDay(hour: 21, minute: 30),
+        duration: const Duration(seconds: 1),
       );
       RecurrentScheduledTrigger(
         type: RecurrentType.monthly,
         weekOfMonth: 12,
         dayOfWeek: DateTime.monday,
-        time: TimeOfDay(hour: 14, minute: 30),
-        duration: Duration(seconds: 1),
+        time: const TimeOfDay(hour: 14, minute: 30),
+        duration: const Duration(seconds: 1),
       );
     }, skip: true);
 
@@ -266,8 +266,8 @@ void main() {
       RandomRecurrentTrigger t = RandomRecurrentTrigger(
         // startTime: Time(hour: 8, minute: 0),
         // endTime: Time(hour: 20, minute: 0),
-        startTime: TimeOfDay(hour: 8, minute: 56),
-        endTime: TimeOfDay(hour: 20, minute: 10),
+        startTime: const TimeOfDay(hour: 8, minute: 56),
+        endTime: const TimeOfDay(hour: 20, minute: 10),
         // startTime: Time(hour: 8, minute: 0),
         // endTime: Time(hour: 8, minute: 30),
         minNumberOfTriggers: 2,
@@ -296,7 +296,7 @@ void main() {
 
     test(' - ConditionalPeriodicTrigger', () {
       ConditionalPeriodicTrigger t = ConditionalPeriodicTrigger(
-        period: Duration(minutes: 1),
+        period: const Duration(minutes: 1),
         triggerCondition: () {
           return ('jakob'.length == 5);
         },

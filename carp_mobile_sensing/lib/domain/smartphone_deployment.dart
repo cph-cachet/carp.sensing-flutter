@@ -53,7 +53,7 @@ class SmartphoneDeployment extends PrimaryDeviceDeployment
     StudyDescription? studyDescription,
     DataEndPoint? dataEndPoint,
   }) {
-    _studyDeploymentId = studyDeploymentId ?? Uuid().v1();
+    _studyDeploymentId = studyDeploymentId ?? const Uuid().v1();
     _data = SmartphoneApplicationData(
       studyDescription: studyDescription,
       dataEndPoint: dataEndPoint,
@@ -76,7 +76,7 @@ class SmartphoneDeployment extends PrimaryDeviceDeployment
           taskControls: deployment.taskControls,
           expectedParticipantData: deployment.expectedParticipantData,
         ) {
-    _studyDeploymentId = studyDeploymentId ?? Uuid().v1();
+    _studyDeploymentId = studyDeploymentId ?? const Uuid().v1();
 
     // check if this deployment has mapped study description in the application
     // data, i.e., a protocol generated from CAMS
@@ -117,7 +117,7 @@ class SmartphoneDeployment extends PrimaryDeviceDeployment
           expectedParticipantData: protocol.expectedParticipantData ??
               deployment.expectedParticipantData,
         ) {
-    _studyDeploymentId = studyDeploymentId ?? Uuid().v1();
+    _studyDeploymentId = studyDeploymentId ?? const Uuid().v1();
     _data.studyDescription = protocol.studyDescription;
     _data.dataEndPoint = protocol.dataEndPoint;
     _data.applicationData = protocol._data.applicationData;
@@ -143,7 +143,7 @@ class SmartphoneDeployment extends PrimaryDeviceDeployment
           taskControls: protocol.taskControls,
           expectedParticipantData: protocol.expectedParticipantData ?? {},
         ) {
-    _studyDeploymentId = studyDeploymentId ?? Uuid().v1();
+    _studyDeploymentId = studyDeploymentId ?? const Uuid().v1();
     _data.studyDescription = protocol.studyDescription;
     _data.dataEndPoint = protocol.dataEndPoint;
     _data.applicationData = protocol._data.applicationData;

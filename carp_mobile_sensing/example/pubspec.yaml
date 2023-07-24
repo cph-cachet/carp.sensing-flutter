@@ -10,12 +10,18 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+
+  carp_serializable: ^1.1.0
+  carp_core: ^1.1.0
   # carp_serializable:
   #   path: ../../carp_serializable/
   # carp_core:
   #   path: ../../carp_core
   carp_mobile_sensing:
     path: ../../carp_mobile_sensing/
+
+  uuid: ^3.0.4
+  iso_duration_parser: ^1.1.0
 
 dependency_overrides:
 

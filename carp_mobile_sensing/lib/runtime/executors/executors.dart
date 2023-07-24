@@ -205,7 +205,7 @@ abstract class AbstractExecutor<TConfig> implements Executor<TConfig> {
 abstract class AggregateExecutor<TConfig> extends AbstractExecutor<TConfig> {
   static final DeviceInfo deviceInfo = DeviceInfo();
   final StreamGroup<Measurement> group = StreamGroup.broadcast();
-  final List<Executor> executors = [];
+  final List<Executor<dynamic>> executors = [];
 
   @override
   Stream<Measurement> get measurements => group.stream;
@@ -257,7 +257,7 @@ abstract class _AbstractExecutorState implements _ExecutorStateMachine {
   @override
   ExecutorState state;
 
-  AbstractExecutor executor;
+  AbstractExecutor<dynamic> executor;
   _AbstractExecutorState(this.executor, this.state);
 
   // Default behavior is to print a warning.
@@ -292,7 +292,7 @@ abstract class _AbstractExecutorState implements _ExecutorStateMachine {
 
 class _CreatedState extends _AbstractExecutorState
     implements _ExecutorStateMachine {
-  _CreatedState(Executor executor)
+  _CreatedState(Executor<dynamic> executor)
       : super(executor as AbstractExecutor, ExecutorState.created);
 
   @override
@@ -313,7 +313,7 @@ class _CreatedState extends _AbstractExecutorState
 
 class _InitializedState extends _AbstractExecutorState
     implements _ExecutorStateMachine {
-  _InitializedState(Executor executor)
+  _InitializedState(Executor<dynamic> executor)
       : super(executor as AbstractExecutor, ExecutorState.initialized);
 
   @override
@@ -330,7 +330,7 @@ class _InitializedState extends _AbstractExecutorState
 
 class _StartedState extends _AbstractExecutorState
     implements _ExecutorStateMachine {
-  _StartedState(Executor executor)
+  _StartedState(Executor<dynamic> executor)
       : super(executor as AbstractExecutor, ExecutorState.started);
 
   @override
@@ -361,7 +361,7 @@ class _StartedState extends _AbstractExecutorState
 
 class _StoppedState extends _AbstractExecutorState
     implements _ExecutorStateMachine {
-  _StoppedState(Executor executor)
+  _StoppedState(Executor<dynamic> executor)
       : super(executor as AbstractExecutor, ExecutorState.stopped);
 
   @override
@@ -378,7 +378,7 @@ class _StoppedState extends _AbstractExecutorState
 
 class _UndefinedState extends _AbstractExecutorState
     implements _ExecutorStateMachine {
-  _UndefinedState(Executor executor)
+  _UndefinedState(Executor<dynamic> executor)
       : super(executor as AbstractExecutor, ExecutorState.undefined);
   @override
   String toString() => 'undefined';

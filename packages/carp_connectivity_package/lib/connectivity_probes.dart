@@ -45,7 +45,7 @@ class WifiProbe extends IntervalProbe {
 }
 
 /// The [BluetoothProbe] scans for nearby and visible Bluetooth devices and
-/// collects a [BluetoothDatum] that lists each device found during the scan.
+/// collects a [Bluetooth] measurement that lists each device found during the scan.
 /// Uses a [PeriodicSamplingConfiguration] for configuration the [interval]
 /// and [duration] of the scan.
 class BluetoothProbe extends BufferingPeriodicStreamProbe {
@@ -54,7 +54,7 @@ class BluetoothProbe extends BufferingPeriodicStreamProbe {
   Data? _data;
 
   @override
-  Stream<dynamic> get bufferingStream => FlutterBluePlus.instance.scanResults;
+  Stream<dynamic> get bufferingStream => FlutterBluePlus.scanResults;
 
   @override
   Future<Measurement?> getMeasurement() async =>
@@ -64,19 +64,19 @@ class BluetoothProbe extends BufferingPeriodicStreamProbe {
   void onSamplingStart() {
     _data = Bluetooth();
     try {
-      FlutterBluePlus.instance.startScan(
+      FlutterBluePlus.startScan(
           scanMode: ScanMode.lowLatency,
           timeout: samplingConfiguration?.duration ??
-              Duration(milliseconds: DEFAULT_TIMEOUT));
+              const Duration(milliseconds: DEFAULT_TIMEOUT));
     } catch (error) {
-      FlutterBluePlus.instance.stopScan();
+      FlutterBluePlus.stopScan();
       _data = Error(message: 'Error scanning for bluetooth - $error');
     }
   }
 
   @override
   void onSamplingEnd() {
-    FlutterBluePlus.instance.stopScan();
+    FlutterBluePlus.stopScan();
     if (_data is Bluetooth) (_data as Bluetooth).endScan = DateTime.now();
   }
 

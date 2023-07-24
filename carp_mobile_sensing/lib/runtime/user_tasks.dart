@@ -104,7 +104,7 @@ abstract class UserTask {
   /// Create a new [UserTask] based on [executor].
   UserTask(AppTaskExecutor executor) {
     _executor = executor;
-    id = Uuid().v1();
+    id = const Uuid().v1();
   }
 
   /// Does this user task has a user interface (`Widget`) to show to the user?
@@ -241,7 +241,7 @@ class OneTimeBackgroundSensingUserTask extends BackgroundSensingUserTask {
   @override
   Widget? onStart() {
     super.onStart();
-    Timer(Duration(seconds: 10), () => super.onDone());
+    Timer(const Duration(seconds: 10), () => super.onDone());
     return null;
   }
 }

@@ -44,9 +44,9 @@ void main() {
 
     // Define what needs to be measured, on which device, when.
     List<Measure> measures = [
-      Measure(type: DataType(NameSpace.CARP, 'light').toString()),
-      Measure(type: DataType(NameSpace.CARP, 'gps').toString()),
-      Measure(type: DataType(NameSpace.CARP, 'steps').toString()),
+      Measure(type: const DataType(NameSpace.CARP, 'light').toString()),
+      Measure(type: const DataType(NameSpace.CARP, 'gps').toString()),
+      Measure(type: const DataType(NameSpace.CARP, 'steps').toString()),
     ];
 
     var task = BackgroundTask(name: 'Start measures')..addMeasures(measures);
@@ -227,7 +227,7 @@ void main() {
 
   test('Triggers -> JSON -> Triggers', () async {
     primaryProtocol.addTaskControl(
-      DelayedTrigger(delay: Duration(seconds: 10)),
+      DelayedTrigger(delay: const Duration(seconds: 10)),
       BackgroundTask()
         ..addMeasure(Measure(type: CarpDataTypes.STEP_COUNT_TYPE_NAME))
         ..addMeasure(Measure(type: DeviceSamplingPackage.SCREEN_EVENT)),
@@ -249,8 +249,8 @@ void main() {
     // collect every day at 13:30.
     t1 = RecurrentScheduledTrigger(
       type: RecurrentType.daily,
-      time: TimeOfDay(hour: 21, minute: 30),
-      duration: Duration(seconds: 1),
+      time: const TimeOfDay(hour: 21, minute: 30),
+      duration: const Duration(seconds: 1),
     );
     print('$t1');
     primaryProtocol.addTaskControl(
@@ -264,9 +264,9 @@ void main() {
     // collect every other day at 13:30.
     t2 = RecurrentScheduledTrigger(
       type: RecurrentType.daily,
-      time: TimeOfDay(hour: 13, minute: 30),
+      time: const TimeOfDay(hour: 13, minute: 30),
       separationCount: 1,
-      duration: Duration(seconds: 1),
+      duration: const Duration(seconds: 1),
     );
     print('$t2');
     primaryProtocol.addTaskControl(
@@ -281,9 +281,9 @@ void main() {
     // collect every wednesday at 12:23.
     t3 = RecurrentScheduledTrigger(
       type: RecurrentType.weekly,
-      time: TimeOfDay(hour: 12, minute: 23),
+      time: const TimeOfDay(hour: 12, minute: 23),
       dayOfWeek: DateTime.wednesday,
-      duration: Duration(seconds: 1),
+      duration: const Duration(seconds: 1),
     );
     print('$t3');
     primaryProtocol.addTaskControl(
@@ -298,10 +298,10 @@ void main() {
     // collect every 2nd monday at 12:23.
     t4 = RecurrentScheduledTrigger(
       type: RecurrentType.weekly,
-      time: TimeOfDay(hour: 12, minute: 23),
+      time: const TimeOfDay(hour: 12, minute: 23),
       dayOfWeek: DateTime.monday,
       separationCount: 1,
-      duration: Duration(seconds: 1),
+      duration: const Duration(seconds: 1),
     );
     print('$t4');
     primaryProtocol.addTaskControl(

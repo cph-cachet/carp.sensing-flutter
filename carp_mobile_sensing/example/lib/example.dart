@@ -30,7 +30,7 @@ Future<void> example_0() async {
   // Automatically collect step count, ambient light, screen activity, and
   // battery level. Sampling is delaying by 10 seconds.
   protocol.addTaskControl(
-    DelayedTrigger(delay: Duration(seconds: 10)),
+    DelayedTrigger(delay: const Duration(seconds: 10)),
     BackgroundTask(measures: [
       Measure(type: SensorSamplingPackage.STEP_COUNT),
       Measure(type: SensorSamplingPackage.AMBIENT_LIGHT),
@@ -159,7 +159,7 @@ void example_2() async {
   // automatically collect accelerometer and gyroscope data
   // but delay the sampling by 10 seconds
   protocol.addTaskControl(
-    DelayedTrigger(delay: Duration(seconds: 10)),
+    DelayedTrigger(delay: const Duration(seconds: 10)),
     BackgroundTask(name: 'Sensor Task')
       ..addMeasure(Measure(type: CarpDataTypes.ACCELERATION_TYPE_NAME))
       ..addMeasure(Measure(type: CarpDataTypes.ROTATION_TYPE_NAME)),
@@ -233,7 +233,7 @@ void example_2() async {
   StreamSubscription<Measurement> subscription =
       controller!.measurements.listen((Measurement measurement) {
     // do something w. the measurement, e.g. print the json
-    print(JsonEncoder.withIndent(' ').convert(measurement));
+    print(const JsonEncoder.withIndent(' ').convert(measurement));
   });
 
   // Sampling can be stopped and started
@@ -478,24 +478,24 @@ void recurrentScheduledTriggerExample() {
   // collect every day at 13:30
   RecurrentScheduledTrigger(
     type: RecurrentType.daily,
-    time: TimeOfDay(hour: 13, minute: 30),
-    duration: Duration(seconds: 1),
+    time: const TimeOfDay(hour: 13, minute: 30),
+    duration: const Duration(seconds: 1),
   );
 
   // collect every other day at 13:30
   RecurrentScheduledTrigger(
     type: RecurrentType.daily,
     separationCount: 1,
-    time: TimeOfDay(hour: 13, minute: 30),
-    duration: Duration(seconds: 1),
+    time: const TimeOfDay(hour: 13, minute: 30),
+    duration: const Duration(seconds: 1),
   );
 
   // collect every wednesday at 12:23
   RecurrentScheduledTrigger(
     type: RecurrentType.weekly,
     dayOfWeek: DateTime.wednesday,
-    time: TimeOfDay(hour: 12, minute: 23),
-    duration: Duration(seconds: 1),
+    time: const TimeOfDay(hour: 12, minute: 23),
+    duration: const Duration(seconds: 1),
   );
 
   // collect every 2nd monday at 12:23
@@ -503,8 +503,8 @@ void recurrentScheduledTriggerExample() {
     type: RecurrentType.weekly,
     dayOfWeek: DateTime.monday,
     separationCount: 1,
-    time: TimeOfDay(hour: 12, minute: 23),
-    duration: Duration(seconds: 1),
+    time: const TimeOfDay(hour: 12, minute: 23),
+    duration: const Duration(seconds: 1),
   );
 
   // collect monthly in the second week on a monday at 14:30
@@ -512,8 +512,8 @@ void recurrentScheduledTriggerExample() {
     type: RecurrentType.monthly,
     weekOfMonth: 2,
     dayOfWeek: DateTime.monday,
-    time: TimeOfDay(hour: 14, minute: 30),
-    duration: Duration(seconds: 1),
+    time: const TimeOfDay(hour: 14, minute: 30),
+    duration: const Duration(seconds: 1),
   );
 
   // collect quarterly on the 11th day of the first month in each quarter at 21:30
@@ -521,8 +521,8 @@ void recurrentScheduledTriggerExample() {
     type: RecurrentType.monthly,
     dayOfMonth: 11,
     separationCount: 2,
-    time: TimeOfDay(hour: 21, minute: 30),
-    duration: Duration(seconds: 1),
+    time: const TimeOfDay(hour: 21, minute: 30),
+    duration: const Duration(seconds: 1),
   );
 }
 

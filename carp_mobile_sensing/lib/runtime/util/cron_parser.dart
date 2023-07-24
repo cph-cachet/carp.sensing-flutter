@@ -180,7 +180,7 @@ class _CronIterator implements CronIterator<tz.TZDateTime> {
   @override
   tz.TZDateTime next() {
     _nextCalled = true;
-    _currentDate = _currentDate.add(Duration(minutes: 1));
+    _currentDate = _currentDate.add(const Duration(minutes: 1));
     while (true) {
       if (_schedule.months?.contains(_currentDate.month) == false) {
         _currentDate = tz.TZDateTime(_currentDate.location, _currentDate.year,
@@ -198,13 +198,13 @@ class _CronIterator implements CronIterator<tz.TZDateTime> {
         continue;
       }
       if (_schedule.hours?.contains(_currentDate.hour) == false) {
-        _currentDate = _currentDate.add(Duration(hours: 1));
+        _currentDate = _currentDate.add(const Duration(hours: 1));
         _currentDate =
             _currentDate.subtract(Duration(minutes: _currentDate.minute));
         continue;
       }
       if (_schedule.minutes?.contains(_currentDate.minute) == false) {
-        _currentDate = _currentDate.add(Duration(minutes: 1));
+        _currentDate = _currentDate.add(const Duration(minutes: 1));
         continue;
       }
       return _currentDate;
@@ -214,18 +214,18 @@ class _CronIterator implements CronIterator<tz.TZDateTime> {
   @override
   tz.TZDateTime previous() {
     _previousCalled = true;
-    _currentDate = _currentDate.subtract(Duration(minutes: 1));
+    _currentDate = _currentDate.subtract(const Duration(minutes: 1));
     while (true) {
       if (_schedule.minutes?.contains(_currentDate.minute) == false) {
-        _currentDate = _currentDate.subtract(Duration(minutes: 1));
+        _currentDate = _currentDate.subtract(const Duration(minutes: 1));
         continue;
       }
       if (_schedule.hours?.contains(_currentDate.hour) == false) {
-        _currentDate = _currentDate.subtract(Duration(hours: 1));
+        _currentDate = _currentDate.subtract(const Duration(hours: 1));
         continue;
       }
       if (_schedule.days?.contains(_currentDate.day) == false) {
-        _currentDate = _currentDate.subtract(Duration(days: 1));
+        _currentDate = _currentDate.subtract(const Duration(days: 1));
         continue;
       }
       if (_schedule.weekdays?.contains(_currentDate.weekday) == false) {

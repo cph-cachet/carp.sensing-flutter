@@ -48,7 +48,7 @@ void main() {
 
     // Add a background task that collects location on a regular basis
     protocol.addTaskControl(
-        PeriodicTrigger(period: Duration(minutes: 5)),
+        PeriodicTrigger(period: const Duration(minutes: 5)),
         BackgroundTask()
           ..addMeasure(Measure(type: ContextSamplingPackage.LOCATION)),
         locationService);
@@ -56,7 +56,7 @@ void main() {
     // Add a background task that continuously collects location and mobility
     // patterns. Delays sampling by 5 minutes.
     protocol.addTaskControl(
-        DelayedTrigger(delay: Duration(minutes: 5)),
+        DelayedTrigger(delay: const Duration(minutes: 5)),
         BackgroundTask()
           ..addMeasure(Measure(type: ContextSamplingPackage.LOCATION))
           ..addMeasure(Measure(type: ContextSamplingPackage.MOBILITY)),
@@ -82,7 +82,7 @@ void main() {
 
     // Add a background task that collects weather every 30 minutes.
     protocol.addTaskControl(
-        PeriodicTrigger(period: Duration(minutes: 30)),
+        PeriodicTrigger(period: const Duration(minutes: 30)),
         BackgroundTask()
           ..addMeasure(Measure(type: ContextSamplingPackage.WEATHER)),
         weatherService);
@@ -94,7 +94,7 @@ void main() {
 
     // Add a background task that air quality every 30 minutes.
     protocol.addTaskControl(
-        PeriodicTrigger(period: Duration(minutes: 30)),
+        PeriodicTrigger(period: const Duration(minutes: 30)),
         BackgroundTask()
           ..addMeasure(Measure(type: ContextSamplingPackage.AIR_QUALITY)),
         airQualityService);

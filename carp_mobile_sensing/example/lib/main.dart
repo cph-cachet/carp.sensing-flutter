@@ -13,10 +13,12 @@ import 'package:iso_duration_parser/iso_duration_parser.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   CarpMobileSensing.ensureInitialized();
-  runApp(CARPMobileSensingApp());
+  runApp(const CARPMobileSensingApp());
 }
 
 class CARPMobileSensingApp extends StatelessWidget {
+  const CARPMobileSensingApp({super.key});
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -24,14 +26,14 @@ class CARPMobileSensingApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: ConsolePage(title: 'CARP Mobile Sensing Demo'),
+      home: const ConsolePage(title: 'CARP Mobile Sensing Demo'),
     );
   }
 }
 
 class ConsolePage extends StatefulWidget {
   final String title;
-  ConsolePage({super.key, required this.title});
+  const ConsolePage({super.key, required this.title});
   @override
   Console createState() => Console();
 }
@@ -77,7 +79,7 @@ class Console extends State<ConsolePage> {
       floatingActionButton: FloatingActionButton(
         onPressed: restart,
         tooltip: 'Start/Stop study',
-        child: sensing.isRunning ? Icon(Icons.stop) : Icon(Icons.play_arrow),
+        child: sensing.isRunning ? const Icon(Icons.stop) : const Icon(Icons.play_arrow),
       ),
     );
   }
@@ -247,7 +249,7 @@ class LocalStudyProtocolManager implements StudyProtocolManager {
 
     // Collect device info periodically
     protocol.addTaskControl(
-      PeriodicTrigger(period: Duration(seconds: 30)),
+      PeriodicTrigger(period: const Duration(seconds: 30)),
       BackgroundTask(
           measures: [Measure(type: DeviceSamplingPackage.DEVICE_INFORMATION)]),
       phone,
@@ -328,7 +330,7 @@ class LocalStudyProtocolManager implements StudyProtocolManager {
 
     // Add a task 1 minute after deployment and make a notification.
     protocol.addTaskControl(
-      ElapsedTimeTrigger(elapsedTime: IsoDuration(seconds: 30)),
+      ElapsedTimeTrigger(elapsedTime: const IsoDuration(seconds: 30)),
       AppTask(
         type: BackgroundSensingUserTask.ONE_TIME_SENSING_TYPE,
         title: "Elapsed Time - App Task",

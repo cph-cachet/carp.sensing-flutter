@@ -380,7 +380,7 @@ abstract class BufferingPeriodicProbe extends MeasurementProbe {
 abstract class BufferingPeriodicStreamProbe extends PeriodicStreamProbe {
   // we don't use the stream in the super class so we give it an empty non-null stream
   @override
-  Stream<Measurement> get stream => Stream.empty();
+  Stream<Measurement> get stream => const Stream.empty();
 
   @override
   Future<bool> onStart() async {
