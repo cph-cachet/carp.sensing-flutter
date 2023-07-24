@@ -1,7 +1,7 @@
 ![CARP-Mobile-Sensing-Vertical](https://user-images.githubusercontent.com/1196642/98542469-43eadd80-2291-11eb-9013-87542d0b23e6.png)
 
 This repo holds the source code for the [Copenhagen Research Platform (CARP)](https://carp.cachet.dk) Mobile Sensing (CAMS) Flutter software.
-CARP is designed and maintained by the [Copenhagen Center for Health Technology (CACHET)](https://www.cachet.dk) at the [Department of Health Technology](https://www.healthtech.dtu.dk/) at the Technical University of Denmark.
+CARP is designed and maintained by the [Copenhagen Center for Health Technology (CACHET)](https://www.cachet.dk) at the [Department of Health Technology](https://www.healthtech.dtu.dk/) at the [Technical University of Denmark](https://www.dtu.dk/english/).
 This repro contains the source code developed by the core CARP team, including the core CAMS Framework, its packages, and example apps.
 
 In addition, the CARP team maintains a set of [Flutter plugins](https://github.com/cph-cachet/flutter-plugins) (mainly) for sensing purposes. Flutter plugins enable access to platform-specific APIs. For more information about plugins, and how to use them, see the
