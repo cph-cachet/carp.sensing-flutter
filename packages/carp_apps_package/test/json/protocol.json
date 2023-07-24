@@ -1,6 +1,6 @@
 {
-  "id": "58fd0a30-be76-11ed-a68a-a540167fb0ec",
-  "createdOn": "2023-03-09T12:31:42.675250Z",
+  "id": "952f0f80-2a00-11ee-9fe3-89f5e9a3ab25",
+  "createdOn": "2023-07-24T09:00:48.632479Z",
   "version": 0,
   "ownerId": "alex@uni.dk",
   "name": "Apps package test",
@@ -17,7 +17,7 @@
   "tasks": [
     {
       "__type": "dk.cachet.carp.common.application.tasks.BackgroundTask",
-      "name": "Task #6",
+      "name": "Task #7",
       "measures": [
         {
           "__type": "dk.cachet.carp.common.application.tasks.Measure.DataStream",
@@ -37,7 +37,7 @@
         },
         {
           "__type": "dk.cachet.carp.common.application.tasks.Measure.DataStream",
-          "type": "dk.cachet.carp.screenevent"
+          "type": "dk.cachet.carp.timezone"
         },
         {
           "__type": "dk.cachet.carp.common.application.tasks.Measure.DataStream",
@@ -83,7 +83,7 @@
   "taskControls": [
     {
       "triggerId": 0,
-      "taskName": "Task #6",
+      "taskName": "Task #7",
       "destinationDeviceRoleName": "Primary Phone",
       "control": "Start"
     }

@@ -1,19 +1,27 @@
 # CARP Apps Sampling Package
 
+[![pub package](https://img.shields.io/pub/v/carp_apps_package.svg)](https://pub.dartlang.org/packages/carp_context_package)
+[![pub points](https://img.shields.io/pub/points/carp_apps_package?color=2E8B57&label=pub%20points)](https://pub.dev/packages/carp_apps_package/score)
+[![github stars](https://img.shields.io/github/stars/cph-cachet/carp.sensing-flutter.svg?style=flat&logo=github&colorB=deeppink&label=stars)](https://github.com/cph-cachet/carp.sensing-flutter)
+[![MIT License](https://img.shields.io/badge/license-MIT-purple.svg)](https://opensource.org/licenses/MIT)
+[![arXiv](https://img.shields.io/badge/arXiv-2006.11904-green.svg)](https://arxiv.org/abs/2006.11904)
+
 This library contains a sampling package for app-related sampling to work with
 the [`carp_mobile_sensing`](https://pub.dartlang.org/packages/carp_mobile_sensing) framework.
-This packages supports sampling of the following [`Measure`](https://pub.dev/documentation/carp_core/latest/carp_core_protocols/Measure-class.html) types:
+This packages supports sampling of the following [`Measure`](https://github.com/cph-cachet/carp.sensing-flutter/wiki/A.-Measure-Types) types:
 
-* `apps` - a list of installed apps on the phone.
-* `app_usage` - a log of app usage activity.
+* `dk.cachet.carp.apps` - a list of installed apps on the phone.
+* `dk.cachet.carp.app_usage` - a log of app usage activity.
 
 These measures are only available on Android.
 
 See the [wiki](https://github.com/cph-cachet/carp.sensing-flutter/wiki) for further documentation, particularly on available [measure types](https://github.com/cph-cachet/carp.sensing-flutter/wiki/A.-Measure-Types).
 See the [CARP Mobile Sensing App](https://github.com/cph-cachet/carp.sensing-flutter/tree/master/apps/carp_mobile_sensing_app) for an example of how to build a mobile sensing app in Flutter.
 
+For Flutter plugins for other CARP products, see [CARP Mobile Sensing in Flutter](https://github.com/cph-cachet/carp.sensing-flutter).
+
 If you're interested in writing you own sampling packages for CARP, see the description on
-how to [extend](https://github.com/cph-cachet/carp.sensing-flutter/wiki/4.-Extending-CARP-Mobile-Sensing) CARP on the wiki.
+how to [extend](https://github.com/cph-cachet/carp.sensing-flutter/wiki/5.-Extending-CARP-Mobile-Sensing) CARP on the wiki.
 
 ## Installing
 
@@ -32,7 +40,7 @@ dependencies:
 
 ### Android Integration
 
-Edit your app's `manifest.xml` file such that it contains the following permission request:
+Add the following to your app's `AndroidManifest.xml` file located in `android/app/src/main` such that it contains the following permission request:
 
 ````xml
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
@@ -53,8 +61,6 @@ Starting from [May 5 2021](https://support.google.com/googleplay/android-develop
 >
 > Apps granted access to this permission must comply with the User Data policies, including the Prominent Disclosure and Consent requirements, and may not extend its use to undisclosed or invalid purposes.
 
-More info here: <https://support.google.com/googleplay/android-developer/answer/10158779>
-
 ### iOS Integration
 
 Not supported.
@@ -74,30 +80,24 @@ Before creating a study and running it, register this package in the
 [SamplingPackageRegistry](https://pub.dartlang.org/documentation/carp_mobile_sensing/latest/runtime/SamplingPackageRegistry.html).
 
 ```dart
-  SamplingPackageRegistry().register(AppsSamplingPackage());
+SamplingPackageRegistry().register(AppsSamplingPackage());
 ```
 
-Collection of apps measures can be added to a study protocol like this.
+Collection of `APPS` and `APP_USAGE` measures can be added to a study protocol like this.
 
 ```dart
-  // create a study protocol
-  StudyProtocol protocol = StudyProtocol(
-    ownerId: 'owner@dtu.dk',
-    name: 'Apps Sensing Example',
-  );
+// Define which devices are used for data collection
+// In this case, its only this smartphone
+Smartphone phone = Smartphone();
+protocol.addPrimaryDevice(phone);
 
-  // define which devices are used for data collection
-  // in this case, its only this smartphone
-  Smartphone phone = Smartphone();
-  protocol.addPrimaryDevice(phone);
-
-  // add an automatic task that collects the list of installed apps
-  // and a log of app usage activity
-  protocol.addTaskControl(
-      ImmediateTrigger(),
-      BackgroundTask(measures: [
-        Measure(type: AppsSamplingPackage.APPS),
-        Measure(type: AppsSamplingPackage.APP_USAGE),
-      ]),
-      phone);
+// Add an automatic task that collects the list of installed apps
+// and a log of app usage activity
+protocol.addTaskControl(
+    ImmediateTrigger(),
+    BackgroundTask(measures: [
+      Measure(type: AppsSamplingPackage.APPS),
+      Measure(type: AppsSamplingPackage.APP_USAGE),
+    ]),
+    phone);
 ```

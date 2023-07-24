@@ -40,7 +40,7 @@ dependencies:
 
 ### Android Integration
 
-Add the following to your app's `manifest.xml` file located in `android/app/src/main`:
+Add the following to your app's `AndroidManifest.xml` file located in `android/app/src/main`:
 
 ````xml
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
