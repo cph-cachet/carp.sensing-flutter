@@ -104,13 +104,11 @@ class Bluetooth extends Data {
   void addBluetoothDevice(BluetoothDevice device) =>
       _scanResult[device.bluetoothDeviceId] = device;
 
-  void addBluetoothDevicesFromScanResults(List<ScanResult> results) =>
-      results.forEach((scanResult) =>
-          addBluetoothDevice(BluetoothDevice.fromScanResult(scanResult)));
-
-  // factory Bluetooth.fromScanResults(List<ScanResult> results) => Bluetooth()
-  //   ..scanResult =
-  //       results.map((r) => BluetoothDevice.fromScanResult(r)).toList();
+  void addBluetoothDevicesFromScanResults(List<ScanResult> results) {
+    for (var scanResult in results) {
+      addBluetoothDevice(BluetoothDevice.fromScanResult(scanResult));
+    }
+  }
 
   @override
   Function get fromJsonFunction => _$BluetoothFromJson;
@@ -162,8 +160,8 @@ class BluetoothDevice {
   }) : super();
 
   factory BluetoothDevice.fromScanResult(ScanResult result) => BluetoothDevice(
-      bluetoothDeviceId: result.device.id.id,
-      bluetoothDeviceName: result.device.name,
+      bluetoothDeviceId: result.device.remoteId.str,
+      bluetoothDeviceName: result.device.localName,
       connectable: result.advertisementData.connectable,
       txPowerLevel: result.advertisementData.txPowerLevel,
       advertisementName: result.advertisementData.localName,

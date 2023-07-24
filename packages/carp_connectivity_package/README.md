@@ -1,7 +1,13 @@
 # CARP Connectivity Sampling Package
 
+[![pub package](https://img.shields.io/pub/v/carp_connectivity_package.svg)](https://pub.dartlang.org/packages/carp_connectivity_package)
+[![pub points](https://img.shields.io/pub/points/carp_connectivity_package?color=2E8B57&label=pub%20points)](https://pub.dev/packages/carp_connectivity_package/score)
+[![github stars](https://img.shields.io/github/stars/cph-cachet/carp.sensing-flutter.svg?style=flat&logo=github&colorB=deeppink&label=stars)](https://github.com/cph-cachet/carp.sensing-flutter)
+[![MIT License](https://img.shields.io/badge/license-MIT-purple.svg)](https://opensource.org/licenses/MIT)
+[![arXiv](https://img.shields.io/badge/arXiv-2006.11904-green.svg)](https://arxiv.org/abs/2006.11904)
+
 This library contains a sampling package for collection of connectivity related measures to work with the [`carp_mobile_sensing`](https://pub.dartlang.org/packages/carp_mobile_sensing) framework.
-This packages supports sampling of the following [`Measure`](https://pub.dev/documentation/carp_core/latest/carp_core_protocols/Measure-class.html) types:
+This packages supports sampling of the following [`Measure`](https://github.com/cph-cachet/carp.sensing-flutter/wiki/A.-Measure-Types) types:
 
 * `dk.cachet.carp.wifi`
 * `dk.cachet.carp.connectivity`
@@ -10,7 +16,7 @@ This packages supports sampling of the following [`Measure`](https://pub.dev/doc
 See the [wiki](https://github.com/cph-cachet/carp.sensing-flutter/wiki) for further documentation, particularly on available [measure types](https://github.com/cph-cachet/carp.sensing-flutter/wiki/A.-Measure-Types).
 See the [CARP Mobile Sensing App](https://github.com/cph-cachet/carp.sensing-flutter/tree/master/apps/carp_mobile_sensing_app) for an example of how to build a mobile sensing app in Flutter.
 
-There is privacy protection of wifi and bluetooth names as part of the default [Privacy Schema](https://github.com/cph-cachet/carp.sensing-flutter/wiki/3.-Using-CARP-Mobile-Sensing#privacy-schema).
+There is privacy protection of wifi and bluetooth names as part of the default [Privacy Schema](https://github.com/cph-cachet/carp.sensing-flutter/wiki/3.-Using-CARP-Mobile-Sensing#privacy-transformer-schemas).
 
 For Flutter plugins for other CARP products, see [CARP Mobile Sensing in Flutter](https://github.com/cph-cachet/carp.sensing-flutter).
 
@@ -25,7 +31,6 @@ To use this package, add the following to you `pubspc.yaml` file. Note that this
 dependencies:
   flutter:
     sdk: flutter
-  carp_core: ^latest
   carp_mobile_sensing: ^latest
   carp_connectivity_package: ^latest
   ...
@@ -37,7 +42,7 @@ As explained in the Android [Wi-Fi scanning overview](https://developer.android.
 For Android >= 10 (API level 29) you need `ACCESS_FINE_LOCATION`, and `ACCESS_COARSE_LOCATION`.
 For Android >=12 (API level 31) be sure that your app has `ACCESS_NETWORK_STATE` permission.
 
-Add the following to your app's `manifest.xml` file located in `android/app/src/main`:
+Add the following to your app's `AndroidManifest.xml` file located in `android/app/src/main`:
 
 ````xml
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
@@ -59,7 +64,7 @@ Add the following to your app's `manifest.xml` file located in `android/app/src/
 ### iOS Integration
 
 From iOS >= 13 there is no longer access to wifi information.
-See here for the [Flutter](https://pub.dev/packages/wifi_info_flutter) description
+See here for the [Flutter](https://pub.dev/packages/network_info_plus) description
 and here for the [iOS](https://developer.apple.com/documentation/systemconfiguration/1614126-cncopycurrentnetworkinfo) description.
 
 To enable bluetooth tracking, add these permissions in the `Info.plist` file located in `ios/Runner`:
@@ -105,8 +110,8 @@ StudyProtocol protocol = StudyProtocol(
   name: 'Connectivity Sensing Example',
 );
 
-// define which devices are used for data collection
-// in this case, its only this smartphone
+// Define which devices are used for data collection
+// In this case, its only this smartphone
 Smartphone phone = Smartphone();
 protocol.addPrimaryDevice(phone);
 
