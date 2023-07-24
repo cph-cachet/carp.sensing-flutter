@@ -1,8 +1,14 @@
 # CARP Communication Sampling Package
 
+[![pub package](https://img.shields.io/pub/v/carp_communication_package.svg)](https://pub.dartlang.org/packages/carp_communication_package)
+[![pub points](https://img.shields.io/pub/points/carp_communication_package?color=2E8B57&label=pub%20points)](https://pub.dev/packages/carp_communication_package/score)
+[![github stars](https://img.shields.io/github/stars/cph-cachet/carp.sensing-flutter.svg?style=flat&logo=github&colorB=deeppink&label=stars)](https://github.com/cph-cachet/carp.sensing-flutter)
+[![MIT License](https://img.shields.io/badge/license-MIT-purple.svg)](https://opensource.org/licenses/MIT)
+[![arXiv](https://img.shields.io/badge/arXiv-2006.11904-green.svg)](https://arxiv.org/abs/2006.11904)
+
 This library contains a sampling package for communication sampling to work with
 the [`carp_mobile_sensing`](https://pub.dartlang.org/packages/carp_mobile_sensing) package.
-This packages supports sampling of the following [`Measure`](https://pub.dev/documentation/carp_core/latest/carp_core_protocols/Measure-class.html) types:
+This packages supports sampling of the following [`Measure`](https://github.com/cph-cachet/carp.sensing-flutter/wiki/A.-Measure-Types) types:
 
 * `dk.cachet.carp.phone_log` - the phone log.
 * `dk.cachet.carp.text_message_log` - the text (sms) message log.
@@ -14,12 +20,12 @@ Note that collection of phone and text message data is only supported on Android
 See the [wiki](https://github.com/cph-cachet/carp.sensing-flutter/wiki) for further documentation, particularly on available [measure types](https://github.com/cph-cachet/carp.sensing-flutter/wiki/A.-Measure-Types).
 See the [CARP Mobile Sensing App](https://github.com/cph-cachet/carp.sensing-flutter/tree/master/apps/carp_mobile_sensing_app) for an example of how to build a mobile sensing app in Flutter.
 
-There is privacy protection of text messages and phone numbers in the default [Privacy Schema](https://github.com/cph-cachet/carp.sensing-flutter/wiki/3.-Using-CARP-Mobile-Sensing#privacy-schema).
+There is privacy protection of text messages and phone numbers in the default [Privacy Schema](https://github.com/cph-cachet/carp.sensing-flutter/wiki/3.-Using-CARP-Mobile-Sensing#privacy-transformer-schemas).
 
-For Flutter plugins for other CARP products, see [CARP Mobile Sensing in Flutter](https://github.com/cph-cachet/carp.sensing-flutter/blob/master/README.md).
+For Flutter plugins for other CARP products, see [CARP Mobile Sensing in Flutter](https://github.com/cph-cachet/carp.sensing-flutter/).
 
 If you're interested in writing you own sampling packages for CARP, see the description on
-how to [extend](https://github.com/cph-cachet/carp.sensing-flutter/wiki/4.-Extending-CARP-Mobile-Sensing) CARP on the wiki.
+how to [extend](https://github.com/cph-cachet/carp.sensing-flutter/wiki/5.-Extending-CARP-Mobile-Sensing) CARP on the wiki.
 
 ## Installing
 
@@ -30,7 +36,6 @@ this package only works together with `carp_mobile_sensing`.
 dependencies:
   flutter:
     sdk: flutter
-  carp_core: ^latest
   carp_mobile_sensing: ^latest
   carp_communication_package: ^latest
   ...
@@ -38,7 +43,7 @@ dependencies:
 
 ### Android Integration
 
-Add the following to your app's `manifest.xml` file located in `android/app/src/main`:
+Add the following to your app's `AndroidManifest.xml` file located in `android/app/src/main`:
 
 ````xml
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
@@ -99,41 +104,40 @@ Before creating a study and running it, register this package in the
 [SamplingPackageRegistry](https://pub.dartlang.org/documentation/carp_mobile_sensing/latest/runtime/SamplingPackageRegistry.html).
 
 `````dart
-  SamplingPackageRegistry().register(CommunicationSamplingPackage());
+SamplingPackageRegistry().register(CommunicationSamplingPackage());
 `````
 
 Collection of communication measures can be added to a study protocol like this.
 
 ```dart
-  // Create a study protocol
-  StudyProtocol protocol = StudyProtocol(
-    ownerId: 'owner@dtu.dk',
-    name: 'Communication Sensing Example',
-  );
+// Create a study protocol
+StudyProtocol protocol = StudyProtocol(
+  ownerId: 'owner@dtu.dk',
+  name: 'Communication Sensing Example',
+);
 
-  // define which devices are used for data collection
-  // in this case, its only this smartphone
-  Smartphone phone = Smartphone();
-  protocol.addPrimaryDevice(phone);
+// Define which devices are used for data collection
+// In this case, its only this smartphone
+Smartphone phone = Smartphone();
+protocol.addPrimaryDevice(phone);
 
-  // Add an automatic task that collects SMS messages in/out
-  protocol.addTaskControl(
-      ImmediateTrigger(),
-      BackgroundTask(
-          measures: [Measure(type: CommunicationSamplingPackage.TEXT_MESSAGE)]),
-      phone);
+// Add an automatic task that collects SMS messages in/out
+protocol.addTaskControl(
+    ImmediateTrigger(),
+    BackgroundTask(
+        measures: [Measure(type: CommunicationSamplingPackage.TEXT_MESSAGE)]),
+    phone);
 
-  // Add an automatic task that every 3 hour collects the logs for:
-  //  * in/out SMS
-  //  * in/out phone calls
-  //  * calendar entries
-  protocol.addTaskControl(
-      PeriodicTrigger(period: const Duration(hours: 3)),
-      BackgroundTask(measures: [
-        Measure(type: CommunicationSamplingPackage.PHONE_LOG),
-        Measure(type: CommunicationSamplingPackage.TEXT_MESSAGE_LOG),
-        Measure(type: CommunicationSamplingPackage.CALENDAR),
-      ]),
-      phone);
-}
+// Add an automatic task that every 3 hour collects the logs for:
+//  * in/out SMS
+//  * in/out phone calls
+//  * calendar entries
+protocol.addTaskControl(
+    PeriodicTrigger(period: const Duration(hours: 3)),
+    BackgroundTask(measures: [
+      Measure(type: CommunicationSamplingPackage.PHONE_LOG),
+      Measure(type: CommunicationSamplingPackage.TEXT_MESSAGE_LOG),
+      Measure(type: CommunicationSamplingPackage.CALENDAR),
+    ]),
+    phone);
 ```

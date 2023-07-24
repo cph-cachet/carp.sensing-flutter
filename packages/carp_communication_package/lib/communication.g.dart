@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of communication;
+part of 'communication.dart';
 
 // **************************************************************************
 // JsonSerializableGenerator

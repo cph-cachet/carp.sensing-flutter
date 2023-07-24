@@ -7,7 +7,7 @@ import 'package:carp_communication_package/communication.dart';
 /// NOTE, however, that the code below will not run.
 /// See the documentation on how to use CAMS: https://github.com/cph-cachet/carp.sensing-flutter/wiki
 void main() async {
-  // register this sampling package before using its measures
+  // Register this sampling package before using its measures
   SamplingPackageRegistry().register(CommunicationSamplingPackage());
 
   // Create a study protocol
@@ -16,8 +16,8 @@ void main() async {
     name: 'Communication Sensing Example',
   );
 
-  // define which devices are used for data collection
-  // in this case, its only this smartphone
+  // Define which devices are used for data collection
+  // In this case, its only this smartphone
   Smartphone phone = Smartphone();
   protocol.addPrimaryDevice(phone);
 
