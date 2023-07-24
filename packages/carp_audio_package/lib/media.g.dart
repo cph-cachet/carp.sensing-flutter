@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of media;
+part of 'media.dart';
 
 // **************************************************************************
 // JsonSerializableGenerator

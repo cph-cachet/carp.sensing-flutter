@@ -4,7 +4,7 @@ version: 1.1.0
 homepage: https://github.com/cph-cachet/carp.sensing-flutter/tree/master/packages/carp_audio_package
 
 environment:
-  sdk: '>=2.17.0 <3.0.0'
+  sdk: ">=2.17.0 <4.0.0"
   flutter: ">=3.0.0"
 
 dependencies:
@@ -12,8 +12,8 @@ dependencies:
     sdk: flutter
     
   carp_serializable: ^1.1.0
-  # carp_core: ^1.1.0
-  # carp_mobile_sensing: ^1.1.0
+  carp_core: ^1.1.0
+  carp_mobile_sensing: ^1.1.0
  
   json_annotation: ^4.8.0
   permission_handler: ^10.3.0  
@@ -21,16 +21,17 @@ dependencies:
   noise_meter: ^4.0.0     # measuring noise level
   audio_streamer: ^3.0.0
   stats: ^2.0.0
+  uuid: ^3.0.4
 
 # Overriding carp libraries to use the local copy
 # Remove this before release of package
 dependency_overrides:
   # carp_serializable:
   #   path: ../../carp_serializable/
-  carp_core:
-    path: ../../carp_core/
-  carp_mobile_sensing:
-    path: ../../carp_mobile_sensing/
+  # carp_core:
+  #   path: ../../carp_core/
+  # carp_mobile_sensing:
+  #   path: ../../carp_mobile_sensing/
 
 dev_dependencies:
   flutter_lints: any

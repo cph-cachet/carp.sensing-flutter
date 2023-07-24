@@ -16,8 +16,8 @@ void main() async {
     name: 'Audio Sensing Example',
   );
 
-  // define which devices are used for data collection
-  // in this case, its only this smartphone
+  // Define which devices are used for data collection
+  // In this case, its only this smartphone
   Smartphone phone = Smartphone();
   protocol.addPrimaryDevice(phone);
 

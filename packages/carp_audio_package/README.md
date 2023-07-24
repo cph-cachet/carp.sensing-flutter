@@ -1,11 +1,13 @@
 # CARP Media Sampling Package
 
 [![pub package](https://img.shields.io/pub/v/carp_audio_package.svg)](https://pub.dartlang.org/packages/carp_audio_package)
+[![pub points](https://img.shields.io/pub/points/carp_audio_package?color=2E8B57&label=pub%20points)](https://pub.dev/packages/carp_audio_package/score)
 [![github stars](https://img.shields.io/github/stars/cph-cachet/carp.sensing-flutter.svg?style=flat&logo=github&colorB=deeppink&label=stars)](https://github.com/cph-cachet/carp.sensing-flutter)
 [![MIT License](https://img.shields.io/badge/license-MIT-purple.svg)](https://opensource.org/licenses/MIT)
+[![arXiv](https://img.shields.io/badge/arXiv-2006.11904-green.svg)](https://arxiv.org/abs/2006.11904)
 
 This library contains a sampling package for media (audio, video, image, noise) sampling to work with the [`carp_mobile_sensing`](https://pub.dartlang.org/packages/carp_mobile_sensing) package.
-This packages supports sampling of the following [`Measure`](https://pub.dev/documentation/carp_core/latest/carp_core/Measure-class.html) types:
+This packages supports sampling of the following [`Measure`](https://github.com/cph-cachet/carp.sensing-flutter/wiki/A.-Measure-Types) types:
 
 * `dk.cachet.carp.audio`
 * `dk.cachet.carp.noise`
@@ -39,7 +41,7 @@ dependencies:
 
 ### Android Integration
 
-Add the following to your app's `manifest.xml` file located in `android/app/src/main`:
+Add the following to your app's `AndroidManifest.xml` file located in `android/app/src/main`:
 
 ````xml
 <uses-permission android:name="android.permission.RECORD_AUDIO" />
@@ -79,29 +81,29 @@ Before creating a study and running it, register this package in the
 [SamplingPackageRegistry](https://pub.dartlang.org/documentation/carp_mobile_sensing/latest/runtime/SamplingPackageRegistry.html).
 
 ```dart
-  SamplingPackageRegistry().register(MediaSamplingPackage());
+SamplingPackageRegistry().register(MediaSamplingPackage());
 ```
 
 Adding audio measure from this package to a study protocol would look something like:
 
 ```dart
-  // Create a study protocol
-  StudyProtocol protocol = StudyProtocol(
-    ownerId: 'owner@dtu.dk',
-    name: 'Audio Sensing Example',
-  );
+// Create a study protocol
+StudyProtocol protocol = StudyProtocol(
+  ownerId: 'owner@dtu.dk',
+  name: 'Audio Sensing Example',
+);
 
-  // define which devices are used for data collection
-  // in this case, its only this smartphone
-  Smartphone phone = Smartphone();
-  protocol.addPrimaryDevice(phone);
+// Define which devices are used for data collection
+// In this case, its only this smartphone
+Smartphone phone = Smartphone();
+protocol.addPrimaryDevice(phone);
 
-  // Add an automatic task that immediately starts collecting audio and noise.
-  protocol.addTaskControl(
-      ImmediateTrigger(),
-      BackgroundTask(measures: [
-        Measure(type: MediaSamplingPackage.AUDIO),
-        Measure(type: MediaSamplingPackage.NOISE),
-      ]),
-      phone);
+// Add an automatic task that immediately starts collecting audio and noise.
+protocol.addTaskControl(
+    ImmediateTrigger(),
+    BackgroundTask(measures: [
+      Measure(type: MediaSamplingPackage.AUDIO),
+      Measure(type: MediaSamplingPackage.NOISE),
+    ]),
+    phone);
 ```

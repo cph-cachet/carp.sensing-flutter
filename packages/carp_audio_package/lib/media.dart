@@ -24,6 +24,3 @@ part 'noise_probe.dart';
 part 'media_data.dart';
 part 'media_package.dart';
 part 'media.g.dart';
-
-// auto generate json code (.g files) with:
-//   flutter pub run build_runner build --delete-conflicting-outputs
