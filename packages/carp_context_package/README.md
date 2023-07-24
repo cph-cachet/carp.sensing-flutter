@@ -1,7 +1,13 @@
 # CARP Context Sampling Package
 
+[![pub package](https://img.shields.io/pub/v/carp_context_package.svg)](https://pub.dartlang.org/packages/carp_context_package)
+[![pub points](https://img.shields.io/pub/points/carp_context_package?color=2E8B57&label=pub%20points)](https://pub.dev/packages/carp_context_package/score)
+[![github stars](https://img.shields.io/github/stars/cph-cachet/carp.sensing-flutter.svg?style=flat&logo=github&colorB=deeppink&label=stars)](https://github.com/cph-cachet/carp.sensing-flutter)
+[![MIT License](https://img.shields.io/badge/license-MIT-purple.svg)](https://opensource.org/licenses/MIT)
+[![arXiv](https://img.shields.io/badge/arXiv-2006.11904-green.svg)](https://arxiv.org/abs/2006.11904)
+
 This library contains a sampling package for collection of contextual data to work with the [`carp_mobile_sensing`](https://pub.dartlang.org/packages/carp_mobile_sensing) framework.
-This packages supports sampling of the following [`Measure`](https://pub.dev/documentation/carp_core/latest/carp_core_protocols/Measure-class.html) types:
+This packages supports sampling of the following [`Measure`](https://github.com/cph-cachet/carp.sensing-flutter/wiki/A.-Measure-Types) types:
 
 * `dk.cachet.carp.activity`
 * `dk.cachet.carp.location`
@@ -109,10 +115,10 @@ import 'package:carp_context_package/context.dart';
 Before creating a study and running it, register this package in the [SamplingPackageRegistry](https://pub.dev/documentation/carp_mobile_sensing/latest/runtime/SamplingPackageRegistry-class.html).
 
 ````dart
-  SamplingPackageRegistry().register(ContextSamplingPackage());
+SamplingPackageRegistry().register(ContextSamplingPackage());
 ````
 
-In order to use the context measures to a study protocol, this context package uses different "services" to collect data.
+The context package uses different "services" to collect data.
 
 The `ACTIVITY` measure uses the phone itself and can be added like this:
 
@@ -138,15 +144,15 @@ protocol.addTaskControl(
 
 All of the location-based measures;
 
-* `dk.cachet.carp.location`
-* `dk.cachet.carp.currentlocation`
-* `dk.cachet.carp.geofence`
-* `dk.cachet.carp.mobility`
+* `LOCATION`
+* `CURRENT_LOCATION`
+* `GEOFENCE`
+* `MOBILITY`
 
-uses the `LocationService` service as a 'connected device' to collect data and can be added to a protocol like this:
+uses the `LocationService` service as a "connected device" to collect data and can be added to a protocol like this:
 
 ```dart
-// Define the online location service and add it as a 'device'
+// Define the online location service and add it as a 'connected device'
 final locationService = LocationService(
     accuracy: GeolocationAccuracy.high,
     distance: 10,
@@ -163,9 +169,9 @@ protocol.addTaskControl(
     locationService);
 ```
 
-> Note that you would often need to balance the configuration of the `LocationService` with the measure you are collecting. For example, if only using the `mobility` measure, a lower `accuracy`, `distance`, and sampling `interval` could be used.
+> Note that you would often need to balance the configuration of the `LocationService` with the measure you are collecting. For example, if only using the `MOBILITY` measure, a lower `accuracy`, `distance`, and sampling `interval` could be used.
 
-The `dk.cachet.carp.weather` and `dk.cachet.carp.air_quality` measures uses the online [Open Weather API](https://openweathermap.org/api) and [Air Quality Open Data Platform](https://aqicn.org/data-platform/token/#/), respectively.
+The `WEATHER` and `AIR_QUALITY` measures uses the online [Open Weather API](https://openweathermap.org/api) and [Air Quality Open Data Platform](https://aqicn.org/data-platform/token/#/), respectively.
 In order to use these service, you need to obtain an API key from each of them.
 Once you have this, these services can be configured and added to a protocol like this:
 

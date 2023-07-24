@@ -32,7 +32,7 @@ void main() async {
       ]),
       phone);
 
-  // Define the online location service and add it as a 'device'
+  // Define the online location service and add it as a 'connected device'
   final locationService = LocationService(
       accuracy: GeolocationAccuracy.high,
       distance: 10,

@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 Copenhagen Center for Health Technology (CACHET) at the
+ * Copyright 2018-2023 Copenhagen Center for Health Technology (CACHET) at the
  * Technical University of Denmark (DTU).
  * Use of this source code is governed by a MIT-style license that can be
  * found in the LICENSE file.
@@ -7,7 +7,7 @@
 
 part of carp_context_package;
 
-/// Holds an activity event as recognized by the phone Activity Recognition API.
+/// Holds an activity event as recognized by the phone Activity Recognition (AR) API.
 @JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
 class Activity extends Data {
   static final Map<ar.ActivityConfidence, int> _confidenceLevelMap = {
@@ -40,7 +40,6 @@ class Activity extends Data {
   /// Possible types of activities are:
   /// * IN_VEHICLE - The device is in a vehicle, such as a car.
   /// * ON_BICYCLE - The device is on a bicycle.
-  /// * ON_FOOT - The device is on a user who is walking or running.
   /// * WALKING - The device is on a user who is walking.
   /// * RUNNING - The device is on a user who is running.
   /// * STILL - The device is still (not moving).
@@ -55,13 +54,13 @@ class Activity extends Data {
   /// * cycling => ON_BICYCLE
   ///
   /// Note that the [ActivityProbe] discard some AR events, which include:
-  ///  * [ActivityType.UNKNOWN]
-  ///  * [ActivityType.TILTING]
+  ///  * UNKNOWN - when the activity cannot be recognized
+  ///  * TILTING - when the phone is tilted (only on Android)
   ///  * Activities with a low confidence level (<50%)
   ActivityType type;
 
   /// Activity [type] as a string.
-  String get typeString => type.toString().split(".").last;
+  String get typeString => type.name;
 
   @override
   String toString() =>
@@ -76,13 +75,13 @@ enum ActivityType {
   /// The device is on a bicycle.
   ON_BICYCLE,
 
-  /// The device is on a user who is running. This is a sub-activity of ON_FOOT.
+  /// The device is on a user who is running.
   RUNNING,
 
   /// The device is still (not moving).
   STILL,
 
-  /// The device is on a user who is walking. This is a sub-activity of ON_FOOT.
+  /// The device is on a user who is walking.
   WALKING,
 
   /// Unable to detect the current activity.

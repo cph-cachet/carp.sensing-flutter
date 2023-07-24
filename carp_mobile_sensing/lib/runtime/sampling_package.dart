@@ -1,6 +1,13 @@
 part of runtime;
 
 /// A registry of [SamplingPackage] packages.
+///
+/// This registry works as a singleton and is accessed using the `SamplingPackageRegistry()`
+/// factory method.
+///
+/// This registry is mainly used to [register] any sampling packages used in a
+/// CAMS app. See the [CAMS GitHub repro](https://github.com/cph-cachet/carp.sensing-flutter/tree/master)
+/// for an overview of available sampling packages.
 class SamplingPackageRegistry {
   final List<SamplingPackage> _packages = [];
   final List<Permission> _permissions = [];

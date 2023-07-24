@@ -11,8 +11,9 @@ part of carp_context_package;
 /// API. It generates an [Activity] every time an activity is detected.
 ///
 /// Since the AR on both Android and iOS generates a lot of 'useless' events, the
-/// following AR event are removed:
-///  * [ActivityType.UNKNOWN]
+/// following AR event are ignored:
+///  * UNKNOWN - when the activity cannot be recognized
+///  * TILTING - when the phone is tilted (only on Android)
 ///  * Activities with a low confidence level (<50%)
 class ActivityProbe extends StreamProbe {
   Stream<Measurement>? _stream;
@@ -49,7 +50,7 @@ class ActivityProbe extends StreamProbe {
   @override
   Stream<Measurement> get stream => _stream ??= ar
       .FlutterActivityRecognition.instance.activityStream
-      .where((event) => event.type != ActivityType.UNKNOWN)
+      .where((event) => event.type != ar.ActivityType.UNKNOWN)
       .where((event) => event.confidence != ar.ActivityConfidence.LOW)
       .map((activity) => Measurement.fromData(Activity.fromActivity(activity)))
       .asBroadcastStream();
