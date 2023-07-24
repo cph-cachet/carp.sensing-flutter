@@ -12,8 +12,8 @@ dependencies:
     sdk: flutter
 
   carp_serializable: ^1.1.0
-  # carp_core: ^1.1.0
-  # carp_mobile_sensing: ^1.1.0
+  carp_core: ^1.1.0
+  carp_mobile_sensing: ^1.1.0
  
   json_annotation: ^4.8.0
   permission_handler: ^10.3.0  
@@ -24,10 +24,10 @@ dependencies:
 dependency_overrides:
   # carp_serializable:
   #   path: ../../carp_serializable/
-  carp_core:
-    path: ../../carp_core/
-  carp_mobile_sensing:
-    path: ../../carp_mobile_sensing/
+  # carp_core:
+  #   path: ../../carp_core/
+  # carp_mobile_sensing:
+  #   path: ../../carp_mobile_sensing/
 
 dev_dependencies:
   build_runner: any

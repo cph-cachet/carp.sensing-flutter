@@ -70,7 +70,7 @@ void main() {
     Media media = Media(
       mediaType: MediaType.audio,
       filename: "filename.mp3",
-      startRecordingTime: DateTime.now().subtract(Duration(days: 1)),
+      startRecordingTime: DateTime.now().subtract(const Duration(days: 1)),
       endRecordingTime: DateTime.now(),
     );
 
@@ -85,7 +85,7 @@ void main() {
     Media media = Media(
       mediaType: MediaType.video,
       filename: "filename.mp3",
-      startRecordingTime: DateTime.now().subtract(Duration(days: 1)),
+      startRecordingTime: DateTime.now().subtract(const Duration(days: 1)),
       endRecordingTime: DateTime.now(),
     );
 

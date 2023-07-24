@@ -34,7 +34,7 @@ class Media extends FileData {
     this.startRecordingTime,
     this.endRecordingTime,
   }) {
-    id = Uuid().v1();
+    id = const Uuid().v1();
   }
 
   @override

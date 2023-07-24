@@ -64,8 +64,8 @@ class MediaSamplingPackage extends SmartphoneSamplingPackage {
               timeType: DataTimeType.TIME_SPAN,
             ),
             PeriodicSamplingConfiguration(
-              interval: Duration(minutes: 5),
-              duration: Duration(seconds: 10),
+              interval: const Duration(minutes: 5),
+              duration: const Duration(seconds: 10),
             )),
       ]);
 
