@@ -1,18 +1,19 @@
 # CARP Web Service Plugin for Flutter
 
-A Flutter plugin to access the [CARP Web Service API](https://cachet.postman.co/collections/7723888-f1dede9d-13db-4561-b0c3-b329c18c408a?version=latest&workspace=fea39375-3597-4b22-851d-6c4a670f7fc3).
-
 [![pub package](https://img.shields.io/pub/v/carp_webservices.svg)](https://pub.dartlang.org/packages/carp_webservices)
+[![pub points](https://img.shields.io/pub/points/carp_webservices?color=2E8B57&label=pub%20points)](https://pub.dev/packages/carp_webservices/score)
+[![github stars](https://img.shields.io/github/stars/cph-cachet/carp.sensing-flutter.svg?style=flat&logo=github&colorB=deeppink&label=stars)](https://github.com/cph-cachet/carp.sensing-flutter)
+[![MIT License](https://img.shields.io/badge/license-MIT-purple.svg)](https://opensource.org/licenses/MIT)
+[![arXiv](https://img.shields.io/badge/arXiv-2006.11904-green.svg)](https://arxiv.org/abs/2006.11904)
 
-For Flutter plugins for other CARP products, see [CARP Mobile Sensing in Flutter](https://github.com/cph-cachet/carp.sensing-flutter/blob/master/README.md).
+A Flutter library to access the [CARP Web Service API](https://carp.cachet.dk/caws/).
+This library is intended to be used with the [`carp_mobile_sensing`](https://pub.dartlang.org/packages/carp_mobile_sensing) framework, but also works on its own, if a app is to connect directly to CAWS.
 
-> **Note**: This plugin is still under development, and some APIs might not be available yet. 
-[Feedback](https://github.com/cph-cachet/carp.sensing-flutter/issues) and 
-[Pull Requests](https://github.com/cph-cachet/carp.sensing-flutter/pulls) are most welcome!
+For an overview of CARP and other Flutter CARP libraries, see [CARP Mobile Sensing in Flutter](https://github.com/cph-cachet/carp.sensing-flutter/blob/master/README.md).
 
 ## Setup
 
-1. You need a CARP Web Service host running. See the [CARP Web Service API](https://github.com/cph-cachet/carp.webservices-docker) documentation for how to do this. If you're part of the [CACHET](https://www.cachet.dk/) team, you can use the specified 
+1. You need a CARP Web Service host running. See the [CARP Web Service API](https://github.com/cph-cachet/carp.webservices-docker) documentation for how to do this. If you're part of the [CACHET](https://www.cachet.dk/) team, you can use the specified
 test, staging, and production servers.
 
 1. Add `carp_services` as a [dependency in your pubspec.yaml file](https://flutter.io/platform-plugins/).
@@ -24,10 +25,10 @@ In order to show the "Reset Password" button in the login dialog, which will lau
 Add the following `LSApplicationQueriesSchemes` entry in your `Info.plist` file:
 
 ```xml
-	<key>LSApplicationQueriesSchemes</key>
-	<array>
-  		<string>https</string>
-	</array>
+ <key>LSApplicationQueriesSchemes</key>
+ <array>
+    <string>https</string>
+ </array>
 ```
 
 ### Android
@@ -75,11 +76,11 @@ The [`CarpService`](https://pub.dartlang.org/documentation/carp_webservices/late
 
   // Configure the CARP Service with this app.
   CarpService().configure(app);
-```` 
+````
 
 > Note that you need a valid `clientID` and `clientSecret` from a CARP Web Service to use it.
 
-> Also note that you need the `studyId` and  `studyDeploymentId` for your study in the CARP Web Service. These can be obtained from an invitation (see below). But if you want to use the CARP Service endpoints directly, you have to specify these IDs in the CarpApp configuration. 
+> Also note that you need the `studyId` and  `studyDeploymentId` for your study in the CARP Web Service. These can be obtained from an invitation (see below). But if you want to use the CARP Service endpoints directly, you have to specify these IDs in the CarpApp configuration.
 
 The singleton can now be accessed via `CarpService()`.
 
@@ -99,7 +100,7 @@ try {
 }
 ```
 
-Since the [CarpUser](https://pub.dev/documentation/carp_webservices/latest/carp_auth/CarpUser-class.html) can be serialized to JSON, the OAuth token can be stored on the phone. 
+Since the [CarpUser](https://pub.dev/documentation/carp_webservices/latest/carp_auth/CarpUser-class.html) can be serialized to JSON, the OAuth token can be stored on the phone.
 This can then later be used for authentication:
 
 ```dart
@@ -143,7 +144,6 @@ For example, the login can be implemeted as part of a TextButton like this:
    ),
 ```
 
-
 ### Informed Consent Document
 
 A [ConsentDocument](https://pub.dev/documentation/carp_webservices/latest/carp_services/ConsentDocument-class.html)
@@ -166,7 +166,7 @@ can be uploaded and downloaded from CARP.
 ### Data Points
 
 A [`DataPointReference`](https://pub.dartlang.org/documentation/carp_webservices/latest/carp_services/DataPointReference-class.html)
-is used to manage [data points](https://cachet.postman.co/collections/7723888-f1dede9d-13db-4561-b0c3-b329c18c408a?version=latest&workspace=fea39375-3597-4b22-851d-6c4a670f7fc3#d1e199eb-1e17-43a4-9d5e-6f1f465464b4) 
+is used to manage [data points](https://cachet.postman.co/collections/7723888-f1dede9d-13db-4561-b0c3-b329c18c408a?version=latest&workspace=fea39375-3597-4b22-851d-6c4a670f7fc3#d1e199eb-1e17-43a4-9d5e-6f1f465464b4)
 on a CARP web service and have CRUD methods for:
 
 * post a data point
@@ -203,12 +203,11 @@ on a CARP web service and have CRUD methods for:
 
 ````
 
-
 ### Application-specific Collections and Documents
 
 A [`CollectionReference`](https://pub.dartlang.org/documentation/carp_webservices/latest/carp_services/CollectionReference-class.html)
 is used to manage [collections](https://cachet.postman.co/collections/7723888-f1dede9d-13db-4561-b0c3-b329c18c408a?version=latest&workspace=fea39375-3597-4b22-851d-6c4a670f7fc3#9e896f66-953b-4c11-93fd-4f5e2097a7f2)
-and [documents](https://cachet.postman.co/collections/7723888-f1dede9d-13db-4561-b0c3-b329c18c408a?version=latest&workspace=fea39375-3597-4b22-851d-6c4a670f7fc3#aacfb3a6-55ea-454a-9d12-7886ee6c247b) 
+and [documents](https://cachet.postman.co/collections/7723888-f1dede9d-13db-4561-b0c3-b329c18c408a?version=latest&workspace=fea39375-3597-4b22-851d-6c4a670f7fc3#aacfb3a6-55ea-454a-9d12-7886ee6c247b)
 on a CARP web service and have methods for:
 
 * creating, updating, and deleting documents
@@ -246,7 +245,6 @@ on a CARP web service and have methods for:
   List<DocumentSnapshot> documents =
       await CarpService().collection('users').documents;
 `````
-
 
 ### File Management
 
@@ -296,11 +294,11 @@ When uploading a file, you can add metadata as a `Map<String, String>`.
 ### Deployments
 
 A core notion of CARP is the [Deployment subsystem](https://github.com/cph-cachet/carp.core-kotlin/blob/develop/docs/carp-deployment.md).
-This subsystem is used for accessing `deployment` configurations, i.e. configurations that describe how data sampling in a study should take place. 
+This subsystem is used for accessing `deployment` configurations, i.e. configurations that describe how data sampling in a study should take place.
 The CARP web service have methods for:
 
- * getting invitations for a specific `accountId`, i.e. a user - default is the user who is authenticated to the CARP Service.
- * getting a deployment reference, which then can be used to query status, register devices, and get the deployment specification.
+* getting invitations for a specific `accountId`, i.e. a user - default is the user who is authenticated to the CARP Service.
+* getting a deployment reference, which then can be used to query status, register devices, and get the deployment specification.
 
 ````dart
   // This example uses the
@@ -336,14 +334,13 @@ The CARP web service have methods for:
 
 ````
 
-There is also support for shwing a modal dialog for the user to select amongst several invitations. 
+There is also support for shwing a modal dialog for the user to select amongst several invitations.
 This is done using the `getStudyInvitation` method, like this:
 
 ```dart
     ActiveParticipationInvitation invitation = await CarpService().getStudyInvitation(context);
     print('Selected CARP Study Invitation: $invitation');
 ```
-
 
 ## Features and bugs
 
@@ -355,4 +352,3 @@ Please file feature requests and bug reports at the [issue tracker][tracker].
 
 This software is copyright (c) [Copenhagen Center for Health Technology (CACHET)](https://www.cachet.dk/) at the [Technical University of Denmark (DTU)](https://www.dtu.dk).
 This software is made available 'as-is' in a MIT [license](/LICENSE).
-
