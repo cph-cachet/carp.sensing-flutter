@@ -116,7 +116,7 @@ class AuthenticationDialog {
         onPressed: () async {
           try {
             info("Reset password at url: '${CarpService().resetPasswordUrl}'");
-            await launch(CarpService().resetPasswordUrl);
+            await launchUrl(Uri.parse(CarpService().resetPasswordUrl));
           } catch (exception) {
             warning('Exception in launching Reset Password URL - $exception');
           }

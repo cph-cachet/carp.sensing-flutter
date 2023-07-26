@@ -21,10 +21,10 @@ class CarpAuthenticationForm extends StatefulWidget {
   final String? username;
   const CarpAuthenticationForm({super.key, this.username});
   @override
-  _CarpAuthenticationFormState createState() => _CarpAuthenticationFormState();
+  CarpAuthenticationFormState createState() => CarpAuthenticationFormState();
 }
 
-class _CarpAuthenticationFormState extends State<CarpAuthenticationForm> {
+class CarpAuthenticationFormState extends State<CarpAuthenticationForm> {
   final GlobalKey<FormState> _formkey = GlobalKey<FormState>();
 
   @override

@@ -65,7 +65,7 @@ void main() {
         for (var invitation in invitations) {
           print(invitation);
         }
-        assert(invitations.length >= 0);
+        expect(invitations, isNotNull);
         print(toJsonString(invitations));
       },
       skip: false,

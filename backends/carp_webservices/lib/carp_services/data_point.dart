@@ -67,7 +67,7 @@ class DataPoint {
   DataPointHeader carpHeader;
 
   /// The CARP data point body. Can be any payload modelled as a [Data].
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   Data? data;
 
   Map<String, dynamic>? _carpBody;

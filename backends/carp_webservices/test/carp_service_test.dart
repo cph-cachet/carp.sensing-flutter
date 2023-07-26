@@ -312,7 +312,7 @@ void main() {
         print('N=${data.length}');
         // data.forEach((datapoint) => print(_encode((datapoint.toJson()))));
 
-        assert(data.length >= 0);
+        expect(data, isNotNull);
       });
 
       test('- count data points based on query', () async {
@@ -365,7 +365,7 @@ void main() {
               await CarpService().getDataPointReference().getAll();
 
           //data.forEach((datapoint) => print(_encode((datapoint.toJson()))));
-          assert(data.length >= 0);
+          expect(data, isNotNull);
           print('N=${data.length}');
         },
         skip: false,
@@ -394,7 +394,7 @@ void main() {
         List<DataPoint> data =
             await CarpService().getDataPointReference().query(query);
 
-        assert(data.length >= 0);
+        expect(data, isNotNull);
         print('N=${data.length}');
         String str = '[';
         for (var datapoint in data) {
@@ -423,10 +423,10 @@ void main() {
 
           print('N=${data.length}');
           print('deleting...');
-          data.forEach((datapoint) async {
+          for (var datapoint in data) {
             print(' ${datapoint.id}');
             await CarpService().getDataPointReference().delete(datapoint.id!);
-          });
+          }
 
           // wait for the delete requests to finish
           await Future.delayed(const Duration(seconds: 2), () {});

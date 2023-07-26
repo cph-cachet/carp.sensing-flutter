@@ -1,4 +1,3 @@
-
 import 'package:carp_serializable/carp_serializable.dart';
 import 'package:carp_core/carp_core.dart';
 import 'package:carp_mobile_sensing/carp_mobile_sensing.dart';
@@ -17,11 +16,11 @@ void main() {
     Settings().debugLevel = DebugLevel.debug;
 
     // Initialization of serialization
-    CarpMobileSensing();
+    CarpMobileSensing.ensureInitialized();
 
     app = CarpApp(
       studyDeploymentId: testDeploymentId,
-      name: "Test",
+      name: "Unit Test",
       uri: Uri.parse(uri),
       oauth: OAuthEndPoint(clientID: clientID, clientSecret: clientSecret),
     );
@@ -121,8 +120,7 @@ void main() {
         );
 
         var batch = [
-          // DataStreamBatch(
-          //     dataStream: DataStreamId(
+          // can't add heartbeat measurements to this study, since it's not part of the protocol
           //         studyDeploymentId: testDeploymentId,
           //         deviceRoleName: phoneRoleName,
           //         dataType: Heartbeat.dataType),
