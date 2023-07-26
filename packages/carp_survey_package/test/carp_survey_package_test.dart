@@ -1,6 +1,5 @@
 import 'dart:convert';
 import 'dart:io';
-import 'package:research_package/research_package.dart';
 import 'package:test/test.dart';
 
 import 'package:carp_serializable/carp_serializable.dart';
@@ -44,7 +43,7 @@ void main() {
     // add a WHO-5 survey as an app task
     // plus collect device and ambient light information when survey is done
     protocol.addTaskControl(
-        DelayedTrigger(delay: Duration(seconds: 30)),
+        DelayedTrigger(delay: const Duration(seconds: 30)),
         RPAppTask(
             type: SurveyUserTask.SURVEY_TYPE,
             name: 'WHO-5 Survey',

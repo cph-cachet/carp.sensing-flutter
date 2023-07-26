@@ -33,7 +33,7 @@ class CollectionReference extends CarpReference {
   /// For example; `activities/running/geopositions`
   CollectionReference._(CarpBaseService service, this._path)
       : super._(service) {
-    assert(!(_path.startsWith('/')) || _path.length == 0);
+    assert(!(_path.startsWith('/')) || _path.isEmpty);
   }
 
   /// ID of the referenced collection.
@@ -67,23 +67,25 @@ class CollectionReference extends CarpReference {
 
     debug('REQUEST: GET $collectionUri\n');
 
-    http.Response response =
+    final response =
         await httpr.get(Uri.encodeFull(collectionUri), headers: restHeaders);
     int httpStatusCode = response.statusCode;
 
     debug('RESPONSE: $httpStatusCode\n${response.body}\n');
 
-    Map<String, dynamic> responseJson = json.decode(response.body);
-    if (httpStatusCode == HttpStatus.ok)
+    Map<String, dynamic> responseJson =
+        json.decode(response.body) as Map<String, dynamic>;
+    if (httpStatusCode == HttpStatus.ok) {
       return this
-        .._id = responseJson['id']
-        .._path = responseJson['name'];
+        .._id = responseJson['id'] as int
+        .._path = responseJson['name'].toString();
+    }
 
     // All other cases are treated as an error.
     throw CarpServiceException(
       httpStatus: HTTPStatus(httpStatusCode, response.reasonPhrase),
-      message: responseJson['message'],
-      path: responseJson["path"],
+      message: responseJson['message'].toString(),
+      path: responseJson["path"].toString(),
     );
   }
 
@@ -91,18 +93,19 @@ class CollectionReference extends CarpReference {
   Future<List<DocumentSnapshot>> get documents async {
     final restHeaders = headers;
 
-    //print('uri :: $collectionUri');
-    http.Response response =
+    final response =
         await httpr.get(Uri.encodeFull(collectionUri), headers: restHeaders);
     int httpStatusCode = response.statusCode;
 
-    Map<String, dynamic> responseJson = json.decode(response.body);
+    final responseJson = json.decode(response.body) as Map<String, dynamic>;
     if (httpStatusCode == HttpStatus.ok) {
-      List<dynamic> documentsJson = responseJson['documents'];
+      List<dynamic> documentsJson = responseJson['documents'] as List<dynamic>;
       List<DocumentSnapshot> documents = [];
       for (var documentJson in documentsJson) {
-        String key = documentJson['name'];
-        documents.add(DocumentSnapshot._('$path/$key', documentJson));
+        if (documentJson is Map<String, dynamic>) {
+          final key = documentJson['name'].toString();
+          documents.add(DocumentSnapshot._('$path/$key', documentJson));
+        }
       }
 
       return documents;
@@ -111,8 +114,8 @@ class CollectionReference extends CarpReference {
     // All other cases are treated as an error.
     throw CarpServiceException(
       httpStatus: HTTPStatus(httpStatusCode, response.reasonPhrase),
-      message: responseJson['message'],
-      path: responseJson["path"],
+      message: responseJson['message'].toString(),
+      path: responseJson["path"].toString(),
     );
   }
 
@@ -122,7 +125,7 @@ class CollectionReference extends CarpReference {
   DocumentReference document([String? name]) {
     String documentPath;
     if (name == null) {
-      final String key = PushIdGenerator.generatePushChildName();
+      final key = PushIdGenerator.generatePushChildName();
       documentPath = '$path/$key';
     } else {
       documentPath = '$path/$name';
@@ -139,18 +142,19 @@ class CollectionReference extends CarpReference {
     String? name,
     Map<String, dynamic>? data,
   ]) async {
-    final DocumentReference newDocument = document(name);
+    final newDocument = document(name);
     if (data != null) await newDocument.setData(data);
     return newDocument;
   }
 
   /// Rename this collection.
-  Future rename(String newName) async {
+  Future<void> rename(String newName) async {
     // PUT the new name of this collection to the CARP web service
-    http.Response response = await httpr.put(Uri.encodeFull(collectionUriByID),
+    final response = await httpr.put(Uri.encodeFull(collectionUriByID),
         headers: headers, body: '{"name":"$newName"}');
     int httpStatusCode = response.statusCode;
-    Map<String, dynamic> responseJson = json.decode(response.body);
+    Map<String, dynamic> responseJson =
+        json.decode(response.body) as Map<String, dynamic>;
 
     if (httpStatusCode == HttpStatus.ok) {
       int start = _path.length - _path.split('/').last.length;
@@ -161,29 +165,31 @@ class CollectionReference extends CarpReference {
     // All other cases are treated as an error.
     throw CarpServiceException(
       httpStatus: HTTPStatus(httpStatusCode, response.reasonPhrase),
-      message: responseJson['message'],
-      path: responseJson["path"],
+      message: responseJson['message'].toString(),
+      path: responseJson["path"].toString(),
     );
   }
 
   /// Deletes the collection referred to by this [CollectionReference].
-  Future delete() async {
-    http.Response response =
+  Future<void> delete() async {
+    final response =
         await httpr.delete(Uri.encodeFull(collectionUriByID), headers: headers);
 
     int httpStatusCode = response.statusCode;
     if (httpStatusCode == HttpStatus.ok) {
-      this._id = -1;
+      _id = -1;
       return;
     } else {
-      final Map<String, dynamic> responseJson = json.decode(response.body);
+      final Map<String, dynamic> responseJson =
+          json.decode(response.body) as Map<String, dynamic>;
       throw CarpServiceException(
         httpStatus: HTTPStatus(httpStatusCode, response.reasonPhrase),
-        message: responseJson['message'],
-        path: responseJson["path"],
+        message: responseJson['message'].toString(),
+        path: responseJson["path"].toString(),
       );
     }
   }
 
+  @override
   String toString() => "CollectionReference - id: '$id', path: '$path'";
 }

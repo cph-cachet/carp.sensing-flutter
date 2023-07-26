@@ -19,7 +19,7 @@ void main() {
     // Initialization of serialization
     CarpMobileSensing();
 
-    app = new CarpApp(
+    app = CarpApp(
       // studyId: testStudyId,
       studyDeploymentId: testDeploymentId,
       name: "Test",
@@ -62,7 +62,9 @@ void main() {
         List<ActiveParticipationInvitation> invitations =
             await CarpParticipationService()
                 .getActiveParticipationInvitations();
-        invitations.forEach((invitation) => print(invitation));
+        for (var invitation in invitations) {
+          print(invitation);
+        }
         assert(invitations.length >= 0);
         print(toJsonString(invitations));
       },
@@ -197,10 +199,10 @@ void main() {
         status.primaryDeviceStatus!.device.roleName,
       );
       print(deployment);
-      deployment.tasks.forEach((task) {
+      for (var task in deployment.tasks) {
         print(task);
         task.measures?.forEach(print);
-      });
+      }
       expect(deployment.registration.deviceId, isNotNull);
     }, skip: false);
 

@@ -8,10 +8,10 @@ part of carp_services;
 
 /// A modal dialog shown to the user to input username and password.
 class AuthenticationDialog {
-  var _usernameKey = GlobalKey<FormFieldState>();
-  var _passwordKey = GlobalKey<FormFieldState>();
-  String? get _username => _usernameKey.currentState?.value?.trim();
-  String? get _password => _passwordKey.currentState?.value?.trim();
+  final _usernameKey = GlobalKey<FormFieldState<dynamic>>();
+  final _passwordKey = GlobalKey<FormFieldState<dynamic>>();
+  String? get _username => _usernameKey.currentState?.value?.toString().trim();
+  String? get _password => _passwordKey.currentState?.value?.toString().trim();
   final GlobalKey<FormState> _formkey = GlobalKey<FormState>();
 
   Dialog build(
@@ -23,7 +23,7 @@ class AuthenticationDialog {
           // can refer to the Scaffold with Scaffold.of().
           builder: (BuildContext context) {
         return Container(
-          padding: EdgeInsets.all(16.0),
+          padding: const EdgeInsets.all(16.0),
           child: ListView(
             shrinkWrap: true,
             children: <Widget>[
@@ -59,7 +59,7 @@ class AuthenticationDialog {
               RequiredValidator(errorText: "* Required"),
               CARPEmailValidator(errorText: "Enter valid email."),
             ]),
-            decoration: InputDecoration(
+            decoration: const InputDecoration(
               icon: Icon(Icons.account_circle),
               labelText: 'Username',
               hintText: 'Enter email as abc@cachet.dk',
@@ -72,7 +72,7 @@ class AuthenticationDialog {
               MinLengthValidator(8, errorText: "At least 8 characters."),
             ]),
             obscureText: true,
-            decoration: InputDecoration(
+            decoration: const InputDecoration(
               icon: Icon(Icons.lock),
               labelText: 'Password',
               hintText: 'Enter password',
@@ -85,11 +85,11 @@ class AuthenticationDialog {
                 builder: (BuildContext context,
                         AsyncSnapshot<AuthEvent> event) =>
                     (event.hasData && event.data == AuthEvent.failed)
-                        ? Text(
+                        ? const Text(
                             'Sign in failed. Please retry.',
                             style: TextStyle(fontSize: 12, color: Colors.red),
                           )
-                        : Text('')),
+                        : const Text('')),
           ),
         ],
       ));
@@ -105,9 +105,9 @@ class AuthenticationDialog {
           }
         },
         style: ElevatedButton.styleFrom(backgroundColor: Colors.blue[900]),
-        child: Text(
+        child: const Text(
           "LOGIN",
-          style: const TextStyle(color: Colors.white, fontSize: 20),
+          style: TextStyle(color: Colors.white, fontSize: 20),
         ),
       );
 
@@ -121,11 +121,11 @@ class AuthenticationDialog {
             warning('Exception in launching Reset Password URL - $exception');
           }
         },
-        child: Text("Reset Password"),
+        child: const Text("Reset Password"),
       );
 
   Text _getEnvironmentText(BuildContext context) => Text(
         'Environment: ${CarpService()._app!.uri}',
-        style: TextStyle(fontSize: 12, color: Colors.grey),
+        style: const TextStyle(fontSize: 12, color: Colors.grey),
       );
 }

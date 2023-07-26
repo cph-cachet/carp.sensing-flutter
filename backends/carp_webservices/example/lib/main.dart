@@ -92,7 +92,7 @@ class AppBLoC {
   CarpApp? _app;
   CarpApp? get app => _app;
 
-  Future init() async {
+  Future<void> init() async {
     _app = CarpApp(
       name: 'carp_backend_example_app',
       uri: Uri.parse(uri),
@@ -104,7 +104,7 @@ class AppBLoC {
 
   void dispose() async {}
 
-  Future authenticate(BuildContext context, {String? username}) async =>
+  Future<void> authenticate(BuildContext context, {String? username}) async =>
       await CarpService().authenticateWithDialog(
         context,
         username: username,

@@ -18,7 +18,7 @@ void main() {
     Settings().debugLevel = DebugLevel.debug;
     CarpMobileSensing.ensureInitialized();
 
-    app = new CarpApp(
+    app = CarpApp(
       studyId: testStudyId,
       studyDeploymentId: testDeploymentId,
       name: "Test",
@@ -150,6 +150,7 @@ void main() {
     test(
       '- getAllFor',
       () async {
+        print('Getting protocols for owner id: $ownerId');
         List<StudyProtocol> protocols =
             await CarpProtocolService().getAllForOwner(ownerId!);
         print(toJsonString(protocols));

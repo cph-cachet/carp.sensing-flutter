@@ -10,7 +10,8 @@ part of carp_services;
 /// A [ParticipationService] that talks to the CARP backend server(s).
 class CarpParticipationService extends CarpBaseService
     implements ParticipationService {
-  static CarpParticipationService _instance = CarpParticipationService._();
+  static final CarpParticipationService _instance =
+      CarpParticipationService._();
 
   CarpParticipationService._();
 
@@ -43,9 +44,10 @@ class CarpParticipationService extends CarpBaseService
         await _rpc(GetActiveParticipationInvitations(accountId!));
 
     // we expect a list of 'items' which maps to the invitations
-    List<dynamic> items = responseJson['items'];
+    List<dynamic> items = responseJson['items'] as List<dynamic>;
     return items
-        .map((item) => ActiveParticipationInvitation.fromJson(item))
+        .map((item) => ActiveParticipationInvitation.fromJson(
+            item as Map<String, dynamic>))
         .toList();
   }
 
@@ -67,27 +69,29 @@ class CarpParticipationService extends CarpBaseService
     bool showInvitations = true,
     bool allowClose = false,
   }) async {
-    if (!this.isConfigured)
+    if (!isConfigured) {
       throw CarpServiceException(
           message:
               "CARP Service not initialized. Call 'CarpService().configure()' first.");
+    }
 
-    if (!CarpService().authenticated)
+    if (!CarpService().authenticated) {
       throw CarpServiceException(
           message:
               "The current user is not authenticated to CARP. Call 'CarpService().authenticate...()' first.");
+    }
 
     List<ActiveParticipationInvitation> invitations =
         await getActiveParticipationInvitations();
 
-    ActiveParticipationInvitation? _invitation;
+    ActiveParticipationInvitation? invitation;
 
     if (invitations.isEmpty) return null;
 
     if (invitations.length == 1 || !showInvitations) {
-      _invitation = invitations[0];
+      invitation = invitations[0];
     } else {
-      _invitation = await showDialog<ActiveParticipationInvitation>(
+      invitation = await showDialog<ActiveParticipationInvitation>(
           context: context,
           barrierDismissible: allowClose,
           builder: (BuildContext context) =>
@@ -96,10 +100,10 @@ class CarpParticipationService extends CarpBaseService
     }
 
     // make sure that the correct study and deployment ids are saved in the app
-    CarpService().app!.studyId = _invitation?.studyId;
-    CarpService().app!.studyDeploymentId = _invitation?.studyDeploymentId;
+    CarpService().app!.studyId = invitation?.studyId;
+    CarpService().app!.studyDeploymentId = invitation?.studyDeploymentId;
 
-    return _invitation;
+    return invitation;
   }
 
   @override
@@ -116,9 +120,12 @@ class CarpParticipationService extends CarpBaseService
         await _rpc(GetParticipantDataList(studyDeploymentIds));
 
     // we expect a list of 'items'
-    List<dynamic> items = responseJson['items'];
+    List<Map<String, dynamic>> items =
+        responseJson['items'] as List<Map<String, dynamic>>;
     List<ParticipantData> data = [];
-    items.forEach((item) => data.add(ParticipantData.fromJson(item)));
+    for (var item in items) {
+      data.add(ParticipantData.fromJson(item));
+    }
 
     return data;
   }

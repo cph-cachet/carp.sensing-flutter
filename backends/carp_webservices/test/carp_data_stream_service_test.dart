@@ -1,4 +1,3 @@
-import 'dart:convert';
 
 import 'package:carp_serializable/carp_serializable.dart';
 import 'package:carp_core/carp_core.dart';
@@ -8,9 +7,6 @@ import 'package:carp_webservices/carp_services/carp_services.dart';
 import 'package:test/test.dart';
 
 import 'credentials.dart';
-
-String _encode(Object object) =>
-    const JsonEncoder.withIndent(' ').convert(object);
 
 void main() {
   CarpApp app;
@@ -23,7 +19,7 @@ void main() {
     // Initialization of serialization
     CarpMobileSensing();
 
-    app = new CarpApp(
+    app = CarpApp(
       studyDeploymentId: testDeploymentId,
       name: "Test",
       uri: Uri.parse(uri),

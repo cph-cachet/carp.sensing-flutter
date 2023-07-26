@@ -51,7 +51,8 @@ class FileStorageReference extends CarpReference {
     http.Response response =
         await httpr.get(Uri.encodeFull(url), headers: headers);
     int httpStatusCode = response.statusCode;
-    Map<String, dynamic> map = json.decode(response.body);
+    Map<String, dynamic> map =
+        json.decode(response.body) as Map<String, dynamic>;
 
     print(response.body);
 
@@ -65,8 +66,8 @@ class FileStorageReference extends CarpReference {
         {
           throw CarpServiceException(
             httpStatus: HTTPStatus(httpStatusCode, response.reasonPhrase),
-            message: map["message"],
-            path: map["path"],
+            message: map["message"].toString(),
+            path: map["path"].toString(),
           );
         }
     }
@@ -90,11 +91,12 @@ class FileStorageReference extends CarpReference {
       default:
         // All other cases are treated as an error.
         {
-          Map<String, dynamic> responseJson = json.decode(response.body);
+          Map<String, dynamic> responseJson =
+              json.decode(response.body) as Map<String, dynamic>;
           throw CarpServiceException(
             httpStatus: HTTPStatus(httpStatusCode, response.reasonPhrase),
-            message: responseJson["message"],
-            path: responseJson["path"],
+            message: responseJson["message"].toString(),
+            path: responseJson["path"].toString(),
           );
         }
     }

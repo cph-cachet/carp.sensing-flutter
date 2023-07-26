@@ -27,14 +27,14 @@ abstract class CarpBaseService {
 
   /// Configure the this instance of a Carp Service.
   void configure(CarpApp app) {
-    this._app = app;
+    _app = app;
   }
 
   /// Configure from another [service] which has already been configured
   /// and potentially authenticated.
   void configureFrom(CarpBaseService service) {
-    this._app = service._app;
-    this._currentUser = service._currentUser;
+    _app = service._app;
+    _currentUser = service._currentUser;
   }
 
   /// Gets the current user.
@@ -52,10 +52,11 @@ abstract class CarpBaseService {
 
   /// The headers for any authenticated HTTP REST call to a [CarpBaseService].
   Map<String, String> get headers {
-    if (CarpService().currentUser!.token == null)
-      throw new CarpServiceException(
+    if (CarpService().currentUser!.token == null) {
+      throw CarpServiceException(
           message:
               "OAuth token is null. Call 'CarpService().authenticate()' first.");
+    }
 
     return {
       "Content-Type": "application/json",
@@ -105,16 +106,19 @@ abstract class CarpBaseService {
     if (responseBody.startsWith('[')) responseBody = '{"items":$responseBody}';
     if (responseBody.isEmpty) responseBody = '{}';
 
-    Map<String, dynamic> responseJson = json.decode(responseBody);
+    Map<String, dynamic> responseJson =
+        json.decode(responseBody) as Map<String, dynamic>;
 
-    if (httpStatusCode == HttpStatus.ok || httpStatusCode == HttpStatus.created)
+    if (httpStatusCode == HttpStatus.ok ||
+        httpStatusCode == HttpStatus.created) {
       return responseJson;
+    }
 
     // All other cases are treated as an error.
     throw CarpServiceException(
       httpStatus: HTTPStatus(httpStatusCode),
-      message: responseJson["message"],
-      path: responseJson["path"],
+      message: responseJson["message"].toString(),
+      path: responseJson["path"].toString(),
     );
   }
 }

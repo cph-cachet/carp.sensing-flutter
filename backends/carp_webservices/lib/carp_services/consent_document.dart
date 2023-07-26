@@ -20,26 +20,27 @@ class ConsentDocument {
   Map<String, dynamic> get snapshot => _snapshot!;
 
   /// The ID of the snapshot's document
-  int get id => snapshot['id'];
+  int get id => snapshot['id'] as int;
 
   /// The id of the study of this document
-  String? get deploymentId => snapshot['deployment_id'];
+  String? get deploymentId => snapshot['deployment_id'].toString();
 
   /// The id of the user who created this document
-  String? get createdBy => snapshot['created_by'];
+  String? get createdBy => snapshot['created_by'].toString();
 
   /// The timestamp of creation of this document
-  DateTime get createdAt => DateTime.parse(snapshot['created_at']);
+  DateTime get createdAt => DateTime.parse(snapshot['created_at'].toString());
 
   /// The timestamp of latest update of this document
-  DateTime get updatedAt => DateTime.parse(snapshot['updated_at']);
+  DateTime get updatedAt => DateTime.parse(snapshot['updated_at'].toString());
 
   /// The actual consent document
-  Map<String, dynamic> get document => snapshot['data'];
+  Map<String, dynamic> get document => snapshot['data'] as Map<String, dynamic>;
 
   /// Reads individual data values from the snapshot
   dynamic operator [](String key) => document[key];
 
+  @override
   String toString() =>
       "ConsentDocument - id : $id, deployment: $deploymentId, document size: ${document.length}";
 }

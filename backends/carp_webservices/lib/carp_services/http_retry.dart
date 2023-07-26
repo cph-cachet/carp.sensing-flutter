@@ -77,8 +77,8 @@ class HTTPRetry {
     http.MultipartRequest sending = request;
 
     return await retry(
-      () => client.send(sending).timeout(Duration(seconds: 5)),
-      delayFactor: Duration(seconds: 25),
+      () => client.send(sending).timeout(const Duration(seconds: 5)),
+      delayFactor: const Duration(seconds: 25),
       maxAttempts: 15,
       retryIf: (e) => e is SocketException || e is TimeoutException,
       onRetry: (e) {
@@ -90,11 +90,11 @@ class HTTPRetry {
         sending.headers.addAll(request.headers);
         sending.fields.addAll(request.fields);
 
-        request.files.forEach((file) {
+        for (var file in request.files) {
           if (file is ClonableMultipartFile) {
             sending.files.add(file.clone());
           }
-        });
+        }
       },
     );
   }
@@ -107,8 +107,8 @@ class HTTPRetry {
               Uri.parse(Uri.encodeFull(url)),
               headers: headers,
             )
-            .timeout(Duration(seconds: 20)),
-        delayFactor: Duration(seconds: 5),
+            .timeout(const Duration(seconds: 20)),
+        delayFactor: const Duration(seconds: 5),
         maxAttempts: 15,
         retryIf: (e) => e is SocketException || e is TimeoutException,
         onRetry: (e) => print('${e.runtimeType} - Retrying to GET $url'),
@@ -118,7 +118,7 @@ class HTTPRetry {
   Future<http.Response> post(
     String url, {
     Map<String, String>? headers,
-    body,
+    Object? body,
     Encoding? encoding,
   }) async {
     // calling the http POST method using the retry approach
@@ -130,8 +130,8 @@ class HTTPRetry {
             body: body,
             encoding: encoding,
           )
-          .timeout(Duration(seconds: 20)),
-      delayFactor: Duration(seconds: 5),
+          .timeout(const Duration(seconds: 20)),
+      delayFactor: const Duration(seconds: 5),
       maxAttempts: 15,
       retryIf: (e) => e is SocketException || e is TimeoutException,
       onRetry: (e) => print('${e.runtimeType} - Retrying to POST $url'),
@@ -143,7 +143,7 @@ class HTTPRetry {
   Future<http.Response> put(
     String url, {
     Map<String, String>? headers,
-    body,
+    Object? body,
     Encoding? encoding,
   }) async {
     // calling the http PUT method using the retry approach
@@ -155,8 +155,8 @@ class HTTPRetry {
             body: body,
             encoding: encoding,
           )
-          .timeout(Duration(seconds: 20)),
-      delayFactor: Duration(seconds: 5),
+          .timeout(const Duration(seconds: 20)),
+      delayFactor: const Duration(seconds: 5),
       maxAttempts: 15,
       retryIf: (e) => e is SocketException || e is TimeoutException,
       onRetry: (e) => print('${e.runtimeType} - Retrying to PUT $url'),
@@ -176,8 +176,8 @@ class HTTPRetry {
             Uri.parse(Uri.encodeFull(url)),
             headers: headers,
           )
-          .timeout(Duration(seconds: 15)),
-      delayFactor: Duration(seconds: 5),
+          .timeout(const Duration(seconds: 15)),
+      delayFactor: const Duration(seconds: 5),
       maxAttempts: 15,
       retryIf: (e) => e is SocketException || e is TimeoutException,
       onRetry: (e) => print('${e.runtimeType} - Retrying to DELETE $url'),

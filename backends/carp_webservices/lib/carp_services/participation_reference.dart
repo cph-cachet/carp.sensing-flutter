@@ -14,7 +14,7 @@ part of carp_services;
 ///   - [getParticipantData()] - get participation data from this deployment.
 ///   - [setParticipantData()] - set participation data in this deployment
 class ParticipationReference extends RPCCarpReference {
-  String? _studyDeploymentId;
+  final String? _studyDeploymentId;
 
   /// The CARP study deployment ID.
   String? get studyDeploymentId =>

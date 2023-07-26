@@ -19,6 +19,7 @@ class CarpDataStreamService extends CarpBaseService
   /// [configure] method.
   factory CarpDataStreamService() => _instance;
 
+  @override
   String get rpcEndpointName => "data-stream-service";
 
   /// Gets a [DataStreamReference] for a [studyDeploymentId].
@@ -53,11 +54,14 @@ class CarpDataStreamService extends CarpBaseService
     ));
 
     // we expect a list of 'items'
-    List<dynamic> items = responseJson['items'];
+    List<dynamic> items = responseJson['items'] as List<dynamic>;
 
-    return (items.length == 0)
+    return (items.isEmpty)
         ? []
-        : items.map((item) => DataStreamBatch.fromJson(item)).toList();
+        : items
+            .map((item) =>
+                DataStreamBatch.fromJson(item as Map<String, dynamic>))
+            .toList();
   }
 
   @override

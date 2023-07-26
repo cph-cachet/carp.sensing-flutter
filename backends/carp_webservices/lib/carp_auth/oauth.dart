@@ -29,7 +29,7 @@ class OAuthToken {
   int expiresIn;
 
   /// The date the access token was issued.
-  final DateTime issuedDate = new DateTime.now();
+  final DateTime issuedDate = DateTime.now();
 
   /// Constructor
   OAuthToken(this.accessToken, this.refreshToken, this.tokenType,
@@ -37,11 +37,11 @@ class OAuthToken {
 
   /// Constructor taking a Map.
   OAuthToken.fromMap(Map<String, dynamic> map)
-      : accessToken = map['access_token'],
-        refreshToken = map['refresh_token'],
-        tokenType = map['token_type'],
-        expiresIn = map['expires_in'],
-        scope = map['scope'];
+      : accessToken = map['access_token'].toString(),
+        refreshToken = map['refresh_token'].toString(),
+        tokenType = map['token_type'].toString(),
+        expiresIn = map['expires_in'] as int,
+        scope = map['scope'].toString();
 
   /// Clone this token.
   OAuthToken clone() =>
@@ -52,7 +52,7 @@ class OAuthToken {
   /// If access token has expired, the refresh token should be used
   /// in order to acquire a new access token.
   DateTime get accessTokenExpiryDate {
-    Duration durationLeft = new Duration(seconds: expiresIn);
+    Duration durationLeft = Duration(seconds: expiresIn);
     DateTime expiryDate = issuedDate.add(durationLeft);
     return expiryDate;
   }
@@ -71,6 +71,7 @@ class OAuthToken {
       _$OAuthTokenFromJson(json);
   Map<String, dynamic> toJson() => _$OAuthTokenToJson(this);
 
+  @override
   String toString() =>
       'OAuthToken - accessToken: $accessToken, refresh_token: $refreshToken, token_type: $tokenType, expires_in: $expiresIn, scope: $scope';
 }

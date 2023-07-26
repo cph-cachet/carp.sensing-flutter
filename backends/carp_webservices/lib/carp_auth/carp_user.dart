@@ -78,14 +78,16 @@ class CarpUser {
   /// Obtains the OAuth token for the current user, forcing a [refresh]
   /// if desired.
   Future<OAuthToken?> getOAuthToken({bool refresh = false}) async {
-    if (!CarpService().isConfigured)
-      throw new CarpServiceException(
+    if (!CarpService().isConfigured) {
+      throw CarpServiceException(
           message:
               "CARP Service not initialized. Call 'CarpService.configure()' first.");
-    if (token == null)
-      throw new CarpServiceException(
+    }
+    if (token == null) {
+      throw CarpServiceException(
           message:
               "OAuth token is null. Call 'CarpService.authenticate()' first.");
+    }
 
     // check if we need to refresh the token.
     if (token!.hasExpired || refresh) {
@@ -103,10 +105,11 @@ class CarpUser {
   /// Reload the data of the current user (e.g., [fullName],
   /// [telephone], etc.) from the CARP web service.
   Future<void> reload() async {
-    if (!CarpService().isConfigured)
-      throw new CarpServiceException(
+    if (!CarpService().isConfigured) {
+      throw CarpServiceException(
           message:
               "CARP Service not configured. Call 'CarpService.configure()' first.");
+    }
 
     CarpService().getCurrentUserProfile();
   }
@@ -115,6 +118,7 @@ class CarpUser {
       _$CarpUserFromJson(json);
   Map<String, dynamic> toJson() => _$CarpUserToJson(this);
 
+  @override
   String toString() =>
       'CARP User: $username [$id] - $firstName $lastName [account id: $accountId]';
 }

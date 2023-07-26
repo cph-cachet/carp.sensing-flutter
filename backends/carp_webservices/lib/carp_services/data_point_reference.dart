@@ -24,23 +24,26 @@ class DataPointReference extends CarpReference {
   ///
   /// Returns the server-generated ID for this data point.
   Future<int> post(DataPoint data) async {
-    final String url = "$dataEndpointUri";
+    final String url = dataEndpointUri;
 
     // POST the data point to the CARP web service
     http.Response response = await httpr.post(Uri.encodeFull(url),
         headers: headers, body: json.encode(data));
 
     int httpStatusCode = response.statusCode;
-    Map<String, dynamic> responseJson = json.decode(response.body);
+    Map<String, dynamic> responseJson =
+        json.decode(response.body) as Map<String, dynamic>;
 
     if ((httpStatusCode == HttpStatus.ok) ||
-        (httpStatusCode == HttpStatus.created)) return responseJson["id"];
+        (httpStatusCode == HttpStatus.created)) {
+      return responseJson["id"] as int;
+    }
 
     // All other cases are treated as an error.
     throw CarpServiceException(
       httpStatus: HTTPStatus(httpStatusCode, response.reasonPhrase),
-      message: responseJson["message"],
-      path: responseJson["path"],
+      message: responseJson["message"].toString(),
+      path: responseJson["path"].toString(),
     );
   }
 
@@ -112,11 +115,12 @@ class DataPointReference extends CarpReference {
 
       // everything else is an exception
       response.stream.toStringStream().first.then((body) {
-        final Map<String, dynamic> responseJson = json.decode(body);
+        final Map<String, dynamic> responseJson =
+            json.decode(body) as Map<String, dynamic>;
         throw CarpServiceException(
           httpStatus: HTTPStatus(httpStatusCode, response.reasonPhrase),
-          message: responseJson["message"],
-          path: responseJson["path"],
+          message: responseJson["message"].toString(),
+          path: responseJson["path"].toString(),
         );
       });
     });
@@ -131,16 +135,18 @@ class DataPointReference extends CarpReference {
         await httpr.get(Uri.encodeFull(url), headers: headers);
 
     int httpStatusCode = response.statusCode;
-    Map<String, dynamic> responseJson = json.decode(response.body);
+    Map<String, dynamic> responseJson =
+        json.decode(response.body) as Map<String, dynamic>;
 
-    if (httpStatusCode == HttpStatus.ok)
+    if (httpStatusCode == HttpStatus.ok) {
       return DataPoint.fromJson(responseJson);
+    }
 
     // All other cases are treated as an error.
     throw CarpServiceException(
       httpStatus: HTTPStatus(httpStatusCode, response.reasonPhrase),
-      message: responseJson["message"],
-      path: responseJson["path"],
+      message: responseJson["message"].toString(),
+      path: responseJson["path"].toString(),
     );
   }
 
@@ -231,29 +237,30 @@ class DataPointReference extends CarpReference {
   ///
   Future<List<DataPoint>> query(String query) async {
     String url =
-        (query.length == 0) ? dataEndpointUri : "$dataEndpointUri?query=$query";
+        (query.isEmpty) ? dataEndpointUri : "$dataEndpointUri?query=$query";
 
     // GET the data points from the CARP web service
     // TODO - for some reason the CARP web service don't like encoded url's....
-    //http.Response response = await httpr.get(Uri.encodeFull(url), headers: restHeaders);
+    // http.Response response = await httpr.get(Uri.encodeFull(url), headers: restHeaders);
     http.Response response = await httpr.get(url, headers: headers);
 
     int httpStatusCode = response.statusCode;
 
     if (httpStatusCode == HttpStatus.ok) {
-      List<dynamic> list = json.decode(response.body);
+      List<dynamic> list = json.decode(response.body) as List<dynamic>;
       List<DataPoint> datapoints = [];
       for (var item in list) {
-        datapoints.add(DataPoint.fromJson(item));
+        datapoints.add(DataPoint.fromJson(item as Map<String, dynamic>));
       }
       return datapoints;
     }
     // All other cases are treated as an error.
-    Map<String, dynamic> responseJson = json.decode(response.body);
+    Map<String, dynamic> responseJson =
+        json.decode(response.body) as Map<String, dynamic>;
     throw CarpServiceException(
       httpStatus: HTTPStatus(httpStatusCode, response.reasonPhrase),
-      message: responseJson["message"],
-      path: responseJson["path"],
+      message: responseJson["message"].toString(),
+      path: responseJson["path"].toString(),
     );
   }
 
@@ -262,7 +269,7 @@ class DataPointReference extends CarpReference {
   /// A [query] using [REST SQL (RSQL)](https://github.com/jirutka/rsql-parser)
   /// can be provided.
   Future<int> count([String query = '']) async {
-    String url = (query.length == 0)
+    String url = (query.isEmpty)
         ? "$dataEndpointUri/count"
         : "$dataEndpointUri/count?query=$query";
 
@@ -274,11 +281,12 @@ class DataPointReference extends CarpReference {
       return int.tryParse(response.body) ?? 0;
     }
     // All other cases are treated as an error.
-    Map<String, dynamic> responseJson = json.decode(response.body);
+    Map<String, dynamic> responseJson =
+        json.decode(response.body) as Map<String, dynamic>;
     throw CarpServiceException(
       httpStatus: HTTPStatus(httpStatusCode, response.reasonPhrase),
-      message: responseJson["message"],
-      path: responseJson["path"],
+      message: responseJson["message"].toString(),
+      path: responseJson["path"].toString(),
     );
   }
 
@@ -295,11 +303,12 @@ class DataPointReference extends CarpReference {
     if (httpStatusCode == HttpStatus.ok) return;
 
     // All other cases are treated as an error.
-    final Map<String, dynamic> responseJson = json.decode(response.body);
+    final Map<String, dynamic> responseJson =
+        json.decode(response.body) as Map<String, dynamic>;
     throw CarpServiceException(
       httpStatus: HTTPStatus(httpStatusCode, response.reasonPhrase),
-      message: responseJson["message"],
-      path: responseJson["path"],
+      message: responseJson["message"].toString(),
+      path: responseJson["path"].toString(),
     );
   }
 }

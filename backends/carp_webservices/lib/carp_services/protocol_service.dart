@@ -13,7 +13,7 @@ part of carp_services;
 /// authenticated as a researcher.
 class CarpProtocolService extends CarpBaseService
     implements ProtocolService, ProtocolFactoryService {
-  static CarpProtocolService _instance = CarpProtocolService._();
+  static final CarpProtocolService _instance = CarpProtocolService._();
 
   CarpProtocolService._();
 
@@ -25,11 +25,11 @@ class CarpProtocolService extends CarpBaseService
   String get rpcEndpointName => "protocol-service";
 
   @override
-  Future add(StudyProtocol protocol, [String? versionTag]) async =>
+  Future<void> add(StudyProtocol protocol, [String? versionTag]) async =>
       await _rpc(Add(protocol, versionTag));
 
   @override
-  Future addVersion(StudyProtocol protocol, [String? versionTag]) async =>
+  Future<void> addVersion(StudyProtocol protocol, [String? versionTag]) async =>
       await _rpc(AddVersion(protocol, versionTag));
 
   /// Find all [StudyProtocol]'s owned by the owner with [ownerId].
@@ -39,9 +39,11 @@ class CarpProtocolService extends CarpBaseService
   /// or an empty list when none are found.
   @override
   Future<List<StudyProtocol>> getAllForOwner(String ownerId) async {
-    Map<String, dynamic> response = await _rpc(GetAllForOwner(ownerId));
-    List<dynamic> items = response['items'];
-    return items.map((item) => StudyProtocol.fromJson(item)).toList();
+    final response = await _rpc(GetAllForOwner(ownerId));
+    List<dynamic> items = response['items'] as List<dynamic>;
+    return items
+        .map((item) => StudyProtocol.fromJson(item as Map<String, dynamic>))
+        .toList();
   }
 
   @override
@@ -52,8 +54,10 @@ class CarpProtocolService extends CarpBaseService
   Future<List<ProtocolVersion>> getVersionHistoryFor(String protocolId) async {
     Map<String, dynamic> responseJson =
         await (_rpc(GetVersionHistoryFor(protocolId)));
-    List<dynamic> items = responseJson['items'];
-    return items.map((item) => ProtocolVersion.fromJson(item)).toList();
+    final items = responseJson['items'] as List<dynamic>;
+    return items
+        .map((item) => ProtocolVersion.fromJson(item as Map<String, dynamic>))
+        .toList();
   }
 
   @override

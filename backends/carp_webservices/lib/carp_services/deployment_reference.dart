@@ -49,7 +49,7 @@ class DeploymentReference extends RPCCarpReference {
   /// Uses the phone's unique hardware id, if available.
   /// Otherwise uses a v4 UUID.
   String get registeredDeviceId =>
-      _registeredDeviceId ??= DeviceInfo().deviceID ?? Uuid().v4().toString();
+      _registeredDeviceId ??= DeviceInfo().deviceID ?? const Uuid().v4().toString();
 
   /// Get the deployment status for this [DeploymentReference].
   Future<StudyDeploymentStatus> getStatus() async =>
@@ -66,7 +66,7 @@ class DeploymentReference extends RPCCarpReference {
     required String deviceRoleName,
     required DeviceRegistration registration,
   }) async {
-    assert(deviceRoleName.length > 0,
+    assert(deviceRoleName.isNotEmpty,
         'deviceRoleName has to be specified when registering a device in CARP.');
 
     return _status = StudyDeploymentStatus.fromJson(await _rpc(RegisterDevice(

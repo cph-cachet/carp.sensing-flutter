@@ -62,8 +62,9 @@ class CarpServiceException implements Exception {
 
   CarpServiceException({this.httpStatus, this.message, this.path});
 
+  @override
   String toString() =>
-      "CarpServiceException: ${(httpStatus != null) ? httpStatus.toString() + " - " : ""} ${message ?? ""} - ${path ?? ""}";
+      "CarpServiceException: ${(httpStatus != null) ? "$httpStatus - " : ""} ${message ?? ""} - ${path ?? ""}";
 }
 
 /// Implements HTTP Response Code and associated Reason Phrase.
@@ -99,10 +100,11 @@ class HTTPStatus {
   String? httpReasonPhrase;
 
   HTTPStatus(this.httpResponseCode, [String? httpPhrase]) {
-    this.httpReasonPhrase = ((httpPhrase == null) || (httpPhrase.length == 0))
+    httpReasonPhrase = ((httpPhrase == null) || (httpPhrase.isEmpty))
         ? httpStatusPhrases[httpResponseCode]
         : httpPhrase;
   }
 
+  @override
   String toString() => "$httpResponseCode $httpReasonPhrase";
 }

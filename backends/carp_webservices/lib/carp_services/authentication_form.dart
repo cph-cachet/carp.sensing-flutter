@@ -19,25 +19,27 @@ class CARPEmailValidator extends TextFieldValidator {
 
 class CarpAuthenticationForm extends StatefulWidget {
   final String? username;
-  CarpAuthenticationForm({this.username});
+  const CarpAuthenticationForm({super.key, this.username});
+  @override
   _CarpAuthenticationFormState createState() => _CarpAuthenticationFormState();
 }
 
 class _CarpAuthenticationFormState extends State<CarpAuthenticationForm> {
   final GlobalKey<FormState> _formkey = GlobalKey<FormState>();
 
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
         //backgroundColor: Colors.white,
         appBar: AppBar(
-          title: Text("CACHET Research Platform"),
+          title: const Text("CACHET Research Platform"),
         ),
         body: Builder(
             // Create an inner BuildContext so that the onPressed methods
             // can refer to the Scaffold with Scaffold.of().
             builder: (BuildContext context) {
           return Container(
-              padding: EdgeInsets.all(16.0),
+              padding: const EdgeInsets.all(16.0),
               child: Form(
                 key: _formkey,
                 autovalidateMode: AutovalidateMode.onUserInteraction,
@@ -58,17 +60,19 @@ class _CarpAuthenticationFormState extends State<CarpAuthenticationForm> {
 
 class _InputWidget extends StatefulWidget {
   final String? username;
-  _InputWidget({this.username});
+  const _InputWidget({this.username});
+  @override
   _InputState createState() => _InputState();
 }
 
 class _InputState extends State<_InputWidget> {
   final int delay = 3;
-  var _usernameKey = GlobalKey<FormFieldState>();
-  var _passwordKey = GlobalKey<FormFieldState>();
-  String? get _username => _usernameKey.currentState?.value?.trim();
-  String? get _password => _passwordKey.currentState?.value?.trim();
+  final _usernameKey = GlobalKey<FormFieldState<dynamic>>();
+  final _passwordKey = GlobalKey<FormFieldState<dynamic>>();
+  String? get _username => _usernameKey.currentState?.value?.toString().trim();
+  String? get _password => _passwordKey.currentState?.value?.toString().trim();
 
+  @override
   Widget build(BuildContext context) {
     return Column(children: [_emailInput, _passwordInput, _signinButton]);
   }
@@ -82,7 +86,7 @@ class _InputState extends State<_InputWidget> {
         maxLines: 1,
         keyboardType: TextInputType.emailAddress,
         autofocus: false,
-        decoration: InputDecoration(
+        decoration: const InputDecoration(
             labelText: 'Email',
             hintText: 'Enter email as abc@cachet.dk',
             icon: Icon(
@@ -100,15 +104,15 @@ class _InputState extends State<_InputWidget> {
   Widget get _passwordInput {
     return Padding(
       padding: const EdgeInsets.fromLTRB(0.0, 15.0, 0.0, 0.0),
-      child: new TextFormField(
+      child: TextFormField(
         maxLines: 1,
         obscureText: true,
         key: _passwordKey,
         autofocus: false,
-        decoration: new InputDecoration(
+        decoration: const InputDecoration(
             labelText: 'Password',
             hintText: 'Enter password',
-            icon: new Icon(
+            icon: Icon(
               Icons.lock,
               color: Colors.grey,
             )),
@@ -122,28 +126,28 @@ class _InputState extends State<_InputWidget> {
   }
 
   Widget get _signinButton {
-    return new Padding(
-        padding: EdgeInsets.fromLTRB(0.0, 45.0, 0.0, 0.0),
+    return Padding(
+        padding: const EdgeInsets.fromLTRB(0.0, 45.0, 0.0, 0.0),
         child: SizedBox(
           height: 40.0,
           width: 300,
-          child: new ElevatedButton(
+          child: ElevatedButton(
             style: ButtonStyle(
               elevation: MaterialStateProperty.all<double>(5.0),
               backgroundColor: MaterialStateProperty.all(Colors.blue[900]),
               shape: MaterialStateProperty.all<RoundedRectangleBorder>(
                 RoundedRectangleBorder(
-                    borderRadius: new BorderRadius.circular(30.0)),
+                    borderRadius: BorderRadius.circular(30.0)),
               ),
             ),
-            child: new Text('Sign in with CARP',
-                style: new TextStyle(fontSize: 20.0, color: Colors.white)),
             onPressed: _validateAndSubmit,
+            child: const Text('Sign in with CARP',
+                style: TextStyle(fontSize: 20.0, color: Colors.white)),
           ),
         ));
   }
 
-  Future _validateAndSubmit() async {
+  Future<void> _validateAndSubmit() async {
     bool success = true;
 
     ScaffoldMessenger.of(context).showSnackBar(_getSnackBar());
@@ -168,32 +172,36 @@ class _InputState extends State<_InputWidget> {
       content: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          failure ? Text('Sign in failed...') : Text('Signing in...'),
-          failure ? Icon(Icons.error) : CircularProgressIndicator(),
+          failure
+              ? const Text('Sign in failed...')
+              : const Text('Signing in...'),
+          failure ? const Icon(Icons.error) : const CircularProgressIndicator(),
         ],
       ));
 }
 
 class _ResetPasswordWidget extends StatefulWidget {
+  @override
   _ResetPasswordState createState() => _ResetPasswordState();
 }
 
 class _ResetPasswordState extends State<_ResetPasswordWidget> {
   final int delay = 3;
 
+  @override
   Widget build(BuildContext context) {
-    return new TextButton(
-      child: Text('Forgot passord?',
+    return TextButton(
+      onPressed: _sendResetPasswordEmail,
+      child: const Text('Forgot passord?',
           style: TextStyle(
             //color: ThemeData.light().buttonColor,
             fontSize: 18.0,
             fontWeight: FontWeight.w300,
           )),
-      onPressed: _sendResetPasswordEmail,
     );
   }
 
-  Future _sendResetPasswordEmail() async {
+  Future<void> _sendResetPasswordEmail() async {
     bool success = true;
     ScaffoldMessenger.of(context).showSnackBar(_resettingSnackBar);
 
@@ -213,7 +221,7 @@ class _ResetPasswordState extends State<_ResetPasswordWidget> {
 
   SnackBar get _resettingSnackBar => SnackBar(
       duration: Duration(seconds: delay),
-      content: Row(
+      content: const Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           Text('Resetting password...'),
@@ -223,7 +231,7 @@ class _ResetPasswordState extends State<_ResetPasswordWidget> {
 
   SnackBar get _successfulSnackBar => SnackBar(
       duration: Duration(seconds: delay),
-      content: Row(
+      content: const Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           Text('Email send.'),
@@ -233,7 +241,7 @@ class _ResetPasswordState extends State<_ResetPasswordWidget> {
 
   SnackBar get _failureSnackBar => SnackBar(
       duration: Duration(seconds: delay),
-      content: Row(
+      content: const Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           Text('Reset password failed...'),
@@ -243,9 +251,10 @@ class _ResetPasswordState extends State<_ResetPasswordWidget> {
 }
 
 class _CancelButtonWidget extends StatelessWidget {
+  @override
   Widget build(BuildContext context) {
-    return new TextButton(
-      child: Text('Cancel',
+    return TextButton(
+      child: const Text('Cancel',
           style: TextStyle(
             fontSize: 18.0,
             fontWeight: FontWeight.w300,
@@ -256,6 +265,7 @@ class _CancelButtonWidget extends StatelessWidget {
 }
 
 class _LogoWidget extends StatelessWidget {
+  @override
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.fromLTRB(10, 10, 10, 0),

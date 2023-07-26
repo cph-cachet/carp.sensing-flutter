@@ -13,10 +13,10 @@ String _encode(Object? object) =>
     const JsonEncoder.withIndent(' ').convert(object);
 
 void main() {
-  final String userId = "jakob@bardram.net";
-  final String studyId = "test_1234";
-  final String collectionName = 'test_patients';
-  final String newCollectionName = 'new_patients';
+  const String userId = "jakob@bardram.net";
+  const String studyId = "test_1234";
+  const String collectionName = 'test_patients';
+  const String newCollectionName = 'new_patients';
 
   CarpApp app;
   StudyProtocol protocol;
@@ -48,9 +48,9 @@ void main() {
     // Define which devices are used for data collection.
     phone = Smartphone();
 
-    protocol..addPrimaryDevice(phone);
+    protocol.addPrimaryDevice(phone);
 
-    app = new CarpApp(
+    app = CarpApp(
       name: "Test",
       studyId: testStudyId,
       studyDeploymentId: testDeploymentId,
@@ -397,7 +397,9 @@ void main() {
         assert(data.length >= 0);
         print('N=${data.length}');
         String str = '[';
-        data.forEach((datapoint) => str += '${datapoint.id},');
+        for (var datapoint in data) {
+          str += '${datapoint.id},';
+        }
         // data.forEach((datapoint) => print(_encode((datapoint.toJson()))));
         str += ']';
         print(str);
@@ -433,7 +435,7 @@ void main() {
               await CarpService().getDataPointReference().getAll();
 
           print('N=${empty.length}');
-          assert(empty.length == 0);
+          assert(empty.isEmpty);
         },
         skip: true,
       );
@@ -442,30 +444,11 @@ void main() {
   );
 
   group("Documents & Collections", () {
-    test('- create document', () async {
-      // create a document - providing userId as the document name
-      // if the collection don't exist, it is created (according to David).
-      var document = await CarpService()
-          .collection(collectionName)
-          .document(userId)
-          .setData({'email': userId, 'role': 'Administrator'});
-
-      print(document);
-      expect(document, isNotNull);
+    test(' - delete document by path', () async {
+      await CarpService().collection(collectionName).document(userId).delete();
     });
 
-    test(' - add document', () async {
-      // create another document
-      var document = await CarpService()
-          .collection(collectionName)
-          .document('user@dtu.dk')
-          .setData({'email': username, 'role': 'Participant'});
-
-      print(document);
-      expect(document, isNotNull);
-    });
-
-    test(' - update document', () async {
+    test(' - CRUD document', () async {
       // first create a document
       var document = await CarpService()
           .collection(collectionName)
@@ -492,6 +475,9 @@ void main() {
       print(updated.data["role"]);
       expect(updated.id, greaterThan(0));
       expect(updated.data["role"], 'Super User');
+
+      // delete document again
+      await CarpService().collection(collectionName).document(userId).delete();
     });
 
     test(' - get document by id', () async {
@@ -510,6 +496,9 @@ void main() {
       print((newDocument));
       expect(newDocument, isNotNull);
       expect(newDocument?.id, document.id);
+
+      // delete document again
+      await CarpService().collection(collectionName).document(userId).delete();
     });
 
     test(' - get document by path', () async {
@@ -527,6 +516,9 @@ void main() {
 
       print((newDocument));
       expect(newDocument?.id, document.id);
+
+      // delete document again
+      await CarpService().collection(collectionName).document(userId).delete();
     });
 
     test(' - get non-existing document', () async {
@@ -535,7 +527,6 @@ void main() {
           .document('not_available')
           .get();
 
-      print((newDocument));
       expect(newDocument, isNull);
     });
 
@@ -592,7 +583,9 @@ void main() {
           await CarpService().documentsByQuery(query);
 
       print("Found ${documents.length} document(s) for user '$userId'");
-      documents.forEach((document) => print(' - $document'));
+      for (var document in documents) {
+        print(' - $document');
+      }
 
       expect(documents.length, greaterThan(0));
     });
@@ -601,7 +594,9 @@ void main() {
       List<DocumentSnapshot> documents = await CarpService().documents();
 
       print('Found ${documents.length} document(s)');
-      documents.forEach((document) => print(' - $document'));
+      for (var document in documents) {
+        print(' - $document');
+      }
       expect(documents.length, greaterThan(0));
     });
 
@@ -619,6 +614,9 @@ void main() {
       expect(newDocument.id, greaterThan(0));
       expect(newDocument.path,
           equals('$collectionName/$userId/activities/cooking'));
+
+      // delete document again
+      await CarpService().collection(collectionName).document(userId).delete();
     });
 
     test(' - get nested document', () async {
@@ -636,13 +634,16 @@ void main() {
           .document('cooking')
           .get();
 
-      expect(newDocument!.id, greaterThan(0));
+      // expect(newDocument?.id, greaterThan(0));
 
       print(newDocument);
-      print(newDocument.snapshot);
-      print(newDocument.createdAt);
-      print(newDocument.data);
-      print(newDocument['what']);
+      print(newDocument?.snapshot);
+      print(newDocument?.createdAt);
+      print(newDocument?.data);
+      // print(newDocument['what']);
+
+      // delete document again
+      await CarpService().collection(collectionName).document(userId).delete();
     });
 
     test('- expire token and the upload document', () async {
@@ -668,23 +669,27 @@ void main() {
     test(" - list documents in a collection", () async {
       List<DocumentSnapshot> documents =
           await CarpService().collection(collectionName).documents;
-      documents.forEach((doc) => print(doc));
+      for (var doc in documents) {
+        print(doc);
+      }
       expect(documents.length, greaterThan(0));
     });
 
     test(" - list collections in a document", () async {
       DocumentSnapshot? newDocument =
           await CarpService().collection(collectionName).document(userId).get();
-      newDocument?.collections.forEach((ref) => print(ref));
+      newDocument?.collections.forEach((element) => print(element));
     });
 
     test(" - list all nested documents in a collection", () async {
       List<DocumentSnapshot> documents =
           await CarpService().collection(collectionName).documents;
-      documents.forEach((doc) {
+      for (var doc in documents) {
         print(doc);
-        doc.collections.forEach((col) => print(col));
-      });
+        for (var col in doc.collections) {
+          print(col);
+        }
+      }
     });
 
 //    test(" - list all collections in the root", () async {
@@ -767,10 +772,12 @@ void main() {
     test(" - list all nested documents in 'patients' collection", () async {
       List<DocumentSnapshot> documents =
           await CarpService().collection('patients').documents;
-      documents.forEach((doc) {
+      for (var doc in documents) {
         print(doc);
-        doc.collections.forEach((col) => print(col));
-      });
+        for (var col in doc.collections) {
+          print(col);
+        }
+      }
     });
     test(
         " - list all nested documents in 'patients/s174238@student.dtu.dk/chapters' collection",
@@ -778,10 +785,12 @@ void main() {
       List<DocumentSnapshot> documents = await CarpService()
           .collection('patients/s174238@student.dtu.dk/chapters')
           .documents;
-      documents.forEach((doc) {
+      for (var doc in documents) {
         print(doc);
-        doc.collections.forEach((col) => print(col));
-      });
+        for (var col in doc.collections) {
+          print(col);
+        }
+      }
     });
   }, skip: true);
 

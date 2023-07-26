@@ -57,17 +57,19 @@ class DocumentReference extends CarpReference {
       http.Response response = await httpr.post(Uri.encodeFull(documentUri),
           headers: headers, body: json.encode(data));
       int httpStatusCode = response.statusCode;
-      Map<String, dynamic> responseJson = json.decode(response.body);
+      Map<String, dynamic> responseJson =
+          json.decode(response.body) as Map<String, dynamic>;
 
       if ((httpStatusCode == HttpStatus.ok) ||
-          (httpStatusCode == HttpStatus.created))
+          (httpStatusCode == HttpStatus.created)) {
         return DocumentSnapshot._(path, responseJson);
+      }
 
       // All other cases are treated as an error.
       throw CarpServiceException(
         httpStatus: HTTPStatus(httpStatusCode, response.reasonPhrase),
-        message: responseJson["message"],
-        path: responseJson["path"],
+        message: responseJson["message"].toString(),
+        path: responseJson["path"].toString(),
       );
     } else {
       return updateData(data);
@@ -79,11 +81,12 @@ class DocumentReference extends CarpReference {
   /// If no document exists yet, the update will fail.
   Future<DocumentSnapshot> updateData(Map<String, dynamic> data) async {
     // if we don't have the document ID, get it first.
-    if (id == null) _id = (await this.get())?.id;
+    if (id == null) _id = (await get())?.id;
 
     // early out if this document does not exist
-    if (_id == null)
+    if (_id == null) {
       throw CarpServiceException(message: 'No valid document id found.');
+    }
 
     Map<String, dynamic> payload = {'name': name, 'data': data};
 
@@ -94,10 +97,12 @@ class DocumentReference extends CarpReference {
 
     int httpStatusCode = response.statusCode;
     debug('RESPONSE: $httpStatusCode\n${response.body}');
-    Map<String, dynamic> responseJson = json.decode(response.body);
+    Map<String, dynamic> responseJson =
+        json.decode(response.body) as Map<String, dynamic>;
 
-    if (httpStatusCode == HttpStatus.ok)
+    if (httpStatusCode == HttpStatus.ok) {
       return DocumentSnapshot._(path, responseJson);
+    }
 
     print('$httpStatusCode - ${response.reasonPhrase}');
     print(responseJson["message"]);
@@ -105,22 +110,24 @@ class DocumentReference extends CarpReference {
 
     throw CarpServiceException(
       httpStatus: HTTPStatus(httpStatusCode, response.reasonPhrase),
-      message: responseJson["message"],
-      path: responseJson["path"],
+      message: responseJson["message"].toString(),
+      path: responseJson["path"].toString(),
     );
   }
 
   /// Renames the document referred to by this [DocumentReference].
   @Deprecated('Documents cannot be renamed in CAWS.')
   Future<DocumentSnapshot> rename(String name) async {
-    assert(name.length > 0, 'Document path names cannot be empty.');
+    assert(name.isNotEmpty, 'Document path names cannot be empty.');
     assert(RegExp(r'^[a-zA-Z0-9_-]+$').hasMatch(name),
         'Document name can only contain alphanumeric, hyphen (-), and underscore (_) characters.');
 
     // if we don't have the document ID, get it first.
-    if (id == null) _id = (await this.get())?.id;
-    if (_id == null) // early out if this document does not exist
+    if (id == null) _id = (await get())?.id;
+    if (_id == null) {
+      // early out if this document does not exist
       throw CarpServiceException(message: 'No valid document id found.');
+    }
 
     Map<String, dynamic> payload = {'name': name};
     http.Response response = await httpr.put(
@@ -130,15 +137,17 @@ class DocumentReference extends CarpReference {
     );
 
     int httpStatusCode = response.statusCode;
-    Map<String, dynamic> responseJson = json.decode(response.body);
+    Map<String, dynamic> responseJson =
+        json.decode(response.body) as Map<String, dynamic>;
 
-    if (httpStatusCode == HttpStatus.ok)
+    if (httpStatusCode == HttpStatus.ok) {
       return DocumentSnapshot._(path, responseJson);
+    }
 
     throw CarpServiceException(
       httpStatus: HTTPStatus(httpStatusCode, response.reasonPhrase),
-      message: responseJson["message"],
-      path: responseJson["path"],
+      message: responseJson["message"].toString(),
+      path: responseJson["path"].toString(),
     );
   }
 
@@ -156,8 +165,9 @@ class DocumentReference extends CarpReference {
     debug('RESPONSE: $httpStatusCode\n${response.body}');
 
     if (httpStatusCode == HttpStatus.ok) {
-      Map<String, dynamic> jsonResponse = json.decode(response.body);
-      _id = jsonResponse['id'];
+      Map<String, dynamic> jsonResponse =
+          json.decode(response.body) as Map<String, dynamic>;
+      _id = jsonResponse['id'] as int;
       return DocumentSnapshot._(path, jsonResponse);
     } else {
       return null;
@@ -165,23 +175,24 @@ class DocumentReference extends CarpReference {
   }
 
   /// Deletes the document referred to by this [DocumentReference].
-  Future delete() async {
+  Future<void> delete() async {
     // if we don't have the document ID, get it first.
-    if (id == null) _id = (await this.get())?.id;
+    if (id == null) _id = (await get())?.id;
     if (_id == null) return; // early out if this document does not exist
 
     http.Response response = await http
         .delete(Uri.parse(Uri.encodeFull(documentUri)), headers: headers);
 
     int httpStatusCode = response.statusCode;
-    if (httpStatusCode == HttpStatus.ok)
+    if (httpStatusCode == HttpStatus.ok) {
       return;
-    else {
-      final Map<String, dynamic> responseJson = json.decode(response.body);
+    } else {
+      final Map<String, dynamic> responseJson =
+          json.decode(response.body) as Map<String, dynamic>;
       throw CarpServiceException(
         httpStatus: HTTPStatus(httpStatusCode, response.reasonPhrase),
-        message: responseJson["message"],
-        path: responseJson["path"],
+        message: responseJson["message"].toString(),
+        path: responseJson["path"].toString(),
       );
     }
   }
@@ -221,6 +232,7 @@ class DocumentReference extends CarpReference {
 //    }
 //  }
 
+  @override
   String toString() => 'DocumentReference - id: $id, path: $path';
 }
 
@@ -241,34 +253,39 @@ class DocumentSnapshot {
   String get path => _path;
 
   /// The ID of the snapshot's document
-  int get id => _snapshot['id'];
+  int get id => _snapshot['id'] as int;
 
   /// The name of the snapshot's document
-  String get name => _snapshot['name'];
+  String get name => _snapshot['name'].toString();
 
   /// The id of the collection this document belongs to
-  int get collectionId => _snapshot['collection_id'];
+  int get collectionId => _snapshot['collection_id'] as int;
 
   /// The id of the user who created this document
-  String get createdByUserId => _snapshot['created_by_user_id'];
+  String get createdByUserId => _snapshot['created_by_user_id'].toString();
 
   /// The timestamp of creation of this document
-  DateTime get createdAt => DateTime.parse(_snapshot['created_at']);
+  DateTime get createdAt => DateTime.parse(_snapshot['created_at'].toString());
 
   /// The timestamp of latest update of this document
-  DateTime get updatedAt => DateTime.parse(_snapshot['updated_at']);
+  DateTime get updatedAt => DateTime.parse(_snapshot['updated_at'].toString());
 
+  /// The list of collections nested inside this document.
   List<String?> get collections {
     List<String?> collections = [];
-    for (var item in _snapshot['collections']) {
-      String? key = item["name"];
-      collections.add(key);
+
+    if (_snapshot['collections'] != null) {
+      List<dynamic> items = _snapshot['collections'] as List<dynamic>;
+      for (var item in items) {
+        String? key = item["name"].toString();
+        collections.add(key);
+      }
     }
     return collections;
   }
 
   /// Contains all the data of this snapshot
-  Map<String, dynamic> get data => _snapshot['data'];
+  Map<String, dynamic> get data => _snapshot['data'] as Map<String, dynamic>;
 
   /// Reads individual data values from the snapshot
   dynamic operator [](String key) => data[key];
@@ -276,6 +293,7 @@ class DocumentSnapshot {
   /// Returns `true` if the document exists.
   // bool get exists => data != null;
 
+  @override
   String toString() =>
-      "${this.runtimeType} - id: $id, name: $name, path: $path, size: ${data.length}";
+      "$runtimeType - id: $id, name: $name, path: $path, size: ${data.length}";
 }

@@ -38,10 +38,13 @@ class CarpApp {
     this.studyId,
   });
 
+  @override
   int get hashCode => name.hashCode;
 
+  @override
   bool operator ==(other) => name == other;
 
+  @override
   String toString() =>
       'CarpApp - name: $name, uri: $uri, studyDeploymentId: $studyDeploymentId, studyId: $studyId';
 }

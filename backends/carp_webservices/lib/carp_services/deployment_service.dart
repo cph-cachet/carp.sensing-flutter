@@ -10,7 +10,7 @@ part of carp_services;
 /// A [DeploymentService] that talks to the CARP Web Services.
 class CarpDeploymentService extends CarpBaseService
     implements DeploymentService {
-  static CarpDeploymentService _instance = CarpDeploymentService._();
+  static final CarpDeploymentService _instance = CarpDeploymentService._();
 
   CarpDeploymentService._();
 
@@ -18,6 +18,7 @@ class CarpDeploymentService extends CarpBaseService
   /// Before this instance can be used, it must be configured using the [configure] method.
   factory CarpDeploymentService() => _instance;
 
+  @override
   String get rpcEndpointName => "deployment-service";
 
   /// Gets a [DeploymentReference] for a [studyDeploymentId].
@@ -54,17 +55,19 @@ class CarpDeploymentService extends CarpBaseService
   @override
   Future<List<StudyDeploymentStatus>> getStudyDeploymentStatusList(
       List<String> studyDeploymentIds) async {
-    assert(studyDeploymentIds.length > 0,
+    assert(studyDeploymentIds.isNotEmpty,
         'List of studyDeploymentIds cannot be empty.');
 
     Map<String, dynamic> responseJson =
         await _rpc(GetStudyDeploymentStatusList(studyDeploymentIds));
 
     // we expect a list of 'items'
-    List<dynamic> items = json.decode(responseJson['items']);
+    List<Map<String, dynamic>> items = json
+        .decode(responseJson['items'].toString()) as List<Map<String, dynamic>>;
     List<StudyDeploymentStatus> statusList = [];
-    items.forEach(
-        (item) => statusList.add(StudyDeploymentStatus.fromJson(item)));
+    for (var item in items) {
+      statusList.add(StudyDeploymentStatus.fromJson(item));
+    }
 
     return statusList;
   }

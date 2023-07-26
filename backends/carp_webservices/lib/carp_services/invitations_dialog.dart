@@ -10,7 +10,7 @@ part of carp_services;
 /// user to select one from.
 class ActiveParticipationInvitationDialog {
   SimpleDialog build(
-    context,
+    BuildContext context,
     List<ActiveParticipationInvitation> invitations,
   ) =>
       SimpleDialog(
@@ -34,13 +34,13 @@ class ActiveParticipationInvitationDialog {
           },
           child: ListTile(
             isThreeLine: true,
-            leading: Icon(
+            leading: const Icon(
               Icons.mail,
               color: Color.fromRGBO(234, 91, 12, 1.0),
             ),
             title: Text(invitation.invitation.name),
             subtitle: (invitation.invitation.description == null)
-                ? Text('No description provided...')
+                ? const Text('No description provided...')
                 : Text(
                     shortStudyDescription(invitation.invitation.description!)),
           ));

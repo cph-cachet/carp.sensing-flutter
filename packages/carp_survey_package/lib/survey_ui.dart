@@ -12,7 +12,8 @@ class SurveyPage extends StatelessWidget {
   /// The [RPTaskResult] is optional and can be `null` if no results were created.
   final void Function([RPTaskResult?])? onSurveyCancel;
 
-  SurveyPage({
+  const SurveyPage({
+    super.key,
     required this.task,
     required this.resultCallback,
     this.onSurveyCancel,
