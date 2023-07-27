@@ -1,9 +1,11 @@
+import 'package:carp_mobile_sensing/carp_mobile_sensing.dart';
 import 'package:flutter/material.dart';
 import 'package:carp_webservices/carp_services/carp_services.dart';
 import 'package:carp_webservices/carp_auth/carp_auth.dart';
 import 'package:carp_core/carp_core.dart';
 
 void main() {
+  CarpMobileSensing.ensureInitialized();
   runApp(MyApp());
 }
 
@@ -84,7 +86,7 @@ class _HomePageState extends State<HomePage> {
 }
 
 class AppBLoC {
-  final String uri = "https://cans.cachet.dk/";
+  final String uri = "https://cans.cachet.dk/dev";
   ActiveParticipationInvitation? _invitation;
   String? get studyId => _invitation?.studyId;
   String? get studyDeploymentId => _invitation?.studyDeploymentId;

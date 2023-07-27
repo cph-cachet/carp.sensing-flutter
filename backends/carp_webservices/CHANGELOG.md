@@ -1,3 +1,9 @@
+## 1.1.0
+
+* update to `carp_mobile_sensing` v. 1.1.0
+* added support for the CARP Core [Data](https://github.com/cph-cachet/carp.core-kotlin/blob/develop/docs/carp-data.md) subsystem
+* moved support for handling `DataPoint` data from carp_core to carp_webservices (since this is specific to CAWS and not part of the CARP Core domain model)
+
 ## 0.40.1
 
 * update to `carp_core` v. 0.40.1

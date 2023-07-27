@@ -5,6 +5,7 @@
 * the first stable release of CARP cores which follows the [carp.core-kotlin](https://github.com/imotions/carp.core-kotlin) v. 1.1.0 domain model.
 * upgrade to [carp_serializable](https://pub.dev/packages/carp_serializable) v. 1.1.0.
 * added `PersonalComputer` and `WebBrowser` as new device configurations.
+* moved support for handling `DataPoint` data from carp_core to carp_webservices (since this is specific to CAWS and not part of the CARP Core domain model)
 
 ## 0.40.8
 
