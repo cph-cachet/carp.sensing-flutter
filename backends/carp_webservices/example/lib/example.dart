@@ -4,10 +4,11 @@ import 'package:carp_core/carp_core.dart';
 import 'package:carp_mobile_sensing/carp_mobile_sensing.dart';
 import 'package:carp_webservices/carp_auth/carp_auth.dart';
 import 'package:carp_webservices/carp_services/carp_services.dart';
+import 'package:flutter/cupertino.dart';
 
 void main() async {
   final String username = 'researcher';
-  final String uri = "https://cans.cachet.dk:443";
+  final String uri = "https://cans.cachet.dk";
 
   CarpApp app;
   StudyProtocol protocol;
@@ -47,8 +48,8 @@ void main() async {
       username: 'a_username',
       password: 'the_password',
     );
-  } catch (excp) {
-    print(excp);
+  } catch (error) {
+    print(error);
   }
   print('$user authenticated.');
 
@@ -63,8 +64,8 @@ void main() async {
     ConsentDocument downloaded =
         await CarpService().getConsentDocument(uploaded.id);
     print(downloaded);
-  } catch (excp) {
-    print(excp);
+  } catch (error) {
+    print(error);
   }
 
 // ------------------- FILE MANAGEMENT --------------------------------
@@ -102,7 +103,7 @@ void main() async {
 
   // ------------------- DATA POINTS --------------------------------
 
-  // Create a test datum
+  // Create a piece of data
   final lightData = AmbientLight(
     maxLux: 12,
     meanLux: 23,
@@ -111,7 +112,7 @@ void main() async {
   );
 
   // create a CARP data point
-  final DataPoint data = DataPoint.fromData(lightData);
+  final data = DataPoint.fromData(lightData);
 
   // post it to the CARP server, which returns the ID of the data point
   int dataPointId = await CarpService().getDataPointReference().post(data);
@@ -122,7 +123,7 @@ void main() async {
   print(dataPoint);
 
   // batch upload a list of raw json data points in a file
-  final File file = File('test/batch.json');
+  final file = File('test/batch.json');
   await CarpService().getDataPointReference().upload(file);
 
   // delete the data point
@@ -131,8 +132,9 @@ void main() async {
   // ------------------- COLLECTIONS AND DOCUMENTS --------------------------------
 
   // access a document
-  //  - if the document id is not specified, a new document (with a new id) is created
-  //  - if the collection (users) don't exist, it is created
+  //  - if the document id is not specified, a new document (with a new id)
+  //    is created
+  //  - if the collection ('users') don't exist, it is created
   DocumentSnapshot document = await CarpService()
       .collection('users')
       .document()
@@ -172,7 +174,7 @@ void main() async {
   //  * [CarpParticipationService]
   //
   // To use these, we first must configure them and authenticate.
-  // However, the [configureFrom] method is a convinient way to do this based
+  // However, the [configureFrom] method is a convenient way to do this based
   // on an existing service, which has been configured.
 
   CarpParticipationService().configureFrom(CarpService());
@@ -200,4 +202,29 @@ void main() async {
 
   // mark the deployment as a success
   status = await deploymentReference.deployed();
+
+// ------------------- DATA STREAMING --------------------------------
+
+  // Configure a [CarpDataStreamService] from an existing CAWS service.
+  CarpDataStreamService().configureFrom(CarpService());
+
+  // Create a (very simple) data batch to upload
+  var measurement = Measurement(
+      sensorStartTime: 1642505144000000,
+      data: Geolocation(
+          latitude: 55.680802203873114, longitude: 12.581802212861367));
+  var batch = [
+    DataStreamBatch(
+        dataStream: DataStreamId(
+            studyDeploymentId:
+                CarpDataStreamService().app?.studyDeploymentId ?? '',
+            deviceRoleName: 'smartphone',
+            dataType: Geolocation.dataType),
+        firstSequenceId: 0,
+        measurements: [measurement],
+        triggerIds: {0}),
+  ];
+
+  // Get a data stream and append the batch
+  CarpDataStreamService().stream().append(batch);
 }

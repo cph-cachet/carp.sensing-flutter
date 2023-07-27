@@ -11,11 +11,12 @@ part of carp_services;
 ///
 /// The (current) assumption is that each Flutter app (using this library) will
 /// only connect to one CARP web service backend.
-/// Therefore the `CarpService` class is a singleton and should be used like:
+/// Therefore a [CarpService] is a singleton and can be used like:
 ///
 /// ```dart
 ///   CarpService().configure(myApp);
-///   CarpUser user = await CarpService().authenticate(username: "user@dtu.dk", password: "password");
+///   CarpUser user = await CarpService()
+///     .authenticate(username: "user@dtu.dk", password: "password");
 /// ```
 class CarpService extends CarpBaseService {
   static final CarpService _instance = CarpService._();

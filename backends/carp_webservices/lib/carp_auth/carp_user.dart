@@ -7,7 +7,7 @@
 
 part of carp_auth;
 
-/// Represents a CARP user.
+/// Represents a CARP Web Service (CAWS) account and user.
 @JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)
 class CarpUser {
   /// Unique CARP username

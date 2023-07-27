@@ -7,7 +7,8 @@
 part of carp_services;
 
 /// Provide a data endpoint reference to a CARP Web Service.
-/// Used to:
+///
+/// Can be used to:
 /// - post (upload) a [DataPoint]
 /// - batch upload a list or file of [DataPoint]s
 /// - get a [DataPoint]
@@ -67,6 +68,7 @@ class DataPointReference extends CarpReference {
   }
 
   // TODO - Delete cached file when uploaded.
+  //
   // Something like:
   //
   //   .then((file) => upload(file).then((_) => file.delete()));
@@ -88,10 +90,10 @@ class DataPointReference extends CarpReference {
         .then((file) => upload(file));
   }
 
-  /// Batch upload a file with [DataPoint]s to the CARP backend using
-  /// HTTP POST.
+  /// Batch upload the [file] containing a list of [DataPoint]s to the CARP
+  /// backend.
   ///
-  /// A file can be created using a [FileDataManager] in `carp_mobile_sensing`.
+  /// The [file] can be created using a [FileDataManager] in `carp_mobile_sensing`.
   /// Note that the file should be raw JSON, and hence _not_ zipped.
   ///
   /// Returns when successful. Throws an [CarpServiceException] if not.
@@ -126,7 +128,7 @@ class DataPointReference extends CarpReference {
     });
   }
 
-  /// Get a [DataPoint] from the CARP backend using HTTP GET
+  /// Get a [DataPoint] based on its [id] from the CARP backend.
   Future<DataPoint> get(int id) async {
     String url = "$dataEndpointUri/$id";
 
@@ -264,7 +266,7 @@ class DataPointReference extends CarpReference {
     );
   }
 
-  /// The count of data points for this deployment.
+  /// The number of data points matching the [query] for this deployment.
   ///
   /// A [query] using [REST SQL (RSQL)](https://github.com/jirutka/rsql-parser)
   /// can be provided.
@@ -291,8 +293,9 @@ class DataPointReference extends CarpReference {
   }
 
   /// Delete a data point with the given [id].
-  /// Returns on success.
-  /// Throws an exception if data point is not found or otherwise unsuccessful.
+  ///
+  /// Returns on success. Throws a [CarpServiceException] if data point is not
+  /// found or otherwise unsuccessful.
   Future<void> delete(int id) async {
     String url = "$dataEndpointUri/$id";
 
