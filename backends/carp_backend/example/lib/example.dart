@@ -1,19 +1,18 @@
 import 'package:carp_backend/carp_backend.dart';
 import 'package:carp_webservices/carp_auth/carp_auth.dart';
 import 'package:carp_webservices/carp_services/carp_services.dart';
-import 'package:carp_serializable/carp_serializable.dart';
 import 'package:carp_core/carp_core.dart';
 import 'package:carp_mobile_sensing/carp_mobile_sensing.dart';
 import 'package:research_package/model.dart';
 
 void main() async {
   // -----------------------------------------------
-  // EXAMPLE OF CONFIGURING THE CARP APP
+  // CONFIGURING THE CAWS APP
   // -----------------------------------------------
 
-  final String uri = "https://cans.cachet.dk:443";
+  final String uri = "https://cans.cachet.dk";
 
-  // configure an app that points to the CARP web service
+  // Configure an app that points to the CARP web services (CAWS)
   CarpApp app = CarpApp(
     name: 'any_display_friendly_name_is_fine',
     uri: Uri.parse(uri),
@@ -23,106 +22,100 @@ void main() async {
     ),
   );
 
-  // configure the CARP service
+  // Configure the CAWS service
   CarpService().configure(app);
 
-  // authenticate at CARP
-  await CarpService()
-      .authenticate(username: 'the_username', password: 'the_password');
+  // Authenticate at CAWS
+  await CarpService().authenticate(
+    username: 'the_username',
+    password: 'the_password',
+  );
 
-  // configure the other services needed
+  // Configure the other services needed.
+  // Note that these CAWS services work as singletons and can be
+  // accessed throughout the app.
   CarpParticipationService().configureFrom(CarpService());
   CarpDeploymentService().configureFrom(CarpService());
 
-  // get the invitations to studies from CARP for this user
+  // -----------------------------------------------
+  // GETTING INVITATIONS FROM CAWS
+  // -----------------------------------------------
+
+  // Get the invitations to studies from CARP for this user.
   List<ActiveParticipationInvitation> invitations =
       await CarpParticipationService().getActiveParticipationInvitations();
 
-  // use the first (i.e. latest) invitation
-  String studyDeploymentId = invitations[0].studyDeploymentId!;
+  // Use the first (i.e. latest) invitation.
+  final invitation = invitations[0];
 
-  // // -----------------------------------------------
-  // // EXAMPLE OF GETTING A STUDY PROTOCOL FROM CARP
-  // // -----------------------------------------------
+  // ------------------------------------------------------------
+  // CONFIGURING A CLIENT TO GET STUDY DEPLOYMENTS FROM CAWS
+  // ------------------------------------------------------------
 
-  // // create a CARP study manager and initialize it
-  // CarpStudyProtocolManager manager = CarpStudyProtocolManager();
-  // await manager.initialize();
+  // Create and configure a client manager for this phone.
+  // If no deployment service is specified in the configure method,
+  // the default CarpDeploymentService() singleton is used.
+  final client = SmartPhoneClientManager();
+  await client.configure();
 
-  // // get the study from CARP
-  // StudyProtocol protocol = await manager.getStudyProtocol('protocol_id');
-  // print(protocol);
+  // Define the study based on the invitation and add it to the client.
+  final study = await client.addStudy(
+    invitation.studyDeploymentId!,
+    invitation.assignedDevices!.first.device.roleName,
+  );
 
-  // // -----------------------------------------------
-  // // EXAMPLE OF GETTING A STUDY DEPLOYMENT FROM CARP
-  // // -----------------------------------------------
+  // Get the study controller and try to deploy the study.
+  //
+  // If "useCached" is true and the study has already been deployed on this
+  // phone, the local cache will be used (default behavior).
+  // If not deployed before (i.e., cached) the study deployment will be
+  // fetched from the deployment service.
+  final controller = client.getStudyRuntime(study);
+  await controller?.tryDeployment(useCached: false);
 
-  // // get the status of the deployment
-  // StudyDeploymentStatus status = await CustomProtocolDeploymentService()
-  //     .getStudyDeploymentStatus(studyDeploymentId);
+  // Configure the controller
+  await controller?.configure();
 
-  // // create and configure a client manager for this phone
-  // SmartPhoneClientManager client = SmartPhoneClientManager();
-  // await client.configure(
-  //   deploymentService: CustomProtocolDeploymentService(),
-  //   deviceController: DeviceController(),
-  // );
-
-  // // Define the study and add it to the client.
-  // final study = Study(
-  //   status.studyDeploymentId,
-  //   status.masterDeviceStatus!.device.roleName,
-  // );
-  // await client.addStudy(study);
-
-  // // Get the study controller and try to deploy the study.
-  // //
-  // // Note that if the study has already been deployed on this phone
-  // // it has been cached locally in a file and the local cache will
-  // // be used pr. default.
-  // // If not deployed before (i.e., cached) the study deployment will be
-  // // fetched from the deployment service.
-  // SmartphoneDeploymentController? controller = client.getStudyRuntime(study);
-  // await controller?.tryDeployment(useCached: true);
-
-  // // configure the controller with the default privacy schema
-  // await controller?.configure();
-
-  // // listening on the data stream and print them as json to the debug console
-  // controller?.data.listen((data) => print(toJsonString(data)));
+  // Start sampling
+  controller?.start();
 
   // -----------------------------------------------
-  // DIFFERENT WAYS TO UPLOAD DATA TO CARP
+  // DIFFERENT WAYS TO UPLOAD DATA TO CAWS
   // -----------------------------------------------
 
-  // first register the CARP data manager factory
+  // First register the CAWS data manager factory
   DataManagerRegistry().register(CarpDataManagerFactory());
 
-  // using the (default) data stream batch upload method
-  CarpDataEndPoint cdep_3 = CarpDataEndPoint(
+  // The following `CarpDataEndPoint` configurations are added to the
+  // `StudyProtocol` and specifies how data is uploaded to CAWS.
+  // This configuration is downloaded as part of the deployment, as shown
+  // above.
+
+  // Using the (default) data stream batch upload method
+  CarpDataEndPoint streamingEndPoint = CarpDataEndPoint(
     uploadMethod: CarpUploadMethod.stream,
     deleteWhenUploaded: true,
   );
 
-  print('$cdep_3');
-
-  // create a CARP data endpoint that upload each measurement using the
-  // DATA_POINT method
-  CarpDataEndPoint cdep = CarpDataEndPoint(
+  // Using the "old" DataPoint endpoint for uploading batches of data points.
+  CarpDataEndPoint dataPointEndPoint = CarpDataEndPoint(
       uploadMethod: CarpUploadMethod.datapoint,
-      name: 'CARP Staging Server',
+      name: 'CAWS Staging Server',
       uri: 'http://staging.carp.cachet.dk:8080',
       clientId: 'carp',
       clientSecret: 'a_secret',
       email: 'username@cachet.dk',
       password: 'password');
 
-  // other types of data endpoints
+  // Note that if a user is already authenticated to a CAWS server - for example
+  // based on the download of invitations and deployments - specification of server
+  // and authentication info is not needed in the CarpDataEndPoint.
+  var endpoint = CarpDataEndPoint(uploadMethod: CarpUploadMethod.datapoint);
 
-  // using the file method would upload SQLite db files
-  CarpDataEndPoint cdep_2 = CarpDataEndPoint(
+  // Using the file method would upload SQLite db files.
+  CarpDataEndPoint fileEndPoint = CarpDataEndPoint(
     uploadMethod: CarpUploadMethod.file,
-    name: 'CARP Staging Server',
+    name: 'CAWS Staging Server',
     uri: 'http://staging.carp.cachet.dk:8080',
     clientId: 'carp',
     clientSecret: 'a_secret',
@@ -130,31 +123,31 @@ void main() async {
     password: 'password',
   );
 
-  print('$cdep_2');
-
-  // create a study protocol with a specific data endpoint
-  SmartphoneStudyProtocol carpProtocol = SmartphoneStudyProtocol(
+  // Create a study protocol with a specific data endpoint.
+  SmartphoneStudyProtocol protocol = SmartphoneStudyProtocol(
     ownerId: 'AB',
     name: 'Track patient movement',
-    dataEndPoint: cdep,
+    dataEndPoint: streamingEndPoint,
   );
 
+  // Register CAWS as a data backend where data can be uploaded
+  DataManagerRegistry().register(CarpDataManagerFactory());
+
   // --------------------------------------------------
-  // EXAMPLE OF GETTING AN INFORMED CONSENT FROM CARP
+  // HANDLING INFORMED CONSENT FROM CARP
   // --------------------------------------------------
 
-  // create and initialize the informed consent manager
+  // Create and initialize the informed consent manager.
+  //
+  // The CarpResourceManager() is a singleton that uses the
+  // the CarpService() singleton for accessing CAWS. Hence,
+  // CarpService needs to be authenticated and initialized before
+  // using the CarpResourceManager.
   CarpResourceManager icManager = CarpResourceManager();
   icManager.initialize();
 
-  // get the informed consent as a RP ordered task
-  RPOrderedTask? informedConsent = await icManager.getInformedConsent();
-
-  print(informedConsent);
-
-  // upload another informed consent to CARP
-  RPOrderedTask anotherInformedConsent =
-      RPOrderedTask(identifier: '12', steps: [
+  // Create a simple informed consent...
+  final consent = RPOrderedTask(identifier: '12', steps: [
     RPInstructionStep(
       identifier: "1",
       title: "Welcome!",
@@ -164,5 +157,9 @@ void main() async {
         title: "Thank You!",
         text: "We saved your consent document."),
   ]);
-  await icManager.setInformedConsent(anotherInformedConsent);
+  // .. and upload it to CAWS.
+  await icManager.setInformedConsent(consent);
+
+  // Get the informed consent back as a RPOrderedTask, if available.
+  RPOrderedTask? myConsent = await icManager.getInformedConsent();
 }

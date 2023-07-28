@@ -29,8 +29,8 @@ class CarpResourceManager
 
   CarpResourceManager._() {
     // Initialization of serialization
-    CarpMobileSensing();
-    ResearchPackage();
+    CarpMobileSensing.ensureInitialized();
+    ResearchPackage.ensureInitialized();
   }
 
   // --------------------------------------------------------------------------
@@ -143,7 +143,7 @@ class CarpResourceManager
   // --------------------------------------------------------------------------
 
   @override
-  Future initialize() async {}
+  Future<void> initialize() async {}
 
   // --------------------------------------------------------------------------
   // INFORMED CONSENT
@@ -193,6 +193,13 @@ class CarpResourceManager
     }
     return '$_cacheLocalizationPath/${locale.languageCode}.json';
   }
+
+  // TODO - we cannot know if a specific locale is supported before
+  //        we have tried to download it from the server....
+  //        So - for now, we always return true, since this method is
+  //        is not async.
+  @override
+  bool isSupported(Locale locale) => true;
 
   @override
   Future<Map<String, String>?> getLocalizations(

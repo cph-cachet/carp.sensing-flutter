@@ -9,7 +9,13 @@ part of carp_backend;
 
 /// Handles retrieving and storing language localization mappings.
 abstract class LocalizationManager {
-  Future initialize() async {}
+  Future<void> initialize() async {}
+
+  /// Whether resources for the given [locale] can be loaded by this manager.
+  ///
+  /// Return true if the instance of `T` loaded by this delegate's [load]
+  /// method supports the given `locale`'s language.
+  bool isSupported(Locale locale);
 
   /// Get localization mapping as json for the specified [locale].
   ///

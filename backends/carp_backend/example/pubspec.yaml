@@ -17,6 +17,8 @@ dependencies:
   carp_mobile_sensing: ^1.1.0
   carp_webservices: ^1.1.0
 
+  research_package: ^1.4.0
+
   # carp_core:
   #   path: ../../../carp_core
   # carp_mobile_sensing:

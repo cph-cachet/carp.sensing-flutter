@@ -13,10 +13,11 @@ class CarpLocalizations {
 
   Map<String, String>? _localizedStrings;
 
-  Future load() async {
+  Future<void> load() async {
     _localizedStrings = await CarpResourceManager().getLocalizations(locale);
-    if (_localizedStrings == null)
+    if (_localizedStrings == null) {
       warning('Could not load localizations for locale: $locale');
+    }
   }
 
   /// Get the translation for [key] to this [locale].
@@ -36,12 +37,11 @@ class _CarpLocalizationsDelegate
   const _CarpLocalizationsDelegate();
 
   @override
-  bool isSupported(Locale locale) =>
-      (CarpResourceManager().getLocalizations(locale) != null);
+  bool isSupported(Locale locale) => CarpResourceManager().isSupported(locale);
 
   @override
   Future<CarpLocalizations> load(Locale locale) async {
-    CarpLocalizations localizations = new CarpLocalizations(locale);
+    CarpLocalizations localizations = CarpLocalizations(locale);
     await localizations.load();
     return localizations;
   }

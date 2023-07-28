@@ -1,202 +1,195 @@
 # CARP Data Backend
 
 [![pub package](https://img.shields.io/pub/v/carp_backend.svg)](https://pub.dartlang.org/packages/carp_backend)
-[![style: effective dart](https://img.shields.io/badge/style-pedandic_dart-40c4ff.svg)](https://pub.dev/packages/pedandic_dart)
+[![pub points](https://img.shields.io/pub/points/carp_backend?color=2E8B57&label=pub%20points)](https://pub.dev/packages/carp_backend/score)
 [![github stars](https://img.shields.io/github/stars/cph-cachet/carp.sensing-flutter.svg?style=flat&logo=github&colorB=deeppink&label=stars)](https://github.com/cph-cachet/carp.sensing-flutter)
 [![MIT License](https://img.shields.io/badge/license-MIT-purple.svg)](https://opensource.org/licenses/MIT)
+[![arXiv](https://img.shields.io/badge/arXiv-2006.11904-green.svg)](https://arxiv.org/abs/2006.11904)
 
-This package integrates the [CARP Mobile Sensing](https://github.com/cph-cachet/carp.sensing) Framework with the [CARP web service backend](https://carp.cachet.dk).
-It support downloading a study configuration and uploading collected data.
+This package integrates the [CARP Mobile Sensing](https://carp.cachet.dk/cams/) Framework with the [CARP Web Services (CAWS)](https://carp.cachet.dk/caws/) backend.
 
-For Flutter plugins for other CARP products, see [CARP Mobile Sensing in Flutter](https://github.com/cph-cachet/carp.sensing-flutter/blob/master/README.md).
+For an overview of all CAMS packages, see [CARP Mobile Sensing in Flutter](https://github.com/cph-cachet/carp.sensing-flutter).
+For documentation on how to use CAMS, see the [CAMS wiki][wiki].
+
+This library supports;
+
+* downloading a study invitation
+* download a study deployment
+* downloading translations
+* downloading messages
+* uploading collected data, and
+* uploading an informed consent document
+
+from/to a CAWS server.
+
+> Note that this library makes little sense on its own and is only to be used as part of the overall [CARP Mobile Sensing](https://pub.dev/packages/carp_mobile_sensing) ecosystem. See the [CAMS wiki][wiki] for documentation on how to use CAMS, and checkout the [CARP Mobile Sening Demo App](https://github.com/cph-cachet/carp.sensing-flutter/tree/master/apps/carp_mobile_sensing_app) for a full example of an app using CARP Mobile Sensing and CAWS, including this library.
 
 ## Using the Plugin
 
-Add `carp_backend` as a [dependency in your pubspec.yaml file](https://flutter.io/platform-plugins/) and import the library along with the [`carp_mobile_sensing`](https://pub.dev/packages/carp_mobile_sensing) library.
+Add `carp_backend` as a [dependency in your pubspec.yaml](https://flutter.io/platform-plugins/) file and import the library along with the other CAMS libraries.
 
 ```dart
+import 'package:carp_core/carp_core.dart';
 import 'package:carp_mobile_sensing/carp_mobile_sensing.dart';
 import 'package:carp_webservices/carp_services/carp_services.dart';
-import 'package:carp_core/carp_core.dart';
 import 'package:carp_backend/carp_backend.dart';
 ```
 
-## Downloading a study configuration from CARP
+## Configuration
 
-Getting a study configuration from CARP is done using a `CARPStudyProtocolManager`.
-But in order to authenticate to CARP and get the available studies for the user,
-we make use of the [`carp_webservices`](https://pub.dev/packages/carp_webservices) API.
-
-To get a study, you basically go through the following steps:
-
- 1. Create and configure a `CarpApp` that points to the correct CARP web service.
- 2. Authenticate to the CARP web service
- 3. Get the list of study invitations for the authenticated user.
- 4. Get a specific study via a `CARPStudyProtocolManager` or deploy it directly using the `CustomProtocolDeploymentService`.
-
-The following code illustrates how this is done:
+This library uses the [`carp_webservices`](https://pub.dev/packages/carp_webservices) API for accessing CAWS. In order to access CAWS, a [`CarpApp`](https://pub.dev/documentation/carp_webservices/latest/carp_services/CarpApp-class.html) needs to be configured like this:
 
 ```dart
-  final String uri = "https://cans.cachet.dk:443";
+final String uri = "https://cans.cachet.dk";
 
-  // configure an app that points to the CARP web service
-  CarpApp app = CarpApp(
-    name: 'any_display_friendly_name_is_fine',
-    uri: Uri.parse(uri),
-    oauth: OAuthEndPoint(
-      clientID: 'the_client_id',
-      clientSecret: 'the_client_secret',
-    ),
-  );
-  CarpService().configure(app);
+// Configure an app that points to the CARP web services (CAWS)
+CarpApp app = CarpApp(
+  name: 'any_display_friendly_name_is_fine',
+  uri: Uri.parse(uri),
+  oauth: OAuthEndPoint(
+    clientID: 'the_client_id',
+    clientSecret: 'the_client_secret',
+  ),
+);
 
-  // authenticate at CARP
-  await CarpService()
-      .authenticate(username: 'the_username', password: 'the_password');
+// Configure the CAWS service
+CarpService().configure(app);
 
-  // get the invitations to studies from CARP for this user
-  List<ActiveParticipationInvitation> invitations =
-      await CarpService().invitations();
+// Authenticate at CAWS
+await CarpService().authenticate(
+  username: 'the_username',
+  password: 'the_password',
+);
 
-  // use the first (i.e. latest) invitation
-  String studyDeploymentId = invitations[0].studyDeploymentId;
+// Configure the other services needed.
+// Note that these CAWS services work as singletons and can be
+// accessed throughout the app.
+CarpParticipationService().configureFrom(CarpService());
+CarpDeploymentService().configureFrom(CarpService());
+```
 
-  // create a study manager, and initialize it
-  CARPStudyProtocolManager manager = CARPStudyProtocolManager();
-  await manager.initialize();
+## Downloading a study invitation and deployment from CAWS
 
-  // get the study protocol from CARP
-  StudyProtocol study = await manager.getStudyProtocol(studyDeploymentId);
-  print('study: $study');
-  ````
-
-If you just want to deploy and run the study deployment directly, another approach is to use the `CustomProtocolDeploymentService` directly:
+Getting a study invitation and deployment from CAWS is done using the `CarpParticipationService` and `CarpDeploymentService` services, respectively.
 
 ```dart
+// Get the invitations to studies from CARP for this user.
+List<ActiveParticipationInvitation> invitations =
+    await CarpParticipationService().getActiveParticipationInvitations();
 
-  // get the status of the deployment
-  StudyDeploymentStatus status = await CustomProtocolDeploymentService()
-      .getStudyDeploymentStatus(studyDeploymentId);
+// Use the first (i.e. latest) invitation.
+final invitation = invitations[0];
+```
 
-  // create and configure a client manager for this phone
-  SmartPhoneClientManager client = SmartPhoneClientManager(
-    deploymentService: CustomProtocolDeploymentService(),
-    deviceRegistry: DeviceController(),
-  );
-  await client.configure();
+The invitation contains information about the deployment, including the `studyDeploymentId` and the device `roleName`. This invitation is used to configure a study, which can be deployed and started in a [`SmartPhoneClientManager`](https://pub.dev/documentation/carp_mobile_sensing/latest/runtime/SmartPhoneClientManager-class.html).
 
-  String deviceRolename = status.masterDeviceStatus.device.roleName;
+```dart
+// Create and configure a client manager for this phone.
+// If no deployment service is specified in the configure method,
+// the default CarpDeploymentService() singleton is used.
+final client = SmartPhoneClientManager();
+await client.configure();
 
-  // add and deploy this deployment using its rolename
-  StudyDeploymentController controller =
-      await client.addStudy(studyDeploymentId, deviceRolename);
+// Define the study based on the invitation and add it to the client.
+final study = await client.addStudy(
+  invitation.studyDeploymentId!,
+  invitation.assignedDevices!.first.device.roleName,
+);
 
-  // configure the controller with the default privacy schema
-  await controller.configure();
-  // controller.resume();
+// Get the study controller and try to deploy the study.
+//
+// If "useCached" is true and the study has already been deployed on this
+// phone, the local cache will be used (default behavior).
+// If not deployed before (i.e., cached) the study deployment will be
+// fetched from the deployment service.
+final controller = client.getStudyRuntime(study);
+await controller?.tryDeployment(useCached: false);
 
-  // listening on the data stream and print them as json to the debug console
-  controller.data.listen((data) => print(toJsonString(data)));
+// Configure the controller
+await controller?.configure();
 
+// Start sampling
+controller?.start();
 ```
 
 ## Uploading of data to CARP
 
-Upload of sensing data to the CARP web service can be done in four different ways:
+Configuration of data upload is done as a [`DataEndPoint`](https://pub.dev/documentation/carp_mobile_sensing/latest/domain/DataEndPoint-class.html), which is part of a [`SmartphoneStudyProtocol`](https://pub.dev/documentation/carp_mobile_sensing/latest/domain/SmartphoneStudyProtocol-class.html).
 
-* as individual CARP data points
-* as a batch upload of a file with multiple CARP data points
-* as a CARP object in a collection
-* as a file to the CARP file store
+CAWS and hence this plugin supports three methods of data upload:
 
-Using the library takes three steps.
+* The (default) data stream batch upload using the [CARP Core Data subsystem](https://github.com/cph-cachet/carp.core-kotlin/blob/develop/docs/carp-data.md)
+* The (legacy) [`DataPoint`](https://pub.dev/documentation/carp_webservices/latest/carp_services/DataPoint-class.html) batch upload
+* File upload of raw SQLite `.db` files
 
-### 1. Register the Data Manager
+### Specifying a CARP Data Endpoint
 
-First you should register the data manager in the [`DataManagerRegistry`](https://pub.dartlang.org/documentation/carp_core/latest/carp_core/DataManagerRegistry-class.html).
+Create a `CarpDataEndPoint` that specify which method to use for uploading data, and the details. Upload methods are defined in the `CarpUploadMethod` property. For example, a streaming data upload is created like this:
 
-````dart
-  DataManagerRegistry().register(CarpDataManager());
-````
+```dart
+// Using the (default) data stream batch upload method
+CarpDataEndPoint streamingEndPoint = CarpDataEndPoint(
+  uploadMethod: CarpUploadMethod.stream,
+  deleteWhenUploaded: true,
+);
+```
 
-### 2. Create a CARP Data Endpoint
+Or a [`DataPoint`](https://pub.dev/documentation/carp_webservices/latest/carp_services/DataPoint-class.html) upload method is created like this:
 
-Create a `CarpDataEndPoint` that specify which method to use for uploading data, and the details.
-Upload methods are defined in the `CarpUploadMethod` class.
-
-For example, a `CarpDataEndPoint` that upload data points directly looks like this:
-
-`````dart
-  CarpDataEndPoint cdep = CarpDataEndPoint(CarpUploadMethod.DATA_POINT,
-      name: 'CARP Staging Server',
-      uri: 'http://staging.carp.cachet.dk:8080',
-      clientId: 'carp',
-      clientSecret: 'a_secret',
-      email: 'username@cachet.dk',
-      password: 'password');
-`````
-
-A `CarpDataEndPoint` that uploads data as zipped files and keeps the file on the phone, looks like this:
-
-`````dart
-  CarpDataEndPoint cdep = CarpDataEndPoint(CarpUploadMethod.FILE,
-      name: 'CARP Staging Server',
-      uri: 'http://staging.carp.cachet.dk:8080',
-      clientId: 'carp',
-      clientSecret: 'a_secret',
-      email: 'username@cachet.dk',
-      password: 'password',
-      bufferSize: 500 * 1000,
-      zip: true);
-`````
-
-And a `CarpDataEndPoint` that batch uploads data points in a json file (which is deleted when uploaded) looks like this:
-
-`````dart
-  CarpDataEndPoint cdep = CarpDataEndPoint(
-    CarpUploadMethod.BATCH_DATA_POINT,
+```dart
+// Using the "old" DataPoint endpoint for uploading batches of data points.
+//
+// Note that if a user is already authenticated to a CAWS server - for example
+// based on the download of invitations and deployments - specification
+// authentication info is not needed in the CarpDataEndPoint.
+CarpDataEndPoint dataPointEndPoint = CarpDataEndPoint(
+    uploadMethod: CarpUploadMethod.datapoint,
     name: 'CARP Staging Server',
     uri: 'http://staging.carp.cachet.dk:8080',
     clientId: 'carp',
     clientSecret: 'a_secret',
     email: 'username@cachet.dk',
-    password: 'password',
-    bufferSize: 500 * 1000,
-    deleteWhenUploaded: true,
-  );
-`````
+    password: 'password');
+```
 
-### 3. Assign the CARP Data Endpoint to your Study Protocol
+To use the data endpoint, add it to the study protocol like this:
 
-You can now use a CARP Data Endpoint to the study protocol.
+```dart
+// Create a study protocol with a specific data endpoint.
+SmartphoneStudyProtocol protocol = SmartphoneStudyProtocol(
+  ownerId: 'AB',
+  name: 'Track patient movement',
+  dataEndPoint: streamingEndPoint,
+);
+```
+
+### Register the Data Manager
+
+In order to use the CAWS data manger for uploading of data, you should register it in the [`DataManagerRegistry`](https://pub.dev/documentation/carp_mobile_sensing/latest/runtime/DataManagerRegistry-class.html).
+
+````dart
+// Register CAWS as a data backend where data can be uploaded.
+DataManagerRegistry().register(CarpDataManagerFactory());
+````
+
+## Authentication to CAWS
+
+Configuration and authentication to CAWS only needs to be done once. Hence, if you app is already authenticated to CARP (for example, because the study deployment has been downloaded from CAWS), there is **NO** need for specifying the server information (`name` and `uri`) and authentication information (`client_id`, `client_secret`, `username`, and `password`) in the `CarpDataEndPoint`. Hence, in this case, you would specify a data endpoint like this:
 
 `````dart
-  // create a study protocol with a specific data endpoint
-  SmartphoneStudyProtocol protocol = SmartphoneStudyProtocol(
-    ownerId: 'AB',
-    name: 'Track patient movement',
-    dataEndPoint: cdep,
-  );
-`````
-
-## Authentication to CARP
-
-Authentication to CARP only needs to be done once. Hence, if you app is already authenticated to CARP (for example, because the study protocol has been downloaded from CARP), there is **NO** need for specifying the client id/secret and username/password in the `CarpDataEndPoint`. Hence, in this case, you would specify a data enpoint like this:
-
-`````dart
-  CarpDataEndPoint cdep = CarpDataEndPoint(CarpUploadMethod.DATA_POINT,
-      name: 'CARP Staging Server',
-      uri: 'http://staging.carp.cachet.dk:8080',
-    );
+var endpoint = CarpDataEndPoint(uploadMethod: CarpUploadMethod.datapoint);
 `````
 
 ## Features and bugs
 
-Please file feature requests and bug reports at the [issue tracker][tracker].
-
-[tracker]: https://github.com/cph-cachet/carp.sensing/issues
+Please file feature requests and bug reports at the [issue tracker][tracker]. Remember to specify which CARP library you're filing an issue for (in this case `carp_backend`).
 
 ## License
 
 This software is copyright (c) [Copenhagen Center for Health Technology (CACHET)](https://www.cachet.dk/) at the [Technical University of Denmark (DTU)](https://www.dtu.dk).
 This software is made available 'as-is' in a MIT [license](/LICENSE).
+
+<!-- LINKS  -->
+
+[tracker]: https://github.com/cph-cachet/carp.sensing/issues
+[wiki]: https://github.com/cph-cachet/carp.sensing-flutter/wiki

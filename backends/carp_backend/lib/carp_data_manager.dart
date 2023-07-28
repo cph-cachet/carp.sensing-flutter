@@ -40,6 +40,7 @@ class CarpDataManager extends AbstractDataManager {
     FromJsonFactory().register(CarpDataEndPoint());
   }
 
+  @override
   String get type => DataEndPointTypes.CAWS;
 
   /// The connectivity status of this data manager.
@@ -71,8 +72,9 @@ class CarpDataManager extends AbstractDataManager {
         .onConnectivityChanged
         .listen((status) => connectivity = status);
 
-    if (!CarpDataStreamService().isConfigured)
+    if (!CarpDataStreamService().isConfigured) {
       CarpDataStreamService().configureFrom(CarpService());
+    }
   }
 
   /// The currently signed in user.
@@ -192,8 +194,7 @@ class CarpDataManager extends AbstractDataManager {
 
   DataPointReference? _dataPointReference;
   DataPointReference get dataPointReference {
-    if (_dataPointReference == null)
-      _dataPointReference = CarpService().getDataPointReference();
+    _dataPointReference ??= CarpService().getDataPointReference();
     return _dataPointReference!;
   }
 
@@ -277,7 +278,8 @@ class CarpDataManager extends AbstractDataManager {
     }
   }
 
-  Future close() async {
+  @override
+  Future<void> close() async {
     uploadTimer?.cancel();
     super.close();
   }

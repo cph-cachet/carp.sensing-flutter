@@ -112,12 +112,15 @@ class CarpDataEndPoint extends DataEndPoint {
           deleteWhenUploaded: deleteWhenUploaded,
         );
 
+  @override
   Function get fromJsonFunction => _$CarpDataEndPointFromJson;
 
   factory CarpDataEndPoint.fromJson(Map<String, dynamic> json) =>
       FromJsonFactory().fromJson(json) as CarpDataEndPoint;
+  @override
   Map<String, dynamic> toJson() => _$CarpDataEndPointToJson(this);
 
+  @override
   String toString() =>
       '$runtimeType [$name] - method: ${uploadMethod.toString().split('.').last}';
 }
@@ -138,5 +141,6 @@ enum CarpUploadMethod {
 class CarpBackendException implements Exception {
   String? message;
   CarpBackendException([this.message]);
+  @override
   String toString() => "$runtimeType - ${message ?? ""}";
 }

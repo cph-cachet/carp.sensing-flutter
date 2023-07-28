@@ -1,7 +1,7 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
-// import 'package:test/test.dart';
-import 'package:flutter_test/flutter_test.dart';
+import 'package:test/test.dart';
+// import 'package:flutter_test/flutter_test.dart';
 
 import 'package:carp_core/carp_core.dart';
 import 'package:carp_mobile_sensing/carp_mobile_sensing.dart';
@@ -27,7 +27,6 @@ void main() {
   // TestWidgetsFlutterBinding.ensureInitialized();
 
   CarpApp app;
-  late CarpUser user;
   // CarpStudyProtocolManager manager = CarpStudyProtocolManager();
 
   // Initialization of serialization
@@ -49,7 +48,7 @@ void main() {
 
     StudyProtocol(ownerId: 'user@dtu.dk', name: 'ignored'); // ...
 
-    app = new CarpApp(
+    app = CarpApp(
       name: "Test",
       studyId: testStudyId,
       uri: Uri.parse(uri),
@@ -61,7 +60,7 @@ void main() {
     // create a carp data manager in order to initialize json serialization
     CarpDataManager();
 
-    user = await CarpService().authenticate(
+    await CarpService().authenticate(
       username: username,
       password: password,
     );
@@ -111,7 +110,7 @@ void main() {
   });
 
   group("Localizations", () {
-    Locale locale = Locale('en');
+    Locale locale = const Locale('en');
 
     test('- get', () async {
       Map<String, String>? localizations =
@@ -238,7 +237,9 @@ void main() {
       List<DocumentSnapshot> documents = await CarpService().documents();
 
       print('Found ${documents.length} document(s)');
-      documents.forEach((document) => print(' - $document'));
+      for (var document in documents) {
+        print(' - $document');
+      }
     });
 
     test(' - delete old document', () async {

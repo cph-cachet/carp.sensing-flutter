@@ -83,7 +83,7 @@ class DataStreamBuffer {
     Set<int> rows = {};
 
     // get all measurement not uploaded yet for this stream
-    final where = '${SQLiteDataManager.UPLOADED_COLUMN} = ? AND '
+    const where = '${SQLiteDataManager.UPLOADED_COLUMN} = ? AND '
         '${SQLiteDataManager.ROLE_NAME_COLUMN} = ? AND '
         '${SQLiteDataManager.DATATYPE_COLUMN} = ?';
     final List<Map<String, dynamic>> maps = await executor?.query(
@@ -118,17 +118,19 @@ class DataStreamBuffer {
     if (delete) {
       sql = 'DELETE FROM ${SQLiteDataManager.MEASUREMENT_TABLE_NAME} WHERE '
           '${SQLiteDataManager.ID_COLUMN} IN ($args)';
-      if (batch != null)
+      if (batch != null) {
         batch?.rawDelete(sql);
-      else
+      } else {
         executor?.rawDelete(sql);
+      }
     } else {
       sql = 'UPDATE ${SQLiteDataManager.MEASUREMENT_TABLE_NAME} SET '
           '${SQLiteDataManager.UPLOADED_COLUMN} = 1 WHERE ${SQLiteDataManager.ID_COLUMN} IN ($args)';
-      if (batch != null)
+      if (batch != null) {
         batch?.rawUpdate(sql);
-      else
+      } else {
         executor?.rawUpdate(sql);
+      }
     }
 
     return DataStreamBatch(
