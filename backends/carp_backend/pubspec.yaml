@@ -1,7 +1,7 @@
 name: carp_backend
-description: CARP data backend for CARP mobile sensing. Supports uploading json to CARP as either zipped filed or as plain json in collections.
+description: CARP data backend for CARP Mobile Sensing. Supports downloading study deployments and uploading data from/to a CARP Web Service (CAWS) server.
 version: 1.1.0
-homepage: https://github.com/cph-cachet/carp.sensing-flutter/tree/master/backends/carp_backend
+homepage: https://github.com/cph-cachet/carp.sensing-flutter/
 
 environment:
   sdk: ">=2.17.0 <4.0.0"
@@ -14,6 +14,7 @@ dependencies:
   json_annotation: ^4.8.0
   uuid: ^3.0.4
   connectivity_plus: ^4.0.0 
+  sqflite: ^2.2.0
 
   carp_serializable: ^1.1.0
   carp_core: ^1.1.0
@@ -50,6 +51,5 @@ dev_dependencies:
   test: any
   flutter_lints: any
 
-# The following section is specific to Flutter.
 flutter:
-  uses-material-design: true
+  uses-material-design: true  # need this since both RP and carp_webservices uses MD

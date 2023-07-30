@@ -295,12 +295,12 @@ class CarpResourceManager
   // MESSAGES
   // --------------------------------------------------------------------------
 
-  int? _messagesCollectionId;
+  // int? _messagesCollectionId;
 
-  /// The query for use for getting the message from the CARP server
-  String _getMessagesQuery(DateTime start, DateTime end) =>
-      // 'query=collection_id==$_messagesCollectionId;updated_at>${start.toUtc()};updated_at<${end.toUtc()}';
-      'collection_id==$_messagesCollectionId';
+  // /// The query for use for getting the message from the CARP server
+  // String _getMessagesQuery(DateTime start, DateTime end) =>
+  //     // 'query=collection_id==$_messagesCollectionId;updated_at>${start.toUtc()};updated_at<${end.toUtc()}';
+  //     'collection_id==$_messagesCollectionId';
 
   @override
   Future<Message?> getMessage(String messageId) async {
