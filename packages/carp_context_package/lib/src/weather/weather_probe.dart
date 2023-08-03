@@ -1,6 +1,6 @@
 part of carp_context_package;
 
-/// Collects local weather information using the [WeatherFactory] API.
+/// Collects local weather information using the [WeatherServiceManager].
 class WeatherProbe extends MeasurementProbe {
   @override
   WeatherServiceManager get deviceManager =>
@@ -12,7 +12,7 @@ class WeatherProbe extends MeasurementProbe {
     return true;
   }
 
-  /// Returns the [Weather] for this location.
+  /// Returns the [Weather] for this location wrapped as a [Measurement].
   @override
   Future<Measurement> getMeasurement() async {
     if (deviceManager.service != null) {

@@ -116,7 +116,6 @@ abstract class UserTask {
   Widget? get widget => null;
 
   /// Callback from the app when this task is to be started.
-  /// Returns the user interface [Widget] to be shown in the app, if any.
   @mustCallSuper
   void onStart() {
     // initialize the background task which holds any measures added to the app task
@@ -216,10 +215,9 @@ class BackgroundSensingUserTask extends UserTask {
   BackgroundSensingUserTask(super.executor);
 
   @override
-  Widget? onStart() {
+  void onStart() {
     super.onStart();
     executor.start();
-    return null;
   }
 
   @override
@@ -239,9 +237,8 @@ class OneTimeBackgroundSensingUserTask extends BackgroundSensingUserTask {
 
   /// Start sensing for 10 seconds, whereafter it is stops automatically.
   @override
-  Widget? onStart() {
+  void onStart() {
     super.onStart();
     Timer(const Duration(seconds: 10), () => super.onDone());
-    return null;
   }
 }

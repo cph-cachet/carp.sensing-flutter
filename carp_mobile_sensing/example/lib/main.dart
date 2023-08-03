@@ -49,8 +49,8 @@ class Console extends State<ConsolePage> {
     sensing = Sensing();
     Settings().init().then((_) {
       sensing.init().then((_) {
-        log('Setting up study : ${sensing.study}');
-        log('Deployment status : ${sensing.status}');
+        log('Setting up study : ${SmartPhoneClientManager().studies[0]}');
+        log('Client state : ${SmartPhoneClientManager().state}');
       });
     });
   }
@@ -69,7 +69,7 @@ class Console extends State<ConsolePage> {
       ),
       body: SingleChildScrollView(
         child: StreamBuilder(
-          stream: sensing.controller?.measurements,
+          stream: SmartPhoneClientManager().measurements,
           builder: (context, AsyncSnapshot<Measurement> snapshot) {
             if (snapshot.hasData) _log += '${toJsonString(snapshot.data!)}\n';
             return Text(_log);
@@ -79,7 +79,9 @@ class Console extends State<ConsolePage> {
       floatingActionButton: FloatingActionButton(
         onPressed: restart,
         tooltip: 'Start/Stop study',
-        child: sensing.isRunning ? const Icon(Icons.stop) : const Icon(Icons.play_arrow),
+        child: sensing.isRunning
+            ? const Icon(Icons.stop)
+            : const Icon(Icons.play_arrow),
       ),
     );
   }
@@ -114,63 +116,40 @@ class Console extends State<ConsolePage> {
 /// This example is useful for creating a Business Logical Object (BLOC) in a
 /// Flutter app. See e.g. the CARP Mobile Sensing App.
 class Sensing {
-  SmartphoneDeploymentController? controller;
-  SmartPhoneClientManager? client;
-  Study? study;
-
   /// Initialize sensing.
   Future<void> init() async {
     Settings().debugLevel = DebugLevel.debug;
 
-    // Get the local protocol.
-    StudyProtocol protocol =
+    // Create and configure a client manager for this phone.
+    await SmartPhoneClientManager().configure();
+
+    // Get the protocol.
+    final protocol =
         await LocalStudyProtocolManager().getStudyProtocol('ignored');
 
-    // Create and configure a client manager for this phone, and
-    // create a study based on the protocol.
-    client = SmartPhoneClientManager();
-    await client?.configure();
-    study = await client?.addStudyProtocol(protocol);
-
-    // Get the study controller and try to deploy the study.
-    //
-    // Note that if the study has already been deployed on this phone
-    // it has been cached locally in a file and the local cache will
-    // be used pr. default.
-    // If not deployed before (i.e., cached) the study deployment will be
-    // fetched from the deployment service.
-    controller = client?.getStudyRuntime(study!);
-    await controller?.tryDeployment(useCached: true);
-
-    // Configure the controller.
-    //
-    // Notifications are enabled for demo purpose and if you add an AppTask to the
-    // protocol below, you should see notifications on the phone.
-    // However, nothing will happen when you click on them.
-    // See the PulmonaryMonitor demo app for a full-scale example of how to use
-    // the App Task model.
-    await controller?.configure();
+    // Create a study based on the protocol, and start sampling.
+    SmartPhoneClientManager()
+        .addStudyProtocol(protocol)
+        .then((_) => SmartPhoneClientManager().start());
 
     // Listening on the data stream and print them as json.
-    controller?.measurements.listen((data) => print(toJsonString(data)));
+    SmartPhoneClientManager()
+        .measurements
+        .listen((data) => print(toJsonString(data)));
   }
 
   /// Is sensing running, i.e. has the study executor been started?
   bool get isRunning =>
-      (controller != null) &&
-      controller!.executor.state == ExecutorState.started;
-
-  /// Status of sensing.
-  StudyStatus? get status => controller?.status;
+      SmartPhoneClientManager().state == ClientManagerState.started;
 
   /// Start sensing
-  void start() async => controller?.executor.start();
+  void start() async => SmartPhoneClientManager().start();
 
   /// Stop sensing
-  void stop() async => controller?.executor.stop();
+  void stop() async => SmartPhoneClientManager().stop();
 
   /// Dispose sensing
-  void dispose() async => client?.dispose();
+  void dispose() async => SmartPhoneClientManager().dispose();
 }
 
 /// This is a simple local [StudyProtocolManager].

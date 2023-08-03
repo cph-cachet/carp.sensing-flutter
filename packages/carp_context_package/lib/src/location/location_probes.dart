@@ -15,9 +15,17 @@ class CurrentLocationProbe extends MeasurementProbe {
       super.deviceManager as LocationServiceManager;
 
   @override
-  Future<Measurement> getMeasurement() async => deviceManager.manager
-      .getLocation()
-      .then((location) => Measurement.fromData(location));
+  Future<Measurement> getMeasurement() async {
+    debug('$runtimeType - getMeasurement called...');
+    try {
+      final location = await LocationManager().getLocation();
+      return Measurement.fromData(location);
+    } catch (error) {
+      warning('$runtimeType - Error location - $error');
+      return Measurement.fromData(
+          Error(message: '$runtimeType Exception: $error'));
+    }
+  }
 }
 
 /// Collects location information from the underlying OS's location API.

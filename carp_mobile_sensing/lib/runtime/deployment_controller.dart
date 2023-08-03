@@ -12,7 +12,6 @@ class SmartphoneDeploymentController extends StudyRuntime<DeviceRegistration> {
   DataManager? _dataManager;
   DataEndPoint? _dataEndPoint;
   final SmartphoneDeploymentExecutor _executor = SmartphoneDeploymentExecutor();
-  String _privacySchemaName = NameSpace.CARP;
   late DataTransformer _transformer;
 
   @override
@@ -33,7 +32,8 @@ class SmartphoneDeploymentController extends StudyRuntime<DeviceRegistration> {
   DataManager? get dataManager => _dataManager;
 
   /// The privacy schema used to encrypt data before upload.
-  String get privacySchemaName => _privacySchemaName;
+  String get privacySchemaName =>
+      deployment?.privacySchemaName ?? NameSpace.CARP;
 
   /// The transformer used to transform data before upload.
   DataTransformer get transformer => _transformer;
@@ -82,15 +82,15 @@ class SmartphoneDeploymentController extends StudyRuntime<DeviceRegistration> {
     assert(
         study != null,
         'Cannot deploy without a valid study deployment id and device role name. '
-        "Call 'initialize()' first.");
+        "Call 'addStudy()' or 'addStudyProtocol()' first.");
 
+    info('$runtimeType - trying to deploy study: $study');
     if (useCached) {
       // restore the deployment and app task queue
       bool success = await restoreDeployment();
       if (success) {
         await AppTaskController().restoreQueue();
-        status = StudyStatus.Deployed;
-        return status;
+        return status = deployment?.status ?? StudyStatus.Deployed;
       }
     }
 
@@ -101,6 +101,7 @@ class SmartphoneDeploymentController extends StudyRuntime<DeviceRegistration> {
       deployment!.deployed = DateTime.now();
       // if no user is specified for this study, look up the local user id
       deployment!.userId ??= await Settings().userId;
+      deployment?.status = status;
       await saveDeployment();
     }
 
@@ -113,7 +114,7 @@ class SmartphoneDeploymentController extends StudyRuntime<DeviceRegistration> {
       ? await Persistence().saveDeployment(deployment!)
       : false;
 
-  /// Restore the [deployment] from a local file cache.
+  /// Restore the [deployment] from a local cache.
   /// Returns `true` if successful.
   Future<bool> restoreDeployment() async => (studyDeploymentId != null)
       ? (deployment =
@@ -149,19 +150,12 @@ class SmartphoneDeploymentController extends StudyRuntime<DeviceRegistration> {
   ///      is done, but sensing can still be started. This is useful for apps
   ///      which wants to use the framework for in-app consumption of sensing
   ///      events without saving the data.
-  ///    * [privacySchemaName] - the name of a [PrivacySchema].
-  ///      Use [PrivacySchema.DEFAULT] for the default, built-in schema.
-  ///      If  not specified, no privacy schema is used and data is saved as collected.
   ///    * [transformer] - a generic [DataTransformer] function which transform
-  ///      each collected data item. If not specified, a 1:1 mapping is done,
+  ///      each collected measurement. If not specified, a 1:1 mapping is done,
   ///      i.e. no transformation.
-  ///    * [heartbeat] - if enabled, a [Heartbeat] data point will be uploaded
-  ///       for each devices every 5 minutes.
   Future<void> configure({
     DataEndPoint? dataEndPoint,
-    String privacySchemaName = NameSpace.CARP,
     DataTransformer? transformer,
-    bool heartbeat = true,
   }) async {
     assert(deployment != null,
         'Cannot configure a StudyDeploymentController without a deployment.');
@@ -177,7 +171,6 @@ class SmartphoneDeploymentController extends StudyRuntime<DeviceRegistration> {
 
     // initialize optional parameters
     _dataEndPoint = dataEndPoint ?? deployment!.dataEndPoint;
-    _privacySchemaName = privacySchemaName;
     _transformer = transformer ?? ((data) => data);
 
     if (_dataEndPoint != null) {
@@ -200,10 +193,12 @@ class SmartphoneDeploymentController extends StudyRuntime<DeviceRegistration> {
     await deviceRegistry.connectAllConnectableDevices();
 
     _executor.initialize(deployment!, deployment!);
-    measurements.listen((dataPoint) => _samplingSize++);
+    measurements.listen((_) => _samplingSize++);
 
     // start heartbeat monitoring
-    if (heartbeat) deviceRegistry.startHeartbeatMonitoring(this);
+    if (SmartPhoneClientManager().heartbeat) {
+      deviceRegistry.startHeartbeatMonitoring(this);
+    }
 
     status = StudyStatus.Deployed;
 
@@ -222,18 +217,31 @@ class SmartphoneDeploymentController extends StudyRuntime<DeviceRegistration> {
     print('===============================================================');
   }
 
-  /// Start this controller and if [start] is true, start data collection
+  /// Start this controller.
+  ///
+  /// If [start] is true, immediately start data collection
   /// according to the parameters specified in [configure].
   ///
   /// [configure] must be called before starting sampling.
   @override
   void start([bool start = true]) {
     info('$runtimeType - Starting data sampling...');
-    super.start();
-    if (start) _executor.start();
+
+    // if this study has not yet been deployed, do this first.
+    if (status.index < StudyStatus.Deployed.index) {
+      tryDeployment().then((value) {
+        configure().then((value) {
+          super.start();
+          if (start) _executor.start();
+        });
+      });
+    } else {
+      super.start();
+      if (start) _executor.start();
+    }
   }
 
-  /// Stop the sampling.
+  /// Stop this controller and data sampling.
   @override
   Future<void> stop() async {
     info('$runtimeType - Stopping data sampling...');

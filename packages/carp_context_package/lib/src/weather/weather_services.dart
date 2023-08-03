@@ -7,17 +7,17 @@
 
 part of carp_context_package;
 
-/// An [OnlineService] for the weather service.
+/// An [OnlineService] for the [Open Weather](https://openweathermap.org/) service.
 @JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
 class WeatherService extends OnlineService {
   /// The type of a air quality service.
   static const String DEVICE_TYPE =
       '${DeviceConfiguration.DEVICE_NAMESPACE}.WeatherService';
 
-  /// The default rolename for a air quality service.
+  /// The default role name for a weather service.
   static const String DEFAULT_ROLENAME = 'Weather Service';
 
-  /// API key for the WAQI API.
+  /// API key for the Open Weather API.
   String apiKey;
 
   WeatherService({

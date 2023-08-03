@@ -37,7 +37,7 @@ class Study {
       '$runtimeType - studyDeploymentId: $studyDeploymentId, deviceRoleName: $deviceRoleName';
 }
 
-/// Describes the status of a [StudyRuntime].
+/// Describes the status of a [Study].
 enum StudyStatus {
   /// The study deployment process hasn't been started yet.
   DeploymentNotStarted,

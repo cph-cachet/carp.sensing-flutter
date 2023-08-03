@@ -11,6 +11,40 @@ import 'dart:convert';
 import 'package:carp_core/carp_core.dart';
 import 'package:carp_mobile_sensing/carp_mobile_sensing.dart';
 
+/// This is an example of how to set up a the most minimal study.
+/// Used in the example app.
+Future<void> init_sensing() async {
+  // Create and configure a client manager for this phone.
+  await SmartPhoneClientManager().configure();
+
+  // Create a protocol.
+  final phone = Smartphone();
+  final protocol = SmartphoneStudyProtocol(
+    ownerId: 'AB',
+    name: 'Track patient movement',
+  )
+    ..addPrimaryDevice(phone)
+    ..addTaskControl(
+      DelayedTrigger(delay: const Duration(seconds: 10)),
+      BackgroundTask(measures: [
+        Measure(type: SensorSamplingPackage.STEP_COUNT),
+        Measure(type: SensorSamplingPackage.AMBIENT_LIGHT),
+        Measure(type: DeviceSamplingPackage.SCREEN_EVENT),
+        Measure(type: DeviceSamplingPackage.BATTERY_STATE),
+      ]),
+      phone,
+      Control.Start,
+    );
+
+  // Create a study based on the protocol, and start sampling.
+  SmartPhoneClientManager()
+      .addStudyProtocol(protocol)
+      .then((_) => SmartPhoneClientManager().start());
+
+  // Listening on the data stream and print them as json.
+  SmartPhoneClientManager().measurements.listen((data) => print(data));
+}
+
 /// This is an example of how to set up a the most minimal study
 /// Used in the intro on the wiki
 Future<void> example_0() async {
@@ -50,26 +84,30 @@ Future<void> example_0() async {
   Study study = await client.addStudyProtocol(protocol);
 
   // Get the study controller and try to deploy the study.
+  //
+  // Note that if the study has already been deployed on this phone
+  // it has been cached locally in a file and the local cache will
+  // be used pr. default.
+  // If not deployed before (i.e., cached) the study deployment will be
+  // fetched from the deployment service.
   SmartphoneDeploymentController? controller = client.getStudyRuntime(study);
   await controller?.tryDeployment();
 
   // Configure the controller.
   await controller?.configure();
 
-  // STEP III -- RUN THE STUDY
+  // STEP III -- START THE STUDY
 
-  // Start the study
+  // Start the data sampling
   controller?.start();
 
-  // Listening and print all data events from the study
+  // Listening and print all measurements collected
   controller?.measurements.forEach(print);
 }
 
 /// This is an example of how to set up a study.
 /// This protocol uses the default sampling configuration and stores
 /// collected data in a local SQLite database.
-///
-/// Used in the README file.
 void example_1() async {
   // Create a study protocol storing data in a local SQLite database.
   SmartphoneStudyProtocol protocol = SmartphoneStudyProtocol(
@@ -267,6 +305,16 @@ void example_2() async {
 
   // Cancel the subscription.
   await subscription.cancel();
+}
+
+/// An example of how to configure a [SmartphoneStudyProtocol] with the
+/// default privacy schema.
+void studyControllerExample() async {
+  SmartphoneStudyProtocol protocol = SmartphoneStudyProtocol(
+    ownerId: 'AB',
+    name: 'Track patient movement',
+    privacySchemaName: PrivacySchema.DEFAULT,
+  );
 }
 
 /// Example of different configuration options.
@@ -524,26 +572,6 @@ void recurrentScheduledTriggerExample() {
     time: const TimeOfDay(hour: 21, minute: 30),
     duration: const Duration(seconds: 1),
   );
-}
-
-/// An example of how to configure a [SmartphoneDeploymentController] with the
-/// default privacy schema.
-void studyControllerExample() async {
-  // create and configure a client manager for this phone
-  SmartPhoneClientManager client = SmartPhoneClientManager();
-
-  await client.configure();
-
-  // add the study and get the study runtime (controller)
-  Study study = await client.addStudy('1234', 'primary_phone');
-  SmartphoneDeploymentController? controller = client.getStudyRuntime(study);
-
-  // configure the controller with the default privacy schema and start sampling
-  await controller?.configure(
-    privacySchemaName: PrivacySchema.DEFAULT,
-  );
-
-  controller?.start();
 }
 
 /// An example of using the AppTask model

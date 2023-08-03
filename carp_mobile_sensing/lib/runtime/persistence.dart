@@ -7,8 +7,8 @@
 
 part of runtime;
 
-/// A persistence layer that knows how to persistently store deployment and app
-/// task information across app restart.
+/// A persistence layer that knows how to persistently store deployment and
+/// app task information across app restart.
 class Persistence {
   static const String DATABASE_NAME = 'carp';
   static const String DEPLOYMENT_TABLE_NAME = 'deployment';
@@ -16,10 +16,12 @@ class Persistence {
 
   static const String DEPLOYMENT_ID_COLUMN = 'deployment_id';
   static const String ROLENAME_COLUMN = 'device_rolename';
+  static const String DEPLOYMENT_STATUS_COLUMN = 'deployment_status';
   static const String UPDATED_AT_COLUMN = 'updated_at';
   static const String DEPLOYED_AT_COLUMN = 'deployed_at';
   static const String USER_ID_COLUMN = 'user_id';
   static const String DEPLOYMENT_COLUMN = 'deployment';
+
   static const String ID_COLUMN = 'id';
   static const String TASK_ID_COLUMN = 'task_id';
   static const String TASK_COLUMN = 'task';
@@ -50,7 +52,7 @@ class Persistence {
       onCreate: (Database db, int version) async {
         // when creating the database, create the tables
         await db.execute(
-            'CREATE TABLE $DEPLOYMENT_TABLE_NAME ($DEPLOYMENT_ID_COLUMN TEXT PRIMARY KEY, $ROLENAME_COLUMN TEXT, $UPDATED_AT_COLUMN TEXT, $DEPLOYED_AT_COLUMN TEXT, $USER_ID_COLUMN TEXT, $DEPLOYMENT_COLUMN TEXT)');
+            'CREATE TABLE $DEPLOYMENT_TABLE_NAME ($DEPLOYMENT_ID_COLUMN TEXT PRIMARY KEY, $ROLENAME_COLUMN TEXT, $DEPLOYMENT_STATUS_COLUMN INTEGER, $UPDATED_AT_COLUMN TEXT, $DEPLOYED_AT_COLUMN TEXT, $USER_ID_COLUMN TEXT, $DEPLOYMENT_COLUMN TEXT)');
         await db.execute(
             'CREATE TABLE $TASK_QUEUE_TABLE_NAME ($ID_COLUMN INTEGER PRIMARY KEY, $DEPLOYMENT_ID_COLUMN TEXT, $TASK_ID_COLUMN TEXT, $TASK_COLUMN TEXT)');
 
@@ -72,6 +74,41 @@ class Persistence {
     await database?.close();
   }
 
+  /// Get the list of all study deployments previously stored on this phone.
+  ///
+  /// Returns an empty list, if not study deployments are stored.
+  Future<List<Study>> getAllStudyDeployments() async {
+    info("$runtimeType - Getting all study deployments stored on this device.");
+    List<Study> list = [];
+    try {
+      final List<Map<String, Object?>> maps = await database?.query(
+            DEPLOYMENT_TABLE_NAME,
+            columns: [
+              DEPLOYMENT_ID_COLUMN,
+              ROLENAME_COLUMN,
+              DEPLOYMENT_STATUS_COLUMN,
+            ],
+          ) ??
+          [];
+      debug('$runtimeType - maps: $maps');
+      if (maps.isNotEmpty) {
+        for (var map in maps) {
+          final study = Study(
+            map[DEPLOYMENT_ID_COLUMN] as String,
+            map[ROLENAME_COLUMN] as String,
+          );
+          final status = map[DEPLOYMENT_STATUS_COLUMN] as int;
+          study.status = StudyStatus.values[status];
+          list.add(study);
+        }
+      }
+    } catch (exception) {
+      warning('$runtimeType - Failed to load deployments - $exception');
+    }
+
+    return list;
+  }
+
   /// Save the [deployment] persistently to a local cache.
   /// Returns `true` if successful.
   Future<bool> saveDeployment(SmartphoneDeployment deployment) async {
@@ -81,6 +118,7 @@ class Persistence {
       final Map<String, dynamic> map = {
         DEPLOYMENT_ID_COLUMN: deployment.studyDeploymentId,
         ROLENAME_COLUMN: deployment.deviceConfiguration.roleName,
+        DEPLOYMENT_STATUS_COLUMN: deployment.status.index,
         UPDATED_AT_COLUMN: DateTime.now().toUtc().toIso8601String(),
         DEPLOYED_AT_COLUMN: deployment.deployed?.toUtc().toIso8601String(),
         USER_ID_COLUMN: deployment.userId,
@@ -113,7 +151,7 @@ class Persistence {
           [];
       // debug('$runtimeType - maps: $maps');
       if (maps.isNotEmpty) {
-        String jsonString = maps[0][DEPLOYMENT_COLUMN] as String;
+        final jsonString = maps[0][DEPLOYMENT_COLUMN] as String;
         deployment = SmartphoneDeployment.fromJson(
             json.decode(jsonString) as Map<String, dynamic>);
       }

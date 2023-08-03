@@ -39,6 +39,14 @@ mixin SmartphoneProtocolExtension {
   set dataEndPoint(DataEndPoint? dataEndPoint) =>
       _data.dataEndPoint = dataEndPoint;
 
+  /// The name of a [PrivacySchema] to be used for protecting sensitive data.
+  ///
+  /// Use [PrivacySchema.DEFAULT] for the default, built-in schema.
+  /// If  not specified, no privacy schema is used and data is saved as collected.
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  String? get privacySchemaName => _data.privacySchemaName;
+  set privacySchemaName(String? name) => _data.privacySchemaName = name;
+
   void addApplicationData(String key, dynamic value) {
     _data.applicationData ??= {};
     _data.applicationData?[key] = value;
@@ -61,6 +69,12 @@ class SmartphoneApplicationData {
   /// used in the app.
   DataEndPoint? dataEndPoint;
 
+  /// The name of a [PrivacySchema].
+  ///
+  /// Use [PrivacySchema.DEFAULT] for the default, built-in privacy schema.
+  /// If  not specified, no privacy schema is used and data is saved as collected.
+  String? privacySchemaName;
+
   /// Application-specific data to be stored as part of the study protocol
   /// which will be included in all deployments of this study protocol.
   Map<String, dynamic>? applicationData;
@@ -68,6 +82,7 @@ class SmartphoneApplicationData {
   SmartphoneApplicationData({
     this.studyDescription,
     this.dataEndPoint,
+    this.privacySchemaName,
     this.applicationData,
   }) : super();
 
@@ -91,6 +106,7 @@ class SmartphoneStudyProtocol extends StudyProtocol
     required super.name,
     StudyDescription? studyDescription,
     DataEndPoint? dataEndPoint,
+    String? privacySchemaName,
   }) : super(
           description: studyDescription?.description ?? '',
         ) {
@@ -98,6 +114,7 @@ class SmartphoneStudyProtocol extends StudyProtocol
     _data = SmartphoneApplicationData(
       studyDescription: studyDescription,
       dataEndPoint: dataEndPoint,
+      privacySchemaName: privacySchemaName,
     );
   }
 

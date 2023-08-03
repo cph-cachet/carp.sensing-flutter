@@ -1,5 +1,5 @@
 /*
- * Copyright 2021-2022 Copenhagen Center for Health Technology (CACHET) at the
+ * Copyright 2021-2023 Copenhagen Center for Health Technology (CACHET) at the
  * Technical University of Denmark (DTU).
  * Use of this source code is governed by a MIT-style license that can be
  * found in the LICENSE file.
@@ -7,10 +7,27 @@
 
 part of runtime;
 
+enum ClientManagerState {
+  created,
+  configured,
+  started,
+  stopped,
+  disposed,
+}
+
 class SmartPhoneClientManager extends SmartphoneClient
     with WidgetsBindingObserver {
   static final SmartPhoneClientManager _instance = SmartPhoneClientManager._();
   NotificationController? _notificationController;
+  bool _heartbeat = true;
+  final StreamGroup<Measurement> _group = StreamGroup.broadcast();
+  ClientManagerState _state = ClientManagerState.created;
+
+  /// The runtime state of this client manager.
+  ClientManagerState get state => _state;
+
+  /// The stream of all [Measurement]s collected by this client manager.
+  Stream<Measurement> get measurements => _group.stream;
 
   /// The permissions granted to this client from the OS.
   Map<Permission, PermissionStatus>? permissions;
@@ -18,7 +35,7 @@ class SmartPhoneClientManager extends SmartphoneClient
   SmartPhoneClientManager._() {
     WidgetsFlutterBinding.ensureInitialized();
     WidgetsBinding.instance.addObserver(this);
-    CarpMobileSensing();
+    CarpMobileSensing.ensureInitialized();
   }
 
   /// Get the singleton [SmartPhoneClientManager].
@@ -26,6 +43,15 @@ class SmartPhoneClientManager extends SmartphoneClient
   /// In CARP Mobile Sensing the [SmartPhoneClientManager] is a singleton,
   /// which implies that only one client manager is used in an app.
   factory SmartPhoneClientManager() => _instance;
+
+  /// Is this client sending [Heartbeat] measurements for its studies?
+  bool get heartbeat => _heartbeat;
+
+  /// The number of studies running on this client.
+  int get studyCount => repository.length;
+
+  /// The list of studies deployed on this client manager.
+  List<Study> get studies => repository.keys.toList();
 
   @override
   DeviceController get deviceController =>
@@ -42,29 +68,36 @@ class SmartPhoneClientManager extends SmartphoneClient
       super.lookupStudyRuntime(studyDeploymentId, deviceRoleName)
           as SmartphoneDeploymentController;
 
-  /// Configure this [SmartPhoneClientManager] by specifying:
-  ///  * [deploymentService] - where to get study deployments.
-  ///      If not specified, the local [SmartphoneDeploymentService] will be used.
-  ///  * [deviceController] that handles devices connected to this client.
-  ///      If not specified, the default [DeviceController] is used.
-  ///  * [registration] - a unique device registration for this client device.
-  ///      If not specified, a [SmartphoneDeviceRegistration] is created and used.
-  ///  * [notificationController] - what [NotificationController] to use for notifications.
-  ///     Two alternatives exists; [FlutterLocalNotificationController] or [AwesomeNotificationController].
-  ///     If not specified, the [AwesomeNotificationController] is used.
-  ///  * [enableNotifications] - should notification be enabled and send to the
-  ///      user when an app task is triggered? Default is true.
-  ///  * [askForPermissions] - automatically ask for permissions for all sampling
-  ///      packages at once. Default to true. If you want the app to handle
-  ///      permissions, set this to false.
+  /// Configure this [SmartPhoneClientManager].
+  ///
+  /// If the [deploymentService] is not specified, the local
+  /// [SmartphoneDeploymentService] will be used.
+  /// If the [deviceController] is not specified, the default [DeviceController]
+  /// is used.
+  /// The [registration] is a unique device registration for this client device.
+  /// If not specified, a [SmartphoneDeviceRegistration] is created and used.
+  ///
+  /// If [enableNotifications] is true (default), notifications is created an [AppTask]
+  /// is triggered? The [notificationController] specifies what [NotificationController] to
+  /// use for notifications. Two alternatives exists:
+  /// [FlutterLocalNotificationController] or [AwesomeNotificationController] (default).
+  ///
+  /// If [askForPermissions] is true (default), this client manager will
+  /// automatically ask for permissions for all sampling packages at once.
+  /// If you want the app to handle permissions itself, set this to false.
+  ///
+  /// If [heartbeat] is true, a [Heartbeat] data point will be uploaded for all
+  /// devices (including the phone) in all studies running on this client
+  /// (every 5 minutes).
   @override
   Future<void> configure({
     DeploymentService? deploymentService,
     DeviceDataCollectorFactory? deviceController,
     DeviceRegistration? registration,
-    NotificationController? notificationController,
     bool enableNotifications = true,
+    NotificationController? notificationController,
     bool askForPermissions = true,
+    bool heartbeat = true,
   }) async {
     // initialize misc device settings
     await DeviceInfo().init();
@@ -83,10 +116,13 @@ class SmartPhoneClientManager extends SmartphoneClient
     );
 
     // initialize default services, if not specified
-    _notificationController =
-        notificationController ?? AwesomeNotificationController();
     deploymentService ??= SmartphoneDeploymentService();
     deviceController ??= DeviceController();
+    if (enableNotifications) {
+      _notificationController =
+          notificationController ?? AwesomeNotificationController();
+    }
+    _heartbeat = heartbeat;
 
     // initialize the app task controller singleton
     await AppTaskController()
@@ -107,13 +143,15 @@ class SmartPhoneClientManager extends SmartphoneClient
     print('===========================================================');
     print('  CARP Mobile Sensing (CAMS) - $runtimeType');
     print('===========================================================');
-    print('              device : ${registration.deviceDisplayName}');
-    print('  deployment service : ${this.deploymentService}');
-    print('   device controller : ${this.deviceController}');
-    print('   available devices : ${this.deviceController.devicesToString()}');
+    print('             device : ${registration.deviceDisplayName}');
+    print(' deployment service : ${this.deploymentService}');
+    print('  device controller : ${this.deviceController}');
+    print('  available devices : ${this.deviceController.devicesToString()}');
     print(
-        '         persistence : ${Persistence().databaseName.split('/').last}');
+        '        persistence : ${Persistence().databaseName.split('/').last}');
     print('===========================================================');
+
+    _state = ClientManagerState.configured;
   }
 
   @override
@@ -130,6 +168,7 @@ class SmartPhoneClientManager extends SmartphoneClient
     final controller =
         SmartphoneDeploymentController(deploymentService!, deviceController);
     repository[study] = controller;
+    _group.add(controller.measurements);
 
     await controller.addStudy(
       study,
@@ -141,21 +180,21 @@ class SmartPhoneClientManager extends SmartphoneClient
   }
 
   /// Create and add a study based on the [protocol] which needs to be executed on
-  /// this client. This is similar to the [addStudy] method, but the [protocol]
-  /// is deployed immediately.
+  /// this client.
+  ///
+  /// This is similar to the [addStudy] method, but the [protocol] is deployed
+  /// immediately.
   ///
   /// Returns the newly added study.
   Future<Study> addStudyProtocol(StudyProtocol protocol) async {
     assert(deploymentService != null,
         'Deployment Service has not been configured. Call configure() first.');
 
-    StudyDeploymentStatus status =
-        await deploymentService!.createStudyDeployment(protocol);
-    Study study = await addStudy(
+    final status = await deploymentService!.createStudyDeployment(protocol);
+    return await addStudy(
       status.studyDeploymentId,
       status.primaryDeviceStatus!.device.roleName,
     );
-    return study;
   }
 
   @override
@@ -186,7 +225,7 @@ class SmartPhoneClientManager extends SmartphoneClient
     }
   }
 
-  /// Called when this client manager is being (re-)activated by the OS
+  /// Called when this client manager is being (re-)activated by the OS.
   ///
   /// Implementations of this method should start with a call to the inherited
   /// method, as in `super.activate()`.
@@ -195,16 +234,73 @@ class SmartPhoneClientManager extends SmartphoneClient
   void activate() {}
 
   /// Called when this client manager is being deactivated and potentially
-  /// stopped by the OS
+  /// stopped by the OS.
   ///
   /// Implementations of this method should start with a call to the inherited
   /// method, as in `super.deactivate()`.
   @protected
   @mustCallSuper
   Future<void> deactivate() async {
-    for (var study in repository.keys) {
+    for (var study in studies) {
       await getStudyRuntime(study)?.saveDeployment();
     }
+  }
+
+  /// Start all studies in this client manager.
+  void start() {
+    for (var study in studies) {
+      getStudyRuntime(study)?.start();
+    }
+    _state = ClientManagerState.started;
+  }
+
+  /// Stop all studies in this client manager.
+  Future<void> stop() async {
+    for (var study in studies) {
+      await getStudyRuntime(study)?.stop();
+    }
+    _state = ClientManagerState.stopped;
+  }
+
+  /// Restore and resume all study deployments which were running on this
+  /// client manager when the app was killed / stopped (e.g., by the OS).
+  ///
+  /// This method is useful on app restart, since it will restore and
+  /// resume all sampling on this client.
+  /// Data sampling will be resumed for studies which were running
+  /// (i.e., having [StudyStatus.Running]) when the app was closed.
+  ///
+  /// Returns the number of restored studies, if any (may be zero).
+  /// To access a list of resumed studies, use [studies] after this
+  /// resume method has ended.
+  Future<int> resume() async {
+    info('$runtimeType - restoring all study deployments');
+    var persistentStudies = await Persistence().getAllStudyDeployments();
+
+    debug('$runtimeType - studies: $persistentStudies');
+
+    for (var study in persistentStudies) {
+      debug('$runtimeType - study status: ${study.status}');
+
+      // only add deployed, running or stopped studies
+      if (study.status == StudyStatus.Deployed ||
+          study.status == StudyStatus.Running ||
+          study.status == StudyStatus.Stopped) {
+        var newStudy =
+            await addStudy(study.studyDeploymentId, study.deviceRoleName);
+        newStudy.status = study.status;
+        final controller = getStudyRuntime(study);
+
+        // deploy the study using the cached deployment
+        await controller?.tryDeployment(useCached: true);
+        await controller?.configure();
+
+        // if this study was running when the app was closed, restart sampling
+        if (study.status == StudyStatus.Running) controller?.start();
+      }
+    }
+    _state = ClientManagerState.started;
+    return studyCount;
   }
 
   /// Called when this client is disposed permanently.
@@ -223,10 +319,12 @@ class SmartPhoneClientManager extends SmartphoneClient
   @mustCallSuper
   void dispose() {
     deactivate();
-    for (var study in repository.keys) {
+    for (var study in studies) {
       getStudyRuntime(study)?.dispose();
     }
+    _group.close();
     Persistence().close();
+    _state = ClientManagerState.disposed;
   }
 
   /// Called when the system puts the app in the background or returns

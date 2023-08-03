@@ -7,18 +7,22 @@
 
 part of carp_context_package;
 
-/// A manger that knows how to configure and get location.
+/// A manger that knows how to get location information.
 /// Provide access to location data while the app is in the background.
 ///
 /// Use as a singleton:
 ///
 ///  `LocationManager()...`
 ///
-/// Note that this [LocationManager] **does not** handle location permissions.
-/// This should be handled and granted on an application level before using
-/// probes that depend on location.
+/// Note that this [LocationManager] **tries** to handle location permissions
+/// during its configuration (via the [configure] method) and the [hasPermission]
+/// and [requestPermission] methods.
+/// **However**, it is much better - and also recommended by both Apple and
+/// Google - to handle permissions on an application level and show the location
+/// permission dialogue to the user **before** using probes that depend on location.
 ///
-/// This version of the location manager is based on the `location` plugin.
+/// This version of the location manager is based on the [location](https://pub.dev/packages/location)
+/// plugin.
 class LocationManager {
   static final LocationManager _instance = LocationManager._();
   LocationManager._();
@@ -26,7 +30,7 @@ class LocationManager {
   /// Get the singleton [LocationManager] instance
   factory LocationManager() => _instance;
 
-  Location? _lastKnownLocation;
+  Location _lastKnownLocation = Location(latitude: 55.7944, longitude: 12.4463);
   bool _enabled = false, _configuring = false;
   final _provider = location.Location();
 
@@ -127,8 +131,7 @@ class LocationManager {
       Location.fromLocationData(await _provider.getLocation());
 
   /// Get the last known location.
-  Future<Location> getLastKnownLocation() async =>
-      _lastKnownLocation ?? await getLocation();
+  Future<Location> getLastKnownLocation() async => _lastKnownLocation;
 
   /// Returns a stream of [Location] objects.
   /// Throws an error if the app has no permission to access location.

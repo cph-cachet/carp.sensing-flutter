@@ -1,3 +1,8 @@
+## 1.1.3
+
+* added support for restoring a `SmartPhoneClientManager` on app restart
+* `privacySchemaName` is moved to be part of the `SmartphoneStudyProtocol` configuration.
+
 ## 1.1.2
 
 > Note: This release has breaking changes.

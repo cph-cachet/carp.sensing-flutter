@@ -35,6 +35,9 @@ class SmartphoneDeployment extends PrimaryDeviceDeployment
   /// data on behalf of another user. For example, a parent on behalf of a child.
   String? userId;
 
+  /// The status of this study deployment.
+  StudyStatus status = StudyStatus.DeploymentNotStarted;
+
   /// Create a new [SmartphoneDeployment].
   ///
   /// [studyDeploymentId] is a unique id for this deployment. If not specified,
@@ -52,11 +55,13 @@ class SmartphoneDeployment extends PrimaryDeviceDeployment
     this.userId,
     StudyDescription? studyDescription,
     DataEndPoint? dataEndPoint,
+    String? privacySchemaName,
   }) {
     _studyDeploymentId = studyDeploymentId ?? const Uuid().v1();
     _data = SmartphoneApplicationData(
       studyDescription: studyDescription,
       dataEndPoint: dataEndPoint,
+      privacySchemaName: privacySchemaName,
     );
   }
 
@@ -86,6 +91,7 @@ class SmartphoneDeployment extends PrimaryDeviceDeployment
           SmartphoneApplicationData.fromJson(deployment.applicationData!);
       _data.studyDescription = data.studyDescription;
       _data.dataEndPoint = data.dataEndPoint;
+      _data.privacySchemaName = data.privacySchemaName;
       _data.applicationData = data.applicationData;
     } else {
       _data.applicationData = deployment.applicationData ?? {};
@@ -120,6 +126,7 @@ class SmartphoneDeployment extends PrimaryDeviceDeployment
     _studyDeploymentId = studyDeploymentId ?? const Uuid().v1();
     _data.studyDescription = protocol.studyDescription;
     _data.dataEndPoint = protocol.dataEndPoint;
+    _data.privacySchemaName = protocol.privacySchemaName;
     _data.applicationData = protocol._data.applicationData;
   }
 
@@ -146,6 +153,7 @@ class SmartphoneDeployment extends PrimaryDeviceDeployment
     _studyDeploymentId = studyDeploymentId ?? const Uuid().v1();
     _data.studyDescription = protocol.studyDescription;
     _data.dataEndPoint = protocol.dataEndPoint;
+    _data.privacySchemaName = protocol.privacySchemaName;
     _data.applicationData = protocol._data.applicationData;
   }
 
