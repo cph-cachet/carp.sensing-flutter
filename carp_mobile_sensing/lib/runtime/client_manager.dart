@@ -174,7 +174,7 @@ class SmartPhoneClientManager extends SmartphoneClient
       study,
       registration!,
     );
-    info('Adding study to $runtimeType - $study');
+    info('Adding study to $runtimeType. $study');
 
     return study;
   }

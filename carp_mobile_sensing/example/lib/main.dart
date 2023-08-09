@@ -49,7 +49,7 @@ class Console extends State<ConsolePage> {
     sensing = Sensing();
     Settings().init().then((_) {
       sensing.init().then((_) {
-        log('Setting up study : ${SmartPhoneClientManager().studies[0]}');
+        // log('Setting up study : ${SmartPhoneClientManager().studies[0]}');
         log('Client state : ${SmartPhoneClientManager().state}');
       });
     });
@@ -71,7 +71,8 @@ class Console extends State<ConsolePage> {
         child: StreamBuilder(
           stream: SmartPhoneClientManager().measurements,
           builder: (context, AsyncSnapshot<Measurement> snapshot) {
-            if (snapshot.hasData) _log += '${toJsonString(snapshot.data!)}\n';
+            if (snapshot.hasData)
+              _log += ' > ${snapshot.data?.data.jsonType}\n';
             return Text(_log);
           },
         ),
@@ -114,7 +115,10 @@ class Console extends State<ConsolePage> {
 /// This class handles sensing logic.
 ///
 /// This example is useful for creating a Business Logical Object (BLOC) in a
-/// Flutter app. See e.g. the CARP Mobile Sensing App.
+/// Flutter app.
+///
+/// For a much more elaborate example of a app using CAMS, see the CARP Mobile
+/// Sensing App at https://github.com/cph-cachet/carp.sensing-flutter/tree/master/apps/carp_mobile_sensing_app
 class Sensing {
   /// Initialize sensing.
   Future<void> init() async {
@@ -123,14 +127,17 @@ class Sensing {
     // Create and configure a client manager for this phone.
     await SmartPhoneClientManager().configure();
 
-    // Get the protocol.
+    // Get the protocol. See below for how to configure a study protocol.
     final protocol =
         await LocalStudyProtocolManager().getStudyProtocol('ignored');
 
-    // Create a study based on the protocol, and start sampling.
-    SmartPhoneClientManager()
-        .addStudyProtocol(protocol)
-        .then((_) => SmartPhoneClientManager().start());
+    // Create a study based on the protocol.
+    SmartPhoneClientManager().addStudyProtocol(protocol);
+
+    // // Create a study based on the protocol, and start sampling.
+    // SmartPhoneClientManager()
+    //     .addStudyProtocol(protocol)
+    //     .then((_) => SmartPhoneClientManager().start());
 
     // Listening on the data stream and print them as json.
     SmartPhoneClientManager()
@@ -143,13 +150,13 @@ class Sensing {
       SmartPhoneClientManager().state == ClientManagerState.started;
 
   /// Start sensing
-  void start() async => SmartPhoneClientManager().start();
+  void start() => SmartPhoneClientManager().start();
 
   /// Stop sensing
-  void stop() async => SmartPhoneClientManager().stop();
+  void stop() => SmartPhoneClientManager().stop();
 
   /// Dispose sensing
-  void dispose() async => SmartPhoneClientManager().dispose();
+  void dispose() => SmartPhoneClientManager().dispose();
 }
 
 /// This is a simple local [StudyProtocolManager].
@@ -186,6 +193,14 @@ class LocalStudyProtocolManager implements StudyProtocolManager {
         ]),
         phone);
 
+    // Collect device info only once, when this study is deployed.
+    protocol.addTaskControl(
+      OneTimeTrigger(),
+      BackgroundTask(
+          measures: [Measure(type: DeviceSamplingPackage.DEVICE_INFORMATION)]),
+      phone,
+    );
+
     // Add background measures from the [DeviceSamplingPackage] and
     // [SensorSamplingPackage] sampling packages.
     //
@@ -206,31 +221,15 @@ class LocalStudyProtocolManager implements StudyProtocolManager {
     );
 
     // Collect IMU data every 10 secs for 1 sec.
-    // protocol.addTaskControl(
-    //   PeriodicTrigger(period: Duration(seconds: 10)),
-    //   BackgroundTask(
-    //     measures: [
-    //       Measure(type: CarpDataTypes.ACCELERATION_TYPE_NAME),
-    //       Measure(type: CarpDataTypes.ROTATION_TYPE_NAME),
-    //     ],
-    //     duration: IsoDuration(seconds: 1),
-    //   ),
-    //   phone,
-    // );
-
-    // // Collect device info only once
-    // protocol.addTaskControl(
-    //   OneTimeTrigger(),
-    //   BackgroundTask()
-    //     ..addMeasure(Measure(type: DeviceSamplingPackage.DEVICE_INFORMATION)),
-    //   phone,
-    // );
-
-    // Collect device info periodically
     protocol.addTaskControl(
-      PeriodicTrigger(period: const Duration(seconds: 30)),
+      PeriodicTrigger(period: const Duration(seconds: 10)),
       BackgroundTask(
-          measures: [Measure(type: DeviceSamplingPackage.DEVICE_INFORMATION)]),
+        measures: [
+          Measure(type: CarpDataTypes.ACCELERATION_TYPE_NAME),
+          Measure(type: CarpDataTypes.ROTATION_TYPE_NAME),
+        ],
+        duration: const IsoDuration(seconds: 1),
+      ),
       phone,
     );
 
@@ -313,7 +312,7 @@ class LocalStudyProtocolManager implements StudyProtocolManager {
       AppTask(
         type: BackgroundSensingUserTask.ONE_TIME_SENSING_TYPE,
         title: "Elapsed Time - App Task",
-        measures: [Measure(type: DeviceSamplingPackage.TIMEZONE)],
+        measures: [Measure(type: DeviceSamplingPackage.DEVICE_INFORMATION)],
         notification: true,
       ),
       phone,
