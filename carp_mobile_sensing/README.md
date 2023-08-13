@@ -129,24 +129,24 @@ In CAMS, a sensing protocol is configured in a [`SmartphoneStudyProtocol`](https
 Below is a simple example of how to set up a protocol that samples step counts, ambient light, screen events, and battery events.
 
 ```dart
-  final phone = Smartphone();
-  final protocol = SmartphoneStudyProtocol(
-    ownerId: 'abc@dtu.dk',
-    name: 'Tracking steps, light, screen, and battery',
-    dataEndPoint: SQLiteDataEndPoint(),
-  )
-    ..addPrimaryDevice(phone)
-    ..addTaskControl(
-      DelayedTrigger(delay: const Duration(seconds: 10)),
-      BackgroundTask(measures: [
-        Measure(type: SensorSamplingPackage.STEP_COUNT),
-        Measure(type: SensorSamplingPackage.AMBIENT_LIGHT),
-        Measure(type: DeviceSamplingPackage.SCREEN_EVENT),
-        Measure(type: DeviceSamplingPackage.BATTERY_STATE),
-      ]),
-      phone,
-      Control.Start,
-    );
+final phone = Smartphone();
+final protocol = SmartphoneStudyProtocol(
+  ownerId: 'abc@dtu.dk',
+  name: 'Tracking steps, light, screen, and battery',
+  dataEndPoint: SQLiteDataEndPoint(),
+)
+  ..addPrimaryDevice(phone)
+  ..addTaskControl(
+    DelayedTrigger(delay: const Duration(seconds: 10)),
+    BackgroundTask(measures: [
+      Measure(type: SensorSamplingPackage.STEP_COUNT),
+      Measure(type: SensorSamplingPackage.AMBIENT_LIGHT),
+      Measure(type: DeviceSamplingPackage.SCREEN_EVENT),
+      Measure(type: DeviceSamplingPackage.BATTERY_STATE),
+    ]),
+    phone,
+    Control.Start,
+  );
 ```
 
 The above example defines a simple [`SmartphoneStudyProtocol`](https://pub.dev/documentation/carp_mobile_sensing/latest/domain/SmartphoneStudyProtocol-class.html) which will use a [`Smartphone`](https://pub.dev/documentation/carp_core/latest/carp_core_common/Smartphone-class.html) as a primary device for data collection and store data in a SQLite database locally on the phone using a [`SQLiteDataEndPoint`](https://pub.dev/documentation/carp_mobile_sensing/latest/domain/SQLiteDataEndPoint-class.html).
@@ -162,22 +162,22 @@ In CAMS, we talk about a study protocol being 'deployed' on a primary device, li
 However, if we want to define and deploy a study locally on the phone, this can be done using the [`SmartPhoneClientManager`](https://pub.dev/documentation/carp_mobile_sensing/latest/runtime/SmartPhoneClientManager-class.html) singleton.
 
 ```dart
-  // Create and configure a client manager for this phone.
-  await SmartPhoneClientManager().configure();
+// Create and configure a client manager for this phone.
+await SmartPhoneClientManager().configure();
 
-  // Create a study based on the protocol.
-  SmartPhoneClientManager().addStudyProtocol(protocol);
+// Create a study based on the protocol.
+SmartPhoneClientManager().addStudyProtocol(protocol);
 
-  /// Start sampling.
-  SmartPhoneClientManager().start();
+/// Start sampling.
+SmartPhoneClientManager().start();
 ```
 
 In this example, the client manager is configured, the protocol is added, and sampling is started. This can actually be done in one line of code, like this:
 
 ```dart
-  SmartPhoneClientManager().configure().then((_) => SmartPhoneClientManager()
-      .addStudyProtocol(protocol)
-      .then((_) => SmartPhoneClientManager().start()));
+SmartPhoneClientManager().configure().then((_) => SmartPhoneClientManager()
+    .addStudyProtocol(protocol)
+    .then((_) => SmartPhoneClientManager().start()));
 ```
 
 This will start the sampling, as specified in the protocol, and data is stored in the database.
@@ -187,10 +187,10 @@ This will start the sampling, as specified in the protocol, and data is stored i
 The generated data can be accessed and used in the app. Access to data is done by listening on the [`measurements`](https://pub.dev/documentation/carp_mobile_sensing/latest/runtime/SmartPhoneClientManager/measurements.html) stream from the client manager, like this:
 
 ```dart
-  // Listening on the data stream and print them as json.
-  SmartPhoneClientManager()
-      .measurements
-      .listen((measurement) => print(toJsonString(measurement)));
+// Listening on the data stream and print them as json.
+SmartPhoneClientManager()
+    .measurements
+    .listen((measurement) => print(toJsonString(measurement)));
 ```
 
 Note that the `measurements` is a Dart [Stream](https://api.dart.dev/stable/3.0.7/dart-async/Stream-class.html) and you can hence apply all the usual stream operations to the collected measurements, including sorting, mapping, reducing, and transforming the measurements.

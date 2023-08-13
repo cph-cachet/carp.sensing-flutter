@@ -1,9 +1,15 @@
 # CARP eSense Sampling Package
 
+[![pub package](https://img.shields.io/pub/v/carp_esense_package.svg)](https://pub.dartlang.org/packages/carp_esense_package)
+[![pub points](https://img.shields.io/pub/points/carp_esense_package?color=2E8B57&label=pub%20points)](https://pub.dev/packages/carp_esense_package/score)
+[![github stars](https://img.shields.io/github/stars/cph-cachet/carp.sensing-flutter.svg?style=flat&logo=github&colorB=deeppink&label=stars)](https://github.com/cph-cachet/carp.sensing-flutter)
+[![MIT License](https://img.shields.io/badge/license-MIT-purple.svg)](https://opensource.org/licenses/MIT)
+[![arXiv](https://img.shields.io/badge/arXiv-2006.11904-green.svg)](https://arxiv.org/abs/2006.11904)
+
 This library contains a sampling package for
 the [`carp_mobile_sensing`](https://pub.dartlang.org/packages/carp_mobile_sensing) framework
 to work with the [eSense](https://www.esense.io) earable computing platform.
-This packages supports sampling of the following [`Measure`](https://pub.dev/documentation/carp_core/latest/carp_core_protocols/Measure-class.html) types (note that the package defines its own namespace of `dk.cachet.carp.esense`):
+This packages supports sampling of the following [`Measure`](https://github.com/cph-cachet/carp.sensing-flutter/wiki/A.-Measure-Types) types (note that the package defines its own namespace of `dk.cachet.carp.esense`):
 
 * `dk.cachet.carp.esense.button` : eSense button pressed / released events
 * `dk.cachet.carp.esense.sensor` : eSense sensor (accelerometer & gyroscope) events.
@@ -17,7 +23,7 @@ See the [CARP Mobile Sensing App](https://github.com/cph-cachet/carp.sensing-flu
 For Flutter plugins for other CARP products, see [CARP Mobile Sensing in Flutter](https://github.com/cph-cachet/carp.sensing-flutter).
 
 If you're interested in writing you own sampling packages for CARP, see the description on
-how to [extend](https://github.com/cph-cachet/carp.sensing-flutter/wiki/4.-Extending-CARP-Mobile-Sensing) CARP on the wiki.
+how to [extend](https://github.com/cph-cachet/carp.sensing-flutter/wiki/5.-Extending-CARP-Mobile-Sensing) CARP on the wiki.
 
 ## Installing
 
@@ -86,54 +92,53 @@ import 'package:carp_mobile_sensing/carp_mobile_sensing.dart';
 import 'package:carp_esense_package/esense.dart';
 `````
 
-Collection of eSense measurements can be added to a study protocol like this.
-
-```dart
-  // Create a study protocol
-  StudyProtocol protocol = StudyProtocol(
-    ownerId: 'owner@dtu.dk',
-    name: 'eSense Sensing Example',
-  );
-
-  // define which devices are used for data collection - both phone and eSense
-  var phone = Smartphone();
-  var eSense = ESenseDevice(
-    deviceName: 'eSense-0223',
-    samplingRate: 10,
-  );
-
-  protocol
-    ..addPrimaryDevice(phone)
-    ..addConnectedDevice(eSense);
-
-  // Add a background task that immediately starts collecting step counts,
-  //ambient light, screen activity, and battery level from the phone.
-  protocol.addTaskControl(
-      ImmediateTrigger(),
-      BackgroundTask(measures: [
-        Measure(type: SensorSamplingPackage.STEP_COUNT),
-        Measure(type: SensorSamplingPackage.AMBIENT_LIGHT),
-        Measure(type: DeviceSamplingPackage.SCREEN_EVENT),
-        Measure(type: DeviceSamplingPackage.BATTERY_STATE),
-      ]),
-      phone);
-
-  // Add a background task that immediately starts collecting eSense button and
-  // sensor events from the eSense device.
-  protocol.addTaskControl(
-      ImmediateTrigger(),
-      BackgroundTask(measures: [
-        Measure(type: ESenseSamplingPackage.ESENSE_BUTTON),
-        Measure(type: ESenseSamplingPackage.ESENSE_SENSOR),
-      ]),
-      eSense);
-````
-
-Before executing a study with an eSense measure, register this package in the
-[SamplingPackageRegistry](https://pub.dartlang.org/documentation/carp_mobile_sensing/latest/runtime/SamplingPackageRegistry.html).
+Before executing a study with an eSense measure, register this package in the [SamplingPackageRegistry](https://pub.dev/documentation/carp_mobile_sensing/latest/runtime/SamplingPackageRegistry-class.html).
 
 `````dart
 SamplingPackageRegistry().register(ESenseSamplingPackage());
 `````
+
+Collection of eSense measurements can be added to a study protocol like this.
+
+```dart
+// Create a study protocol
+StudyProtocol protocol = StudyProtocol(
+  ownerId: 'owner@dtu.dk',
+  name: 'eSense Sensing Example',
+);
+
+// define which devices are used for data collection - both phone and eSense
+var phone = Smartphone();
+var eSense = ESenseDevice(
+  deviceName: 'eSense-0223',
+  samplingRate: 10,
+);
+
+protocol
+  ..addPrimaryDevice(phone)
+  ..addConnectedDevice(eSense);
+
+// Add a background task that immediately starts collecting step counts,
+//ambient light, screen activity, and battery level from the phone.
+protocol.addTaskControl(
+    ImmediateTrigger(),
+    BackgroundTask(measures: [
+      Measure(type: SensorSamplingPackage.STEP_COUNT),
+      Measure(type: SensorSamplingPackage.AMBIENT_LIGHT),
+      Measure(type: DeviceSamplingPackage.SCREEN_EVENT),
+      Measure(type: DeviceSamplingPackage.BATTERY_STATE),
+    ]),
+    phone);
+
+// Add a background task that immediately starts collecting eSense button and
+// sensor events from the eSense device.
+protocol.addTaskControl(
+    ImmediateTrigger(),
+    BackgroundTask(measures: [
+      Measure(type: ESenseSamplingPackage.ESENSE_BUTTON),
+      Measure(type: ESenseSamplingPackage.ESENSE_SENSOR),
+    ]),
+    eSense);
+````
 
 > **NOTE** that the eSense device must be paired with the phone via BLE **before** CAMS can connect to it.

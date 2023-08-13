@@ -116,6 +116,7 @@ class Sensing {
       bloc.deviceRolename!,
     );
     await controller?.tryDeployment(useCached: bloc.useCachedStudyDeployment);
+    await controller?.configure();
 
     // Listen on the measurements stream and print them as json.
     SmartPhoneClientManager()
