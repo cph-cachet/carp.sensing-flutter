@@ -142,17 +142,17 @@ class SmartphoneDeploymentController extends StudyRuntime<DeviceRegistration> {
   /// Must be called after a deployment is ready using [tryDeployment] and
   /// before [start] is called.
   ///
-  /// A number of optional parameters can be specified:
+  /// The [dataEndPoint] parameter is a custom [DataEndPoint] specifying where to save
+  /// or upload data. If not specified, the endpoint specified in the study deployment
+  /// ([deployment.dataEndPoint]) which originates from the study protocol is used.
+  /// If no data endpoint is specified in the study protocol either, then no data
+  /// management is done, but sensing  can still be started. This is useful for
+  /// apps that wants to use the framework for in-app consumption of sensing
+  /// events without saving the data.
   ///
-  ///    * [dataEndPoint] - A specific [DataEndPoint] specifying where to save or upload data.
-  ///      If not specified, the [deployment.dataEndPoint] is used.
-  ///      If no data endpoint is found, then no data management
-  ///      is done, but sensing can still be started. This is useful for apps
-  ///      which wants to use the framework for in-app consumption of sensing
-  ///      events without saving the data.
-  ///    * [transformer] - a generic [DataTransformer] function which transform
-  ///      each collected measurement. If not specified, a 1:1 mapping is done,
-  ///      i.e. no transformation.
+  /// The [transformer] is a generic [DataTransformer] function which transform
+  /// each collected measurement. If not specified, a 1:1 mapping is done,
+  /// i.e. no transformation.
   Future<void> configure({
     DataEndPoint? dataEndPoint,
     DataTransformer? transformer,

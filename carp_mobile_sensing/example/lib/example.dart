@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 Copenhagen Center for Health Technology (CACHET) at the
+ * Copyright 2019-2023 Copenhagen Center for Health Technology (CACHET) at the
  * Technical University of Denmark (DTU).
  * Use of this source code is governed by a MIT-style license that can be
  * found in the LICENSE file.
@@ -10,19 +10,18 @@ import 'dart:convert';
 
 import 'package:carp_core/carp_core.dart';
 import 'package:carp_mobile_sensing/carp_mobile_sensing.dart';
+import 'package:carp_serializable/carp_serializable.dart';
 import 'package:iso_duration_parser/iso_duration_parser.dart';
 
 /// This is an example of how to set up a the most minimal study.
-/// Used in the example app.
-Future<void> init_sensing() async {
-  // Create and configure a client manager for this phone.
-  await SmartPhoneClientManager().configure();
-
+/// Used in the README file.
+Future<void> minimalExample() async {
   // Create a protocol.
   final phone = Smartphone();
   final protocol = SmartphoneStudyProtocol(
     ownerId: 'AB',
-    name: 'Track patient movement',
+    name: 'Tracking steps, light, screen, and battery',
+    dataEndPoint: SQLiteDataEndPoint(),
   )
     ..addPrimaryDevice(phone)
     ..addTaskControl(
@@ -37,13 +36,32 @@ Future<void> init_sensing() async {
       Control.Start,
     );
 
-  // Create a study based on the protocol, and start sampling.
-  SmartPhoneClientManager()
-      .addStudyProtocol(protocol)
-      .then((_) => SmartPhoneClientManager().start());
+  // Create and configure a client manager for this phone.
+  await SmartPhoneClientManager().configure();
+
+  // Create a study based on the protocol.
+  SmartPhoneClientManager().addStudyProtocol(protocol);
+
+  /// Start sampling.
+  SmartPhoneClientManager().start();
 
   // Listening on the data stream and print them as json.
-  SmartPhoneClientManager().measurements.listen((data) => print(data));
+  SmartPhoneClientManager()
+      .measurements
+      .listen((measurement) => print(toJsonString(measurement)));
+
+  // Alternatively: do it all in one line of code....!
+  // Create and configure a client manager for this phone, add the protocol,
+  // and start sampling data.
+  SmartPhoneClientManager().configure().then((_) => SmartPhoneClientManager()
+      .addStudyProtocol(protocol)
+      .then((_) => SmartPhoneClientManager().start()));
+
+  // Stop sampling again.
+  SmartPhoneClientManager().stop();
+
+  // Dispose the client. Can not be used anymore.
+  SmartPhoneClientManager().dispose();
 }
 
 /// This is an example of how to set up a the most minimal study
@@ -400,7 +418,7 @@ void example_4() async {
   print(deployment);
 }
 
-void protocol_example() async {
+void protocolExample() async {
   // Create a protocol. Note that the [id] is not used for anything.
   SmartphoneStudyProtocol protocol = SmartphoneStudyProtocol(
       ownerId: 'AB',
@@ -453,13 +471,13 @@ void protocol_example() async {
 
   // Collect IMU data every 10 secs for 1 sec.
   protocol.addTaskControl(
-    PeriodicTrigger(period: Duration(seconds: 10)),
+    PeriodicTrigger(period: const Duration(seconds: 10)),
     BackgroundTask(
       measures: [
         Measure(type: CarpDataTypes.ACCELERATION_TYPE_NAME),
         Measure(type: CarpDataTypes.ROTATION_TYPE_NAME),
       ],
-      duration: IsoDuration(seconds: 1),
+      duration: const IsoDuration(seconds: 1),
     ),
     phone,
   );

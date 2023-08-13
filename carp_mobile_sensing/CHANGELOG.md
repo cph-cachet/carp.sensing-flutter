@@ -2,6 +2,7 @@
 
 * added support for restoring a `SmartPhoneClientManager` on app restart
 * `privacySchemaName` is moved to be part of the `SmartphoneStudyProtocol` configuration.
+* simplification of API so that a simple local study can be configured, initialized, and started in one statement (without the need for understanding the whole deployment architecture).
 
 ## 1.1.2
 

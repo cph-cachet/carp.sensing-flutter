@@ -93,10 +93,40 @@ class SmartphoneApplicationData {
 
 /// A description of how a study is to be executed on a smartphone.
 ///
-/// A [SmartphoneStudyProtocol] defining the primary device ([PrimaryDeviceConfiguration])
-/// responsible for aggregating data (typically this phone), the optional
-/// devices ([DeviceConfiguration]) connected to the primary device,
-/// and the [Trigger]'s which lead to data collection on said devices.
+/// A study protocol defines how a study is to be executed, defining the type(s) of
+/// primary device(s) ([PrimaryDeviceConfiguration]) responsible for
+/// aggregating data, the optional devices ([DeviceConfiguration]) connected
+/// to them, and the [TaskControl]'s which lead to data collection on
+/// said devices.
+///
+/// A simple study protocol can be specified like this:
+///
+/// ```dart
+/// // Create a study protocol storing data in a local SQLite database.
+/// SmartphoneStudyProtocol protocol = SmartphoneStudyProtocol(
+///   ownerId: 'abc@dtu.dk',
+///   name: 'Track patient movement',
+///   dataEndPoint: SQLiteDataEndPoint(),
+/// );
+///
+/// // Define which devices are used for data collection.
+/// // In this case, its only this smartphone.
+/// Smartphone phone = Smartphone();
+/// protocol.addPrimaryDevice(phone);
+///
+/// // Automatically collect step count, ambient light, screen activity, and
+/// // battery level. Sampling is delaying by 10 seconds.
+/// protocol.addTaskControl(
+///   ImmediateTrigger(),
+///   BackgroundTask(measures: [
+///     Measure(type: SensorSamplingPackage.STEP_COUNT),
+///     Measure(type: SensorSamplingPackage.AMBIENT_LIGHT),
+///     Measure(type: DeviceSamplingPackage.SCREEN_EVENT),
+///     Measure(type: DeviceSamplingPackage.BATTERY_STATE),
+///   ]),
+///   phone,
+/// );
+/// ```
 @JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
 class SmartphoneStudyProtocol extends StudyProtocol
     with SmartphoneProtocolExtension {

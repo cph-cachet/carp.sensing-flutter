@@ -114,16 +114,14 @@ There is also a range of different [examples](https://github.com/cph-cachet/carp
 
 However, the [CARP Mobile Sensing App](https://github.com/cph-cachet/carp.sensing-flutter/tree/master/apps/carp_mobile_sensing_app) provides a **MUCH** better example of how to use the framework in a Flutter BLoC architecture, including good documentation of how to do this.
 
-Below is a small primer in the use of CAMS.
+Below is a small primer in the use of CAMS for a very simple sampling study running locally on the phone. This example is similar to the [example app](https://github.com/cph-cachet/carp.sensing-flutter/blob/master/carp_mobile_sensing/example/lib/main.dart) app.
 
 Following [`carp_core`](https://pub.dev/documentation/carp_core/latest/), a CAMS study can be configured, deployed, executed, and used in different steps:
 
 1. Define a [`SmartphoneStudyProtocol`](https://pub.dev/documentation/carp_mobile_sensing/latest/domain/SmartphoneStudyProtocol-class.html).
-2. Deploy this protocol to a [`DeploymentService`](https://pub.dev/documentation/carp_core/latest/carp_core_deployment/DeploymentService-class.html).
-3. Get a study deployment for the phone and start executing this study deployment using a [`SmartPhoneClientManager`](https://pub.dev/documentation/carp_mobile_sensing/latest/runtime/SmartPhoneClientManager-class.html).
-4. Use the generated data (called `measurements`) locally in the app or specify how and where to store or upload it using a [`DataEndPoint`](https://pub.dev/documentation/carp_mobile_sensing/latest/domain/DataEndPoint-class.html).
-
-As a mobile sensing framework running on a phone, CAMS could be limited to support only step 3 and 4. However, to support the 'full cycle', CAMS also supports 1-2. This allows for local creation, deployment, and execution of study protocols (which in many [applications](https://carp.cachet.dk/#applications) have shown to be useful).
+2. Deploy this protocol to the [`SmartPhoneClientManager`](https://pub.dev/documentation/carp_mobile_sensing/latest/runtime/SmartPhoneClientManager-class.html).
+3. Use the generated data (called `measurements`) locally in the app or specify how and where to store or upload it using a [`DataEndPoint`](https://pub.dev/documentation/carp_mobile_sensing/latest/domain/DataEndPoint-class.html).
+4. Control the execution of the study, like calling [`start`](https://pub.dev/documentation/carp_mobile_sensing/latest/runtime/SmartPhoneClientManager/start.html).
 
 ### Defining a `SmartphoneStudyProtocol`
 
@@ -131,155 +129,86 @@ In CAMS, a sensing protocol is configured in a [`SmartphoneStudyProtocol`](https
 Below is a simple example of how to set up a protocol that samples step counts, ambient light, screen events, and battery events.
 
 ```dart
-// Create a study protocol storing data in a local SQLite database.
-SmartphoneStudyProtocol protocol = SmartphoneStudyProtocol(
-  ownerId: 'abc@dtu.dk',
-  name: 'Track patient movement',
-  dataEndPoint: SQLiteDataEndPoint(),
-);
-
-// Define which devices are used for data collection.
-// In this case, its only this smartphone.
-Smartphone phone = Smartphone();
-protocol.addPrimaryDevice(phone);
-
-// Automatically collect step count, ambient light, screen activity, and
-// battery level. Sampling is delaying by 10 seconds.
-protocol.addTaskControl(
-  ImmediateTrigger(),
-  BackgroundTask(measures: [
-    Measure(type: SensorSamplingPackage.STEP_COUNT),
-    Measure(type: SensorSamplingPackage.AMBIENT_LIGHT),
-    Measure(type: DeviceSamplingPackage.SCREEN_EVENT),
-    Measure(type: DeviceSamplingPackage.BATTERY_STATE),
-  ]),
-  phone,
-);
+  final phone = Smartphone();
+  final protocol = SmartphoneStudyProtocol(
+    ownerId: 'abc@dtu.dk',
+    name: 'Tracking steps, light, screen, and battery',
+    dataEndPoint: SQLiteDataEndPoint(),
+  )
+    ..addPrimaryDevice(phone)
+    ..addTaskControl(
+      DelayedTrigger(delay: const Duration(seconds: 10)),
+      BackgroundTask(measures: [
+        Measure(type: SensorSamplingPackage.STEP_COUNT),
+        Measure(type: SensorSamplingPackage.AMBIENT_LIGHT),
+        Measure(type: DeviceSamplingPackage.SCREEN_EVENT),
+        Measure(type: DeviceSamplingPackage.BATTERY_STATE),
+      ]),
+      phone,
+      Control.Start,
+    );
 ```
 
-The above example defines a simple [`SmartphoneStudyProtocol`](https://pub.dev/documentation/carp_mobile_sensing/latest/domain/SmartphoneStudyProtocol-class.html) which will store data in a SQLite database locally on the phone using a [`SQLiteDataEndPoint`](https://pub.dev/documentation/carp_mobile_sensing/latest/domain/SQLiteDataEndPoint-class.html).
-Sampling is configured by adding a [`TaskControl`](https://pub.dev/documentation/carp_core/latest/carp_core_common/TaskControl-class.html) to the protocol using an [`ImmediateTrigger`](https://pub.dev/documentation/carp_mobile_sensing/latest/domain/ImmediateTrigger-class.html) which triggers a [`BackgroundTask`](https://pub.dev/documentation/carp_core/latest/carp_core_common/BackgroundTask-class.html) containing four different [`Measure`](https://pub.dev/documentation/carp_core/latest/carp_core_common/Measure-class.html)s.
+The above example defines a simple [`SmartphoneStudyProtocol`](https://pub.dev/documentation/carp_mobile_sensing/latest/domain/SmartphoneStudyProtocol-class.html) which will use a [`Smartphone`](https://pub.dev/documentation/carp_core/latest/carp_core_common/Smartphone-class.html) as a primary device for data collection and store data in a SQLite database locally on the phone using a [`SQLiteDataEndPoint`](https://pub.dev/documentation/carp_mobile_sensing/latest/domain/SQLiteDataEndPoint-class.html).
+Sampling is configured by adding a [`TaskControl`](https://pub.dev/documentation/carp_core/latest/carp_core_common/TaskControl-class.html) to the protocol using an [`DelayedTrigger`](https://pub.dev/documentation/carp_mobile_sensing/latest/domain/DelayedTrigger-class.html) which triggers a [`BackgroundTask`](https://pub.dev/documentation/carp_core/latest/carp_core_common/BackgroundTask-class.html) containing four different [`Measure`](https://pub.dev/documentation/carp_core/latest/carp_core_common/Measure-class.html)s.
+When this task control is triggered (after a delay of 10 seconds), the sampling will start.
 
-Sampling can be configured in very sophisticated ways, by specifying different types of devices, triggers, tasks, measures and sampling configurations.
+Sampling can be configured in very sophisticated ways, by specifying different types of devices, task controls, triggers, tasks, measures, and sampling configurations.
 See the CAMS [wiki][wiki] for an overview and more details.
 
-You can write your own `DataEndPoint` definitions and a corresponding [`DataManager`](https://pub.dev/documentation/carp_mobile_sensing/latest/runtime/DataManager-class.html) class for uploading data to your own data endpoint. See the wiki on how to [add a new data manager](https://github.com/cph-cachet/carp.sensing-flutter/wiki/5.-Extending-CARP-Mobile-Sensing#adding-a-new-data-manager).
+### Deploying and Running a Study on a `SmartPhoneClientManager`
 
-### Using a `DeploymentService`
-
-A device deployment specifies how a study protocol is executed on a specific device - in this case a smartphone.
-According to the [CARP Core domain model](https://github.com/cph-cachet/carp.core-kotlin/blob/develop/docs/carp-deployments.md), a `StudyProtocol` can be deployed to a `DeploymentService` which handles the deployment of protocols for different devices. CAMS comes with a simple deployment service (the [`SmartphoneDeploymentService`](https://pub.dev/documentation/carp_mobile_sensing/latest/runtime/SmartphoneDeploymentService-class.html)) which runs locally on the phone. This can be used to deploy a protocol and get back a [`SmartphoneDeployment`](https://pub.dev/documentation/carp_mobile_sensing/latest/domain/SmartphoneDeployment-class.html), which can be executed on the phone.
+In CAMS, we talk about a study protocol being 'deployed' on a primary device, like a phone. CAMS has a fairly [sophisticated software architecture](https://github.com/cph-cachet/carp.sensing-flutter/wiki/1.-Software-Architecture) for doing this.
+However, if we want to define and deploy a study locally on the phone, this can be done using the [`SmartPhoneClientManager`](https://pub.dev/documentation/carp_mobile_sensing/latest/runtime/SmartPhoneClientManager-class.html) singleton.
 
 ```dart
-...
+  // Create and configure a client manager for this phone.
+  await SmartPhoneClientManager().configure();
 
-// Use the on-phone deployment service.
-DeploymentService deploymentService = SmartphoneDeploymentService();
+  // Create a study based on the protocol.
+  SmartPhoneClientManager().addStudyProtocol(protocol);
 
-// Create a study deployment using the protocol
-var status = await deploymentService.createStudyDeployment(protocol);
+  /// Start sampling.
+  SmartPhoneClientManager().start();
 ```
 
-### Creating a `SmartPhoneClientManager` and  Running a `SmartphoneDeploymentController`
-
-A study deployment for a phone (called a 'primary device' in CARP) is handled by a [`SmartPhoneClientManager`](https://pub.dev/documentation/carp_mobile_sensing/latest/runtime/SmartPhoneClientManager-class.html).
-This client manager controls the execution of one or more study deployments using a [`SmartphoneDeploymentController`](https://pub.dev/documentation/carp_mobile_sensing/latest/runtime/SmartphoneDeploymentController-class.html).
+In this example, the client manager is configured, the protocol is added, and sampling is started. This can actually be done in one line of code, like this:
 
 ```dart
-...
-
-String studyDeploymentId = ... // any id obtained e.g. from an invitation
-String roleName = ... // the role name of this phone in the protocol
-
-// Create and configure a client manager for this phone
-SmartPhoneClientManager client = SmartPhoneClientManager();
-await client.configure(deploymentService: deploymentService);
-
-// Add the study to the client manager and get a study runtime to
-// control this deployment
-Study study = await client.addStudy(studyDeploymentId, roleName);
-SmartphoneDeploymentController? controller = client.getStudyRuntime(study);
-
-// Deploy the study on this phone.
-await controller?.tryDeployment();
-
-// Configure the controller and start sampling.
-await controller?.configure();
-controller?.start();
+  SmartPhoneClientManager().configure().then((_) => SmartPhoneClientManager()
+      .addStudyProtocol(protocol)
+      .then((_) => SmartPhoneClientManager().start()));
 ```
+
+This will start the sampling, as specified in the protocol, and data is stored in the database.
 
 ### Using the generated data
 
-The generated data can be accessed and used in the app. Access to data is done by listening on the `measurements` streams from the study deployment controller or some of its underlying executors or probes. Below are a few examples on how to listen on data streams.
+The generated data can be accessed and used in the app. Access to data is done by listening on the [`measurements`](https://pub.dev/documentation/carp_mobile_sensing/latest/runtime/SmartPhoneClientManager/measurements.html) stream from the client manager, like this:
 
 ```dart
-// listening to the stream of all measurements from the controller
-controller?.measurements.listen((measurement) => print(measurement));
-
-// listen only on CARP measurements
-controller?.measurements
-    .where(
-        (measurement) => measurement.data.format.namespace == NameSpace.CARP)
-    .listen((event) => print(event));
-
-// listen on ambient light measurements only
-controller?.measurements
-    .where((measurement) =>
-        measurement.data.format.toString() ==
-        SensorSamplingPackage.AMBIENT_LIGHT)
-    .listen((measurement) => print(measurement));
-
-// map measurements to JSON and then print
-controller?.measurements
-    .map((measurement) => measurement.toJson())
-    .listen((json) => print(json));
-
-// subscribe to the stream of measurements
-StreamSubscription<Measurement> subscription =
-    controller!.measurements.listen((Measurement measurement) {
-  // do something w. the measurement, e.g. print the json
-  print(JsonEncoder.withIndent(' ').convert(measurement));
-});
+  // Listening on the data stream and print them as json.
+  SmartPhoneClientManager()
+      .measurements
+      .listen((measurement) => print(toJsonString(measurement)));
 ```
+
+Note that the `measurements` is a Dart [Stream](https://api.dart.dev/stable/3.0.7/dart-async/Stream-class.html) and you can hence apply all the usual stream operations to the collected measurements, including sorting, mapping, reducing, and transforming the measurements.
 
 ### Controlling the sampling of data
 
-The execution of sensing can be controlled on runtime in a number of ways. For example:
+The execution of sensing can be controlled on runtime by starting, stopping, and disposing sampling.
+For example, calling `SmartPhoneClientManager().stop()` would stop the study running on the client. Calling `start()` would (re)start it again.
 
-```dart
-// Sampling can be stopped and started
-controller.executor?.stop();
-controller.executor?.start();
+Calling `SmartPhoneClientManager().dispose()` would dispose of the client manager. Once dispose is called, you can't call `start` or `stop` anymore. This methods is typically used in the Flutter `dispose()` method.
 
-// Stop specific probe(s)
-controller.executor
-    ?.lookupProbe(CarpDataTypes.ACCELERATION_TYPE_NAME)
-    .forEach((probe) => probe.stop());
+## Extending CAMS
 
-// Adapt a measure
-//
-// Note that this will only work if the protocol is created locally on the
-// phone (as in the example above)
-// If downloaded and deserialized from json, then we need to locate the
-// measure in the deployment
-lightMeasure.overrideSamplingConfiguration = PeriodicSamplingConfiguration(
-  interval: const Duration(minutes: 5),
-  duration: const Duration(seconds: 10),
-);
+CAMS is designed to be extended in many ways, including [adding new sampling capabilities](https://github.com/cph-cachet/carp.sensing-flutter/wiki/5.-Extending-CARP-Mobile-Sensing#adding-new-sampling-capabilities) by implementing a SamplingPackage, [adding a new data management and backend support](https://github.com/cph-cachet/carp.sensing-flutter/wiki/5.-Extending-CARP-Mobile-Sensing#adding-a-new-data-manager) by creating a DataManager, and [creating data and privacy transformer schemas](https://github.com/cph-cachet/carp.sensing-flutter/wiki/5.-Extending-CARP-Mobile-Sensing#adding-data-and-privacy-transformers) that can transform CARP data to other formats, including privacy protecting them, by implementing a TransformerSchema.
 
-// Restart the light probe(s) in order to load the new configuration
-controller.executor
-    ?.lookupProbe(SensorSamplingPackage.AMBIENT_LIGHT)
-    .forEach((probe) => probe.restart());
+For example, you can write your own `DataEndPoint` definitions and a corresponding [`DataManager`](https://pub.dev/documentation/carp_mobile_sensing/latest/runtime/DataManager-class.html) class for uploading data to your own data endpoint. See the wiki on how to [add a new data manager](https://github.com/cph-cachet/carp.sensing-flutter/wiki/5.-Extending-CARP-Mobile-Sensing#adding-a-new-data-manager).
 
-
-// Once the sampling has to stop, e.g. in a Flutter dispose method,
-// call the controller's dispose method.
-controller.dispose();
-
-// Cancel the subscription.
-await subscription.cancel();
-```
+Please see the wiki on how to [extend](https://github.com/cph-cachet/carp.sensing-flutter/wiki/5.-Extending-CARP-Mobile-Sensing) CAMS.
 
 ## Features and bugs
 

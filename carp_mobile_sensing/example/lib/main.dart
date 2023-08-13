@@ -20,15 +20,11 @@ class CARPMobileSensingApp extends StatelessWidget {
   const CARPMobileSensingApp({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'CARP Mobile Sensing Demo',
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-      ),
-      home: const ConsolePage(title: 'CARP Mobile Sensing Demo'),
-    );
-  }
+  Widget build(BuildContext context) => MaterialApp(
+        title: 'CARP Mobile Sensing Demo',
+        theme: ThemeData(primarySwatch: Colors.blue),
+        home: const ConsolePage(title: 'CARP Mobile Sensing Demo'),
+      );
 }
 
 class ConsolePage extends StatefulWidget {
@@ -41,15 +37,15 @@ class ConsolePage extends StatefulWidget {
 /// A simple UI with a console that shows the sensed data in a json format.
 class Console extends State<ConsolePage> {
   String _log = '';
-  Sensing sensing = Sensing();
+  Sensing _sensing = Sensing();
 
   @override
   void initState() {
     super.initState();
-    sensing = Sensing();
+    _sensing = Sensing();
+    Settings().debugLevel = DebugLevel.debug;
     Settings().init().then((_) {
-      sensing.init().then((_) {
-        // log('Setting up study : ${SmartPhoneClientManager().studies[0]}');
+      _sensing.init().then((_) {
         log('Client state : ${SmartPhoneClientManager().state}');
       });
     });
@@ -57,59 +53,47 @@ class Console extends State<ConsolePage> {
 
   @override
   void dispose() {
-    sensing.dispose();
+    _sensing.dispose();
     super.dispose();
   }
 
   @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(widget.title),
-      ),
-      body: SingleChildScrollView(
-        child: StreamBuilder(
-          stream: SmartPhoneClientManager().measurements,
-          builder: (context, AsyncSnapshot<Measurement> snapshot) {
-            if (snapshot.hasData)
-              _log += ' > ${snapshot.data?.data.jsonType}\n';
-            return Text(_log);
-          },
+  Widget build(BuildContext context) => Scaffold(
+        appBar: AppBar(title: Text(widget.title)),
+        body: SingleChildScrollView(
+          child: StreamBuilder(
+            stream: SmartPhoneClientManager().measurements,
+            builder: (context, AsyncSnapshot<Measurement> snapshot) => Text(
+                (snapshot.hasData)
+                    ? _log += toJsonString(snapshot.data)
+                    : _log),
+          ),
         ),
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: restart,
-        tooltip: 'Start/Stop study',
-        child: sensing.isRunning
-            ? const Icon(Icons.stop)
-            : const Icon(Icons.play_arrow),
-      ),
-    );
-  }
+        floatingActionButton: FloatingActionButton(
+          onPressed: restart,
+          tooltip: 'Start/Stop study',
+          child: _sensing.isRunning
+              ? const Icon(Icons.stop)
+              : const Icon(Icons.play_arrow),
+        ),
+      );
 
-  void log(String msg) {
-    setState(() {
-      _log += '$msg\n';
-    });
-  }
+  /// Add [msg] to the console log.
+  void log(String msg) => setState(() => _log += '$msg\n');
 
-  void clearLog() {
-    setState(() {
-      _log += '';
-    });
-  }
+  /// Clear the console log.
+  void clearLog() => setState(() => _log += '');
 
-  void restart() {
-    setState(() {
-      if (sensing.isRunning) {
-        sensing.stop();
-        log('\nSensing stopped ...');
-      } else {
-        sensing.start();
-        log('\nSensing started ...');
-      }
-    });
-  }
+  /// Restart (start/stop) sampling.
+  void restart() => setState(() {
+        if (_sensing.isRunning) {
+          _sensing.stop();
+          log('\nSensing stopped ...');
+        } else {
+          _sensing.start();
+          log('\nSensing started ...');
+        }
+      });
 }
 
 /// This class handles sensing logic.
@@ -122,22 +106,14 @@ class Console extends State<ConsolePage> {
 class Sensing {
   /// Initialize sensing.
   Future<void> init() async {
-    Settings().debugLevel = DebugLevel.debug;
-
-    // Create and configure a client manager for this phone.
-    await SmartPhoneClientManager().configure();
-
     // Get the protocol. See below for how to configure a study protocol.
     final protocol =
         await LocalStudyProtocolManager().getStudyProtocol('ignored');
 
-    // Create a study based on the protocol.
-    SmartPhoneClientManager().addStudyProtocol(protocol);
-
-    // // Create a study based on the protocol, and start sampling.
-    // SmartPhoneClientManager()
-    //     .addStudyProtocol(protocol)
-    //     .then((_) => SmartPhoneClientManager().start());
+    // Create and configure a client manager for this phone and add the protocol.
+    SmartPhoneClientManager()
+        .configure()
+        .then((_) => SmartPhoneClientManager().addStudyProtocol(protocol));
 
     // Listening on the data stream and print them as json.
     SmartPhoneClientManager()

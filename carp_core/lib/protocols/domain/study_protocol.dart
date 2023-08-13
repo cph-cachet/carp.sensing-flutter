@@ -8,9 +8,9 @@
 part of carp_core_protocols;
 
 /// A description of how a study is to be executed, defining the type(s) of
-/// primary device(s) ([AnyPrimaryDeviceConfiguration]) responsible for
-/// aggregating data, the optional devices ([AnyDeviceConfiguration]) connected
-/// to them, and the [TriggerConfiguration]'s which lead to data collection on
+/// primary device(s) ([PrimaryDeviceConfiguration]) responsible for
+/// aggregating data, the optional devices ([DeviceConfiguration]) connected
+/// to them, and the [TaskControl]'s which lead to data collection on
 /// said devices.
 @JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
 class StudyProtocol extends Snapshot {
