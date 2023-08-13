@@ -139,53 +139,55 @@ class ESenseDeviceManager extends BTLEDeviceManager<ESenseDevice> {
   Future<DeviceStatus> onConnect() async {
     if (configuration?.deviceName == null ||
         configuration!.deviceName!.isEmpty) {
+      warning(
+          '$runtimeType - cannot connect to eSense device, device name is null.');
       return DeviceStatus.error;
     }
 
-    manager = ESenseManager(id);
-
-    // listen for connection events
-    manager?.connectionEvents.listen((event) {
-      debug('$runtimeType - $event');
-
-      switch (event.type) {
-        case ConnectionType.connected:
-          status = DeviceStatus.connected;
-
-          // this is a hack! - don't know why, but the sensorEvents stream
-          // needs a kick in the ass to get started...
-          manager?.sensorEvents.listen(null);
-
-          // when connected, listen for battery events
-          manager!.eSenseEvents.listen((event) {
-            if (event is BatteryRead) {
-              _voltageLevel = event.voltage ?? 4;
-            }
-          });
-
-          // set up a timer that asks for the voltage level
-          Timer.periodic(const Duration(minutes: 2), (_) {
-            if (status == DeviceStatus.connected) {
-              manager?.getBatteryVoltage();
-            }
-          });
-          break;
-        case ConnectionType.unknown:
-          status = DeviceStatus.unknown;
-          break;
-        case ConnectionType.device_found:
-          status = DeviceStatus.connecting;
-          break;
-        case ConnectionType.device_not_found:
-        case ConnectionType.disconnected:
-          status = DeviceStatus.disconnected;
-          _voltageLevel = null;
-          // _eventSubscription?.cancel();
-          break;
-      }
-    });
-
     try {
+      manager = ESenseManager(id);
+
+      // listen for connection events
+      manager?.connectionEvents.listen((event) {
+        debug('$runtimeType - $event');
+
+        switch (event.type) {
+          case ConnectionType.connected:
+            status = DeviceStatus.connected;
+
+            // this is a hack! - don't know why, but the sensorEvents stream
+            // needs a kick in the ass to get started...
+            manager?.sensorEvents.listen(null);
+
+            // when connected, listen for battery events
+            manager!.eSenseEvents.listen((event) {
+              if (event is BatteryRead) {
+                _voltageLevel = event.voltage ?? 4;
+              }
+            });
+
+            // set up a timer that asks for the voltage level
+            Timer.periodic(const Duration(minutes: 2), (_) {
+              if (status == DeviceStatus.connected) {
+                manager?.getBatteryVoltage();
+              }
+            });
+            break;
+          case ConnectionType.unknown:
+            status = DeviceStatus.unknown;
+            break;
+          case ConnectionType.device_found:
+            status = DeviceStatus.connecting;
+            break;
+          case ConnectionType.device_not_found:
+          case ConnectionType.disconnected:
+            status = DeviceStatus.disconnected;
+            _voltageLevel = null;
+            // _eventSubscription?.cancel();
+            break;
+        }
+      });
+
       // try to scan for eSense device and connect to it
       manager?.connect();
     } catch (error) {

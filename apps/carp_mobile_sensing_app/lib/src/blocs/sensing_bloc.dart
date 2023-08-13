@@ -109,7 +109,7 @@ class SensingBLoC {
 
   /// Get a list of running devices
   Iterable<DeviceModel> get availableDevices =>
-      Sensing().availableDevices!.map((device) => DeviceModel(device));
+      Sensing().availableDevices.map((device) => DeviceModel(device));
 
   /// Initialize the BLoC.
   Future<void> initialize({
@@ -131,16 +131,17 @@ class SensingBLoC {
   }
 
   /// Connect to a [device] which is part of the [deployment].
-  void connectToDevice(DeviceModel device) =>
-      Sensing().client?.deviceController.devices[device.type!]!.connect();
+  void connectToDevice(DeviceModel device) => SmartPhoneClientManager()
+      .deviceController
+      .devices[device.type!]!
+      .connect();
 
-  void start() async => Sensing().controller?.executor.start();
-  void stop() async => Sensing().controller?.executor.stop();
+  void start() async => SmartPhoneClientManager().start();
+  void stop() async => SmartPhoneClientManager().stop();
 
   /// Is sensing running, i.e. has the study executor been started?
   bool get isRunning =>
-      (Sensing().controller != null) &&
-      Sensing().controller!.executor.state == ExecutorState.started;
+      SmartPhoneClientManager().state == ClientManagerState.started;
 }
 
 final bloc = SensingBLoC();
