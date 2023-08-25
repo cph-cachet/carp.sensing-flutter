@@ -45,17 +45,17 @@ Future<void> minimalExample() async {
   /// Start sampling.
   SmartPhoneClientManager().start();
 
-  // Listening on the data stream and print them as json.
-  SmartPhoneClientManager()
-      .measurements
-      .listen((measurement) => print(toJsonString(measurement)));
-
   // Alternatively: do it all in one line of code....!
   // Create and configure a client manager for this phone, add the protocol,
   // and start sampling data.
   SmartPhoneClientManager().configure().then((_) => SmartPhoneClientManager()
       .addStudyProtocol(protocol)
       .then((_) => SmartPhoneClientManager().start()));
+
+  // Listening on the data stream and print them as json.
+  SmartPhoneClientManager()
+      .measurements
+      .listen((measurement) => print(toJsonString(measurement)));
 
   // Stop sampling again.
   SmartPhoneClientManager().stop();
