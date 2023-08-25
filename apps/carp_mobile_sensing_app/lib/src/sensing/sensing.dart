@@ -109,8 +109,9 @@ class Sensing {
 
     // Configure the client manager with the deployment service selected above
     // (local or CARP), add the study, and deploy it.
-    await SmartPhoneClientManager()
-        .configure(deploymentService: deploymentService);
+    await SmartPhoneClientManager().configure(
+      deploymentService: deploymentService,
+    );
     study = await SmartPhoneClientManager().addStudy(
       bloc.studyDeploymentId!,
       bloc.deviceRolename!,

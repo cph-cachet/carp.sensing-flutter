@@ -1,8 +1,9 @@
 # CARP Mobile Sensing App
 
 The CARP Mobile Sensing App provides an example on how to use the [`carp_mobile_sensing`](https://pub.dartlang.org/packages/carp_mobile_sensing) package.
-The app sets up a `Study Deployment` (or just `Study`) that uses a set of `Device`s and starts a set of `Probe`s. The UI of the app is shown below, showing
-(from left to right) the Study Deployment page, the Probe List page, and the Device List page.
+The app sets up a `SmartphoneStudyProtocol` (or just "Protocol") that uses a set of `Device`s and collects a set of `Measures`s.
+Following the [CARP Mobile Sensing architecture](https://github.com/cph-cachet/carp.sensing-flutter/wiki/1.-Software-Architecture), the protocol is "Deployed" on the phone and data collection is done via a set of "Probes" which each use a "Device", including the phone itself.
+The UI of the app is shown below, showing (from left to right) the Study Deployment page, the Probe List page, and the Device List page.
 
 ![Study Visualization page](documentation/study_viz_3.jpg) __
 ![Probe List page](documentation/probe_list_3.jpg)__
@@ -21,18 +22,39 @@ Each UI widget only knows its corresponding model and the model knows the BloC.
 
 ## Sensing BLoC
 
-Since the BLoC is the controller of the entire app, let's look closer on this class.
+Since the [`SensingBLoC`](https://github.com/cph-cachet/carp.sensing-flutter/blob/master/apps/carp_mobile_sensing_app/lib/src/blocs/sensing_bloc.dart) is the controller of the entire app, let's look closer on this class. Below are essential parts shown (omitting some implementation details):
 
 ````dart
 class SensingBLoC {
+  /// The URI of the CARP server to use depending on the current [deploymentMode].
+  String get uri => ...
+
+  /// The study id for the currently running deployment.
+  /// Returns the study id cached locally on the phone (if available).
+  /// Returns `null` if no study is deployed (yet).
+  String? get studyId => ...
+
   /// The study deployment id for the currently running deployment.
-  String? studyDeploymentId;
+  /// Returns the deployment id cached locally on the phone (if available).
+  /// Returns `null` if no study is deployed (yet).
+  String? get studyDeploymentId => ...
+  
+  /// The device role name for the currently running deployment.
+  /// Returns the role name cached locally on the phone (if available).
+  /// Returns `null` if no study is deployed (yet).
+  String? get deviceRolename => ...
+  
+  /// Use the cached study deployment?
+  bool get useCachedStudyDeployment => _useCached;
+
+  /// Should sensing be automatically resumed on app startup?
+  bool get resumeSensingOnStartup => _resumeSensingOnStartup;
 
   /// The [SmartphoneDeployment] deployed on this phone.
   SmartphoneDeployment? get deployment => Sensing().controller?.deployment;
 
-  /// What kind of deployment are we running - local or CARP?
-  DeploymentMode deploymentMode = DeploymentMode.LOCAL;
+  /// What kind of deployment are we running. Default is local.
+  DeploymentMode deploymentMode = DeploymentMode.local;
 
   /// The preferred format of the data to be uploaded according to
   /// [NameSpace]. Default using the [NameSpace.CARP].
@@ -49,34 +71,40 @@ class SensingBLoC {
       Sensing().runningProbes.map((probe) => ProbeModel(probe));
 
   /// Get a list of running devices
-  Iterable<DeviceModel> get runningDevices =>
-      Sensing().runningDevices!.map((device) => DeviceModel(device));
+  Iterable<DeviceModel> get availableDevices =>
+      Sensing().availableDevices.map((device) => DeviceModel(device));
 
   /// Initialize the BLoC.
-  Future initialize({
-    DeploymentMode deploymentMode = DeploymentMode.LOCAL,
+  Future<void> initialize({
+    DeploymentMode deploymentMode = DeploymentMode.local,
+    String? deploymentId,
     String dataFormat = NameSpace.CARP,
+    bool useCachedStudyDeployment = true,
+    bool resumeSensingOnStartup = false,
   }) async {
     await Settings().init();
-    Settings().debugLevel = DebugLevel.DEBUG;
+    Settings().debugLevel = DebugLevel.debug;
     this.deploymentMode = deploymentMode;
+    if (deploymentId != null) studyDeploymentId = deploymentId;
     this.dataFormat = dataFormat;
+    _resumeSensingOnStartup = resumeSensingOnStartup;
+    _useCached = useCachedStudyDeployment;
 
     info('$runtimeType initialized');
   }
 
   /// Connect to a [device] which is part of the [deployment].
-  void connectToDevice(DeviceModel device) =>
-      Sensing().client?.deviceController.devices[device.type!]!.connect();
+  void connectToDevice(DeviceModel device) => SmartPhoneClientManager()
+      .deviceController
+      .devices[device.type!]!
+      .connect();
 
-  void resume() async => Sensing().controller?.executor?.resume();
-  void pause() => Sensing().controller?.executor?.pause();
-  void stop() async => Sensing().controller?.stop();
+  void start() async => SmartPhoneClientManager().start();
+  void stop() async => SmartPhoneClientManager().stop();
 
-  /// Is sensing running, i.e. has the study executor been resumed?
+  /// Is sensing running, i.e. has the study executor been started?
   bool get isRunning =>
-      (Sensing().controller != null) &&
-      Sensing().controller!.executor!.state == ExecutorState.resumed;
+      SmartPhoneClientManager().state == ClientManagerState.started;
 }
 
 final bloc = SensingBLoC();
@@ -84,20 +112,36 @@ final bloc = SensingBLoC();
 
 The BLoC basically plays three roles:
 
-* it holds core business data like the `deployment` and the `deploymentId`
-* it can create (UI) models such as the `StudyDeploymentModel` and a list of `ProbeModel`s, and
-* it provide a set of life cycle methods for sensing like `connectToDevice` and `resume`.
+* it holds core business data like `studyId`, `deploymentId`, `deviceRolename`, and the `deployment` configuration
+* it can create (UI) models such as the `StudyDeploymentModel` and the list of `ProbeModel`s and `DeviceModel`s
+* it provide a set of life cycle methods for sensing like `initialize`, `connectToDevice` and `start`.
 
 Finally, note that the singleton `bloc` variable is instantiated, which makes the BLoC accessible in the entire app.
 
-Set up and configuration of sensing is done in the [`Sensing`](https://github.com/cph-cachet/carp.sensing-flutter/blob/master/apps/carp_mobile_sensing_app/lib/src/sensing/sensing.dart) class.
-Depending on the "deploymenet mode" (local or using CARP), sensing is initialized using the [`LocalStudyProtocolManager`](https://github.com/cph-cachet/carp.sensing-flutter/blob/master/apps/carp_mobile_sensing_app/lib/src/sensing/local_study_protocol_mananger.dart) or the [`CustomProtocolDeploymentService`](https://pub.dev/documentation/carp_backend/latest/carp_backend/CustomProtocolDeploymentService-class.html), respectivly.
+Configuration of sensing is done in the [`Sensing`](https://github.com/cph-cachet/carp.sensing-flutter/blob/master/apps/carp_mobile_sensing_app/lib/src/sensing/sensing.dart) class.
+Depending on the "deployment mode" (local or using CARP), deployment is initialized using the [`SmartphoneDeploymentService`](https://pub.dev/documentation/carp_mobile_sensing/latest/runtime/SmartphoneDeploymentService-class.html) or the [`CarpDeploymentService`](https://pub.dev/documentation/carp_webservices/latest/carp_services/CarpDeploymentService-class.html), respectively.
+Once, the right deployment service is configured, the `SmartPhoneClientManager` singleton is configured and the study is added (based on the deployment id and the role name of the phone) and deployed.
+When deployed, the runtime (`SmartphoneDeploymentController`) is configured and sampling can now be started or stopped. This part of `Sensing` is shown below:
+
+```dart
+    // Configure the client manager with the deployment service selected above
+    // (local or CARP), add the study, and deploy it.
+    await SmartPhoneClientManager().configure(
+      deploymentService: deploymentService,
+    );
+    study = await SmartPhoneClientManager().addStudy(
+      bloc.studyDeploymentId!,
+      bloc.deviceRolename!,
+    );
+    await controller?.tryDeployment();
+    await controller?.configure();
+```
 
 ## UI Models
 
-In this CARP Mobile Sensing App we use one UI model for each UI widget.
+The CARP Mobile Sensing App uses one UI model for each UI widget.
 For example, the UI Model `StudyDeploymentModel` serves the UI Widget `StudyDeploymentPage`.
-The main reposibility of the UI Model is to provide access to data (both getter and setters), which is done via the BLoC.
+The main responsibility of the UI Model is to provide access to data (both getter and setters), which again is available via the BLoC.
 
 The `StudyDeploymentModel` class looks like this:
 
@@ -105,10 +149,9 @@ The `StudyDeploymentModel` class looks like this:
 class StudyDeploymentModel {
   SmartphoneDeployment deployment;
 
-  String get title => deployment.protocolDescription?.title ?? '';
+  String get title => deployment.studyDescription?.title ?? '';
   String get description =>
-      deployment.protocolDescription?.description ??
-      'No description available.';
+      deployment.studyDescription?.description ?? 'No description available.';
   Image get image => Image.asset('assets/study.png');
   String get studyDeploymentId => deployment.studyDeploymentId;
   String get userID => deployment.userId ?? '';
@@ -116,16 +159,17 @@ class StudyDeploymentModel {
 
   /// Events on the state of the study executor
   Stream<ExecutorState> get studyExecutorStateEvents =>
-      Sensing().controller!.executor!.stateEvents;
+      Sensing().controller!.executor.stateEvents;
 
   /// Current state of the study executor (e.g., resumed, paused, ...)
-  ExecutorState get studyState => Sensing().controller!.executor!.state;
+  ExecutorState get studyState => Sensing().controller!.executor.state;
 
-  /// Get all sesing events (i.e. all [Datum] objects being collected).
-  Stream<DataPoint> get data => Sensing().controller!.data;
+  /// Get all sensing events (i.e. all [Measurement] objects being collected).
+  Stream<Measurement> get measurements =>
+      Sensing().controller?.measurements ?? Stream.empty();
 
   /// The total sampling size so far since this study was started.
-  int get samplingSize => Sensing().controller!.samplingSize;
+  int get samplingSize => Sensing().controller?.samplingSize ?? 0;
 
   StudyDeploymentModel(this.deployment) : super();
 }
@@ -142,7 +186,7 @@ void set title(String title) {
 
 ## UI Widgets
 
-The final layer is the UI widgets.
+The top layer contains the UI widgets.
 Each UI widget takes in its constructor its corresponding UI model.
 For example, the `StudyVisualization` widget's `State` takes a `StudyModel` in its constructor:
 
@@ -169,7 +213,7 @@ class StudyDeploymentPageState extends State<StudyDeploymentPage> {
 `````
 
 In this way, the `studyDeploymentModel` is available in the entire UI Widget.
-This allow us to access data and show it in the UI. For example, to show the study title and image this code is used:
+This allows us to access data and show it in the UI. For example, to show the study title and image this code is used:
 
 ````dart
  FlexibleSpaceBar(
@@ -189,7 +233,7 @@ More sophisticated (reactive) UI implementation can also be done. For example, t
 `````dart
  StreamBuilder<Datum>(
     stream: studyDeploymentModel.samplingEvents,
-    builder: (context, AsyncSnapshot<Datum> snapshot) {
-      return Text('Sample Size: ${studyDeploymentModel.samplingSize}');
-    })
+    builder: (context, AsyncSnapshot<Datum> snapshot) =>
+      Text('Sample Size: ${studyDeploymentModel.samplingSize}')
+    )
 `````

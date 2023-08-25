@@ -11,6 +11,7 @@ class SensingBLoC {
   bool _useCached = true;
   bool _resumeSensingOnStartup = false;
 
+  /// The URI of the CARP server to use depending on the current [deploymentMode].
   String get uri {
     switch (deploymentMode) {
       case DeploymentMode.local:

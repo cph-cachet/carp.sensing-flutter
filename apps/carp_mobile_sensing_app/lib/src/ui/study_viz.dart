@@ -139,11 +139,10 @@ class StudyDeploymentPageState extends State<StudyDeploymentPage> {
                     StreamBuilder<Measurement>(
                         stream: studyDeploymentModel.measurements,
                         builder:
-                            (context, AsyncSnapshot<Measurement> snapshot) {
-                          return _StudyControllerLine(
-                              '${studyDeploymentModel.samplingSize}',
-                              heading: 'Sample Size');
-                        }),
+                            (context, AsyncSnapshot<Measurement> snapshot) =>
+                                _StudyControllerLine(
+                                    '${studyDeploymentModel.samplingSize}',
+                                    heading: 'Sample Size')),
                   ]))
             ],
           ),
