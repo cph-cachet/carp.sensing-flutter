@@ -14,7 +14,7 @@ which is recommended by the [Flutter Team](https://www.youtube.com/watch?v=PLHln
 
 ![Bloc Architecture](documentation/architecture_3.png)
 
-The basic architecture holds a singleton `Sensing` class responsible for handling sensing via the [`carp_mobile_sensing`](https://pub.dartlang.org/packages/carp_mobile_sensing) package.
+All sensing logic is handled via the `Sensing` class responsible for handling sensing via the [`carp_mobile_sensing`](https://pub.dartlang.org/packages/carp_mobile_sensing) package.
 All business logic is handled by the singleton `SensingBLoC` which is the only way the UI models can access and modify data or initiate life cycle events (like pausing and resuming sensing).
 All data to be shown in the UI are handled by (UI) models, and finally each screen is implemented as a [`StatefulWidget`](https://docs.flutter.io/flutter/widgets/StatefulWidget-class.html) in Flutter.
 Each UI widget only knows its corresponding model and the model knows the BloC.
@@ -26,7 +26,10 @@ Since the [`SensingBLoC`](https://github.com/cph-cachet/carp.sensing-flutter/blo
 
 ````dart
 class SensingBLoC {
-  /// The URI of the CARP server to use depending on the current [deploymentMode].
+  /// What kind of deployment are we running? Default is local.
+  DeploymentMode deploymentMode => ...
+
+  /// The URI of the CAWS server to use depending on the current [deploymentMode].
   String get uri => ...
 
   /// The study id for the currently running deployment.
@@ -51,7 +54,7 @@ class SensingBLoC {
   bool get resumeSensingOnStartup => _resumeSensingOnStartup;
 
   /// The [SmartphoneDeployment] deployed on this phone.
-  SmartphoneDeployment? get deployment => Sensing().controller?.deployment;
+  SmartphoneDeployment? get deployment => bloc.sensing.controller?.deployment;
 
   /// What kind of deployment are we running. Default is local.
   DeploymentMode deploymentMode = DeploymentMode.local;
@@ -68,11 +71,11 @@ class SensingBLoC {
 
   /// Get a list of running probes
   Iterable<ProbeModel> get runningProbes =>
-      Sensing().runningProbes.map((probe) => ProbeModel(probe));
+      bloc.sensing.runningProbes.map((probe) => ProbeModel(probe));
 
   /// Get a list of running devices
   Iterable<DeviceModel> get availableDevices =>
-      Sensing().availableDevices.map((device) => DeviceModel(device));
+      bloc.sensing.availableDevices.map((device) => DeviceModel(device));
 
   /// Initialize the BLoC.
   Future<void> initialize({
@@ -118,14 +121,22 @@ The BLoC basically plays three roles:
 
 Finally, note that the singleton `bloc` variable is instantiated, which makes the BLoC accessible in the entire app.
 
+## Sensing
+
 Configuration of sensing is done in the [`Sensing`](https://github.com/cph-cachet/carp.sensing-flutter/blob/master/apps/carp_mobile_sensing_app/lib/src/sensing/sensing.dart) class.
-Depending on the "deployment mode" (local or using CARP), deployment is initialized using the [`SmartphoneDeploymentService`](https://pub.dev/documentation/carp_mobile_sensing/latest/runtime/SmartphoneDeploymentService-class.html) or the [`CarpDeploymentService`](https://pub.dev/documentation/carp_webservices/latest/carp_services/CarpDeploymentService-class.html), respectively.
+
+This class also illustrates how the app can be run both in a "local" deployment mode and in different "CAWS" modes.
+Depending on the "deployment mode" (local or using CAWS), deployment is initialized using the [`SmartphoneDeploymentService`](https://pub.dev/documentation/carp_mobile_sensing/latest/runtime/SmartphoneDeploymentService-class.html) or the [`CarpDeploymentService`](https://pub.dev/documentation/carp_webservices/latest/carp_services/CarpDeploymentService-class.html), respectively.
+
+In the case a local deployment is used, a protocol is fetched from the `LocalStudyProtocolManager`, which is then added to the local `SmartphoneDeploymentService`.
+In the case a CAWS deployment is used, the study deployment configuration will be fetched from the `CarpDeploymentService` based on the `studyDeploymentId` fetched from an invitation (this invitation is fetched as part of the `init` method of the main `App` class).
+
 Once, the right deployment service is configured, the `SmartPhoneClientManager` singleton is configured and the study is added (based on the deployment id and the role name of the phone) and deployed.
 When deployed, the runtime (`SmartphoneDeploymentController`) is configured and sampling can now be started or stopped. This part of `Sensing` is shown below:
 
 ```dart
     // Configure the client manager with the deployment service selected above
-    // (local or CARP), add the study, and deploy it.
+    // (local or CAWS), add the study, and deploy it.
     await SmartPhoneClientManager().configure(
       deploymentService: deploymentService,
     );
@@ -159,17 +170,17 @@ class StudyDeploymentModel {
 
   /// Events on the state of the study executor
   Stream<ExecutorState> get studyExecutorStateEvents =>
-      Sensing().controller!.executor.stateEvents;
+      bloc.sensing.controller!.executor.stateEvents;
 
   /// Current state of the study executor (e.g., resumed, paused, ...)
-  ExecutorState get studyState => Sensing().controller!.executor.state;
+  ExecutorState get studyState => bloc.sensing.controller!.executor.state;
 
   /// Get all sensing events (i.e. all [Measurement] objects being collected).
   Stream<Measurement> get measurements =>
-      Sensing().controller?.measurements ?? Stream.empty();
+      bloc.sensing.controller?.measurements ?? Stream.empty();
 
   /// The total sampling size so far since this study was started.
-  int get samplingSize => Sensing().controller?.samplingSize ?? 0;
+  int get samplingSize => bloc.sensing.controller?.samplingSize ?? 0;
 
   StudyDeploymentModel(this.deployment) : super();
 }

@@ -5,11 +5,18 @@ class SensingBLoC {
   static const String STUDY_DEPLOYMENT_ID_KEY = 'study_deployment_id';
   static const String DEVICE_ROLENAME_KEY = 'device_rolename';
 
+  final Sensing _sensing = Sensing();
   String? _studyId;
   String? _studyDeploymentId;
   String? _deviceRolename;
   bool _useCached = true;
   bool _resumeSensingOnStartup = false;
+
+  /// The [Sensing] layer used in the app.
+  Sensing get sensing => _sensing;
+
+  /// What kind of deployment are we running? Default is local.
+  DeploymentMode deploymentMode = DeploymentMode.local;
 
   /// The URI of the CARP server to use depending on the current [deploymentMode].
   String get uri {
@@ -89,10 +96,7 @@ class SensingBLoC {
   }
 
   /// The [SmartphoneDeployment] deployed on this phone.
-  SmartphoneDeployment? get deployment => Sensing().controller?.deployment;
-
-  /// What kind of deployment are we running - local or CARP?
-  DeploymentMode deploymentMode = DeploymentMode.local;
+  SmartphoneDeployment? get deployment => bloc.sensing.controller?.deployment;
 
   /// The preferred format of the data to be uploaded according to
   /// [NameSpace]. Default using the [NameSpace.CARP].
@@ -106,11 +110,11 @@ class SensingBLoC {
 
   /// Get a list of running probes
   Iterable<ProbeModel> get runningProbes =>
-      Sensing().runningProbes.map((probe) => ProbeModel(probe));
+      bloc.sensing.runningProbes.map((probe) => ProbeModel(probe));
 
   /// Get a list of running devices
   Iterable<DeviceModel> get availableDevices =>
-      Sensing().availableDevices.map((device) => DeviceModel(device));
+      bloc.sensing.availableDevices.map((device) => DeviceModel(device));
 
   /// Initialize the BLoC.
   Future<void> initialize({
@@ -152,12 +156,12 @@ enum DeploymentMode {
   /// Use a local study protocol & deployment and store data locally on the phone.
   local,
 
-  /// Use the CAWS PROD server to get the study deployment and store data.
+  /// Use the CAWS production server to get the study deployment and store data.
   production,
 
   /// Use the CAWS staging server to get the study deployment and store data.
   staging,
 
-  /// Use the CAWS DEV server to get the study deployment and store data.
+  /// Use the CAWS development server to get the study deployment and store data.
   development,
 }

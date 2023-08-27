@@ -12,15 +12,14 @@ class App extends StatelessWidget {
 }
 
 class LoadingPage extends StatelessWidget {
-  /// This methods is used to set up the entire app, including:
-  ///  * initialize the bloc
-  ///  * authenticate the user
-  ///  * get the invitation
-  ///  * get the study
-  ///  * initialize sensing
-  ///  * start sensing
+  /// This methods is used to initialize the app and the sensing.
+  ///
+  /// If using CAWS, this method also initialize the CAWS backend,
+  /// authenticate the user, and gets the study invitation from CAWS.
+  ///
+  /// Returns true when done.
   Future<bool> init(BuildContext context) async {
-    // Initialize and use the CARP backend if not in local deployment mode
+    // Initialize and use the CAWS backend if not in local deployment mode
     if (bloc.deploymentMode != DeploymentMode.local) {
       await CarpBackend().initialize();
       await CarpBackend().authenticate(context, username: 'jakob@bardram.net');
@@ -36,8 +35,7 @@ class LoadingPage extends StatelessWidget {
       CarpService().app?.studyDeploymentId = bloc.studyDeploymentId;
     }
 
-    await Sensing().initialize();
-
+    await bloc.sensing.initialize();
     return true;
   }
 

@@ -30,13 +30,13 @@ part 'src/sensing/sensing.dart';
 part 'src/models/probe_model.dart';
 part 'src/models/device_model.dart';
 part 'src/models/probe_description.dart';
-part 'src/models/deployment_model.dart';
+part 'src/models/study_deployment_model.dart';
 part 'src/blocs/sensing_bloc.dart';
 part 'src/blocs/carp_backend.dart';
 part 'src/sensing/local_study_protocol_manager.dart';
 part 'src/ui/probe_list.dart';
 part 'src/ui/device_list.dart';
-part 'src/ui/study_viz.dart';
+part 'src/ui/study_deployment_page.dart';
 part 'src/ui/cachet.dart';
 
 void main() async {

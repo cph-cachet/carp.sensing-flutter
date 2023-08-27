@@ -14,18 +14,13 @@ part of mobile_sensing_app;
 /// control the study execution (e.g., start and stop).
 /// Collected data is available in the [measurements] stream.
 class Sensing {
-  static final Sensing _instance = Sensing._();
+  // static final Sensing _instance = Sensing._();
   StudyDeploymentStatus? _status;
-  // SmartphoneDeploymentController? _controller;
 
   DeploymentService? deploymentService;
-  // SmartPhoneClientManager? client;
 
   /// The study running on this phone.
   Study? study;
-
-  /// The deployment running on this phone.
-  // SmartphoneDeployment? get deployment => _controller?.deployment;
 
   /// Get the latest status of the study deployment.
   StudyDeploymentStatus? get status => _status;
@@ -38,8 +33,9 @@ class Sensing {
       ? SmartPhoneClientManager().getStudyRuntime(study!)
       : null;
 
-  // /// The stream of all sampled measurements.
-  // Stream<Measurement>? get measurements => controller?.measurements;
+  /// The stream of all sampled measurements.
+  Stream<Measurement> get measurements =>
+      controller?.measurements ?? Stream.empty();
 
   /// the list of running - i.e. used - probes in this study.
   List<Probe> get runningProbes =>
@@ -49,10 +45,10 @@ class Sensing {
   List<DeviceManager> get availableDevices =>
       SmartPhoneClientManager().deviceController.devices.values.toList();
 
-  /// The singleton sensing instance
-  factory Sensing() => _instance;
+  // /// The singleton sensing instance
+  // factory Sensing() => _instance;
 
-  Sensing._() {
+  Sensing() {
     CarpMobileSensing.ensureInitialized();
 
     // Create and register external sampling packages
@@ -64,9 +60,9 @@ class Sensing {
     SamplingPackageRegistry().register(PolarSamplingPackage());
     SamplingPackageRegistry().register(ESenseSamplingPackage());
 
-    // Register the CARP data manager for uploading data back to CARP.
-    // This is needed in both LOCAL and CARP deployments, since a local study
-    // protocol may still upload to CARP
+    // Register the CARP data manager for uploading data back to CAWS.
+    // This is needed in both LOCAL and CAWS deployments, since a local study
+    // protocol may still upload to CAWS
     DataManagerRegistry().register(CarpDataManagerFactory());
   }
 
@@ -108,7 +104,7 @@ class Sensing {
     }
 
     // Configure the client manager with the deployment service selected above
-    // (local or CARP), add the study, and deploy it.
+    // (local or CAWS), add the study, and deploy it.
     await SmartPhoneClientManager().configure(
       deploymentService: deploymentService,
     );
