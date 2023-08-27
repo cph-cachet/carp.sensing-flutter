@@ -120,6 +120,9 @@ class Sensing {
         .measurements
         .listen((measurement) => print(toJsonString(measurement)));
 
+    // Listen to all battery events
+    DeviceController().batteryEvents.listen((event) => print(event));
+
     info('$runtimeType initialized');
   }
 }

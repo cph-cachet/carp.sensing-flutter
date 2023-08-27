@@ -85,6 +85,8 @@ class ESenseDeviceManager extends BTLEDeviceManager<ESenseDevice> {
   // the last known voltage level of the eSense device
   double? _voltageLevel;
 
+  StreamController<int> _batteryEventController = StreamController.broadcast();
+
   /// A handle to the [ESenseManager] plugin.
   ESenseManager? manager;
 
@@ -104,7 +106,7 @@ class ESenseDeviceManager extends BTLEDeviceManager<ESenseDevice> {
 
   /// A estimate of the battery level of the eSense device.
   ///
-  /// It assumes a liniar relationship based on a regression on
+  /// It assumes a linear relationship based on a regression on
   /// these measures of battery and voltages levels:
   ///
   /// ```
@@ -125,6 +127,9 @@ class ESenseDeviceManager extends BTLEDeviceManager<ESenseDevice> {
   int? get batteryLevel => (_voltageLevel != null)
       ? ((1.19 * _voltageLevel! - 3.91) * 100).toInt()
       : null;
+
+  @override
+  Stream<int> get batteryEvents => _batteryEventController.stream;
 
   ESenseDeviceManager(
     super.type, [
@@ -163,6 +168,9 @@ class ESenseDeviceManager extends BTLEDeviceManager<ESenseDevice> {
             manager!.eSenseEvents.listen((event) {
               if (event is BatteryRead) {
                 _voltageLevel = event.voltage ?? 4;
+                if (batteryLevel != null) {
+                  _batteryEventController.add(batteryLevel!);
+                }
               }
             });
 

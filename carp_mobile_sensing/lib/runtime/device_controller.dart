@@ -11,6 +11,7 @@ part of runtime;
 class DeviceController implements DeviceDataCollectorFactory {
   static final DeviceController _instance = DeviceController._();
   final Map<String, DeviceManager> _devices = {};
+  final StreamGroup<BatteryStatus> _batteryEventGroup = StreamGroup.broadcast();
 
   /// The period of sending [Heartbeat] measurements, in minutes.
   static const int HEARTBEAT_PERIOD = 5;
@@ -22,9 +23,12 @@ class DeviceController implements DeviceDataCollectorFactory {
   @override
   Map<String, DeviceManager> get devices => _devices;
 
-  /// Get the list of connected devices defined in the study deployment.
+  /// The list of connected devices defined in the study deployment.
   List<DeviceManager> get connectedDevices =>
       _devices.values.where((manager) => manager.isInitialized).toList();
+
+  /// The stream of all battery events from all connected devices.
+  Stream<BatteryStatus> get batteryEvents => _batteryEventGroup.stream;
 
   @override
   bool supportsDevice(String type) {
@@ -75,6 +79,11 @@ class DeviceController implements DeviceDataCollectorFactory {
   void registerDevice(String deviceType, DeviceDataCollector manager) {
     manager.type = deviceType;
     _devices[deviceType] = manager as DeviceManager;
+    if (manager is HardwareDeviceManager) {
+      _batteryEventGroup.add(manager.batteryEvents.map((batteryLevel) =>
+          BatteryStatus(manager.id, manager.type,
+              manager.configuration?.roleName, batteryLevel)));
+    }
   }
 
   @override
@@ -137,4 +146,25 @@ class DeviceController implements DeviceDataCollectorFactory {
 
   @override
   String toString() => '$runtimeType [${_devices.length}]';
+}
+
+/// Runtime battery status of a device.
+class BatteryStatus {
+  final String deviceId;
+  final String deviceType;
+  final String? deviceRoleName;
+  final int batteryLevel;
+  BatteryStatus(
+    this.deviceId,
+    this.deviceType,
+    this.deviceRoleName,
+    this.batteryLevel,
+  );
+
+  @override
+  String toString() => '$runtimeType - '
+      'device id: $deviceId, '
+      'type: $deviceType, '
+      'role name: $deviceRoleName, '
+      'battery level: $batteryLevel';
 }

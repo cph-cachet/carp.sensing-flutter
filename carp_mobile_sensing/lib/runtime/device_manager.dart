@@ -15,6 +15,7 @@ abstract class DeviceManager<TDeviceConfiguration extends DeviceConfiguration>
       StreamController.broadcast();
 
   Timer? _heartbeatTimer;
+  DeviceStatus _status = DeviceStatus.unknown;
 
   /// The set of task control executors that use this device manager.
   final Set<TaskControlExecutor> executors = {};
@@ -27,11 +28,6 @@ abstract class DeviceManager<TDeviceConfiguration extends DeviceConfiguration>
   @override
   Set<String> get supportedDataTypes => configuration?.supportedDataTypes ?? {};
 
-  /// The stream of status events for this device.
-  Stream<DeviceStatus> get statusEvents => _eventController.stream;
-
-  DeviceStatus _status = DeviceStatus.unknown;
-
   /// The runtime status of this device.
   DeviceStatus get status => _status;
 
@@ -42,10 +38,13 @@ abstract class DeviceManager<TDeviceConfiguration extends DeviceConfiguration>
     _eventController.add(_status);
   }
 
+  /// The stream of status events for this device.
+  Stream<DeviceStatus> get statusEvents => _eventController.stream;
+
   /// Has this device manager been initialized?
   bool get isInitialized => status.index >= DeviceStatus.initialized.index;
 
-  /// Has this device manager been connected?
+  /// Is this device manager connected to the real device?
   bool get isConnected => status == DeviceStatus.connected;
 
   /// Initialize the device manager by specifying its [configuration].
@@ -180,12 +179,19 @@ abstract class OnlineServiceManager<TDeviceConfiguration extends OnlineService>
 }
 
 /// A [DeviceManager] for a hardware device.
+///
+/// The main assumption for a hardware device is that it has a battery and
+/// this hardware device manager allow for getting the battery level and
+/// listen to battery events.
 abstract class HardwareDeviceManager<
         TDeviceConfiguration extends DeviceConfiguration>
     extends DeviceManager<TDeviceConfiguration> {
   /// The runtime battery level of this hardware device.
   /// Returns null if unknown.
   int? get batteryLevel;
+
+  /// The stream of battery level events.
+  Stream<int> get batteryEvents => const Stream.empty();
 
   HardwareDeviceManager(
     super.type, [
@@ -228,6 +234,10 @@ class SmartphoneDeviceManager extends HardwareDeviceManager<Smartphone> {
 
   @override
   int get batteryLevel => _batteryLevel;
+
+  @override
+  Stream<int> get batteryEvents =>
+      battery.onBatteryStateChanged.map((_) => _batteryLevel);
 
   @override
   Future<bool> canConnect() async => true; // can always connect to the phone
