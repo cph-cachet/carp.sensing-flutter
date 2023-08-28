@@ -1,3 +1,8 @@
+## 1.1.4
+
+* battery stream on device controller and device managers
+* support for creating, scheduling, and cancelling generic text-based notifications in the notification controller
+
 ## 1.1.3
 
 * added support for restoring a `SmartPhoneClientManager` on app restart

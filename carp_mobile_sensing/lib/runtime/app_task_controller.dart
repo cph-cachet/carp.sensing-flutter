@@ -142,10 +142,10 @@ class AppTaskController {
         (triggerTime == null)
             ? await SmartPhoneClientManager()
                 .notificationController
-                ?.sendNotification(userTask)
+                ?.createTaskNotification(userTask)
             : await SmartPhoneClientManager()
                 .notificationController
-                ?.scheduleNotification(userTask);
+                ?.scheduleTaskNotification(userTask);
       }
       return userTask;
     }
@@ -165,7 +165,7 @@ class AppTaskController {
       if (notificationsEnabled) {
         SmartPhoneClientManager()
             .notificationController
-            ?.cancelNotification(userTask);
+            ?.cancelTaskNotification(userTask);
       }
     }
   }
@@ -186,7 +186,7 @@ class AppTaskController {
 
       SmartPhoneClientManager()
           .notificationController
-          ?.cancelNotification(userTask);
+          ?.cancelTaskNotification(userTask);
     }
   }
 
@@ -206,7 +206,7 @@ class AppTaskController {
       }
       SmartPhoneClientManager()
           .notificationController
-          ?.cancelNotification(userTask);
+          ?.cancelTaskNotification(userTask);
     }
   }
 

@@ -7,6 +7,8 @@ class AwesomeNotificationController implements NotificationController {
       AwesomeNotificationController._();
   AwesomeNotificationController._() : super();
 
+  final Random _random = Random();
+
   /// The singleton [NotificationController].
   factory AwesomeNotificationController() => _instance;
 
@@ -51,11 +53,69 @@ class AwesomeNotificationController implements NotificationController {
   }
 
   @override
+  Future<int> createNotification({
+    int? id,
+    required String title,
+    String? body,
+  }) async {
+    id ??= _random.nextInt(1000);
+    await AwesomeNotifications().createNotification(
+      content: NotificationContent(
+        id: id,
+        channelKey: NotificationController.CHANNEL_ID,
+        title: title,
+        body: body,
+        wakeUpScreen: true,
+      ),
+    );
+    return id;
+  }
+
+  @override
+  Future<int> scheduleNotification(
+      {int? id,
+      required String title,
+      String? body,
+      required DateTime schedule}) async {
+    id ??= _random.nextInt(1000);
+    await AwesomeNotifications().createNotification(
+        content: NotificationContent(
+          id: id,
+          channelKey: NotificationController.SCHEDULED_CHANNEL_ID,
+          title: title,
+          body: body,
+          wakeUpScreen: true,
+        ),
+        schedule: NotificationCalendar.fromDate(
+          date: schedule,
+          allowWhileIdle: true,
+        ));
+    return id;
+  }
+
+  @override
+  Future<void> cancelNotification(int id) async =>
+      await AwesomeNotifications().cancel(id);
+
+  @override
   Future<int> get pendingNotificationRequestsCount async =>
       (await AwesomeNotifications().listScheduledNotifications()).length;
 
   @override
-  Future<void> scheduleNotification(UserTask task) async {
+  Future<void> createTaskNotification(UserTask task) async =>
+      await AwesomeNotifications().createNotification(
+        content: NotificationContent(
+            id: task.id.hashCode,
+            channelKey: NotificationController.CHANNEL_ID,
+            title: task.title,
+            body: task.description,
+            payload: {'task_id': task.id},
+            wakeUpScreen: true,
+            notificationLayout: NotificationLayout.Default),
+      );
+
+  @override
+  Future<void> scheduleTaskNotification(UserTask task) async {
     // early out if not to be scheduled
     if (!task.notification) return;
 
@@ -91,21 +151,7 @@ class AwesomeNotificationController implements NotificationController {
   }
 
   @override
-  Future<void> sendNotification(UserTask task) async {
-    await AwesomeNotifications().createNotification(
-      content: NotificationContent(
-          id: task.id.hashCode,
-          channelKey: NotificationController.CHANNEL_ID,
-          title: task.title,
-          body: task.description,
-          payload: {'task_id': task.id},
-          wakeUpScreen: true,
-          notificationLayout: NotificationLayout.Default),
-    );
-  }
-
-  @override
-  Future<void> cancelNotification(UserTask task) async {
+  Future<void> cancelTaskNotification(UserTask task) async {
     if (task.notification) {
       await AwesomeNotifications().cancel(task.id.hashCode);
       info('$runtimeType - Notification canceled for $task');

@@ -32,14 +32,14 @@ First, since CAMS rely on the [awesome_notifications](https://pub.dev/packages/a
 
 ### Android Integration
 
-Set the minimum android SDK to 21 and Java SDK Version to 33 by setting the `minSdkVersion`, the `compileSdkVersion`, and `targetSdkVersion` in the `build.gradle` file, located in the `android/app/` folder:
+Set the minimum android SDK to 23 and Java SDK Version to 33 by setting the `minSdkVersion`, the `compileSdkVersion`, and `targetSdkVersion` in the `build.gradle` file, located in the `android/app/` folder:
 
 ```gradle
 android {
     compileSdkVersion 33
 
     defaultConfig {
-        minSdkVersion 21
+        minSdkVersion 23
         targetSdkVersion 33
         ...
     }

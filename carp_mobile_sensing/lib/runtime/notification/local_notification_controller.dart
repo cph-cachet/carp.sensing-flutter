@@ -19,6 +19,8 @@ class FlutterLocalNotificationController implements NotificationController {
       FlutterLocalNotificationController._();
   FlutterLocalNotificationController._() : super();
 
+  final Random _random = Random();
+
   /// The singleton [NotificationController].
   factory FlutterLocalNotificationController() => _instance;
 
@@ -46,7 +48,8 @@ class FlutterLocalNotificationController implements NotificationController {
     }
   }
 
-  final NotificationDetails _platformChannelSpecifics = const NotificationDetails(
+  final NotificationDetails _platformChannelSpecifics =
+      const NotificationDetails(
     android: AndroidNotificationDetails(
       NotificationController.CHANNEL_ID,
       NotificationController.CHANNEL_NAME,
@@ -58,9 +61,53 @@ class FlutterLocalNotificationController implements NotificationController {
     iOS: DarwinNotificationDetails(),
   );
 
+  @override
+  Future<int> createNotification({
+    int? id,
+    required String title,
+    String? body,
+  }) async {
+    id ??= _random.nextInt(1000);
+    await FlutterLocalNotificationsPlugin().show(
+      id,
+      title,
+      body,
+      _platformChannelSpecifics,
+    );
+    return id;
+  }
+
+  @override
+  Future<int> scheduleNotification(
+      {int? id,
+      required String title,
+      String? body,
+      required DateTime schedule}) async {
+    id ??= _random.nextInt(1000);
+    final time =
+        tz.TZDateTime.from(schedule, tz.getLocation(Settings().timezone));
+
+    await FlutterLocalNotificationsPlugin().zonedSchedule(
+      id,
+      title,
+      body,
+      time,
+      _platformChannelSpecifics,
+      androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
+      uiLocalNotificationDateInterpretation:
+          UILocalNotificationDateInterpretation.absoluteTime,
+    );
+
+    return id;
+  }
+
+  @override
+  Future<void> cancelNotification(int id) async =>
+      await FlutterLocalNotificationsPlugin().cancel(id);
+
   /// Send an immediate notification for a [task].
   @override
-  Future<void> sendNotification(UserTask task) async {
+  Future<void> createTaskNotification(UserTask task) async {
     if (task.notification) {
       await FlutterLocalNotificationsPlugin().show(
         task.id.hashCode,
@@ -75,7 +122,7 @@ class FlutterLocalNotificationController implements NotificationController {
 
   /// Schedule a notification for a [task] at the [UserTask.triggerTime].
   @override
-  Future<void> scheduleNotification(UserTask task) async {
+  Future<void> scheduleTaskNotification(UserTask task) async {
     // early out if not to be scheduled
     if (!task.notification) return;
 
@@ -113,7 +160,7 @@ class FlutterLocalNotificationController implements NotificationController {
 
   /// Cancel (i.e., remove) the notification for the [task].
   @override
-  Future<void> cancelNotification(UserTask task) async {
+  Future<void> cancelTaskNotification(UserTask task) async {
     if (task.notification) {
       await FlutterLocalNotificationsPlugin().cancel(task.id.hashCode);
       info('$runtimeType - Notification canceled for $task');

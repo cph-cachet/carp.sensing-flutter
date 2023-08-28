@@ -41,33 +41,72 @@ abstract class NotificationController {
   /// Also tries to get permissions to send notifications.
   Future<void> initialize();
 
-  /// Send an immediate notification for a [task].
-  Future<void> sendNotification(UserTask task);
+  /// Create an immediate notification with [id], [title], and [body].
+  /// If the [id] is not specified, a random id will be generated.
+  ///
+  /// Returns the id of the notification.
+  Future<int> createNotification({
+    int? id,
+    required String title,
+    String? body,
+  });
+
+  /// Schedule a notification with [id], [title], and [body] at the [schedule] time.
+  /// If the [id] is not specified, a random id will be generated.
+  ///
+  /// Returns the id of the notification.
+  Future<int> scheduleNotification({
+    int? id,
+    required String title,
+    String? body,
+    required DateTime schedule,
+  });
+
+  /// Cancel (i.e., remove) the notification with [id].
+  Future<void> cancelNotification(int id);
+
+  /// Create an immediate notification for a [task].
+  Future<void> createTaskNotification(UserTask task);
 
   /// Schedule a notification for a [task] at the [task.triggerTime].
-  Future<void> scheduleNotification(UserTask task);
+  Future<void> scheduleTaskNotification(UserTask task);
+
+  /// Cancel (i.e., remove) the notification for the [task].
+  Future<void> cancelTaskNotification(UserTask task);
 
   /// The number of pending notifications.
   Future<int> get pendingNotificationRequestsCount;
-
-  /// Cancel (i.e., remove) the notification for the [task].
-  Future<void> cancelNotification(UserTask task);
 }
 
 /// A no-operation notification controller that does nothing.
 class NoOpNotificationController implements NotificationController {
   @override
-  Future<void> cancelNotification(UserTask task) async {}
+  Future<int> createNotification(
+          {int? id, required String title, String? body}) async =>
+      0;
+
+  @override
+  Future<int> scheduleNotification(
+          {int? id,
+          required String title,
+          String? body,
+          required DateTime schedule}) async =>
+      0;
+
+  @override
+  Future<void> cancelNotification(int id) async {}
+  @override
+  Future<void> cancelTaskNotification(UserTask task) async {}
 
   @override
   Future<void> initialize() async {}
 
   @override
+  Future<void> scheduleTaskNotification(UserTask task) async {}
+
+  @override
+  Future<void> createTaskNotification(UserTask task) async {}
+
+  @override
   Future<int> get pendingNotificationRequestsCount async => 0;
-
-  @override
-  Future<void> scheduleNotification(UserTask task) async {}
-
-  @override
-  Future<void> sendNotification(UserTask task) async {}
 }

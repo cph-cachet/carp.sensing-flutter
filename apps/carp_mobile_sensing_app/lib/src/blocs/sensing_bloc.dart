@@ -141,8 +141,23 @@ class SensingBLoC {
       .devices[device.type!]!
       .connect();
 
-  void start() async => SmartPhoneClientManager().start();
-  void stop() async => SmartPhoneClientManager().stop();
+  void start() async {
+    SmartPhoneClientManager().notificationController?.createNotification(
+          title: 'Sensing Started',
+          body:
+              'Data sampling is now running in the background. Click the STOP button to stop sampling again.',
+        );
+    SmartPhoneClientManager().start();
+  }
+
+  void stop() async {
+    SmartPhoneClientManager().notificationController?.createNotification(
+          title: 'Sensing Stopped',
+          body:
+              'Sampling is stopped and no more data will be collected. Click the START button to restart sampling.',
+        );
+    SmartPhoneClientManager().stop();
+  }
 
   /// Is sensing running, i.e. has the study executor been started?
   bool get isRunning =>

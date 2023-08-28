@@ -77,6 +77,9 @@ class DeviceController implements DeviceDataCollectorFactory {
 
   @override
   void registerDevice(String deviceType, DeviceDataCollector manager) {
+    if (_devices.containsKey(deviceType)) return;
+
+    debug('$runtimeType - registering device of type: $deviceType');
     manager.type = deviceType;
     _devices[deviceType] = manager as DeviceManager;
     if (manager is HardwareDeviceManager) {
@@ -154,6 +157,7 @@ class BatteryStatus {
   final String deviceType;
   final String? deviceRoleName;
   final int batteryLevel;
+
   BatteryStatus(
     this.deviceId,
     this.deviceType,
@@ -166,5 +170,5 @@ class BatteryStatus {
       'device id: $deviceId, '
       'type: $deviceType, '
       'role name: $deviceRoleName, '
-      'battery level: $batteryLevel';
+      'battery level: $batteryLevel ';
 }
