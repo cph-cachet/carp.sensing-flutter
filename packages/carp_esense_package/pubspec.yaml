@@ -26,8 +26,8 @@ dependencies:
 #     path: ../../carp_serializable/
 #   carp_core:
 #     path: ../../carp_core/
-  carp_mobile_sensing:
-    path: ../../carp_mobile_sensing/
+  # carp_mobile_sensing:
+  #   path: ../../carp_mobile_sensing/
 
 dev_dependencies:
   flutter_lints: any
