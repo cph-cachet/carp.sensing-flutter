@@ -5,22 +5,22 @@
  * found in the LICENSE file.
  */
 
-part of carp_context_package;
+part of health_package;
 
-/// An [OnlineService] for the [Open Weather](https://openweathermap.org/) service.
+/// An [OnlineService] for the [health](https://pub.dev/packages/health) service.
 @JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
-class WeatherService extends OnlineService {
-  /// The type of a air quality service.
+class HealthService extends OnlineService {
+  /// The type of the health service.
   static const String DEVICE_TYPE =
-      '${DeviceConfiguration.DEVICE_NAMESPACE}.WeatherService';
+      '${DeviceConfiguration.DEVICE_NAMESPACE}.HealthService';
 
-  /// The default role name for a weather service.
-  static const String DEFAULT_ROLENAME = 'Weather Service';
+  /// The default role name for a health service.
+  static const String DEFAULT_ROLENAME = 'Health Service';
 
   /// API key for the Open Weather API.
   String apiKey;
 
-  WeatherService({
+  HealthService({
     String? roleName,
     required this.apiKey,
   }) : super(
@@ -28,15 +28,15 @@ class WeatherService extends OnlineService {
         );
 
   @override
-  Function get fromJsonFunction => _$WeatherServiceFromJson;
-  factory WeatherService.fromJson(Map<String, dynamic> json) =>
-      FromJsonFactory().fromJson(json) as WeatherService;
+  Function get fromJsonFunction => _$HealthServiceFromJson;
+  factory HealthService.fromJson(Map<String, dynamic> json) =>
+      FromJsonFactory().fromJson(json) as HealthService;
   @override
-  Map<String, dynamic> toJson() => _$WeatherServiceToJson(this);
+  Map<String, dynamic> toJson() => _$HealthServiceToJson(this);
 }
 
 /// A [DeviceManager] for the [WeatherService].
-class WeatherServiceManager extends OnlineServiceManager<WeatherService> {
+class HealthServiceManager extends OnlineServiceManager<HealthService> {
   weather.WeatherFactory? _service;
 
   /// A handle to the [WeatherFactory] plugin.
@@ -47,26 +47,18 @@ class WeatherServiceManager extends OnlineServiceManager<WeatherService> {
           : null;
 
   @override
-  List<Permission> get permissions => [
-        Permission.locationAlways,
-      ];
-
-  @override
   String get id => configuration!.apiKey;
 
   @override
   String? get displayName => 'Weather Service (OW)';
 
-  WeatherServiceManager([
-    WeatherService? configuration,
-  ]) : super(WeatherService.DEVICE_TYPE, configuration);
-
-  @override
-  Future<void> onRequestPermissions() async {}
+  HealthServiceManager([
+    HealthService? configuration,
+  ]) : super(HealthService.DEVICE_TYPE, configuration);
 
   @override
   // ignore: avoid_renaming_method_parameters
-  void onInitialize(WeatherService service) {}
+  void onInitialize(HealthService service) {}
 
   @override
   Future<bool> canConnect() async {

@@ -47,6 +47,11 @@ class AirQualityServiceManager extends OnlineServiceManager<AirQualityService> {
           : null;
 
   @override
+  List<Permission> get permissions => [
+        Permission.locationAlways,
+      ];
+
+  @override
   String get id => configuration!.apiKey;
 
   @override
@@ -59,6 +64,9 @@ class AirQualityServiceManager extends OnlineServiceManager<AirQualityService> {
   @override
   // ignore: avoid_renaming_method_parameters
   void onInitialize(AirQualityService service) {}
+
+  @override
+  Future<void> onRequestPermissions() async {}
 
   @override
   Future<bool> canConnect() async {

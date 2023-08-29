@@ -1,3 +1,7 @@
+## 1.2.0
+
+* update to `carp_mobile_sensing` v. 1.2.0 using the new device permissions model
+
 ## 1.1.1
 
 * update to `carp_mobile_sensing` v. 1.1.0

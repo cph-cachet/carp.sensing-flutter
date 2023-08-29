@@ -77,6 +77,7 @@ class PolarDevice extends BLEHeartRateDevice {
 class PolarDeviceManager extends BTLEDeviceManager<PolarDevice> {
   int? _batteryLevel;
   bool _polarFeaturesAvailable = false;
+  StreamController<int> _batteryEventController = StreamController.broadcast();
   StreamSubscription<PolarBatteryLevelEvent>? _batterySubscription;
   StreamSubscription<PolarDeviceInfo>? _connectingSubscription;
   StreamSubscription<PolarDeviceInfo>? _connectedSubscription;
@@ -136,6 +137,9 @@ class PolarDeviceManager extends BTLEDeviceManager<PolarDevice> {
   int? get batteryLevel => _batteryLevel;
 
   @override
+  Stream<int> get batteryEvents => _batteryEventController.stream;
+
+  @override
   String get btleAddress => configuration?.address ?? '';
 
   @override
@@ -145,6 +149,9 @@ class PolarDeviceManager extends BTLEDeviceManager<PolarDevice> {
     super.type, [
     super.configuration,
   ]);
+
+  @override
+  Future<void> onRequestPermissions() async => await polar.requestPermissions();
 
   @override
   Future<bool> canConnect() async => configuration?.identifier != null;
@@ -163,22 +170,7 @@ class PolarDeviceManager extends BTLEDeviceManager<PolarDevice> {
         _batterySubscription = polar.batteryLevel.listen((event) {
           debug('$runtimeType - Polar event : $event');
           _batteryLevel = event.level;
-        });
-
-        // listen for what features the connected Polar device supports
-        polar.sdkFeatureReady.listen((event) {
-          debug('$runtimeType - Polar event : $event');
-
-          if (configuration!.identifier == event.identifier) {
-            polar
-                .getAvailableOnlineStreamDataTypes(event.identifier)
-                .then((dataTypes) {
-              features = dataTypes.toList();
-              debug('$runtimeType - features: $features');
-              _polarFeaturesAvailable = true;
-              status = DeviceStatus.connected;
-            });
-          }
+          _batteryEventController.add(_batteryLevel!);
         });
 
         // listen for connection events
@@ -205,7 +197,25 @@ class PolarDeviceManager extends BTLEDeviceManager<PolarDevice> {
           _batteryLevel = null;
         });
 
+        // connect to the device based on its identified (id)
         polar.connectToDevice(id, requestPermissions: true);
+
+        // listen for what features the connected Polar device supports
+        polar.sdkFeatureReady.listen((event) {
+          debug('$runtimeType - Polar event : $event');
+
+          if (configuration!.identifier == event.identifier &&
+              event.feature == PolarSdkFeature.onlineStreaming) {
+            polar
+                .getAvailableOnlineStreamDataTypes(event.identifier)
+                .then((dataTypes) {
+              features = dataTypes.toList();
+              debug('$runtimeType - features: $features');
+              _polarFeaturesAvailable = true;
+              status = DeviceStatus.connected;
+            });
+          }
+        });
 
         return DeviceStatus.connecting;
       } catch (error) {

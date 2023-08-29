@@ -124,8 +124,9 @@ class ContextSamplingPackage extends SmartphoneSamplingPackage {
   }
 
   @override
-  List<Permission> get permissions =>
-      [Permission.locationAlways, Permission.activityRecognition];
+  List<Permission> get permissions => [
+        Permission.activityRecognition,
+      ];
 }
 
 /// The location sampling package.

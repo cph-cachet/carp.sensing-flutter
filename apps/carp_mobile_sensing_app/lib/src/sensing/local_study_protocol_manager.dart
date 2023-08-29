@@ -206,7 +206,8 @@ class LocalStudyProtocolManager implements StudyProtocolManager {
         ImmediateTrigger(),
         BackgroundTask()
           ..addMeasure(Measure(type: ESenseSamplingPackage.ESENSE_BUTTON))
-          ..addMeasure(Measure(type: ESenseSamplingPackage.ESENSE_SENSOR)),
+        // ..addMeasure(Measure(type: ESenseSamplingPackage.ESENSE_SENSOR))
+        ,
         eSense);
 
     // define the Polar device and add its measures
@@ -229,9 +230,9 @@ class LocalStudyProtocolManager implements StudyProtocolManager {
         ImmediateTrigger(),
         BackgroundTask(measures: [
           Measure(type: PolarSamplingPackage.HR),
-          Measure(type: PolarSamplingPackage.ECG),
-          Measure(type: PolarSamplingPackage.PPG),
-          Measure(type: PolarSamplingPackage.PPI),
+          // Measure(type: PolarSamplingPackage.ECG),
+          // Measure(type: PolarSamplingPackage.PPG),
+          // Measure(type: PolarSamplingPackage.PPI),
         ]),
         polar);
 

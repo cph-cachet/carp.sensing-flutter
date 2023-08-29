@@ -29,7 +29,7 @@ class DevicesListState extends State<DevicesList> {
               itemCount: devices.length,
               padding: EdgeInsets.symmetric(vertical: 8.0),
               itemBuilder: (context, index) =>
-                  _buildTaskCard(context, devices[index]),
+                  _deviceCard(context, devices[index]),
             ),
           );
         },
@@ -37,7 +37,7 @@ class DevicesListState extends State<DevicesList> {
     );
   }
 
-  Widget _buildTaskCard(BuildContext context, DeviceModel device) {
+  Widget _deviceCard(BuildContext context, DeviceModel device) {
     return Center(
       child: Card(
         elevation: 10,
@@ -60,6 +60,27 @@ class DevicesListState extends State<DevicesList> {
               TextButton(
                   child: const Text('How to use this device?'),
                   onPressed: () => print('Use the $device')),
+              FutureBuilder<bool>(
+                  future: device.deviceManager.hasPermissions(),
+                  builder: (
+                    BuildContext context,
+                    AsyncSnapshot<bool> snapshot,
+                  ) {
+                    Widget w = Text("");
+
+                    if (snapshot.hasData && !snapshot.data!) {
+                      w = Column(children: [
+                        const Divider(),
+                        TextButton(
+                          child: const Text(
+                              'Request permissions to access this device'),
+                          onPressed: () =>
+                              device.deviceManager.requestPermissions(),
+                        ),
+                      ]);
+                    }
+                    return w;
+                  }),
               (device.status != DeviceStatus.connected)
                   ? Column(children: [
                       const Divider(),

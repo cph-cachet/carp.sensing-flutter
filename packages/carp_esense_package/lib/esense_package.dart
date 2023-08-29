@@ -92,13 +92,7 @@ class ESenseSamplingPackage implements SamplingPackage {
   }
 
   @override
-  List<Permission> get permissions => [
-        Permission.location,
-        Permission.microphone,
-        Permission.bluetooth,
-        Permission.bluetoothConnect,
-        Permission.bluetoothScan,
-      ];
+  List<Permission> get permissions => [];
 
   @override
   String get deviceType => ESenseDevice.DEVICE_TYPE;

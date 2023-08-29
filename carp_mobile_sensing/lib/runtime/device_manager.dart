@@ -14,11 +14,21 @@ abstract class DeviceManager<TDeviceConfiguration extends DeviceConfiguration>
   final StreamController<DeviceStatus> _eventController =
       StreamController.broadcast();
 
+  bool _hasPermissions = false;
   Timer? _heartbeatTimer;
   DeviceStatus _status = DeviceStatus.unknown;
 
   /// The set of task control executors that use this device manager.
   final Set<TaskControlExecutor> executors = {};
+
+  /// The list of permissions that this device need in order to run.
+  ///
+  /// See [Permission](https://pub.dev/documentation/permission_handler/latest/permission_handler/Permission/values-constant.html)
+  /// for a list of possible permissions.
+  ///
+  /// For Android permission in the Manifest.xml file, see
+  /// [Manifest.permission]https://developer.android.com/reference/kotlin/android/Manifest.permission)
+  List<Permission> get permissions;
 
   DeviceManager(
     super.type, [
@@ -27,6 +37,9 @@ abstract class DeviceManager<TDeviceConfiguration extends DeviceConfiguration>
 
   @override
   Set<String> get supportedDataTypes => configuration?.supportedDataTypes ?? {};
+
+  /// The name of the [type] without the namespace.
+  String get typeName => type.split('.').last;
 
   /// The runtime status of this device.
   DeviceStatus get status => _status;
@@ -51,7 +64,7 @@ abstract class DeviceManager<TDeviceConfiguration extends DeviceConfiguration>
   @nonVirtual
   void initialize(TDeviceConfiguration configuration) {
     info(
-        'Initializing device manager, type: $type, configuration: $configuration');
+        'Initializing device manager, type: $typeName, configuration: $configuration');
     super.configuration = configuration;
     onInitialize(configuration);
 
@@ -88,6 +101,40 @@ abstract class DeviceManager<TDeviceConfiguration extends DeviceConfiguration>
   /// Stop heartbeat monitoring for this device.
   void stopHeartbeatMonitoring() => _heartbeatTimer?.cancel();
 
+  /// Does this device manager have the [permissions] to run?
+  @nonVirtual
+  Future<bool> hasPermissions() async {
+    if (!_hasPermissions) {
+      info(
+          '$runtimeType - Checking permissions for device of type: $typeName and id: $id');
+      _hasPermissions = true;
+      for (var permission in permissions) {
+        bool isGranted = await permission.isGranted;
+        debug('$runtimeType - Permission of $permission: $isGranted');
+        _hasPermissions = isGranted && _hasPermissions;
+      }
+      debug('$runtimeType - Permission of all permissions: $_hasPermissions');
+    }
+    return _hasPermissions;
+  }
+
+  /// Request all [permissions] for this device manager.
+  @nonVirtual
+  Future<void> requestPermissions() async {
+    info(
+        '$runtimeType - Requesting permissions for device of type: $typeName and id: $id');
+    for (var permission in permissions) {
+      await permission.request();
+    }
+
+    await onRequestPermissions();
+  }
+
+  /// Callback on [requestPermissions].
+  ///
+  /// Is to be overridden in sub-classes for device-specific permission handling.
+  Future<void> onRequestPermissions();
+
   /// Ask this [DeviceManager] to start connecting to the device.
   ///
   /// Returns the [DeviceStatus] of the device.
@@ -98,8 +145,14 @@ abstract class DeviceManager<TDeviceConfiguration extends DeviceConfiguration>
       return status;
     }
 
+    if (!(await hasPermissions())) {
+      warning('$runtimeType has not the permissions required to connect. '
+          'Call requestPermissions() before calling connect.');
+      return status;
+    }
+
     info(
-        '$runtimeType - Trying to connect to device of type: $type and id: $id');
+        '$runtimeType - Trying to connect to device of type: $typeName and id: $id');
 
     try {
       status = await onConnect();
@@ -153,7 +206,7 @@ abstract class DeviceManager<TDeviceConfiguration extends DeviceConfiguration>
     }
 
     info(
-        '$runtimeType - Trying to disconnect to device of type: $type and id: $id');
+        '$runtimeType - Trying to disconnect to device of type: $typeName and id: $id');
     success = await onDisconnect();
     status = (success) ? DeviceStatus.disconnected : DeviceStatus.error;
 
@@ -166,7 +219,8 @@ abstract class DeviceManager<TDeviceConfiguration extends DeviceConfiguration>
   Future<bool> onDisconnect();
 
   @override
-  String toString() => '$runtimeType - type: $type, id: $id, status: $status';
+  String toString() =>
+      '$runtimeType - type: $typeName, id: $id, status: $status';
 }
 
 /// A [DeviceManager] for an online service, like a weather service.
@@ -206,6 +260,9 @@ class SmartphoneDeviceManager extends HardwareDeviceManager<Smartphone> {
   final Set<String> _supportedDataTypes = {};
 
   @override
+  List<Permission> get permissions => [];
+
+  @override
   Set<String> get supportedDataTypes => _supportedDataTypes;
 
   @override
@@ -243,6 +300,9 @@ class SmartphoneDeviceManager extends HardwareDeviceManager<Smartphone> {
   Future<bool> canConnect() async => true; // can always connect to the phone
 
   @override
+  Future<void> onRequestPermissions() async {}
+
+  @override
   Future<DeviceStatus> onConnect() async => DeviceStatus.connected;
 
   @override
@@ -264,6 +324,13 @@ abstract class BTLEDeviceManager<
   /// Returns empty string if unknown.
   String get btleName => _btleName;
   set btleName(String btleName) => _btleName = btleName;
+
+  @override
+  List<Permission> get permissions => [
+        // Permission.bluetooth,
+        Permission.bluetoothConnect,
+        Permission.bluetoothScan,
+      ];
 
   BTLEDeviceManager(
     super.type, [

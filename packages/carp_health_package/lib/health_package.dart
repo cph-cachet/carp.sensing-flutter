@@ -24,6 +24,7 @@ import 'package:health/health.dart';
 part 'health_domain.dart';
 part 'health_package.g.dart';
 part 'health_probe.dart';
+part 'health_services.dart';
 
 HealthFactory _healthFactory = HealthFactory();
 

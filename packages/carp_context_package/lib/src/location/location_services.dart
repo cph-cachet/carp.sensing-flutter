@@ -79,6 +79,11 @@ class LocationServiceManager extends OnlineServiceManager<LocationService> {
   LocationManager manager = LocationManager();
 
   @override
+  List<Permission> get permissions => [
+        Permission.locationAlways,
+      ];
+
+  @override
   String get id => manager.hashCode.toString();
 
   @override
@@ -103,4 +108,8 @@ class LocationServiceManager extends OnlineServiceManager<LocationService> {
 
   @override
   Future<bool> onDisconnect() async => true;
+
+  @override
+  Future<void> onRequestPermissions() async =>
+      LocationManager().requestPermission();
 }

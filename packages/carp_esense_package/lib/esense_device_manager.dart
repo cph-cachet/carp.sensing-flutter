@@ -91,6 +91,13 @@ class ESenseDeviceManager extends BTLEDeviceManager<ESenseDevice> {
   ESenseManager? manager;
 
   @override
+  List<Permission> get permissions => [
+        Permission.microphone,
+        Permission.bluetoothConnect,
+        Permission.bluetoothScan,
+      ];
+
+  @override
   String get id => configuration?.deviceName ?? 'eSense-????';
 
   @override
@@ -141,6 +148,9 @@ class ESenseDeviceManager extends BTLEDeviceManager<ESenseDevice> {
       configuration!.deviceName!.isNotEmpty);
 
   @override
+  Future<void> onRequestPermissions() async {}
+
+  @override
   Future<DeviceStatus> onConnect() async {
     if (configuration?.deviceName == null ||
         configuration!.deviceName!.isEmpty) {
@@ -167,7 +177,7 @@ class ESenseDeviceManager extends BTLEDeviceManager<ESenseDevice> {
             // when connected, listen for battery events
             manager!.eSenseEvents.listen((event) {
               if (event is BatteryRead) {
-                _voltageLevel = event.voltage ?? 4;
+                _voltageLevel = event.voltage;
                 if (batteryLevel != null) {
                   _batteryEventController.add(batteryLevel!);
                 }

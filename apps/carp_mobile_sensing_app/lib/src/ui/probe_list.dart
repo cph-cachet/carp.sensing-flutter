@@ -17,7 +17,7 @@ class ProbeListState extends State<ProbesList> {
     Iterable<Widget> probes = ListTile.divideTiles(
         context: context,
         tiles: bloc.runningProbes
-            .map<Widget>((probe) => _buildProbeListTile(context, probe)));
+            .map<Widget>((probe) => _probeListTile(context, probe)));
 
     return Scaffold(
       key: scaffoldKey,
@@ -45,7 +45,7 @@ class ProbeListState extends State<ProbesList> {
     );
   }
 
-  Widget _buildProbeListTile(BuildContext context, ProbeModel probe) {
+  Widget _probeListTile(BuildContext context, ProbeModel probe) {
     return StreamBuilder<ExecutorState>(
       stream: probe.stateEvents,
       initialData: ExecutorState.created,

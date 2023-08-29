@@ -52,7 +52,7 @@ void main() async {
   await bloc.initialize(
     deploymentMode: DeploymentMode.local,
     // deploymentId: testDeploymentId,
-    // useCachedStudyDeployment: false,
+    useCachedStudyDeployment: false,
     resumeSensingOnStartup: false,
   );
 

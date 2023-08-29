@@ -107,6 +107,7 @@ class Sensing {
     // (local or CAWS), add the study, and deploy it.
     await SmartPhoneClientManager().configure(
       deploymentService: deploymentService,
+      askForPermissions: false,
     );
     study = await SmartPhoneClientManager().addStudy(
       bloc.studyDeploymentId!,

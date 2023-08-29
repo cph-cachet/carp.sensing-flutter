@@ -1,7 +1,8 @@
-## 1.1.4
+## 1.2.0
 
 * battery stream on device controller and device managers
 * support for creating, scheduling, and cancelling generic text-based notifications in the notification controller
+* a device manager can now specify and handle its required permissions
 
 ## 1.1.3
 
