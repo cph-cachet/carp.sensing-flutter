@@ -1,3 +1,7 @@
+## 1.1.1
+
+* update to `polar` v. 6.0 (Polar API level 5.2)
+
 ## 1.1.0
 
 * update to `carp_mobile_sensing` v. 1.1.0

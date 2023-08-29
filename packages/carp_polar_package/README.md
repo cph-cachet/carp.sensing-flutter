@@ -166,8 +166,8 @@ Before executing a study with an Polar measure, register this package in the
 SamplingPackageRegistry().register(PolarSamplingPackage());
 `````
 
-> **NOTE** that the Polar device `identifier` must be specified for the phone to connect to the device via BLE.
-
+**NOTE** that the Polar device `identifier` must be specified before the phone can connect to the device via BLE.
 This entails that a Polar device and its probes should not be connected and resumed, before the device identifier is know.
 
-Also note that the package does not handle permissions. This should be done on an app level.
+Also note that the package does not handle permissions for Bluetooth scanning / connectivity.
+This should be handled on an app level.

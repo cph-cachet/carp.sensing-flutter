@@ -80,7 +80,7 @@ class PolarDeviceManager extends BTLEDeviceManager<PolarDevice> {
   StreamSubscription<PolarBatteryLevelEvent>? _batterySubscription;
   StreamSubscription<PolarDeviceInfo>? _connectingSubscription;
   StreamSubscription<PolarDeviceInfo>? _connectedSubscription;
-  StreamSubscription<PolarDeviceInfo>? _disconnectedSubscription;
+  StreamSubscription<PolarDeviceDisconnectedEvent>? _disconnectedSubscription;
 
   /// The [Polar] device handler.
   final Polar polar = Polar();
@@ -203,9 +203,6 @@ class PolarDeviceManager extends BTLEDeviceManager<PolarDevice> {
           debug('$runtimeType - Polar event : $event');
           status = DeviceStatus.disconnected;
           _batteryLevel = null;
-          configuration?.address = event.address;
-          configuration?.name = event.name;
-          configuration?.rssi = event.rssi;
         });
 
         polar.connectToDevice(id, requestPermissions: true);
