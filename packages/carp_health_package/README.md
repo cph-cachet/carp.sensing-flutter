@@ -1,6 +1,12 @@
 # CARP Health Sampling Package
 
-This library contains a sampling package for sampling health data from Apple Health and/or Google Fit to work with the [`carp_mobile_sensing`](https://pub.dartlang.org/packages/carp_mobile_sensing) framework.
+[![pub package](https://img.shields.io/pub/v/carp_health_package.svg)](https://pub.dartlang.org/packages/carp_health_package)
+[![pub points](https://img.shields.io/pub/points/carp_health_package?color=2E8B57&label=pub%20points)](https://pub.dev/packages/carp_health_package/score)
+[![github stars](https://img.shields.io/github/stars/cph-cachet/carp.sensing-flutter.svg?style=flat&logo=github&colorB=deeppink&label=stars)](https://github.com/cph-cachet/carp.sensing-flutter)
+[![MIT License](https://img.shields.io/badge/license-MIT-purple.svg)](https://opensource.org/licenses/MIT)
+[![arXiv](https://img.shields.io/badge/arXiv-2006.11904-green.svg)](https://arxiv.org/abs/2006.11904)
+
+This library contains a sampling package for sampling health data from Apple Health and or Google Fit or Health Connect to work with the [carp_mobile_sensing](https://pub.dartlang.org/packages/carp_mobile_sensing) framework. It used the [health](https://pub.dev/packages/health) plugin for this.
 This packages supports sampling of the following [`Measure`](https://pub.dev/documentation/carp_core/latest/carp_core_protocols/Measure-class.html) types:
 
 * `dk.cachet.carp.health`
@@ -11,7 +17,7 @@ See the [CARP Mobile Sensing App](https://github.com/cph-cachet/carp.sensing-flu
 For Flutter plugins for other CARP products, see [CARP Mobile Sensing in Flutter](https://github.com/cph-cachet/carp.sensing-flutter).
 
 If you're interested in writing you own sampling packages for CARP, see the description on
-how to [extend](https://github.com/cph-cachet/carp.sensing-flutter/wiki/4.-Extending-CARP-Mobile-Sensing) CARP on the wiki.
+how to [extend](https://github.com/cph-cachet/carp.sensing-flutter/wiki/5.-Extending-CARP-Mobile-Sensing) CARP on the wiki.
 
 ## Installing
 
@@ -38,18 +44,7 @@ Google Fit can be tricky to set up and it requires a separate app to be installe
 Please follow this [guide to set up Google Fit](https://developers.google.com/fit/android/get-started).
 Check out the documentation of the [`health`](https://pub.dev/packages/health#google-fit-android-option-1) package.
 
-[Health Connect](https://developer.android.com/guide/health-and-fitness/health-connect) seems more simple to setup - see the documentation on the [`health`](https://pub.dev/packages/health#google-fit-android-option-2) package.
-
-Health Connect requires the following lines in the `AndroidManifest.xml` file:
-
-```xml
-<queries>
-    <package android:name="com.google.android.apps.healthdata" />
-        <intent>
-            <action android:name="androidx.health.ACTION_SHOW_PERMISSIONS_RATIONALE" />
-        </intent>
-</queries>
-```
+[Health Connect](https://developer.android.com/guide/health-and-fitness/health-connect) seems more simple to setup - see the documentation on the [`health`](https://pub.dev/packages/health#google-fit-android-option-2) package and on the [Android Developer page](https://developer.android.com/guide/health-and-fitness/health-connect/get-started).
 
 ### iOS Integration
 
@@ -82,21 +77,60 @@ Before creating a study and running it, register this package in the
 SamplingPackageRegistry().register(HealthSamplingPackage());
 `````
 
-When defining a study protocol with a health measure, it would look like this:
+When defining a study protocol with a health device, it would look like this:
 
 ```dart
-  // automatically collect the default (steps) data every hour
-  protocol.addTaskControl(
-      PeriodicTrigger(period: Duration(minutes: 60)),
-      BackgroundTask(measures: [Measure(type: HealthSamplingPackage.HEALTH)]),
-      phone);
+  // Create a study protocol
+  StudyProtocol protocol = StudyProtocol(
+    ownerId: 'owner@dtu.dk',
+    name: 'Health Sensing Example',
+  );
+
+  // Define which devices are used for data collection.
+
+  // First add this smartphone.
+  final phone = Smartphone();
+  protocol.addPrimaryDevice(phone);
+
+  // Define which health types to collect.
+  var healthDataTypes = [
+    HealthDataType.WEIGHT,
+    HealthDataType.EXERCISE_TIME,
+    HealthDataType.STEPS,
+    HealthDataType.SLEEP_ASLEEP,
+  ];
+
+  // Create and add a health service (device)
+  final healthService = HealthService(types: healthDataTypes);
+  protocol.addConnectedDevice(healthService, phone);
 ```
 
-This would collect health data every hour using the default configuration (which only collect step count).
-Configuration of what data to collect is done via the `HealthSamplingConfiguration` which can be used to override the default configuration:
+Note that a list of `HealthDataType` types is specified for the service. This is later used by the service to request the right permission to access this type of data.
+
+Data sampling can now be configured by a measure in the protocol:
 
 ```dart
-  // automatically collect a set of health data every hour
+  // Automatically collect the set of health data every hour.
+  //
+  // Note that the [HealthSamplingConfiguration] is a [HistoricSamplingConfiguration]
+  // which samples data back in time until last time, data was sampled.
+  protocol.addTaskControl(
+      PeriodicTrigger(period: Duration(minutes: 60)),
+      BackgroundTask()
+        ..addMeasure(Measure(type: HealthSamplingPackage.HEALTH)
+          ..overrideSamplingConfiguration =
+              HealthSamplingConfiguration(healthDataTypes: healthDataTypes)),
+      healthService);
+```
+
+This would collect health data every hour using the same data types, as configured for the service. Configuration of what data to collect is done via the `HealthSamplingConfiguration` which is used to override the default configuration. Another set of data to collect can be specified, as shown below. However, the user might not have granted access to collect this data.
+
+```dart
+  // Automatically collect another set of health data every hour
+  //
+  // Note, however, that the service defined above DOES NOT have this list of
+  // health data specified, and has therefore not asked for permission to access
+  // this new set of health data.
   protocol.addTaskControl(
       PeriodicTrigger(period: Duration(minutes: 60)),
       BackgroundTask()
@@ -110,7 +144,7 @@ Configuration of what data to collect is done via the `HealthSamplingConfigurati
             HealthDataType.HEART_RATE,
             HealthDataType.STEPS,
           ])),
-      phone);
+      healthService);
 ```
 
 The `HealthSamplingConfiguration` can be configured to collect a specific set of [`HealthDataType`](https://pub.dev/documentation/health/latest/health/HealthDataType-class.html), like:
@@ -131,24 +165,22 @@ Hence, this probe is suited for configuration using some trigger that collects d
 However, it can also be configured using as an [`AppTask`](https://pub.dev/documentation/carp_mobile_sensing/latest/domain/AppTask-class.html) that asks the user to collect the data.
 
 ```dart
-  // create an app task for the user to collect his own health data every day
+  // Create an app task for the user to collect his own health data once pr. day
   protocol.addTaskControl(
       PeriodicTrigger(period: Duration(hours: 24)),
       AppTask(
           type: 'health',
           title: "Press here to collect your physical health data",
-          description: "This will collect your weight, exercise time, steps, and sleep time from Apple Health.",
+          description:
+              "This will collect your weight, exercise time, steps, and sleep time from Apple Health.",
           measures: [
             Measure(type: HealthSamplingPackage.HEALTH)
               ..overrideSamplingConfiguration =
-                  HealthSamplingConfiguration(healthDataTypes: [
-                HealthDataType.WEIGHT,
-                HealthDataType.EXERCISE_TIME,
-                HealthDataType.STEPS,
-                HealthDataType.SLEEP_ASLEEP,
-              ])
+                  HealthSamplingConfiguration(healthDataTypes: healthDataTypes)
           ]),
-      phone);
+      healthService);
 ```
+
+> **NOTE** - Health data can only be collected when the app is in the foreground and the phone is unlocked. This applies both for Android and iOS.
 
 See the `example.dart` file for a full example of how to set up a CAMS study protocol for this sampling package.
