@@ -40,11 +40,11 @@ const Map<DasesHealthDataType, HealthDataUnit> dasesDataTypeToUnit = {
 
 /// Specify the configuration on how to collect health data.
 ///
-/// The [healthDataType] specify which [HealthDataType](https://pub.dev/documentation/health/latest/health/HealthDataType-class.html)
+/// The [healthDataTypes] parameter specifies which [HealthDataType]
 /// to collect.
 @JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
 class HealthSamplingConfiguration extends HistoricSamplingConfiguration {
-  /// The list of [HealthDataType](https://pub.dev/documentation/health/latest/health/HealthDataType-class.html) to collect.
+  /// The list of [HealthDataType] to collect.
   List<HealthDataType> healthDataTypes;
 
   HealthSamplingConfiguration({super.past, required this.healthDataTypes});
@@ -62,7 +62,7 @@ class HealthSamplingConfiguration extends HistoricSamplingConfiguration {
 /// A no-op function for deserializing a HealthValue - never used.
 HealthValue _healthValueFromJson(json) => NumericHealthValue(-1);
 
-/// A [Datum] that holds a [HealthDataPoint](https://pub.dev/documentation/health/latest/health/HealthDataPoint-class.html) data point information.
+/// A [Data] object that holds health data from a [HealthDataPoint].
 @JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)
 class HealthData extends Data {
   /// The value of the health data.
@@ -94,10 +94,19 @@ class HealthData extends Data {
   /// The unique UUID of the data point.
   String uuid;
 
-  HealthData(this.value, this.unit, this.dataType, this.dateFrom, this.dateTo,
-      this.platform, this.deviceId, this.uuid)
-      : super();
+  /// Create a [HealthData] object.
+  HealthData(
+    this.value,
+    this.unit,
+    this.dataType,
+    this.dateFrom,
+    this.dateTo,
+    this.platform,
+    this.deviceId,
+    this.uuid,
+  ) : super();
 
+  /// Create a [HealthData] from a [HealthDataPoint] health data object.
   factory HealthData.fromHealthDataPoint(HealthDataPoint healthDataPoint) {
     String uuid =
         Uuid().v5(Uuid.NAMESPACE_URL, healthDataPoint.toJson().toString());
@@ -119,8 +128,8 @@ class HealthData extends Data {
   @override
   Map<String, dynamic> toJson() => _$HealthDataToJson(this);
 
-  /// The json type of this health datum is `carp.health.<healthdatatype>`,
-  /// where `<healthdatatype>` is the lowercase of the [HealthDataType](https://pub.dev/documentation/health/latest/health/HealthDataType-class.html) collected.
+  /// The json type of this health data is `dk.cachet.carp.health.<healthdatatype>`,
+  /// where `<healthdatatype>` is the lowercase version of the [HealthDataType].
   @override
   String get jsonType =>
       '${HealthSamplingPackage.HEALTH}.${dataType.toLowerCase()}';

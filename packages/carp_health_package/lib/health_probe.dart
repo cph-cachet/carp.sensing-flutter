@@ -1,6 +1,6 @@
 part of health_package;
 
-/// A probe collecting health data from Apple Health or Google Fit.
+/// A probe collecting health data from Apple Health or Google Fit / Health Connect.
 ///
 /// Configuration of this probe is based on a [HealthSamplingConfiguration] which
 /// again is a [HistoricSamplingConfiguration].
@@ -21,11 +21,8 @@ class HealthProbe extends StreamProbe {
       super.samplingConfiguration as HealthSamplingConfiguration;
 
   @override
-  bool onInitialize() {
-    // Request access to the health data type before starting sampling
-    _healthFactory.requestAuthorization(samplingConfiguration.healthDataTypes);
-    return true;
-  }
+  HealthServiceManager get deviceManager =>
+      super.deviceManager as HealthServiceManager;
 
   @override
   Future<bool> onStart() async {
@@ -44,7 +41,7 @@ class HealthProbe extends StreamProbe {
     debug(
         '$runtimeType - Collecting health data, type: $healthDataTypes, start: ${start.toUtc()}, end: ${end.toUtc()}');
     try {
-      data = await _healthFactory.getHealthDataFromTypes(
+      data = await deviceManager.service.getHealthDataFromTypes(
         start,
         end,
         healthDataTypes,

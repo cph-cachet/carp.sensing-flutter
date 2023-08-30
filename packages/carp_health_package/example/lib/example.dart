@@ -17,18 +17,41 @@ void main() async {
     name: 'Health Sensing Example',
   );
 
-  // define which devices are used for data collection
-  // in this case, its only this smartphone
-  Smartphone phone = Smartphone();
+  // Define which devices are used for data collection.
+
+  // First add this smartphone.
+  final phone = Smartphone();
   protocol.addPrimaryDevice(phone);
 
-  // automatically collect the default (steps) data every hour
+  // Define which health types to collect.
+  var healthDataTypes = [
+    HealthDataType.WEIGHT,
+    HealthDataType.EXERCISE_TIME,
+    HealthDataType.STEPS,
+    HealthDataType.SLEEP_ASLEEP,
+  ];
+
+  // Create and add a health service (device)
+  final healthService = HealthService(types: healthDataTypes);
+  protocol.addConnectedDevice(healthService, phone);
+
+  // Automatically collect the set of health data every hour.
+  //
+  // Note that the [HealthSamplingConfiguration] is a [HistoricSamplingConfiguration]
+  // which samples data back in time until last time, data was sampled.
   protocol.addTaskControl(
       PeriodicTrigger(period: Duration(minutes: 60)),
-      BackgroundTask(measures: [Measure(type: HealthSamplingPackage.HEALTH)]),
-      phone);
+      BackgroundTask()
+        ..addMeasure(Measure(type: HealthSamplingPackage.HEALTH)
+          ..overrideSamplingConfiguration =
+              HealthSamplingConfiguration(healthDataTypes: healthDataTypes)),
+      healthService);
 
-  // automatically collect a set of health data every hour
+  // Automatically collect another set of health data every hour
+  //
+  // Note, however, that the service defined above DOES NOT have this list of
+  // health data specified, and has therefore not asked for permission to access
+  // this new set of health data.
   protocol.addTaskControl(
       PeriodicTrigger(period: Duration(minutes: 60)),
       BackgroundTask()
@@ -44,17 +67,7 @@ void main() async {
           ])),
       phone);
 
-  // collect weight every day at 23:00
-  protocol.addTaskControl(
-      RecurrentScheduledTrigger(
-          type: RecurrentType.daily, time: TimeOfDay(hour: 23, minute: 00)),
-      BackgroundTask()
-        ..addMeasure(Measure(type: HealthSamplingPackage.HEALTH)
-          ..overrideSamplingConfiguration = HealthSamplingConfiguration(
-              healthDataTypes: [HealthDataType.WEIGHT])),
-      phone);
-
-  // create an app task for the user to collect his own health data every day
+  // Create an app task for the user to collect his own health data once pr. day
   protocol.addTaskControl(
       PeriodicTrigger(period: Duration(hours: 24)),
       AppTask(
@@ -65,12 +78,7 @@ void main() async {
           measures: [
             Measure(type: HealthSamplingPackage.HEALTH)
               ..overrideSamplingConfiguration =
-                  HealthSamplingConfiguration(healthDataTypes: [
-                HealthDataType.WEIGHT,
-                HealthDataType.EXERCISE_TIME,
-                HealthDataType.STEPS,
-                HealthDataType.SLEEP_ASLEEP,
-              ])
+                  HealthSamplingConfiguration(healthDataTypes: healthDataTypes)
           ]),
-      phone);
+      healthService);
 }

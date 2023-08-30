@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of health_package;
+part of 'health_package.dart';
 
 // **************************************************************************
 // JsonSerializableGenerator
@@ -74,6 +74,11 @@ const _$HealthDataTypeEnumMap = {
   HealthDataType.SLEEP_IN_BED: 'SLEEP_IN_BED',
   HealthDataType.SLEEP_ASLEEP: 'SLEEP_ASLEEP',
   HealthDataType.SLEEP_AWAKE: 'SLEEP_AWAKE',
+  HealthDataType.SLEEP_LIGHT: 'SLEEP_LIGHT',
+  HealthDataType.SLEEP_DEEP: 'SLEEP_DEEP',
+  HealthDataType.SLEEP_REM: 'SLEEP_REM',
+  HealthDataType.SLEEP_OUT_OF_BED: 'SLEEP_OUT_OF_BED',
+  HealthDataType.SLEEP_SESSION: 'SLEEP_SESSION',
   HealthDataType.EXERCISE_TIME: 'EXERCISE_TIME',
   HealthDataType.WORKOUT: 'WORKOUT',
   HealthDataType.HEADACHE_NOT_PRESENT: 'HEADACHE_NOT_PRESENT',
@@ -117,5 +122,42 @@ Map<String, dynamic> _$HealthDataToJson(HealthData instance) {
   val['platform'] = instance.platform;
   val['device_id'] = instance.deviceId;
   val['uuid'] = instance.uuid;
+  return val;
+}
+
+HealthService _$HealthServiceFromJson(Map<String, dynamic> json) =>
+    HealthService(
+      roleName: json['roleName'] as String?,
+      types: (json['types'] as List<dynamic>)
+          .map((e) => $enumDecode(_$HealthDataTypeEnumMap, e))
+          .toList(),
+      useHealthConnectIfAvailable:
+          json['useHealthConnectIfAvailable'] as bool? ?? false,
+    )
+      ..$type = json['__type'] as String?
+      ..isOptional = json['isOptional'] as bool?
+      ..defaultSamplingConfiguration =
+          (json['defaultSamplingConfiguration'] as Map<String, dynamic>?)?.map(
+        (k, e) => MapEntry(
+            k, SamplingConfiguration.fromJson(e as Map<String, dynamic>)),
+      );
+
+Map<String, dynamic> _$HealthServiceToJson(HealthService instance) {
+  final val = <String, dynamic>{};
+
+  void writeNotNull(String key, dynamic value) {
+    if (value != null) {
+      val[key] = value;
+    }
+  }
+
+  writeNotNull('__type', instance.$type);
+  val['roleName'] = instance.roleName;
+  writeNotNull('isOptional', instance.isOptional);
+  writeNotNull(
+      'defaultSamplingConfiguration', instance.defaultSamplingConfiguration);
+  val['types'] =
+      instance.types.map((e) => _$HealthDataTypeEnumMap[e]!).toList();
+  val['useHealthConnectIfAvailable'] = instance.useHealthConnectIfAvailable;
   return val;
 }

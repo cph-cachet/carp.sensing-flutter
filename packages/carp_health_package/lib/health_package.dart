@@ -26,7 +26,7 @@ part 'health_package.g.dart';
 part 'health_probe.dart';
 part 'health_services.dart';
 
-HealthFactory _healthFactory = HealthFactory();
+// HealthFactory _healthFactory = HealthFactory();
 
 /// The health sampling package supports the following overall measure type:
 ///
@@ -91,11 +91,4 @@ class HealthSamplingPackage extends SmartphoneSamplingPackage {
 
   @override
   List<Permission> get permissions => [];
-
-  /// Request access to Google Fit or Apple HealthKit.
-  /// This method can be used from the app to request access at a 'convenient'
-  /// time and will typically be done before sampling is started for
-  /// all [types] that are needed.
-  Future<bool> requestAuthorization(List<HealthDataType> types) async =>
-      _healthFactory.requestAuthorization(types);
 }

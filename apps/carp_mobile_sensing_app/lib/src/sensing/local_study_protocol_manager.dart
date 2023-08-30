@@ -254,22 +254,27 @@ class LocalStudyProtocolManager implements StudyProtocolManager {
     //   movisens,
     // );
 
-    // // add measures to collect data from Apple Health / Google Fit
-    // protocol.addTaskControl(
-    //     PeriodicTrigger(
-    //       period: Duration(minutes: 60),
-    //       duration: Duration(minutes: 10),
-    //     ),
-    //     AutomaticTask()
-    //       ..addMeasures([
-    //         HealthMeasure(
-    //             type: HealthSamplingPackage.HEALTH,
-    //             healthDataType: HealthDataType.BLOOD_GLUCOSE),
-    //         HealthMeasure(
-    //             type: HealthSamplingPackage.HEALTH,
-    //             healthDataType: HealthDataType.STEPS)
-    //       ]),
-    //     phone);
+    // add measures to collect data from Apple Health / Google Fit
+
+    // Define which health types to collect.
+    var healthDataTypes = [
+      HealthDataType.WEIGHT,
+      HealthDataType.EXERCISE_TIME,
+      HealthDataType.STEPS,
+      HealthDataType.SLEEP_ASLEEP,
+    ];
+
+    // Create and add a health service (device)
+    final healthService = HealthService(types: healthDataTypes);
+    protocol.addConnectedDevice(healthService, phone);
+
+    protocol.addTaskControl(
+        PeriodicTrigger(period: Duration(minutes: 60)),
+        BackgroundTask()
+          ..addMeasure(Measure(type: HealthSamplingPackage.HEALTH)
+            ..overrideSamplingConfiguration =
+                HealthSamplingConfiguration(healthDataTypes: healthDataTypes)),
+        healthService);
 
     return protocol;
   }

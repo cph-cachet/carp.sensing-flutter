@@ -53,6 +53,8 @@ dependency_overrides:
     path: ../../packages/carp_esense_package/
   carp_polar_package:
     path: ../../packages/carp_polar_package/
+  carp_health_package:
+    path: ../../packages/carp_health_package/
   carp_backend:
     path: ../../backends/carp_backend/
   carp_webservices:

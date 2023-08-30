@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 Copenhagen Center for Health Technology (CACHET) at the
+ * Copyright 2023 Copenhagen Center for Health Technology (CACHET) at the
  * Technical University of Denmark (DTU).
  * Use of this source code is governed by a MIT-style license that can be
  * found in the LICENSE file.
@@ -17,12 +17,16 @@ class HealthService extends OnlineService {
   /// The default role name for a health service.
   static const String DEFAULT_ROLENAME = 'Health Service';
 
-  /// API key for the Open Weather API.
-  String apiKey;
+  /// Which health data types should this service access.
+  List<HealthDataType> types;
+
+  /// Should this health service use the Android Health Connect API?
+  bool useHealthConnectIfAvailable;
 
   HealthService({
     String? roleName,
-    required this.apiKey,
+    required this.types,
+    this.useHealthConnectIfAvailable = false,
   }) : super(
           roleName: roleName ?? DEFAULT_ROLENAME,
         );
@@ -35,22 +39,25 @@ class HealthService extends OnlineService {
   Map<String, dynamic> toJson() => _$HealthServiceToJson(this);
 }
 
-/// A [DeviceManager] for the [WeatherService].
+/// A [DeviceManager] for the [HealthService].
 class HealthServiceManager extends OnlineServiceManager<HealthService> {
-  weather.WeatherFactory? _service;
+  HealthFactory? _service;
 
-  /// A handle to the [WeatherFactory] plugin.
-  weather.WeatherFactory? get service => (_service != null)
-      ? _service
-      : (configuration?.apiKey != null)
-          ? _service = weather.WeatherFactory(configuration!.apiKey)
-          : null;
-
-  @override
-  String get id => configuration!.apiKey;
+  /// A handle to the [HealthFactory] plugin.
+  HealthFactory get service => (_service == null)
+      ? _service = HealthFactory(
+          useHealthConnectIfAvailable:
+              configuration!.useHealthConnectIfAvailable)
+      : _service!;
 
   @override
-  String? get displayName => 'Weather Service (OW)';
+  String get id => service.runtimeType.toString();
+
+  @override
+  String? get displayName => 'Health Service';
+
+  @override
+  List<Permission> get permissions => [];
 
   HealthServiceManager([
     HealthService? configuration,
@@ -61,19 +68,15 @@ class HealthServiceManager extends OnlineServiceManager<HealthService> {
   void onInitialize(HealthService service) {}
 
   @override
-  Future<bool> canConnect() async {
-    try {
-      var data = await service?.currentWeatherByLocation(
-          40.63047005003576, -74.12938368359374);
-      return (data != null);
-    } catch (_) {
-      return false;
-    }
-  }
+  Future<void> onRequestPermissions() async => (configuration?.types != null)
+      ? service.requestAuthorization(configuration!.types)
+      : null;
 
   @override
-  Future<DeviceStatus> onConnect() async =>
-      (service != null) ? DeviceStatus.connected : DeviceStatus.disconnected;
+  Future<bool> canConnect() async => true;
+
+  @override
+  Future<DeviceStatus> onConnect() async => DeviceStatus.connected;
 
   @override
   Future<bool> onDisconnect() async => true;
