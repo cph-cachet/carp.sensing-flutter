@@ -131,7 +131,7 @@ class ContextSamplingPackage extends SmartphoneSamplingPackage {
 
 /// The location sampling package.
 class LocationSamplingPackage extends SmartphoneSamplingPackage {
-  final DeviceManager _deviceManager = LocationServiceManager();
+  final _deviceManager = LocationServiceManager();
 
   @override
   DataTypeSamplingSchemeMap get samplingSchemes =>

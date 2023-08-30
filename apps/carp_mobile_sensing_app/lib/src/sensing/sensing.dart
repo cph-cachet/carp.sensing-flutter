@@ -59,6 +59,7 @@ class Sensing {
     SamplingPackageRegistry().register(AppsSamplingPackage());
     SamplingPackageRegistry().register(PolarSamplingPackage());
     SamplingPackageRegistry().register(ESenseSamplingPackage());
+    SamplingPackageRegistry().register(HealthSamplingPackage());
 
     // Register the CARP data manager for uploading data back to CAWS.
     // This is needed in both LOCAL and CAWS deployments, since a local study

@@ -259,13 +259,15 @@ class LocalStudyProtocolManager implements StudyProtocolManager {
     // Define which health types to collect.
     var healthDataTypes = [
       HealthDataType.WEIGHT,
-      HealthDataType.EXERCISE_TIME,
       HealthDataType.STEPS,
       HealthDataType.SLEEP_ASLEEP,
     ];
 
     // Create and add a health service (device)
-    final healthService = HealthService(types: healthDataTypes);
+    final healthService = HealthService(
+      useHealthConnectIfAvailable: true,
+      types: healthDataTypes,
+    );
     protocol.addConnectedDevice(healthService, phone);
 
     protocol.addTaskControl(

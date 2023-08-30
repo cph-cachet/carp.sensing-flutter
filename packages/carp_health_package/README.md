@@ -28,22 +28,28 @@ dependencies:
   ...
 `````
 
+In general, you need to follow the setup guides in the [health](https://pub.dev/packages/health#setup) plugin.
+
 ### Android Integration
 
-This package uses AndroidX.
-See Flutter [AndroidX compatibility](https://flutter.dev/docs/development/packages-and-plugins/androidx-compatibility)
-
-Replace the content of the `android/gradle.properties` file with the following lines:
-
-```xml
-org.gradle.jvmargs=-Xmx1536M
-android.enableJetifier=true
-android.useAndroidX=true
-```
+The [health](https://pub.dev/packages/health) plugin supports both [Google Fit](https://www.google.com/fit/) and [Health Connect](https://health.google/health-connect-android/).
 
 Google Fit can be tricky to set up and it requires a separate app to be installed.
 Please follow this [guide to set up Google Fit](https://developers.google.com/fit/android/get-started).
-Also - check out the documentation of the [`health`](https://pub.dev/packages/health) package.
+Check out the documentation of the [`health`](https://pub.dev/packages/health#google-fit-android-option-1) package.
+
+[Health Connect](https://developer.android.com/guide/health-and-fitness/health-connect) seems more simple to setup - see the documentation on the [`health`](https://pub.dev/packages/health#google-fit-android-option-2) package.
+
+Health Connect requires the following lines in the `AndroidManifest.xml` file:
+
+```xml
+<queries>
+    <package android:name="com.google.android.apps.healthdata" />
+        <intent>
+            <action android:name="androidx.health.ACTION_SHOW_PERMISSIONS_RATIONALE" />
+        </intent>
+</queries>
+```
 
 ### iOS Integration
 
@@ -55,6 +61,8 @@ Add this permission in the `Info.plist` file located in `ios/Runner`:
 <key>NSHealthUpdateUsageDescription</key>
 <string>We will sync your data with the Apple Health app to give you better insights</string>
 ```
+
+Then open your Flutter project in XCode by right clicking on the "ios" folder and selecting "Open in XCode". Enable "HealthKit" by adding a capability inside the "Signing & Capabilities" tab of the Runner target's settings.
 
 ## Using it
 

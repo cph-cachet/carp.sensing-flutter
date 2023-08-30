@@ -65,7 +65,7 @@ void main() async {
             HealthDataType.HEART_RATE,
             HealthDataType.STEPS,
           ])),
-      phone);
+      healthService);
 
   // Create an app task for the user to collect his own health data once pr. day
   protocol.addTaskControl(

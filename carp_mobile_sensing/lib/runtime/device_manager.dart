@@ -108,15 +108,26 @@ abstract class DeviceManager<TDeviceConfiguration extends DeviceConfiguration>
       info(
           '$runtimeType - Checking permissions for device of type: $typeName and id: $id');
       _hasPermissions = true;
+
+      // first check all the listed permissions
       for (var permission in permissions) {
         bool isGranted = await permission.isGranted;
         debug('$runtimeType - Permission of $permission: $isGranted');
         _hasPermissions = isGranted && _hasPermissions;
       }
+
+      // then check any device-specific permission
+      _hasPermissions = await onHasPermissions() && _hasPermissions;
+
       debug('$runtimeType - Permission of all permissions: $_hasPermissions');
     }
     return _hasPermissions;
   }
+
+  /// Callback on [hasPermissions].
+  ///
+  /// Can be overridden in sub-classes for device-specific permission handling.
+  Future<bool> onHasPermissions() async => true;
 
   /// Request all [permissions] for this device manager.
   @nonVirtual

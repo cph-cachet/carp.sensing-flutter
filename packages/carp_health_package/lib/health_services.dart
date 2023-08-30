@@ -51,7 +51,11 @@ class HealthServiceManager extends OnlineServiceManager<HealthService> {
       : _service!;
 
   @override
-  String get id => service.runtimeType.toString();
+  String get id => (Platform.isIOS)
+      ? "Apple Health"
+      : (configuration!.useHealthConnectIfAvailable)
+          ? "Google Health Connect"
+          : "Google Fit";
 
   @override
   String? get displayName => 'Health Service';
@@ -68,8 +72,13 @@ class HealthServiceManager extends OnlineServiceManager<HealthService> {
   void onInitialize(HealthService service) {}
 
   @override
+  Future<bool> onHasPermissions() async => (configuration?.types != null)
+      ? await service.hasPermissions(configuration!.types) ?? false
+      : true;
+
+  @override
   Future<void> onRequestPermissions() async => (configuration?.types != null)
-      ? service.requestAuthorization(configuration!.types)
+      ? await service.requestAuthorization(configuration!.types)
       : null;
 
   @override

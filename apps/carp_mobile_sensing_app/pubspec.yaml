@@ -60,12 +60,6 @@ dependency_overrides:
   carp_webservices:
     path: ../../backends/carp_webservices/
 
-  # override of specific plugins, if needed
-
-  # this is due to this issue --> https://github.com/Lyokone/flutterlocation/issues/863
-  location_platform_interface: 3.0.0
-
-
   # research_package:
   #   path: ../../../../research.package/
   # esense_flutter:

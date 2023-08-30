@@ -38,6 +38,7 @@ class DeviceModel {
         LocationService.DEVICE_TYPE: 'Location',
         AirQualityService.DEVICE_TYPE: 'Air Quality',
         WeatherService.DEVICE_TYPE: 'Weather',
+        HealthService.DEVICE_TYPE: 'Health',
       };
 
   static Map<String, String> get deviceTypeDescription => {
@@ -47,6 +48,7 @@ class DeviceModel {
         LocationService.DEVICE_TYPE: 'Location Service',
         AirQualityService.DEVICE_TYPE: 'World Air Quality Service',
         WeatherService.DEVICE_TYPE: 'Open Weather Service',
+        HealthService.DEVICE_TYPE: 'Health data stored on the phone',
       };
 
   static Map<String, Icon> get deviceTypeIcon => {
@@ -62,6 +64,8 @@ class DeviceModel {
             Icon(Icons.air, size: 50, color: CACHET.LIGHT_GREEN),
         WeatherService.DEVICE_TYPE:
             Icon(Icons.cloud, size: 50, color: CACHET.DARK_BLUE),
+        HealthService.DEVICE_TYPE:
+            Icon(Icons.heart_broken, size: 50, color: CACHET.LIGHT_GREEN),
       };
 
   static Map<DeviceStatus, Icon> get deviceStateIcon => {

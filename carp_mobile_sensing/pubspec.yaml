@@ -22,7 +22,7 @@ dependencies:
   sqflite: ^2.2.8                     # For local storage in SQLite DB
   archive: ^3.3.0
   permission_handler: ^10.3.0  
-  shared_preferences: ^2.1.0
+  shared_preferences: ^2.2.0
   package_info_plus: ^4.0.0
   flutter_local_notifications: ^15.0.0 # For sending notification on AppTask
   awesome_notifications: ^0.7.4        # For sending notification on AppTask
