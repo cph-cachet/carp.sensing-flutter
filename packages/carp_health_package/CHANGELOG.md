@@ -1,4 +1,4 @@
-## 3.0.0
+## 2.6.0
 
 * update to `carp_mobile_sensing` v. 1.2.0
 * now uses a dedicated `HealthService` to access the health data on the phone

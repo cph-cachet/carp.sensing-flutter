@@ -16,7 +16,7 @@ class LocalStudyProtocolManager implements StudyProtocolManager {
 
   @override
   Future<SmartphoneStudyProtocol> getStudyProtocol(String protocolId) async =>
-      _getSingleUserStudyProtocol(protocolId);
+      getSingleUserStudyProtocol(protocolId);
 
   StudyDescription get studyDescription => StudyDescription(
       title: 'CAMS App - Sensing Coverage Study',
@@ -40,8 +40,7 @@ class LocalStudyProtocolManager implements StudyProtocolManager {
     // set the format of the data to upload - e.g. Open mHealth
     ..dataFormat = bloc.dataFormat;
 
-  Future<SmartphoneStudyProtocol> _getSingleUserStudyProtocol(
-      String protocolId) async {
+  SmartphoneStudyProtocol getSingleUserStudyProtocol(String protocolId) {
     SmartphoneStudyProtocol protocol = SmartphoneStudyProtocol(
       ownerId: 'abc@dtu.dk',
       name: protocolId,
@@ -281,8 +280,7 @@ class LocalStudyProtocolManager implements StudyProtocolManager {
     return protocol;
   }
 
-  Future<SmartphoneStudyProtocol> _getFamilyStudyProtocol(
-      String protocolId) async {
+  SmartphoneStudyProtocol getFamilyStudyProtocol(String protocolId) {
     SmartphoneStudyProtocol protocol = SmartphoneStudyProtocol(
       ownerId: 'abc@dtu.dk',
       name: protocolId,
@@ -297,16 +295,25 @@ class LocalStudyProtocolManager implements StudyProtocolManager {
     protocol.addParticipantRole(ParticipantRole(father));
     protocol.addParticipantRole(ParticipantRole(mother));
 
-    // define the primary device(s)
+    // define and assign the primary device(s)
     Smartphone fatherPhone = Smartphone(roleName: "Father's Phone");
     protocol.addPrimaryDevice(fatherPhone);
     Smartphone motherPhone = Smartphone(roleName: "Mother's Phone");
     protocol.addPrimaryDevice(motherPhone);
-
     protocol.changeDeviceAssignment(
         fatherPhone, AssignedTo(roleNames: {father}));
     protocol.changeDeviceAssignment(
         motherPhone, AssignedTo(roleNames: {mother}));
+
+    // add expected participant data
+    protocol.addExpectedParticipantData(ExpectedParticipantData(
+        attribute: ParticipantAttribute(inputDataType: SexInput.type)));
+    protocol.addExpectedParticipantData(ExpectedParticipantData(
+        attribute:
+            ParticipantAttribute(inputDataType: InformedConsentInput.type)));
+    protocol.addExpectedParticipantData(ExpectedParticipantData(
+        attribute: ParticipantAttribute(inputDataType: NameInput.type),
+        assignedTo: AssignedTo(roleNames: {mother})));
 
     // build-in measure from sensor and device sampling packages
     protocol.addTaskControl(
@@ -480,41 +487,6 @@ class LocalStudyProtocolManager implements StudyProtocolManager {
           ..addMeasure(Measure(type: PolarSamplingPackage.PPG))
           ..addMeasure(Measure(type: PolarSamplingPackage.PPI)),
         polar);
-
-    // // add a measure for ECG monitoring using the Movisens device
-    // protocol.addTaskControl(
-    //   ImmediateTrigger(),
-    //   AutomaticTask()
-    //     ..addMeasure(MovisensMeasure(
-    //       type: MovisensSamplingPackage.MOVISENS_NAMESPACE,
-    //       name: 'Movisens ECG device',
-    //       address: '88:6B:0F:CD:E7:F2',
-    //       sensorLocation: SensorLocation.chest,
-    //       gender: Gender.male,
-    //       deviceName: 'Sensor 02655',
-    //       height: 175,
-    //       weight: 75,
-    //       age: 25,
-    //     )),
-    //   movisens,
-    // );
-
-    // // add measures to collect data from Apple Health / Google Fit
-    // protocol.addTaskControl(
-    //     PeriodicTrigger(
-    //       period: Duration(minutes: 60),
-    //       duration: Duration(minutes: 10),
-    //     ),
-    //     AutomaticTask()
-    //       ..addMeasures([
-    //         HealthMeasure(
-    //             type: HealthSamplingPackage.HEALTH,
-    //             healthDataType: HealthDataType.BLOOD_GLUCOSE),
-    //         HealthMeasure(
-    //             type: HealthSamplingPackage.HEALTH,
-    //             healthDataType: HealthDataType.STEPS)
-    //       ]),
-    //     phone);
 
     return protocol;
   }

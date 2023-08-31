@@ -1364,12 +1364,11 @@ Map<String, dynamic> _$CustomInputToJson(CustomInput instance) {
   return val;
 }
 
-SexCustomInput _$SexCustomInputFromJson(Map<String, dynamic> json) =>
-    SexCustomInput(
+SexInput _$SexInputFromJson(Map<String, dynamic> json) => SexInput(
       $enumDecode(_$SexEnumMap, json['value']),
     )..$type = json['__type'] as String?;
 
-Map<String, dynamic> _$SexCustomInputToJson(SexCustomInput instance) {
+Map<String, dynamic> _$SexInputToJson(SexInput instance) {
   final val = <String, dynamic>{};
 
   void writeNotNull(String key, dynamic value) {
@@ -1388,3 +1387,126 @@ const _$SexEnumMap = {
   Sex.Female: 'Female',
   Sex.Intersex: 'Intersex',
 };
+
+SocialSecurityNumberInput _$SocialSecurityNumberInputFromJson(
+        Map<String, dynamic> json) =>
+    SocialSecurityNumberInput(
+      json['socialSecurityNumber'] as String,
+    )..$type = json['__type'] as String?;
+
+Map<String, dynamic> _$SocialSecurityNumberInputToJson(
+    SocialSecurityNumberInput instance) {
+  final val = <String, dynamic>{};
+
+  void writeNotNull(String key, dynamic value) {
+    if (value != null) {
+      val[key] = value;
+    }
+  }
+
+  writeNotNull('__type', instance.$type);
+  val['socialSecurityNumber'] = instance.socialSecurityNumber;
+  return val;
+}
+
+NameInput _$NameInputFromJson(Map<String, dynamic> json) => NameInput(
+      json['firstName'] as String,
+      json['middleName'] as String,
+      json['lastName'] as String,
+    )..$type = json['__type'] as String?;
+
+Map<String, dynamic> _$NameInputToJson(NameInput instance) {
+  final val = <String, dynamic>{};
+
+  void writeNotNull(String key, dynamic value) {
+    if (value != null) {
+      val[key] = value;
+    }
+  }
+
+  writeNotNull('__type', instance.$type);
+  val['firstName'] = instance.firstName;
+  val['middleName'] = instance.middleName;
+  val['lastName'] = instance.lastName;
+  return val;
+}
+
+InformedConsentInput _$InformedConsentInputFromJson(
+        Map<String, dynamic> json) =>
+    InformedConsentInput(
+      json['name'] as String,
+      json['consent'] as String?,
+      DateTime.parse(json['signedTimestamp'] as String),
+      json['signatureImage'] as String?,
+    )..$type = json['__type'] as String?;
+
+Map<String, dynamic> _$InformedConsentInputToJson(
+    InformedConsentInput instance) {
+  final val = <String, dynamic>{};
+
+  void writeNotNull(String key, dynamic value) {
+    if (value != null) {
+      val[key] = value;
+    }
+  }
+
+  writeNotNull('__type', instance.$type);
+  val['signedTimestamp'] = instance.signedTimestamp.toIso8601String();
+  val['name'] = instance.name;
+  writeNotNull('consent', instance.consent);
+  writeNotNull('signatureImage', instance.signatureImage);
+  return val;
+}
+
+AddressInput _$AddressInputFromJson(Map<String, dynamic> json) => AddressInput(
+      json['address1'] as String?,
+      json['address2'] as String?,
+      json['street'] as String?,
+      json['country'] as String?,
+      json['zip'] as String?,
+    )..$type = json['__type'] as String?;
+
+Map<String, dynamic> _$AddressInputToJson(AddressInput instance) {
+  final val = <String, dynamic>{};
+
+  void writeNotNull(String key, dynamic value) {
+    if (value != null) {
+      val[key] = value;
+    }
+  }
+
+  writeNotNull('__type', instance.$type);
+  writeNotNull('address1', instance.address1);
+  writeNotNull('address2', instance.address2);
+  writeNotNull('street', instance.street);
+  writeNotNull('country', instance.country);
+  writeNotNull('zip', instance.zip);
+  return val;
+}
+
+DiagnosisInput _$DiagnosisInputFromJson(Map<String, dynamic> json) =>
+    DiagnosisInput(
+      json['effectiveDate'] == null
+          ? null
+          : DateTime.parse(json['effectiveDate'] as String),
+      json['diagnosis'] as String?,
+      json['idc11Code'] as String,
+      json['conclusion'] as String?,
+    )..$type = json['__type'] as String?;
+
+Map<String, dynamic> _$DiagnosisInputToJson(DiagnosisInput instance) {
+  final val = <String, dynamic>{};
+
+  void writeNotNull(String key, dynamic value) {
+    if (value != null) {
+      val[key] = value;
+    }
+  }
+
+  writeNotNull('__type', instance.$type);
+  writeNotNull('effectiveDate', instance.effectiveDate?.toIso8601String());
+  writeNotNull('diagnosis', instance.diagnosis);
+  val['idc11Code'] = instance.icd11Code;
+  writeNotNull('conclusion', instance.conclusion);
+  return val;
+}

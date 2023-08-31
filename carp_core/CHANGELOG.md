@@ -1,3 +1,7 @@
+## 1.1.1
+
+* added input data format for informed consent, participant name, and more
+
 ## 1.1.0
 
 > Note: This release has breaking changes.

@@ -11,6 +11,9 @@ import 'package:carp_polar_package/carp_polar_package.dart';
 import 'package:carp_context_package/carp_context_package.dart';
 import 'package:carp_audio_package/media.dart';
 // import 'package:carp_communication_package/communication.dart';
+import 'package:carp_health_package/health_package.dart';
+import 'package:health/health.dart';
+
 import 'package:carp_apps_package/apps.dart';
 import 'package:carp_backend/carp_backend.dart';
 // import 'package:carp_webservices/carp_auth/carp_auth.dart';
@@ -36,6 +39,7 @@ void main() {
     SamplingPackageRegistry().register(AppsSamplingPackage());
     SamplingPackageRegistry().register(ESenseSamplingPackage());
     SamplingPackageRegistry().register(PolarSamplingPackage());
+    SamplingPackageRegistry().register(HealthSamplingPackage());
 
     // create a data manager in order to register the json functions
     CarpDataManager();
@@ -46,8 +50,9 @@ void main() {
 
     // generate the protocol to be used in testing below
     // setting the right accountId, if to be uploaded to CAWS
-    protocol ??=
-        await LocalStudyProtocolManager().getStudyProtocol('CAMS App v 1.1.0');
+    // protocol ??=
+    //     await LocalStudyProtocolManager().getStudyProtocol('CAMS App v 1.1.0');
+    protocol ??= LocalStudyProtocolManager().getFamilyStudyProtocol('');
     protocol?.ownerId = accountId;
   });
 

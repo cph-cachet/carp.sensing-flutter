@@ -148,11 +148,11 @@ void _registerFromJsonFunctions() {
   // INPUT DATA TYPES
   FromJsonFactory().register(
     CustomInput(''),
-    type: CustomInput.CUSTOM_INPUT_TYPE_NAME,
+    type: CustomInput.type,
   );
   FromJsonFactory().register(
-    SexCustomInput(Sex.Female),
-    type: SexCustomInput.SEX_INPUT_TYPE_NAME,
+    SexInput(Sex.Female),
+    type: SexInput.type,
   );
 
   _fromJsonFunctionsRegistered = true;

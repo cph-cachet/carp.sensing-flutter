@@ -32,7 +32,7 @@ class ExpectedParticipantData {
   late AssignedTo assignedTo;
 
   ExpectedParticipantData({required this.attribute, AssignedTo? assignedTo}) {
-    this.assignedTo = assignedTo ?? AssignedTo(roleNames: {'Participant'});
+    this.assignedTo = assignedTo ?? AssignedTo();
   }
 
   factory ExpectedParticipantData.fromJson(Map<String, dynamic> json) =>
@@ -44,8 +44,7 @@ class ExpectedParticipantData {
 /// participants in a study.
 @JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
 class ParticipantAttribute extends Serializable {
-  /// Uniquely identifies the type of data represented by this participant
-  /// attribute.
+  /// Uniquely identifies the type of data represented by this participant attribute.
   String inputDataType;
 
   ParticipantAttribute({required this.inputDataType}) : super();
