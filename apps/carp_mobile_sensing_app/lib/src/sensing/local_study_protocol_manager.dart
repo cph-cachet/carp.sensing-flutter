@@ -309,8 +309,9 @@ class LocalStudyProtocolManager implements StudyProtocolManager {
     protocol.addExpectedParticipantData(ExpectedParticipantData(
         attribute: ParticipantAttribute(inputDataType: SexInput.type)));
     protocol.addExpectedParticipantData(ExpectedParticipantData(
-        attribute:
-            ParticipantAttribute(inputDataType: InformedConsentInput.type)));
+        attribute: ParticipantAttribute(
+      inputDataType: InformedConsentInput.type,
+    )));
     protocol.addExpectedParticipantData(ExpectedParticipantData(
         attribute: ParticipantAttribute(inputDataType: NameInput.type),
         assignedTo: AssignedTo(roleNames: {mother})));

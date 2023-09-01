@@ -8,15 +8,19 @@
 part of carp_core_common;
 
 /// Custom input data as requested by a researcher.
+abstract class InputType {
+  static const INPUT_TYPE_NAMESPACE = '${NameSpace.CARP}.input';
+}
+
+/// Custom input data as requested by a researcher.
 @JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
 class CustomInput extends Data {
-  static const INPUT_TYPE_NAME = '${NameSpace.CARP}.input';
-  static const type = '${CustomInput.INPUT_TYPE_NAME}.custom';
+  static const type = '${InputType.INPUT_TYPE_NAMESPACE}.custom';
 
-  /// A default value
+  /// Any value
   dynamic value;
 
-  CustomInput(this.value) : super();
+  CustomInput({this.value}) : super();
 
   @override
   Function get fromJsonFunction => _$CustomInputFromJson;
@@ -34,10 +38,12 @@ enum Sex { Male, Female, Intersex }
 /// The biological sex assigned at birth of a participant.
 @JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
 class SexInput extends Data {
-  static const type = '${CustomInput.INPUT_TYPE_NAME}.sex';
+  static const type = '${InputType.INPUT_TYPE_NAMESPACE}.sex';
 
+  /// Biological sex of a participant.
   Sex value;
-  SexInput(this.value) : super();
+
+  SexInput({required this.value}) : super();
 
   @override
   Function get fromJsonFunction => _$SexInputFromJson;
@@ -49,15 +55,21 @@ class SexInput extends Data {
   String get jsonType => type;
 }
 
-/// The social security number of a participant.
+/// The social security number (SSN) of a participant.
 @JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
 class SocialSecurityNumberInput extends Data {
-  static const type = '${CustomInput.INPUT_TYPE_NAME}.ssn';
+  static const type = '${InputType.INPUT_TYPE_NAMESPACE}.ssn';
 
-  /// The social security number
+  /// The social security number (SSN)
   String socialSecurityNumber;
 
-  SocialSecurityNumberInput(this.socialSecurityNumber) : super();
+  /// The country in which this [socialSecurityNumber] originates from.
+  String country;
+
+  SocialSecurityNumberInput({
+    required this.socialSecurityNumber,
+    required this.country,
+  }) : super();
 
   @override
   Function get fromJsonFunction => _$SocialSecurityNumberInputFromJson;
@@ -72,10 +84,15 @@ class SocialSecurityNumberInput extends Data {
 /// The full name of a participant.
 @JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
 class NameInput extends Data {
-  static const type = '${CustomInput.INPUT_TYPE_NAME}.name';
+  static const type = '${InputType.INPUT_TYPE_NAMESPACE}.name';
 
-  String firstName, middleName, lastName;
-  NameInput(this.firstName, this.middleName, this.lastName) : super();
+  String? firstName, middleName, lastName;
+
+  NameInput({
+    this.firstName,
+    this.middleName,
+    this.lastName,
+  }) : super();
 
   @override
   Function get fromJsonFunction => _$NameInputFromJson;
@@ -90,12 +107,18 @@ class NameInput extends Data {
 /// The informed consent from a participant.
 @JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
 class InformedConsentInput extends Data {
-  static const type = '${CustomInput.INPUT_TYPE_NAME}.consent';
+  static const type = '${InputType.INPUT_TYPE_NAMESPACE}.consent';
 
   /// The time this informed consent was signed.
   DateTime signedTimestamp;
 
-  /// The full name of the participant signing this consent.
+  /// The location where this informed consent was signed.
+  String? signedLocation;
+
+  /// The ID of the participant who signed this consent.
+  String? userID;
+
+  /// The full name of the participant who signed this consent.
   String name;
 
   /// The content of the signed consent.
@@ -103,12 +126,17 @@ class InformedConsentInput extends Data {
   /// This may be plain text or JSON.
   String? consent;
 
-  /// The image of the provided signature in png format as bytes
+  /// The image of the provided signature in png format as bytes.
   String? signatureImage;
 
-  InformedConsentInput(
-      this.name, this.consent, this.signedTimestamp, this.signatureImage)
-      : super();
+  InformedConsentInput({
+    required this.signedTimestamp,
+    this.signedLocation,
+    this.userID,
+    required this.name,
+    this.consent,
+    this.signatureImage,
+  }) : super();
 
   @override
   Function get fromJsonFunction => _$InformedConsentInputFromJson;
@@ -123,12 +151,16 @@ class InformedConsentInput extends Data {
 /// The full address of a participant.
 @JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
 class AddressInput extends Data {
-  static const type = '${CustomInput.INPUT_TYPE_NAME}.address';
+  static const type = '${InputType.INPUT_TYPE_NAMESPACE}.address';
 
   String? address1, address2, street, country, zip;
-  AddressInput(
-      this.address1, this.address2, this.street, this.country, this.zip)
-      : super();
+  AddressInput({
+    this.address1,
+    this.address2,
+    this.street,
+    this.country,
+    this.zip,
+  }) : super();
 
   @override
   Function get fromJsonFunction => _$AddressInputFromJson;
@@ -146,7 +178,7 @@ class AddressInput extends Data {
 /// classification.
 @JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
 class DiagnosisInput extends Data {
-  static const type = '${CustomInput.INPUT_TYPE_NAME}.diagnosis';
+  static const type = '${InputType.INPUT_TYPE_NAMESPACE}.diagnosis';
 
   /// The date this diagnosis was effective.
   DateTime? effectiveDate;
@@ -161,9 +193,12 @@ class DiagnosisInput extends Data {
   /// Any conclusion or notes from the physician.
   String? conclusion;
 
-  DiagnosisInput(
-      this.effectiveDate, this.diagnosis, this.icd11Code, this.conclusion)
-      : super();
+  DiagnosisInput({
+    this.effectiveDate,
+    this.diagnosis,
+    required this.icd11Code,
+    this.conclusion,
+  }) : super();
 
   @override
   Function get fromJsonFunction => _$DiagnosisInputFromJson;

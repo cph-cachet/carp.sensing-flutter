@@ -498,7 +498,7 @@ void main() {
 
       var request = SetParticipantData(
         'c9cc5317-48da-45f2-958e-58bc07f34681',
-        {SexInput.type: SexInput(Sex.Male)},
+        {SexInput.type: SexInput(value: Sex.Male)},
         'Participant',
       );
 

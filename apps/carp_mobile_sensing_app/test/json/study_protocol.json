@@ -26,8 +26,8 @@
             "deleteWhenUploaded": true
         }
     },
-    "id": "54ebd660-47ec-11ee-9b64-9fb51ee61eb3",
-    "createdOn": "2023-08-31T10:51:25.766251Z",
+    "id": "d2d609a0-48bf-11ee-8ec3-5d7ee98bd07c",
+    "createdOn": "2023-09-01T12:05:20.826681Z",
     "version": 0,
     "description": "The default study testing coverage of most measures. Used in the coverage tests.",
     "ownerId": "01dc52c4-b33b-4304-b265-8118c69f5935",

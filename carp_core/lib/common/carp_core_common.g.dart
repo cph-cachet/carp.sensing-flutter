@@ -1347,7 +1347,7 @@ Map<String, dynamic> _$ErrorToJson(Error instance) {
 }
 
 CustomInput _$CustomInputFromJson(Map<String, dynamic> json) => CustomInput(
-      json['value'],
+      value: json['value'],
     )..$type = json['__type'] as String?;
 
 Map<String, dynamic> _$CustomInputToJson(CustomInput instance) {
@@ -1365,7 +1365,7 @@ Map<String, dynamic> _$CustomInputToJson(CustomInput instance) {
 }
 
 SexInput _$SexInputFromJson(Map<String, dynamic> json) => SexInput(
-      $enumDecode(_$SexEnumMap, json['value']),
+      value: $enumDecode(_$SexEnumMap, json['value']),
     )..$type = json['__type'] as String?;
 
 Map<String, dynamic> _$SexInputToJson(SexInput instance) {
@@ -1391,7 +1391,8 @@ const _$SexEnumMap = {
 SocialSecurityNumberInput _$SocialSecurityNumberInputFromJson(
         Map<String, dynamic> json) =>
     SocialSecurityNumberInput(
-      json['socialSecurityNumber'] as String,
+      socialSecurityNumber: json['socialSecurityNumber'] as String,
+      country: json['country'] as String,
     )..$type = json['__type'] as String?;
 
 Map<String, dynamic> _$SocialSecurityNumberInputToJson(
@@ -1406,13 +1407,14 @@ Map<String, dynamic> _$SocialSecurityNumberInputToJson(
 
   writeNotNull('__type', instance.$type);
   val['socialSecurityNumber'] = instance.socialSecurityNumber;
+  val['country'] = instance.country;
   return val;
 }
 
 NameInput _$NameInputFromJson(Map<String, dynamic> json) => NameInput(
-      json['firstName'] as String,
-      json['middleName'] as String,
-      json['lastName'] as String,
+      firstName: json['firstName'] as String?,
+      middleName: json['middleName'] as String?,
+      lastName: json['lastName'] as String?,
     )..$type = json['__type'] as String?;
 
 Map<String, dynamic> _$NameInputToJson(NameInput instance) {
@@ -1425,19 +1427,21 @@ Map<String, dynamic> _$NameInputToJson(NameInput instance) {
   }
 
   writeNotNull('__type', instance.$type);
-  val['firstName'] = instance.firstName;
-  val['middleName'] = instance.middleName;
-  val['lastName'] = instance.lastName;
+  writeNotNull('firstName', instance.firstName);
+  writeNotNull('middleName', instance.middleName);
+  writeNotNull('lastName', instance.lastName);
   return val;
 }
 
 InformedConsentInput _$InformedConsentInputFromJson(
         Map<String, dynamic> json) =>
     InformedConsentInput(
-      json['name'] as String,
-      json['consent'] as String?,
-      DateTime.parse(json['signedTimestamp'] as String),
-      json['signatureImage'] as String?,
+      signedTimestamp: DateTime.parse(json['signedTimestamp'] as String),
+      signedLocation: json['signedLocation'] as String?,
+      userID: json['userID'] as String?,
+      name: json['name'] as String,
+      consent: json['consent'] as String?,
+      signatureImage: json['signatureImage'] as String?,
     )..$type = json['__type'] as String?;
 
 Map<String, dynamic> _$InformedConsentInputToJson(
@@ -1452,6 +1456,8 @@ Map<String, dynamic> _$InformedConsentInputToJson(
 
   writeNotNull('__type', instance.$type);
   val['signedTimestamp'] = instance.signedTimestamp.toIso8601String();
+  writeNotNull('signedLocation', instance.signedLocation);
+  writeNotNull('userID', instance.userID);
   val['name'] = instance.name;
   writeNotNull('consent', instance.consent);
   writeNotNull('signatureImage', instance.signatureImage);
@@ -1459,11 +1465,11 @@ Map<String, dynamic> _$InformedConsentInputToJson(
 }
 
 AddressInput _$AddressInputFromJson(Map<String, dynamic> json) => AddressInput(
-      json['address1'] as String?,
-      json['address2'] as String?,
-      json['street'] as String?,
-      json['country'] as String?,
-      json['zip'] as String?,
+      address1: json['address1'] as String?,
+      address2: json['address2'] as String?,
+      street: json['street'] as String?,
+      country: json['country'] as String?,
+      zip: json['zip'] as String?,
     )..$type = json['__type'] as String?;
 
 Map<String, dynamic> _$AddressInputToJson(AddressInput instance) {
@@ -1486,12 +1492,12 @@ Map<String, dynamic> _$AddressInputToJson(AddressInput instance) {
 
 DiagnosisInput _$DiagnosisInputFromJson(Map<String, dynamic> json) =>
     DiagnosisInput(
-      json['effectiveDate'] == null
+      effectiveDate: json['effectiveDate'] == null
           ? null
           : DateTime.parse(json['effectiveDate'] as String),
-      json['diagnosis'] as String?,
-      json['idc11Code'] as String,
-      json['conclusion'] as String?,
+      diagnosis: json['diagnosis'] as String?,
+      icd11Code: json['icd11Code'] as String,
+      conclusion: json['conclusion'] as String?,
     )..$type = json['__type'] as String?;
 
 Map<String, dynamic> _$DiagnosisInputToJson(DiagnosisInput instance) {
@@ -1506,7 +1512,7 @@ Map<String, dynamic> _$DiagnosisInputToJson(DiagnosisInput instance) {
   writeNotNull('__type', instance.$type);
   writeNotNull('effectiveDate', instance.effectiveDate?.toIso8601String());
   writeNotNull('diagnosis', instance.diagnosis);
-  val['idc11Code'] = instance.icd11Code;
+  val['icd11Code'] = instance.icd11Code;
   writeNotNull('conclusion', instance.conclusion);
   return val;
 }

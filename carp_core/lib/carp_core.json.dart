@@ -146,14 +146,15 @@ void _registerFromJsonFunctions() {
   ]);
 
   // INPUT DATA TYPES
-  FromJsonFactory().register(
-    CustomInput(''),
-    type: CustomInput.type,
-  );
-  FromJsonFactory().register(
-    SexInput(Sex.Female),
-    type: SexInput.type,
-  );
+  FromJsonFactory().registerAll([
+    CustomInput(value: ''),
+    SexInput(value: Sex.Female),
+    NameInput(),
+    AddressInput(),
+    SocialSecurityNumberInput(socialSecurityNumber: '', country: ''),
+    InformedConsentInput(name: '', signedTimestamp: DateTime.now()),
+    DiagnosisInput(icd11Code: ''),
+  ]);
 
   _fromJsonFunctionsRegistered = true;
 }
