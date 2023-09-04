@@ -14,7 +14,7 @@ class ParticipantData {
   String studyDeploymentId;
 
   /// Data that is related to everyone in the study deployment.
-  Map<String, Data> common;
+  Map<String, Data?> common;
 
   /// Data that is related to specific roles in the study deployment.
   List<RoleData> roles;

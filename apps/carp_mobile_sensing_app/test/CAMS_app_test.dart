@@ -12,7 +12,7 @@ import 'package:carp_context_package/carp_context_package.dart';
 import 'package:carp_audio_package/media.dart';
 // import 'package:carp_communication_package/communication.dart';
 import 'package:carp_health_package/health_package.dart';
-import 'package:health/health.dart';
+// import 'package:health/health.dart';
 
 import 'package:carp_apps_package/apps.dart';
 import 'package:carp_backend/carp_backend.dart';
@@ -52,7 +52,10 @@ void main() {
     // setting the right accountId, if to be uploaded to CAWS
     // protocol ??=
     //     await LocalStudyProtocolManager().getStudyProtocol('CAMS App v 1.1.0');
-    protocol ??= LocalStudyProtocolManager().getFamilyStudyProtocol('');
+    protocol ??= LocalStudyProtocolManager()
+        .getFamilyStudyProtocol('Family study with Participant Data');
+    // .getSingleUserStudyProtocol('Single Participant Study');
+
     protocol?.ownerId = accountId;
   });
 

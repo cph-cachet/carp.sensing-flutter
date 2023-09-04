@@ -77,6 +77,7 @@ class PolarDevice extends BLEHeartRateDevice {
 class PolarDeviceManager extends BTLEDeviceManager<PolarDevice> {
   int? _batteryLevel;
   bool _polarFeaturesAvailable = false;
+  Polar? _polar;
   StreamController<int> _batteryEventController = StreamController.broadcast();
   StreamSubscription<PolarBatteryLevelEvent>? _batterySubscription;
   StreamSubscription<PolarDeviceInfo>? _connectingSubscription;
@@ -84,7 +85,7 @@ class PolarDeviceManager extends BTLEDeviceManager<PolarDevice> {
   StreamSubscription<PolarDeviceDisconnectedEvent>? _disconnectedSubscription;
 
   /// The [Polar] device handler.
-  final Polar polar = Polar();
+  Polar get polar => _polar ??= Polar();
 
   /// List of [PolarDataType]s that are available in Polar devices for online
   /// streaming or offline recording.

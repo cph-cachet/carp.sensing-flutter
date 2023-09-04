@@ -88,8 +88,10 @@ class HealthSamplingPackage extends SmartphoneSamplingPackage {
 
   @override
   void onRegister() {
-    FromJsonFactory()
-        .register(HealthSamplingConfiguration(healthDataTypes: []));
+    FromJsonFactory().registerAll([
+      HealthService(types: []),
+      HealthSamplingConfiguration(healthDataTypes: []),
+    ]);
   }
 
   @override

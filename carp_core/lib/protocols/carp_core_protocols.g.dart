@@ -15,6 +15,9 @@ StudyProtocol _$StudyProtocolFromJson(Map<String, dynamic> json) =>
       ..id = json['id'] as String
       ..createdOn = DateTime.parse(json['createdOn'] as String)
       ..version = json['version'] as int
+      ..participantRoles = (json['participantRoles'] as List<dynamic>?)
+          ?.map((e) => ParticipantRole.fromJson(e as Map<String, dynamic>))
+          .toSet()
       ..primaryDevices = (json['primaryDevices'] as List<dynamic>)
           .map((e) => PrimaryDeviceConfiguration<DeviceRegistration>.fromJson(
               e as Map<String, dynamic>))
@@ -26,6 +29,11 @@ StudyProtocol _$StudyProtocolFromJson(Map<String, dynamic> json) =>
       ..connections = (json['connections'] as List<dynamic>?)
           ?.map((e) => DeviceConnection.fromJson(e as Map<String, dynamic>))
           .toList()
+      ..assignedDevices =
+          (json['assignedDevices'] as Map<String, dynamic>?)?.map(
+        (k, e) =>
+            MapEntry(k, (e as List<dynamic>).map((e) => e as String).toSet()),
+      )
       ..tasks = (json['tasks'] as List<dynamic>)
           .map((e) => TaskConfiguration.fromJson(e as Map<String, dynamic>))
           .toSet()
@@ -36,14 +44,6 @@ StudyProtocol _$StudyProtocolFromJson(Map<String, dynamic> json) =>
       ..taskControls = (json['taskControls'] as List<dynamic>)
           .map((e) => TaskControl.fromJson(e as Map<String, dynamic>))
           .toSet()
-      ..participantRoles = (json['participantRoles'] as List<dynamic>?)
-          ?.map((e) => ParticipantRole.fromJson(e as Map<String, dynamic>))
-          .toSet()
-      ..assignedDevices =
-          (json['assignedDevices'] as Map<String, dynamic>?)?.map(
-        (k, e) =>
-            MapEntry(k, (e as List<dynamic>).map((e) => e as String).toSet()),
-      )
       ..expectedParticipantData =
           (json['expectedParticipantData'] as List<dynamic>?)
               ?.map((e) =>
@@ -67,15 +67,15 @@ Map<String, dynamic> _$StudyProtocolToJson(StudyProtocol instance) {
   }
 
   writeNotNull('description', instance.description);
+  writeNotNull('participantRoles', instance.participantRoles?.toList());
   val['primaryDevices'] = instance.primaryDevices.toList();
   writeNotNull('connectedDevices', instance.connectedDevices?.toList());
   writeNotNull('connections', instance.connections);
+  writeNotNull('assignedDevices',
+      instance.assignedDevices?.map((k, e) => MapEntry(k, e.toList())));
   val['tasks'] = instance.tasks.toList();
   val['triggers'] = instance.triggers;
   val['taskControls'] = instance.taskControls.toList();
-  writeNotNull('participantRoles', instance.participantRoles?.toList());
-  writeNotNull('assignedDevices',
-      instance.assignedDevices?.map((k, e) => MapEntry(k, e.toList())));
   writeNotNull(
       'expectedParticipantData', instance.expectedParticipantData?.toList());
   writeNotNull('applicationData', instance.applicationData);

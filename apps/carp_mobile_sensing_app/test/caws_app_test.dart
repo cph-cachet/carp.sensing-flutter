@@ -9,6 +9,7 @@ import 'package:carp_mobile_sensing/carp_mobile_sensing.dart';
 import 'package:carp_connectivity_package/connectivity.dart';
 import 'package:carp_esense_package/esense.dart';
 import 'package:carp_polar_package/carp_polar_package.dart';
+import 'package:carp_health_package/health_package.dart';
 import 'package:carp_context_package/carp_context_package.dart';
 import 'package:carp_audio_package/media.dart';
 // import 'package:carp_communication_package/communication.dart';
@@ -24,6 +25,9 @@ void main() {
   // TestWidgetsFlutterBinding.ensureInitialized();
   CarpMobileSensing.ensureInitialized();
 
+  CarpApp app;
+  late CarpUser user;
+
   setUp(() async {
     Settings().debugLevel = DebugLevel.debug;
 
@@ -34,38 +38,33 @@ void main() {
     // SamplingPackageRegistry().register(CommunicationSamplingPackage());
     SamplingPackageRegistry().register(AppsSamplingPackage());
     SamplingPackageRegistry().register(ESenseSamplingPackage());
-    // SamplingPackageRegistry().register(PolarSamplingPackage());
+    SamplingPackageRegistry().register(PolarSamplingPackage());
+    SamplingPackageRegistry().register(HealthSamplingPackage());
 
     FromJsonFactory().register(PolarDevice());
 
     // create a data manager in order to register the json functions
     CarpDataManager();
+
+    app = CarpApp(
+      name: "Test",
+      uri: Uri.parse(uri),
+      oauth: OAuthEndPoint(clientID: clientID, clientSecret: clientSecret),
+    );
+
+    CarpService().configure(app);
+
+    user = await CarpService().authenticate(
+      username: username,
+      password: password,
+    );
+
+    CarpParticipationService().configureFrom(CarpService());
+    CarpDeploymentService().configureFrom(CarpService());
   });
 
-  CarpApp app;
-  late CarpUser user;
-
-  group("CARP Study Protocol Manager", () {
-    setUp(() async {
-      app = CarpApp(
-        name: "Test",
-        uri: Uri.parse(uri),
-        oauth: OAuthEndPoint(clientID: clientID, clientSecret: clientSecret),
-      );
-
-      CarpService().configure(app);
-
-      user = await CarpService().authenticate(
-        username: username,
-        password: password,
-      );
-
-      CarpParticipationService().configureFrom(CarpService());
-      CarpDeploymentService().configureFrom(CarpService());
-
-      // make sure that the json functions are loaded
-      CarpMobileSensing();
-    });
+  group("CARP Deployment Service", () {
+    setUp(() async {});
 
     test('- authentication', () async {
       print('CarpService : ${CarpService().app}');
@@ -78,6 +77,29 @@ void main() {
       print(toJsonString(status));
     });
 
+    test("- register Primary Phone", () async {
+      final status = await CarpDeploymentService().registerDevice(
+          testDeploymentId,
+          "Primary Phone",
+          DefaultDeviceRegistration(deviceDisplayName: 'Samsung A10'));
+      print(toJsonString(status));
+    });
+    test("- register Father's device", () async {
+      final status = await CarpDeploymentService().registerDevice(
+          testDeploymentId,
+          "Father's Phone",
+          DefaultDeviceRegistration(deviceDisplayName: 'Samsung A10'));
+      print(toJsonString(status));
+    });
+
+    test("- register Mother's device", () async {
+      final status = await CarpDeploymentService().registerDevice(
+          testDeploymentId,
+          "Mother's Phone",
+          DefaultDeviceRegistration(deviceDisplayName: 'Samsung A20'));
+      print(toJsonString(status));
+    });
+
     test('- get study deployment ', () async {
       final status = await CarpDeploymentService()
           .getStudyDeploymentStatus(testDeploymentId);
@@ -87,18 +109,61 @@ void main() {
           status.primaryDeviceStatus!.device.roleName);
       print(toJsonString(study));
     });
+  });
 
-    test(
-      '- get invitations',
-      () async {
-        List<ActiveParticipationInvitation> invitations =
-            await CarpParticipationService()
-                .getActiveParticipationInvitations();
+  group("CARP Participation Service", () {
+    test('- get invitations', () async {
+      List<ActiveParticipationInvitation> invitations =
+          await CarpParticipationService().getActiveParticipationInvitations();
 
-        for (var invitation in invitations) {
-          print(toJsonString(invitation));
-        }
-      },
-    );
+      for (var invitation in invitations) {
+        print(toJsonString(invitation));
+      }
+    });
+
+    test('- set participant data - SEX', () async {
+      var data = await CarpParticipationService().setParticipantData(
+        testDeploymentId,
+        {SexInput.type: SexInput(value: Sex.Male)},
+      );
+
+      print(toJsonString(data));
+    });
+
+    test('- set participant data - CONSENT', () async {
+      var data = await CarpParticipationService().setParticipantData(
+        testDeploymentId,
+        {
+          InformedConsentInput.type: InformedConsentInput(
+            signedTimestamp: DateTime.now(),
+            name: 'JEB',
+          )
+        },
+      );
+
+      print(toJsonString(data));
+    });
+
+    test('- set participant data - NAME', () async {
+      var data = await CarpParticipationService().setParticipantData(
+        testDeploymentId,
+        {
+          NameInput.type: NameInput(
+            firstName: 'Eva',
+            middleName: 'G.',
+            lastName: 'Bardram',
+          )
+        },
+        "Mother",
+      );
+      print(toJsonString(data));
+    });
+
+    test('- get participant data', () async {
+      var data =
+          await CarpParticipationService().getParticipantData(testDeploymentId);
+
+      print(toJsonString(data));
+    });
   });
 }

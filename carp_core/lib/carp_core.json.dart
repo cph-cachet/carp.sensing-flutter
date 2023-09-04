@@ -81,6 +81,7 @@ void _registerFromJsonFunctions() {
     AltBeacon(),
     ParticipantAttribute(inputDataType: ''),
     AssignedTo(),
+    AssignedTo(roleNames: {'AA'}),
     AccountIdentity(),
     EmailAccountIdentity(''),
     UsernameAccountIdentity(''),

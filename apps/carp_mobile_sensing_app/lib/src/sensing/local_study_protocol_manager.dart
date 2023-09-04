@@ -40,10 +40,10 @@ class LocalStudyProtocolManager implements StudyProtocolManager {
     // set the format of the data to upload - e.g. Open mHealth
     ..dataFormat = bloc.dataFormat;
 
-  SmartphoneStudyProtocol getSingleUserStudyProtocol(String protocolId) {
+  SmartphoneStudyProtocol getSingleUserStudyProtocol(String name) {
     SmartphoneStudyProtocol protocol = SmartphoneStudyProtocol(
       ownerId: 'abc@dtu.dk',
-      name: protocolId,
+      name: name,
       studyDescription: studyDescription,
       dataEndPoint: dataEndPoint..dataFormat = bloc.dataFormat,
     );
@@ -56,10 +56,11 @@ class LocalStudyProtocolManager implements StudyProtocolManager {
     Smartphone phone = Smartphone();
     protocol.addPrimaryDevice(phone);
 
-    protocol.changeDeviceAssignment(
-      phone,
-      AssignedTo(roleNames: {participant}),
-    );
+    // 2023-09-04 - the following device assignments should not be needed.
+    // protocol.changeDeviceAssignment(
+    //   phone,
+    //   AssignedTo(roleNames: {participant}),
+    // );
 
     // build-in measure from sensor and device sampling packages
     protocol.addTaskControl(
@@ -280,10 +281,10 @@ class LocalStudyProtocolManager implements StudyProtocolManager {
     return protocol;
   }
 
-  SmartphoneStudyProtocol getFamilyStudyProtocol(String protocolId) {
+  SmartphoneStudyProtocol getFamilyStudyProtocol(String name) {
     SmartphoneStudyProtocol protocol = SmartphoneStudyProtocol(
       ownerId: 'abc@dtu.dk',
-      name: protocolId,
+      name: name,
       studyDescription: studyDescription,
       dataEndPoint: dataEndPoint..dataFormat = bloc.dataFormat,
     );
@@ -300,6 +301,7 @@ class LocalStudyProtocolManager implements StudyProtocolManager {
     protocol.addPrimaryDevice(fatherPhone);
     Smartphone motherPhone = Smartphone(roleName: "Mother's Phone");
     protocol.addPrimaryDevice(motherPhone);
+
     protocol.changeDeviceAssignment(
         fatherPhone, AssignedTo(roleNames: {father}));
     protocol.changeDeviceAssignment(

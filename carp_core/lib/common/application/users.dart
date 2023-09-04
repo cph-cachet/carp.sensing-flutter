@@ -32,7 +32,7 @@ class ExpectedParticipantData {
   late AssignedTo assignedTo;
 
   ExpectedParticipantData({required this.attribute, AssignedTo? assignedTo}) {
-    this.assignedTo = assignedTo ?? AssignedTo();
+    this.assignedTo = assignedTo ?? AssignedTo.all();
   }
 
   factory ExpectedParticipantData.fromJson(Map<String, dynamic> json) =>
@@ -64,16 +64,16 @@ class ParticipantAttribute extends Serializable {
 @JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
 class AssignedTo extends Serializable {
   /// Assign this to the specified [roleNames] in the study protocol.
-  /// If empty, assign this to all participants in the study protocol.
-  Set<String> roleNames = {};
+  /// If null, assign this to all participants in the study protocol.
+  Set<String>? roleNames;
 
   /// Is this role assigned to all participants?
-  bool get isAssignedToAll => roleNames.isEmpty;
+  bool get isAssignedToAll => roleNames == null;
 
   /// Create a new assignment with the list of [roleNames].
-  AssignedTo({this.roleNames = const {}}) : super();
+  AssignedTo({this.roleNames}) : super();
 
-  /// Assign to all participants in the study protocol.
+  /// Create a new assignment assigned to all participants in the study protocol.
   AssignedTo.all() : this();
 
   @override
@@ -84,6 +84,7 @@ class AssignedTo extends Serializable {
   Map<String, dynamic> toJson() => _$AssignedToToJson(this);
 
   @override
-  String get jsonType =>
-      'dk.cachet.carp.common.application.users.AssignedTo.Roles';
+  String get jsonType => isAssignedToAll
+      ? 'dk.cachet.carp.common.application.users.AssignedTo.All'
+      : 'dk.cachet.carp.common.application.users.AssignedTo.Roles';
 }

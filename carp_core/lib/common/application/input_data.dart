@@ -57,6 +57,45 @@ class SexInput extends Data {
 
 /// The social security number (SSN) of a participant.
 @JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
+class PhoneNumberInput extends Data {
+  static const type = '${InputType.INPUT_TYPE_NAMESPACE}.phonenumber';
+
+  /// The country code of this phone number.
+  ///
+  /// The country code is represented by a string, since some country codes
+  /// contain a '-'. For example, "1-246" for Barbados or "44-1481" for Guernsey.
+  ///
+  /// See https://countrycode.org/ or https://en.wikipedia.org/wiki/List_of_country_calling_codes
+  String countryCode;
+
+  /// The ICO 3166 code of the [countryCode], if available.
+  ///
+  /// See https://en.wikipedia.org/wiki/List_of_ISO_3166_country_codes
+  String? icoCode;
+
+  /// The phone number.
+  ///
+  /// The phone number is represented as a string since it may be pretty-printed
+  /// with spaces.
+  String number;
+
+  PhoneNumberInput({
+    required this.countryCode,
+    required this.number,
+  }) : super();
+
+  @override
+  Function get fromJsonFunction => _$PhoneNumberInputFromJson;
+  factory PhoneNumberInput.fromJson(Map<String, dynamic> json) =>
+      FromJsonFactory().fromJson(json) as PhoneNumberInput;
+  @override
+  Map<String, dynamic> toJson() => _$PhoneNumberInputToJson(this);
+  @override
+  String get jsonType => type;
+}
+
+/// The social security number (SSN) of a participant.
+@JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
 class SocialSecurityNumberInput extends Data {
   static const type = '${InputType.INPUT_TYPE_NAMESPACE}.ssn';
 

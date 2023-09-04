@@ -137,9 +137,8 @@ Map<String, dynamic> _$ParticipantAttributeToJson(
 
 AssignedTo _$AssignedToFromJson(Map<String, dynamic> json) => AssignedTo(
       roleNames: (json['roleNames'] as List<dynamic>?)
-              ?.map((e) => e as String)
-              .toSet() ??
-          const {},
+          ?.map((e) => e as String)
+          .toSet(),
     )..$type = json['__type'] as String?;
 
 Map<String, dynamic> _$AssignedToToJson(AssignedTo instance) {
@@ -152,7 +151,7 @@ Map<String, dynamic> _$AssignedToToJson(AssignedTo instance) {
   }
 
   writeNotNull('__type', instance.$type);
-  val['roleNames'] = instance.roleNames.toList();
+  writeNotNull('roleNames', instance.roleNames?.toList());
   return val;
 }
 
@@ -1387,6 +1386,30 @@ const _$SexEnumMap = {
   Sex.Female: 'Female',
   Sex.Intersex: 'Intersex',
 };
+
+PhoneNumberInput _$PhoneNumberInputFromJson(Map<String, dynamic> json) =>
+    PhoneNumberInput(
+      countryCode: json['countryCode'] as String,
+      number: json['number'] as String,
+    )
+      ..$type = json['__type'] as String?
+      ..icoCode = json['icoCode'] as String?;
+
+Map<String, dynamic> _$PhoneNumberInputToJson(PhoneNumberInput instance) {
+  final val = <String, dynamic>{};
+
+  void writeNotNull(String key, dynamic value) {
+    if (value != null) {
+      val[key] = value;
+    }
+  }
+
+  writeNotNull('__type', instance.$type);
+  val['countryCode'] = instance.countryCode;
+  writeNotNull('icoCode', instance.icoCode);
+  val['number'] = instance.number;
+  return val;
+}
 
 SocialSecurityNumberInput _$SocialSecurityNumberInputFromJson(
         Map<String, dynamic> json) =>

@@ -40,6 +40,12 @@ class StudyProtocol extends Snapshot {
   /// An optional description for the study protocol.
   String? description;
 
+  /// Roles which can be assigned to participants in the study and [ParticipantAttribute]s
+  /// can be linked to.
+  /// If a [ParticipantAttribute] is not linked to any specific participant role,
+  /// the participant data can be filled out by all participants in the study deployment.
+  Set<ParticipantRole>? participantRoles = {};
+
   /// The full list of devices part of this configuration.
   Set<DeviceConfiguration> get devices {
     Set<DeviceConfiguration> set = {...primaryDevices, ...connectedDevices!};
@@ -56,6 +62,10 @@ class StudyProtocol extends Snapshot {
   /// The connections between [primaryDevices] and [connectedDevices].
   List<DeviceConnection>? connections = [];
 
+  /// Per device role, the participant roles to which the device is assigned.
+  /// Unassigned device are assigned to "anyone".
+  Map<String, Set<String>>? assignedDevices = {};
+
   /// The tasks which measure data and/or present output on a device.
   Set<TaskConfiguration> tasks = {};
 
@@ -66,16 +76,6 @@ class StudyProtocol extends Snapshot {
   /// Stores which tasks need to be started or stopped when the conditions
   /// defined by [triggers] are met.
   Set<TaskControl> taskControls = {};
-
-  /// Roles which can be assigned to participants in the study and [ParticipantAttribute]s
-  /// can be linked to.
-  /// If a [ParticipantAttribute] is not linked to any specific participant role,
-  /// the participant data can be filled out by all participants in the study deployment.
-  Set<ParticipantRole>? participantRoles = {};
-
-  /// Per device role, the participant roles to which the device is assigned.
-  /// Unassigned device are assigned to "anyone".
-  Map<String, Set<String>>? assignedDevices = {};
 
   Set<ExpectedParticipantData>? expectedParticipantData = {};
 
@@ -330,9 +330,9 @@ class StudyProtocol extends Snapshot {
   /// Determines whether all participant roles in [assignment] are part of the
   /// [participantRoles] in this protocol.
   bool isValidAssignment(AssignedTo assignment) {
-    if (assignment.roleNames.isEmpty) return true; // assigned to all
+    if (assignment.isAssignedToAll) return true; // assigned to all
 
-    for (var name in assignment.roleNames) {
+    for (var name in assignment.roleNames!) {
       for (var role in participantRoles!) {
         if (role.role == name) return true;
       }
@@ -342,7 +342,9 @@ class StudyProtocol extends Snapshot {
 
   /// Change who the primary [device] is [assignedTo].
   ///
-  /// By default, primary devices are all roles.
+  /// By default, primary devices are all roles so using this method is only
+  /// needed if you want to change this default assignment.
+  ///
   /// Requires that [device] is part of this protocol and [assignedTo] contains
   /// participant roles which are part of this protocol.
   void changeDeviceAssignment(
@@ -354,8 +356,26 @@ class StudyProtocol extends Snapshot {
         "The device configuration is not part of this protocol.");
     assert(isValidAssignment(assignedTo),
         "One of the assigned participant roles is not part of this protocol.");
+    assert(
+        !assignedTo.isAssignedToAll,
+        "Do not use this method to assign a device to all participants. "
+        "This is done per default.");
 
-    assignedDevices![device.roleName] = assignedTo.roleNames;
+    assignedDevices![device.roleName] = assignedTo.roleNames!;
+  }
+
+  /// Remove the primary [device] assignments and hence make it assigned
+  /// to all roles.
+  ///
+  /// Requires that [device] is part of this protocol.
+  void removeDeviceAssignment(
+    PrimaryDeviceConfiguration device,
+  ) {
+    assignedDevices ??= {};
+    assert(primaryDevices.contains(device),
+        "The device configuration is not part of this protocol.");
+
+    assignedDevices!.remove(device.roleName);
   }
 
   /// Add expected participant data to be input by users.

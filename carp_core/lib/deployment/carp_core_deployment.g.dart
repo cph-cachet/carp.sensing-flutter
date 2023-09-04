@@ -181,7 +181,8 @@ ParticipantData _$ParticipantDataFromJson(Map<String, dynamic> json) =>
     ParticipantData(
       studyDeploymentId: json['studyDeploymentId'] as String,
       common: (json['common'] as Map<String, dynamic>?)?.map(
-            (k, e) => MapEntry(k, Data.fromJson(e as Map<String, dynamic>)),
+            (k, e) => MapEntry(
+                k, e == null ? null : Data.fromJson(e as Map<String, dynamic>)),
           ) ??
           const {},
       roles: (json['roles'] as List<dynamic>?)
