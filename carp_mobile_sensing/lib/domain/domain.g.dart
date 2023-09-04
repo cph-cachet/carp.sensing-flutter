@@ -16,6 +16,7 @@ SmartphoneApplicationData _$SmartphoneApplicationDataFromJson(
       dataEndPoint: json['dataEndPoint'] == null
           ? null
           : DataEndPoint.fromJson(json['dataEndPoint'] as Map<String, dynamic>),
+      privacySchemaName: json['privacySchemaName'] as String?,
       applicationData: json['applicationData'] as Map<String, dynamic>?,
     );
 
@@ -31,6 +32,7 @@ Map<String, dynamic> _$SmartphoneApplicationDataToJson(
 
   writeNotNull('studyDescription', instance.studyDescription);
   writeNotNull('dataEndPoint', instance.dataEndPoint);
+  writeNotNull('privacySchemaName', instance.privacySchemaName);
   writeNotNull('applicationData', instance.applicationData);
   return val;
 }
@@ -46,6 +48,9 @@ SmartphoneStudyProtocol _$SmartphoneStudyProtocolFromJson(
       ..createdOn = DateTime.parse(json['createdOn'] as String)
       ..version = json['version'] as int
       ..description = json['description'] as String
+      ..participantRoles = (json['participantRoles'] as List<dynamic>?)
+          ?.map((e) => ParticipantRole.fromJson(e as Map<String, dynamic>))
+          .toSet()
       ..primaryDevices = (json['primaryDevices'] as List<dynamic>)
           .map((e) => PrimaryDeviceConfiguration<DeviceRegistration>.fromJson(
               e as Map<String, dynamic>))
@@ -57,6 +62,11 @@ SmartphoneStudyProtocol _$SmartphoneStudyProtocolFromJson(
       ..connections = (json['connections'] as List<dynamic>?)
           ?.map((e) => DeviceConnection.fromJson(e as Map<String, dynamic>))
           .toList()
+      ..assignedDevices =
+          (json['assignedDevices'] as Map<String, dynamic>?)?.map(
+        (k, e) =>
+            MapEntry(k, (e as List<dynamic>).map((e) => e as String).toSet()),
+      )
       ..tasks = (json['tasks'] as List<dynamic>)
           .map((e) => TaskConfiguration.fromJson(e as Map<String, dynamic>))
           .toSet()
@@ -67,14 +77,6 @@ SmartphoneStudyProtocol _$SmartphoneStudyProtocolFromJson(
       ..taskControls = (json['taskControls'] as List<dynamic>)
           .map((e) => TaskControl.fromJson(e as Map<String, dynamic>))
           .toSet()
-      ..participantRoles = (json['participantRoles'] as List<dynamic>?)
-          ?.map((e) => ParticipantRole.fromJson(e as Map<String, dynamic>))
-          .toSet()
-      ..assignedDevices =
-          (json['assignedDevices'] as Map<String, dynamic>?)?.map(
-        (k, e) =>
-            MapEntry(k, (e as List<dynamic>).map((e) => e as String).toSet()),
-      )
       ..expectedParticipantData =
           (json['expectedParticipantData'] as List<dynamic>?)
               ?.map((e) =>
@@ -98,15 +100,15 @@ Map<String, dynamic> _$SmartphoneStudyProtocolToJson(
   val['description'] = instance.description;
   val['ownerId'] = instance.ownerId;
   val['name'] = instance.name;
+  writeNotNull('participantRoles', instance.participantRoles?.toList());
   val['primaryDevices'] = instance.primaryDevices.toList();
   writeNotNull('connectedDevices', instance.connectedDevices?.toList());
   writeNotNull('connections', instance.connections);
+  writeNotNull('assignedDevices',
+      instance.assignedDevices?.map((k, e) => MapEntry(k, e.toList())));
   val['tasks'] = instance.tasks.toList();
   val['triggers'] = instance.triggers;
   val['taskControls'] = instance.taskControls.toList();
-  writeNotNull('participantRoles', instance.participantRoles?.toList());
-  writeNotNull('assignedDevices',
-      instance.assignedDevices?.map((k, e) => MapEntry(k, e.toList())));
   writeNotNull(
       'expectedParticipantData', instance.expectedParticipantData?.toList());
   return val;
@@ -434,7 +436,8 @@ SmartphoneDeployment _$SmartphoneDeploymentFromJson(
       ..studyId = json['studyId'] as String?
       ..deployed = json['deployed'] == null
           ? null
-          : DateTime.parse(json['deployed'] as String);
+          : DateTime.parse(json['deployed'] as String)
+      ..status = $enumDecode(_$StudyStatusEnumMap, json['status']);
 
 Map<String, dynamic> _$SmartphoneDeploymentToJson(
     SmartphoneDeployment instance) {
@@ -459,8 +462,24 @@ Map<String, dynamic> _$SmartphoneDeploymentToJson(
   val['studyDeploymentId'] = instance.studyDeploymentId;
   writeNotNull('deployed', instance.deployed?.toIso8601String());
   writeNotNull('userId', instance.userId);
+  val['status'] = _$StudyStatusEnumMap[instance.status]!;
   return val;
 }
+
+const _$StudyStatusEnumMap = {
+  StudyStatus.DeploymentNotStarted: 'DeploymentNotStarted',
+  StudyStatus.DeploymentStatusAvailable: 'DeploymentStatusAvailable',
+  StudyStatus.Deploying: 'Deploying',
+  StudyStatus.AwaitingOtherDeviceRegistrations:
+      'AwaitingOtherDeviceRegistrations',
+  StudyStatus.AwaitingDeviceDeployment: 'AwaitingDeviceDeployment',
+  StudyStatus.DeviceDeploymentReceived: 'DeviceDeploymentReceived',
+  StudyStatus.RegisteringDevices: 'RegisteringDevices',
+  StudyStatus.Deployed: 'Deployed',
+  StudyStatus.Running: 'Running',
+  StudyStatus.Stopped: 'Stopped',
+  StudyStatus.DeploymentNotAvailable: 'DeploymentNotAvailable',
+};
 
 AppTask _$AppTaskFromJson(Map<String, dynamic> json) => AppTask(
       name: json['name'] as String?,

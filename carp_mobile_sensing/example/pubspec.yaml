@@ -1,7 +1,7 @@
 name: carp_mobile_sensing_example
 description: Examples of how to use the carp_mobile_sensing framework.
 publish_to: 'none'
-version: 1.1.0
+version: 1.2.0
 
 environment:
   sdk: ">=2.17.0 <4.0.0"
@@ -20,7 +20,7 @@ dependencies:
   carp_mobile_sensing:
     path: ../../carp_mobile_sensing/
 
-  uuid: ^3.0.4
+  uuid: ^4.0.0
   iso_duration_parser: ^1.1.0
 
 dependency_overrides:

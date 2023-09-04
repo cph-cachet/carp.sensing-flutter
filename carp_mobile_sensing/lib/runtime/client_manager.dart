@@ -335,6 +335,7 @@ class SmartPhoneClientManager extends SmartphoneClient
     switch (state) {
       case AppLifecycleState.inactive:
       case AppLifecycleState.paused:
+      case AppLifecycleState.hidden:
       case AppLifecycleState.detached:
         deactivate();
         break;
