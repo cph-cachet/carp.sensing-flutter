@@ -115,6 +115,8 @@ class StudyDeploymentPageState extends State<StudyDeploymentPage> {
                     _StudyControllerLine(studyDeploymentModel.description),
                     _StudyControllerLine(studyDeploymentModel.studyDeploymentId,
                         heading: 'Deployment ID'),
+                    _StudyControllerLine(studyDeploymentModel.deviceRoleName,
+                        heading: 'Device Role Name'),
                     _StudyControllerLine(studyDeploymentModel.userID,
                         heading: 'User'),
                     _StudyControllerLine(studyDeploymentModel.dataEndpoint,

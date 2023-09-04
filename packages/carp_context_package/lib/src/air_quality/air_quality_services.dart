@@ -52,7 +52,7 @@ class AirQualityServiceManager extends OnlineServiceManager<AirQualityService> {
       ];
 
   @override
-  String get id => configuration!.apiKey;
+  String get id => configuration?.apiKey ?? 'N/A';
 
   @override
   String? get displayName => 'Air Quality Service (WAQI)';

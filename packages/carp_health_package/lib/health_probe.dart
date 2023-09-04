@@ -36,16 +36,17 @@ class HealthProbe extends StreamProbe {
     DateTime end = DateTime.now();
     List<HealthDataType> healthDataTypes =
         samplingConfiguration.healthDataTypes;
-    List<HealthDataPoint> data = [];
 
     debug(
         '$runtimeType - Collecting health data, type: $healthDataTypes, start: ${start.toUtc()}, end: ${end.toUtc()}');
     try {
-      data = await deviceManager.service.getHealthDataFromTypes(
-        start,
-        end,
-        healthDataTypes,
-      );
+      List<HealthDataPoint>? data =
+          await deviceManager.service?.getHealthDataFromTypes(
+                start,
+                end,
+                healthDataTypes,
+              ) ??
+              [];
       debug(
           '$runtimeType - Retrieved ${data.length} health data points of type. $healthDataTypes');
 

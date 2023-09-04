@@ -45,8 +45,9 @@ class Sensing {
   List<DeviceManager> get availableDevices =>
       SmartPhoneClientManager().deviceController.devices.values.toList();
 
-  // /// The singleton sensing instance
-  // factory Sensing() => _instance;
+  /// The list of connected devices.
+  List<DeviceManager> get connectedDevices =>
+      SmartPhoneClientManager().deviceController.connectedDevices.toList();
 
   Sensing() {
     CarpMobileSensing.ensureInitialized();

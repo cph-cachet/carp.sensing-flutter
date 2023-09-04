@@ -112,9 +112,13 @@ class SensingBLoC {
   Iterable<ProbeModel> get runningProbes =>
       bloc.sensing.runningProbes.map((probe) => ProbeModel(probe));
 
-  /// Get a list of running devices
+  /// Get a list of available devices
   Iterable<DeviceModel> get availableDevices =>
       bloc.sensing.availableDevices.map((device) => DeviceModel(device));
+
+  /// Get a list of connected devices
+  Iterable<DeviceModel> get connectedDevices =>
+      bloc.sensing.connectedDevices.map((device) => DeviceModel(device));
 
   /// Initialize the BLoC.
   Future<void> initialize({

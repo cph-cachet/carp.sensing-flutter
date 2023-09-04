@@ -131,6 +131,7 @@ void main() {
     });
 
     test('- set participant data - CONSENT', () async {
+      // This will fail since CARP Core does not know about the Informed Consent input type...
       var data = await CarpParticipationService().setParticipantData(
         testDeploymentId,
         {
@@ -145,6 +146,7 @@ void main() {
     });
 
     test('- set participant data - NAME', () async {
+      // This will fail since CARP Core does not know about the Name input type...
       var data = await CarpParticipationService().setParticipantData(
         testDeploymentId,
         {

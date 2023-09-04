@@ -40,6 +40,7 @@ class WeatherServiceManager extends OnlineServiceManager<WeatherService> {
   weather.WeatherFactory? _service;
 
   /// A handle to the [WeatherFactory] plugin.
+  /// Returns null if the service is not configured.
   weather.WeatherFactory? get service => (_service != null)
       ? _service
       : (configuration?.apiKey != null)
@@ -52,7 +53,7 @@ class WeatherServiceManager extends OnlineServiceManager<WeatherService> {
       ];
 
   @override
-  String get id => configuration!.apiKey;
+  String get id => configuration?.apiKey ?? 'N/A';
 
   @override
   String? get displayName => 'Weather Service (OW)';

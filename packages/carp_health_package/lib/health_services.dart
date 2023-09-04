@@ -44,18 +44,21 @@ class HealthServiceManager extends OnlineServiceManager<HealthService> {
   HealthFactory? _service;
 
   /// A handle to the [HealthFactory] plugin.
-  HealthFactory get service => (_service == null)
-      ? _service = HealthFactory(
+  /// Returns null if the service is not configured.
+  HealthFactory? get service => (configuration != null)
+      ? _service ??= HealthFactory(
           useHealthConnectIfAvailable:
               configuration!.useHealthConnectIfAvailable)
-      : _service!;
+      : null;
 
   @override
-  String get id => (Platform.isIOS)
-      ? "Apple Health"
-      : (configuration!.useHealthConnectIfAvailable)
-          ? "Google Health Connect"
-          : "Google Fit";
+  String get id => (configuration != null)
+      ? (Platform.isIOS)
+          ? "Apple Health"
+          : (configuration!.useHealthConnectIfAvailable)
+              ? "Google Health Connect"
+              : "Google Fit"
+      : 'N/A';
 
   @override
   String? get displayName => 'Health Service';
@@ -73,12 +76,12 @@ class HealthServiceManager extends OnlineServiceManager<HealthService> {
 
   @override
   Future<bool> onHasPermissions() async => (configuration?.types != null)
-      ? await service.hasPermissions(configuration!.types) ?? false
+      ? await service?.hasPermissions(configuration!.types) ?? false
       : true;
 
   @override
   Future<void> onRequestPermissions() async => (configuration?.types != null)
-      ? await service.requestAuthorization(configuration!.types)
+      ? await service?.requestAuthorization(configuration!.types)
       : null;
 
   @override
