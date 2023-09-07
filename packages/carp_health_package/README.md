@@ -6,7 +6,7 @@
 [![MIT License](https://img.shields.io/badge/license-MIT-purple.svg)](https://opensource.org/licenses/MIT)
 [![arXiv](https://img.shields.io/badge/arXiv-2006.11904-green.svg)](https://arxiv.org/abs/2006.11904)
 
-This library contains a sampling package for sampling health data from Apple Health and or Google Fit or Health Connect to work with the [carp_mobile_sensing](https://pub.dartlang.org/packages/carp_mobile_sensing) framework. It used the [health](https://pub.dev/packages/health) plugin for this.
+This library contains a sampling package for sampling health data from Apple Health and Google Fit or Health Connect to work with the [carp_mobile_sensing](https://pub.dartlang.org/packages/carp_mobile_sensing) framework. It uses the [health](https://pub.dev/packages/health) plugin for this.
 This packages supports sampling of the following [`Measure`](https://pub.dev/documentation/carp_core/latest/carp_core_protocols/Measure-class.html) types:
 
 * `dk.cachet.carp.health`
@@ -34,7 +34,7 @@ dependencies:
   ...
 `````
 
-In general, you need to follow the setup guides in the [health](https://pub.dev/packages/health#setup) plugin.
+Then, follow the setup guides in the [health](https://pub.dev/packages/health#setup) plugin.
 
 ### Android Integration
 
@@ -44,9 +44,11 @@ Google Fit can be tricky to set up and it requires a separate app to be installe
 Please follow this [guide to set up Google Fit](https://developers.google.com/fit/android/get-started).
 Check out the documentation of the [`health`](https://pub.dev/packages/health#google-fit-android-option-1) package.
 
-[Health Connect](https://developer.android.com/guide/health-and-fitness/health-connect) seems more simple to setup - see the documentation on the [`health`](https://pub.dev/packages/health#google-fit-android-option-2) package and on the [Android Developer page](https://developer.android.com/guide/health-and-fitness/health-connect/get-started).
+[Health Connect](https://developer.android.com/guide/health-and-fitness/health-connect) seems more simple to setup - see the documentation on the [`health`](https://pub.dev/packages/health#health-connect-android-option-2) package and on the [Android Developer page](https://developer.android.com/guide/health-and-fitness/health-connect/get-started).
 
 ### iOS Integration
+
+See the setup guide for iOS in the [health](https://pub.dev/packages/health#apple-health-ios) package.
 
 Add this permission in the `Info.plist` file located in `ios/Runner`:
 
@@ -57,7 +59,7 @@ Add this permission in the `Info.plist` file located in `ios/Runner`:
 <string>We will sync your data with the Apple Health app to give you better insights</string>
 ```
 
-Then open your Flutter project in XCode by right clicking on the "ios" folder and selecting "Open in XCode". Enable "HealthKit" by adding a capability inside the "Signing & Capabilities" tab of the Runner target's settings.
+Then open your Flutter project in XCode by right clicking on the `ios` folder and selecting "Open in XCode". Enable "HealthKit" by adding a capability inside the "Signing & Capabilities" tab of the Runner target's settings.
 
 ## Using it
 
@@ -123,7 +125,7 @@ Data sampling can now be configured by a measure in the protocol:
       healthService);
 ```
 
-This would collect health data every hour using the same data types, as configured for the service. Configuration of what data to collect is done via the `HealthSamplingConfiguration` which is used to override the default configuration. Another set of data to collect can be specified, as shown below. However, the user might not have granted access to collect this data.
+This would collect health data every hour using the same data types, as configured for the service. Configuration of what data to collect is done via the `HealthSamplingConfiguration` which is used to override the default configuration (default is to collect nothing). Another set of data to collect can be specified, as shown below. However, the user might not have granted access to collect this data.
 
 ```dart
   // Automatically collect another set of health data every hour
@@ -131,6 +133,9 @@ This would collect health data every hour using the same data types, as configur
   // Note, however, that the service defined above DOES NOT have this list of
   // health data specified, and has therefore not asked for permission to access
   // this new set of health data.
+  // However, on Apple Health, for example, the user has an option to 
+  // "Turn All Categories On". If the use has done this, the all the data listed 
+  // below is accessible. 
   protocol.addTaskControl(
       PeriodicTrigger(period: Duration(minutes: 60)),
       BackgroundTask()

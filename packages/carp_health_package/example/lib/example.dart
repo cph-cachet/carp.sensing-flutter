@@ -52,6 +52,8 @@ void main() async {
   // Note, however, that the service defined above DOES NOT have this list of
   // health data specified, and has therefore not asked for permission to access
   // this new set of health data.
+  // However, on Apple Health, for example, the user has an option to "Turn All Categories On",
+  // and if the use has done this, the all the data listed below is accessible.
   protocol.addTaskControl(
       PeriodicTrigger(period: Duration(minutes: 60)),
       BackgroundTask()

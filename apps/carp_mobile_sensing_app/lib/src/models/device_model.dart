@@ -16,7 +16,7 @@ class DeviceModel {
   String get description => '${deviceTypeDescription[type!]} - $statusString'
       '${(deviceManager is HardwareDeviceManager && batteryLevel != null) ? '\n$batteryLevel% battery remaining.' : ''}';
 
-  String get statusString => status.toString().split('.').last;
+  String get statusString => status.name;
 
   /// The battery level of this device, if known.
   int? get batteryLevel => deviceManager is HardwareDeviceManager

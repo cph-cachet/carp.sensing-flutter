@@ -12,23 +12,23 @@ dependencies:
     sdk: flutter
 
   carp_serializable: ^1.1.0
-  # carp_core: ^1.1.0
-  # carp_mobile_sensing: ^1.1.0
+  carp_core: ^1.2.0
+  carp_mobile_sensing: ^1.2.0
 
-  health: ^7.0.0
+  health: ^8.0.0
   json_annotation: ^4.8.0
-  uuid: ^3.0.4
+  uuid: ^4.0.0
   permission_handler: ^10.3.0  
 
 # Overriding carp libraries to use the local copy
 # Remove this before release of package
-dependency_overrides:
+# dependency_overrides:
   # carp_serializable:
   #   path: ../../carp_serializable/
-  carp_core:
-    path: ../../carp_core/
-  carp_mobile_sensing:
-    path: ../../carp_mobile_sensing/
+  # carp_core:
+  #   path: ../../carp_core/
+  # carp_mobile_sensing:
+  #   path: ../../carp_mobile_sensing/
 
 dev_dependencies:
   lints: any

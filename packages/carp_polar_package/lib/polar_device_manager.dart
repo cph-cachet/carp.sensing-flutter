@@ -78,7 +78,8 @@ class PolarDeviceManager extends BTLEDeviceManager<PolarDevice> {
   int? _batteryLevel;
   bool _polarFeaturesAvailable = false;
   Polar? _polar;
-  StreamController<int> _batteryEventController = StreamController.broadcast();
+  final StreamController<int> _batteryEventController =
+      StreamController.broadcast();
   StreamSubscription<PolarBatteryLevelEvent>? _batterySubscription;
   StreamSubscription<PolarDeviceInfo>? _connectingSubscription;
   StreamSubscription<PolarDeviceInfo>? _connectedSubscription;
