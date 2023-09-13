@@ -1,3 +1,6 @@
+## 1.1.1
+* upgrade UUID package to 4.0.0
+
 ## 1.1.0
 
 * update to `carp_mobile_sensing` v. 1.1.0
