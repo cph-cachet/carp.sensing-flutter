@@ -17,13 +17,13 @@ This packages supports sampling of the following [`Measure`](https://github.com/
 See the user documentation on the [eSense device](https://www.esense.io/share/eSense-User-Documentation.pdf) for how to use the device.
 See the [`esense_flutter`](https://pub.dev/packages/esense_flutter) Flutter plugin and its [API](https://pub.dev/documentation/esense_flutter/latest/) documentation to understand how sensor data is generated and their data formats.
 
-See the `carp_mobile_sensing` [wiki](https://github.com/cph-cachet/carp.sensing-flutter/wiki) for further documentation, particularly on available [measure types](https://github.com/cph-cachet/carp.sensing-flutter/wiki/A.-Measure-Types).
+See the CARP Mobile Sensing [wiki](https://github.com/cph-cachet/carp.sensing-flutter/wiki) for further documentation, particularly on available [measure types](https://github.com/cph-cachet/carp.sensing-flutter/wiki/A.-Measure-Types).
 See the [CARP Mobile Sensing App](https://github.com/cph-cachet/carp.sensing-flutter/tree/master/apps/carp_mobile_sensing_app) for an example of how to build a mobile sensing app in Flutter.
 
 For Flutter plugins for other CARP products, see [CARP Mobile Sensing in Flutter](https://github.com/cph-cachet/carp.sensing-flutter).
 
-If you're interested in writing you own sampling packages for CARP, see the description on
-how to [extend](https://github.com/cph-cachet/carp.sensing-flutter/wiki/5.-Extending-CARP-Mobile-Sensing) CARP on the wiki.
+If you are interested in writing your own sampling packages, see the description on
+how to [extend](https://github.com/cph-cachet/carp.sensing-flutter/wiki/5.-Extending-CARP-Mobile-Sensing) CARP Mobile Sensing on the wiki.
 
 ## Installing
 
@@ -40,22 +40,25 @@ dependencies:
   ...
 `````
 
+The package uses bluetooth to fetch data from the eSense earplugs. Therefore permission to access bluetooth must be enabled on both Android and iOS, as follows.
+Then make sure to obtain permissions in your app to use bluetooth.
+
 ### Android Integration
 
 Add the following to your app's `manifest.xml` file located in `android/app/src/main`:
 
 ```xml
-<uses-permission android:name="android.permission.BLUETOOTH"/>
-<uses-permission android:name="android.permission.BLUETOOTH_ADMIN"/>
-<uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
-<uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
-<uses-feature android:name="android.hardware.bluetooth_le" android:required="true"/>
+<uses-permission
+    android:name="android.permission.BLUETOOTH"
+    android:maxSdkVersion="30" />
+<uses-permission
+    android:name="android.permission.BLUETOOTH_ADMIN"
+    android:maxSdkVersion="30" />
+<uses-permission
+    android:name="android.permission.BLUETOOTH_SCAN" 
+    android:usesPermissionFlags="neverForLocation" /> 
+<uses-permission android:name="android.permission.BLUETOOTH_CONNECT"/>
 ```
-
-> **NOTE:** The first time the app starts, make sure to allow it to access the phone location.
-This is necessary to use the BLE on Android.
-> **NOTE:** This package only supports AndroidX and hence requires any Android app using this plugin to also [migrate](https://developer.android.com/jetpack/androidx/migrate) if they're using the original support library.
-See Flutter [AndroidX compatibility](https://flutter.dev/docs/development/packages-and-plugins/androidx-compatibility)
 
 ### iOS Integration
 
@@ -72,13 +75,13 @@ Add this permission in the `Info.plist` file located in `ios/Runner`:
 <key>NSBluetoothAlwaysUsageDescription</key>
 <string>Uses bluetooth to connect to the eSense device</string>
 <key>UIBackgroundModes</key>
-<array>
+  <array>
+ <string>bluetooth-central</string>
+ <string>bluetooth-peripheral</string>
   <string>audio</string>
   <string>external-accessory</string>
   <string>fetch</string>
-  <string>bluetooth-central</string>
 </array>
-
 ```
 
 ## Using it
@@ -116,10 +119,10 @@ var eSense = ESenseDevice(
 
 protocol
   ..addPrimaryDevice(phone)
-  ..addConnectedDevice(eSense);
+  ..addConnectedDevice(eSense, phone);
 
 // Add a background task that immediately starts collecting step counts,
-//ambient light, screen activity, and battery level from the phone.
+// ambient light, screen activity, and battery level from the phone.
 protocol.addTaskControl(
     ImmediateTrigger(),
     BackgroundTask(measures: [

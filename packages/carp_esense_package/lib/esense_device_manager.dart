@@ -54,7 +54,7 @@ class ESenseDevice extends DeviceConfiguration {
   static const String DEVICE_TYPE =
       '${DeviceConfiguration.DEVICE_NAMESPACE}.ESenseDevice';
 
-  /// The default rolename for a eSense device.
+  /// The default role name for a eSense device.
   static const String DEFAULT_ROLENAME = 'eSense';
 
   /// The name of the eSense device.
@@ -63,13 +63,13 @@ class ESenseDevice extends DeviceConfiguration {
   String? deviceName;
 
   /// The sampling rate in Hz of getting sensor data from the device.
-  int? samplingRate;
+  int samplingRate;
 
   ESenseDevice({
     super.roleName = ESenseDevice.DEFAULT_ROLENAME,
     super.isOptional = true,
     this.deviceName,
-    this.samplingRate,
+    this.samplingRate = 10,
   });
 
   @override
@@ -82,10 +82,11 @@ class ESenseDevice extends DeviceConfiguration {
 
 /// A [DeviceManager] for the eSense device.
 class ESenseDeviceManager extends BTLEDeviceManager<ESenseDevice> {
-  // the last known voltage level of the eSense device
+  Timer? _batteryTimer;
+  StreamSubscription<ESenseEvent>? _batterySubscription;
   double? _voltageLevel;
-
-  StreamController<int> _batteryEventController = StreamController.broadcast();
+  final StreamController<int> _batteryEventController =
+      StreamController.broadcast();
 
   /// A handle to the [ESenseManager] plugin.
   ESenseManager? manager;
@@ -107,7 +108,7 @@ class ESenseDeviceManager extends BTLEDeviceManager<ESenseDevice> {
   String get btleName => configuration?.deviceName ?? 'eSense-????';
 
   /// Set the name of this device based on the Bluetooth name.
-  /// This name is used for connection.
+  /// This name is used for connecting to the device.
   @override
   set btleName(String btleName) => configuration?.deviceName = btleName;
 
@@ -151,31 +152,31 @@ class ESenseDeviceManager extends BTLEDeviceManager<ESenseDevice> {
   Future<void> onRequestPermissions() async {}
 
   @override
-  Future<DeviceStatus> onConnect() async {
-    if (configuration?.deviceName == null ||
-        configuration!.deviceName!.isEmpty) {
+  void onInitialize(ESenseDevice configuration) {
+    if (configuration.deviceName == null || configuration.deviceName!.isEmpty) {
       warning(
           '$runtimeType - cannot connect to eSense device, device name is null.');
-      return DeviceStatus.error;
     }
+    manager = ESenseManager(id);
 
+    super.onInitialize(configuration);
+  }
+
+  @override
+  Future<DeviceStatus> onConnect() async {
     try {
-      manager = ESenseManager(id);
-
       // listen for connection events
-      manager?.connectionEvents.listen((event) {
+      manager?.connectionEvents.listen((event) async {
         debug('$runtimeType - $event');
 
         switch (event.type) {
           case ConnectionType.connected:
             status = DeviceStatus.connected;
 
-            // this is a hack! - don't know why, but the sensorEvents stream
-            // needs a kick in the ass to get started...
-            manager?.sensorEvents.listen(null);
+            await manager?.setSamplingRate(configuration?.samplingRate ?? 10);
 
             // when connected, listen for battery events
-            manager!.eSenseEvents.listen((event) {
+            _batterySubscription = manager!.eSenseEvents.listen((event) {
               if (event is BatteryRead) {
                 _voltageLevel = event.voltage;
                 if (batteryLevel != null) {
@@ -185,7 +186,7 @@ class ESenseDeviceManager extends BTLEDeviceManager<ESenseDevice> {
             });
 
             // set up a timer that asks for the voltage level
-            Timer.periodic(const Duration(minutes: 2), (_) {
+            _batteryTimer = Timer.periodic(const Duration(minutes: 2), (_) {
               if (status == DeviceStatus.connected) {
                 manager?.getBatteryVoltage();
               }
@@ -201,7 +202,8 @@ class ESenseDeviceManager extends BTLEDeviceManager<ESenseDevice> {
           case ConnectionType.disconnected:
             status = DeviceStatus.disconnected;
             _voltageLevel = null;
-            // _eventSubscription?.cancel();
+            _batteryTimer?.cancel();
+            _batterySubscription?.cancel();
             break;
         }
       });

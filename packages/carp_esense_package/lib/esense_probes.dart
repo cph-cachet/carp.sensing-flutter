@@ -32,16 +32,27 @@ class ESenseButtonProbe extends _ESenseProbe {
 /// Collects eSense sensor events.
 /// It generates an [ESenseSensor] for each sensor event.
 class ESenseSensorProbe extends _ESenseProbe {
+  Stream<Measurement>? _stream;
+
   @override
-  Stream<Measurement>? get stream => (deviceManager.isConnected)
-      ? deviceManager.manager!.sensorEvents
-          .map((event) => Measurement.fromData(
-                ESenseSensor.fromSensorEvent(
-                  deviceName: deviceManager.manager!.deviceName,
-                  event: event,
-                ),
-                event.timestamp.microsecondsSinceEpoch,
-              ))
-          .asBroadcastStream()
-      : null;
+  Stream<Measurement>? get stream {
+    debug(
+        '$runtimeType - deviceManager.manager!.sensorEvents: ${deviceManager.manager!.sensorEvents}');
+    _stream ??= (deviceManager.isConnected)
+        ? deviceManager.manager!.sensorEvents
+            .map((event) => Measurement.fromData(
+                  ESenseSensor.fromSensorEvent(
+                    deviceName: deviceManager.manager!.deviceName,
+                    event: event,
+                  ),
+                  event.timestamp.microsecondsSinceEpoch,
+                ))
+            .asBroadcastStream()
+        : null;
+
+    debug('$runtimeType - _stream: $_stream');
+    _stream?.listen((event) => debug('$runtimeType - $event'));
+
+    return _stream;
+  }
 }

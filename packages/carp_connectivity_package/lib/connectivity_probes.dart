@@ -65,7 +65,6 @@ class BluetoothProbe extends BufferingPeriodicStreamProbe {
     _data = Bluetooth();
     try {
       FlutterBluePlus.startScan(
-          scanMode: ScanMode.lowLatency,
           timeout: samplingConfiguration?.duration ??
               const Duration(milliseconds: DEFAULT_TIMEOUT));
     } catch (error) {

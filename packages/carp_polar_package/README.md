@@ -26,7 +26,7 @@ This demo app also includes support for this Polar sampling package.
 
 For Flutter plugins for other CARP products, see [CARP Mobile Sensing in Flutter](https://github.com/cph-cachet/carp.sensing-flutter).
 
-If you're interested in writing you own sampling packages for CARP, see the description on
+If you are interested in writing your own sampling packages for CARP, see the description on
 how to [extend](https://github.com/cph-cachet/carp.sensing-flutter/wiki/4.-Extending-CARP-Mobile-Sensing) CARP on the wiki.
 
 ## Installing

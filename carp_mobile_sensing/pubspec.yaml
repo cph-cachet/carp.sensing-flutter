@@ -16,7 +16,7 @@ dependencies:
 
   json_annotation: ^4.8.0
   system_info2: ^4.0.0
-  uuid: ^4.0.0
+  uuid: '>=3.0.1 <5.0.0'
   async: ^2.11.0
   path_provider: ^2.0.0
   sqflite: ^2.2.8                     # For local storage in SQLite DB

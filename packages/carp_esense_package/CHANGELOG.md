@@ -1,6 +1,7 @@
 ## 1.2.0
 
 * update to `carp_mobile_sensing` v. 1.2.0 using the new device permissions model
+* upgrade to `esense_flutter: ^1.0.0`
 
 ## 1.1.0
 

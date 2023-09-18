@@ -204,10 +204,10 @@ class LocalStudyProtocolManager implements StudyProtocolManager {
 
     protocol.addTaskControl(
         ImmediateTrigger(),
-        BackgroundTask()
-          ..addMeasure(Measure(type: ESenseSamplingPackage.ESENSE_BUTTON))
-        // ..addMeasure(Measure(type: ESenseSamplingPackage.ESENSE_SENSOR))
-        ,
+        BackgroundTask(measures: [
+          Measure(type: ESenseSamplingPackage.ESENSE_BUTTON),
+          Measure(type: ESenseSamplingPackage.ESENSE_SENSOR)
+        ]),
         eSense);
 
     // define the Polar device and add its measures
@@ -272,10 +272,11 @@ class LocalStudyProtocolManager implements StudyProtocolManager {
 
     protocol.addTaskControl(
         PeriodicTrigger(period: Duration(minutes: 60)),
-        BackgroundTask()
-          ..addMeasure(Measure(type: HealthSamplingPackage.HEALTH)
+        BackgroundTask(measures: [
+          Measure(type: HealthSamplingPackage.HEALTH)
             ..overrideSamplingConfiguration =
-                HealthSamplingConfiguration(healthDataTypes: healthDataTypes)),
+                HealthSamplingConfiguration(healthDataTypes: healthDataTypes)
+        ]),
         healthService);
 
     return protocol;

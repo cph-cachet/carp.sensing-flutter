@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of esense;
+part of 'esense.dart';
 
 // **************************************************************************
 // JsonSerializableGenerator
@@ -61,7 +61,7 @@ ESenseDevice _$ESenseDeviceFromJson(Map<String, dynamic> json) => ESenseDevice(
       roleName: json['roleName'] as String? ?? ESenseDevice.DEFAULT_ROLENAME,
       isOptional: json['isOptional'] as bool? ?? true,
       deviceName: json['deviceName'] as String?,
-      samplingRate: json['samplingRate'] as int?,
+      samplingRate: json['samplingRate'] as int? ?? 10,
     )
       ..$type = json['__type'] as String?
       ..defaultSamplingConfiguration =
@@ -85,6 +85,6 @@ Map<String, dynamic> _$ESenseDeviceToJson(ESenseDevice instance) {
   writeNotNull(
       'defaultSamplingConfiguration', instance.defaultSamplingConfiguration);
   writeNotNull('deviceName', instance.deviceName);
-  writeNotNull('samplingRate', instance.samplingRate);
+  val['samplingRate'] = instance.samplingRate;
   return val;
 }
