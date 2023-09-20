@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of carp_auth;
+part of 'carp_auth.dart';
 
 // **************************************************************************
 // JsonSerializableGenerator
@@ -24,7 +24,7 @@ Map<String, dynamic> _$OAuthTokenToJson(OAuthToken instance) =>
     };
 
 CarpUser _$CarpUserFromJson(Map<String, dynamic> json) => CarpUser(
-      username: json['username'] as String,
+      username: json['username'] as String? ?? '',
       id: json['id'] as int?,
       accountId: json['account_id'] as String?,
       firstName: json['first_name'] as String?,

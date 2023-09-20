@@ -1,3 +1,7 @@
+## 1.3.0
+
+* upgrade of uuid and permission_handler plugins
+
 ## 1.2.0
 
 * battery stream on device controller and device managers

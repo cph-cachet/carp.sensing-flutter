@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of carp_services;
+part of 'carp_services.dart';
 
 // **************************************************************************
 // JsonSerializableGenerator

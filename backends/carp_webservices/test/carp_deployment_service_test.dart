@@ -90,7 +90,7 @@ void main() {
             CarpParticipationService().participation(testDeploymentId);
 
         ParticipantData data = await participation.setParticipantData(
-          {SexCustomInput.SEX_INPUT_TYPE_NAME: SexCustomInput(Sex.Male)},
+          {SexInput.type: SexInput(value: Sex.Male)},
           'Participant',
         );
         print(toJsonString(data));

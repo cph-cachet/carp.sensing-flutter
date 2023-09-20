@@ -1,7 +1,10 @@
+## 1.3.0
+
+* upgrade of uuid package
+
 ## 1.2.0
 
 * added input data format for informed consent, participant name, and more
-* upgrade of uuid package
 
 ## 1.1.0
 
