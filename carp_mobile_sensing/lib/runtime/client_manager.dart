@@ -120,7 +120,7 @@ class SmartPhoneClientManager extends SmartphoneClient
     deviceController ??= DeviceController();
     if (enableNotifications) {
       _notificationController =
-          notificationController ?? AwesomeNotificationController();
+          notificationController ?? FlutterLocalNotificationController();
     }
     _heartbeat = heartbeat;
 
