@@ -25,7 +25,6 @@ dependencies:
   shared_preferences: ^2.2.0
   package_info_plus: ^4.0.0
   flutter_local_notifications: ^15.0.0 # For sending notification on AppTask
-  awesome_notifications: ^0.7.4        # For sending notification on AppTask
   cron: ^0.5.0                         # For scheduling / triggering cron jobs
   timezone: ^0.9.0                     # For collecting time zone information
   stats: ^2.0.0                        # For calculating statistics, ex LightProbe
@@ -38,7 +37,7 @@ dependencies:
 
   # the CACHET plugins
   pedometer: ^4.0.0       # Step count from local OS
-  light: ^3.0.0           # Light sensor 
+  light: ^3.0.0           # Light sensor
   screen_state: ^3.0.0    # Screen LOCK/ON/OFF
 
 # Overriding carp core libraries to use the local copy
@@ -60,11 +59,11 @@ flutter:
 
 
 # Useful pubspec commands:
-#   flutter pub upgrade 
-#   flutter pub outdated 
+#   flutter pub upgrade
+#   flutter pub outdated
 #   flutter pub outdated --no-dev-dependencies --up-to-date --no-dependency-overrides
 #   flutter pub cache repair
 #   ./gradlew clean
-# 
+#
 # Auto generate json code (.g files) with:
 #   dart run build_runner build --delete-conflicting-outputs
