@@ -18,8 +18,7 @@ dependencies:
   json_annotation: ^4.8.0
   permission_handler: ^11.0.0  
   flutter_sound: ^9.2.0   # audio probe
-  noise_meter: ^4.0.0     # measuring noise level
-  audio_streamer: ^3.1.0
+  noise_meter: ^5.0.0     # measuring noise level
   stats: ^2.0.0
   uuid: '>=3.0.1 <5.0.0'
 
