@@ -11,18 +11,18 @@ This package integrates the [CARP Mobile Sensing](https://carp.cachet.dk/cams/) 
 For an overview of all CAMS packages, see [CARP Mobile Sensing in Flutter](https://github.com/cph-cachet/carp.sensing-flutter).
 For documentation on how to use CAMS, see the [CAMS wiki][wiki].
 
-This library supports;
+This library supports:
 
 * downloading a study invitation
 * download a study deployment
-* downloading translations
-* downloading messages
-* uploading collected data, and
-* uploading an informed consent document
+* uploading collected data
+* getting and uploading an informed consent document
+* getting and uploading translations
+* getting and uploading messages
 
 from/to a CAWS server.
 
-> Note that this library makes little sense on its own and is only to be used as part of the overall [CARP Mobile Sensing](https://pub.dev/packages/carp_mobile_sensing) ecosystem. See the [CAMS wiki][wiki] for documentation on how to use CAMS, and checkout the [CARP Mobile Sening Demo App](https://github.com/cph-cachet/carp.sensing-flutter/tree/master/apps/carp_mobile_sensing_app) for a full example of an app using CARP Mobile Sensing and CAWS, including this library.
+> Note that this library does nothing on its own and is only to be used as part of the overall [CARP Mobile Sensing](https://pub.dev/packages/carp_mobile_sensing) ecosystem. See the [CAMS wiki][wiki] for documentation on how to use CAMS, and checkout the [CARP Mobile Sening Demo App](https://github.com/cph-cachet/carp.sensing-flutter/tree/master/apps/carp_mobile_sensing_app) for a full example of an app using CARP Mobile Sensing and CAWS, including this library.
 
 ## Using the Plugin
 
@@ -112,45 +112,60 @@ await controller?.configure();
 controller?.start();
 ```
 
-## Uploading of data to CARP
+## Uploading of Data to CARP
 
 Configuration of data upload is done as a [`DataEndPoint`](https://pub.dev/documentation/carp_mobile_sensing/latest/domain/DataEndPoint-class.html), which is part of a [`SmartphoneStudyProtocol`](https://pub.dev/documentation/carp_mobile_sensing/latest/domain/SmartphoneStudyProtocol-class.html).
 
 CAWS and hence this plugin supports three methods of data upload:
 
-* The (default) data stream batch upload using the [CARP Core Data subsystem](https://github.com/cph-cachet/carp.core-kotlin/blob/develop/docs/carp-data.md)
-* The (legacy) [`DataPoint`](https://pub.dev/documentation/carp_webservices/latest/carp_services/DataPoint-class.html) batch upload
+* The (default) data stream upload using the [CARP Core Data subsystem](https://github.com/cph-cachet/carp.core-kotlin/blob/develop/docs/carp-data.md)
+* The (legacy) [`DataPoint`](https://pub.dev/documentation/carp_webservices/latest/carp_services/DataPoint-class.html) upload
 * File upload of raw SQLite `.db` files
 
 ### Specifying a CARP Data Endpoint
 
-Create a `CarpDataEndPoint` that specify which method to use for uploading data, and the details. Upload methods are defined in the `CarpUploadMethod` property. For example, a streaming data upload is created like this:
+Create a `CarpDataEndPoint` that specify which method to use for uploading data, and the details. For example, a streaming data upload is created like this:
 
 ```dart
 // Using the (default) data stream batch upload method
-CarpDataEndPoint streamingEndPoint = CarpDataEndPoint(
-  uploadMethod: CarpUploadMethod.stream,
-  deleteWhenUploaded: true,
+var streamingEndPoint = CarpDataEndPoint();
+```
+
+Upload methods are defined in the `uploadMethod` property. A data point upload method is created like this:
+
+```dart
+// Using the "legacy" DataPoint endpoint for uploading batches of data points.
+var dataPointEndPoint =
+    CarpDataEndPoint(uploadMethod: CarpUploadMethod.datapoint);
+```
+
+Similarly, an endpoint uploading the raw SQLite db files can be specified:
+
+```dart
+// Using the file method would upload SQLite db files.
+var fileEndPoint = CarpDataEndPoint(uploadMethod: CarpUploadMethod.file);
+```
+
+There are some details in how the three different types of endpoints work:
+
+* **Streaming** - Using the streaming data method requires that the study deployment has been obtained from CAWS via an invitation, as shown above. This ensures that there is a linkage between the study deployment ID from the deployment and the ID in the data being streamed back to CAWS.
+
+* **Data Point** & **File** - The data point and file endpoints need the study ID and study deployment ID. This can be obtained via the invitation (as above), but it can also be specified when creating the `CarpApp` configuration. Hence, the data point and file endpoints can be used if these IDs are known, e.g., are static to the app.
+
+For all three upload types (stream, data point, and file), additional parameters can be specified for a an endpoint.
+
+```dart
+/// Specify parameters on upload interval (in minutes), if upload only
+/// should happen when the phone is connected to WiFi, and whether data
+/// buffered locally on the phone should be deleted when uploaded.
+streamingEndPoint = CarpDataEndPoint(
+  uploadInterval: 20,
+  onlyUploadOnWiFi: true,
+  deleteWhenUploaded: false,
 );
 ```
 
-Or a [`DataPoint`](https://pub.dev/documentation/carp_webservices/latest/carp_services/DataPoint-class.html) upload method is created like this:
-
-```dart
-// Using the "old" DataPoint endpoint for uploading batches of data points.
-//
-// Note that if a user is already authenticated to a CAWS server - for example
-// based on the download of invitations and deployments - specification
-// authentication info is not needed in the CarpDataEndPoint.
-CarpDataEndPoint dataPointEndPoint = CarpDataEndPoint(
-    uploadMethod: CarpUploadMethod.datapoint,
-    name: 'CARP Staging Server',
-    uri: 'http://staging.carp.cachet.dk:8080',
-    clientId: 'carp',
-    clientSecret: 'a_secret',
-    email: 'username@cachet.dk',
-    password: 'password');
-```
+### Adding a Data Endpoint to the Study Protocol
 
 To use the data endpoint, add it to the study protocol like this:
 
@@ -165,20 +180,12 @@ SmartphoneStudyProtocol protocol = SmartphoneStudyProtocol(
 
 ### Register the Data Manager
 
-In order to use the CAWS data manger for uploading of data, you should register it in the [`DataManagerRegistry`](https://pub.dev/documentation/carp_mobile_sensing/latest/runtime/DataManagerRegistry-class.html).
+In order to use the CAWS data manger for uploading of data, you should register its factory in the [`DataManagerRegistry`](https://pub.dev/documentation/carp_mobile_sensing/latest/runtime/DataManagerRegistry-class.html).
 
 ````dart
 // Register CAWS as a data backend where data can be uploaded.
 DataManagerRegistry().register(CarpDataManagerFactory());
 ````
-
-## Authentication to CAWS
-
-Configuration and authentication to CAWS only needs to be done once. Hence, if you app is already authenticated to CARP (for example, because the study deployment has been downloaded from CAWS), there is **NO** need for specifying the server information (`name` and `uri`) and authentication information (`client_id`, `client_secret`, `username`, and `password`) in the `CarpDataEndPoint`. Hence, in this case, you would specify a data endpoint like this:
-
-`````dart
-var endpoint = CarpDataEndPoint(uploadMethod: CarpUploadMethod.datapoint);
-`````
 
 ## Features and bugs
 

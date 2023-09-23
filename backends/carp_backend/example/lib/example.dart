@@ -91,21 +91,36 @@ void main() async {
   // This configuration is downloaded as part of the deployment, as shown
   // above.
 
-  // Using the (default) data stream batch upload method
-  CarpDataEndPoint streamingEndPoint = CarpDataEndPoint(
-    uploadMethod: CarpUploadMethod.stream,
-    deleteWhenUploaded: true,
+  // Using the (default) data stream batch upload method.
+  //
+  // Using the streaming data method requires that the study deployment has
+  // been obtained from CAWS. This ensures that there is a linkage between the
+  // study deployment ID from the deployment and the ID in the data being
+  // streamed back to CAWS.
+  var streamingEndPoint = CarpDataEndPoint();
+
+  /// Specify parameters on upload interval (in minutes), if upload only
+  /// should happen when the phone is connected to WiFi, and whether data
+  /// buffered locally on the phone should be deleted when uploaded.
+  streamingEndPoint = CarpDataEndPoint(
+    uploadInterval: 20,
+    onlyUploadOnWiFi: true,
+    deleteWhenUploaded: false,
   );
 
   // Using the "old" DataPoint endpoint for uploading batches of data points.
-  CarpDataEndPoint dataPointEndPoint = CarpDataEndPoint(
-      uploadMethod: CarpUploadMethod.datapoint,
-      name: 'CAWS Staging Server',
-      uri: 'http://staging.carp.cachet.dk:8080',
-      clientId: 'carp',
-      clientSecret: 'a_secret',
-      email: 'username@cachet.dk',
-      password: 'password');
+  var dataPointEndPoint =
+      CarpDataEndPoint(uploadMethod: CarpUploadMethod.datapoint);
+
+  // var dataPointEndPoint = CarpDataEndPoint(
+  //   uploadMethod: CarpUploadMethod.datapoint,
+  //   name: 'CAWS Staging Server',
+  //   // uri: 'http://staging.carp.cachet.dk:8080',
+  //   // clientId: 'carp',
+  //   // clientSecret: 'a_secret',
+  //   // email: 'username@cachet.dk',
+  //   // password: 'password',
+  // );
 
   // Note that if a user is already authenticated to a CAWS server - for example
   // based on the download of invitations and deployments - specification of server
@@ -113,15 +128,21 @@ void main() async {
   var endpoint = CarpDataEndPoint(uploadMethod: CarpUploadMethod.datapoint);
 
   // Using the file method would upload SQLite db files.
-  CarpDataEndPoint fileEndPoint = CarpDataEndPoint(
-    uploadMethod: CarpUploadMethod.file,
-    name: 'CAWS Staging Server',
-    uri: 'http://staging.carp.cachet.dk:8080',
-    clientId: 'carp',
-    clientSecret: 'a_secret',
-    email: 'username@cachet.dk',
-    password: 'password',
-  );
+  var fileEndPoint = CarpDataEndPoint(uploadMethod: CarpUploadMethod.file);
+
+  // // Using the file method would upload SQLite db files.
+  // //
+  // // Since this endpoint is normally "outside" download of invitation, you can
+  // // specify the URI and auth info for upload.
+  // fileEndPoint = CarpDataEndPoint(
+  //   uploadMethod: CarpUploadMethod.file,
+  //   name: 'CAWS Staging Server',
+  //   // uri: 'http://staging.carp.cachet.dk:8080',
+  //   // clientId: 'carp',
+  //   // clientSecret: 'a_secret',
+  //   // email: 'username@cachet.dk',
+  //   // password: 'password',
+  // );
 
   // Create a study protocol with a specific data endpoint.
   SmartphoneStudyProtocol protocol = SmartphoneStudyProtocol(

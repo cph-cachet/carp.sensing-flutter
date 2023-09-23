@@ -11,15 +11,10 @@ CarpDataEndPoint _$CarpDataEndPointFromJson(Map<String, dynamic> json) =>
       uploadMethod: $enumDecodeNullable(
               _$CarpUploadMethodEnumMap, json['uploadMethod']) ??
           CarpUploadMethod.stream,
-      name: json['name'] as String? ?? 'CARP Web Services',
-      uri: json['uri'] as String?,
-      clientId: json['clientId'] as String?,
-      clientSecret: json['clientSecret'] as String?,
-      email: json['email'] as String?,
-      password: json['password'] as String?,
       onlyUploadOnWiFi: json['onlyUploadOnWiFi'] as bool? ?? false,
       uploadInterval: json['uploadInterval'] as int? ?? 10,
       deleteWhenUploaded: json['deleteWhenUploaded'] as bool? ?? true,
+      name: json['name'] as String? ?? 'CARP Web Services',
       dataFormat: json['dataFormat'] as String? ?? NameSpace.CARP,
     )
       ..$type = json['__type'] as String?
@@ -39,11 +34,6 @@ Map<String, dynamic> _$CarpDataEndPointToJson(CarpDataEndPoint instance) {
   val['dataFormat'] = instance.dataFormat;
   val['uploadMethod'] = _$CarpUploadMethodEnumMap[instance.uploadMethod]!;
   val['name'] = instance.name;
-  writeNotNull('uri', instance.uri);
-  writeNotNull('clientId', instance.clientId);
-  writeNotNull('clientSecret', instance.clientSecret);
-  writeNotNull('email', instance.email);
-  writeNotNull('password', instance.password);
   val['onlyUploadOnWiFi'] = instance.onlyUploadOnWiFi;
   val['uploadInterval'] = instance.uploadInterval;
   val['deleteWhenUploaded'] = instance.deleteWhenUploaded;

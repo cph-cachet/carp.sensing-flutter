@@ -67,6 +67,7 @@ class CarpBackend {
     bloc.studyDeploymentId = invitation?.studyDeploymentId;
     bloc.deviceRolename = invitation?.assignedDevices?.first.device.roleName;
     info('Invitation received - '
+        'study id: ${bloc.studyId}, '
         'deployment id: ${bloc.studyDeploymentId}, '
         'role name: ${bloc.deviceRolename}');
   }

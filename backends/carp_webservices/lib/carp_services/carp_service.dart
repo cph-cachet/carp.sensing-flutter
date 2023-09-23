@@ -471,7 +471,7 @@ class CarpService extends CarpBaseService {
     );
   }
 
-  /// Asynchronously gets an uploaded (signed) [ConsentDocument] based on its [id].
+  /// Get a previously uploaded (signed) [ConsentDocument] based on its [id].
   Future<ConsentDocument> getConsentDocument(int id) async {
     String url = "$consentDocumentEndpointUri/$id";
 

@@ -61,6 +61,9 @@ class CarpDataManager extends AbstractDataManager {
     await super.initialize(dataEndPoint, deployment, measurements);
     carpEndPoint = dataEndPoint as CarpDataEndPoint;
 
+    assert(CarpService().isConfigured,
+        'CarpService is not configured -- cannot upload data to this end point.');
+
     buffer.initialize(deployment, measurements);
 
     // set up a timer that uploads data on a regular basis
@@ -75,44 +78,6 @@ class CarpDataManager extends AbstractDataManager {
     if (!CarpDataStreamService().isConfigured) {
       CarpDataStreamService().configureFrom(CarpService());
     }
-  }
-
-  /// The currently signed in user.
-  ///
-  /// If a user is already authenticated to the [CarpService], then this account
-  /// is used for uploading the data to CARP.
-  ///
-  /// If the user is not authenticated, this method will try to authenticate
-  /// the user based on the configuration (uri, client_id, client_secret) and
-  /// credentials (username and password) specified in [carpEndPoint].
-  Future<CarpUser?> get user async {
-    // check if the CARP web service has already been configured and the user is logged in.
-    if (!CarpService().authenticated) {
-      info('$runtimeType - No user is authenticated. '
-          'Trying to authenticate based on configuration and credentials specified in the endpoint configuration.');
-
-      try {
-        if (!CarpService().isConfigured) {
-          CarpService().configure(CarpApp(
-            studyDeploymentId: studyDeploymentId,
-            name: carpEndPoint.name,
-            uri: Uri.parse(carpEndPoint.uri.toString()),
-            oauth: OAuthEndPoint(
-                clientID: carpEndPoint.clientId.toString(),
-                clientSecret: carpEndPoint.clientSecret.toString()),
-          ));
-        }
-        await CarpService().authenticate(
-          username: carpEndPoint.email.toString(),
-          password: carpEndPoint.password.toString(),
-        );
-        info("$runtimeType - Signed in user: ${CarpService().currentUser}");
-      } catch (error) {
-        warning('$runtimeType - Cannot authenticate user');
-      }
-    }
-
-    return CarpService().currentUser;
   }
 
   @override
@@ -138,10 +103,9 @@ class CarpDataManager extends AbstractDataManager {
 
     // now start trying to upload data...
     try {
-      // authenticated to CAWS and fast exit if not successful
-      if (await user == null) {
-        warning(
-            'User cannot be authenticated - username: ${carpEndPoint.email}');
+      // check if authenticated to CAWS and fast exit if not
+      if (!CarpService().authenticated) {
+        warning('No user authenticated to CAWS - cannot upload data.');
         return;
       }
 

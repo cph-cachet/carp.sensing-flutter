@@ -1,6 +1,7 @@
 ## 1.3.0
 
 * upgrade of uuid plugins
+* removal of uri and authentication information from CarpDataEndPoint (too unsecure to specify password in clear text)
 * update to `carp_mobile_sensing` v. 1.3.0
 
 ## 1.1.0

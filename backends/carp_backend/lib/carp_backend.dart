@@ -21,7 +21,6 @@ import 'package:carp_serializable/carp_serializable.dart';
 import 'package:carp_core/carp_core.dart';
 import 'package:carp_mobile_sensing/carp_mobile_sensing.dart';
 import 'package:carp_webservices/carp_services/carp_services.dart';
-import 'package:carp_webservices/carp_auth/carp_auth.dart';
 import 'package:research_package/model.dart';
 
 part 'carp_data_manager.dart';
@@ -34,11 +33,6 @@ part 'carp_backend.g.dart';
 part 'message_manager.dart';
 
 /// Specify a CARP Web Service (CAWS) endpoint for uploading data.
-///
-/// If a study deployment is downloaded from CAWS (i.e., via the
-/// [CarpDeploymentService]), then the address and authentication used for downloading
-/// is used, and the [uri], [clientId], [clientSecret], [email] and [password]
-/// need not to be specified.
 @JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
 class CarpDataEndPoint extends DataEndPoint {
   /// The method used to upload to CARP. See [CarpUploadMethod] for options.
@@ -47,24 +41,6 @@ class CarpDataEndPoint extends DataEndPoint {
   /// A printer-friendly name of the CAWS endpoint. Can be anything, but its
   /// recommended to name it according to the CAWS service name.
   String name;
-
-  /// The URI of the CARP Web Service.
-  String? uri;
-
-  /// The CARP web service client ID.
-  String? clientId;
-
-  /// The CARP web service client secret.
-  String? clientSecret;
-
-  /// Email used as username in password authentication.
-  String? email;
-
-  /// Password used in password authentication.
-  ///
-  /// Note that the password is in **clear text** and should hence only be used
-  /// if it is entered by the user locally on the phone.
-  String? password;
 
   /// Only upload when connected via WiFi network?
   bool onlyUploadOnWiFi = false;
@@ -77,39 +53,14 @@ class CarpDataEndPoint extends DataEndPoint {
 
   /// Creates a [CarpDataEndPoint].
   CarpDataEndPoint({
-    this.uploadMethod = CarpUploadMethod.stream,
+    super.dataFormat,
     this.name = 'CARP Web Services',
-    this.uri,
-    this.clientId,
-    this.clientSecret,
-    this.email,
-    this.password,
+    this.uploadMethod = CarpUploadMethod.stream,
     this.onlyUploadOnWiFi = false,
     this.uploadInterval = 10,
     this.deleteWhenUploaded = true,
-    super.dataFormat,
   }) : super(
           type: DataEndPointTypes.CAWS,
-        );
-
-  /// Creates a [CarpDataEndPoint] based on a [CarpApp] [app].
-  CarpDataEndPoint.fromCarpApp({
-    CarpUploadMethod uploadMethod = CarpUploadMethod.stream,
-    bool onlyUploadOnWiFi = false,
-    int uploadInterval = 10,
-    bool deleteWhenUploaded = true,
-    String dataFormat = NameSpace.CARP,
-    required CarpApp app,
-  }) : this(
-          uploadMethod: uploadMethod,
-          name: app.name,
-          uri: app.uri.toString(),
-          clientId: app.oauth.clientID,
-          clientSecret: app.oauth.clientSecret,
-          dataFormat: dataFormat,
-          onlyUploadOnWiFi: onlyUploadOnWiFi,
-          uploadInterval: uploadInterval,
-          deleteWhenUploaded: deleteWhenUploaded,
         );
 
   @override

@@ -36,8 +36,6 @@ class ESenseSensorProbe extends _ESenseProbe {
 
   @override
   Stream<Measurement>? get stream {
-    debug(
-        '$runtimeType - deviceManager.manager!.sensorEvents: ${deviceManager.manager!.sensorEvents}');
     _stream ??= (deviceManager.isConnected)
         ? deviceManager.manager!.sensorEvents
             .map((event) => Measurement.fromData(
@@ -49,9 +47,6 @@ class ESenseSensorProbe extends _ESenseProbe {
                 ))
             .asBroadcastStream()
         : null;
-
-    debug('$runtimeType - _stream: $_stream');
-    _stream?.listen((event) => debug('$runtimeType - $event'));
 
     return _stream;
   }
