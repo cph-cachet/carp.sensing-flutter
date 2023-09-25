@@ -28,7 +28,7 @@ dependencies:
 
 When you want to add CAMS to you app, there are a few things to do in terms of configuring your app.
 
-First, since CAMS rely on the [awesome_notifications](https://pub.dev/packages/awesome_notifications) plugin, you should configure your app following their [configuration guide](https://pub.dev/packages/awesome_notifications#initial-configurations) for both [Android](https://pub.dev/packages/awesome_notifications#-configuring-android) and [iOS](https://pub.dev/packages/awesome_notifications#-configuring-ios).
+First, since CAMS rely on the [flutter_local_notifications](https://pub.dev/packages/flutter_local_notifications) plugin, you should configure your app to the [platforms it supports](https://pub.dev/packages/flutter_local_notifications#-supported-platforms) and cofigure your app for both [Android](https://pub.dev/packages/flutter_local_notifications#-android-setup) and [iOS](https://pub.dev/packages/flutter_local_notifications#-ios-setup).
 
 ### Android Integration
 
@@ -62,8 +62,6 @@ The pedometer (step count) probe uses `NSMotion` on iOS and the `NSMotionUsageDe
 <key>NSMotionUsageDescription</key>
 <string>Collecting step count.</string>
 ```
-
-For notification to work in background mode, you need to configure your iOS app to be [set up for background actions](https://pub.dev/packages/awesome_notifications#-extra-ios-setup-for-background-actions).
 
 -------------------------------------
 
@@ -159,7 +157,7 @@ See the CAMS [wiki][wiki] for an overview and more details.
 ### Deploying and Running a Study on a `SmartPhoneClientManager`
 
 In CAMS, we talk about a study protocol being 'deployed' on a primary device, like a phone. CAMS has a fairly [sophisticated software architecture](https://github.com/cph-cachet/carp.sensing-flutter/wiki/1.-Software-Architecture) for doing this.
-However, if we want to define and deploy a study locally on the phone, this can be done using the [`SmartPhoneClientManager`](https://pub.dev/documentation/carp_mobile_sensing/latest/runtime/SmartPhoneClientManager-class.html) singleton.
+However, if we just want to define and deploy a study locally on the phone, this can be done using the [`SmartPhoneClientManager`](https://pub.dev/documentation/carp_mobile_sensing/latest/runtime/SmartPhoneClientManager-class.html) singleton.
 
 ```dart
 // Create and configure a client manager for this phone.

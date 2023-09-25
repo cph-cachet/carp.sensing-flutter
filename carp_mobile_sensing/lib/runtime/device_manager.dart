@@ -339,9 +339,30 @@ abstract class BTLEDeviceManager<
   @override
   List<Permission> get permissions => [
         // Permission.bluetooth,
-        Permission.bluetoothConnect,
-        Permission.bluetoothScan,
+        // Permission.bluetoothConnect,
+        // Permission.bluetoothScan,
       ];
+
+  @override
+  @mustCallSuper
+  Future<bool> onHasPermissions() async => (Platform.isAndroid)
+      ? await Permission.bluetoothConnect.isGranted &&
+          await Permission.bluetoothScan.isGranted
+      : (Platform.isIOS)
+          ? await Permission.bluetooth.isGranted
+          : true;
+
+  @override
+  @mustCallSuper
+  Future<void> onRequestPermissions() async {
+    if (Platform.isAndroid) {
+      await Permission.bluetoothConnect.request();
+      await Permission.bluetoothScan.request();
+    }
+    if (Platform.isIOS) {
+      await Permission.bluetooth.request();
+    }
+  }
 
   BTLEDeviceManager(
     super.type, [

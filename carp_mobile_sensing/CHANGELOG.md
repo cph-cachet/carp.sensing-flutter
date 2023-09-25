@@ -1,6 +1,7 @@
-## 1.3.0
+## 1.3.1
 
 * upgrade of uuid and permission_handler plugins
+* removal of support for awesome_notifications which does not compile on iOS
 
 ## 1.2.0
 
