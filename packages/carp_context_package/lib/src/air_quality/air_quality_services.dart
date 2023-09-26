@@ -48,7 +48,7 @@ class AirQualityServiceManager extends OnlineServiceManager<AirQualityService> {
 
   @override
   List<Permission> get permissions => [
-        Permission.locationAlways,
+        Permission.locationWhenInUse,
       ];
 
   @override

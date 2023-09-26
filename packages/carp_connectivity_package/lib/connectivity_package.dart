@@ -83,10 +83,8 @@ class ConnectivitySamplingPackage extends SmartphoneSamplingPackage {
         .add(WIFI, wifiNameAnoymizer);
   }
 
-  // Bluetooth scan requires access to location - for some strange reason...
   @override
   List<Permission> get permissions => [
-        Permission.location,
         Permission.bluetoothScan,
       ];
 }

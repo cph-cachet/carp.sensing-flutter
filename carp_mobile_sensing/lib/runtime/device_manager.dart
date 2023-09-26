@@ -350,6 +350,8 @@ abstract class BTLEDeviceManager<
           await Permission.bluetoothScan.isGranted
       // : (Platform.isIOS)
       //     ? await Permission.bluetooth.isGranted
+      // for some reason it seems like Permission.bluetooth.isGranted always
+      // return false on iOS....?
       : true;
 
   @override

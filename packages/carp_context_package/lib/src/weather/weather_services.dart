@@ -49,7 +49,7 @@ class WeatherServiceManager extends OnlineServiceManager<WeatherService> {
 
   @override
   List<Permission> get permissions => [
-        Permission.locationAlways,
+        Permission.locationWhenInUse,
       ];
 
   @override
