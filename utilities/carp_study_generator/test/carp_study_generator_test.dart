@@ -18,13 +18,12 @@ void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
 
   setUp(() {
-    // Initialization of serialization
-    CarpMobileSensing();
-    ResearchPackage();
-    // CognitionPackage();
+    // Initialization of libraries
+    CarpMobileSensing.ensureInitialized();
+    ResearchPackage.ensureInitialized();
+    // CognitionPackage.ensureInitialized();
 
     // register the sampling packages
-    // this is used to be able to deserialize the json protocol
     SamplingPackageRegistry().register(AppsSamplingPackage());
     // SamplingPackageRegistry().register(CommunicationSamplingPackage());
     SamplingPackageRegistry().register(ContextSamplingPackage());

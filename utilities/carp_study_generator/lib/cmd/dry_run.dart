@@ -14,7 +14,7 @@ class DryRunCommand extends AbstractCommand {
   DryRunCommand() : super();
 
   @override
-  Future execute() async {
+  Future<void> execute() async {
     int issues = 0;
 
     try {

@@ -4,7 +4,7 @@ class UpdateStudyProtocolCommand extends CreateStudyProtocolCommand {
   UpdateStudyProtocolCommand() : super();
 
   @override
-  Future execute() async {
+  Future<void> execute() async {
     await authenticate();
 
     print("Updating protocol: $protocol");

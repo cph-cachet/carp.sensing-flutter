@@ -7,7 +7,6 @@ import 'package:yaml/yaml.dart';
 import 'dart:convert';
 import 'dart:io';
 
-import 'package:carp_serializable/carp_serializable.dart';
 import 'package:carp_core/carp_core.dart';
 import 'package:carp_mobile_sensing/carp_mobile_sensing.dart';
 import 'package:carp_webservices/carp_services/carp_services.dart';
@@ -23,7 +22,7 @@ import 'package:carp_esense_package/esense.dart';
 import 'package:carp_polar_package/carp_polar_package.dart';
 
 import 'package:research_package/model.dart';
-// import 'package:cognition_package/model.dart';
+import 'package:cognition_package/model.dart';
 
 part 'cmd/command.dart';
 part 'cmd/help.dart';
@@ -31,6 +30,6 @@ part 'cmd/create.dart';
 part 'cmd/update.dart';
 part 'cmd/consent.dart';
 part 'cmd/localization.dart';
-part 'cmd/dryrun.dart';
+part 'cmd/dry_run.dart';
 part 'cmd/messages.dart';
 part 'cmd/delete_all_messages.dart';

@@ -4,7 +4,7 @@ class DeleteAllMessagesCommand extends AbstractCommand {
   DeleteAllMessagesCommand() : super();
 
   @override
-  Future execute() async {
+  Future<void> execute() async {
     await authenticate();
     await CarpResourceManager().deleteAllMessages();
     print("All messages deleted");

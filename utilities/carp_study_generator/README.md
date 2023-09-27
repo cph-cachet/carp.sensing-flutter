@@ -87,7 +87,7 @@ The available commands are:
 
 ```bash
   help                   Prints this help message.
-  dryrun                 Makes a dryrun testing access to the CARP server the correctness of the json resources.
+  dry-run                 Makes a dry run testing access to the CARP server the correctness of the json resources.
   create                 Create a study protocol based on a json file and uploads it to the CARP server.
   update                 Update an existing study protocol as a new version.
   consent                Create an informed consent based on a json file and uploads it to the CARP server.
@@ -96,7 +96,7 @@ The available commands are:
   message-delete-all     Delete all messages on the CARP server.
 ```
 
-Before uploading a any json files to CARP, run the `dryrun` command first. It will check and output a list like the following:
+Before uploading a any json files to CARP, run the `dry-run` command first. It will check and output a list like the following:
 
 ```bash
 [✓] CARP App             CarpApp - name: CARP server at 'https://cans.cachet.dk/dev', uri: https://cans.cachet.dk/dev, studyDeploymentId: null, studyId: 33441683-bbec-4c85-95de-b27aec09afce

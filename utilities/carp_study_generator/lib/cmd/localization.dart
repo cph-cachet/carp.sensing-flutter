@@ -9,12 +9,13 @@ class LocalizationCommand extends AbstractCommand {
   }
 
   @override
-  Future execute() async {
+  Future<void> execute() async {
     await authenticate();
 
     for (var element in locales) {
       String locale = element.toString();
-      Map<String, dynamic> upLocalizations = json.decode(getLocaleJson(locale));
+      Map<String, dynamic> upLocalizations =
+          json.decode(getLocaleJson(locale)) as Map<String, dynamic>;
 
       print("Uploading localization for locale: '$locale' to CARP.");
       bool success = await CarpResourceManager()

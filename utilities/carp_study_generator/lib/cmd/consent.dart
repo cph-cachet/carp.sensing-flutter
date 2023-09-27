@@ -26,7 +26,7 @@ class ConsentCommand extends AbstractCommand {
   }
 
   @override
-  Future execute() async {
+  Future<void> execute() async {
     await authenticate();
     consentJson;
     informedConsent;

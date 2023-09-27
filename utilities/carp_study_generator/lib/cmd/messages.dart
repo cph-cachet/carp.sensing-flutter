@@ -7,12 +7,13 @@ class MessagesCommand extends AbstractCommand {
       File('$messagesPath$id.json').readAsStringSync();
 
   @override
-  Future execute() async {
+  Future<void> execute() async {
     await authenticate();
 
     for (var element in messageIds) {
       String id = element.toString();
-      Message message = Message.fromJson(json.decode(getMessageJson(id)));
+      Message message = Message.fromJson(
+          json.decode(getMessageJson(id)) as Map<String, dynamic>);
 
       await CarpResourceManager().setMessage(message);
       print("Uploaded message '$id' - id: '${message.id}'");

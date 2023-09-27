@@ -1,6 +1,7 @@
-## 1.1.0
+## 1.3.0
 
-* update to `carp_mobile_sensing` v. 1.1.0
+* update to `carp_mobile_sensing` v. 1.3.0
+* `dryrun` command renamed to `dry-run` (to be consistent with Dart)
 
 ## 0.40.0
 
