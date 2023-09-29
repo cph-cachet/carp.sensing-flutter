@@ -14,57 +14,46 @@ class CarpUser {
   String username;
 
   /// Unique CARP ID
-  int? id;
-
-  /// The CARP account id.
-  String? accountId;
-
-  /// Is this user activated in any studies?
-  bool? isActivated;
+  String id;
 
   /// The user's email
-  String? email;
+  String email;
 
   /// User's first name
-  String? firstName;
+  String firstName;
 
   /// User's last name
-  String? lastName;
-
-  /// Mobile phone number
-  String? phone;
-
-  /// Department of the the user (e.g. CACHET)
-  String? department;
-
-  /// Organization of the the user (e.g. DTU)
-  String? organization;
-
-  /// Timestamp for agreeing to the informed consent
-  DateTime? termsAgreed;
-
-  /// Timestamp for the creation of this user.
-  DateTime? created;
+  String lastName;
 
   /// The list of roles that this user has in CARP.
-  List<String> role = [];
+  List<String> roles = [];
 
   /// The OAuth 2.0 [OAuthToken] for this user, once authenticated to CARP.
   /// Is `null` if user is not authenticated.
   OAuthToken? token;
 
   CarpUser({
-    this.username = '',
-    this.id,
-    this.accountId,
-    this.firstName,
-    this.lastName,
-    this.isActivated = true,
-    this.phone,
-    this.email,
-    this.department,
-    this.organization,
+    required this.username,
+    required this.id,
+    required this.firstName,
+    required this.lastName,
+    required this.email,
+    required this.roles,
+    this.token,
   });
+
+  static CarpUser fromJWT(Map<String, dynamic> jwt, OAuthToken token) {
+    CarpUser user = CarpUser(
+      username: jwt['preferred_username'] as String,
+      id: jwt['sub'] as String,
+      firstName: jwt['given_name'] as String,
+      lastName: jwt['family_name'] as String,
+      email: jwt['email'] as String,
+      roles: jwt['realm_access']['roles'] as List<String>,
+      token: token,
+    );
+    return user;
+  }
 
   /// Set or update the authenticated [OAuthToken] token for this user.
   void authenticated(OAuthToken token) => this.token = token;
@@ -74,7 +63,6 @@ class CarpUser {
 
   /// Returns true if the user's email is verified.
   bool get isEmailVerified => (token != null);
-
 
   /// Sign out the current user.
   Future<void> signOut() async {
@@ -87,5 +75,5 @@ class CarpUser {
 
   @override
   String toString() =>
-      'CARP User: $username [$id] - $firstName $lastName [account id: $accountId]';
+      'CARP User: $username [$id] - $firstName $lastName [account id: $id]';
 }

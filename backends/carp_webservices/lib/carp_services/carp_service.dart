@@ -56,43 +56,38 @@ class CarpService extends CarpBaseService {
   Stream<AuthEvent> get authStateChanges =>
       _authEventController.stream.asBroadcastStream();
 
-  Future<AuthorizationTokenResponse?> authenticate() async {
-    final String _clientId = 'interactive.public';
-    final String _redirectUrl = 'com.duendesoftware.demo:/oauthredirect';
-    final String _issuer = 'https://demo.duendesoftware.com';
-    final String _discoveryUrl =
-        'https://demo.duendesoftware.com/.well-known/openid-configuration';
-    final String _postLogoutRedirectUrl = 'com.duendesoftware.demo:/';
-    final List<String> _scopes = <String>[
-      'openid',
-      'profile',
-      'email',
-      'offline_access',
-      'api'
-    ];
+  Future<CarpUser> authenticate() async {
+    if (_app == null) {
+      throw CarpServiceException(
+          message:
+              "CARP Service not initialized. Call 'CarpService().configure()' first.");
+    }
 
-    final AuthorizationServiceConfiguration _serviceConfiguration =
-        const AuthorizationServiceConfiguration(
-      authorizationEndpoint:
-          'https://demo.duendesoftware.com/connect/authorize',
-      tokenEndpoint: 'https://demo.duendesoftware.com/connect/token',
-      endSessionEndpoint: 'https://demo.duendesoftware.com/connect/endsession',
+    var response = await appAuth.authorizeAndExchangeCode(
+      AuthorizationTokenRequest(
+        _app!.clientId,
+        "${_app!.redirectURI}",
+        discoveryUrl: "${_app!.discoveryURL}",
+      ),
     );
 
-    var request = AuthorizationTokenRequest(
-      _app!.clientId,
-      "${_app!.redirectURI}",
-      discoveryUrl: "${_app!.discoveryURL}",
-    );
+    if (response != null) {
+      _currentUser!
+          .authenticated(OAuthToken.fromAuthorizationTokenResponse(response));
+      await getCurrentUserProfile(response);
+      _authEventController.add(AuthEvent.authenticated);
+      return _currentUser!;
+    }
 
-    var request2 = AuthorizationTokenRequest(
-      _clientId,
-      _redirectUrl,
-      discoveryUrl: _discoveryUrl,
-      scopes: _scopes,
-    );
-    return await appAuth.authorizeAndExchangeCode(
-      request,
+    // All other cases are treated as a failed attempt and throws an error
+    _authEventController.add(AuthEvent.failed);
+    _currentUser = null;
+
+    // auth error response from CARP is on the form
+    //      {error: invalid_grant, error_description: Bad credentials}
+    throw CarpServiceException(
+      httpStatus: HTTPStatus(401),
+      message: 'Authentication failed.',
     );
   }
 
@@ -111,6 +106,14 @@ class CarpService extends CarpBaseService {
 
   /// The URL for the user endpoint for this [CarpService].
   String get userEndpointUri => "${_app!.uri.toString()}/api/users";
+
+  /// Asynchronously gets the CARP profile of the current user.
+  Future<CarpUser> getCurrentUserProfile(
+      AuthorizationTokenResponse response) async {
+    var jwt = JwtDecoder.decode(response.accessToken.toString());
+    return CarpUser.fromJWT(
+        jwt, OAuthToken.fromAuthorizationTokenResponse(response));
+  }
 
   /// The headers for any authenticated HTTP REST call to this [CarpService].
   @override

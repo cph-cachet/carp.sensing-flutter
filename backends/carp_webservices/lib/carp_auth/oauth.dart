@@ -23,7 +23,7 @@ class OAuthToken {
   /// - read
   /// - read write
   // TODO : anything else?
-  final String scope;
+  final List<String> scope;
 
   /// Expires in seconds.
   int expiresIn;
@@ -35,13 +35,16 @@ class OAuthToken {
   OAuthToken(this.accessToken, this.refreshToken, this.tokenType,
       this.expiresIn, this.scope);
 
-  /// Constructor taking a Map.
-  OAuthToken.fromMap(Map<String, dynamic> map)
-      : accessToken = map['access_token'].toString(),
-        refreshToken = map['refresh_token'].toString(),
-        tokenType = map['token_type'].toString(),
-        expiresIn = map['expires_in'] as int,
-        scope = map['scope'].toString();
+  static OAuthToken fromAuthorizationTokenResponse(
+      AuthorizationTokenResponse response) {
+    return OAuthToken(
+      response.accessToken.toString(),
+      response.refreshToken.toString(),
+      response.tokenType.toString(),
+      response.accessTokenExpirationDateTime as int,
+      response.scopes ?? [],
+    );
+  }
 
   /// Clone this token.
   OAuthToken clone() =>

@@ -38,7 +38,7 @@ class CarpParticipationService extends CarpBaseService
   @override
   Future<List<ActiveParticipationInvitation>> getActiveParticipationInvitations(
       [String? accountId]) async {
-    accountId ??= currentUser!.accountId;
+    accountId ??= currentUser!.id;
 
     Map<String, dynamic> responseJson =
         await _rpc(GetActiveParticipationInvitations(accountId!));
