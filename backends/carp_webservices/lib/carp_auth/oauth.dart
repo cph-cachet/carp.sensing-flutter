@@ -81,16 +81,12 @@ class OAuthEndPoint {
   /// The OAuth 2.0 client id.
   String clientID;
 
-  /// The OAuth 2.0 client secret.
-  String clientSecret;
-
   /// Path of the authentication endpoint.
   /// Default is `/oauth/token`
   String path;
 
   OAuthEndPoint({
     required this.clientID,
-    required this.clientSecret,
     this.path = "/oauth/token",
   });
 }

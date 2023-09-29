@@ -75,43 +75,10 @@ class CarpUser {
   /// Returns true if the user's email is verified.
   bool get isEmailVerified => (token != null);
 
-  /// Obtains the OAuth token for the current user, forcing a [refresh]
-  /// if desired.
-  Future<OAuthToken?> getOAuthToken({bool refresh = false}) async {
-    if (!CarpService().isConfigured) {
-      throw CarpServiceException(
-          message:
-              "CARP Service not initialized. Call 'CarpService.configure()' first.");
-    }
-    if (token == null) {
-      throw CarpServiceException(
-          message:
-              "OAuth token is null. Call 'CarpService.authenticate()' first.");
-    }
-
-    // check if we need to refresh the token.
-    if (token!.hasExpired || refresh) {
-      token = await CarpService().refresh();
-    }
-
-    return token;
-  }
 
   /// Sign out the current user.
   Future<void> signOut() async {
     token = null;
-  }
-
-  /// Reload the data of the current user (e.g., [fullName],
-  /// [telephone], etc.) from the CARP web service.
-  Future<void> reload() async {
-    if (!CarpService().isConfigured) {
-      throw CarpServiceException(
-          message:
-              "CARP Service not configured. Call 'CarpService.configure()' first.");
-    }
-
-    CarpService().getCurrentUserProfile();
   }
 
   factory CarpUser.fromJson(Map<String, dynamic> json) =>

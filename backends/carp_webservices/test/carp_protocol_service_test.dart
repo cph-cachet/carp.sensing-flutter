@@ -18,21 +18,6 @@ void main() {
     Settings().debugLevel = DebugLevel.debug;
     CarpMobileSensing.ensureInitialized();
 
-    app = CarpApp(
-      studyId: testStudyId,
-      studyDeploymentId: testDeploymentId,
-      name: "Test",
-      uri: Uri.parse(uri),
-      oauth: OAuthEndPoint(clientID: clientID, clientSecret: clientSecret),
-    );
-
-    CarpService().configure(app);
-
-    user = await CarpService().authenticate(
-      username: username,
-      password: password,
-    );
-
     CarpProtocolService().configureFrom(CarpService());
     ownerId = CarpService().currentUser!.accountId;
     var phone = Smartphone(roleName: phoneRoleName);
