@@ -72,9 +72,9 @@ class CarpService extends CarpBaseService {
     );
 
     if (response != null) {
+      _currentUser = await getCurrentUserProfile(response);
       _currentUser!
           .authenticated(OAuthToken.fromAuthorizationTokenResponse(response));
-      await getCurrentUserProfile(response);
       _authEventController.add(AuthEvent.authenticated);
       return _currentUser!;
     }
@@ -111,8 +111,7 @@ class CarpService extends CarpBaseService {
   Future<CarpUser> getCurrentUserProfile(
       AuthorizationTokenResponse response) async {
     var jwt = JwtDecoder.decode(response.accessToken.toString());
-    return CarpUser.fromJWT(
-        jwt, OAuthToken.fromAuthorizationTokenResponse(response));
+    return CarpUser.fromJWT(jwt);
   }
 
   /// The headers for any authenticated HTTP REST call to this [CarpService].

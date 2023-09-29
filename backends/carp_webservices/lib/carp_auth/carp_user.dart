@@ -42,7 +42,7 @@ class CarpUser {
     this.token,
   });
 
-  static CarpUser fromJWT(Map<String, dynamic> jwt, OAuthToken token) {
+  static CarpUser fromJWT(Map<String, dynamic> jwt) {
     CarpUser user = CarpUser(
       username: jwt['preferred_username'] as String,
       id: jwt['sub'] as String,
@@ -50,7 +50,6 @@ class CarpUser {
       lastName: jwt['family_name'] as String,
       email: jwt['email'] as String,
       roles: jwt['realm_access']['roles'] as List<String>,
-      token: token,
     );
     return user;
   }
