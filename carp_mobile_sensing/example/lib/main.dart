@@ -184,30 +184,44 @@ class LocalStudyProtocolManager implements StudyProtocolManager {
     //  * screen events
     //  * ambient light
     //  * free memory (there seems to be a bug in the underlying sysinfo plugin)
+    // protocol.addTaskControl(
+    //   ImmediateTrigger(),
+    //   BackgroundTask(measures: [
+    //     Measure(type: DeviceSamplingPackage.FREE_MEMORY),
+    //     Measure(type: DeviceSamplingPackage.BATTERY_STATE),
+    //     Measure(type: DeviceSamplingPackage.SCREEN_EVENT),
+    //     Measure(type: CarpDataTypes.STEP_COUNT_TYPE_NAME),
+    //     Measure(type: SensorSamplingPackage.AMBIENT_LIGHT)
+    //   ]),
+    //   phone,
+    // );
+
+    // Collect IMU data every 10 secs for 1 sec.
     protocol.addTaskControl(
       ImmediateTrigger(),
-      BackgroundTask(measures: [
-        Measure(type: DeviceSamplingPackage.FREE_MEMORY),
-        Measure(type: DeviceSamplingPackage.BATTERY_STATE),
-        Measure(type: DeviceSamplingPackage.SCREEN_EVENT),
-        Measure(type: CarpDataTypes.STEP_COUNT_TYPE_NAME),
-        Measure(type: SensorSamplingPackage.AMBIENT_LIGHT)
-      ]),
+      BackgroundTask(
+        measures: [
+          Measure(type: SensorSamplingPackage.BUFFERING_ACCELERATION)
+            ..overrideSamplingConfiguration = PeriodicSamplingConfiguration(
+                interval: const Duration(seconds: 2),
+                duration: const Duration(seconds: 1)),
+        ],
+      ),
       phone,
     );
 
     // Collect IMU data every 10 secs for 1 sec.
-    protocol.addTaskControl(
-      PeriodicTrigger(period: const Duration(seconds: 10)),
-      BackgroundTask(
-        measures: [
-          Measure(type: CarpDataTypes.ACCELERATION_TYPE_NAME),
-          Measure(type: CarpDataTypes.ROTATION_TYPE_NAME),
-        ],
-        duration: const IsoDuration(seconds: 1),
-      ),
-      phone,
-    );
+    // protocol.addTaskControl(
+    //   PeriodicTrigger(period: const Duration(seconds: 10)),
+    //   BackgroundTask(
+    //     measures: [
+    //       Measure(type: SensorSamplingPackage.ACCELERATION),
+    //       Measure(type: SensorSamplingPackage.ROTATION),
+    //     ],
+    //     duration: const IsoDuration(seconds: 1),
+    //   ),
+    //   phone,
+    // );
 
     // // Example of how to start and stop sampling using the Control.Start and
     // // Control.Stop method
@@ -283,16 +297,16 @@ class LocalStudyProtocolManager implements StudyProtocolManager {
     // the App Task model.
 
     // Add a task 1 minute after deployment and make a notification.
-    protocol.addTaskControl(
-      ElapsedTimeTrigger(elapsedTime: const IsoDuration(seconds: 30)),
-      AppTask(
-        type: BackgroundSensingUserTask.ONE_TIME_SENSING_TYPE,
-        title: "Elapsed Time - App Task",
-        measures: [Measure(type: DeviceSamplingPackage.DEVICE_INFORMATION)],
-        notification: true,
-      ),
-      phone,
-    );
+    // protocol.addTaskControl(
+    //   ElapsedTimeTrigger(elapsedTime: const IsoDuration(seconds: 30)),
+    //   AppTask(
+    //     type: BackgroundSensingUserTask.ONE_TIME_SENSING_TYPE,
+    //     title: "Elapsed Time - App Task",
+    //     measures: [Measure(type: DeviceSamplingPackage.DEVICE_INFORMATION)],
+    //     notification: true,
+    //   ),
+    //   phone,
+    // );
 
     // // Add a cron job every day at 11:45
     // protocol.addTaskControl(

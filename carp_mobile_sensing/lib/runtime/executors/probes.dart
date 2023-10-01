@@ -288,15 +288,16 @@ abstract class PeriodicStreamProbe extends StreamProbe {
   }
 }
 
-/// An abstract probe which can be used to sample data into a buffer,
-/// every [frequency] for a period of [duration]. These events are buffered, and
-/// once collected for the [duration], are collected from the [getMeasurement] method and
-/// send to the main [measurements] stream.
+/// An type of probe which collects data for a period of time and then return
+/// a measurement from this collected data.
+///
+/// Probes of this type uses a [PeriodicSamplingConfiguration] that specify
+/// the [interval] of starting sampling, and the [duration] of the sampling window.
+/// Once this sampling window is over, the final measurement is collected from
+/// the [getMeasurement] method and send to the main [measurements] stream.
 ///
 /// When sampling starts, the [onSamplingStart] handle is called.
 /// When the sampling window ends, the [onSamplingEnd] handle is called.
-///
-/// See [AudioProbe] for an example.
 abstract class BufferingPeriodicProbe extends MeasurementProbe {
   Timer? timer;
 
@@ -362,9 +363,12 @@ abstract class BufferingPeriodicProbe extends MeasurementProbe {
   Future<Measurement?> getMeasurement();
 }
 
-/// An abstract probe which can be used to sample data from a buffering stream,
-/// every [interval] for a period of [duration]. These events are buffered
-/// for the specified [duration], and then collected from the [getMeasurement]
+/// An type of probe which buffers data from an underlying stream and on a regular
+/// interval return a measurement based on this collected data.
+///
+/// Probes of this type uses a [PeriodicSamplingConfiguration] that specify
+/// the [interval] of sampling. The [duration] is not used.
+/// Every [interval] the measurement is collected from the [getMeasurement]
 /// method and send to the main [measurements] stream.
 ///
 /// Sub-classes must implement the
@@ -373,10 +377,95 @@ abstract class BufferingPeriodicProbe extends MeasurementProbe {
 ///
 /// method in order to provide the stream to be buffered.
 ///
+/// The difference between this [BufferingIntervalStreamProbe] and the
+/// [BufferingPeriodicStreamProbe] is that this type of probe keeps the
+/// underlying [bufferingStream] running continuously, while the latter
+/// starts and stop the underlying [bufferingStream] in the sampling
+/// windows specified by the [interval] and [duration] parameters of the
+/// [samplingConfiguration].
+abstract class BufferingIntervalStreamProbe extends StreamProbe {
+  Timer? timer;
+
+  @override
+  IntervalSamplingConfiguration? get samplingConfiguration =>
+      super.samplingConfiguration as IntervalSamplingConfiguration;
+
+  @override
+  Future<bool> onStart() async {
+    Duration? interval = samplingConfiguration?.interval;
+    if (interval != null) {
+      subscription = bufferingStream.listen(
+        onSamplingData,
+        onError: onError,
+        onDone: onDone,
+      );
+      timer = Timer.periodic(interval, (_) async {
+        try {
+          Measurement? measurement = await getMeasurement();
+          if (measurement != null) addMeasurement(measurement);
+        } catch (error) {
+          addError(error);
+        }
+      });
+    } else {
+      warning(
+          '$runtimeType - no valid interval found in sampling configuration: $samplingConfiguration. '
+          'Is a valid IntervalSamplingConfiguration provided?');
+      return false;
+    }
+    return true;
+  }
+
+  @override
+  Future<bool> onStop() async {
+    await super.onStop();
+    await subscription?.cancel();
+    return true;
+  }
+
+  /// The stream of events to be buffered. Must be specified by sub-classes.
+  Stream<dynamic> get bufferingStream;
+
+  /// Handler for handling onData events from the buffering stream.
+  void onSamplingData(dynamic event);
+
+  /// Subclasses should implement / override this method to collect the [Measurement].
+  /// This method will be called every time data has been buffered for a [duration]
+  /// and should return the final measurement for the buffered data.
+  ///
+  /// Can return `null` if no data is available.
+  /// Can return an [Error] if an error occurs.
+  Future<Measurement?> getMeasurement();
+}
+
+/// An type of probe which buffers data from an underlying stream for a period
+/// of time and then return a measurement from this collected data.
+///
+/// Probes of this type uses a [PeriodicSamplingConfiguration] that specify
+/// the [interval] of starting sampling, and the [duration] of the sampling window.
+/// Once this sampling window is over, the final measurement is collected from
+/// the [getMeasurement] method and send to the main [measurements] stream.
+///
+/// Sub-classes must implement the
+///
+///     Stream<dynamic> get bufferingStream => ...
+///
+/// method in order to provide the stream to be buffered from.
+///
 /// When sampling starts, the [onSamplingStart] handle is called.
 /// When the sampling window ends, the [onSamplingEnd] handle is called.
 ///
-/// See [LightProbe] for an example.
+/// The difference between this [BufferingPeriodicStreamProbe] and the
+/// [BufferingIntervalStreamProbe] is that this type of probe starts and stops
+/// the underlying [bufferingStream] in the sampling windows specified by the
+/// [interval] and [duration] parameters of the [samplingConfiguration],
+/// whereas the latter [BufferingIntervalStreamProbe] keeps the
+/// underlying [bufferingStream] running continuously.
+///
+/// See [LightProbe] for an example. This probe listens to the light sensor
+/// every [interval] for [duration] and buffers the reading during this period
+/// into an overall measurement for light, calculated in the [getMeasurement]
+/// method.
 abstract class BufferingPeriodicStreamProbe extends PeriodicStreamProbe {
   // we don't use the stream in the super class so we give it an empty non-null stream
   @override
@@ -447,69 +536,37 @@ abstract class BufferingPeriodicStreamProbe extends PeriodicStreamProbe {
   Future<Measurement?> getMeasurement();
 }
 
-/// An abstract probe which can be used to buffer data from a stream and collect
-/// a measurement every [interval]. All events from the [bufferingStream] are
-/// buffered, and collected from the [getMeasurement] method every [interval]
-/// and send to the main [measurements] stream.
-///
-/// Sub-classes must implement the
-///
-///     Stream<dynamic> get bufferingStream => ...
-///
-/// method in order to provide the stream to be buffered.
-///
-/// When the sampling window ends, the [getMeasurement] method is called.
-abstract class BufferingIntervalStreamProbe extends StreamProbe {
-  Timer? timer;
+class BufferingPeriodicStreamProbeImpl extends BufferingPeriodicStreamProbe {
+  DataBuffer buffer = DataBuffer();
 
   @override
-  IntervalSamplingConfiguration? get samplingConfiguration =>
-      super.samplingConfiguration as IntervalSamplingConfiguration;
+  Stream<dynamic> bufferingStream;
+
+  BufferingPeriodicStreamProbeImpl(this.bufferingStream) {
+    debug('$runtimeType - created');
+  }
 
   @override
-  Future<bool> onStart() async {
-    Duration? interval = samplingConfiguration?.interval;
-    if (interval != null) {
-      subscription = bufferingStream.listen(
-        onSamplingData,
-        onError: onError,
-        onDone: onDone,
-      );
-      timer = Timer.periodic(interval, (_) async {
-        try {
-          Measurement? measurement = await getMeasurement();
-          if (measurement != null) addMeasurement(measurement);
-        } catch (error) {
-          addError(error);
-        }
-      });
-    } else {
-      warning(
-          '$runtimeType - no valid interval found in sampling configuration: $samplingConfiguration. '
-          'Is a valid IntervalSamplingConfiguration provided?');
-      return false;
+  void onSamplingData(event) {
+    if (event is Measurement) {
+      buffer.add(event.data);
     }
-    return true;
   }
 
   @override
-  Future<bool> onStop() async {
-    await super.onStop();
-    await subscription?.cancel();
-    return true;
+  void onSamplingStart() {
+    debug('$runtimeType - onSamplingStart()');
+    buffer = DataBuffer();
   }
 
-  /// The stream of events to be buffered. Must be specified by sub-classes.
-  Stream<dynamic> get bufferingStream;
+  @override
+  void onSamplingEnd() {
+    debug('$runtimeType - onSamplingEnd()');
+    buffer.close();
+  }
 
-  /// Handler for handling onData events from the buffering stream.
-  void onSamplingData(dynamic event);
-
-  /// Subclasses should implement / override this method to collect the [Measurement].
-  /// This method will be called every time data has been buffered for a [duration]
-  /// and should return the final measurement for the buffered data.
-  ///
-  /// Can return `null` if no data is available.
-  /// Can return an [Error] if an error occurs.
-  Future<Measurement?> getMeasurement();
+  @override
+  Future<Measurement?> getMeasurement() async =>
+      Measurement.fromData(buffer, buffer.startTime.microsecondsSinceEpoch)
+        ..sensorEndTime = buffer.endTime?.microsecondsSinceEpoch;
 }

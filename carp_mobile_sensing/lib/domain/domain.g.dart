@@ -932,6 +932,28 @@ Map<String, dynamic> _$FileDataToJson(FileData instance) {
   return val;
 }
 
+DataBuffer _$DataBufferFromJson(Map<String, dynamic> json) => DataBuffer()
+  ..$type = json['__type'] as String?
+  ..buffer = (json['buffer'] as List<dynamic>)
+      .map((e) => Data.fromJson(e as Map<String, dynamic>))
+      .toList()
+  ..bufferDataType = json['bufferDataType'] as String?;
+
+Map<String, dynamic> _$DataBufferToJson(DataBuffer instance) {
+  final val = <String, dynamic>{};
+
+  void writeNotNull(String key, dynamic value) {
+    if (value != null) {
+      val[key] = value;
+    }
+  }
+
+  writeNotNull('__type', instance.$type);
+  val['buffer'] = instance.buffer;
+  writeNotNull('bufferDataType', instance.bufferDataType);
+  return val;
+}
+
 Heartbeat _$HeartbeatFromJson(Map<String, dynamic> json) => Heartbeat(
       period: json['period'] as int,
       deviceType: json['deviceType'] as String,

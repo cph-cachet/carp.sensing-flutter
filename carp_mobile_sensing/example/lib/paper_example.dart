@@ -21,14 +21,15 @@ void sensing() async {
   // add selected measures from the sampling packages
   protocol.addTaskControl(
     ImmediateTrigger(),
-    BackgroundTask()
-      ..addMeasure(Measure(type: CarpDataTypes.ACCELERATION_TYPE_NAME))
-      ..addMeasure(Measure(type: CarpDataTypes.ROTATION_TYPE_NAME))
-      ..addMeasure(Measure(type: DeviceSamplingPackage.FREE_MEMORY))
-      ..addMeasure(Measure(type: DeviceSamplingPackage.BATTERY_STATE))
-      ..addMeasure(Measure(type: DeviceSamplingPackage.SCREEN_EVENT))
-      ..addMeasure(Measure(type: CarpDataTypes.STEP_COUNT_TYPE_NAME))
-      ..addMeasure(Measure(type: SensorSamplingPackage.AMBIENT_LIGHT)),
+    BackgroundTask(measures: [
+      Measure(type: SensorSamplingPackage.ACCELERATION),
+      Measure(type: SensorSamplingPackage.ROTATION),
+      Measure(type: DeviceSamplingPackage.FREE_MEMORY),
+      Measure(type: DeviceSamplingPackage.BATTERY_STATE),
+      Measure(type: DeviceSamplingPackage.SCREEN_EVENT),
+      Measure(type: CarpDataTypes.STEP_COUNT_TYPE_NAME),
+      Measure(type: SensorSamplingPackage.AMBIENT_LIGHT),
+    ]),
     phone,
     Control.Start,
   );

@@ -88,14 +88,20 @@ class DataStreamBatch {
 /// When [sensorEndTime] is set, the [data] pertains to an interval in time;
 /// otherwise, a point in time.
 ///
-/// The unit of [sensorStartTime] and [sensorEndTime] is fully determined by the
-/// sensor that collected the data.
-/// For example, it could be a simple clock increment since the device powered up.
-/// However, in CARP we prefer microseconds over milliseconds for higher precision.
+/// The unit of [sensorStartTime] and [sensorEndTime] is either determined by the
+/// sensor that collected the data, or, in case the sensor does not provide this
+/// information, by the phone.
+/// For example, the timestamps could be a simple clock increment since the device
+/// powered up.
+/// Note that in CARP we prefer microseconds over milliseconds for higher precision.
 @JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
 class Measurement {
   /// Start time as set by the sensor.
-  /// The unit is determined by the sensor.
+  ///
+  /// If this timestamp has been provided by the sensor, the unit is determined
+  /// by the sensor.
+  /// If this timestamp is provided by the phone (e.g., by using the [Measurement.fromData]
+  /// method), this timestamp is in microseconds since epoch.
   int sensorStartTime;
 
   /// End time as set by the sensor, if available.
@@ -112,14 +118,16 @@ class Measurement {
   /// The [Data] collected in this measurement.
   Data data;
 
+  /// Create a new measurement based on [data].
   Measurement({
     required this.sensorStartTime,
     this.sensorEndTime,
     required this.data,
   });
 
-  /// Create a measurement from [data] giving it the current time
-  /// stamp as [sensorStartTime].
+  /// Create a measurement from [data] based on the [sensorStartTime] provided
+  /// by the sensor. If [sensorStartTime] is not specified, the phones current
+  /// time stamp as microseconds since epoch is used.
   factory Measurement.fromData(Data data, [int? sensorStartTime]) =>
       Measurement(
           sensorStartTime:
