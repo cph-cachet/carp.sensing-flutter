@@ -363,7 +363,7 @@ abstract class BufferingPeriodicProbe extends MeasurementProbe {
   Future<Measurement?> getMeasurement();
 }
 
-/// An type of probe which buffers data from an underlying stream and on a regular
+/// A type of probe which buffers data from an underlying stream and on a regular
 /// interval return a measurement based on this collected data.
 ///
 /// Probes of this type uses a [PeriodicSamplingConfiguration] that specify
@@ -438,7 +438,7 @@ abstract class BufferingIntervalStreamProbe extends StreamProbe {
   Future<Measurement?> getMeasurement();
 }
 
-/// An type of probe which buffers data from an underlying stream for a period
+/// A type of probe which buffers data from an underlying stream for a period
 /// of time and then return a measurement from this collected data.
 ///
 /// Probes of this type uses a [PeriodicSamplingConfiguration] that specify

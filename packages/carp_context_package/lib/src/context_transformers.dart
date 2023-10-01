@@ -19,9 +19,6 @@ class OMHContextDataPoint extends Data {
 
   OMHContextDataPoint(this.datapoint);
 
-  // @override
-  // Map<String, dynamic> toJson() => datapoint.toJson();
-
   @override
   Function get fromJsonFunction => _$OMHContextDataPointFromJson;
   factory OMHContextDataPoint.fromJson(Map<String, dynamic> json) =>

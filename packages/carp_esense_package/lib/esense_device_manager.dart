@@ -50,11 +50,11 @@ part of esense;
 /// record only IMU data.
 @JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
 class ESenseDevice extends DeviceConfiguration {
-  /// The type of a eSense device.
+  /// The type of an eSense device.
   static const String DEVICE_TYPE =
       '${DeviceConfiguration.DEVICE_NAMESPACE}.ESenseDevice';
 
-  /// The default role name for a eSense device.
+  /// The default role name for an eSense device.
   static const String DEFAULT_ROLENAME = 'eSense';
 
   /// The name of the eSense device.
@@ -112,10 +112,10 @@ class ESenseDeviceManager extends BTLEDeviceManager<ESenseDevice> {
   @override
   set btleName(String btleName) => configuration?.deviceName = btleName;
 
-  /// A estimate of the battery level of the eSense device.
+  /// An estimate of the battery level of the eSense device.
   ///
   /// It assumes a linear relationship based on a regression on
-  /// these measures of battery and voltages levels:
+  /// these measures of battery and voltage levels:
   ///
   /// ```
   ///   B  |  V

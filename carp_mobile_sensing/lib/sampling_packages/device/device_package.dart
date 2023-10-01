@@ -98,7 +98,4 @@ class DeviceSamplingPackage extends SmartphoneSamplingPackage {
     FromJsonFactory().register(ScreenEvent());
     FromJsonFactory().register(Timezone(''));
   }
-
-  @override
-  List<Permission> get permissions => [];
 }

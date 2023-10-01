@@ -90,7 +90,4 @@ class SensorSamplingPackage extends SmartphoneSamplingPackage {
   void onRegister() {
     FromJsonFactory().register(AmbientLight());
   }
-
-  @override
-  List<Permission> get permissions => [];
 }

@@ -48,7 +48,7 @@ class HistoricSamplingConfiguration extends PersistentSamplingConfiguration {
       FromJsonFactory().fromJson(json) as HistoricSamplingConfiguration;
 }
 
-/// A sampling configuration which allows configuring the time [interval] in
+/// A sampling configuration that allows configuring the time [interval] in
 /// between subsequent measurements.
 @JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
 class IntervalSamplingConfiguration extends PersistentSamplingConfiguration {
