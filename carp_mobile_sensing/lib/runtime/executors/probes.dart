@@ -535,38 +535,3 @@ abstract class BufferingPeriodicStreamProbe extends PeriodicStreamProbe {
   /// Can return an [Error] if an error occurs.
   Future<Measurement?> getMeasurement();
 }
-
-class BufferingPeriodicStreamProbeImpl extends BufferingPeriodicStreamProbe {
-  DataBuffer buffer = DataBuffer();
-
-  @override
-  Stream<dynamic> bufferingStream;
-
-  BufferingPeriodicStreamProbeImpl(this.bufferingStream) {
-    debug('$runtimeType - created');
-  }
-
-  @override
-  void onSamplingData(event) {
-    if (event is Measurement) {
-      buffer.add(event.data);
-    }
-  }
-
-  @override
-  void onSamplingStart() {
-    debug('$runtimeType - onSamplingStart()');
-    buffer = DataBuffer();
-  }
-
-  @override
-  void onSamplingEnd() {
-    debug('$runtimeType - onSamplingEnd()');
-    buffer.close();
-  }
-
-  @override
-  Future<Measurement?> getMeasurement() async =>
-      Measurement.fromData(buffer, buffer.startTime.microsecondsSinceEpoch)
-        ..sensorEndTime = buffer.endTime?.microsecondsSinceEpoch;
-}
