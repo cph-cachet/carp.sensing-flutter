@@ -112,37 +112,29 @@ class SamplingPackageRegistry {
 
 /// Interface for a sampling package.
 ///
-/// A sampling package provides information on sampling:
+/// A sampling package provides information on:
 ///  * [dataTypes] - the data types supported
 ///  * [samplingSchemes] - the default [DataTypeSamplingSchemeMap] containing
 ///     a set of [SamplingConfiguration]s for each data type.
-///  * [permissions] - a list of [Permission]s needed for this package
 ///  * [deviceType] - what type of device this package supports
+///  * [permissions] - a list of [Permission]s needed for this package
 ///
 /// It also contains factory methods for:
 ///  * creating a [Probe] based on a [Measure] type
-///  * creating a [DeviceManager] based on a device type
+///  * getting a [DeviceManager] for the [deviceType]
 abstract class SamplingPackage {
+  /// The list of data type this package supports.
+  List<DataTypeMetaData> get dataTypes;
+
   /// The default sampling schemes for all [dataTypes] in this package.
   ///
   /// All sampling packages should defined a [DataTypeSamplingScheme] for each
   /// data type.
   DataTypeSamplingSchemeMap get samplingSchemes;
 
-  /// The list of data type this package supports.
-  List<DataTypeMetaData> get dataTypes;
-
-  /// The list of permissions that this package need.
-  ///
-  /// See [PermissionGroup](https://pub.dev/documentation/permission_handler/latest/permission_handler/PermissionGroup-class.html)
-  /// for a list of possible permissions.
-  ///
-  /// For Android permission in the Manifest.xml file,
-  /// see [Manifest.permission](https://developer.android.com/reference/android/Manifest.permission.html)
-  List<Permission> get permissions;
-
   /// Creates a new [Probe] of the specified [type].
-  /// Returns `null` if a probe cannot be created for this [type].
+  /// Note that [type] should be one of the [dataTypes] that this package supports.
+  /// Returns null if a probe cannot be created for the [type].
   Probe? create(String type);
 
   /// What device type is this package using?
@@ -157,6 +149,15 @@ abstract class SamplingPackage {
 
   /// Get the [DeviceManager] for the device used by this package.
   DeviceManager get deviceManager;
+
+  /// The list of permissions that this package need in order to run.
+  ///
+  /// See [PermissionGroup](https://pub.dev/documentation/permission_handler/latest/permission_handler/PermissionGroup-class.html)
+  /// for a list of possible permissions.
+  ///
+  /// For Android permission in the Manifest.xml file,
+  /// see [Manifest.permission](https://developer.android.com/reference/android/Manifest.permission.html)
+  List<Permission> get permissions;
 
   /// Callback method when this package is being registered.
   void onRegister();

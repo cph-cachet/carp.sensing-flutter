@@ -14,7 +14,6 @@ import 'package:light/light.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:pedometer/pedometer.dart' as pedometer;
 import 'package:stats/stats.dart';
-import 'package:permission_handler/permission_handler.dart';
 
 import 'package:carp_serializable/carp_serializable.dart';
 import 'package:carp_core/carp_core.dart';
