@@ -43,48 +43,6 @@ class FileData extends Data {
       '${super.toString()}, filename: $filename, upload: $upload';
 }
 
-/// A buffer of [Data] objects.
-///
-/// This type of data is typically collected by the buffering probes, like
-/// [BufferingPeriodicProbe] or [BufferingPeriodicStreamProbe].
-@JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
-class DataBuffer extends Data {
-  static const dataType = '${CarpDataTypes.CARP_NAMESPACE}.databuffer';
-
-  /// The buffer of data. May be empty.
-  List<Data> buffer = [];
-
-  /// The data type of the data in this buffer. Returns null if the [buffer] is
-  /// empty.
-  String? bufferDataType;
-  //  =>
-  //     buffer.isNotEmpty ? buffer[0].format.toString() : null;
-
-  @JsonKey(includeFromJson: false, includeToJson: false)
-  late DateTime startTime;
-
-  @JsonKey(includeFromJson: false, includeToJson: false)
-  DateTime? endTime;
-
-  DataBuffer() {
-    startTime = DateTime.now();
-  }
-
-  void add(Data value) => buffer.add(value);
-
-  void close() {
-    endTime = DateTime.now();
-    bufferDataType = buffer[0].format.toString();
-  }
-
-  @override
-  Function get fromJsonFunction => _$DataBufferFromJson;
-  factory DataBuffer.fromJson(Map<String, dynamic> json) =>
-      FromJsonFactory().fromJson(json) as DataBuffer;
-  @override
-  Map<String, dynamic> toJson() => _$DataBufferToJson(this);
-}
-
 /// Reflects a heart beat data send every [period] minute.
 /// Useful for calculating sampling coverage over time.
 @JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
