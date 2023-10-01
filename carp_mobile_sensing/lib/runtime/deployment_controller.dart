@@ -40,10 +40,12 @@ class SmartphoneDeploymentController extends StudyRuntime<DeviceRegistration> {
 
   /// The stream of all sampled measurements.
   ///
-  /// Measures in the [measurements] stream are transformed in the following order:
+  /// Data in the [measurements] stream are transformed in the following order:
   ///   1. privacy schema as specified in the [privacySchemaName]
-  ///   2. preferred data format as specified by [dataFormat] in the [SmartphoneDeployment.dataEndPoint]
-  ///   3. any custom [transformer] provided
+  ///   2. preferred data format as specified by [dataFormat] in the
+  ///      [SmartphoneDeployment.dataEndPoint]
+  ///   3. any custom [transformer] provided in the [configure] method when
+  ///      configuring this controller
   ///
   /// This is a broadcast stream and supports multiple subscribers.
   Stream<Measurement> get measurements =>

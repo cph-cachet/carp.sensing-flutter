@@ -217,9 +217,10 @@ void example_2() async {
   // but delay the sampling by 10 seconds
   protocol.addTaskControl(
     DelayedTrigger(delay: const Duration(seconds: 10)),
-    BackgroundTask(name: 'Sensor Task')
-      ..addMeasure(Measure(type: CarpDataTypes.ACCELERATION_TYPE_NAME))
-      ..addMeasure(Measure(type: CarpDataTypes.ROTATION_TYPE_NAME)),
+    BackgroundTask(name: 'Sensor Task', measures: [
+      Measure(type: SensorSamplingPackage.ACCELERATION),
+      Measure(type: SensorSamplingPackage.ROTATION),
+    ]),
     phone,
     Control.Start,
   );

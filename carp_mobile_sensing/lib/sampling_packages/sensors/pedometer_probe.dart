@@ -12,7 +12,8 @@ part of sensors;
 /// It samples step counts directly from the native OS and reports step counts
 /// as they are sensed, typically for each step taken.
 ///
-/// Note that the [Pedometer] plugin returns the steps taken since last system boot.
+/// Note that the [Pedometer] plugin returns the total steps taken since last
+/// system boot.
 class PedometerProbe extends StreamProbe {
   @override
   Stream<Measurement> get stream => pedometer.Pedometer.stepCountStream.map(

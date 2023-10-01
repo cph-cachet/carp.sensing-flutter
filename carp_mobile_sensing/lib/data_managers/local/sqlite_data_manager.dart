@@ -39,8 +39,6 @@ class SQLiteDataManager extends AbstractDataManager {
 
   static const String MEASUREMENT_TABLE_NAME = 'measurements';
   static const String ID_COLUMN = 'id';
-  // SQLite does not have a separate Boolean storage class. Instead,
-  // Boolean values are stored as integers 0 (false) and 1 (true).
   static const String UPLOADED_COLUMN = 'uploaded';
   static const String DEPLOYMENT_ID_COLUMN = 'deployment_id';
   static const String TRIGGER_ID_COLUMN = 'trigger_id';
@@ -71,7 +69,7 @@ class SQLiteDataManager extends AbstractDataManager {
 
     _databasePath ??= await getDatabasesPath();
 
-    // open the database - make sure to use the same database across app (re)start
+    // Open the database - make sure to use the same database across app (re)start
     database = await openDatabase(
       databaseName,
       version: 1,
@@ -81,6 +79,8 @@ class SQLiteDataManager extends AbstractDataManager {
         debug("$runtimeType - Creating '$MEASUREMENT_TABLE_NAME' table");
         await db.execute('CREATE TABLE $MEASUREMENT_TABLE_NAME ('
             '$ID_COLUMN INTEGER PRIMARY KEY AUTOINCREMENT, '
+            // SQLite does not have a separate Boolean storage class. Instead,
+            // boolean values are stored as integers 0 (false) and 1 (true).
             '$UPLOADED_COLUMN INTEGER, '
             '$DEPLOYMENT_ID_COLUMN TEXT, '
             '$TRIGGER_ID_COLUMN INTEGER, '

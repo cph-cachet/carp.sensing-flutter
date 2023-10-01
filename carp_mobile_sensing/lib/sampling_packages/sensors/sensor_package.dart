@@ -16,6 +16,9 @@ class SensorSamplingPackage extends SmartphoneSamplingPackage {
   static const String NON_GRAVITATIONAL_ACCELERATION =
       CarpDataTypes.NON_GRAVITATIONAL_ACCELERATION_TYPE_NAME;
 
+  static const String BUFFERING_ACCELERATION =
+      '${CarpDataTypes.CARP_NAMESPACE}.bufferingacceleration';
+
   /// Rotation of the device in x,y,z (typically measured by a gyroscope).
   ///  * Event-based measure.
   ///  * Uses the [Smartphone] device for data collection.
@@ -49,6 +52,13 @@ class SensorSamplingPackage extends SmartphoneSamplingPackage {
         DataTypeSamplingScheme(CarpDataTypes()
             .types[CarpDataTypes.NON_GRAVITATIONAL_ACCELERATION_TYPE_NAME]!),
         DataTypeSamplingScheme(
+          DataTypeMetaData(
+            type: BUFFERING_ACCELERATION,
+            displayName: "Buffering Accelerometer",
+            timeType: DataTimeType.TIME_SPAN,
+          ),
+        ),
+        DataTypeSamplingScheme(
             CarpDataTypes().types[CarpDataTypes.ROTATION_TYPE_NAME]!),
         DataTypeSamplingScheme(
             CarpDataTypes().types[CarpDataTypes.STEP_COUNT_TYPE_NAME]!),
@@ -73,6 +83,9 @@ class SensorSamplingPackage extends SmartphoneSamplingPackage {
         return AccelerometerProbe();
       case NON_GRAVITATIONAL_ACCELERATION:
         return UserAccelerometerProbe();
+      case BUFFERING_ACCELERATION:
+        return BufferingPeriodicStreamProbeImpl(
+            UserAccelerometerProbe().stream);
       case MAGNETIC_FIELD:
         return MagnetometerProbe();
       case ROTATION:
