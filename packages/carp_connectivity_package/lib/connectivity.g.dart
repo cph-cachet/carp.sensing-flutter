@@ -70,7 +70,6 @@ BluetoothDevice _$BluetoothDeviceFromJson(Map<String, dynamic> json) =>
       advertisementName: json['advertisementName'] as String,
       bluetoothDeviceId: json['bluetoothDeviceId'] as String,
       bluetoothDeviceName: json['bluetoothDeviceName'] as String,
-      bluetoothDeviceType: json['bluetoothDeviceType'] as String,
       connectable: json['connectable'] as bool,
       rssi: json['rssi'] as int,
       txPowerLevel: json['txPowerLevel'] as int?,
@@ -81,7 +80,6 @@ Map<String, dynamic> _$BluetoothDeviceToJson(BluetoothDevice instance) {
     'advertisementName': instance.advertisementName,
     'bluetoothDeviceId': instance.bluetoothDeviceId,
     'bluetoothDeviceName': instance.bluetoothDeviceName,
-    'bluetoothDeviceType': instance.bluetoothDeviceType,
     'connectable': instance.connectable,
   };
 
