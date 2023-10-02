@@ -10,8 +10,9 @@ OAuthToken _$OAuthTokenFromJson(Map<String, dynamic> json) => OAuthToken(
       json['access_token'] as String,
       json['refresh_token'] as String,
       json['token_type'] as String,
-      json['expires_in'] as int,
+      DateTime.parse(json['expires_at'] as String),
       (json['scope'] as List<dynamic>).map((e) => e as String).toList(),
+      json['id_token'] as String,
     );
 
 Map<String, dynamic> _$OAuthTokenToJson(OAuthToken instance) =>
@@ -19,8 +20,9 @@ Map<String, dynamic> _$OAuthTokenToJson(OAuthToken instance) =>
       'access_token': instance.accessToken,
       'refresh_token': instance.refreshToken,
       'token_type': instance.tokenType,
+      'id_token': instance.idToken,
       'scope': instance.scope,
-      'expires_in': instance.expiresIn,
+      'expires_at': instance.expiresAt.toIso8601String(),
     };
 
 CarpUser _$CarpUserFromJson(Map<String, dynamic> json) => CarpUser(
@@ -29,7 +31,7 @@ CarpUser _$CarpUserFromJson(Map<String, dynamic> json) => CarpUser(
       firstName: json['first_name'] as String,
       lastName: json['last_name'] as String,
       email: json['email'] as String,
-      roles: (json['roles'] as List<dynamic>).map((e) => e as String).toList(),
+      roles: json['roles'] as List<dynamic>,
       token: json['token'] == null
           ? null
           : OAuthToken.fromJson(json['token'] as Map<String, dynamic>),

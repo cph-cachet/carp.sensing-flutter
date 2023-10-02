@@ -19,21 +19,30 @@ class OAuthToken {
   /// The type of token.
   final String tokenType;
 
+  /// The ID token used to uniquely identify the user with KeyCloak.
+  final String idToken;
+
   /// Scope of this token:
   /// - read
   /// - read write
   // TODO : anything else?
   final List<String> scope;
 
-  /// Expires in seconds.
-  int expiresIn;
+  /// Expires in seconds. Defaults to 60 days in the future.
+  DateTime expiresAt;
 
   /// The date the access token was issued.
   final DateTime issuedDate = DateTime.now();
 
   /// Constructor
-  OAuthToken(this.accessToken, this.refreshToken, this.tokenType,
-      this.expiresIn, this.scope);
+  OAuthToken(
+    this.accessToken,
+    this.refreshToken,
+    this.tokenType,
+    this.expiresAt,
+    this.scope,
+    this.idToken,
+  );
 
   static OAuthToken fromAuthorizationTokenResponse(
       AuthorizationTokenResponse response) {
@@ -41,34 +50,42 @@ class OAuthToken {
       response.accessToken.toString(),
       response.refreshToken.toString(),
       response.tokenType.toString(),
-      response.accessTokenExpirationDateTime as int,
+      response.accessTokenExpirationDateTime!,
       response.scopes ?? [],
+      response.idToken.toString(),
+    );
+  }
+
+  static OAuthToken fromTokenResponse(TokenResponse response) {
+    return OAuthToken(
+      response.accessToken.toString(),
+      response.refreshToken.toString(),
+      response.tokenType.toString(),
+      response.accessTokenExpirationDateTime!,
+      response.scopes ?? [],
+      response.idToken.toString(),
     );
   }
 
   /// Clone this token.
-  OAuthToken clone() =>
-      OAuthToken(accessToken, refreshToken, tokenType, expiresIn, scope);
-
-  /// Calculate the date of expiration for the access token.
-  ///
-  /// If access token has expired, the refresh token should be used
-  /// in order to acquire a new access token.
-  DateTime get accessTokenExpiryDate {
-    Duration durationLeft = Duration(seconds: expiresIn);
-    DateTime expiryDate = issuedDate.add(durationLeft);
-    return expiryDate;
-  }
+  OAuthToken clone() => OAuthToken(
+        accessToken,
+        refreshToken,
+        tokenType,
+        expiresAt,
+        scope,
+        idToken,
+      );
 
   /// Expire the authenticated OAuth token for this user.
-  void expire() => expiresIn = 0;
+  void expire() => expiresAt = DateTime.now();
 
   /// Has the access token expired?
-  bool get hasExpired => DateTime.now().isAfter(accessTokenExpiryDate);
+  bool get hasExpired => DateTime.now().isAfter(expiresAt);
 
   String get tokenInfo => "Access Token: $accessToken, "
       "Refresh Token: $refreshToken, "
-      "Expiry date: $accessTokenExpiryDate";
+      "Expiry date: $expiresAt";
 
   factory OAuthToken.fromJson(Map<String, dynamic> json) =>
       _$OAuthTokenFromJson(json);
@@ -76,7 +93,7 @@ class OAuthToken {
 
   @override
   String toString() =>
-      'OAuthToken - accessToken: $accessToken, refresh_token: $refreshToken, token_type: $tokenType, expires_in: $expiresIn, scope: $scope';
+      'OAuthToken - accessToken: $accessToken, refresh_token: $refreshToken, token_type: $tokenType, expires_in: $expiresAt, scope: $scope';
 }
 
 /// Specifies an OAuth 2.0 REST endpoint.

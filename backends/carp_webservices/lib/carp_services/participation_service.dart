@@ -41,7 +41,7 @@ class CarpParticipationService extends CarpBaseService
     accountId ??= currentUser!.id;
 
     Map<String, dynamic> responseJson =
-        await _rpc(GetActiveParticipationInvitations(accountId!));
+        await _rpc(GetActiveParticipationInvitations(accountId));
 
     // we expect a list of 'items' which maps to the invitations
     List<dynamic> items = responseJson['items'] as List<dynamic>;

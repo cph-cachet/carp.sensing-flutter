@@ -56,14 +56,20 @@ class CarpService extends CarpBaseService {
   Stream<AuthEvent> get authStateChanges =>
       _authEventController.stream.asBroadcastStream();
 
-  Future<CarpUser> authenticate() async {
+  /// Makes sure that the [CarpApp] is configured.
+  void makeSureAppIsNotNull() {
     if (_app == null) {
       throw CarpServiceException(
           message:
               "CARP Service not initialized. Call 'CarpService().configure()' first.");
     }
+  }
 
-    var response = await appAuth.authorizeAndExchangeCode(
+  Future<CarpUser> authenticate() async {
+    makeSureAppIsNotNull();
+
+    final AuthorizationTokenResponse? response =
+        await appAuth.authorizeAndExchangeCode(
       AuthorizationTokenRequest(
         _app!.clientId,
         "${_app!.redirectURI}",
@@ -91,8 +97,50 @@ class CarpService extends CarpBaseService {
     );
   }
 
+  Future<CarpUser> refresh() async {
+    makeSureAppIsNotNull();
+
+    final TokenResponse? response = await appAuth.token(
+      TokenRequest(
+        _app!.clientId,
+        "${_app!.redirectURI}",
+        discoveryUrl: "${_app!.discoveryURL}",
+        refreshToken: _currentUser!.token!.refreshToken,
+      ),
+    );
+
+    if (response != null) {
+      _currentUser!.authenticated(OAuthToken.fromTokenResponse(response));
+      _authEventController.add(AuthEvent.refreshed);
+      return _currentUser!;
+    }
+
+    // All other cases are treated as a failed attempt and throws an error
+    _authEventController.add(AuthEvent.failed);
+    _currentUser = null;
+
+    // auth error response from CARP is on the form
+    //      {error: invalid_grant, error_description: Bad credentials}
+    throw CarpServiceException(
+      httpStatus: HTTPStatus(401),
+      message: 'Authentication failed.',
+    );
+  }
+
   /// Logout from CARP
   Future<void> logout() async {
+    await appAuth.endSession(
+      EndSessionRequest(
+        discoveryUrl: "${_app!.discoveryURL}",
+        idTokenHint: _currentUser!.token!.refreshToken,
+        postLogoutRedirectUrl: "carp.studies://login",
+        // additionalParameters: Map<String, String>.from({
+        // "client_id": _app!.clientId,
+        // "id_token_hint": "${_currentUser!.token!.refreshToken}",
+        // }),
+      ),
+    );
+
     _currentUser = null;
   }
 

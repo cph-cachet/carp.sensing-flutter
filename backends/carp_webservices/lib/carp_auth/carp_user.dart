@@ -26,7 +26,7 @@ class CarpUser {
   String lastName;
 
   /// The list of roles that this user has in CARP.
-  List<String> roles = [];
+  List<dynamic> roles = [];
 
   /// The OAuth 2.0 [OAuthToken] for this user, once authenticated to CARP.
   /// Is `null` if user is not authenticated.
@@ -49,7 +49,7 @@ class CarpUser {
       firstName: jwt['given_name'] as String,
       lastName: jwt['family_name'] as String,
       email: jwt['email'] as String,
-      roles: jwt['realm_access']['roles'] as List<String>,
+      roles: jwt['realm_access']['roles'] as List<dynamic>,
     );
     return user;
   }
