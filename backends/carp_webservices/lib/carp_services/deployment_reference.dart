@@ -118,7 +118,7 @@ class DeploymentReference extends RPCCarpReference {
 
     // converting it to a SmartphoneDeployment and saving it
     return _deployment = SmartphoneDeployment.fromPrimaryDeviceDeployment(
-      studyId: CarpService().app?.studyId,
+      studyId: CarpService().app.studyId,
       studyDeploymentId: studyDeploymentId,
       deployment: downloaded,
     );

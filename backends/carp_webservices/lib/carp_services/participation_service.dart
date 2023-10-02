@@ -100,8 +100,8 @@ class CarpParticipationService extends CarpBaseService
     }
 
     // make sure that the correct study and deployment ids are saved in the app
-    CarpService().app!.studyId = invitation?.studyId;
-    CarpService().app!.studyDeploymentId = invitation?.studyDeploymentId;
+    CarpService().app.studyId = invitation?.studyId;
+    CarpService().app.studyDeploymentId = invitation?.studyDeploymentId;
 
     return invitation;
   }

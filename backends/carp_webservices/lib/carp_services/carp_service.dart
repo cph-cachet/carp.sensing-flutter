@@ -42,11 +42,17 @@ class CarpService extends CarpBaseService {
   /// The fomat is `https://cans.cachet.dk/forgotten` for the production host
   /// and `https://cans.cachet.dk/portal/stage/forgotten` for the stage, test,
   /// and dev hosts.
-  Uri get authEndpointUri => _app!.authURL;
+  Uri get authEndpointUri => app.authURL;
 
   /// Is a user authenticated?
   /// If `true`, the authenticated user is [currentUser].
   bool get authenticated => (_currentUser != null);
+
+  @override
+  CarpApp get app => nonNullAble(_app);
+
+  @override
+  CarpUser get currentUser => nonNullAble(_currentUser);
 
   final StreamController<AuthEvent> _authEventController =
       StreamController.broadcast();
@@ -56,33 +62,38 @@ class CarpService extends CarpBaseService {
   Stream<AuthEvent> get authStateChanges =>
       _authEventController.stream.asBroadcastStream();
 
-  /// Makes sure that the [CarpApp] is configured.
-  void makeSureAppIsNotNull() {
-    if (_app == null) {
+  /// Makes sure that the [CarpApp] or [CarpUser] is configured, by throwing a [CarpServiceException] if they are null.
+  /// Otherwise, returns the non-null value.
+  T nonNullAble<T>(T? argument) {
+    if (argument == null && argument is CarpApp) {
       throw CarpServiceException(
           message:
               "CARP Service not initialized. Call 'CarpService().configure()' first.");
+    } else if (argument == null && argument is CarpUser) {
+      throw CarpServiceException(
+          message:
+              "CARP User not authenticated. Call 'CarpService().authenticate()' first.");
+    } else {
+      return argument!;
     }
   }
 
   Future<CarpUser> authenticate() async {
-    makeSureAppIsNotNull();
-
     final AuthorizationTokenResponse? response =
         await appAuth.authorizeAndExchangeCode(
       AuthorizationTokenRequest(
-        _app!.clientId,
-        "${_app!.redirectURI}",
-        discoveryUrl: "${_app!.discoveryURL}",
+        app.clientId,
+        "${app.redirectURI}",
+        discoveryUrl: "${app.discoveryURL}",
       ),
     );
 
     if (response != null) {
       _currentUser = await getCurrentUserProfile(response);
-      _currentUser!
+      currentUser
           .authenticated(OAuthToken.fromAuthorizationTokenResponse(response));
       _authEventController.add(AuthEvent.authenticated);
-      return _currentUser!;
+      return currentUser;
     }
 
     // All other cases are treated as a failed attempt and throws an error
@@ -98,21 +109,19 @@ class CarpService extends CarpBaseService {
   }
 
   Future<CarpUser> refresh() async {
-    makeSureAppIsNotNull();
-
     final TokenResponse? response = await appAuth.token(
       TokenRequest(
-        _app!.clientId,
-        "${_app!.redirectURI}",
-        discoveryUrl: "${_app!.discoveryURL}",
-        refreshToken: _currentUser!.token!.refreshToken,
+        app.clientId,
+        "${app.redirectURI}",
+        discoveryUrl: "${app.discoveryURL}",
+        refreshToken: currentUser.token!.refreshToken,
       ),
     );
 
     if (response != null) {
-      _currentUser!.authenticated(OAuthToken.fromTokenResponse(response));
+      currentUser.authenticated(OAuthToken.fromTokenResponse(response));
       _authEventController.add(AuthEvent.refreshed);
-      return _currentUser!;
+      return currentUser;
     }
 
     // All other cases are treated as a failed attempt and throws an error
@@ -131,13 +140,9 @@ class CarpService extends CarpBaseService {
   Future<void> logout() async {
     await appAuth.endSession(
       EndSessionRequest(
-        discoveryUrl: "${_app!.discoveryURL}",
-        idTokenHint: _currentUser!.token!.refreshToken,
+        discoveryUrl: "${app.discoveryURL}",
+        idTokenHint: currentUser.token!.refreshToken,
         postLogoutRedirectUrl: "carp.studies://login",
-        // additionalParameters: Map<String, String>.from({
-        // "client_id": _app!.clientId,
-        // "id_token_hint": "${_currentUser!.token!.refreshToken}",
-        // }),
       ),
     );
 
@@ -150,10 +155,10 @@ class CarpService extends CarpBaseService {
 
   /// The URL for the current user end point for this [CarpService].
   String get currentUserEndpointUri =>
-      "${_app!.uri.toString()}/api/users/current";
+      "${app.uri.toString()}/api/users/current";
 
   /// The URL for the user endpoint for this [CarpService].
-  String get userEndpointUri => "${_app!.uri.toString()}/api/users";
+  String get userEndpointUri => "${app.uri.toString()}/api/users";
 
   /// Asynchronously gets the CARP profile of the current user.
   Future<CarpUser> getCurrentUserProfile(
@@ -165,7 +170,7 @@ class CarpService extends CarpBaseService {
   /// The headers for any authenticated HTTP REST call to this [CarpService].
   @override
   Map<String, String> get headers {
-    if (_currentUser!.token == null) {
+    if (currentUser.token == null) {
       throw CarpServiceException(
           message:
               "OAuth token is null. Call 'CarpService().authenticate()' first.");
@@ -173,7 +178,7 @@ class CarpService extends CarpBaseService {
 
     return {
       "Content-Type": "application/json",
-      "Authorization": "bearer ${_currentUser!.token!.accessToken}",
+      "Authorization": "bearer ${currentUser.token!.accessToken}",
       "cache-control": "no-cache"
     };
   }
@@ -184,7 +189,7 @@ class CarpService extends CarpBaseService {
 
   /// The URL for the consent document end point for this [CarpService].
   String get consentDocumentEndpointUri =>
-      "${_app!.uri.toString()}/api/deployments/${_app!.studyDeploymentId}/consent-documents";
+      "${app.uri.toString()}/api/deployments/${app.studyDeploymentId}/consent-documents";
 
   /// Create a new (signed) consent document for this user.
   /// Returns the created [ConsentDocument] if the document is uploaded correctly.
@@ -249,7 +254,7 @@ class CarpService extends CarpBaseService {
 
   /// The URL for the file end point for this [CarpService].
   String get fileEndpointUri =>
-      "${_app!.uri.toString()}/api/studies/${_app!.studyId}/files";
+      "${app.uri.toString()}/api/studies/${app.studyId}/files";
 
   /// Get a [FileStorageReference] that reference a file at the current
   /// CarpService storage location.
@@ -325,7 +330,7 @@ class CarpService extends CarpBaseService {
 
   /// The URL for the document end point for this [CarpService].
   String get documentEndpointUri =>
-      "${_app!.uri.toString()}/api/studies/${_app!.studyId}/documents";
+      "${app.uri.toString()}/api/studies/${app.studyId}/documents";
 
   /// Get a list documents based on a query.
   ///
