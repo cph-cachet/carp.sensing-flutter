@@ -60,8 +60,7 @@ abstract class CarpBaseService {
 
     return {
       "Content-Type": "application/json",
-      "Authorization":
-          "bearer ${CarpService().currentUser.token!.accessToken}",
+      "Authorization": "bearer ${CarpService().currentUser.token!.accessToken}",
       "cache-control": "no-cache"
     };
   }

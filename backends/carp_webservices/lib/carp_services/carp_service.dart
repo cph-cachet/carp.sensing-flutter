@@ -85,6 +85,7 @@ class CarpService extends CarpBaseService {
         app.clientId,
         "${app.redirectURI}",
         discoveryUrl: "${app.discoveryURL}",
+        scopes: ['openid'] // To get an ID token
       ),
     );
 
@@ -141,8 +142,8 @@ class CarpService extends CarpBaseService {
     await appAuth.endSession(
       EndSessionRequest(
         discoveryUrl: "${app.discoveryURL}",
-        idTokenHint: currentUser.token!.refreshToken,
-        postLogoutRedirectUrl: "carp.studies://login",
+        idTokenHint: currentUser.token!.idToken,
+        postLogoutRedirectUrl: "study-app://auth",
       ),
     );
 
