@@ -16,11 +16,10 @@ class SensorSamplingPackage extends SmartphoneSamplingPackage {
   static const String NON_GRAVITATIONAL_ACCELERATION =
       CarpDataTypes.NON_GRAVITATIONAL_ACCELERATION_TYPE_NAME;
 
-
   /// same as NON_GRAVITATIONAL_ACCELERATION, but averaged over a period
   ///  * Uses a [PeriodicSamplingConfiguration] for configuration.
-  static const String NON_GRAVITATIONAL_ACCELERATION_AVERAGE =
-      'nongravitationalacceleration_average';
+  static const String AVERAGE_NON_GRAVITATIONAL_ACCELERATION =
+      'averagenongravitationalacceleration';
 
   /// Rotation of the device in x,y,z (typically measured by a gyroscope).
   ///  * Event-based measure.
@@ -62,8 +61,8 @@ class SensorSamplingPackage extends SmartphoneSamplingPackage {
             CarpDataTypes().types[CarpDataTypes.MAGNETIC_FIELD_TYPE_NAME]!),
         DataTypeSamplingScheme(
             DataTypeMetaData(
-              type: NON_GRAVITATIONAL_ACCELERATION_AVERAGE,
-              displayName: "Non Gravitational Accelerometer Average",
+              type: AVERAGE_NON_GRAVITATIONAL_ACCELERATION,
+              displayName: "Average Non Gravitational Accelerometer",
               timeType: DataTimeType.TIME_SPAN,
             ),
             PeriodicSamplingConfiguration(
@@ -89,14 +88,14 @@ class SensorSamplingPackage extends SmartphoneSamplingPackage {
         return AccelerometerProbe();
       case NON_GRAVITATIONAL_ACCELERATION:
         return UserAccelerometerProbe();
+      case AVERAGE_NON_GRAVITATIONAL_ACCELERATION:
+        return AverageUserAccelerometerProbe();
       case MAGNETIC_FIELD:
         return MagnetometerProbe();
       case ROTATION:
         return GyroscopeProbe();
       case STEP_COUNT:
         return PedometerProbe();
-      case NON_GRAVITATIONAL_ACCELERATION_AVERAGE:
-        return UserAccelerometerAverageProbe();
       case AMBIENT_LIGHT:
         return (Platform.isAndroid) ? LightProbe() : null;
       default:

@@ -21,74 +21,46 @@ class UserAccelerometerProbe extends StreamProbe {
       Measurement.fromData(Acceleration(x: event.x, y: event.y, z: event.z)));
 }
 
-
-class UserAccelerometerAverageProbe extends BufferingPeriodicStreamProbe {
-  List<UserAccelerometerEvent>userAccelerometerEventList=[];
+/// A probe collecting average accelerometer data collected over a sampling
+/// period. Configured with a [PeriodicSamplingConfiguration] configuration.
+class AverageUserAccelerometerProbe extends BufferingPeriodicStreamProbe {
+  List<UserAccelerometerEvent> userAccelerometerEventList = [];
   int sensorStartTime = 0;
   int? sensorEndTime;
 
-  late Stream<dynamic> _bufferingStream;
-
   @override
-  Stream<dynamic> get bufferingStream => _bufferingStream;
-
-  @override
-  bool onInitialize() {
-    _bufferingStream = userAccelerometerEvents;
-    return true;
-  }
+  Stream<dynamic> get bufferingStream => userAccelerometerEvents;
 
   @override
   Future<Measurement?> getMeasurement() async {
     if (userAccelerometerEventList.isEmpty) return null;
 
-
     // compute averages of accelerometer
     // xm, ym, zm: normal averages (or means)
     // xms, yms, zms: averages of squared values
     // n: number of values included
-    int n =userAccelerometerEventList.length;
-    double xms=0;
-    double yms=0;
-    double zms=0;
+    int n = userAccelerometerEventList.length;
+    double xms = 0, yms = 0, zms = 0;
+    double xm = 0, ym = 0, zm = 0;
 
-    double xm=0;
-    double ym=0;
-    double zm=0;
-
-    for(UserAccelerometerEvent uDatum in (userAccelerometerEventList)){
-      if(uDatum.x!=null){
-        xms=xms+(uDatum.x!)*(uDatum.x!);
-        xm=xm+uDatum.x!;
-      }
-
-      if(uDatum.y!=null){
-        yms=yms+(uDatum.y!)*(uDatum.y!);
-        ym=ym+uDatum.y!;
-      }
-
-      if(uDatum.z!=null){
-        zms=zms+(uDatum.z!)*(uDatum.z!);
-        zm=zm+uDatum.z!;
-      }
+    for (UserAccelerometerEvent event in (userAccelerometerEventList)) {
+      xms += (event.x) * (event.x);
+      xm += event.x;
+      yms += (event.y) * (event.y);
+      ym += event.y;
+      zms += (event.z) * (event.z);
+      zm += event.z;
     }
 
-    xms=xms/n;
-    xm=xm/n;
-    yms=yms/n;
-    ym=ym/n;
-    zms=zms/n;
-    zm=zm/n;
-
+    xms = xms / n;
+    xm = xm / n;
+    yms = yms / n;
+    ym = ym / n;
+    zms = zms / n;
+    zm = zm / n;
 
     var data = AverageAccelerometer(
-        xm: xm,
-        ym: ym,
-        zm: zm,
-        xms: xms,
-        yms: yms,
-        zms: zms,
-        n: n);
+        xm: xm, ym: ym, zm: zm, xms: xms, yms: yms, zms: zms, n: n);
 
     return Measurement(
         sensorStartTime: sensorStartTime,
@@ -109,12 +81,11 @@ class UserAccelerometerAverageProbe extends BufferingPeriodicStreamProbe {
 
   @override
   void onSamplingData(event) {
-     if(event is UserAccelerometerEvent){
-       userAccelerometerEventList.add(event);
-      }
+    if (event is UserAccelerometerEvent) {
+      userAccelerometerEventList.add(event);
+    }
   }
 }
-
 
 /// A probe collecting raw data from the gyroscope.
 class GyroscopeProbe extends StreamProbe {

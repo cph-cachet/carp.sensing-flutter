@@ -33,17 +33,33 @@ class AmbientLight extends SensorData {
 
 @JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
 class AverageAccelerometer extends SensorData {
-  static const dataType = SensorSamplingPackage.NON_GRAVITATIONAL_ACCELERATION_AVERAGE;
+  static const dataType =
+      SensorSamplingPackage.AVERAGE_NON_GRAVITATIONAL_ACCELERATION;
 
+  /// Average (mean) over X.
   double? xm;
+
+  /// Average (mean) over Y.
   double? ym;
+
+  /// Average (mean) over Z.
   double? zm;
+
+  /// Average over squared X (X^2)
   double? xms;
+
+  /// Average over squared Y (X^2)
   double? yms;
+
+  /// Average over squared Z (X^2)
   double? zms;
+
+  /// Number of values included
   int? n;
 
-  AverageAccelerometer({this.xm, this.ym, this.zm, this.xms, this.yms, this.zms,this.n}) : super();
+  AverageAccelerometer(
+      {this.xm, this.ym, this.zm, this.xms, this.yms, this.zms, this.n})
+      : super();
 
   @override
   Function get fromJsonFunction => _$AverageAccelerometerFromJson;
