@@ -23,6 +23,10 @@ class CarpApp {
   /// Redirect URI for OAuth
   final Uri redirectURI;
 
+  /// Redirect uri for OAuth after logout
+  /// If not specified, the [redirectURI] is used.
+  Uri? logoutRedirectURI;
+
   /// Discovery URI for OAuth
   final Uri discoveryURL;
 
@@ -48,6 +52,7 @@ class CarpApp {
     required this.discoveryURL,
     this.studyDeploymentId,
     this.studyId,
+    this.logoutRedirectURI,
   });
 
   @override

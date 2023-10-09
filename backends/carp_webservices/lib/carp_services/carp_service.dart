@@ -143,7 +143,7 @@ class CarpService extends CarpBaseService {
       EndSessionRequest(
         discoveryUrl: "${app.discoveryURL}",
         idTokenHint: currentUser.token!.idToken,
-        postLogoutRedirectUrl: "study-app://auth",
+        postLogoutRedirectUrl: "${app.logoutRedirectURI ?? app.redirectURI}",
       ),
     );
 
