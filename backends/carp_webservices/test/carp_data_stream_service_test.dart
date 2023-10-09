@@ -22,14 +22,11 @@ void main() {
       studyDeploymentId: testDeploymentId,
       name: "Unit Test",
       uri: Uri.parse(uri),
-      oauth: OAuthEndPoint(clientID: clientID, clientSecret: clientSecret),
     );
 
     CarpService().configure(app);
 
     user = await CarpService().authenticate(
-      username: username,
-      password: password,
     );
 
     CarpDataStreamService().configureFrom(CarpService());

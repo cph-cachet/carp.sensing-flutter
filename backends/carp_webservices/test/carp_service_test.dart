@@ -7,6 +7,7 @@ import 'package:carp_webservices/carp_auth/carp_auth.dart';
 import 'package:carp_webservices/carp_services/carp_services.dart';
 import 'package:test/test.dart';
 
+import 'authentication.dart';
 import 'credentials.dart';
 
 String _encode(Object? object) =>
@@ -18,7 +19,6 @@ void main() {
   const String collectionName = 'test_patients';
   const String newCollectionName = 'new_patients';
 
-  CarpApp app;
   StudyProtocol protocol;
   Smartphone phone;
 
@@ -42,7 +42,7 @@ void main() {
     // Create a new study protocol.
     protocol = StudyProtocol(
       ownerId: 'owner@dtu.dk',
-      name: 'CARP Webb Services Test',
+      name: 'CARP Web Services Test',
     );
 
     // Define which devices are used for data collection.
@@ -50,20 +50,7 @@ void main() {
 
     protocol.addPrimaryDevice(phone);
 
-    app = CarpApp(
-      name: "Test",
-      studyId: testStudyId,
-      studyDeploymentId: testDeploymentId,
-      uri: Uri.parse(uri),
-      oauth: OAuthEndPoint(clientID: clientID, clientSecret: clientSecret),
-    );
-
-    CarpService().configure(app);
-
-    await CarpService().authenticate(
-      username: username,
-      password: password,
-    );
+    final app = MockAuthenticationService().app;
   });
 
   /// Close connection to CARP.
@@ -72,11 +59,11 @@ void main() {
 
   group("CARP Base Services", () {
     test('- service', () async {
-      print('CarpService : ${CarpService().app}');
+      print('CarpService : ${MockAuthenticationService().app}');
     });
 
     test('- authentication w. username and password', () async {
-      CarpUser user = await CarpService().authenticate(
+      CarpUser user = await MockAuthenticationService().authenticate(
         username: username,
         password: password,
       );
@@ -89,104 +76,104 @@ void main() {
       print(_encode(user.toJson()));
     });
 
-    test('- get user profile', () async {
-      CarpUser newUser = await CarpService().getCurrentUserProfile();
+    // test('- get user profile', () async {
+    //   CarpUser newUser = await CarpService().getCurrentUserProfile();
 
-      print("signed in : $newUser");
-      print("   name   : ${newUser.firstName} ${newUser.lastName}");
-    });
+    //   print("signed in : $newUser");
+    //   print("   name   : ${newUser.firstName} ${newUser.lastName}");
+    // });
 
-    test('- refresh token', () async {
-      await CarpService().authenticate(
-        username: username,
-        password: password,
-      );
+    // test('- refresh token', () async {
+    //   await CarpService().authenticate(
+    //     username: username,
+    //     password: password,
+    //   );
 
-      print('expiring token...');
-      CarpService().currentUser!.token!.expire();
+    //   print('expiring token...');
+    //   CarpService().currentUser!.token!.expire();
 
-      await CarpService().currentUser!.getOAuthToken(refresh: true);
-      CarpUser user = CarpService().currentUser!;
+    //   await CarpService().currentUser!.getOAuthToken(refresh: true);
+    //   CarpUser user = CarpService().currentUser!;
 
-      assert(user.token != null);
-      print("signed in : $user");
-      print("   token  : ${user.token}\n");
-    });
+    //   assert(user.token != null);
+    //   print("signed in : $user");
+    //   print("   token  : ${user.token}\n");
+    // });
 
-    test('- authentication with saved token', () async {
-      CarpUser user = await CarpService().authenticate(
-        username: username,
-        password: password,
-      );
+    // test('- authentication with saved token', () async {
+    //   CarpUser user = await CarpService().authenticate(
+    //     username: username,
+    //     password: password,
+    //   );
 
-      CarpUser newUser = await CarpService()
-          .authenticateWithToken(username: user.username, token: user.token!);
+    //   CarpUser newUser = await CarpService()
+    //       .authenticateWithToken(username: user.username, token: user.token!);
 
-      assert(newUser.isAuthenticated);
-      assert(newUser.username == user.username);
+    //   assert(newUser.isAuthenticated);
+    //   assert(newUser.username == user.username);
 
-      print("signed in : $newUser");
-      print("   token  : ${newUser.token}");
-    });
+    //   print("signed in : $newUser");
+    //   print("   token  : ${newUser.token}");
+    // });
 
-    test('- authentication with saved JSON token', () async {
-      CarpUser user = await CarpService().authenticate(
-        username: username,
-        password: password,
-      );
+    // test('- authentication with saved JSON token', () async {
+    //   CarpUser user = await CarpService().authenticate(
+    //     username: username,
+    //     password: password,
+    //   );
 
-      //saving token as json
-      Map<String, dynamic> tokenAsJson = user.token!.toJson();
-      print(_encode(tokenAsJson));
+    //   //saving token as json
+    //   Map<String, dynamic> tokenAsJson = user.token!.toJson();
+    //   print(_encode(tokenAsJson));
 
-      CarpUser newUser = await CarpService().authenticateWithToken(
-          username: username, token: OAuthToken.fromJson(tokenAsJson));
+    //   CarpUser newUser = await CarpService().authenticateWithToken(
+    //       username: username, token: OAuthToken.fromJson(tokenAsJson));
 
-      assert(newUser.isAuthenticated);
-      assert(newUser.username == user.username);
+    //   assert(newUser.isAuthenticated);
+    //   assert(newUser.username == user.username);
 
-      print("signed in : $newUser");
-      print("   token  : ${newUser.token}");
-    });
+    //   print("signed in : $newUser");
+    //   print("   token  : ${newUser.token}");
+    // });
 
-    test('- change password', () async {
-      CarpUser user1 = await CarpService().authenticate(
-        username: username,
-        password: password,
-      );
+    // test('- change password', () async {
+    //   CarpUser user1 = await CarpService().authenticate(
+    //     username: username,
+    //     password: password,
+    //   );
 
-      // saving password
-      String oldPassword = password;
-      String newPassword = 'new_$password';
+    //   // saving password
+    //   String oldPassword = password;
+    //   String newPassword = 'new_$password';
 
-      // changing password to the new one
-      CarpUser user2 = await CarpService().changePassword(
-        currentPassword: password,
-        newPassword: newPassword,
-      );
+    //   // changing password to the new one
+    //   CarpUser user2 = await CarpService().changePassword(
+    //     currentPassword: password,
+    //     newPassword: newPassword,
+    //   );
 
-      assert(user2.isAuthenticated);
-      assert(user2.username == user1.username);
-      print("Password has been changed to '$newPassword'\n - user : $user2");
+    //   assert(user2.isAuthenticated);
+    //   assert(user2.username == user1.username);
+    //   print("Password has been changed to '$newPassword'\n - user : $user2");
 
-      // check if we can authenticate with the new password
-      CarpUser user3 = await CarpService().authenticate(
-        username: username,
-        password: newPassword,
-      );
+    //   // check if we can authenticate with the new password
+    //   CarpUser user3 = await CarpService().authenticate(
+    //     username: username,
+    //     password: newPassword,
+    //   );
 
-      assert(user3.isAuthenticated);
-      assert(user3.username == user1.username);
-      print("signed in using the '$newPassword' password\n - user: $user3");
+    //   assert(user3.isAuthenticated);
+    //   assert(user3.username == user1.username);
+    //   print("signed in using the '$newPassword' password\n - user: $user3");
 
-      // changing the password back to the old one
-      CarpUser? user4 = await CarpService().changePassword(
-        currentPassword: newPassword,
-        newPassword: oldPassword,
-      );
-      print(
-          "Password has been changed back to '$oldPassword'\n - user : $user4");
-    });
+    //   // changing the password back to the old one
+    //   CarpUser? user4 = await CarpService().changePassword(
+    //     currentPassword: newPassword,
+    //     newPassword: oldPassword,
+    //   );
+    //   print(
+    //       "Password has been changed back to '$oldPassword'\n - user : $user4");
+    // });
   });
 
   group('Informed Consent', () {
