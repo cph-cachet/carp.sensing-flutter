@@ -107,7 +107,8 @@ class LocationManager {
         description: configuration?.notificationDescription ??
             'Background location is on to keep the app up-to-date with your location. '
                 'This is required for main features to work properly when the app is not in use.',
-        onTapBringToFront: false,
+        onTapBringToFront: configuration?.notificationOnTapBringToFront??false,
+        iconName: configuration?.notificationIconName
       );
     } catch (error) {
       warning('$runtimeType - Configuration failed - $error');
