@@ -44,6 +44,12 @@ class LocationService extends OnlineService {
   /// Only used on Android.
   String? notificationDescription;
 
+  /// The icon in Android/app/main/res/drawable folder .
+  String? notificationIconName;
+
+  // if a tap on the notification will bring the app to the front
+  bool? notificationOnTapBringToFront;
+
   /// Create and configure a [LocationService].
   ///
   /// Default configuration is:
@@ -59,6 +65,8 @@ class LocationService extends OnlineService {
     this.notificationTitle,
     this.notificationMessage,
     this.notificationDescription,
+    this.notificationIconName,
+    this.notificationOnTapBringToFront,
   }) : super(
           roleName: roleName ?? DEFAULT_ROLENAME,
         ) {
