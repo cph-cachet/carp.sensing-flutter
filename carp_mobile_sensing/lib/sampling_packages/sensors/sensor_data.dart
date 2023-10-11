@@ -30,3 +30,45 @@ class AmbientLight extends SensorData {
   String toString() =>
       '${super.toString()}, avgLux: $meanLux, stdLux: $stdLux, minLux: $minLux, maxLux: $maxLux';
 }
+
+@JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
+class AverageAccelerometer extends SensorData {
+  static const dataType =
+      SensorSamplingPackage.AVERAGE_NON_GRAVITATIONAL_ACCELERATION;
+
+  /// Average (mean) over X.
+  double? xm;
+
+  /// Average (mean) over Y.
+  double? ym;
+
+  /// Average (mean) over Z.
+  double? zm;
+
+  /// Average over squared X (X^2)
+  double? xms;
+
+  /// Average over squared Y (X^2)
+  double? yms;
+
+  /// Average over squared Z (X^2)
+  double? zms;
+
+  /// Number of values included
+  int? n;
+
+  AverageAccelerometer(
+      {this.xm, this.ym, this.zm, this.xms, this.yms, this.zms, this.n})
+      : super();
+
+  @override
+  Function get fromJsonFunction => _$AverageAccelerometerFromJson;
+  factory AverageAccelerometer.fromJson(Map<String, dynamic> json) =>
+      FromJsonFactory().fromJson(json) as AverageAccelerometer;
+  @override
+  Map<String, dynamic> toJson() => _$AverageAccelerometerToJson(this);
+
+  @override
+  String toString() =>
+      '${super.toString()}, n: $n, xm: $xm, ym: $ym, zm: $zm , xms: $xms, yms: $yms, zms: $zms';
+}

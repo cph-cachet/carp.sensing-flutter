@@ -78,7 +78,6 @@ void main() {
         connectable: true,
         txPowerLevel: 314,
         rssi: 567,
-        bluetoothDeviceType: "classic",
       ));
 
     final measurement = Measurement.fromData(data);

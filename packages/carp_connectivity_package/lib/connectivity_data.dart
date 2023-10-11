@@ -133,13 +133,6 @@ class BluetoothDevice {
   /// The bluetooth name of the nearby device.
   String bluetoothDeviceName;
 
-  /// The type of bluetooth device:
-  /// - classic
-  /// - dual
-  /// - le
-  /// - unknown
-  String bluetoothDeviceType;
-
   /// Is the device connectable.
   bool connectable;
 
@@ -153,35 +146,19 @@ class BluetoothDevice {
     required this.advertisementName,
     required this.bluetoothDeviceId,
     required this.bluetoothDeviceName,
-    required this.bluetoothDeviceType,
     required this.connectable,
     required this.rssi,
     this.txPowerLevel,
   }) : super();
 
   factory BluetoothDevice.fromScanResult(ScanResult result) => BluetoothDevice(
-      bluetoothDeviceId: result.device.remoteId.str,
-      bluetoothDeviceName: result.device.localName,
-      connectable: result.advertisementData.connectable,
-      txPowerLevel: result.advertisementData.txPowerLevel,
-      advertisementName: result.advertisementData.localName,
-      rssi: result.rssi,
-      bluetoothDeviceType: getBluetoothDeviceType(
-        result.device.type,
-      ));
-
-  static String getBluetoothDeviceType(BluetoothDeviceType type) {
-    switch (type) {
-      case BluetoothDeviceType.classic:
-        return "classic";
-      case BluetoothDeviceType.dual:
-        return "dual";
-      case BluetoothDeviceType.le:
-        return "le";
-      default:
-        return "unknown";
-    }
-  }
+        bluetoothDeviceId: result.device.remoteId.str,
+        bluetoothDeviceName: result.device.platformName,
+        connectable: result.advertisementData.connectable,
+        txPowerLevel: result.advertisementData.txPowerLevel,
+        advertisementName: result.advertisementData.localName,
+        rssi: result.rssi,
+      );
 
   factory BluetoothDevice.fromJson(Map<String, dynamic> json) =>
       _$BluetoothDeviceFromJson(json);
@@ -192,7 +169,6 @@ class BluetoothDevice {
       ', advertisementName: $advertisementName'
       ', id: $bluetoothDeviceId'
       ', name: $bluetoothDeviceName'
-      ', type: $bluetoothDeviceType'
       ', connectable: $connectable'
       ', rssi: $rssi';
 }

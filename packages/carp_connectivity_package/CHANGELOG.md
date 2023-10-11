@@ -1,3 +1,8 @@
+## 1.3.1
+
+* fix of [Issue [#339](https://github.com/cph-cachet/carp.sensing-flutter/issues/339).
+* `bluetoothDeviceType` no longer available from underlying BLE API.
+
 ## 1.3.0
 
 * upgrade of uuid and permission_handler plugins

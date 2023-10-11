@@ -16,6 +16,11 @@ class SensorSamplingPackage extends SmartphoneSamplingPackage {
   static const String NON_GRAVITATIONAL_ACCELERATION =
       CarpDataTypes.NON_GRAVITATIONAL_ACCELERATION_TYPE_NAME;
 
+  /// same as NON_GRAVITATIONAL_ACCELERATION, but averaged over a period
+  ///  * Uses a [PeriodicSamplingConfiguration] for configuration.
+  static const String AVERAGE_NON_GRAVITATIONAL_ACCELERATION =
+      'averagenongravitationalacceleration';
+
   /// Rotation of the device in x,y,z (typically measured by a gyroscope).
   ///  * Event-based measure.
   ///  * Uses the [Smartphone] device for data collection.
@@ -56,6 +61,16 @@ class SensorSamplingPackage extends SmartphoneSamplingPackage {
             CarpDataTypes().types[CarpDataTypes.MAGNETIC_FIELD_TYPE_NAME]!),
         DataTypeSamplingScheme(
             DataTypeMetaData(
+              type: AVERAGE_NON_GRAVITATIONAL_ACCELERATION,
+              displayName: "Average Non Gravitational Accelerometer",
+              timeType: DataTimeType.TIME_SPAN,
+            ),
+            PeriodicSamplingConfiguration(
+              interval: const Duration(minutes: 1),
+              duration: const Duration(seconds: 2),
+            )),
+        DataTypeSamplingScheme(
+            DataTypeMetaData(
               type: AMBIENT_LIGHT,
               displayName: "Ambient Light",
               timeType: DataTimeType.TIME_SPAN,
@@ -73,6 +88,8 @@ class SensorSamplingPackage extends SmartphoneSamplingPackage {
         return AccelerometerProbe();
       case NON_GRAVITATIONAL_ACCELERATION:
         return UserAccelerometerProbe();
+      case AVERAGE_NON_GRAVITATIONAL_ACCELERATION:
+        return AverageUserAccelerometerProbe();
       case MAGNETIC_FIELD:
         return MagnetometerProbe();
       case ROTATION:

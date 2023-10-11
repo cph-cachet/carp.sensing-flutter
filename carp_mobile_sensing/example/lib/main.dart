@@ -196,15 +196,32 @@ class LocalStudyProtocolManager implements StudyProtocolManager {
       phone,
     );
 
+    // // Collect IMU data every 10 secs for 1 sec.
+    // protocol.addTaskControl(
+    //   PeriodicTrigger(period: const Duration(seconds: 10)),
+    //   BackgroundTask(
+    //     measures: [
+    //       Measure(type: SensorSamplingPackage.ACCELERATION),
+    //       Measure(type: SensorSamplingPackage.ROTATION),
+    //     ],
+    //     duration: const IsoDuration(seconds: 1),
+    //   ),
+    //   phone,
+    // );
+
     // Collect IMU data every 10 secs for 1 sec.
     protocol.addTaskControl(
-      PeriodicTrigger(period: const Duration(seconds: 10)),
+      ImmediateTrigger(),
       BackgroundTask(
         measures: [
-          Measure(type: SensorSamplingPackage.ACCELERATION),
-          Measure(type: SensorSamplingPackage.ROTATION),
+          Measure(
+              type:
+                  SensorSamplingPackage.AVERAGE_NON_GRAVITATIONAL_ACCELERATION)
+            ..overrideSamplingConfiguration = PeriodicSamplingConfiguration(
+              interval: const Duration(minutes: 1),
+              duration: const Duration(seconds: 2),
+            ),
         ],
-        duration: const IsoDuration(seconds: 1),
       ),
       phone,
     );
