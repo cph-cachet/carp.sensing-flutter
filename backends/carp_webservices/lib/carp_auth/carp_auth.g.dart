@@ -13,17 +13,27 @@ OAuthToken _$OAuthTokenFromJson(Map<String, dynamic> json) => OAuthToken(
       DateTime.parse(json['expires_at'] as String),
       (json['scope'] as List<dynamic>).map((e) => e as String).toList(),
       json['id_token'] as String,
-    );
+    )..expiresIn = json['expires_in'] as int?;
 
-Map<String, dynamic> _$OAuthTokenToJson(OAuthToken instance) =>
-    <String, dynamic>{
-      'access_token': instance.accessToken,
-      'refresh_token': instance.refreshToken,
-      'token_type': instance.tokenType,
-      'id_token': instance.idToken,
-      'scope': instance.scope,
-      'expires_at': instance.expiresAt.toIso8601String(),
-    };
+Map<String, dynamic> _$OAuthTokenToJson(OAuthToken instance) {
+  final val = <String, dynamic>{
+    'access_token': instance.accessToken,
+    'refresh_token': instance.refreshToken,
+    'token_type': instance.tokenType,
+    'id_token': instance.idToken,
+    'scope': instance.scope,
+    'expires_at': instance.expiresAt.toIso8601String(),
+  };
+
+  void writeNotNull(String key, dynamic value) {
+    if (value != null) {
+      val[key] = value;
+    }
+  }
+
+  writeNotNull('expires_in', instance.expiresIn);
+  return val;
+}
 
 CarpUser _$CarpUserFromJson(Map<String, dynamic> json) => CarpUser(
       username: json['username'] as String,

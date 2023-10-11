@@ -7,7 +7,7 @@ import 'package:carp_webservices/carp_auth/carp_auth.dart';
 import 'package:carp_webservices/carp_services/carp_services.dart';
 import 'package:test/test.dart';
 
-import 'authentication.dart';
+import 'mock_authentication_service.dart';
 import 'credentials.dart';
 
 String _encode(Object? object) =>
@@ -49,8 +49,6 @@ void main() {
     phone = Smartphone();
 
     protocol.addPrimaryDevice(phone);
-
-    final app = MockAuthenticationService().app;
   });
 
   /// Close connection to CARP.
@@ -58,9 +56,9 @@ void main() {
   tearDownAll(() {});
 
   group("CARP Base Services", () {
-    test('- service', () async {
-      print('CarpService : ${MockAuthenticationService().app}');
-    });
+    // test('- service', () async {
+    //   print('CarpService : ${MockAuthenticationService().app}');
+    // });
 
     test('- authentication w. username and password', () async {
       CarpUser user = await MockAuthenticationService().authenticate(
@@ -68,37 +66,41 @@ void main() {
         password: password,
       );
 
-      assert(user.token != null);
-      assert(user.isAuthenticated);
+      expect(user.token, isNotNull);
+      expect(user.isAuthenticated, true);
 
       print("signed in : $user");
-      print("   token  : ${user.token}");
-      print(_encode(user.toJson()));
+      print("token  : ${user.token}");
     });
 
-    // test('- get user profile', () async {
-    //   CarpUser newUser = await CarpService().getCurrentUserProfile();
+    setUp(() async {
+      await MockAuthenticationService().authenticate(
+        username: username,
+        password: password,
+      );
 
-    //   print("signed in : $newUser");
-    //   print("   name   : ${newUser.firstName} ${newUser.lastName}");
-    // });
+      expect(MockAuthenticationService().authenticated, true);
+    });
 
-    // test('- refresh token', () async {
-    //   await CarpService().authenticate(
-    //     username: username,
-    //     password: password,
-    //   );
+    test('- get user profile', () async {
+      assert(MockAuthenticationService().authenticated);
 
-    //   print('expiring token...');
-    //   CarpService().currentUser!.token!.expire();
+      CarpUser newUser = MockAuthenticationService().currentUser;
 
-    //   await CarpService().currentUser!.getOAuthToken(refresh: true);
-    //   CarpUser user = CarpService().currentUser!;
+      print("signed in : $newUser");
+      print("   name   : ${newUser.firstName} ${newUser.lastName}");
 
-    //   assert(user.token != null);
-    //   print("signed in : $user");
-    //   print("   token  : ${user.token}\n");
-    // });
+      expect(newUser.firstName, isNotEmpty);
+      expect(newUser.lastName, isNotEmpty);
+      expect(newUser.isAuthenticated, true);
+    });
+
+    test('- oauth token refreshes', () async {
+      print('expiring token...');
+      MockAuthenticationService().currentUser.token!.expire();
+
+      MockAuthenticationService().currentUser;
+    });
 
     // test('- authentication with saved token', () async {
     //   CarpUser user = await CarpService().authenticate(
@@ -203,7 +205,7 @@ void main() {
       print('createdBy : ${downloaded.createdBy}');
       print('document  : ${downloaded.document}');
     });
-  }, skip: false);
+  });
 
   group(
     "Data points",

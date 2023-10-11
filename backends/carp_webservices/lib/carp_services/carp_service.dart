@@ -82,17 +82,15 @@ class CarpService extends CarpBaseService {
     final AuthorizationTokenResponse? response =
         await appAuth.authorizeAndExchangeCode(
       AuthorizationTokenRequest(
-        app.clientId,
-        "${app.redirectURI}",
+        app.clientId, "${app.redirectURI}",
         discoveryUrl: "${app.discoveryURL}",
-        scopes: ['openid'] // To get an ID token
+        scopes: ['openid'], // To get an ID token
       ),
     );
 
     if (response != null) {
-      _currentUser = await getCurrentUserProfile(response);
-      currentUser
-          .authenticated(OAuthToken.fromAuthorizationTokenResponse(response));
+      _currentUser = getCurrentUserProfile(response);
+      currentUser.authenticated(OAuthToken.fromTokenResponse(response));
       _authEventController.add(AuthEvent.authenticated);
       return currentUser;
     }
@@ -154,17 +152,9 @@ class CarpService extends CarpBaseService {
   // USERS
   // --------------------------------------------------------------------------
 
-  /// The URL for the current user end point for this [CarpService].
-  String get currentUserEndpointUri =>
-      "${app.uri.toString()}/api/users/current";
-
-  /// The URL for the user endpoint for this [CarpService].
-  String get userEndpointUri => "${app.uri.toString()}/api/users";
-
-  /// Asynchronously gets the CARP profile of the current user.
-  Future<CarpUser> getCurrentUserProfile(
-      AuthorizationTokenResponse response) async {
-    var jwt = JwtDecoder.decode(response.accessToken.toString());
+  /// Gets the CARP profile of the current user from the JWT token
+  CarpUser getCurrentUserProfile(TokenResponse response) {
+    var jwt = JwtDecoder.decode(response.accessToken!);
     return CarpUser.fromJWT(jwt);
   }
 

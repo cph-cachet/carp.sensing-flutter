@@ -23,13 +23,13 @@ class OAuthToken {
   final String idToken;
 
   /// Scope of this token:
-  /// - read
-  /// - read write
-  // TODO : anything else?
   final List<String> scope;
 
-  /// Expires in seconds. Defaults to 60 days in the future.
+  /// Expires at [DateTime].
   DateTime expiresAt;
+
+  /// The number of seconds until this token expires.
+  int? expiresIn;
 
   /// The date the access token was issued.
   final DateTime issuedDate = DateTime.now();
@@ -44,20 +44,7 @@ class OAuthToken {
     this.idToken,
   );
 
-  static OAuthToken fromAuthorizationTokenResponse(
-      AuthorizationTokenResponse response) {
-    return OAuthToken(
-      response.accessToken.toString(),
-      response.refreshToken.toString(),
-      response.tokenType.toString(),
-      response
-          .accessTokenExpirationDateTime!, // Throw an error if there is no access token expiration date
-      response.scopes ?? [],
-      response.idToken.toString(),
-    );
-  }
-
-  static OAuthToken fromTokenResponse(TokenResponse response) {
+  factory OAuthToken.fromTokenResponse(TokenResponse response) {
     return OAuthToken(
       response.accessToken.toString(),
       response.refreshToken.toString(),
