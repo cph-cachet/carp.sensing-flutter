@@ -44,11 +44,13 @@ class LocationService extends OnlineService {
   /// Only used on Android.
   String? notificationDescription;
 
-  /// The icon in Android/app/main/res/drawable folder .
+  /// The icon in `Android/app/main/res/drawable` folder.
+  /// Only used on Android.
   String? notificationIconName;
 
-  // if a tap on the notification will bring the app to the front
-  bool? notificationOnTapBringToFront;
+  /// Should the app be brought to the front on tap?
+  /// Default is false.
+  bool notificationOnTapBringToFront;
 
   /// Create and configure a [LocationService].
   ///
@@ -66,7 +68,7 @@ class LocationService extends OnlineService {
     this.notificationMessage,
     this.notificationDescription,
     this.notificationIconName,
-    this.notificationOnTapBringToFront,
+    this.notificationOnTapBringToFront = false,
   }) : super(
           roleName: roleName ?? DEFAULT_ROLENAME,
         ) {
@@ -87,9 +89,7 @@ class LocationServiceManager extends OnlineServiceManager<LocationService> {
   LocationManager manager = LocationManager();
 
   @override
-  List<Permission> get permissions => [
-        Permission.locationAlways,
-      ];
+  List<Permission> get permissions => [Permission.locationAlways];
 
   @override
   String get id => manager.hashCode.toString();

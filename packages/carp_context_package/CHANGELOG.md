@@ -1,7 +1,8 @@
-## 1.3.0
+## 1.3.1
 
 * upgrade of uuid and permission_handler plugins
 * update to `carp_mobile_sensing` v. 1.3.0
+* included [PR#344](https://github.com/cph-cachet/carp.sensing-flutter/pull/344)
 
 ## 1.2.0
 

@@ -101,15 +101,14 @@ class LocationManager {
       );
 
       await _provider.changeNotificationOptions(
-        title: configuration?.notificationTitle ?? 'CARP Location Service',
-        subtitle: configuration?.notificationMessage ??
-            'The location service is running in the background',
-        description: configuration?.notificationDescription ??
-            'Background location is on to keep the app up-to-date with your location. '
-                'This is required for main features to work properly when the app is not in use.',
-        onTapBringToFront: configuration?.notificationOnTapBringToFront??false,
-        iconName: configuration?.notificationIconName
-      );
+          title: configuration?.notificationTitle ?? 'CARP Location Service',
+          subtitle: configuration?.notificationMessage ??
+              'The location service is running in the background',
+          description: configuration?.notificationDescription ??
+              'Background location is on to keep the CARP Mobile Sensing app up-to-date with your location. '
+                  'This is required for main features to work properly when the app is not in use.',
+          onTapBringToFront: configuration?.notificationOnTapBringToFront,
+          iconName: configuration?.notificationIconName);
     } catch (error) {
       warning('$runtimeType - Configuration failed - $error');
       return;
