@@ -44,7 +44,7 @@ android {
 
     defaultConfig {
         // TODO: Specify your own unique Application ID (https://developer.android.com/studio/build/application-id.html).
-        applicationId "com.example.example"
+        applicationId "dk.cachet.carp-web-services-example"
         minSdkVersion 31
         targetSdkVersion flutter.targetSdkVersion
         versionCode flutterVersionCode.toInteger()
@@ -58,6 +58,7 @@ android {
             signingConfig signingConfigs.debug
         }
     }
+    namespace 'dk.cachet.carp-web-services-example'
 }
 
 flutter {
