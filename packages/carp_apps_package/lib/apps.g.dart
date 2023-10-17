@@ -67,7 +67,8 @@ AppUsage _$AppUsageFromJson(Map<String, dynamic> json) => AppUsage(
       DateTime.parse(json['start'] as String),
       DateTime.parse(json['end'] as String),
       (json['usage'] as Map<String, dynamic>?)?.map(
-            (k, e) => MapEntry(k, e as int),
+            (k, e) =>
+                MapEntry(k, AppUsageInfo.fromJson(e as Map<String, dynamic>)),
           ) ??
           const {},
     )..$type = json['__type'] as String?;
@@ -87,3 +88,22 @@ Map<String, dynamic> _$AppUsageToJson(AppUsage instance) {
   val['usage'] = instance.usage;
   return val;
 }
+
+AppUsageInfo _$AppUsageInfoFromJson(Map<String, dynamic> json) => AppUsageInfo(
+      json['packageName'] as String,
+      json['appName'] as String,
+      Duration(microseconds: json['usage'] as int),
+      DateTime.parse(json['startDate'] as String),
+      DateTime.parse(json['endDate'] as String),
+      DateTime.parse(json['lastForeground'] as String),
+    );
+
+Map<String, dynamic> _$AppUsageInfoToJson(AppUsageInfo instance) =>
+    <String, dynamic>{
+      'packageName': instance.packageName,
+      'appName': instance.appName,
+      'usage': instance.usage.inMicroseconds,
+      'startDate': instance.startDate.toIso8601String(),
+      'endDate': instance.endDate.toIso8601String(),
+      'lastForeground': instance.lastForeground.toIso8601String(),
+    };

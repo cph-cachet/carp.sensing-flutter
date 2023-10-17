@@ -41,9 +41,9 @@ class AppUsageProbe extends MeasurementProbe {
     List<app_usage.AppUsageInfo> infos =
         await app_usage.AppUsage().getAppUsage(start, end);
 
-    Map<String, int> usage = {};
-    for (var inf in infos) {
-      usage[inf.appName] = inf.usage.inSeconds;
+    Map<String, AppUsageInfo> usage = {};
+    for (var info in infos) {
+      usage[info.appName] = AppUsageInfo.fromAppUsageInfo(info);
     }
 
     return Measurement(

@@ -10,7 +10,7 @@ String _encode(Object object) =>
 void main() {
   setUp(() {
     // Initialization of serialization
-    CarpMobileSensing();
+    CarpMobileSensing.ensureInitialized();
     AppsSamplingPackage().onRegister();
   });
 
@@ -26,14 +26,59 @@ void main() {
     });
 
     test(' - apps usage', () {
+      AppUsageInfo(
+        'dk.cachet',
+        'carp_mobile_sensing_test_app',
+        Duration(seconds: 4),
+        DateTime.now(),
+        DateTime.now(),
+        DateTime.now(),
+      );
+
       AppUsage d2 = AppUsage(DateTime.now(), DateTime.now())
         ..usage = {
-          'carp_mobile_sensing_test_app': 1405,
-          'systemui': 4,
-          'MtpApplication': 5,
-          'launcher': 1999,
-          'settings': 19,
+          'carp_mobile_sensing_test_app': AppUsageInfo(
+            'dk.cachet',
+            'carp_mobile_sensing_test_app',
+            Duration(seconds: 4),
+            DateTime.now(),
+            DateTime.now(),
+            DateTime.now(),
+          ),
+          'systemui': AppUsageInfo(
+            'com.google',
+            'systemui',
+            Duration(seconds: 4),
+            DateTime.now(),
+            DateTime.now(),
+            DateTime.now(),
+          ),
+          'MtpApplication': AppUsageInfo(
+            'com.google',
+            'MtpApplication',
+            Duration(seconds: 44),
+            DateTime.now(),
+            DateTime.now(),
+            DateTime.now(),
+          ),
+          'launcher': AppUsageInfo(
+            'com.google',
+            'launcher',
+            Duration(seconds: 47),
+            DateTime.now(),
+            DateTime.now(),
+            DateTime.now(),
+          ),
+          'settings': AppUsageInfo(
+            'com.google',
+            'settings',
+            Duration(seconds: 24),
+            DateTime.now(),
+            DateTime.now(),
+            DateTime.now(),
+          ),
         };
+
       print(d2);
       print(_encode(d2));
     });

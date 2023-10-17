@@ -27,47 +27,47 @@ class Apps extends Data {
   String toString() => '${super.toString()}, installedApps: $installedApps';
 }
 
-/// An application installed on the device
-/// Depending on the Android version, some attributes may not be available
+/// An application installed on the device.
+/// Depending on the Android version, some attributes may not be available.
 @JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
 class App {
-  /// Name of the package
+  /// Name of the package.
   String? packageName;
 
-  /// Displayable name of the application
+  /// Displayable name of the application.
   String? appName;
 
-  /// Full path to the base APK for this application
+  /// Full path to the base APK for this application.
   String? apkFilePath;
 
-  /// Public name of the application (eg: 1.0.0)
+  /// Public name of the application (e.g., 1.0.0).
   /// The version name of this package, as specified by the <manifest> tag's
-  /// `versionName` attribute
+  /// `versionName` attribute.
   String? versionName;
 
-  /// Unique version id for the application
+  /// Unique version id for the application.
   int? versionCode;
 
   /// Full path to the default directory assigned to the package for its
-  /// persistent data
+  /// persistent data.
   String? dataDir;
 
   /// Whether the application is installed in the device's system image
-  /// An application downloaded by the user won't be a system app
+  /// An application downloaded by the user won't be a system app.
   bool? systemApp;
 
-  /// The time at which the app was first installed
+  /// The time at which the app was first installed in milliseconds.
   int? installTimeMillis;
 
-  /// The time at which the app was last updated
+  /// The time at which the app was last updated in milliseconds.
   int? updateTimeMillis;
 
-  /// The category of this application
-  /// The information may come from the application itself or the system
+  /// The category of this application.
+  /// The information may come from the application itself or the system.
   String? category;
 
   /// Whether the app is enabled (installed and visible)
-  /// or disabled (installed, but not visible)
+  /// or disabled (installed, but not visible).
   bool? enabled;
 
   App({
@@ -119,15 +119,15 @@ class App {
   }
 }
 
-/// Holds a map of names of apps and their corresponding usage in seconds.
+/// Holds a map of names of apps and their usage, as defined in [AppUsageInfo].
 @JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
 class AppUsage extends Data {
   static const dataType = AppsSamplingPackage.APP_USAGE;
 
   DateTime start, end;
 
-  /// A map of names of apps and their usage in seconds.
-  Map<String, int> usage = {};
+  /// A map of names of apps and their usage.
+  Map<String, AppUsageInfo> usage = {};
 
   AppUsage(this.start, this.end, [this.usage = const {}]) : super();
 
@@ -141,4 +141,54 @@ class AppUsage extends Data {
   @override
   String toString() =>
       '${super.toString()}, start: $start, end: $end, usage: $usage';
+}
+
+/// Holds information about usage for a specific app.
+@JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
+class AppUsageInfo {
+  /// The name of the application package
+  String packageName;
+
+  /// The name of the application
+  String appName;
+
+  /// The amount of time the application has been used
+  /// in the specified interval
+  Duration usage;
+
+  /// The start of the interval
+  DateTime startDate;
+
+  /// The end of the interval
+  DateTime endDate;
+
+  /// Last time app was in foreground
+  DateTime lastForeground;
+
+  AppUsageInfo(
+    this.packageName,
+    this.appName,
+    this.usage,
+    this.startDate,
+    this.endDate,
+    this.lastForeground,
+  );
+
+  AppUsageInfo.fromAppUsageInfo(app_usage.AppUsageInfo info)
+      : this(
+          info.packageName,
+          info.appName,
+          info.usage,
+          info.startDate,
+          info.endDate,
+          info.lastForeground,
+        );
+
+  factory AppUsageInfo.fromJson(Map<String, dynamic> json) =>
+      _$AppUsageInfoFromJson(json);
+  Map<String, dynamic> toJson() => _$AppUsageInfoToJson(this);
+
+  @override
+  String toString() =>
+      'App Usage: $packageName - $appName, duration: $usage [$startDate, $endDate]';
 }

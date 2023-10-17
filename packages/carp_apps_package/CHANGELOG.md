@@ -1,3 +1,7 @@
+## 1.3.1
+
+* Fix of [#346](https://github.com/cph-cachet/carp.sensing-flutter/issues/346)
+
 ## 1.3.0
 
 * upgrade of uuid and permission_handler plugins
