@@ -43,7 +43,7 @@ class AppUsageProbe extends MeasurementProbe {
 
     Map<String, AppUsageInfo> usage = {};
     for (var info in infos) {
-      usage[info.appName] = AppUsageInfo.fromAppUsageInfo(info);
+      usage[info.packageName] = AppUsageInfo.fromAppUsageInfo(info);
     }
 
     return Measurement(

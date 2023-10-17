@@ -26,52 +26,43 @@ void main() {
     });
 
     test(' - apps usage', () {
-      AppUsageInfo(
-        'dk.cachet',
-        'carp_mobile_sensing_test_app',
-        Duration(seconds: 4),
-        DateTime.now(),
-        DateTime.now(),
-        DateTime.now(),
-      );
-
       AppUsage d2 = AppUsage(DateTime.now(), DateTime.now())
         ..usage = {
-          'carp_mobile_sensing_test_app': AppUsageInfo(
-            'dk.cachet',
+          'dk.cachet.carp_mobile_sensing_test_app': AppUsageInfo(
+            'dk.cachet.carp_mobile_sensing_test_app',
             'carp_mobile_sensing_test_app',
             Duration(seconds: 4),
             DateTime.now(),
             DateTime.now(),
             DateTime.now(),
           ),
-          'systemui': AppUsageInfo(
-            'com.google',
+          'com.google.systemui': AppUsageInfo(
+            'com.google.systemui',
             'systemui',
             Duration(seconds: 4),
             DateTime.now(),
             DateTime.now(),
             DateTime.now(),
           ),
-          'MtpApplication': AppUsageInfo(
-            'com.google',
+          'com.google.MtpApplication': AppUsageInfo(
+            'com.google.MtpApplication',
             'MtpApplication',
             Duration(seconds: 44),
             DateTime.now(),
             DateTime.now(),
             DateTime.now(),
           ),
-          'launcher': AppUsageInfo(
-            'com.google',
+          'com.google.launcher': AppUsageInfo(
+            'com.google.launcher',
             'launcher',
             Duration(seconds: 47),
             DateTime.now(),
             DateTime.now(),
             DateTime.now(),
           ),
-          'settings': AppUsageInfo(
-            'com.google',
-            'settings',
+          'com.instagram.android': AppUsageInfo(
+            'com.instagram.android',
+            'android',
             Duration(seconds: 24),
             DateTime.now(),
             DateTime.now(),

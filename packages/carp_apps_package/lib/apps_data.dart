@@ -126,7 +126,7 @@ class AppUsage extends Data {
 
   DateTime start, end;
 
-  /// A map of names of apps and their usage.
+  /// A map from the full package name of an app and its usage.
   Map<String, AppUsageInfo> usage = {};
 
   AppUsage(this.start, this.end, [this.usage = const {}]) : super();
@@ -146,7 +146,7 @@ class AppUsage extends Data {
 /// Holds information about usage for a specific app.
 @JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
 class AppUsageInfo {
-  /// The name of the application package
+  /// The full name of the application package
   String packageName;
 
   /// The name of the application
