@@ -28,7 +28,7 @@ dependencies:
 
 When you want to add CAMS to you app, there are a few things to do in terms of configuring your app.
 
-First, since CAMS rely on the [flutter_local_notifications](https://pub.dev/packages/flutter_local_notifications) plugin, you should configure your app to the [platforms it supports](https://pub.dev/packages/flutter_local_notifications#-supported-platforms) and cofigure your app for both [Android](https://pub.dev/packages/flutter_local_notifications#-android-setup) and [iOS](https://pub.dev/packages/flutter_local_notifications#-ios-setup).
+First, since CAMS rely on the [flutter_local_notifications](https://pub.dev/packages/flutter_local_notifications) plugin, you should configure your app to the [platforms it supports](https://pub.dev/packages/flutter_local_notifications#-supported-platforms) and configure your app for both [Android](https://pub.dev/packages/flutter_local_notifications#-android-setup) and [iOS](https://pub.dev/packages/flutter_local_notifications#-ios-setup).
 
 ### Android Integration
 

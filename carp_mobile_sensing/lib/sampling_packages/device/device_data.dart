@@ -71,10 +71,6 @@ class DeviceInformation extends Data {
       FromJsonFactory().fromJson(json) as DeviceInformation;
   @override
   Map<String, dynamic> toJson() => _$DeviceInformationToJson(this);
-
-  @override
-  String toString() =>
-      '${super.toString()}, platform: $platform, deviceId: $deviceId, hardware: $hardware, name: $deviceName, manufacturer: $deviceManufacturer, model: $deviceModel, OS: $operatingSystem, SDK: $sdk, release: $release';
 }
 
 /// Holds battery level and charging status collected from the phone.
@@ -128,10 +124,6 @@ class BatteryState extends Data {
       FromJsonFactory().fromJson(json) as BatteryState;
   @override
   Map<String, dynamic> toJson() => _$BatteryStateToJson(this);
-
-  @override
-  String toString() =>
-      '${super.toString()}, level: $batteryLevel%, status: $batteryStatus';
 }
 
 /// Holds information about free memory on the phone.
@@ -153,10 +145,6 @@ class FreeMemory extends Data {
       FromJsonFactory().fromJson(json) as FreeMemory;
   @override
   Map<String, dynamic> toJson() => _$FreeMemoryToJson(this);
-
-  @override
-  String toString() =>
-      '${super.toString()}, physical: $freePhysicalMemory, virtual: $freeVirtualMemory';
 }
 
 /// Holds a screen event collected from the phone.
@@ -200,9 +188,6 @@ class ScreenEvent extends Data {
       FromJsonFactory().fromJson(json) as ScreenEvent;
   @override
   Map<String, dynamic> toJson() => _$ScreenEventToJson(this);
-
-  @override
-  String toString() => '${super.toString()}, screenEvent: $screenEvent';
 }
 
 /// Holds timezone information about the mobile device.
@@ -227,7 +212,4 @@ class Timezone extends Data {
       _$TimezoneFromJson(json);
   @override
   Map<String, dynamic> toJson() => _$TimezoneToJson(this);
-
-  @override
-  String toString() => '${super.toString()}, timezone: $timezone';
 }

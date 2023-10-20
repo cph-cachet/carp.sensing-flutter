@@ -1,9 +1,10 @@
-## 1.3.3
+## 1.3.4
 
 * upgrade of uuid and permission_handler plugins
-* addition of a AVERAGE_NON_GRAVITATIONAL_ACCELERATION that average accelerometer sampling over a sampling period (Issue [336](https://github.com/cph-cachet/carp.sensing-flutter/issues/336))
+* addition of a ACCELERATION_FEATURES that samples accelerometer readings over a sampling period and calculates a set of statistical features (Issue [336](https://github.com/cph-cachet/carp.sensing-flutter/issues/336) & [347](https://github.com/cph-cachet/carp.sensing-flutter/issues/347))
 * removal of support for awesome_notifications which does not compile on iOS
 * improvements to API docs
+* removal of `toString()` methods on data points - if you want to print data, print the json generated from the `toJson()` method.
 
 ## 1.2.0
 

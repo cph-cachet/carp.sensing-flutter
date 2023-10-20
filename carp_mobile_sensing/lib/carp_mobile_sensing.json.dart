@@ -63,7 +63,7 @@ void _registerFromJsonFunctions() {
     FreeMemory(),
     ScreenEvent(),
     Timezone(''),
-    AmbientLight()
+    AmbientLight(3, 5, 7, 3)
   ]);
 
   // Sampling Configuration classes

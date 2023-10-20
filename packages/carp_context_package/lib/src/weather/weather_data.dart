@@ -61,8 +61,4 @@ class Weather extends Data {
       FromJsonFactory().fromJson(json) as Weather;
   @override
   Map<String, dynamic> toJson() => _$WeatherToJson(this);
-
-  @override
-  String toString() =>
-      '${super.toString()}, place: $areaName ($country), date: $date, weather: $weatherMain, $weatherDescription, temperature (min, max): $temperature ($tempMin, $tempMax), sunrise: $sunrise, sunset: $sunset';
 }

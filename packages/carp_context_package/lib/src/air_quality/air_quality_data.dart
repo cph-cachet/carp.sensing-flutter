@@ -43,10 +43,6 @@ class AirQuality extends Data {
       FromJsonFactory().fromJson(json) as AirQuality;
   @override
   Map<String, dynamic> toJson() => _$AirQualityToJson(this);
-
-  @override
-  String toString() =>
-      '${super.toString()}, place: $place (latitude:$latitude, longitude:$longitude), souce: $source, airQualityIndex: $airQualityIndex, airQualityLevel: $airQualityLevel';
 }
 
 /// Level of air quality.

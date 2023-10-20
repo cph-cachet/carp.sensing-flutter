@@ -24,9 +24,6 @@ class TextMessageLog extends Data {
 
   @override
   String get jsonType => dataType;
-
-  @override
-  String toString() => '${super.toString()}, size: ${textMessageLog.length}';
 }
 
 /// Holds a text messages (SMS).
@@ -93,10 +90,6 @@ class TextMessage extends Data {
 
   @override
   String get jsonType => dataType;
-
-  @override
-  String toString() =>
-      "Text Message - id: $id, address: $address, read: $read, date: $date, date_send: $dateSent, type: $type, status: $status\n$body";
 }
 
 /// Holds a phone log, i.e. a list of phone calls made on the device.
@@ -116,9 +109,6 @@ class PhoneLog extends Data {
 
   @override
   String get jsonType => dataType;
-
-  @override
-  String toString() => "${super.toString()}, size: ${phoneLog.length}";
 }
 
 /// Phone call data.
@@ -195,10 +185,6 @@ class PhoneCall {
   factory PhoneCall.fromJson(Map<String, dynamic> json) =>
       _$PhoneCallFromJson(json);
   Map<String, dynamic> toJson() => _$PhoneCallToJson(this);
-
-  @override
-  String toString() =>
-      "$runtimeType - timestamp: $timestamp, call_type: $callType, duration: $duration, number: $number, formatted_number: $formattedNumber, name: $name";
 }
 
 /// Holds a list of calendar events from the device.
@@ -217,9 +203,6 @@ class Calendar extends Data {
       _$CalendarFromJson(json);
   @override
   Map<String, dynamic> toJson() => _$CalendarToJson(this);
-
-  @override
-  String toString() => '${super.toString()}, size: ${calendarEvents.length}';
 }
 
 /// A calendar event.
@@ -279,8 +262,4 @@ class CalendarEvent {
   factory CalendarEvent.fromJson(Map<String, dynamic> json) =>
       _$CalendarEventFromJson(json);
   Map<String, dynamic> toJson() => _$CalendarEventToJson(this);
-
-  @override
-  String toString() =>
-      "Calendar Event - eventId: $eventId, calendarId: $calendarId, title: $title, description: $description, start: $start, end: $end, all day: $allDay, location: $location, no. attendees: ${attendees!.length}";
 }

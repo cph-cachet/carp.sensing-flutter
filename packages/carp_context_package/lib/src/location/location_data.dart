@@ -124,8 +124,4 @@ class Location extends Geolocation {
       FromJsonFactory().fromJson(json) as Location;
   @override
   Map<String, dynamic> toJson() => _$LocationToJson(this);
-
-  @override
-  String toString() =>
-      '$runtimeType -  latitude: $latitude, longitude: $longitude, altitude: $altitude, speed: $speed, time: $time';
 }

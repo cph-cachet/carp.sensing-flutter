@@ -37,10 +37,6 @@ class FileData extends Data {
       FromJsonFactory().fromJson(json) as FileData;
   @override
   Map<String, dynamic> toJson() => _$FileDataToJson(this);
-
-  @override
-  String toString() =>
-      '${super.toString()}, filename: $filename, upload: $upload';
 }
 
 /// Reflects a heart beat data send every [period] minute.

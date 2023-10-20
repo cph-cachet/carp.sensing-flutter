@@ -60,8 +60,4 @@ class Mobility extends Data {
       FromJsonFactory().fromJson(json) as Mobility;
   @override
   Map<String, dynamic> toJson() => _$MobilityToJson(this);
-
-  @override
-  String toString() =>
-      '${super.toString()}, number of places: $numberOfPlaces, location variance: $locationVariance, entropy: $entropy, normalized entropy: $normalizedEntropy, home stay: $homeStay, distance travelled: $distanceTraveled';
 }

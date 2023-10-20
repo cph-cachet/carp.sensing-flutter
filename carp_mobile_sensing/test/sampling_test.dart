@@ -12,7 +12,7 @@ void main() {
       expect(schemes.configurations.length, 5);
 
       schemes.addSamplingSchema(SensorSamplingPackage().samplingSchemes);
-      expect(schemes.configurations.length, 11);
+      expect(schemes.configurations.length, 12);
 
       print(schemes.types);
     });

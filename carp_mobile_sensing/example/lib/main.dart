@@ -214,12 +214,10 @@ class LocalStudyProtocolManager implements StudyProtocolManager {
       ImmediateTrigger(),
       BackgroundTask(
         measures: [
-          Measure(
-              type:
-                  SensorSamplingPackage.AVERAGE_NON_GRAVITATIONAL_ACCELERATION)
+          Measure(type: SensorSamplingPackage.ACCELERATION_FEATURES)
             ..overrideSamplingConfiguration = PeriodicSamplingConfiguration(
               interval: const Duration(minutes: 1),
-              duration: const Duration(seconds: 2),
+              duration: const Duration(seconds: 10),
             ),
         ],
       ),

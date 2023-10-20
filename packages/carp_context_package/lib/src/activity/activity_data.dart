@@ -61,10 +61,6 @@ class Activity extends Data {
 
   /// Activity [type] as a string.
   String get typeString => type.name;
-
-  @override
-  String toString() =>
-      '${super.toString()}, type: $typeString, confidence: $confidence';
 }
 
 /// Defines the type of activity.

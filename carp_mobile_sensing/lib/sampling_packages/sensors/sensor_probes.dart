@@ -21,9 +21,12 @@ class UserAccelerometerProbe extends StreamProbe {
       Measurement.fromData(Acceleration(x: event.x, y: event.y, z: event.z)));
 }
 
-/// A probe collecting average accelerometer data collected over a sampling
-/// period. Configured with a [PeriodicSamplingConfiguration] configuration.
-class AverageUserAccelerometerProbe extends BufferingPeriodicStreamProbe {
+/// A probe collecting accelerometer data over a sampling period and calculates
+/// a set of features based on the samplings, as represented by a
+/// [AccelerationFeatures] data point.
+///
+/// Configured with a [PeriodicSamplingConfiguration] configuration.
+class AccelerometerFeaturesProbe extends BufferingPeriodicStreamProbe {
   List<UserAccelerometerEvent> userAccelerometerEventList = [];
   int sensorStartTime = 0;
   int? sensorEndTime;
@@ -32,41 +35,14 @@ class AverageUserAccelerometerProbe extends BufferingPeriodicStreamProbe {
   Stream<dynamic> get bufferingStream => userAccelerometerEvents;
 
   @override
-  Future<Measurement?> getMeasurement() async {
-    if (userAccelerometerEventList.isEmpty) return null;
-
-    // compute averages of accelerometer
-    // xm, ym, zm: normal averages (or means)
-    // xms, yms, zms: averages of squared values
-    // n: number of values included
-    int n = userAccelerometerEventList.length;
-    double xms = 0, yms = 0, zms = 0;
-    double xm = 0, ym = 0, zm = 0;
-
-    for (UserAccelerometerEvent event in (userAccelerometerEventList)) {
-      xms += (event.x) * (event.x);
-      xm += event.x;
-      yms += (event.y) * (event.y);
-      ym += event.y;
-      zms += (event.z) * (event.z);
-      zm += event.z;
-    }
-
-    xms = xms / n;
-    xm = xm / n;
-    yms = yms / n;
-    ym = ym / n;
-    zms = zms / n;
-    zm = zm / n;
-
-    var data = AverageAccelerometer(
-        xm: xm, ym: ym, zm: zm, xms: xms, yms: yms, zms: zms, n: n);
-
-    return Measurement(
-        sensorStartTime: sensorStartTime,
-        sensorEndTime: sensorEndTime,
-        data: data);
-  }
+  Future<Measurement?> getMeasurement() async =>
+      userAccelerometerEventList.isEmpty
+          ? null
+          : Measurement(
+              sensorStartTime: sensorStartTime,
+              sensorEndTime: sensorEndTime,
+              data: AccelerationFeatures.fromAccelerometerReadings(
+                  userAccelerometerEventList));
 
   @override
   void onSamplingStart() {

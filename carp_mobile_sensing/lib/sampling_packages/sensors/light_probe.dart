@@ -29,21 +29,12 @@ class LightProbe extends BufferingPeriodicStreamProbe {
   }
 
   @override
-  Future<Measurement?> getMeasurement() async {
-    if (luxValues.isEmpty) return null;
-
-    var stats = Stats.fromData(luxValues);
-    var data = AmbientLight(
-        meanLux: stats.average,
-        stdLux: stats.standardDeviation,
-        minLux: stats.min,
-        maxLux: stats.max);
-
-    return Measurement(
-        sensorStartTime: sensorStartTime,
-        sensorEndTime: sensorEndTime,
-        data: data);
-  }
+  Future<Measurement?> getMeasurement() async => (luxValues.isEmpty)
+      ? null
+      : Measurement(
+          sensorStartTime: sensorStartTime,
+          sensorEndTime: sensorEndTime,
+          data: AmbientLight.fromLuxReadings(luxValues));
 
   @override
   void onSamplingStart() {

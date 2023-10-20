@@ -29,9 +29,6 @@ class Geofence extends Data {
   ///  - EXIT
   ///  - DWELL
   GeofenceType type;
-
-  @override
-  String toString() => '${super.toString()}, name: $name, type: $type';
 }
 
 enum GeofenceType { ENTER, EXIT, DWELL }

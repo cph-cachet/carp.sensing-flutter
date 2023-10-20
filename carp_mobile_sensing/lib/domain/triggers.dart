@@ -324,7 +324,7 @@ class RecurrentScheduledTrigger extends PeriodicTrigger {
 
   @override
   String toString() =>
-      'RecurrentScheduledTrigger - type: $type, time: $time, separationCount: $separationCount, dayOfWeek: $dayOfWeek, firstOccurrence: $firstOccurrence, period; $period';
+      '$runtimeType - type: $type, time: $time, separationCount: $separationCount, dayOfWeek: $dayOfWeek, firstOccurrence: $firstOccurrence, period; $period';
 }
 
 /// Type of recurrence for a [RecurrentScheduledTrigger].
