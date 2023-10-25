@@ -1,4 +1,4 @@
-package dk.cachet.carp.webservices.example
+package dk.cachet.example
 
 import io.flutter.embedding.android.FlutterActivity
 

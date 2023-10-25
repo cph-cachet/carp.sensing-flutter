@@ -113,7 +113,10 @@ class AppBLoC {
   );
 
   Future<void> init() async {
-    CarpService().configure(app!);
+
+
+
+    CarpService().configure(mockCarpApp);
   }
 
   void dispose() async {}
