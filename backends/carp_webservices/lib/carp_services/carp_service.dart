@@ -31,8 +31,8 @@ class CarpService extends CarpBaseService {
 
   FlutterAppAuth appAuth = const FlutterAppAuth();
 
-  @override
   // RPC is not used in the CarpService endpoints which are named differently.
+  @override
   String get rpcEndpointName => throw UnimplementedError();
 
   // --------------------------------------------------------------------------
@@ -81,6 +81,13 @@ class CarpService extends CarpBaseService {
     }
   }
 
+  /// Authenticate to this CARP service using a [BuildContext], that opens the
+  /// authentication page of the Identity Server using a secure web view from the OS.
+  ///
+  /// The discovery URL is used to find the Identity Server.
+  ///
+  /// Return the signed in user (with an [OAuthToken] access token), if successful.
+  /// Throws a [CarpServiceException] if not successful.
   Future<CarpUser> authenticate() async {
     final AuthorizationTokenResponse? response =
         await appAuth.authorizeAndExchangeCode(
@@ -102,21 +109,36 @@ class CarpService extends CarpBaseService {
     _authEventController.add(AuthEvent.failed);
     _currentUser = null;
 
-    // auth error response from CARP is on the form
-    //      {error: invalid_grant, error_description: Bad credentials}
+    // auth error response from CARP is in the form
     throw CarpServiceException(
       httpStatus: HTTPStatus(401),
       message: 'Authentication failed.',
     );
   }
 
-  Future<CarpUser> refresh() async {
+  /// Authenticate to this CARP service using a [username] and [password].
+  ///
+  /// This method needs a [BuildContext] to authenticate but it does not open
+  /// a web view. Use this if you want to create your own authentication page.
+  ///
+  /// The discovery URL is used to find the Identity Server.
+  ///
+  /// Return the signed in user (with an [OAuthToken] access token), if successful.
+  /// Throws a [CarpServiceException] if not successful.
+  Future<CarpUser> authenticateWithUsernamePassword({
+    required String username,
+    required String password,
+  }) async {
     final TokenResponse? response = await appAuth.token(
       TokenRequest(
         app.clientId,
         "${app.redirectURI}",
         discoveryUrl: "${app.discoveryURL}",
-        refreshToken: currentUser.token!.refreshToken,
+        grantType: 'password',
+        additionalParameters: Map.fromEntries([
+          MapEntry('username', username),
+          MapEntry('password', password),
+        ]),
       ),
     );
 
@@ -138,7 +160,162 @@ class CarpService extends CarpBaseService {
     );
   }
 
-  /// Logout from CARP
+  /// Authenticate to this CARP service using a [username] and [password].
+  ///
+  /// Use only if you know what you are doing! This method is used only if neither
+  /// [authenticate] nor [authenticateWithUsernamePassword] works for you,
+  /// i.e. you do not have access to a [BuildContext].
+  ///
+  /// This method uses a POST request to the Identity Server to get an access token.
+  /// The discovery URL is used to find the Identity Server.
+  ///
+  /// Return the signed in user (with an [OAuthToken] access token), if successful.
+  /// Throws a [CarpServiceException] if not successful.
+  Future<CarpUser> authenticateWithUsernamePasswordNoContext({
+    required String username,
+    required String password,
+  }) async {
+    final url = app.authURL.replace(pathSegments: [
+      ...app.authURL.pathSegments,
+      'protocol',
+      'openid-connect',
+      'token',
+    ]);
+    final body = {
+      'client_id': app.clientId,
+      'username': username,
+      'password': password,
+      'grant_type': 'password',
+    };
+    final headers = {
+      'Content-Type': 'application/x-www-form-urlencoded',
+    };
+
+    final response = await http.post(url, body: body, headers: headers);
+
+    // Json to map the response
+    final jsonResponse = json.decode(response.body);
+    final tokenResponse =
+        convertToTokenResponse(jsonResponse as Map<String, dynamic>);
+    CarpUser user = getCurrentUserProfile(tokenResponse);
+    user.authenticated(OAuthToken.fromTokenResponse(tokenResponse));
+
+    currentUser = user;
+
+    return user;
+  }
+
+  /// Authenticate to this CARP Service using a [OAuthToken] access token
+  /// and a [CarpUser].
+  /// This method is typically used to re-authenticate a user based on a previously
+  /// granted access token, for example when the app is restarted.
+  ///
+  /// This does not require a [BuildContext] and does not open a web view.
+  /// It does not require an internet connection either.
+  ///
+  /// Returns the [CarpUser] with the [OAuthToken] access token.
+  CarpUser authenticateWithToken({
+    required CarpUser user,
+    required OAuthToken token,
+  }) {
+    user.authenticated(token);
+    _currentUser = user;
+    _authEventController.add(AuthEvent.authenticated);
+    return user;
+  }
+
+  /// Get a new access token for the current user based on the
+  /// previously granted refresh token, using the Identity Server discovery URL.
+  ///
+  /// This method is typically used when the access token has expired, and a new
+  /// access token is needed to access the CARP web service. The refresh token
+  /// expiration date is [OAuthToken.expiresAt] which has type [DateTime].
+  ///
+  /// Returns the signed in user (with a new [OAuthToken] access token), if successful.
+  /// Throws a [CarpServiceException] if not successful.
+  Future<CarpUser> refresh() async {
+    final TokenResponse? response = await appAuth.token(
+      TokenRequest(
+        app.clientId,
+        "${app.redirectURI}",
+        discoveryUrl: "${app.discoveryURL}",
+        refreshToken: currentUser.token!.refreshToken,
+      ),
+    );
+
+    if (response != null) {
+      currentUser = getCurrentUserProfile(response);
+      currentUser.authenticated(OAuthToken.fromTokenResponse(response));
+      _authEventController.add(AuthEvent.refreshed);
+      return currentUser;
+    }
+
+    // All other cases are treated as a failed attempt and throws an error
+    _authEventController.add(AuthEvent.failed);
+    _currentUser = null;
+
+    // auth error response from CARP is on the form
+    //      {error: invalid_grant, error_description: Bad credentials}
+    throw CarpServiceException(
+      httpStatus: HTTPStatus(401),
+      message: 'Authentication failed.',
+    );
+  }
+
+  /// Get a new access token for the current user based on the
+  /// previously granted refresh token, using the Identity Server discovery URL.
+  /// Need to have run any of the authenticate functions first.
+  ///
+  /// Use only if you know what you are doing! This method is used only if the
+  /// [refresh] method does not work for you, i.e. you do not have access to a [BuildContext].
+  ///  Use this if you used [authenticateWithUsernamePasswordNoContext] to authenticate.
+  ///
+  /// This method uses a POST request to the Identity Server to get an access token.
+  /// The discovery URL is used to find the Identity Server.
+  ///
+  /// This method is typically used when the access token has expired, and a new
+  /// access token is needed to access the CARP web service. The refresh token
+  /// expiration date is [OAuthToken.expiresAt], as a [DateTime].
+  ///
+  /// Returns the signed in user (with a new [OAuthToken] access token), if successful.
+  /// Throws a [CarpServiceException] if not successful.
+  Future<CarpUser> refreshNoContext() async {
+    final url = app.authURL.replace(pathSegments: [
+      ...app.authURL.pathSegments,
+      'protocol',
+      'openid-connect',
+      'token',
+    ]);
+
+    final body = {
+      'client_id': app.clientId,
+      'grant_type': 'refresh_token',
+      'refresh_token': currentUser.token!.refreshToken,
+    };
+    final headers = {
+      'Content-Type': 'application/x-www-form-urlencoded',
+    };
+
+    final response = await http.post(url, body: body, headers: headers);
+
+    // Json to map the response
+    final jsonResponse = json.decode(response.body);
+    final tokenResponse =
+        convertToTokenResponse(jsonResponse as Map<String, dynamic>);
+    CarpUser user = getCurrentUserProfile(tokenResponse);
+    user.authenticated(OAuthToken.fromTokenResponse(tokenResponse));
+
+    currentUser = user;
+
+    return user;
+  }
+
+  /// Log out of this CARP service using a [BuildContext], that opens a
+  /// web view to clear cookies and end the sesion on the Identity Server.
+  ///
+  /// Use this if you used [authenticate] to authenticate.
+  ///
+  /// The discovery URL is used to find the Identity Server.
   Future<void> logout() async {
     await appAuth.endSession(
       EndSessionRequest(
@@ -150,6 +327,49 @@ class CarpService extends CarpBaseService {
 
     _currentUser = null;
   }
+
+  /// Logs out of this [CarpService], by clearing the current user.
+  ///
+  /// Use only if you know what you are doing! This method is used only if the
+  /// [logout] method does not work for you, i.e. you do not have access to a [BuildContext].
+  ///
+  /// Use this if you used [authenticateWithUsernamePassword]
+  /// or [authenticateWithUsernamePasswordNoContext] to authenticate.
+  Future<void> logoutNoContext() async {
+    currentUser = null;
+  }
+
+  TokenResponse convertToTokenResponse(Map<String, dynamic> json) {
+    return AuthorizationTokenResponse(
+      json['access_token'] as String,
+      json['refresh_token'] as String,
+      // Expires in is in seconds, but the DateTime expects milliseconds.
+      DateTime.now().add(
+        Duration(seconds: json['expires_in'] as int),
+      ),
+      json['session_state'] as String,
+      json['token_type'] as String,
+      (json['scope'] as String).split(' '),
+      null,
+      null,
+    );
+  }
+
+  /// -------------------------------------------------------------------------
+  /// Deprecated authentication methods
+  /// --------------------------------------------------------------------------
+
+  @Deprecated(
+      'Use authenticate() in (almost) all authentication instances instead.')
+  Future<CarpUser> authenticateWithRefreshToken(String refreshToken) =>
+      authenticate();
+
+  @Deprecated('''Not possible anymore. Needs to be done on the Identity Server.
+      When authenticating, the user can get a new password on the Identity Server login page.''')
+  Future<String> sendForgottenPasswordEmail() => throw UnimplementedError();
+
+  @Deprecated('Use authenticate() instead.')
+  Future<CarpUser> authenticateWithDialog() => authenticate();
 
   // --------------------------------------------------------------------------
   // USERS

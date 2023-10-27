@@ -72,62 +72,63 @@ void main() {
       // test('- service', () async {
       //   print('CarpService : ${MockAuthenticationService().app}');
       // });
+      group('authentication', () {
+        test('- authentication w. username and password', () async {
+          CarpUser user = await MockAuthenticationService().authenticate(
+            username: username,
+            password: password,
+          );
 
-      test('- authentication w. username and password', () async {
-        CarpUser user = await MockAuthenticationService().authenticate(
-          username: username,
-          password: password,
-        );
+          expect(user.token, isNotNull);
+          expect(user.isAuthenticated, true);
 
-        expect(user.token, isNotNull);
-        expect(user.isAuthenticated, true);
+          print("signed in : $user");
+          print("token  : ${user.token}");
+        });
 
-        print("signed in : $user");
-        print("token  : ${user.token}");
-      });
+        setUp(() async {
+          await MockAuthenticationService().authenticate(
+            username: username,
+            password: password,
+          );
 
-      setUp(() async {
-        await MockAuthenticationService().authenticate(
-          username: username,
-          password: password,
-        );
+          expect(MockAuthenticationService().authenticated, true);
+        });
 
-        expect(MockAuthenticationService().authenticated, true);
-      });
+        test('- get user profile', () async {
+          assert(MockAuthenticationService().authenticated);
 
-      test('- get user profile', () async {
-        assert(MockAuthenticationService().authenticated);
+          CarpUser newUser = MockAuthenticationService().currentUser;
 
-        CarpUser newUser = MockAuthenticationService().currentUser;
+          print("signed in : $newUser");
+          print("   name   : ${newUser.firstName} ${newUser.lastName}");
 
-        print("signed in : $newUser");
-        print("   name   : ${newUser.firstName} ${newUser.lastName}");
+          expect(newUser.firstName, isNotEmpty);
+          expect(newUser.lastName, isNotEmpty);
+          expect(newUser.isAuthenticated, true);
+        });
 
-        expect(newUser.firstName, isNotEmpty);
-        expect(newUser.lastName, isNotEmpty);
-        expect(newUser.isAuthenticated, true);
-      });
+        test('- oauth token refreshes', () async {
+          print('expiring token...');
+          MockAuthenticationService().currentUser.token!.expire();
 
-      test('- oauth token refreshes', () async {
-        print('expiring token...');
-        MockAuthenticationService().currentUser.token!.expire();
+          MockAuthenticationService().currentUser;
+        });
 
-        MockAuthenticationService().currentUser;
-      });
+        test('- refreshing token', () async {
+          CarpUser user = await MockAuthenticationService().authenticate(
+            username: username,
+            password: password,
+          );
 
-      test('- refreshing token', () async {
-        CarpUser user = await MockAuthenticationService().authenticate(
-          username: username,
-          password: password,
-        );
+          CarpUser newUser = await MockAuthenticationService().refresh();
 
-        CarpUser newUser = await MockAuthenticationService().refresh();
+          assert(newUser.isAuthenticated);
+          assert(newUser.username == user.username);
 
-        assert(newUser.isAuthenticated);
-        assert(newUser.username == user.username);
-
-        print("signed in : $newUser");
-        print("   token  : ${newUser.token}");
+          print("signed in : $newUser");
+          print("   token  : ${newUser.token}");
+        });
       });
 
       group('Informed Consent', () {

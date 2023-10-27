@@ -41,7 +41,7 @@ dev_dependencies:
   json_serializable: any
   test: any
   flutter_lints: any
-  mockito: ^5.4.2
+  mockito: any
 
 flutter:
   uses-material-design: true
