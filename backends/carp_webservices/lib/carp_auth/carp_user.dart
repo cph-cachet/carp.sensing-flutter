@@ -42,17 +42,6 @@ class CarpUser {
     this.token,
   });
 
-  factory CarpUser.fromJWT(Map<String, dynamic> jwt) {
-    return CarpUser(
-      username: jwt['preferred_username'] as String,
-      id: jwt['sub'] as String,
-      firstName: jwt['given_name'] as String,
-      lastName: jwt['family_name'] as String,
-      email: jwt['email'] as String,
-      roles: jwt['realm_access']['roles'] as List<dynamic>,
-    );
-  }
-
   /// Set or update the authenticated [OAuthToken] token for this user.
   void authenticated(OAuthToken token) => this.token = token;
 
@@ -67,9 +56,23 @@ class CarpUser {
     token = null;
   }
 
+  factory CarpUser.fromJWT(Map<String, dynamic> jwt) {
+    return CarpUser(
+      username: jwt['preferred_username'] as String,
+      id: jwt['sub'] as String,
+      firstName: jwt['given_name'] as String,
+      lastName: jwt['family_name'] as String,
+      email: jwt['email'] as String,
+      roles: jwt['realm_access']['roles'] as List<dynamic>,
+    );
+  }
+
   factory CarpUser.fromJson(Map<String, dynamic> json) =>
       _$CarpUserFromJson(json);
   Map<String, dynamic> toJson() => _$CarpUserToJson(this);
+
+  @Deprecated('Use id instead')
+  String get accountId => id;
 
   @override
   String toString() =>

@@ -5,13 +5,12 @@ import 'package:http/http.dart' as http;
 
 import 'package:carp_webservices/carp_auth/carp_auth.dart';
 import 'package:carp_webservices/carp_services/carp_services.dart';
-import 'package:jwt_decoder/jwt_decoder.dart';
-import 'package:mockito/mockito.dart';
+import 'credentials.dart';
 
-class MockAuthenticationService {
+class MockAuthenticationService extends CarpService {
   static final MockAuthenticationService _instance =
       MockAuthenticationService._();
-  MockAuthenticationService._();
+  MockAuthenticationService._() : super.instance();
 
   factory MockAuthenticationService() => _instance;
 
@@ -27,10 +26,6 @@ class MockAuthenticationService {
     ],
   );
 
-  bool get authenticated => _currentUser != null;
-
-  CarpUser? _currentUser;
-
   late CarpApp mockCarpApp = CarpApp(
     name: "CAWS @ DTU",
     uri: uri.replace(pathSegments: ['dev']),
@@ -38,12 +33,14 @@ class MockAuthenticationService {
     clientId: 'carp-webservices-dart',
     redirectURI: Uri.base,
     discoveryURL: Uri.base,
+    studyDeploymentId: testDeploymentId,
+    studyId: testStudyId,
   );
 
+  @override
   CarpApp get app => mockCarpApp;
 
-  CarpUser get currentUser => _currentUser!;
-
+  @override
   Future<CarpUser> authenticate({
     String? username,
     String? password,
@@ -68,16 +65,17 @@ class MockAuthenticationService {
 
     // Json to map the response
     final jsonResponse = json.decode(response.body);
-    final tokenResponse = convertToAuthorizationTokenResponse(
-        jsonResponse as Map<String, dynamic>);
+    final tokenResponse =
+        convertToTokenResponse(jsonResponse as Map<String, dynamic>);
     CarpUser user = getCurrentUserProfile(tokenResponse);
     user.authenticated(OAuthToken.fromTokenResponse(tokenResponse));
 
-    _currentUser = user;
+    currentUser = user;
 
     return user;
   }
 
+  @override
   Future<CarpUser> refresh({
     String? username,
     String? password,
@@ -91,8 +89,8 @@ class MockAuthenticationService {
 
     final body = {
       'client_id': app.clientId,
-      'username': username,
-      'password': password,
+      if (username != null) 'username': username,
+      if (password != null) 'password': password,
       'grant_type': 'refresh_token',
       'refresh_token': currentUser.token!.refreshToken,
     };
@@ -104,23 +102,23 @@ class MockAuthenticationService {
 
     // Json to map the response
     final jsonResponse = json.decode(response.body);
-    final tokenResponse = convertToAuthorizationTokenResponse(
-        jsonResponse as Map<String, dynamic>);
+    final tokenResponse =
+        convertToTokenResponse(jsonResponse as Map<String, dynamic>);
     CarpUser user = getCurrentUserProfile(tokenResponse);
     user.authenticated(OAuthToken.fromTokenResponse(tokenResponse));
 
-    _currentUser = user;
+    currentUser = user;
 
     return user;
   }
 
   /// Logout from CARP
+  @override
   Future<void> logout() async {
-    _currentUser = null;
+    currentUser = null;
   }
 
-  AuthorizationTokenResponse convertToAuthorizationTokenResponse(
-      Map<String, dynamic> json) {
+  TokenResponse convertToTokenResponse(Map<String, dynamic> json) {
     return AuthorizationTokenResponse(
       json['access_token'] as String,
       json['refresh_token'] as String,
@@ -134,11 +132,5 @@ class MockAuthenticationService {
       null,
       null,
     );
-  }
-
-  /// Gets the CARP profile of the current user from the JWT token
-  CarpUser getCurrentUserProfile(TokenResponse response) {
-    var jwt = JwtDecoder.decode(response.accessToken!);
-    return CarpUser.fromJWT(jwt);
   }
 }

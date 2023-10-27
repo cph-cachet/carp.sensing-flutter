@@ -26,6 +26,8 @@ class CarpService extends CarpBaseService {
   /// Before this instance can be used, it must be configured using the
   /// [configure] method.
   factory CarpService() => _instance;
+  CarpService.instance()
+      : this._(); // So we can extend this class and call the private constructor
 
   FlutterAppAuth appAuth = const FlutterAppAuth();
 
@@ -53,6 +55,7 @@ class CarpService extends CarpBaseService {
 
   @override
   CarpUser get currentUser => nonNullAble(_currentUser);
+  set currentUser(CarpUser? user) => _currentUser = user;
 
   final StreamController<AuthEvent> _authEventController =
       StreamController.broadcast();

@@ -9,7 +9,6 @@ import 'package:iso_duration_parser/iso_duration_parser.dart';
 import 'credentials.dart';
 
 void main() {
-  CarpApp app;
   CarpUser? user;
   String? ownerId;
   late StudyProtocol protocol;
@@ -19,7 +18,7 @@ void main() {
     CarpMobileSensing.ensureInitialized();
 
     CarpProtocolService().configureFrom(CarpService());
-    ownerId = CarpService().currentUser!.accountId;
+    ownerId = CarpService().currentUser.id;
     var phone = Smartphone(roleName: phoneRoleName);
     phone.defaultSamplingConfiguration?.addAll({
       Geolocation.dataType: BatteryAwareSamplingConfiguration(

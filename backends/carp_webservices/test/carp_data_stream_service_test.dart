@@ -6,10 +6,11 @@ import 'package:carp_webservices/carp_services/carp_services.dart';
 import 'package:test/test.dart';
 
 import 'credentials.dart';
+import 'mock_authentication_service.dart';
 
 void main() {
   CarpApp app;
-  CarpUser? user;
+  CarpUser? mockUser;
 
   /// Runs once before all tests.
   setUpAll(() async {
@@ -18,16 +19,14 @@ void main() {
     // Initialization of serialization
     CarpMobileSensing.ensureInitialized();
 
-    app = CarpApp(
-      studyDeploymentId: testDeploymentId,
-      name: "Unit Test",
-      uri: Uri.parse(uri),
-    );
-
+    app = MockAuthenticationService().app;
     CarpService().configure(app);
 
-    user = await CarpService().authenticate(
+    CarpUser mockUser = await MockAuthenticationService().authenticate(
+      username: username,
+      password: password,
     );
+    CarpService().currentUser = mockUser;
 
     CarpDataStreamService().configureFrom(CarpService());
   });
@@ -38,7 +37,7 @@ void main() {
   group("Base services", () {
     test('- authentication', () async {
       print('CarpService : ${CarpService().app}');
-      print(" - signed in as: $user");
+      print(" - signed in as: $mockUser");
       //expect(user.accountId, testParticipantId);
     }, skip: false);
   });
