@@ -1,3 +1,10 @@
+## 2.0.0
+
+Completely revamped authentication service to use an Identity Server, using the `flutter_appauth` library.
+* Deprecated unused endpoints
+* Revamped existing endpoints to use an Identity Server and native OS APIs for authentication. Look at README.
+* Added new endpoints to accomodate all use-cases
+
 ## 1.3.0
 
 * upgrade of uuid plugins
