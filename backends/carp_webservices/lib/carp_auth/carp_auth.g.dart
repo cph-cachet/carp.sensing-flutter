@@ -10,45 +10,19 @@ OAuthToken _$OAuthTokenFromJson(Map<String, dynamic> json) => OAuthToken(
       json['access_token'] as String,
       json['refresh_token'] as String,
       json['token_type'] as String,
-      json['expires_in'] as int,
-      json['scope'] as String,
-    );
+      DateTime.parse(json['expires_at'] as String),
+      (json['scope'] as List<dynamic>).map((e) => e as String).toList(),
+      json['id_token'] as String,
+    )..expiresIn = json['expires_in'] as int?;
 
-Map<String, dynamic> _$OAuthTokenToJson(OAuthToken instance) =>
-    <String, dynamic>{
-      'access_token': instance.accessToken,
-      'refresh_token': instance.refreshToken,
-      'token_type': instance.tokenType,
-      'scope': instance.scope,
-      'expires_in': instance.expiresIn,
-    };
-
-CarpUser _$CarpUserFromJson(Map<String, dynamic> json) => CarpUser(
-      username: json['username'] as String? ?? '',
-      id: json['id'] as int?,
-      accountId: json['account_id'] as String?,
-      firstName: json['first_name'] as String?,
-      lastName: json['last_name'] as String?,
-      isActivated: json['is_activated'] as bool? ?? true,
-      phone: json['phone'] as String?,
-      email: json['email'] as String?,
-      department: json['department'] as String?,
-      organization: json['organization'] as String?,
-    )
-      ..termsAgreed = json['terms_agreed'] == null
-          ? null
-          : DateTime.parse(json['terms_agreed'] as String)
-      ..created = json['created'] == null
-          ? null
-          : DateTime.parse(json['created'] as String)
-      ..role = (json['role'] as List<dynamic>).map((e) => e as String).toList()
-      ..token = json['token'] == null
-          ? null
-          : OAuthToken.fromJson(json['token'] as Map<String, dynamic>);
-
-Map<String, dynamic> _$CarpUserToJson(CarpUser instance) {
+Map<String, dynamic> _$OAuthTokenToJson(OAuthToken instance) {
   final val = <String, dynamic>{
-    'username': instance.username,
+    'access_token': instance.accessToken,
+    'refresh_token': instance.refreshToken,
+    'token_type': instance.tokenType,
+    'id_token': instance.idToken,
+    'scope': instance.scope,
+    'expires_at': instance.expiresAt.toIso8601String(),
   };
 
   void writeNotNull(String key, dynamic value) {
@@ -57,18 +31,38 @@ Map<String, dynamic> _$CarpUserToJson(CarpUser instance) {
     }
   }
 
-  writeNotNull('id', instance.id);
-  writeNotNull('account_id', instance.accountId);
-  writeNotNull('is_activated', instance.isActivated);
-  writeNotNull('email', instance.email);
-  writeNotNull('first_name', instance.firstName);
-  writeNotNull('last_name', instance.lastName);
-  writeNotNull('phone', instance.phone);
-  writeNotNull('department', instance.department);
-  writeNotNull('organization', instance.organization);
-  writeNotNull('terms_agreed', instance.termsAgreed?.toIso8601String());
-  writeNotNull('created', instance.created?.toIso8601String());
-  val['role'] = instance.role;
+  writeNotNull('expires_in', instance.expiresIn);
+  return val;
+}
+
+CarpUser _$CarpUserFromJson(Map<String, dynamic> json) => CarpUser(
+      username: json['username'] as String,
+      id: json['id'] as String,
+      firstName: json['first_name'] as String,
+      lastName: json['last_name'] as String,
+      email: json['email'] as String,
+      roles: json['roles'] as List<dynamic>,
+      token: json['token'] == null
+          ? null
+          : OAuthToken.fromJson(json['token'] as Map<String, dynamic>),
+    );
+
+Map<String, dynamic> _$CarpUserToJson(CarpUser instance) {
+  final val = <String, dynamic>{
+    'username': instance.username,
+    'id': instance.id,
+    'email': instance.email,
+    'first_name': instance.firstName,
+    'last_name': instance.lastName,
+    'roles': instance.roles,
+  };
+
+  void writeNotNull(String key, dynamic value) {
+    if (value != null) {
+      val[key] = value;
+    }
+  }
+
   writeNotNull('token', instance.token);
   return val;
 }

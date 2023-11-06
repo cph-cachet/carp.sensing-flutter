@@ -14,8 +14,21 @@ class CarpApp {
   /// URI of the CARP web service
   final Uri uri;
 
-  /// The OAuth 2.0 endpoint.
-  final OAuthEndPoint oauth;
+  /// The OAuth endpoint for this app.
+  final Uri authURL;
+
+  /// OAuth client id
+  final String clientId;
+
+  /// Redirect URI for OAuth
+  final Uri redirectURI;
+
+  /// Redirect uri for OAuth after logout
+  /// If not specified, the [redirectURI] is used.
+  Uri? logoutRedirectURI;
+
+  /// Discovery URI for OAuth
+  final Uri discoveryURL;
 
   /// The CARP study id for this app.
   String? studyId;
@@ -33,9 +46,13 @@ class CarpApp {
   CarpApp({
     required this.name,
     required this.uri,
-    required this.oauth,
+    required this.authURL,
+    required this.clientId,
+    required this.redirectURI,
+    required this.discoveryURL,
     this.studyDeploymentId,
     this.studyId,
+    this.logoutRedirectURI,
   });
 
   @override

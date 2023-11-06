@@ -38,10 +38,10 @@ class CarpParticipationService extends CarpBaseService
   @override
   Future<List<ActiveParticipationInvitation>> getActiveParticipationInvitations(
       [String? accountId]) async {
-    accountId ??= currentUser!.accountId;
+    accountId ??= currentUser!.id;
 
     Map<String, dynamic> responseJson =
-        await _rpc(GetActiveParticipationInvitations(accountId!));
+        await _rpc(GetActiveParticipationInvitations(accountId));
 
     // we expect a list of 'items' which maps to the invitations
     List<dynamic> items = responseJson['items'] as List<dynamic>;
@@ -100,8 +100,8 @@ class CarpParticipationService extends CarpBaseService
     }
 
     // make sure that the correct study and deployment ids are saved in the app
-    CarpService().app!.studyId = invitation?.studyId;
-    CarpService().app!.studyDeploymentId = invitation?.studyDeploymentId;
+    CarpService().app.studyId = invitation?.studyId;
+    CarpService().app.studyDeploymentId = invitation?.studyDeploymentId;
 
     return invitation;
   }

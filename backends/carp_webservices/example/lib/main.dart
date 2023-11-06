@@ -13,8 +13,6 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'CARP Backend Demo',
-      theme: ThemeData.light(),
-      darkTheme: ThemeData.dark(),
       home: HomePage(),
     );
   }
@@ -47,10 +45,8 @@ class _HomePageState extends State<HomePage> {
             width: 200,
             decoration: BoxDecoration(borderRadius: BorderRadius.circular(10)),
             child: TextButton.icon(
-              onPressed: () => bloc.authenticate(
-                context,
-                username: 'user@dtu.dk',
-              ),
+              onPressed: () async =>
+                  bloc.currentUser = await CarpService().authenticate(),
               icon: Icon(Icons.login),
               label: Text(
                 'LOGIN',
@@ -86,32 +82,44 @@ class _HomePageState extends State<HomePage> {
 }
 
 class AppBLoC {
-  final String uri = "https://cans.cachet.dk/dev";
   ActiveParticipationInvitation? _invitation;
   String? get studyId => _invitation?.studyId;
   String? get studyDeploymentId => _invitation?.studyDeploymentId;
 
   CarpApp? _app;
   CarpApp? get app => _app;
+  Uri uri = Uri(
+    scheme: 'https',
+    host: 'carp.computerome.dk',
+    pathSegments: [
+      'auth',
+      'dev',
+      'realms',
+      'Carp',
+    ],
+  );
+
+  bool get authenticated => currentUser != null;
+
+  CarpUser? currentUser;
+
+  late CarpApp mockCarpApp = CarpApp(
+    name: "CAWS @ DTU",
+    uri: uri.replace(pathSegments: ['dev']),
+    authURL: uri,
+    clientId: 'carp-webservices-dart',
+    redirectURI: Uri.base,
+    discoveryURL: Uri.base,
+  );
 
   Future<void> init() async {
-    _app = CarpApp(
-      name: 'carp_backend_example_app',
-      uri: Uri.parse(uri),
-      oauth: OAuthEndPoint(clientID: 'carp', clientSecret: 'carp'),
-    );
 
-    CarpService().configure(app!);
+
+
+    CarpService().configure(mockCarpApp);
   }
 
   void dispose() async {}
-
-  Future<void> authenticate(BuildContext context, {String? username}) async =>
-      await CarpService().authenticateWithDialog(
-        context,
-        username: username,
-        allowClose: true,
-      );
 
   Future<ActiveParticipationInvitation?> getStudyInvitation(
       BuildContext context) async {
