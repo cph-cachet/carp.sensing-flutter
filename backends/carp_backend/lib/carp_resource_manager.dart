@@ -44,7 +44,7 @@ class CarpResourceManager
   void _assertCarpService() {
     assert(CarpService().isConfigured,
         "CARP Service has not been configured - call 'CarpService().configure()' first.");
-    assert(CarpService().currentUser != null,
+    assert(CarpService().currentUser.isAuthenticated,
         "No user is authenticated - call 'CarpService().authenticate()' first.");
   }
 
@@ -227,7 +227,7 @@ class CarpResourceManager
       _assertCarpService();
 
       info('Getting language locale from server. '
-          'study_id: ${CarpService().app?.studyId}, '
+          'study_id: ${CarpService().app.studyId}, '
           'path: ${_getLocalizationsPath(locale)}');
       DocumentSnapshot? document =
           await CarpService().document(_getLocalizationsPath(locale)).get();
