@@ -20,6 +20,9 @@ class CarpApp {
   /// OAuth client id
   final String clientId;
 
+  /// OAuth client secret
+  String? clientSecret;
+
   /// Redirect URI for OAuth
   final Uri redirectURI;
 
@@ -48,6 +51,7 @@ class CarpApp {
     required this.uri,
     required this.authURL,
     required this.clientId,
+    this.clientSecret,
     required this.redirectURI,
     required this.discoveryURL,
     this.studyDeploymentId,

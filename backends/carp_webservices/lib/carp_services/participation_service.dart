@@ -91,12 +91,14 @@ class CarpParticipationService extends CarpBaseService
     if (invitations.length == 1 || !showInvitations) {
       invitation = invitations[0];
     } else {
-      invitation = await showDialog<ActiveParticipationInvitation>(
-          context: context,
-          barrierDismissible: allowClose,
-          builder: (BuildContext context) =>
-              ActiveParticipationInvitationDialog()
-                  .build(context, invitations));
+      if (context.mounted) {
+        invitation = await showDialog<ActiveParticipationInvitation>(
+            context: context,
+            barrierDismissible: allowClose,
+            builder: (BuildContext context) =>
+                ActiveParticipationInvitationDialog()
+                    .build(context, invitations));
+      }
     }
 
     // make sure that the correct study and deployment ids are saved in the app

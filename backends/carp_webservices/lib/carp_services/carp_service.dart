@@ -93,6 +93,7 @@ class CarpService extends CarpBaseService {
         await appAuth.authorizeAndExchangeCode(
       AuthorizationTokenRequest(
         app.clientId, "${app.redirectURI}",
+        clientSecret: app.clientSecret ?? '',
         discoveryUrl: "${app.discoveryURL}",
         scopes: ['openid'], // To get an ID token
       ),
@@ -133,6 +134,7 @@ class CarpService extends CarpBaseService {
       TokenRequest(
         app.clientId,
         "${app.redirectURI}",
+        clientSecret: app.clientSecret ?? '',
         discoveryUrl: "${app.discoveryURL}",
         grantType: 'password',
         additionalParameters: Map.fromEntries([
@@ -183,6 +185,7 @@ class CarpService extends CarpBaseService {
     ]);
     final body = {
       'client_id': app.clientId,
+      'client_secret': app.clientSecret ?? '',
       'username': username,
       'password': password,
       'grant_type': 'password',
@@ -237,6 +240,7 @@ class CarpService extends CarpBaseService {
     final TokenResponse? response = await appAuth.token(
       TokenRequest(
         app.clientId,
+        clientSecret: app.clientSecret ?? '',
         "${app.redirectURI}",
         discoveryUrl: "${app.discoveryURL}",
         refreshToken: currentUser.token!.refreshToken,
@@ -289,6 +293,7 @@ class CarpService extends CarpBaseService {
 
     final body = {
       'client_id': app.clientId,
+      'client_secret': app.clientSecret ?? '',
       'grant_type': 'refresh_token',
       'refresh_token': currentUser.token!.refreshToken,
     };
