@@ -1,6 +1,6 @@
 name: carp_study_generator
 description: Utilities for generating CARP Mobile Sensing studies
-version: 1.3.0
+version: 1.3.1
 homepage: https://github.com/cph-cachet/carp.sensing-flutter
 
 environment:
@@ -13,8 +13,8 @@ dependencies:
   carp_serializable: ^1.1.0
   carp_core: ^1.3.0
   carp_mobile_sensing: ^1.3.0
-  carp_webservices: ^1.3.0
-  carp_backend: ^1.3.0
+  carp_webservices: ^2.0.1
+  carp_backend: ^1.3.1
   carp_apps_package: ^1.3.0
   carp_context_package: ^1.3.0
   carp_audio_package: ^1.3.0
@@ -62,16 +62,16 @@ dependencies:
 #     path: ../../packages/carp_survey_package/
 #   carp_health_package:
 #     path: ../../packages/carp_health_package/
-#   research_package: 
+#   research_package:
 #     path: ../../../../research.package
-#   cognition_package: 
+#   cognition_package:
 #     path: ../../../../cognition_package
 
 # Overriding carp libraries to use github branch
 #
 # NOTE - you need to run "flutter pub upgrade" and "flutter pub get" in order to download the lastest
 # versions from Github.
-# dependency_overrides:  
+# dependency_overrides:
 #   carp_core:
 #     git:
 #       url: https://github.com/cph-cachet/carp.sensing-flutter.git
@@ -132,11 +132,11 @@ dependencies:
   #     url: https://github.com/cph-cachet/carp.sensing-flutter.git
   #     ref: develop
   #     path: backends/carp_webservices/
-  # research_package: 
+  # research_package:
   #   git:
   #     url: https://github.com/cph-cachet/research.package.git
   #     ref: dev-carp-core-0_40_0
-  # cognition_package: 
+  # cognition_package:
   #   git:
   #     url: https://github.com/cph-cachet/cognition_package.git
   #     ref: develop

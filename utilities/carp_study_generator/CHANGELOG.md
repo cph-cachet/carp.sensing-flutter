@@ -1,3 +1,8 @@
+## 1.3.1
+
+* update to new authentication from webservices 2.0.0
+* use new style of `CarpApp`
+
 ## 1.3.0
 
 * update to `carp_mobile_sensing` v. 1.3.0

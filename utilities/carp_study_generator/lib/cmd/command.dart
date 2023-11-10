@@ -11,7 +11,14 @@ abstract class AbstractCommand implements Command {
   static dynamic _yaml;
   CarpApp? _app;
 
-  String? get uri => _yaml['server']['uri'].toString();
+  Uri? get _uri => Uri.parse(_yaml['server']['uri'] as String);
+  Uri get uri {
+    if (_uri == null) {
+      throw Exception("No URI is provided");
+    }
+    return _uri!;
+  }
+
   String get clientId => _yaml['server']['client_id'].toString();
   String get clientSecret => _yaml['server']['client_secret'].toString();
   String get username => _yaml['server']['username'].toString();
@@ -30,7 +37,7 @@ abstract class AbstractCommand implements Command {
   List<dynamic> get locales =>
       _yaml['localization']['locales'] as List<dynamic>;
 
-  String get ownerId => CarpService().currentUser?.accountId ?? 'unknown';
+  String get ownerId => CarpService().currentUser.id;
 
   AbstractCommand() {
     WidgetsFlutterBinding.ensureInitialized();
@@ -61,24 +68,29 @@ abstract class AbstractCommand implements Command {
   /// The configuration of the CARP server app.
   CarpApp get app {
     if (_app == null) {
-      if (uri == null) throw Exception("No URI is provided");
-      if (!Uri.parse(uri!).isAbsolute)
-        throw Exception("Not a valid URI - '$uri'");
       try {
         if (studyId == null) throw Exception("A study ID must be provided");
-        if (studyId!.length == 0)
+        if (studyId!.isEmpty) {
           throw Exception("The study ID cannot be empty - '$studyId'");
+        }
       } catch (e) {
         throw Exception("A valid study ID is not provided");
       }
-
       _app = CarpApp(
-        name: "CARP server at '$uri'",
-        uri: Uri.parse(uri!),
-        oauth: OAuthEndPoint(clientID: clientId, clientSecret: clientSecret),
+        name: "CAWS @ DTU",
+        uri: uri.replace(pathSegments: ['dev']),
+        authURL: uri,
+        clientId: clientId,
+        clientSecret: clientSecret,
+        redirectURI: Uri.parse('carp-studies-auth://auth'),
+        discoveryURL: uri.replace(pathSegments: [
+          ...uri.pathSegments,
+          '.well-known',
+          'openid-configuration'
+        ]),
         studyId: studyId,
-        // studyDeploymentId: studyDeploymentId,
       );
+      print(_app);
     }
     return _app!;
   }
@@ -88,7 +100,8 @@ abstract class AbstractCommand implements Command {
     print('CARP app: $app');
     CarpService().configure(app);
     print('Authenticating to the CARP Server...');
-    await CarpService().authenticate(username: username, password: password);
+    await CarpService().authenticateWithUsernamePasswordNoContext(
+        username: username, password: password);
     print("Authenticated as user: '$username'");
     CarpProtocolService().configureFrom(CarpService());
   }

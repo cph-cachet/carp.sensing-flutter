@@ -26,7 +26,7 @@ class DryRunCommand extends AbstractCommand {
     }
 
     try {
-      await CarpService().authenticate(username: username, password: password);
+      await CarpService().authenticateWithUsernamePasswordNoContext(username: username, password: password);
       print('\x1B[32m[✓]\x1B[0m CARP Server \t username: $username');
     } catch (error) {
       print('\x1B[31m[!]\x1B[0m CARP Server \t ${errorToString(error)}');
@@ -88,13 +88,13 @@ class DryRunCommand extends AbstractCommand {
 
     String locale = '', path = '';
     try {
-      locales.forEach((element) {
+      for (var element in locales) {
         locale = element.toString();
         path = '$localizationPath$locale.json';
         String localeJson = File(path).readAsStringSync();
         json.decode(localeJson);
         print('\x1B[32m[✓]\x1B[0m Locale - $locale \t $path');
-      });
+      }
     } catch (error) {
       print('\x1B[31m[!]\x1B[0m Locale - $locale \t ${errorToString(error)}');
       issues++;
@@ -102,13 +102,13 @@ class DryRunCommand extends AbstractCommand {
 
     String id = '';
     try {
-      messageIds.forEach((element) {
+      for (var element in messageIds) {
         id = element.toString();
         path = '$messagesPath$id.json';
         String localeJson = File(path).readAsStringSync();
         json.decode(localeJson);
         print('\x1B[32m[✓]\x1B[0m Message - $id \t $path');
-      });
+      }
     } catch (error) {
       print('\x1B[31m[!]\x1B[0m Message - $id \t ${errorToString(error)}');
       issues++;
