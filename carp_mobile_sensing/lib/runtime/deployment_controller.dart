@@ -50,9 +50,9 @@ class SmartphoneDeploymentController extends StudyRuntime<DeviceRegistration> {
   /// This is a broadcast stream and supports multiple subscribers.
   Stream<Measurement> get measurements =>
       _executor.measurements.map((measurement) => measurement
-        ..data = _transformer(TransformerSchemaRegistry()
+        ..data = _transformer(DataTransformerSchemaRegistry()
             .lookup(deployment?.dataEndPoint?.dataFormat ?? NameSpace.CARP)!
-            .transform(TransformerSchemaRegistry()
+            .transform(DataTransformerSchemaRegistry()
                 .lookup(privacySchemaName)!
                 .transform(measurement.data))));
 
@@ -100,7 +100,7 @@ class SmartphoneDeploymentController extends StudyRuntime<DeviceRegistration> {
     // and save a local cache
     status = await super.tryDeployment();
     if (status == StudyStatus.Deployed && deployment != null) {
-      deployment!.deployed = DateTime.now();
+      deployment!.deployed = DateTime.now().toUtc();
       // if no user is specified for this study, look up the local user id
       deployment!.userId ??= await Settings().userId;
       deployment?.status = status;

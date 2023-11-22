@@ -7,7 +7,7 @@
 [![arXiv](https://img.shields.io/badge/arXiv-2006.11904-green.svg)](https://arxiv.org/abs/2006.11904)
 
 This library contains a sampling package for sampling health data from Apple Health and Google Fit or Health Connect to work with the [carp_mobile_sensing](https://pub.dartlang.org/packages/carp_mobile_sensing) framework. It uses the [health](https://pub.dev/packages/health) plugin for this.
-This packages supports sampling of the following [`Measure`](https://pub.dev/documentation/carp_core/latest/carp_core_protocols/Measure-class.html) types:
+This packages supports sampling of the following [`Measure`](https://pub.dev/documentation/carp_core/latest/carp_core_common/Measure-class.html) types:
 
 * `dk.cachet.carp.health`
 
@@ -73,7 +73,7 @@ import 'package:carp_health_package/health.dart';
 `````
 
 Before creating a study and running it, register this package in the
-[SamplingPackageRegistry](https://pub.dartlang.org/documentation/carp_mobile_sensing/latest/runtime/SamplingPackageRegistry.html).
+[SamplingPackageRegistry](https://pub.dev/documentation/carp_mobile_sensing/latest/runtime/SamplingPackageRegistry-class.html).
 
 `````dart
 SamplingPackageRegistry().register(HealthSamplingPackage());
@@ -107,7 +107,7 @@ When defining a study protocol with a health device, it would look like this:
   protocol.addConnectedDevice(healthService, phone);
 ```
 
-Note that a list of `HealthDataType` types is specified for the service. This is later used by the service to request the right permission to access this type of data.
+Note that a list of [`HealthDataType`](https://pub.dev/documentation/health/latest/health/HealthDataType.html) types is specified for the service. This is later used by the service to request the right permission to access this type of data.
 
 Data sampling can now be configured by a measure in the protocol:
 
@@ -125,7 +125,7 @@ Data sampling can now be configured by a measure in the protocol:
       healthService);
 ```
 
-This would collect health data every hour using the same data types, as configured for the service. Configuration of what data to collect is done via the `HealthSamplingConfiguration` which is used to override the default configuration (default is to collect nothing). Another set of data to collect can be specified, as shown below. However, the user might not have granted access to collect this data.
+This would collect health data every hour using the same data types, as configured for the service. Configuration of what data to collect is done via the [`HealthSamplingConfiguration`](https://pub.dev/documentation/carp_health_package/latest/health_package/HealthSamplingConfiguration-class.html) which is used to override the default configuration (default is to collect nothing). Another set of data to collect can be specified, as shown below. However, the user might not have granted access to collect this data.
 
 ```dart
   // Automatically collect another set of health data every hour
@@ -162,7 +162,7 @@ The `HealthSamplingConfiguration` can be configured to collect a specific set of
 * STEPS,
 * ...
 
-See the [`HealthDataType`](https://pub.dev/documentation/health/latest/health/HealthDataType-class.html) documentation for a complete list.
+See the [`HealthDataType`](https://pub.dev/documentation/health/latest/health/HealthDataType.html) documentation for a complete list.
 
 A `HealthSamplingConfiguration` is a [`HistoricSamplingConfiguration`](https://pub.dev/documentation/carp_mobile_sensing/latest/domain/HistoricSamplingConfiguration-class.html).
 This means that when triggered, the task and measure will try to collect data back to the last time data was collected.
@@ -189,3 +189,34 @@ However, it can also be configured using as an [`AppTask`](https://pub.dev/docum
 > **NOTE** - Health data can only be collected when the app is in the foreground and the phone is unlocked. This applies both for Android and iOS.
 
 See the `example.dart` file for a full example of how to set up a CAMS study protocol for this sampling package.
+
+## Collected Data
+
+The data collected is contained in a [`HealthData`](https://pub.dev/documentation/carp_health_package/latest/health_package/HealthData-class.html) object, which wraps the data collected from a [`HealthDataPoint`](https://pub.dev/documentation/health/latest/health/HealthDataPoint-class.html). For example, workout collected from Apple Health serialized to JSON may looks like this:
+
+```json
+{
+ "sensorStartTime": 1700415799841973,
+ "data": {
+  "__type": "dk.cachet.carp.health.workout",
+  "uuid": "4321",
+  "value": {
+   "workoutActivityType": "AEROBICS",
+   "totalEnergyBurned": 8,
+   "totalEnergyBurnedUnit": "KILOCALORIE",
+   "totalDistance": 1000,
+   "totalDistanceUnit": "METER"
+  },
+  "unit": "NO_UNIT",
+  "date_from": "2023-11-19T09:43:19.841907Z",
+  "date_to": "2023-11-19T17:43:19.841907Z",
+  "data_type": "WORKOUT",
+  "platform": "IOS",
+  "device_id": "1234",
+  "source_id": "4321",
+  "source_name": "4321"
+ }
+}
+```
+
+The type of the collected health data is `dk.cachet.carp.health.workout` and in general, the collected health data has the type of `dk.cachet.carp.health.<health_type>`, where `health_type` is the lower-case version of [`HealthDataType`](https://pub.dev/documentation/health/latest/health/HealthDataType.html).

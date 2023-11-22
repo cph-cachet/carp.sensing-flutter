@@ -34,7 +34,7 @@ class ImmediateTrigger extends TriggerConfiguration {
   Map<String, dynamic> toJson() => _$ImmediateTriggerToJson(this);
 }
 
-/// A trigger that triggers once during a deployment.
+/// A trigger that triggers only once during a deployment.
 ///
 /// In contrast to [ImmediateTrigger], which triggers every time the app is (re)started,
 /// this [OneTimeTrigger] only triggers *once* during the life-time of a deployment.
@@ -519,8 +519,8 @@ class ConditionalSamplingEventTrigger extends TriggerConfiguration {
 /// Returns [true] if triggering should happen, [false] otherwise.
 typedef ConditionalEvaluator = bool Function();
 
-/// A trigger that periodically checks if application-specific  triggering
-/// condition is meet.
+/// A trigger that periodically checks if an application-specific  triggering
+/// condition is met.
 ///
 /// Note that the [triggerCondition] is a [ConditionalEvaluator] function,
 /// which cannot be serialized to/from JSON.

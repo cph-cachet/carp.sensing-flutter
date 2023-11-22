@@ -11,7 +11,7 @@ part of carp_core_deployment;
 /// device participates in running a study.
 @JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
 class PrimaryDeviceDeployment {
-  // The configuration for the primary device this deployment is intended for.
+  /// The configuration for the primary device this deployment is intended for.
   PrimaryDeviceConfiguration deviceConfiguration;
 
   /// Registration for this primary device.

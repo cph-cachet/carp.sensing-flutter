@@ -18,6 +18,7 @@ import 'package:iso_duration_parser/iso_duration_parser.dart';
 Future<void> minimalExample() async {
   // Create a protocol.
   final phone = Smartphone();
+
   final protocol = SmartphoneStudyProtocol(
     ownerId: 'AB',
     name: 'Tracking steps, light, screen, and battery',
@@ -81,7 +82,7 @@ Future<void> example_0() async {
   protocol.addPrimaryDevice(phone);
 
   // Automatically collect step count, ambient light, screen activity, and
-  // battery level. Sampling is delaying by 10 seconds.
+  // battery level from the phone. Sampling is delayed by 10 seconds.
   protocol.addTaskControl(
     DelayedTrigger(delay: const Duration(seconds: 10)),
     BackgroundTask(measures: [
@@ -91,7 +92,6 @@ Future<void> example_0() async {
       Measure(type: DeviceSamplingPackage.BATTERY_STATE),
     ]),
     phone,
-    Control.Start,
   );
 
   // STEP II -- DEPLOY STUDY ON A CLIENT
@@ -180,6 +180,9 @@ void example_1() async {
 
   // Print all data events from the study
   controller?.measurements.forEach(print);
+
+  // Using the client's measurements stream
+  client.measurements.forEach(print);
 }
 
 /// This is a more elaborate example used in the README.md file.
@@ -226,7 +229,7 @@ void example_2() async {
   );
 
   // specify details of a light measure
-  Measure lightMeasure = Measure(
+  var lightMeasure = Measure(
     type: SensorSamplingPackage.AMBIENT_LIGHT,
   )..overrideSamplingConfiguration = PeriodicSamplingConfiguration(
       interval: const Duration(minutes: 10),
@@ -294,6 +297,13 @@ void example_2() async {
     print(const JsonEncoder.withIndent(' ').convert(measurement));
   });
 
+  // Listen to a specific probe(s)
+  controller.executor
+      .lookupProbe(CarpDataTypes.ACCELERATION_TYPE_NAME)
+      .forEach((probe) => probe.measurements.listen(
+            (measurement) => print(measurement),
+          ));
+
   // Sampling can be stopped and started
   controller.executor.stop();
   controller.executor.start();
@@ -319,7 +329,7 @@ void example_2() async {
       .lookupProbe(SensorSamplingPackage.AMBIENT_LIGHT)
       .forEach((probe) => probe.restart());
 
-  // Once the sampling has to stop, e.g. in a Flutter dispose() methods,
+  // Once the sampling has to stop, e.g. in a Flutter dispose() method,
   // call the controller's dispose method.
   controller.dispose();
 
@@ -329,7 +339,7 @@ void example_2() async {
 
 /// An example of how to configure a [SmartphoneStudyProtocol] with the
 /// default privacy schema.
-void studyControllerExample() async {
+void privacySchemaExample() async {
   SmartphoneStudyProtocol protocol = SmartphoneStudyProtocol(
     ownerId: 'AB',
     name: 'Track patient movement',
@@ -417,6 +427,20 @@ void example_4() async {
       .getDeviceDeployment(studyDeploymentId);
 
   print(deployment);
+}
+
+void transformedExample() async {
+  // Create a study protocol storing data in files using the OMH data format
+  SmartphoneStudyProtocol protocol = SmartphoneStudyProtocol(
+    ownerId: 'AB',
+    name: 'Track patient movement',
+    dataEndPoint: FileDataEndPoint(
+      bufferSize: 500 * 1000,
+      zip: true,
+      encrypt: false,
+      dataFormat: NameSpace.OMH,
+    ),
+  );
 }
 
 void protocolExample() async {

@@ -1,8 +1,10 @@
-/// A library containing a sampling package for collecting information from the device hardware:
+/// A library containing a sampling package for collecting information from the
+/// device hardware:
 ///  - device info
-///  - battery
-///  - screen
+///  - battery status
+///  - screen events
 ///  - free memory
+///  - time zone
 library device;
 
 import 'dart:async';
