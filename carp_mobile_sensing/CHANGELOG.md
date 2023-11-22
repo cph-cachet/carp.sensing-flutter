@@ -1,4 +1,4 @@
-## 1.3.4
+## 1.3.5
 
 * upgrade of uuid and permission_handler plugins
 * addition of a ACCELERATION_FEATURES that samples accelerometer readings over a sampling period and calculates a set of statistical features (Issue [336](https://github.com/cph-cachet/carp.sensing-flutter/issues/336) & [347](https://github.com/cph-cachet/carp.sensing-flutter/issues/347))
