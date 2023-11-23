@@ -5,6 +5,7 @@
 * removal of support for awesome_notifications which does not compile on iOS
 * improvements to API docs
 * removal of `toString()` methods on data points - if you want to print data, print the json generated from the `toJson()` method.
+* rename of `TransformerSchemaRegistry` to `DataTransformerSchemaRegistry`
 
 ## 1.2.0
 

@@ -22,7 +22,7 @@ class LoadingPage extends StatelessWidget {
     // Initialize and use the CAWS backend if not in local deployment mode
     if (bloc.deploymentMode != DeploymentMode.local) {
       await CarpBackend().initialize();
-      await CarpBackend().authenticate(context, username: 'jakob@bardram.net');
+      await CarpBackend().authenticate();
 
       // Check if there is a local deployment id.
       // If not, get a deployment id based on an invitation.

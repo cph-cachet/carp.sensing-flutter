@@ -358,8 +358,8 @@ abstract class BTLEDeviceManager<
   @mustCallSuper
   Future<void> onRequestPermissions() async {
     if (Platform.isAndroid) {
-      await Permission.bluetoothConnect.request();
       await Permission.bluetoothScan.request();
+      await Permission.bluetoothConnect.request();
     }
     if (Platform.isIOS) {
       await Permission.bluetooth.request();

@@ -1,4 +1,4 @@
-## 1.3.2
+## 1.3.3
 
 * upgrade of uuid and permission_handler plugins
 * update to `carp_mobile_sensing` v. 1.3.0

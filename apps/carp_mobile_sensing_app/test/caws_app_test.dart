@@ -46,15 +46,41 @@ void main() {
     // create a data manager in order to register the json functions
     CarpDataManager();
 
+    var uri = Uri(
+      scheme: 'https',
+      host: 'carp.computerome.dk',
+      pathSegments: [
+        'auth',
+        'dev',
+        'realms',
+        'Carp',
+      ],
+    );
+
+    // app = CarpApp(
+    //   name: "Test",
+    //   uri: Uri.parse(uri),
+    //   oauth: OAuthEndPoint(clientID: clientID, clientSecret: clientSecret),
+    // );
+
     app = CarpApp(
       name: "Test",
-      uri: Uri.parse(uri),
-      oauth: OAuthEndPoint(clientID: clientID, clientSecret: clientSecret),
+      uri: uri.replace(pathSegments: ['dev']),
+      authURL: uri,
+      clientId: 'carp-webservices-dart',
+      redirectURI: Uri.parse('carp-studies-auth://auth'),
+      discoveryURL: uri.replace(pathSegments: [
+        ...uri.pathSegments,
+        '.well-known',
+        'openid-configuration'
+      ]),
+      studyId: testStudyId,
+      studyDeploymentId: testDeploymentId,
     );
 
     CarpService().configure(app);
 
-    user = await CarpService().authenticate(
+    user = await CarpService().authenticateWithUsernamePassword(
       username: username,
       password: password,
     );
