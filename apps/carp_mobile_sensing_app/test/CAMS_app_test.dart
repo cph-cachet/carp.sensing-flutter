@@ -50,11 +50,9 @@ void main() {
 
     // generate the protocol to be used in testing below
     // setting the right accountId, if to be uploaded to CAWS
-    // protocol ??=
-    //     await LocalStudyProtocolManager().getStudyProtocol('CAMS App v 1.1.0');
-    protocol ??= LocalStudyProtocolManager()
-        .getFamilyStudyProtocol('Family study with Participant Data');
-    // .getSingleUserStudyProtocol('Single Participant Study');
+    protocol ??= LocalStudyProtocolManager().getSingleUserStudyProtocol(
+        'CAMS Demo App Protocol - Single Participant Study');
+    // .getFamilyStudyProtocol('CAMS Demo App Protocol - Family study with Participant Data');
 
     protocol?.ownerId = accountId;
   });

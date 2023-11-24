@@ -211,18 +211,17 @@ class LocalStudyProtocolManager implements StudyProtocolManager {
         eSense);
 
     // define the Polar device and add its measures
-    // PolarDevice polar = PolarDevice(
-    //   identifier: 'B5FC172F',
-    //   name: 'Polar H10 HR Monitor',
-    //   polarDeviceType: PolarDeviceType.H10,
-    //   roleName: 'Polar H10',
-    // );
     PolarDevice polar = PolarDevice(
-      identifier: 'B36B5B21',
-      name: 'Polar PVS',
-      polarDeviceType: PolarDeviceType.SENSE,
-      roleName: 'polar-pvs-device',
+      identifier: 'B5FC172F',
+      name: 'Polar H10 HR Monitor',
+      polarDeviceType: PolarDeviceType.H10,
     );
+    // PolarDevice polar = PolarDevice(
+    //   identifier: 'B36B5B21',
+    //   name: 'Polar PVS',
+    //   polarDeviceType: PolarDeviceType.SENSE,
+    //   roleName: 'polar-pvs-device',
+    // );
 
     protocol.addConnectedDevice(polar, phone);
 
@@ -472,24 +471,21 @@ class LocalStudyProtocolManager implements StudyProtocolManager {
     //   identifier: 'B5FC172F',
     //   name: 'Polar H10 HR Monitor',
     //   polarDeviceType: PolarDeviceType.H10,
-    //   roleName: 'Polar H10',
     // );
     PolarDevice polar = PolarDevice(
       identifier: 'B36B5B21',
       name: 'Polar PVS',
       polarDeviceType: PolarDeviceType.SENSE,
-      roleName: 'polar-pvs-device',
     );
 
     protocol.addConnectedDevice(polar, fatherPhone);
 
     protocol.addTaskControl(
         ImmediateTrigger(),
-        BackgroundTask()
-          ..addMeasure(Measure(type: PolarSamplingPackage.HR))
-          ..addMeasure(Measure(type: PolarSamplingPackage.ECG))
-          ..addMeasure(Measure(type: PolarSamplingPackage.PPG))
-          ..addMeasure(Measure(type: PolarSamplingPackage.PPI)),
+        BackgroundTask()..addMeasure(Measure(type: PolarSamplingPackage.HR)),
+        // ..addMeasure(Measure(type: PolarSamplingPackage.ECG))
+        // ..addMeasure(Measure(type: PolarSamplingPackage.PPG))
+        // ..addMeasure(Measure(type: PolarSamplingPackage.PPI)),
         polar);
 
     return protocol;

@@ -131,13 +131,16 @@ class SmartphoneApplicationData {
 class SmartphoneStudyProtocol extends StudyProtocol
     with SmartphoneProtocolExtension {
   /// Create a new [SmartphoneStudyProtocol].
+  ///
+  /// If [ownerId] is not specified, a UUID will be generated.
   SmartphoneStudyProtocol({
-    required super.ownerId,
+    String? ownerId,
     required super.name,
     StudyDescription? studyDescription,
     DataEndPoint? dataEndPoint,
     String? privacySchemaName,
   }) : super(
+          ownerId: ownerId ?? const Uuid().v1(),
           description: studyDescription?.description ?? '',
         ) {
     // add the smartphone specific protocol data as application-specific data

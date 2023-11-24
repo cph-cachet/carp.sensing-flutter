@@ -18,7 +18,7 @@ void main() {
     Settings().debugLevel = DebugLevel.debug;
 
     // Initialization of serialization
-    CarpMobileSensing();
+    CarpMobileSensing.ensureInitialized();
 
     app = MockAuthenticationService().app;
     CarpService().configure(app);
@@ -28,7 +28,6 @@ void main() {
       password: password,
     );
     CarpService().currentUser = mockUser;
-
 
     CarpParticipationService().configureFrom(CarpService());
     CarpDeploymentService().configureFrom(CarpService());

@@ -24,7 +24,7 @@ class MockAuthenticationService extends CarpService {
   );
 
   late CarpApp mockCarpApp = CarpApp(
-    name: "CAWS @ DTU",
+    name: "CAWS @ Computerome",
     uri: uri.replace(pathSegments: ['dev']),
     authURL: uri,
     clientId: 'carp-webservices-dart',
