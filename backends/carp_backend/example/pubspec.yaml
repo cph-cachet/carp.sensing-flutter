@@ -15,7 +15,7 @@ dependencies:
   carp_serializable: ^1.0.0
   carp_core: ^1.1.0
   carp_mobile_sensing: ^1.1.0
-  carp_webservices: ^1.1.0
+  carp_webservices: ^2.0.0
 
   research_package: ^1.4.0
 

@@ -10,23 +10,47 @@ void main() async {
   // CONFIGURING THE CAWS APP
   // -----------------------------------------------
 
-  final String uri = "https://cans.cachet.dk";
+  Uri uri = Uri(
+    scheme: 'https',
+    host: 'carp.computerome.dk',
+    pathSegments: [
+      'auth',
+      'dev',
+      'realms',
+      'Carp',
+    ],
+  );
 
   // Configure an app that points to the CARP web services (CAWS)
+  // CarpApp app = CarpApp(
+  //   name: 'any_display_friendly_name_is_fine',
+  //   uri: Uri.parse(uri),
+  //   oauth: OAuthEndPoint(
+  //     clientID: 'the_client_id',
+  //     clientSecret: 'the_client_secret',
+  //   ),
+  // );
+
   CarpApp app = CarpApp(
-    name: 'any_display_friendly_name_is_fine',
-    uri: Uri.parse(uri),
-    oauth: OAuthEndPoint(
-      clientID: 'the_client_id',
-      clientSecret: 'the_client_secret',
-    ),
+    name: "CAWS @ DTU",
+    uri: uri.replace(pathSegments: ['dev']),
+    authURL: uri,
+    clientId: 'carp-webservices-dart',
+    redirectURI: uri,
+    discoveryURL: uri.replace(pathSegments: [
+      ...uri.pathSegments,
+      '.well-known',
+      'openid-configuration'
+    ]),
+    studyId: '<the_study_id_if_known>',
+    studyDeploymentId: '<the_study_deployment_id_if_known>',
   );
 
   // Configure the CAWS service
   CarpService().configure(app);
 
   // Authenticate at CAWS
-  await CarpService().authenticate(
+  await CarpService().authenticateWithUsernamePassword(
     username: 'the_username',
     password: 'the_password',
   );

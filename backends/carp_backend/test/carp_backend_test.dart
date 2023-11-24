@@ -69,8 +69,8 @@ void main() {
         '.well-known',
         'openid-configuration'
       ]),
-      studyId: studyId,
-      studyDeploymentId: studyDeploymentId,
+      studyId: testStudyId,
+      studyDeploymentId: testDeploymentId,
     );
 
     CarpService().configure(app);

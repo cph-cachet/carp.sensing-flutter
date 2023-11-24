@@ -23,12 +23,7 @@ void main() {
   Smartphone phone;
   CarpApp app;
 
-  final lightData = AmbientLight(
-    maxLux: 12,
-    meanLux: 23,
-    minLux: 0.3,
-    stdLux: 0.4,
-  );
+  final lightData = AmbientLight(12, 23, 0.3, 0.4);
 
   final deviceData = DeviceInformation(
     platform: 'Android',
