@@ -34,7 +34,7 @@ class OMHContextDataPoint extends Data {
 /// data point.
 class OMHGeopositionDataPoint extends OMHContextDataPoint
     implements DataTransformerFactory {
-  OMHGeopositionDataPoint(DataPoint datapoint) : super(datapoint);
+  OMHGeopositionDataPoint(super.datapoint);
 
   factory OMHGeopositionDataPoint.fromLocationData(Location location) {
     var pos = Geoposition(
@@ -59,7 +59,7 @@ class OMHGeopositionDataPoint extends OMHContextDataPoint
 /// data point.
 class OMHPhysicalActivityDataPoint extends OMHContextDataPoint
     implements DataTransformerFactory {
-  OMHPhysicalActivityDataPoint(DataPoint datapoint) : super(datapoint);
+  OMHPhysicalActivityDataPoint(super.datapoint);
 
   factory OMHPhysicalActivityDataPoint.fromActivityData(Activity activity) {
     var act = PhysicalActivity(activityName: activity.typeString);
