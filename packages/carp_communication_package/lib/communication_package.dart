@@ -108,16 +108,16 @@ class CommunicationSamplingPackage extends SmartphoneSamplingPackage {
   @override
   void onRegister() {
     // register the default privacy transformers
-    TransformerSchemaRegistry()
+    DataTransformerSchemaRegistry()
         .lookup(PrivacySchema.DEFAULT)!
         .add(TEXT_MESSAGE, textMessageAnoymizer);
-    TransformerSchemaRegistry()
+    DataTransformerSchemaRegistry()
         .lookup(PrivacySchema.DEFAULT)!
         .add(TEXT_MESSAGE_LOG, textMessageLogAnoymizer);
-    TransformerSchemaRegistry()
+    DataTransformerSchemaRegistry()
         .lookup(PrivacySchema.DEFAULT)!
         .add(PHONE_LOG, phoneLogAnoymizer);
-    TransformerSchemaRegistry()
+    DataTransformerSchemaRegistry()
         .lookup(PrivacySchema.DEFAULT)!
         .add(CALENDAR, calendarAnoymizer);
   }

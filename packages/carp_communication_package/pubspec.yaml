@@ -1,24 +1,24 @@
 name: carp_communication_package
 description: CARP communication sampling package. Samples phone, sms, and calendar logs and activity.
-version: 1.3.0
+version: 1.4.0
 homepage: https://github.com/cph-cachet/carp.sensing-flutter/tree/master/packages/carp_communication_package
 
 environment:
-  sdk: ">=2.17.0 <4.0.0"
-  flutter: ">=3.0.0"
+  sdk: ">=3.2.0 <4.0.0"
+  flutter: ">=3.6.0"
 
 dependencies:
   flutter:
     sdk: flutter
 
   carp_serializable: ^1.1.0
-  carp_core: ^1.3.0
-  carp_mobile_sensing: ^1.3.0
+  carp_core: ^1.4.0
+  carp_mobile_sensing: ^1.4.0
 
   json_annotation: ^4.8.0
   telephony: ^0.2.0
   call_log: ^4.0.0
-  # device_calendar: ^4.3.1
+  device_calendar: ^4.3.2
   crypto: ^3.0.1
   permission_handler: ^11.0.0  
   
@@ -33,10 +33,10 @@ dependency_overrides:
   #   path: ../../carp_mobile_sensing/
   
   # Issue w. device_calendar => https://github.com/builttoroam/device_calendar/issues/483
-  device_calendar:
-    git:
-      url: https://github.com/builttoroam/device_calendar.git
-      ref: 4.3.1    
+  # device_calendar:
+  #   git:
+  #     url: https://github.com/builttoroam/device_calendar.git
+  #     ref: 4.3.1    
 
 dev_dependencies:
   flutter_lints: any
