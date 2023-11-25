@@ -28,4 +28,4 @@ part 'who5.dart';
 part 'survey_user_task.dart';
 
 // auto generate json code (.g files) with:
-//   flutter pub run build_runner build --delete-conflicting-outputs
+//   dart run build_runner build --delete-conflicting-outputs
