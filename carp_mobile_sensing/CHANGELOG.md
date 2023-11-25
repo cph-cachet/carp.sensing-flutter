@@ -1,3 +1,7 @@
+## 1.4.0
+
+* upgrade to Dart 3.2
+
 ## 1.3.5
 
 * upgrade of uuid and permission_handler plugins
