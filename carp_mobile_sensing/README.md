@@ -48,10 +48,13 @@ android {
 ```
 
 The pedometer (step count) probe needs permission to `ACTIVITY_RECOGNITION`.
-Add the following to your app's `manifest.xml` file located in `android/app/src/main`:
+Schedule notifications (if using `AppTask`) needs permission to `SCHEDULE_EXACT_ALARM` (before SDK level 32) and `USE_EXACT_ALARM`. Add the following to your app's `manifest.xml` file located in `android/app/src/main`:
 
 ````xml
 <uses-permission android:name="android.permission.ACTIVITY_RECOGNITION"/>
+<uses-permission android:name="android.permission.SCHEDULE_EXACT_ALARM"
+    android:maxSdkVersion="32" />
+<uses-permission android:name="android.permission.USE_EXACT_ALARM" />
 ````
 
 ### iOS Integration
