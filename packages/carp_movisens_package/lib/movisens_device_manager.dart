@@ -19,7 +19,7 @@ class MovisensDevice extends DeviceConfiguration {
       '${DeviceConfiguration.DEVICE_NAMESPACE}.MovisensDevice';
 
   /// The default role name for a Movisens device.
-  static const String DEFAULT_ROLENAME = 'movisens';
+  static const String DEFAULT_ROLE_NAME = 'movisens';
 
   /// The name of the device used for connecting to the device.
   ///
@@ -55,15 +55,8 @@ class MovisensDevice extends DeviceConfiguration {
     this.weight = 78,
     this.age = 25,
   }) : super(
-          roleName: roleName ?? DEFAULT_ROLENAME,
+          roleName: roleName ?? DEFAULT_ROLE_NAME,
           isOptional: true,
-          supportedDataTypes: [
-            MovisensSamplingPackage.ACTIVITY,
-            MovisensSamplingPackage.HR,
-            MovisensSamplingPackage.EDA,
-            MovisensSamplingPackage.TAP_MARKER,
-            MovisensSamplingPackage.SKIN_TEMPERATURE,
-          ],
         );
 
   @override
@@ -79,7 +72,7 @@ class MovisensDeviceManager extends BTLEDeviceManager<MovisensDevice> {
   // the last known voltage level of the Movisens device
   int _batteryLevel = -1;
   String? _connectionStatus;
-  StreamSubscription<BluetoothDeviceState>? _subscription;
+  StreamSubscription<BluetoothConnectionState>? _subscription;
 
   /// The [Movisens] device handler.
   /// Only available after this device manger has been initialized via the
@@ -127,16 +120,14 @@ class MovisensDeviceManager extends BTLEDeviceManager<MovisensDevice> {
       // listen for BTLE connection events
       _subscription = device?.state?.listen((state) {
         switch (state) {
-          case BluetoothDeviceState.connecting:
+          case BluetoothConnectionState.connecting:
             status = DeviceStatus.connecting;
-
             break;
-          case BluetoothDeviceState.connected:
+          case BluetoothConnectionState.connected:
             status = DeviceStatus.connected;
-
             break;
-          case BluetoothDeviceState.disconnecting:
-          case BluetoothDeviceState.disconnected:
+          case BluetoothConnectionState.disconnecting:
+          case BluetoothConnectionState.disconnected:
             status = DeviceStatus.disconnected;
             break;
         }

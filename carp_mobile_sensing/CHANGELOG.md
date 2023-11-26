@@ -1,6 +1,7 @@
-## 1.4.0
+## 1.4.0+1
 
 * upgrade to Dart 3.2
+* update to README
 
 ## 1.3.5
 

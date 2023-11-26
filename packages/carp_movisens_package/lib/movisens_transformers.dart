@@ -41,7 +41,7 @@ class OMHHeartRateDataPoint extends OMHMovisensDataPoint
     implements DataTransformerFactory {
   static const String DEFAULT_HR_UNIT = "beats/min";
 
-  OMHHeartRateDataPoint(omh.DataPoint datapoint) : super(datapoint);
+  OMHHeartRateDataPoint(super.datapoint);
 
   factory OMHHeartRateDataPoint.fromMovisensHRData(MovisensHR data) {
     var hr = omh.HeartRate(
@@ -73,7 +73,7 @@ class OMHHeartRateDataPoint extends OMHMovisensDataPoint
 /// A [Data] that holds an OMH [StepCount](https://pub.dev/documentation/openmhealth_schemas/latest/domain_omh_activity/StepCount-class.html)
 class OMHStepCountDataPoint extends OMHMovisensDataPoint
     implements DataTransformerFactory {
-  OMHStepCountDataPoint(omh.DataPoint datapoint) : super(datapoint);
+  OMHStepCountDataPoint(super.datapoint);
 
   factory OMHStepCountDataPoint.fromMovisensStepCountData(
       MovisensStepCount data) {

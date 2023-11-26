@@ -92,7 +92,7 @@ void main() {
     expect(protocol.ownerId, 'alex@uni.dk');
     expect(protocol.primaryDevice.roleName, Smartphone.DEFAULT_ROLENAME);
     expect(protocol.connectedDevices?.first.roleName,
-        MovisensDevice.DEFAULT_ROLENAME);
+        MovisensDevice.DEFAULT_ROLE_NAME);
 
     print(toJsonString(protocol));
   });
@@ -108,7 +108,7 @@ void main() {
     print(toJsonString(dp_1));
     expect(dp_1.dataType.namespace, MovisensSamplingPackage.HR);
 
-    final omhHR = TransformerSchemaRegistry()
+    final omhHR = DataTransformerSchemaRegistry()
         .lookup(NameSpace.OMH)!
         .transform(hr) as OMHHeartRateDataPoint;
     ;
@@ -133,7 +133,7 @@ void main() {
     print(toJsonString(m_1));
     expect(m_1.dataType.namespace, MovisensSamplingPackage.ACTIVITY);
 
-    final omhSteps = TransformerSchemaRegistry()
+    final omhSteps = DataTransformerSchemaRegistry()
         .lookup(NameSpace.OMH)!
         .transform(steps) as OMHStepCountDataPoint;
     final m_2 = Measurement.fromData(omhSteps);
@@ -156,7 +156,7 @@ void main() {
     print(toJsonString(m_1));
     expect(m_1.dataType.namespace, MovisensSamplingPackage.HR);
 
-    final fhirHR = TransformerSchemaRegistry()
+    final fhirHR = DataTransformerSchemaRegistry()
         .lookup(NameSpace.FHIR)!
         .transform(hr) as FHIRHeartRateObservation;
     final m_2 = Measurement.fromData(fhirHR);
@@ -175,16 +175,16 @@ void main() {
     );
 
     var transformedData =
-        TransformerSchemaRegistry().lookup(NameSpace.OMH)!.transform(data);
+        DataTransformerSchemaRegistry().lookup(NameSpace.OMH)!.transform(data);
 
     Stream<Data> dataStream = StreamController<Data>().stream;
 
     Stream<Data> transformedDataStream = dataStream.map((data) => data =
-        TransformerSchemaRegistry().lookup(NameSpace.OMH)!.transform(data));
+        DataTransformerSchemaRegistry().lookup(NameSpace.OMH)!.transform(data));
 
     Stream<Data> transformedPrivateDataStream = dataStream.map((data) => data =
-        TransformerSchemaRegistry().lookup(NameSpace.OMH)!.transform(
-            TransformerSchemaRegistry()
+        DataTransformerSchemaRegistry().lookup(NameSpace.OMH)!.transform(
+            DataTransformerSchemaRegistry()
                 .lookup("privacySchemaName")!
                 .transform(data)));
   });
