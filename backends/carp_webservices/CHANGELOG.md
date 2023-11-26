@@ -1,13 +1,15 @@
 ## 2.0.1
 
-* Added the ability to add a client secret for a carp app for authentication to clients with secrets
+* Support for client secret for a CARP app for authentication.
 
 ## 2.0.0
 
 Completely revamped authentication service to use an Identity Server, using the `flutter_appauth` library.
+
 * Deprecated unused endpoints
-* Revamped existing endpoints to use an Identity Server and native OS APIs for authentication. Look at README.
-* Added new endpoints to accomodate all use-cases
+* Refactored existing endpoints to use an Identity Server and native OS APIs for authentication.
+* Added new endpoints to accommodate all use-cases
+* API docs and README updated
 
 ## 1.3.0
 

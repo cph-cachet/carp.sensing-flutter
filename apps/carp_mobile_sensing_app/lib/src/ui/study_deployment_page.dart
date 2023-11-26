@@ -185,7 +185,7 @@ class _StudyControllerLine extends StatelessWidget {
 }
 
 class _TaskPanel extends StatelessWidget {
-  _TaskPanel({Key? key, this.task}) : super(key: key);
+  _TaskPanel({this.task});
 
   final TaskConfiguration? task;
 
@@ -220,7 +220,7 @@ class _TaskPanel extends StatelessWidget {
 }
 
 class _MeasureLine extends StatelessWidget {
-  _MeasureLine({Key? key, this.measure}) : super(key: key);
+  _MeasureLine({this.measure});
 
   final Measure? measure;
 

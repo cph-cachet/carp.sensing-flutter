@@ -1,3 +1,7 @@
+## 1.4.1
+
+* `Permission.calendarFullAccess` used instead of deprecated `Permission.calendar`.
+
 ## 1.4.0
 
 * upgrade to Dart 3.2
@@ -96,7 +100,7 @@
 
 ## 0.6.1
 
-* allignment with `carp_mobile_sensing` v. 0.6.1.
+* alignment with `carp_mobile_sensing` v. 0.6.1.
 * extensive testing on iOS
 
 ## 0.6.0

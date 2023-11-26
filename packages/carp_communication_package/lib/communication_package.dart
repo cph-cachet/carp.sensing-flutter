@@ -124,5 +124,5 @@ class CommunicationSamplingPackage extends SmartphoneSamplingPackage {
 
   @override
   List<Permission> get permissions =>
-      [Permission.phone, Permission.sms, Permission.calendar];
+      [Permission.phone, Permission.sms, Permission.calendarFullAccess];
 }

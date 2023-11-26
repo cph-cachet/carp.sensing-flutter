@@ -26,7 +26,8 @@ class DryRunCommand extends AbstractCommand {
     }
 
     try {
-      await CarpService().authenticateWithUsernamePasswordNoContext(username: username, password: password);
+      await CarpService().authenticateWithUsernamePasswordNoContext(
+          username: username, password: password);
       print('\x1B[32m[✓]\x1B[0m CARP Server \t username: $username');
     } catch (error) {
       print('\x1B[31m[!]\x1B[0m CARP Server \t ${errorToString(error)}');

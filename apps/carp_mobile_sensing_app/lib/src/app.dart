@@ -31,8 +31,8 @@ class LoadingPage extends StatelessWidget {
       }
 
       // Make sure that CarpService knows the study and deployment ids
-      CarpService().app?.studyId = bloc.studyId;
-      CarpService().app?.studyDeploymentId = bloc.studyDeploymentId;
+      CarpService().app.studyId = bloc.studyId;
+      CarpService().app.studyDeploymentId = bloc.studyDeploymentId;
     }
 
     await bloc.sensing.initialize();
@@ -57,7 +57,7 @@ class LoadingPage extends StatelessWidget {
 }
 
 class CarpMobileSensingApp extends StatefulWidget {
-  CarpMobileSensingApp({Key? key}) : super(key: key);
+  CarpMobileSensingApp({super.key});
   @override
   CarpMobileSensingAppState createState() => CarpMobileSensingAppState();
 }

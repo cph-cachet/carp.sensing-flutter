@@ -1,6 +1,6 @@
 name: carp_study_generator
-description: Utilities for generating CARP Mobile Sensing studies
-version: 1.3.1
+description: Utilities for managing CARP Mobile Sensing studies, including generating and uploading a study protocol, informed consent, translations, and messages.
+version: 1.4.0
 homepage: https://github.com/cph-cachet/carp.sensing-flutter
 
 environment:
@@ -11,19 +11,19 @@ dependencies:
     sdk: flutter
 
   carp_serializable: ^1.1.0
-  carp_core: ^1.3.0
-  carp_mobile_sensing: ^1.3.0
+  carp_core: ^1.4.0
+  carp_mobile_sensing: ^1.4.0
   carp_webservices: ^2.0.1
   carp_backend: ^1.3.1
-  carp_apps_package: ^1.3.0
-  carp_context_package: ^1.3.0
-  carp_audio_package: ^1.3.0
-  carp_esense_package: ^1.3.0
-  carp_polar_package: ^1.3.0
-  carp_survey_package: ^1.3.0
-  carp_health_package: ^2.7.0
-  # carp_communication_package: ^1.3.0
-  carp_connectivity_package: ^1.3.0
+  carp_apps_package: ^1.4.0
+  carp_context_package: ^1.4.0
+  carp_audio_package: ^1.4.0
+  carp_esense_package: ^1.4.0
+  carp_polar_package: ^1.4.0
+  carp_survey_package: ^1.4.0
+  carp_health_package: ^2.8.0
+  carp_communication_package: ^1.4.0
+  carp_connectivity_package: ^1.4.0
 
   research_package: ^1.4.0
   cognition_package: ^1.5.0

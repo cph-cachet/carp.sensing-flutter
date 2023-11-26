@@ -1,7 +1,7 @@
 part of mobile_sensing_app;
 
 class ProbesList extends StatefulWidget {
-  const ProbesList({Key? key}) : super(key: key);
+  const ProbesList({super.key});
   static const String routeName = '/probelist';
 
   @override
