@@ -42,7 +42,10 @@ class LocalStudyProtocolManager implements StudyProtocolManager {
 
   SmartphoneStudyProtocol getSingleUserStudyProtocol(String name) {
     SmartphoneStudyProtocol protocol = SmartphoneStudyProtocol(
-      ownerId: 'abc@dtu.dk',
+      // Note that CAWS require a UUID for ownerId.
+      // You can put anything here (as long as it is a valid UUID), and this will be replaced with
+      // the ID of the user uploading the protocol.
+      ownerId: '979b408d-784e-4b1b-bb1e-ff9204e072f3',
       name: name,
       studyDescription: studyDescription,
       dataEndPoint: dataEndPoint..dataFormat = bloc.dataFormat,
@@ -195,7 +198,7 @@ class LocalStudyProtocolManager implements StudyProtocolManager {
     //       )),
     //     phone);
 
-    // define the sSense device and add its measures
+    // Define the sSense device and add its measures
     ESenseDevice eSense = ESenseDevice(
       deviceName: 'eSense-0332',
       samplingRate: 10,
@@ -211,17 +214,16 @@ class LocalStudyProtocolManager implements StudyProtocolManager {
         eSense);
 
     // define the Polar device and add its measures
-    PolarDevice polar = PolarDevice(
-      identifier: 'B5FC172F',
-      name: 'Polar H10 HR Monitor',
-      polarDeviceType: PolarDeviceType.H10,
-    );
-    // PolarDevice polar = PolarDevice(
-    //   identifier: 'B36B5B21',
-    //   name: 'Polar PVS',
-    //   polarDeviceType: PolarDeviceType.SENSE,
-    //   roleName: 'polar-pvs-device',
+    // var polar = PolarDevice(
+    //   identifier: 'B5FC172F',
+    //   name: 'Polar H10 HR Monitor',
+    //   polarDeviceType: PolarDeviceType.H10,
     // );
+    PolarDevice polar = PolarDevice(
+      identifier: 'B36B5B21',
+      name: 'Polar HR Sense',
+      polarDeviceType: PolarDeviceType.SENSE,
+    );
 
     protocol.addConnectedDevice(polar, phone);
 
@@ -235,25 +237,29 @@ class LocalStudyProtocolManager implements StudyProtocolManager {
         ]),
         polar);
 
-    // // add a measure for ECG monitoring using the Movisens device
-    // protocol.addTaskControl(
-    //   ImmediateTrigger(),
-    //   AutomaticTask()
-    //     ..addMeasure(MovisensMeasure(
-    //       type: MovisensSamplingPackage.MOVISENS_NAMESPACE,
-    //       name: 'Movisens ECG device',
-    //       address: '88:6B:0F:CD:E7:F2',
-    //       sensorLocation: SensorLocation.chest,
-    //       gender: Gender.male,
-    //       deviceName: 'Sensor 02655',
-    //       height: 175,
-    //       weight: 75,
-    //       age: 25,
-    //     )),
-    //   movisens,
-    // );
+    // Define the Movisens device and add its measures
+    var movisens = MovisensDevice(
+      deviceName: 'MOVISENS Sensor 02655',
+      sensorLocation: SensorLocation.Chest,
+      sex: Sex.Male,
+      height: 175,
+      weight: 75,
+      age: 25,
+    );
 
-    // add measures to collect data from Apple Health / Google Fit
+    protocol.addConnectedDevice(movisens, phone);
+
+    protocol.addTaskControl(
+      ImmediateTrigger(),
+      BackgroundTask(measures: [
+        Measure(type: MovisensSamplingPackage.HR),
+        Measure(type: MovisensSamplingPackage.ACTIVITY),
+        Measure(type: MovisensSamplingPackage.TAP_MARKER),
+      ]),
+      movisens,
+    );
+
+    // Add measures to collect data from Apple Health / Google Fit
 
     // Define which health types to collect.
     var healthDataTypes = [

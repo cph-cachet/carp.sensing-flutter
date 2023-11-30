@@ -62,14 +62,14 @@ part 'movisens_device_manager.dart';
 ///
 /// ```dart
 ///  // Create a study protocol
-///     StudyProtocol protocol = StudyProtocol(
+///  var protocol = StudyProtocol(
 ///    ownerId: 'owner@dtu.dk',
 ///    name: 'Movisens Example',
 ///  );
 ///
 ///  // define which devices are used for data collection - both phone and Movisens
-///  Smartphone phone = Smartphone();
-///  MovisensDevice movisens = MovisensDevice(
+///  var phone = Smartphone();
+///  var movisens = MovisensDevice(
 ///    deviceName: 'MOVISENS Sensor 02655',
 ///    sensorLocation: SensorLocation.Chest,
 ///    sex: Sex.Male,
