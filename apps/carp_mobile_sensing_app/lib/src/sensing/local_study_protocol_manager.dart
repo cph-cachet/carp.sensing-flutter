@@ -198,20 +198,20 @@ class LocalStudyProtocolManager implements StudyProtocolManager {
     //       )),
     //     phone);
 
-    // Define the sSense device and add its measures
-    ESenseDevice eSense = ESenseDevice(
-      deviceName: 'eSense-0332',
-      samplingRate: 10,
-    );
-    protocol.addConnectedDevice(eSense, phone);
+    // // Define the sSense device and add its measures
+    // ESenseDevice eSense = ESenseDevice(
+    //   deviceName: 'eSense-0332',
+    //   samplingRate: 10,
+    // );
+    // protocol.addConnectedDevice(eSense, phone);
 
-    protocol.addTaskControl(
-        ImmediateTrigger(),
-        BackgroundTask(measures: [
-          Measure(type: ESenseSamplingPackage.ESENSE_BUTTON),
-          Measure(type: ESenseSamplingPackage.ESENSE_SENSOR)
-        ]),
-        eSense);
+    // protocol.addTaskControl(
+    //     ImmediateTrigger(),
+    //     BackgroundTask(measures: [
+    //       Measure(type: ESenseSamplingPackage.ESENSE_BUTTON),
+    //       Measure(type: ESenseSamplingPackage.ESENSE_SENSOR)
+    //     ]),
+    //     eSense);
 
     // define the Polar device and add its measures
     // var polar = PolarDevice(
@@ -232,57 +232,57 @@ class LocalStudyProtocolManager implements StudyProtocolManager {
         BackgroundTask(measures: [
           Measure(type: PolarSamplingPackage.HR),
           // Measure(type: PolarSamplingPackage.ECG),
-          // Measure(type: PolarSamplingPackage.PPG),
+          Measure(type: PolarSamplingPackage.PPG),
           // Measure(type: PolarSamplingPackage.PPI),
         ]),
         polar);
 
-    // Define the Movisens device and add its measures
-    var movisens = MovisensDevice(
-      deviceName: 'MOVISENS Sensor 02655',
-      sensorLocation: SensorLocation.Chest,
-      sex: Sex.Male,
-      height: 175,
-      weight: 75,
-      age: 25,
-    );
+    // // Define the Movisens device and add its measures
+    // var movisens = MovisensDevice(
+    //   deviceName: 'MOVISENS Sensor 02655',
+    //   sensorLocation: SensorLocation.Chest,
+    //   sex: Sex.Male,
+    //   height: 175,
+    //   weight: 75,
+    //   age: 25,
+    // );
 
-    protocol.addConnectedDevice(movisens, phone);
+    // protocol.addConnectedDevice(movisens, phone);
 
-    protocol.addTaskControl(
-      ImmediateTrigger(),
-      BackgroundTask(measures: [
-        Measure(type: MovisensSamplingPackage.HR),
-        Measure(type: MovisensSamplingPackage.ACTIVITY),
-        Measure(type: MovisensSamplingPackage.TAP_MARKER),
-      ]),
-      movisens,
-    );
+    // protocol.addTaskControl(
+    //   ImmediateTrigger(),
+    //   BackgroundTask(measures: [
+    //     Measure(type: MovisensSamplingPackage.HR),
+    //     Measure(type: MovisensSamplingPackage.ACTIVITY),
+    //     Measure(type: MovisensSamplingPackage.TAP_MARKER),
+    //   ]),
+    //   movisens,
+    // );
 
     // Add measures to collect data from Apple Health / Google Fit
 
-    // Define which health types to collect.
-    var healthDataTypes = [
-      HealthDataType.WEIGHT,
-      HealthDataType.STEPS,
-      HealthDataType.SLEEP_ASLEEP,
-    ];
+    // // Define which health types to collect.
+    // var healthDataTypes = [
+    //   HealthDataType.WEIGHT,
+    //   HealthDataType.STEPS,
+    //   HealthDataType.SLEEP_ASLEEP,
+    // ];
 
-    // Create and add a health service (device)
-    final healthService = HealthService(
-      useHealthConnectIfAvailable: true,
-      types: healthDataTypes,
-    );
-    protocol.addConnectedDevice(healthService, phone);
+    // // Create and add a health service (device)
+    // final healthService = HealthService(
+    //   useHealthConnectIfAvailable: true,
+    //   types: healthDataTypes,
+    // );
+    // protocol.addConnectedDevice(healthService, phone);
 
-    protocol.addTaskControl(
-        PeriodicTrigger(period: Duration(minutes: 60)),
-        BackgroundTask(measures: [
-          Measure(type: HealthSamplingPackage.HEALTH)
-            ..overrideSamplingConfiguration =
-                HealthSamplingConfiguration(healthDataTypes: healthDataTypes)
-        ]),
-        healthService);
+    // protocol.addTaskControl(
+    //     PeriodicTrigger(period: Duration(minutes: 60)),
+    //     BackgroundTask(measures: [
+    //       Measure(type: HealthSamplingPackage.HEALTH)
+    //         ..overrideSamplingConfiguration =
+    //             HealthSamplingConfiguration(healthDataTypes: healthDataTypes)
+    //     ]),
+    //     healthService);
 
     return protocol;
   }
