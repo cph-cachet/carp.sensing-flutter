@@ -232,7 +232,7 @@ class LocalStudyProtocolManager implements StudyProtocolManager {
         BackgroundTask(measures: [
           Measure(type: PolarSamplingPackage.HR),
           // Measure(type: PolarSamplingPackage.ECG),
-          Measure(type: PolarSamplingPackage.PPG),
+          // Measure(type: PolarSamplingPackage.PPG),
           // Measure(type: PolarSamplingPackage.PPI),
         ]),
         polar);

@@ -22,7 +22,7 @@ import 'package:carp_webservices/carp_services/carp_services.dart';
 import 'credentials.dart';
 
 void main() {
-  // TestWidgetsFlutterBinding.ensureInitialized();
+  TestWidgetsFlutterBinding.ensureInitialized();
   CarpMobileSensing.ensureInitialized();
 
   CarpApp app;

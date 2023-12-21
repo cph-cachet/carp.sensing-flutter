@@ -18,20 +18,6 @@ class SensingBLoC {
   /// What kind of deployment are we running? Default is local.
   DeploymentMode deploymentMode = DeploymentMode.local;
 
-  /// The URI of the CARP server to use depending on the current [deploymentMode].
-  String get uri {
-    switch (deploymentMode) {
-      case DeploymentMode.local:
-        return "";
-      case DeploymentMode.production:
-        return "https://cans.cachet.dk/";
-      case DeploymentMode.staging:
-        return "https://cans.cachet.dk/stage";
-      case DeploymentMode.development:
-        return "https://cans.cachet.dk/dev";
-    }
-  }
-
   /// The study id for the currently running deployment.
   /// Returns the study id cached locally on the phone (if available).
   /// Returns `null` if no study is deployed (yet).

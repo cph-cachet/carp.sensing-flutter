@@ -29,7 +29,7 @@ class AirQualityProbe extends MeasurementProbe {
       }
     }
     warning(
-        '$runtimeType - no service available. Did you remember to add the AirQualityService to the study protocol?');
+        '$runtimeType - no service available. Has the AirQualityService been added to the study protocol?');
 
     return Measurement.fromData(
         Error(message: ('$runtimeType - no service available.')));

@@ -100,7 +100,8 @@ class CarpDataManager extends AbstractDataManager {
     // fast exit if only upload on wifi and we're not on wifi
     if (carpEndPoint.onlyUploadOnWiFi &&
         connectivity != ConnectivityResult.wifi) {
-      warning('$runtimeType - No wifi connectivity - '
+      warning(
+          '$runtimeType - WiFi required by the data endpoint, but no wifi connectivity - '
           'cannot upload buffered data.');
       return;
     }

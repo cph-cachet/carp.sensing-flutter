@@ -24,10 +24,10 @@ class LocationService extends OnlineService {
   /// The minimum distance in meters a device must move horizontally
   /// before an update event is generated.
   /// Specify 0 when you want to be notified of all movements.
-  double distance = 0;
+  double distance = 10;
 
-  /// The interval between location updates.
-  late Duration interval;
+  /// The time interval between location updates.
+  Duration interval = const Duration(minutes: 1);
 
   /// The title of the notification to be shown to the user when
   /// location tracking takes place in the background.
@@ -57,23 +57,19 @@ class LocationService extends OnlineService {
   /// Default configuration is:
   ///  * roleName = "location_service"
   ///  * accuracy = balanced
-  ///  * distance = 0
-  ///  * interval = 1 minute
+  ///  * distance = 10 meters
+  ///  * interval = 10 seconds
   LocationService({
     String? roleName,
     this.accuracy = GeolocationAccuracy.balanced,
-    this.distance = 0,
-    Duration? interval,
+    this.distance = 10,
+    this.interval = const Duration(minutes: 1),
     this.notificationTitle,
     this.notificationMessage,
     this.notificationDescription,
     this.notificationIconName,
     this.notificationOnTapBringToFront = false,
-  }) : super(
-          roleName: roleName ?? DEFAULT_ROLENAME,
-        ) {
-    this.interval = interval ?? const Duration(minutes: 1);
-  }
+  }) : super(roleName: roleName ?? DEFAULT_ROLENAME);
 
   @override
   Function get fromJsonFunction => _$LocationServiceFromJson;

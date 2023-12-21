@@ -8,7 +8,7 @@ class CarpBackend {
   // static const String TEST_URI = "https://cans.cachet.dk/test";
   // static const String DEV_URI = "https://cans.cachet.dk/dev";
   // static const String CLIENT_ID = "carp";
-  static const String CLIENT_SECRET = "carp";
+  // static const String CLIENT_SECRET = "carp";
 
   static const Map<DeploymentMode, String> uris = {
     DeploymentMode.development: 'dev',

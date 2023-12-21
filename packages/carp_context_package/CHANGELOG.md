@@ -1,3 +1,7 @@
+## 1.4.1
+
+* default location updated changed to one minute (instead of 1 second)
+
 ## 1.4.0
 
 * upgrade to Dart 3.2

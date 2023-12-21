@@ -18,7 +18,7 @@ class CurrentLocationProbe extends MeasurementProbe {
   Future<Measurement> getMeasurement() async {
     debug('$runtimeType - getMeasurement called...');
     try {
-      final location = await LocationManager().getLocation();
+      final location = await deviceManager.manager.getLocation();
       return Measurement.fromData(location);
     } catch (error) {
       warning('$runtimeType - Error location - $error');
