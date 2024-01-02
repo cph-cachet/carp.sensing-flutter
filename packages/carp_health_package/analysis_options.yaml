@@ -15,3 +15,4 @@ linter:
     cancel_subscriptions: true
     constant_identifier_names: false
     depend_on_referenced_packages: false
+    use_string_in_part_of_directives: false

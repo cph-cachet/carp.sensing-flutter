@@ -35,6 +35,10 @@ class CarpDataManager extends AbstractDataManager {
   Timer? uploadTimer;
   ConnectivityResult _connectivity = ConnectivityResult.none;
 
+  /// Make sure to create and initialize the [CarpDataManager].
+  static void ensureInitialized() =>
+      FromJsonFactory().register(CarpDataEndPoint());
+
   CarpDataManager() : super() {
     CarpMobileSensing.ensureInitialized();
     FromJsonFactory().register(CarpDataEndPoint());

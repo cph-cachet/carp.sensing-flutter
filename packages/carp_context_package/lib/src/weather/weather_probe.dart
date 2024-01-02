@@ -17,7 +17,7 @@ class WeatherProbe extends MeasurementProbe {
   Future<Measurement> getMeasurement() async {
     if (deviceManager.service != null) {
       try {
-        final loc = await LocationManager().getLastKnownLocation();
+        final loc = await LocationManager().getLocation();
         final w = await deviceManager.service!.currentWeatherByLocation(
           loc.latitude,
           loc.longitude,

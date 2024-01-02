@@ -1,4 +1,9 @@
-## 1.3.1
+## 1.4.0
+
+* upgrade to Dart 3.2
+* update to `carp_mobile_sensing` v. 1.4.0
+
+## 1.3.2
 
 * fix of [Issue [#339](https://github.com/cph-cachet/carp.sensing-flutter/issues/339).
 * `bluetoothDeviceType` no longer available from underlying BLE API.

@@ -19,18 +19,18 @@ abstract class DataTransformerFactory {
 
 /// A registry of [DataTransformerSchema]s which hold a set of
 /// [DataTransformer]s.
-class TransformerSchemaRegistry {
-  static final TransformerSchemaRegistry _instance =
-      TransformerSchemaRegistry._();
+class DataTransformerSchemaRegistry {
+  static final DataTransformerSchemaRegistry _instance =
+      DataTransformerSchemaRegistry._();
 
   /// The map between the namespace of a transformer schema and the schema.
   Map<String, DataTransformerSchema> get schemas => _schemas;
   final Map<String, DataTransformerSchema> _schemas = {};
 
-  /// Get the singleton instance of the [TransformerSchemaRegistry].
-  factory TransformerSchemaRegistry() => _instance;
+  /// Get the singleton instance of the [DataTransformerSchemaRegistry].
+  factory DataTransformerSchemaRegistry() => _instance;
 
-  TransformerSchemaRegistry._() {
+  DataTransformerSchemaRegistry._() {
     // register 3 default transformer schemas:
     // 1. a no-operation CARP schema
     // 2. a default OMH schema

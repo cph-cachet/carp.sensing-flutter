@@ -197,7 +197,7 @@ void main() {
     expect(m_1.dataType.namespace, NameSpace.CARP);
     print(_encode(loc));
 
-    OMHGeopositionDataPoint geo = TransformerSchemaRegistry()
+    OMHGeopositionDataPoint geo = DataTransformerSchemaRegistry()
         .lookup(NameSpace.OMH)!
         .transform(loc) as OMHGeopositionDataPoint;
     print(_encode(geo));
@@ -217,7 +217,7 @@ void main() {
     expect(m_1.dataType.namespace, NameSpace.CARP);
     print(_encode(act));
 
-    OMHPhysicalActivityDataPoint phy = TransformerSchemaRegistry()
+    OMHPhysicalActivityDataPoint phy = DataTransformerSchemaRegistry()
         .lookup(NameSpace.OMH)!
         .transform(act) as OMHPhysicalActivityDataPoint;
     print(_encode(phy));

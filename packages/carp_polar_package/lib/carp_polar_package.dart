@@ -16,13 +16,13 @@
 /// **H10 Heart rate sensor**
 ///
 ///  * Heart rate as beats per minute. RR Interval in ms and 1/1024 format.
-///  * Electrocardiography (ECG) data in µV. Default epoch for timestamp is 1.1.2000
+///  * Electrocardiography (ECG) data in µV with sample rate 130Hz. Default epoch for timestamp is 1.1.2000.
 ///  * Accelerometer data with sample rates of 25Hz, 50Hz, 100Hz and 200Hz and range of 2G, 4G and 8G. Axis specific acceleration data in mG. Default epoch for timestamp is 1.1.2000
-///  * Start and stop of internal recording and request for internal recording status. Recording supports RR, HR with one second sampletime or HR with five second sampletime.
+///  * Start and stop of internal recording and request for internal recording status. Recording supports RR, HR with one second sample time or HR with five second sample time.
 ///
 /// **Polar Verity Sense optical heart rate sensor**
 ///
-///  * Heart rate as beats per minute.
+///  * Heart rate (HR) as beats per minute.
 ///  * Photoplethysmograpy (PPG) values.
 ///  * PP interval (milliseconds) representing cardiac pulse-to-pulse interval extracted from PPG signal.
 ///  * Accelerometer data with sample rate of 52Hz and range of 8G. Axis specific acceleration data in mG.

@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of carp_movisens_package;
+part of 'carp_movisens_package.dart';
 
 // **************************************************************************
 // JsonSerializableGenerator
@@ -383,9 +383,6 @@ MovisensDevice _$MovisensDeviceFromJson(Map<String, dynamic> json) =>
     )
       ..$type = json['__type'] as String?
       ..isOptional = json['isOptional'] as bool?
-      ..supportedDataTypes = (json['supportedDataTypes'] as List<dynamic>?)
-          ?.map((e) => e as String)
-          .toList()
       ..defaultSamplingConfiguration =
           (json['defaultSamplingConfiguration'] as Map<String, dynamic>?)?.map(
         (k, e) => MapEntry(
@@ -404,7 +401,6 @@ Map<String, dynamic> _$MovisensDeviceToJson(MovisensDevice instance) {
   writeNotNull('__type', instance.$type);
   val['roleName'] = instance.roleName;
   writeNotNull('isOptional', instance.isOptional);
-  writeNotNull('supportedDataTypes', instance.supportedDataTypes);
   writeNotNull(
       'defaultSamplingConfiguration', instance.defaultSamplingConfiguration);
   val['deviceName'] = instance.deviceName;

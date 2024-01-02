@@ -147,6 +147,34 @@ class ProbeDescription {
           'Polar PPI',
           'Polar Pulse-to-Pulse Interval.',
         ),
+        MovisensSamplingPackage.HR: ProbeDescriptor(
+          'Movisens HR',
+          'Movisens Heart Rate.',
+        ),
+        MovisensSamplingPackage.EDA: ProbeDescriptor(
+          'Movisens EDA',
+          'Movisens Electro Dermal Activity.',
+        ),
+        MovisensSamplingPackage.ACTIVITY: ProbeDescriptor(
+          'Movisens Activity',
+          'Movisens Activity Recognition.',
+        ),
+        MovisensSamplingPackage.RESPIRATION: ProbeDescriptor(
+          'Movisens Respiration',
+          'Movisens Respiration Rate.',
+        ),
+        MovisensSamplingPackage.SKIN_TEMPERATURE: ProbeDescriptor(
+          'Movisens Skin Temperature',
+          'Movisens Skin Temperature.',
+        ),
+        MovisensSamplingPackage.TAP_MARKER: ProbeDescriptor(
+          'Movisens Tap',
+          'Movisens Tap Marker.',
+        ),
+        HealthSamplingPackage.HEALTH: ProbeDescriptor(
+          'Health',
+          'Health data collected from the phone (Apple Health or Google Fit).',
+        ),
         MovesenseSamplingPackage.HR: ProbeDescriptor(
           'Movesense HR',
           'Movesense Heart Rate.',
@@ -224,6 +252,20 @@ class ProbeDescription {
             Icon(Icons.add_link, size: 50, color: CACHET.GREY_2),
         PolarSamplingPackage.PPI:
             Icon(Icons.link, size: 50, color: CACHET.GREY_3),
+        MovisensSamplingPackage.HR:
+            Icon(Icons.heart_broken, size: 50, color: CACHET.CYAN),
+        MovisensSamplingPackage.EDA:
+            Icon(Icons.pin_drop, size: 50, color: CACHET.CYAN),
+        MovisensSamplingPackage.ACTIVITY:
+            Icon(Icons.directions_bike, size: 50, color: CACHET.CYAN),
+        MovisensSamplingPackage.RESPIRATION:
+            Icon(Icons.air, size: 50, color: CACHET.CYAN),
+        MovisensSamplingPackage.SKIN_TEMPERATURE:
+            Icon(Icons.boy_rounded, size: 50, color: CACHET.CYAN),
+        MovisensSamplingPackage.TAP_MARKER:
+            Icon(Icons.fingerprint, size: 50, color: CACHET.CYAN),
+        HealthSamplingPackage.HEALTH:
+            Icon(Icons.heart_broken, size: 50, color: CACHET.RED),
       };
 
   static Map<ExecutorState, String> get probeStateLabel => {

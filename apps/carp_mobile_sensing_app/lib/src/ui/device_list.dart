@@ -1,7 +1,7 @@
 part of mobile_sensing_app;
 
 class DevicesList extends StatefulWidget {
-  const DevicesList({Key? key}) : super(key: key);
+  const DevicesList({super.key});
   static const String routeName = '/deviceslist';
 
   @override

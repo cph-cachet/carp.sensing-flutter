@@ -19,7 +19,7 @@ class CommunicationSamplingPackage extends SmartphoneSamplingPackage {
   ///  * One-time measure.
   ///  * Uses the [Smartphone] master device for data collection.
   ///  * Use the [HistoricSamplingConfiguration] for configuration.
-  static const String PHONE_LOG = "${NameSpace.CARP}.phone_log";
+  static const String PHONE_LOG = "${NameSpace.CARP}.phonelog";
 
   // static const String TELEPHONY = "dk.cachet.carp.telephony";
 
@@ -28,13 +28,13 @@ class CommunicationSamplingPackage extends SmartphoneSamplingPackage {
   ///  * One-time measure.
   ///  * Uses the [Smartphone] master device for data collection.
   ///  * Use the [HistoricSamplingConfiguration] for configuration.
-  static const String TEXT_MESSAGE_LOG = "${NameSpace.CARP}.text_message_log";
+  static const String TEXT_MESSAGE_LOG = "${NameSpace.CARP}.textmessagelog";
 
   /// Measure type for collection of text message (SMS) as they are received.
   ///  * Event-based measure.
   ///  * Uses the [Smartphone] master device for data collection.
   ///  * No sampling configuration needed.
-  static const String TEXT_MESSAGE = "${NameSpace.CARP}.text_message";
+  static const String TEXT_MESSAGE = "${NameSpace.CARP}.textmessage";
 
   /// Measure type for collection of calendar entries from the calendar on the
   /// phone for a specific time period.
@@ -108,21 +108,21 @@ class CommunicationSamplingPackage extends SmartphoneSamplingPackage {
   @override
   void onRegister() {
     // register the default privacy transformers
-    TransformerSchemaRegistry()
+    DataTransformerSchemaRegistry()
         .lookup(PrivacySchema.DEFAULT)!
         .add(TEXT_MESSAGE, textMessageAnoymizer);
-    TransformerSchemaRegistry()
+    DataTransformerSchemaRegistry()
         .lookup(PrivacySchema.DEFAULT)!
         .add(TEXT_MESSAGE_LOG, textMessageLogAnoymizer);
-    TransformerSchemaRegistry()
+    DataTransformerSchemaRegistry()
         .lookup(PrivacySchema.DEFAULT)!
         .add(PHONE_LOG, phoneLogAnoymizer);
-    TransformerSchemaRegistry()
+    DataTransformerSchemaRegistry()
         .lookup(PrivacySchema.DEFAULT)!
         .add(CALENDAR, calendarAnoymizer);
   }
 
   @override
   List<Permission> get permissions =>
-      [Permission.phone, Permission.sms, Permission.calendar];
+      [Permission.phone, Permission.sms, Permission.calendarFullAccess];
 }

@@ -73,7 +73,7 @@ void main() {
 
     print(toJsonString(msg));
 
-    final pMsg = TransformerSchemaRegistry()
+    final pMsg = DataTransformerSchemaRegistry()
         .lookup(PrivacySchema.DEFAULT)!
         .transform(msg) as TextMessage;
     expect(pMsg.address, isNot('25550446'));
@@ -91,7 +91,7 @@ void main() {
 
     log.textMessageLog.forEach(print);
 
-    TextMessageLog pLog = TransformerSchemaRegistry()
+    TextMessageLog pLog = DataTransformerSchemaRegistry()
         .lookup(PrivacySchema.DEFAULT)!
         .transform(log) as TextMessageLog;
     //expect(p_msg.textMessage.address, isNot('25550446'));
@@ -111,7 +111,7 @@ void main() {
 
     log.phoneLog.forEach(print);
 
-    PhoneLog pLog = TransformerSchemaRegistry()
+    PhoneLog pLog = DataTransformerSchemaRegistry()
         .lookup(PrivacySchema.DEFAULT)!
         .transform(log) as PhoneLog;
     pLog.phoneLog.forEach(print);
@@ -125,7 +125,7 @@ void main() {
 
     print(toJsonString(cal));
 
-    Calendar pCal = TransformerSchemaRegistry()
+    Calendar pCal = DataTransformerSchemaRegistry()
         .lookup(PrivacySchema.DEFAULT)!
         .transform(cal) as Calendar;
     print(toJsonString(pCal));

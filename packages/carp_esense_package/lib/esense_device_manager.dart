@@ -149,9 +149,6 @@ class ESenseDeviceManager extends BTLEDeviceManager<ESenseDevice> {
       configuration!.deviceName!.isNotEmpty);
 
   @override
-  Future<void> onRequestPermissions() async {}
-
-  @override
   void onInitialize(ESenseDevice configuration) {
     if (configuration.deviceName == null || configuration.deviceName!.isEmpty) {
       warning(

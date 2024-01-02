@@ -1,3 +1,8 @@
+## 1.4.0
+
+* upgrade to Dart 3.2
+* update to `carp_mobile_sensing` v. 1.4.0
+
 ## 1.3.2
 
 * Fix of [#346](https://github.com/cph-cachet/carp.sensing-flutter/issues/346)

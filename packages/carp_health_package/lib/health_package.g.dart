@@ -61,6 +61,8 @@ const _$HealthDataTypeEnumMap = {
   HealthDataType.HEART_RATE_VARIABILITY_SDNN: 'HEART_RATE_VARIABILITY_SDNN',
   HealthDataType.HEIGHT: 'HEIGHT',
   HealthDataType.RESTING_HEART_RATE: 'RESTING_HEART_RATE',
+  HealthDataType.RESPIRATORY_RATE: 'RESPIRATORY_RATE',
+  HealthDataType.PERIPHERAL_PERFUSION_INDEX: 'PERIPHERAL_PERFUSION_INDEX',
   HealthDataType.STEPS: 'STEPS',
   HealthDataType.WAIST_CIRCUMFERENCE: 'WAIST_CIRCUMFERENCE',
   HealthDataType.WALKING_HEART_RATE: 'WALKING_HEART_RATE',
@@ -86,6 +88,7 @@ const _$HealthDataTypeEnumMap = {
   HealthDataType.HEADACHE_MODERATE: 'HEADACHE_MODERATE',
   HealthDataType.HEADACHE_SEVERE: 'HEADACHE_SEVERE',
   HealthDataType.HEADACHE_UNSPECIFIED: 'HEADACHE_UNSPECIFIED',
+  HealthDataType.NUTRITION: 'NUTRITION',
   HealthDataType.HIGH_HEART_RATE_EVENT: 'HIGH_HEART_RATE_EVENT',
   HealthDataType.LOW_HEART_RATE_EVENT: 'LOW_HEART_RATE_EVENT',
   HealthDataType.IRREGULAR_HEART_RATE_EVENT: 'IRREGULAR_HEART_RATE_EVENT',
@@ -94,6 +97,7 @@ const _$HealthDataTypeEnumMap = {
 };
 
 HealthData _$HealthDataFromJson(Map<String, dynamic> json) => HealthData(
+      json['uuid'] as String,
       _healthValueFromJson(json['value']),
       json['unit'] as String,
       json['data_type'] as String,
@@ -101,7 +105,8 @@ HealthData _$HealthDataFromJson(Map<String, dynamic> json) => HealthData(
       DateTime.parse(json['date_to'] as String),
       json['platform'] as String,
       json['device_id'] as String,
-      json['uuid'] as String,
+      json['source_id'] as String,
+      json['source_name'] as String,
     )..$type = json['__type'] as String?;
 
 Map<String, dynamic> _$HealthDataToJson(HealthData instance) {
@@ -114,6 +119,7 @@ Map<String, dynamic> _$HealthDataToJson(HealthData instance) {
   }
 
   writeNotNull('__type', instance.$type);
+  val['uuid'] = instance.uuid;
   val['value'] = instance.value;
   val['unit'] = instance.unit;
   val['date_from'] = instance.dateFrom.toIso8601String();
@@ -121,7 +127,8 @@ Map<String, dynamic> _$HealthDataToJson(HealthData instance) {
   val['data_type'] = instance.dataType;
   val['platform'] = instance.platform;
   val['device_id'] = instance.deviceId;
-  val['uuid'] = instance.uuid;
+  val['source_id'] = instance.sourceId;
+  val['source_name'] = instance.sourceName;
   return val;
 }
 

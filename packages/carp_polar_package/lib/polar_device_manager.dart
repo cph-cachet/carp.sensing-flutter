@@ -153,9 +153,6 @@ class PolarDeviceManager extends BTLEDeviceManager<PolarDevice> {
   ]);
 
   @override
-  Future<void> onRequestPermissions() async => await polar.requestPermissions();
-
-  @override
   Future<bool> canConnect() async => configuration?.identifier != null;
 
   @override

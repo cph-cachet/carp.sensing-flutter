@@ -62,14 +62,14 @@ part 'movisens_device_manager.dart';
 ///
 /// ```dart
 ///  // Create a study protocol
-///     StudyProtocol protocol = StudyProtocol(
+///  var protocol = StudyProtocol(
 ///    ownerId: 'owner@dtu.dk',
 ///    name: 'Movisens Example',
 ///  );
 ///
 ///  // define which devices are used for data collection - both phone and Movisens
-///  Smartphone phone = Smartphone();
-///  MovisensDevice movisens = MovisensDevice(
+///  var phone = Smartphone();
+///  var movisens = MovisensDevice(
 ///    deviceName: 'MOVISENS Sensor 02655',
 ///    sensorLocation: SensorLocation.Chest,
 ///    sex: Sex.Male,
@@ -115,15 +115,15 @@ class MovisensSamplingPackage implements SamplingPackage {
 
     // registering the transformers from CARP to OMH and FHIR for heart rate and step count.
     // we assume that there are OMH and FHIR schemas created and registered already...
-    TransformerSchemaRegistry().lookup(NameSpace.OMH)?.add(
+    DataTransformerSchemaRegistry().lookup(NameSpace.OMH)?.add(
           MovisensData.HR_MEAN,
           OMHHeartRateDataPoint.transformer,
         );
-    TransformerSchemaRegistry().lookup(NameSpace.OMH)?.add(
+    DataTransformerSchemaRegistry().lookup(NameSpace.OMH)?.add(
           MovisensData.STEPS,
           OMHStepCountDataPoint.transformer,
         );
-    TransformerSchemaRegistry().lookup(NameSpace.FHIR)?.add(
+    DataTransformerSchemaRegistry().lookup(NameSpace.FHIR)?.add(
           MovisensData.HR_MEAN,
           FHIRHeartRateObservation.transformer,
         );
@@ -160,41 +160,54 @@ class MovisensSamplingPackage implements SamplingPackage {
   }
 
   @override
-  List<DataTypeMetaData> get dataTypes => [
-        DataTypeMetaData(
-          type: ACTIVITY,
-          displayName: "Physical Activity",
-          timeType: DataTimeType.POINT,
-        ),
-        DataTypeMetaData(
-          type: HR,
-          displayName: "Heart Rate (HR) data",
-          timeType: DataTimeType.POINT,
-        ),
-        DataTypeMetaData(
-          type: EDA,
-          displayName: "Elecrodermal Activity (EDA)",
-          timeType: DataTimeType.POINT,
-        ),
-        DataTypeMetaData(
-          type: SKIN_TEMPERATURE,
-          displayName: "Skin Temperature",
-          timeType: DataTimeType.POINT,
-        ),
-        DataTypeMetaData(
-          type: RESPIRATION,
-          displayName: "Respiration",
-          timeType: DataTimeType.POINT,
-        ),
-        DataTypeMetaData(
-          type: TAP_MARKER,
-          displayName: "Tap markers by the user.",
-          timeType: DataTimeType.POINT,
-        ),
-      ];
+  List<DataTypeMetaData> get dataTypes => samplingSchemes.dataTypes;
 
   @override
-  SamplingSchema get samplingSchema => SamplingSchema();
+  DataTypeSamplingSchemeMap get samplingSchemes =>
+      DataTypeSamplingSchemeMap.from([
+        DataTypeSamplingScheme(
+          DataTypeMetaData(
+            type: ACTIVITY,
+            displayName: "Physical Activity",
+            timeType: DataTimeType.POINT,
+          ),
+        ),
+        DataTypeSamplingScheme(
+          DataTypeMetaData(
+            type: HR,
+            displayName: "Heart Rate (HR) data",
+            timeType: DataTimeType.POINT,
+          ),
+        ),
+        DataTypeSamplingScheme(
+          DataTypeMetaData(
+            type: EDA,
+            displayName: "Elecrodermal Activity (EDA)",
+            timeType: DataTimeType.POINT,
+          ),
+        ),
+        DataTypeSamplingScheme(
+          DataTypeMetaData(
+            type: SKIN_TEMPERATURE,
+            displayName: "Skin Temperature",
+            timeType: DataTimeType.POINT,
+          ),
+        ),
+        DataTypeSamplingScheme(
+          DataTypeMetaData(
+            type: RESPIRATION,
+            displayName: "Respiration",
+            timeType: DataTimeType.POINT,
+          ),
+        ),
+        DataTypeSamplingScheme(
+          DataTypeMetaData(
+            type: TAP_MARKER,
+            displayName: "Tap markers by the user.",
+            timeType: DataTimeType.POINT,
+          ),
+        ),
+      ]);
 }
 
 /// The location on the body where the Movisens device is placed.

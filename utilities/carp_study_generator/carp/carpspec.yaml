@@ -7,11 +7,11 @@
 # configuration of the CARP server and the user who runs this study
 server:
   # uri: https://cans.cachet.dk/
-  uri: https://cans.cachet.dk/dev
-  client_id: carp
-  client_secret: carp
-  username: jakba@dtu.dk
-  password: Benjamin
+  uri: https://carp.computerome.dk/auth/dev/realms/Carp
+  client_id: xxxxx
+  client_secret: xxxxx
+  username: researcher@cachet.dk
+  password: researcher
 
 # configuration of the study ID - used for upload of informed consent and translations
 study:
@@ -29,18 +29,17 @@ consent:
 message:
   # the location of the messages to be uploaded
   path: carp/messages/
-  # list the messages to be uploaded 
+  # list the messages to be uploaded
   # add each message as a <name>.json file in the [path] folder
-  messages: 
+  messages:
     - 1
     - 2
 
 localization:
   # the location of the localization files to be uploaded
   path: carp/lang/
-  # list the locales supported 
+  # list the locales supported
   # for each locale, add a <locale>.json file in the [path] folder
   locales:
     - en
     - da
-

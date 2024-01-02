@@ -1,10 +1,16 @@
 # CARP Survey Sampling Package
 
-This library contains a sampling package for collecting user-generated data such as [surveys](https://carp.cachet.dk/creating-a-survey/) and [cognitive tests](https://carp.cachet.dk/creating-cognitive-tests/).
-For this, this library uses the [CARP Research Package](https://carp.cachet.dk/research-package/) and the [CARP Cognition Package](https://carp.cachet.dk/cognition-package/).
-This package support the creation of a `RPAppTask` which can be added to a CAMS study protocol.
+[![pub package](https://img.shields.io/pub/v/carp_connectivity_package.svg)](https://pub.dartlang.org/packages/carp_connectivity_package)
+[![pub points](https://img.shields.io/pub/points/carp_connectivity_package?color=2E8B57&label=pub%20points)](https://pub.dev/packages/carp_connectivity_package/score)
+[![github stars](https://img.shields.io/github/stars/cph-cachet/carp.sensing-flutter.svg?style=flat&logo=github&colorB=deeppink&label=stars)](https://github.com/cph-cachet/carp.sensing-flutter)
+[![MIT License](https://img.shields.io/badge/license-MIT-purple.svg)](https://opensource.org/licenses/MIT)
+[![arXiv](https://img.shields.io/badge/arXiv-2006.11904-green.svg)](https://arxiv.org/abs/2006.11904)
 
-Read more on the [Research Package API](https://carp.cachet.dk/research-package-api/) and how to [create a survey](https://carp.cachet.dk/creating-a-survey/) and how to [create a cognitive test](https://carp.cachet.dk/creating-cognitive-tests/) on the CARP website.
+This library contains a sampling package for collection of user-generated data to work with the [`carp_mobile_sensing`](https://pub.dartlang.org/packages/carp_mobile_sensing) framework. Data is collected via [surveys](https://carp.cachet.dk/creating-a-survey/) and [cognitive tests](https://carp.cachet.dk/creating-cognitive-tests/).
+For this, this library uses the [CARP Research Package](https://carp.cachet.dk/research-package/) and the [CARP Cognition Package](https://carp.cachet.dk/cognition-package/).
+This package supports the creation of a `RPAppTask` which can be added to a CAMS study protocol.
+
+Read more on the [Research Package API](https://carp.cachet.dk/research-package-api/) and how to [create a survey](https://carp.cachet.dk/creating-a-survey/) and how to [create a cognitive test](https://carp.cachet.dk/creating-cognitive-tests/) on the CARP website. For a demo of how to use this package and the `RPAppTask` in an app, see the [PulmonaryMonitor](https://github.com/cph-cachet/pulmonary_monitor_app) app. To read more about using the `AppTask`, see the [CAMS wiki](https://github.com/cph-cachet/carp.sensing-flutter/wiki/4.-The-AppTask-Model).
 
 ## Installing
 
@@ -73,7 +79,7 @@ protocol.addTaskControl(
   RPAppTask(
       type: SurveyUserTask.COGNITIVE_ASSESSMENT_TYPE,
       title: "Parkinson's' Assessment",
-      description: "A simple task assessing finger tapping speed.",
+      description: "A simple task assessing motor and cognitive functioning.",
       minutesToComplete: 3,
       rpTask: RPOrderedTask(
         identifier: "parkinsons_assessment",
@@ -82,14 +88,17 @@ protocol.addTaskControl(
               identifier: 'parkinsons_instruction',
               title: "Parkinsons' Disease Assessment",
               text:
-                  "In the following pages, you will be asked to solve two simple test which will help assess your symptoms on a daily basis. "
-                  "Each test has an instruction page, which you should read carefully before starting the test.\n\n"
-                  "Please sit down comfortably and hold the phone in one hand while performing the test with the other."),
+                  "In the following pages, you will be asked to solve two simple test which will help assess "
+                  "your symptoms on a daily basis. Each test has an instruction page, which you should read "
+                  "carefully before starting the test.\n\n"
+                  "Please sit down comfortably and hold the phone in one hand while performing the test "
+                  "with the other."),
           RPTimerStep(
-            identifier: 'RPTimerStepID',
+            identifier: 'timer_1',
             timeout: const Duration(seconds: 6),
             title:
-                "Please stand up and hold the phone in one hand and lift it in a straight arm until you hear the sound.",
+                "Please stand up and hold the phone in one hand and lift it in a straight arm "
+                "until you hear the sound.",
             playSound: true,
           ),
           RPFlankerActivity(
@@ -109,5 +118,3 @@ protocol.addTaskControl(
       ]),
   phone);
   ```
-
-Please check out the [Pulmonary Monitor App](https://github.com/cph-cachet/pulmonary_monitor_app) which demonstrates how surveys and cognitive tests can be added to a full CAMS app.

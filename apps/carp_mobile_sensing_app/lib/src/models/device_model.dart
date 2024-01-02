@@ -40,6 +40,7 @@ class DeviceModel {
         AirQualityService.DEVICE_TYPE: 'Air Quality',
         WeatherService.DEVICE_TYPE: 'Weather',
         HealthService.DEVICE_TYPE: 'Health',
+        MovisensDevice.DEVICE_TYPE: 'Movisens',
       };
 
   static Map<String, String> get deviceTypeDescription => {
@@ -51,6 +52,7 @@ class DeviceModel {
         AirQualityService.DEVICE_TYPE: 'World Air Quality Service',
         WeatherService.DEVICE_TYPE: 'Open Weather Service',
         HealthService.DEVICE_TYPE: 'Health data stored on the phone',
+        MovisensDevice.DEVICE_TYPE: 'Movisens Sensor',
       };
 
   static Map<String, Icon> get deviceTypeIcon => {
@@ -59,7 +61,7 @@ class DeviceModel {
         ESenseDevice.DEVICE_TYPE:
             Icon(Icons.headset, size: 50, color: CACHET.CACHET_BLUE),
         PolarDevice.DEVICE_TYPE:
-            Icon(Icons.monitor_heart, size: 50, color: CACHET.RED),
+            Icon(Icons.monitor_heart, size: 50, color: CACHET.LIGHT_GREEN),
         MovesenseDevice.DEVICE_TYPE:
             Icon(Icons.monitor_heart_rounded, size: 50, color: CACHET.RED),
         LocationService.DEVICE_TYPE:
@@ -69,7 +71,9 @@ class DeviceModel {
         WeatherService.DEVICE_TYPE:
             Icon(Icons.cloud, size: 50, color: CACHET.DARK_BLUE),
         HealthService.DEVICE_TYPE:
-            Icon(Icons.heart_broken, size: 50, color: CACHET.LIGHT_GREEN),
+            Icon(Icons.heart_broken, size: 50, color: CACHET.RED),
+        MovisensDevice.DEVICE_TYPE:
+            Icon(Icons.watch, size: 50, color: CACHET.CYAN),
       };
 
   static Map<DeviceStatus, Icon> get deviceStateIcon => {

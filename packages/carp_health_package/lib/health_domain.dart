@@ -65,7 +65,12 @@ HealthValue _healthValueFromJson(json) => NumericHealthValue(-1);
 /// A [Data] object that holds health data from a [HealthDataPoint].
 @JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)
 class HealthData extends Data {
+  /// A unique UUID of this data point.
+  String uuid;
+
   /// The value of the health data.
+  ///
+  /// See [HealthValue](https://pub.dev/documentation/health/latest/health/HealthValue-class.html)
   @JsonKey(fromJson: _healthValueFromJson)
   HealthValue value;
 
@@ -75,13 +80,12 @@ class HealthData extends Data {
   String unit;
 
   /// Start date-time for this health data.
-  DateTime dateFrom;
+  late DateTime dateFrom;
 
   /// End date-time for this health data.
-  DateTime dateTo;
+  late DateTime dateTo;
 
-  /// The type of health data -- see [HealthDataType](https://pub.dev/documentation/health/latest/health/HealthDataType-class.html).
-  ///
+  /// The type of health data -- see [HealthDataType](https://pub.dev/documentation/health/latest/health/HealthDataType.html).
   /// Note that the uppercase version is used, e.g. `STEPS`.
   String dataType;
 
@@ -91,35 +95,44 @@ class HealthData extends Data {
   /// The device id of the phone.
   String deviceId;
 
-  /// The unique UUID of the data point.
-  String uuid;
+  /// The id of the source from which the data point was fetched.
+  String sourceId;
+
+  /// The name of the source from which the data point was fetched.
+  String sourceName;
 
   /// Create a [HealthData] object.
   HealthData(
+    this.uuid,
     this.value,
     this.unit,
     this.dataType,
-    this.dateFrom,
-    this.dateTo,
+    DateTime dateFrom,
+    DateTime dateTo,
     this.platform,
     this.deviceId,
-    this.uuid,
-  ) : super();
+    this.sourceId,
+    this.sourceName,
+  ) : super() {
+    this.dateFrom = dateFrom.toUtc();
+    this.dateTo = dateTo.toUtc();
+  }
 
   /// Create a [HealthData] from a [HealthDataPoint] health data object.
   factory HealthData.fromHealthDataPoint(HealthDataPoint healthDataPoint) {
     String uuid =
         Uuid().v5(Uuid.NAMESPACE_URL, healthDataPoint.toJson().toString());
     return HealthData(
-      healthDataPoint.value,
-      healthDataPoint.unitString,
-      healthDataPoint.typeString,
-      healthDataPoint.dateFrom,
-      healthDataPoint.dateTo,
-      enumToString(healthDataPoint.platform),
-      healthDataPoint.deviceId,
-      uuid,
-    );
+        uuid,
+        healthDataPoint.value,
+        healthDataPoint.unitString,
+        healthDataPoint.typeString,
+        healthDataPoint.dateFrom.toUtc(),
+        healthDataPoint.dateTo.toUtc(),
+        enumToString(healthDataPoint.platform),
+        healthDataPoint.deviceId,
+        healthDataPoint.sourceId,
+        healthDataPoint.sourceName);
   }
 
   factory HealthData.fromJson(Map<String, dynamic> json) =>
@@ -129,7 +142,7 @@ class HealthData extends Data {
   Map<String, dynamic> toJson() => _$HealthDataToJson(this);
 
   /// The json type of this health data is `dk.cachet.carp.health.<healthdatatype>`,
-  /// where `<healthdatatype>` is the lowercase version of the [HealthDataType].
+  /// where `<healthdatatype>` is the lowercase version of the [dataType].
   @override
   String get jsonType =>
       '${HealthSamplingPackage.HEALTH}.${dataType.toLowerCase()}';

@@ -30,7 +30,6 @@ class LocationManager {
   /// Get the singleton [LocationManager] instance
   factory LocationManager() => _instance;
 
-  Location _lastKnownLocation = Location(latitude: 55.7944, longitude: 12.4463);
   bool _enabled = false, _configuring = false;
   final _provider = location.Location();
 
@@ -127,11 +126,8 @@ class LocationManager {
 
   /// Gets the current location of the phone.
   /// Throws an error if the app has no permission to access location.
-  Future<Location> getLocation() async => _lastKnownLocation =
+  Future<Location> getLocation() async =>
       Location.fromLocationData(await _provider.getLocation());
-
-  /// Get the last known location.
-  Future<Location> getLastKnownLocation() async => _lastKnownLocation;
 
   /// Returns a stream of [Location] objects.
   /// Throws an error if the app has no permission to access location.

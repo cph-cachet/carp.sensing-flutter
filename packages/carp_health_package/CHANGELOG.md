@@ -1,7 +1,14 @@
-## 2.7.0
+## 2.8.0
+
+* upgrade to Dart 3.2
+* update to `carp_mobile_sensing` v. 1.4.0
+
+## 2.7.1
 
 * upgrade of uuid and permission_handler plugins
 * update to `carp_mobile_sensing` v. 1.3.0
+* addition of source id and name
+* improvements to API docs
 
 ## 2.6.0
 

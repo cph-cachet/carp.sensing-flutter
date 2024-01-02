@@ -120,8 +120,11 @@ void main() {
       String platform = enumToString(PlatformType.ANDROID);
       String deviceId = '1234';
       String uuid = "4321";
+      String sourceId = "AH";
+      String sourceName = "AppleHealth";
 
       HealthData hd = HealthData(
+        uuid,
         NumericHealthValue(value),
         unit,
         type,
@@ -129,7 +132,8 @@ void main() {
         to,
         platform,
         deviceId,
-        uuid,
+        sourceId,
+        sourceName,
       );
 
       final dp_1 = Measurement.fromData(hd);
@@ -143,6 +147,7 @@ void main() {
       DateTime to = DateTime.now();
       DateTime from = to.subtract(Duration(milliseconds: 10000));
       HealthData hd = HealthData(
+          '4321',
           NumericHealthValue(6),
           enumToString(dasesDataTypeToUnit[DasesHealthDataType.ALCOHOL]),
           enumToString(DasesHealthDataType.ALCOHOL),
@@ -150,6 +155,7 @@ void main() {
           to,
           enumToString(PlatformType.IOS),
           '1234',
+          '4321',
           '4321');
 
       final dp_1 = Measurement.fromData(hd);
@@ -163,6 +169,7 @@ void main() {
       DateTime to = DateTime.now();
       DateTime from = to.subtract(Duration(hours: 8));
       HealthData hd = HealthData(
+          '4321',
           NumericHealthValue(6),
           enumToString(dasesDataTypeToUnit[DasesHealthDataType.SLEEP]),
           enumToString(DasesHealthDataType.SLEEP),
@@ -170,6 +177,7 @@ void main() {
           to,
           enumToString(PlatformType.IOS),
           '1234',
+          '4321',
           '4321');
 
       final dp_1 = Measurement.fromData(hd);
@@ -184,6 +192,7 @@ void main() {
       DateTime from = to.subtract(Duration(hours: 8));
 
       HealthData smoking = HealthData(
+          '4321',
           NumericHealthValue(12),
           enumToString(
               dasesDataTypeToUnit[DasesHealthDataType.SMOKED_CIGARETTES]),
@@ -194,6 +203,7 @@ void main() {
               ? enumToString(PlatformType.ANDROID)
               : enumToString(PlatformType.IOS),
           '1234',
+          '4321',
           '4321');
 
       final dp_1 = Measurement.fromData(smoking);
@@ -208,6 +218,7 @@ void main() {
       DateTime from = to.subtract(Duration(hours: 8));
 
       HealthData audiogram = HealthData(
+          '4321',
           AudiogramHealthValue([12, 32], [1, 2, 3, 4], [1, 4, 7]),
           enumToString(HealthDataUnit.NO_UNIT),
           enumToString(HealthDataType.AUDIOGRAM),
@@ -217,6 +228,7 @@ void main() {
               ? enumToString(PlatformType.ANDROID)
               : enumToString(PlatformType.IOS),
           '1234',
+          '4321',
           '4321');
 
       final dp_1 = Measurement.fromData(audiogram);
@@ -231,6 +243,7 @@ void main() {
       DateTime from = to.subtract(Duration(hours: 8));
 
       HealthData workout = HealthData(
+          '4321',
           WorkoutHealthValue(HealthWorkoutActivityType.AEROBICS, 8,
               HealthDataUnit.KILOCALORIE, 1000, HealthDataUnit.METER),
           enumToString(HealthDataUnit.NO_UNIT),
@@ -241,6 +254,7 @@ void main() {
               ? enumToString(PlatformType.ANDROID)
               : enumToString(PlatformType.IOS),
           '1234',
+          '4321',
           '4321');
 
       final dp_1 = Measurement.fromData(workout);

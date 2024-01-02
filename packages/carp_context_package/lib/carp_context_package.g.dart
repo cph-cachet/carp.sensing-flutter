@@ -431,6 +431,9 @@ LocationService _$LocationServiceFromJson(Map<String, dynamic> json) =>
       notificationTitle: json['notificationTitle'] as String?,
       notificationMessage: json['notificationMessage'] as String?,
       notificationDescription: json['notificationDescription'] as String?,
+      notificationIconName: json['notificationIconName'] as String?,
+      notificationOnTapBringToFront:
+          json['notificationOnTapBringToFront'] as bool? ?? false,
     )
       ..$type = json['__type'] as String?
       ..isOptional = json['isOptional'] as bool?
@@ -460,6 +463,8 @@ Map<String, dynamic> _$LocationServiceToJson(LocationService instance) {
   writeNotNull('notificationTitle', instance.notificationTitle);
   writeNotNull('notificationMessage', instance.notificationMessage);
   writeNotNull('notificationDescription', instance.notificationDescription);
+  writeNotNull('notificationIconName', instance.notificationIconName);
+  val['notificationOnTapBringToFront'] = instance.notificationOnTapBringToFront;
   return val;
 }
 

@@ -101,7 +101,7 @@ class CarpDeploymentService extends CarpBaseService
 
     // converting it to a SmartphoneDeployment
     return SmartphoneDeployment.fromPrimaryDeviceDeployment(
-      studyId: CarpService().app?.studyId,
+      studyId: CarpService().app.studyId,
       studyDeploymentId: studyDeploymentId,
       deployment: deployment,
     );

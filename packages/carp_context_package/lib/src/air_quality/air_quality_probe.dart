@@ -17,7 +17,7 @@ class AirQualityProbe extends MeasurementProbe {
   Future<Measurement> getMeasurement() async {
     if (deviceManager.service != null) {
       try {
-        final loc = await LocationManager().getLastKnownLocation();
+        final loc = await LocationManager().getLocation();
         waqi.AirQualityData airQuality = await deviceManager.service!
             .feedFromGeoLocation(loc.latitude, loc.longitude);
 

@@ -122,6 +122,28 @@
         android:label="CARP Mobile Sensing"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
+
+        <!-- Configuration of AppAuth - see also flutter_appauth plugin -->
+        <activity
+            android:name="net.openid.appauth.RedirectUriReceiverActivity"
+            android:exported="true"
+            tools:node="replace">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <data android:scheme="carp-studies-auth" android:pathPrefix="/auth" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <data android:scheme="http" />
+                <data android:host="carp.computerome.dk" />
+                <data android:pathPrefix="/auth/dev" />
+            </intent-filter>
+        </activity>
+
         <activity
             android:name=".MainActivity"
             android:exported="true"

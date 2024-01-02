@@ -49,9 +49,9 @@ abstract class MovisensData extends Data {
   }
 
   /// Make a Movisens timestamp into UTC format
-  static String _movisensTimestampToUTC(String timestamp) {
-    List<String> splittedTimestamp = timestamp.split(" ");
-    return "${splittedTimestamp[0]}T${splittedTimestamp[1]}.000Z";
+  static String movisensTimestampToUTC(String timestamp) {
+    var split = timestamp.split(" ");
+    return "${split[0]}T${split[1]}.000Z";
   }
 }
 

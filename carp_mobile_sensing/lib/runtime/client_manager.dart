@@ -7,6 +7,7 @@
 
 part of runtime;
 
+/// The possible states of the [SmartPhoneClientManager].
 enum ClientManagerState {
   created,
   configured,
@@ -27,6 +28,8 @@ class SmartPhoneClientManager extends SmartphoneClient
   ClientManagerState get state => _state;
 
   /// The stream of all [Measurement]s collected by this client manager.
+  /// This is the aggregation of all measurements collected by the
+  /// [studies] running on this client.
   Stream<Measurement> get measurements => _group.stream;
 
   /// The permissions granted to this client from the OS.
@@ -77,10 +80,11 @@ class SmartPhoneClientManager extends SmartphoneClient
   /// The [registration] is a unique device registration for this client device.
   /// If not specified, a [SmartphoneDeviceRegistration] is created and used.
   ///
-  /// If [enableNotifications] is true (default), notifications is created an [AppTask]
-  /// is triggered? The [notificationController] specifies what [NotificationController] to
-  /// use for notifications. Two alternatives exists:
-  /// [FlutterLocalNotificationController] or [AwesomeNotificationController] (default).
+  /// If [enableNotifications] is true (default), notifications is created when
+  /// an [AppTask] is triggered.
+  /// The [notificationController] specifies what [NotificationController] to
+  /// use for notifications. If not specified, the [FlutterLocalNotificationController]
+  /// is used.
   ///
   /// If [askForPermissions] is true (default), this client manager will
   /// automatically ask for permissions for all sampling packages at once.

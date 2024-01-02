@@ -9,7 +9,6 @@ import 'package:iso_duration_parser/iso_duration_parser.dart';
 import 'credentials.dart';
 
 void main() {
-  CarpApp app;
   CarpUser? user;
   String? ownerId;
   late StudyProtocol protocol;
@@ -18,23 +17,8 @@ void main() {
     Settings().debugLevel = DebugLevel.debug;
     CarpMobileSensing.ensureInitialized();
 
-    app = CarpApp(
-      studyId: testStudyId,
-      studyDeploymentId: testDeploymentId,
-      name: "Test",
-      uri: Uri.parse(uri),
-      oauth: OAuthEndPoint(clientID: clientID, clientSecret: clientSecret),
-    );
-
-    CarpService().configure(app);
-
-    user = await CarpService().authenticate(
-      username: username,
-      password: password,
-    );
-
     CarpProtocolService().configureFrom(CarpService());
-    ownerId = CarpService().currentUser!.accountId;
+    ownerId = CarpService().currentUser.id;
     var phone = Smartphone(roleName: phoneRoleName);
     phone.defaultSamplingConfiguration?.addAll({
       Geolocation.dataType: BatteryAwareSamplingConfiguration(

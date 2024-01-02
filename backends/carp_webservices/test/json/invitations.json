@@ -1,0 +1,101 @@
+[
+    {
+        "participation": {
+            "studyDeploymentId": "73b125e9-57ef-4775-806e-3faf6c7a04c9",
+            "participantId": "88714d8e-4cdd-45c7-b3a9-5fe234a0ffec",
+            "assignedRoles": {
+                "__type": "dk.cachet.carp.common.application.users.AssignedTo.Roles",
+                "roleNames": [
+                    "Version 2"
+                ]
+            }
+        },
+        "invitation": {
+            "name": "The ICAT Test",
+            "description": "Hello victims! Welcome to the ICAT test. ",
+            "applicationData": "133cb51b-9403-4982-8ce1-8aa128598b81"
+        },
+        "assignedDevices": [
+            {
+                "device": {
+                    "__type": "dk.cachet.carp.common.application.devices.WebBrowser",
+                    "roleName": "ICAT Web Browser",
+                    "defaultSamplingConfiguration": {},
+                    "isPrimaryDevice": true
+                },
+                "registration": {
+                    "__type": "dk.cachet.carp.common.application.devices.DefaultDeviceRegistration",
+                    "deviceId": "21a84510-ff4d-4180-bff6-9e7d751ad48c",
+                    "deviceDisplayName": "ICAT WebServer",
+                    "registrationCreatedOn": "2023-10-28T11:25:47.010Z"
+                }
+            }
+        ]
+    },
+    {
+        "participation": {
+            "studyDeploymentId": "73b125e9-57ef-4775-806e-3faf6c7a04c9",
+            "participantId": "37b5c39e-fd21-42c6-8591-7ac534a07d97",
+            "assignedRoles": {
+                "__type": "dk.cachet.carp.common.application.users.AssignedTo.Roles",
+                "roleNames": [
+                    "Version 2"
+                ]
+            }
+        },
+        "invitation": {
+            "name": "The ICAT Test",
+            "description": "Hello victims! Welcome to the ICAT test. ",
+            "applicationData": "133cb51b-9403-4982-8ce1-8aa128598b81"
+        },
+        "assignedDevices": [
+            {
+                "device": {
+                    "__type": "dk.cachet.carp.common.application.devices.WebBrowser",
+                    "roleName": "ICAT Web Browser",
+                    "defaultSamplingConfiguration": {},
+                    "isPrimaryDevice": true
+                },
+                "registration": {
+                    "__type": "dk.cachet.carp.common.application.devices.DefaultDeviceRegistration",
+                    "deviceId": "21a84510-ff4d-4180-bff6-9e7d751ad48c",
+                    "deviceDisplayName": "ICAT WebServer",
+                    "registrationCreatedOn": "2023-10-28T11:25:47.010Z"
+                }
+            }
+        ]
+    },
+    {
+        "participation": {
+            "studyDeploymentId": "73b125e9-57ef-4775-806e-3faf6c7a04c9",
+            "participantId": "acd3533b-fa83-4105-aceb-954bdd10b7d2",
+            "assignedRoles": {
+                "__type": "dk.cachet.carp.common.application.users.AssignedTo.Roles",
+                "roleNames": [
+                    "Version 2"
+                ]
+            }
+        },
+        "invitation": {
+            "name": "The ICAT Test",
+            "description": "Hello victims! Welcome to the ICAT test. ",
+            "applicationData": "133cb51b-9403-4982-8ce1-8aa128598b81"
+        },
+        "assignedDevices": [
+            {
+                "device": {
+                    "__type": "dk.cachet.carp.common.application.devices.WebBrowser",
+                    "roleName": "ICAT Web Browser",
+                    "defaultSamplingConfiguration": {},
+                    "isPrimaryDevice": true
+                },
+                "registration": {
+                    "__type": "dk.cachet.carp.common.application.devices.DefaultDeviceRegistration",
+                    "deviceId": "21a84510-ff4d-4180-bff6-9e7d751ad48c",
+                    "deviceDisplayName": "ICAT WebServer",
+                    "registrationCreatedOn": "2023-10-28T11:25:47.010Z"
+                }
+            }
+        ]
+    }
+]

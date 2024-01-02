@@ -22,7 +22,7 @@ class LoadingPage extends StatelessWidget {
     // Initialize and use the CAWS backend if not in local deployment mode
     if (bloc.deploymentMode != DeploymentMode.local) {
       await CarpBackend().initialize();
-      await CarpBackend().authenticate(context, username: 'jakob@bardram.net');
+      await CarpBackend().authenticate();
 
       // Check if there is a local deployment id.
       // If not, get a deployment id based on an invitation.
@@ -31,8 +31,8 @@ class LoadingPage extends StatelessWidget {
       }
 
       // Make sure that CarpService knows the study and deployment ids
-      CarpService().app?.studyId = bloc.studyId;
-      CarpService().app?.studyDeploymentId = bloc.studyDeploymentId;
+      CarpService().app.studyId = bloc.studyId;
+      CarpService().app.studyDeploymentId = bloc.studyDeploymentId;
     }
 
     await bloc.sensing.initialize();
@@ -57,7 +57,7 @@ class LoadingPage extends StatelessWidget {
 }
 
 class CarpMobileSensingApp extends StatefulWidget {
-  CarpMobileSensingApp({Key? key}) : super(key: key);
+  CarpMobileSensingApp({super.key});
   @override
   CarpMobileSensingAppState createState() => CarpMobileSensingAppState();
 }

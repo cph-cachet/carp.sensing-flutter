@@ -61,87 +61,60 @@ import 'package:carp_webservices/carp_services/carp_services.dart';
 The [`CarpService`](https://pub.dartlang.org/documentation/carp_webservices/latest/carp_services/CarpService-class.html) is a singleton and needs to be configured once.
 
 ````dart
-final String uri = "https://cans.cachet.dk";
+  Uri get uri => Uri(
+        scheme: 'https',
+        host: 'carp.computerome.dk',
+        pathSegments: [
+          'auth',
+          'dev',
+          'realms',
+          'Carp',
+        ], // Depends on your specific instance
+      );
 CarpApp app;
 
 app = CarpApp(
-  name: 'any_display_friendly_name_is_fine',
-  studyId: 'the_study_id',
-  studyDeploymentId: 'the_study_deployment_id',
-  uri: Uri.parse(uri),
-  oauth: OAuthEndPoint(
-    clientID: 'the_client_id',
-    clientSecret: 'the_client_secret',
-  ),
-);
+      name: "CAWS @ DTU",
+      uri: uri.replace(pathSegments: [uris[bloc.deploymentMode]!]),
+      authURL: uri,
+      clientId: '<your personal client id from keycloak>',
+      redirectURI: Uri.parse('<your-custom-redirect URL>'), // E.g. carp-studies-auth://auth
+      discoveryURL: uri.replace(pathSegments: [
+        ...uri.pathSegments,
+        '.well-known',
+        'openid-configuration'
+      ]),
+      studyId: studyId, // From an invitation
+      studyDeploymentId: studyDeploymentId, //
+  );
 
 // Configure the CARP Service with this app.
 CarpService().configure(app);
 ````
 
-Note that you need a valid `clientID` and `clientSecret` from a CAWS instance to use it.
+Note that the custom scheme for the redirect URIs has to be set up in platform configurations according to [`Flutter_AppAuth`](https://pub.dev/packages/flutter_appauth).
+
+Note that you need a valid `clientID` and `clientSecret` (if you have a secret) from a CAWS instance to use it.
 Also note that you need the `studyId` and  `studyDeploymentId` for a study deployed in your CAWS instance. On the client side (in Flutter), these can be obtained from an invitation (see below). But if you want to use the CAWS endpoints directly, you have to specify these IDs in the `CarpApp` configuration, as shown above.
 
 The singleton can now be accessed via `CarpService()`.
 
 ### Authentication
 
-Basic authentication is using username and password.
+Basic authentication is using the CAWS keycloak login page, which the system opens when running:
 
 ```dart
-CarpUser user;
-try {
-   user = await CarpService().authenticate(
-      username: "a_username", 
-      password: "the_password",
-   );
-} catch (errors) {
-   ...;
-}
+CarpUser user = await CarpService().authenticate();
 ```
 
+This `CarpUser` object contains the OAuth token in the `.token` (of type `OAuthToken`) parameter.
 Since the [CarpUser](https://pub.dev/documentation/carp_webservices/latest/carp_auth/CarpUser-class.html) can be serialized to JSON, the OAuth token can be stored on the phone.
-This can then later be used for authentication:
 
+To refresh the OAuth token the client (Flutter) simply calls
 ```dart
-try {
-   user = await CarpService().authenticateWithToken(
-      username: user.username, 
-      token: user.token,
-   );
-} catch (error) {
-   ...;
-}
+await CarpService().refresh()
 ```
-
-The user's password can be changed using the `changePassword()` method:
-
-```dart
-try {
-   user = await CarpService().changePassword(
-        currentPassword: 'the_password',
-        newPassword: 'a_new_password',
-      );
-} catch (error) {
-   ...;
-}
-```
-
-The plugin also comes with a user interface for authenticating at a CAWS server using the `authenticateWithDialog()` method. For example, the login can be implemented as part of a `TextButton` like this:
-
-```dart
-    child: TextButton.icon(
-      onPressed: () => CarpService().authenticateWithDialog(
-        context,
-        username: 'user@cachet.dk',
-      ),
-      icon: Icon(Icons.login),
-      label: Text(
-        'LOGIN',
-        style: TextStyle(fontSize: 35),
-      ),
-   ),
-```
+This method returns a `CarpUser`, with the new access token.
 
 ### Informed Consent Document
 
@@ -302,9 +275,9 @@ Deployments are accessed via a [`DeploymentReference`](https://pub.dev/documenta
 // This example uses the
 //  * CarpDeploymentService
 //  * CarpParticipationService
-// 
+//
 // To use these, we first must configure them and authenticate.
-// However, the [configureFrom] method is a convenient way to do this 
+// However, the [configureFrom] method is a convenient way to do this
 // based on an existing service, which has been configured.
 
 CarpParticipationService().configureFrom(CarpService());
@@ -367,7 +340,7 @@ DataStreamBatch(
 // Get a data stream and append the batch
 CarpDataStreamService().stream().append(batch);
 ```
-  
+
 ## Features and bugs
 
 Please file feature requests and bug reports at the [issue tracker][tracker].

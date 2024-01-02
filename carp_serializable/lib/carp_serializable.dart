@@ -1,6 +1,5 @@
 library carp_serializable;
 
-import 'package:meta/meta.dart';
 import 'dart:convert';
 import 'package:json_annotation/json_annotation.dart';
 
@@ -127,7 +126,6 @@ abstract class Serializable {
   String? $type;
 
   /// Create an object that can be serialized to JSON.
-  @mustCallSuper
   Serializable() {
     $type = jsonType;
   }

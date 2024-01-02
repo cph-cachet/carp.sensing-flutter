@@ -1,9 +1,11 @@
 /// A library containing a sampling package for collecting data from the basic
 /// device sensors:
-/// - accelerometer
-/// - gyroscope
-/// - light
-/// - pedometer
+///  - accelerometer
+///  - gyroscope
+///  - magnetometer
+///  - acceleration features
+///  - ambient light
+///  - pedometer (step events)
 library sensors;
 
 import 'dart:async';
@@ -14,7 +16,6 @@ import 'package:sensors_plus/sensors_plus.dart';
 import 'package:light/light.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:pedometer/pedometer.dart' as pedometer;
-// import 'package:stats/stats.dart';
 import 'package:statistics/statistics.dart';
 import 'package:sample_statistics/sample_statistics.dart';
 

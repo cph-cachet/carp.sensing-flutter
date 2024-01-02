@@ -156,7 +156,7 @@ class BluetoothDevice {
         bluetoothDeviceName: result.device.platformName,
         connectable: result.advertisementData.connectable,
         txPowerLevel: result.advertisementData.txPowerLevel,
-        advertisementName: result.advertisementData.localName,
+        advertisementName: result.advertisementData.advName,
         rssi: result.rssi,
       );
 

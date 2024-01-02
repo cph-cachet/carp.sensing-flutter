@@ -26,12 +26,18 @@
             "deleteWhenUploaded": true
         }
     },
-    "id": "b8ce96d0-4aef-11ee-94c1-0da5df3879d4",
-    "createdOn": "2023-09-04T06:53:15.325603Z",
+    "id": "6fdf8870-8add-11ee-8c4b-2ff8c0e4f97b",
+    "createdOn": "2023-11-24T15:23:36.439696Z",
     "version": 0,
     "description": "The default study testing coverage of most measures. Used in the coverage tests.",
     "ownerId": "979b408d-784e-4b1b-bb1e-ff9204e072f3",
-    "name": "Single Participant Study",
+    "name": "CAMS Demo App Protocol - Single Participant Study",
+    "participantRoles": [
+        {
+            "role": "Participant",
+            "isOptional": false
+        }
+    ],
     "primaryDevices": [
         {
             "__type": "dk.cachet.carp.common.application.devices.Smartphone",
@@ -74,12 +80,12 @@
         },
         {
             "__type": "dk.cachet.carp.common.application.devices.PolarDevice",
-            "roleName": "polar-pvs-device",
+            "roleName": "Polar HR Device",
             "isOptional": true,
             "defaultSamplingConfiguration": {},
-            "identifier": "B36B5B21",
-            "polarDeviceType": "SENSE",
-            "name": "Polar PVS"
+            "identifier": "B5FC172F",
+            "polarDeviceType": "H10",
+            "name": "Polar H10 HR Monitor"
         },
         {
             "__type": "dk.cachet.carp.common.application.devices.HealthService",
@@ -112,7 +118,7 @@
             "connectedToRoleName": "Primary Phone"
         },
         {
-            "roleName": "polar-pvs-device",
+            "roleName": "Polar HR Device",
             "connectedToRoleName": "Primary Phone"
         },
         {
@@ -120,6 +126,7 @@
             "connectedToRoleName": "Primary Phone"
         }
     ],
+    "assignedDevices": {},
     "tasks": [
         {
             "__type": "dk.cachet.carp.common.application.tasks.BackgroundTask",
@@ -330,6 +337,10 @@
                 {
                     "__type": "dk.cachet.carp.common.application.tasks.Measure.DataStream",
                     "type": "dk.cachet.carp.esense.button"
+                },
+                {
+                    "__type": "dk.cachet.carp.common.application.tasks.Measure.DataStream",
+                    "type": "dk.cachet.carp.esense.sensor"
                 }
             ]
         },
@@ -473,11 +484,11 @@
         },
         "14": {
             "__type": "dk.cachet.carp.common.application.triggers.NoOpTrigger",
-            "sourceDeviceRoleName": "polar-pvs-device"
+            "sourceDeviceRoleName": "Polar HR Device"
         },
         "15": {
             "__type": "dk.cachet.carp.common.application.triggers.ImmediateTrigger",
-            "sourceDeviceRoleName": "polar-pvs-device"
+            "sourceDeviceRoleName": "Polar HR Device"
         },
         "16": {
             "__type": "dk.cachet.carp.common.application.triggers.NoOpTrigger",
@@ -577,13 +588,13 @@
         {
             "triggerId": 14,
             "taskName": "Task #21",
-            "destinationDeviceRoleName": "polar-pvs-device",
+            "destinationDeviceRoleName": "Polar HR Device",
             "control": "Start"
         },
         {
             "triggerId": 15,
             "taskName": "Task #22",
-            "destinationDeviceRoleName": "polar-pvs-device",
+            "destinationDeviceRoleName": "Polar HR Device",
             "control": "Start"
         },
         {
@@ -599,12 +610,5 @@
             "control": "Start"
         }
     ],
-    "participantRoles": [
-        {
-            "role": "Participant",
-            "isOptional": false
-        }
-    ],
-    "assignedDevices": {},
     "expectedParticipantData": []
 }

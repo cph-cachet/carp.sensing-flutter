@@ -1,3 +1,14 @@
+## 1.4.0
+
+* upgrade to Dart 3.2
+* update to `carp_mobile_sensing` v. 1.4.0
+* `CommunicationSamplingPackage` added so that protocols with communication measure are now supported
+
+## 1.3.1
+
+* update to new authentication from carp_webservices 2.0.0
+* use new style of `CarpApp`
+
 ## 1.3.0
 
 * update to `carp_mobile_sensing` v. 1.3.0

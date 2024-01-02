@@ -11,7 +11,7 @@ the [`carp_mobile_sensing`](https://pub.dartlang.org/packages/carp_mobile_sensin
 This packages supports sampling of the following [`Measure`](https://github.com/cph-cachet/carp.sensing-flutter/wiki/A.-Measure-Types) types:
 
 * `dk.cachet.carp.apps` - a list of installed apps on the phone.
-* `dk.cachet.carp.app_usage` - a log of app usage activity.
+* `dk.cachet.carp.appusage` - a log of app usage activity.
 
 These measures are only available on Android.
 

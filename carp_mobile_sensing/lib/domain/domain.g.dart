@@ -40,7 +40,7 @@ Map<String, dynamic> _$SmartphoneApplicationDataToJson(
 SmartphoneStudyProtocol _$SmartphoneStudyProtocolFromJson(
         Map<String, dynamic> json) =>
     SmartphoneStudyProtocol(
-      ownerId: json['ownerId'] as String,
+      ownerId: json['ownerId'] as String?,
       name: json['name'] as String,
     )
       ..applicationData = json['applicationData'] as Map<String, dynamic>?

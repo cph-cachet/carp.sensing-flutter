@@ -75,10 +75,10 @@ class ConnectivitySamplingPackage extends SmartphoneSamplingPackage {
     ]);
 
     // registering default privacy functions
-    TransformerSchemaRegistry()
+    DataTransformerSchemaRegistry()
         .lookup(PrivacySchema.DEFAULT)!
         .add(BLUETOOTH, blueetothNameAnoymizer);
-    TransformerSchemaRegistry()
+    DataTransformerSchemaRegistry()
         .lookup(PrivacySchema.DEFAULT)!
         .add(WIFI, wifiNameAnoymizer);
   }

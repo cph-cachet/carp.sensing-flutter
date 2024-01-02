@@ -1,7 +1,7 @@
 part of carp_study_generator;
 
 class HelpCommand implements Command {
-  static final String helpText =
+  static const String helpText =
       "Manage your CARP Mobile Sensing (CAMS) Study.\n\n"
       "Usage: flutter test carp/<command>\n\n"
       "Available commands:\n"

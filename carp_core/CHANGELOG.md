@@ -1,3 +1,11 @@
+## 1.4.0
+
+* upgrade to Dart 3.2
+
+## 1.3.1
+
+* fix of issue [#352](https://github.com/cph-cachet/carp.sensing-flutter/issues/352)
+
 ## 1.3.0
 
 * upgrade of uuid package
@@ -8,30 +16,30 @@
 
 ## 1.1.0
 
-> Note: This release has breaking changes.
+> Note: This release has breaking changes...
 
-* the first stable release of CARP cores which follows the [carp.core-kotlin](https://github.com/imotions/carp.core-kotlin) v. 1.1.0 domain model.
-* upgrade to [carp_serializable](https://pub.dev/packages/carp_serializable) v. 1.1.0.
-* added `PersonalComputer` and `WebBrowser` as new device configurations.
+* the first stable release of CARP cores which follows the [carp.core-kotlin](https://github.com/imotions/carp.core-kotlin) v. 1.1.0 domain model
+* upgrade to [carp_serializable](https://pub.dev/packages/carp_serializable) v. 1.1.0
+* added `PersonalComputer` and `WebBrowser` as new device configurations
 * moved support for handling `DataPoint` data from carp_core to carp_webservices (since this is specific to CAWS and not part of the CARP Core domain model)
 
 ## 0.40.8
 
-* refactor of `DataManager` interface to support multiple deployment on the `ClientManager`.
+* refactor of `DataManager` interface to support multiple deployment on the `ClientManager`
 * adding `pause`, `remove`, and `dispose` life cycle methods to the `StudyRuntime`
 * fix of JsonKey annotations
 
 ## 0.40.3
 
-* fix of non-null `id` in `DeviceDataCollector`.
+* fix of non-null `id` in `DeviceDataCollector`
 
 ## 0.40.2
 
-* fix of issue [#269](https://github.com/cph-cachet/carp.sensing-flutter/issues/269).
+* fix of issue [#269](https://github.com/cph-cachet/carp.sensing-flutter/issues/269)
 
 ## 0.40.1
 
-* fix of issue [#265](https://github.com/cph-cachet/carp.sensing-flutter/issues/265).
+* fix of issue [#265](https://github.com/cph-cachet/carp.sensing-flutter/issues/265)
 
 ## 0.40.0
 

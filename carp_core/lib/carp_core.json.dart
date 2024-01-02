@@ -78,6 +78,7 @@ void _registerFromJsonFunctions() {
     PrimaryDeviceConfiguration(roleName: ''),
     CustomProtocolDevice(),
     Smartphone(),
+    WebBrowser(),
     AltBeacon(),
     ParticipantAttribute(inputDataType: ''),
     AssignedTo(),

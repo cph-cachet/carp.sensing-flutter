@@ -5,7 +5,6 @@ import 'package:test/test.dart';
 
 import 'package:carp_core/carp_core.dart';
 import 'package:carp_mobile_sensing/carp_mobile_sensing.dart';
-import 'package:carp_webservices/carp_auth/carp_auth.dart';
 import 'package:carp_webservices/carp_services/carp_services.dart';
 import 'package:carp_backend/carp_backend.dart';
 import 'package:research_package/model.dart';
@@ -43,16 +42,35 @@ void main() {
   /// Setup CARP and authenticate.
   /// Runs once before all tests.
   setUpAll(() async {
+    Uri uri = Uri(
+      scheme: 'https',
+      host: 'carp.computerome.dk',
+      pathSegments: [
+        'auth',
+        'dev',
+        'realms',
+        'Carp',
+      ],
+    );
+
     Settings().saveAppTaskQueue = false;
     Settings().debugLevel = DebugLevel.debug;
 
     StudyProtocol(ownerId: 'user@dtu.dk', name: 'ignored'); // ...
 
     app = CarpApp(
-      name: "Test",
+      name: "CAWS @ DTU",
+      uri: uri.replace(pathSegments: ['dev']),
+      authURL: uri,
+      clientId: 'carp-webservices-dart',
+      redirectURI: uri,
+      discoveryURL: uri.replace(pathSegments: [
+        ...uri.pathSegments,
+        '.well-known',
+        'openid-configuration'
+      ]),
       studyId: testStudyId,
-      uri: Uri.parse(uri),
-      oauth: OAuthEndPoint(clientID: clientID, clientSecret: clientSecret),
+      studyDeploymentId: testDeploymentId,
     );
 
     CarpService().configure(app);
@@ -60,7 +78,7 @@ void main() {
     // create a carp data manager in order to initialize json serialization
     CarpDataManager();
 
-    await CarpService().authenticate(
+    await CarpService().authenticateWithUsernamePasswordNoContext(
       username: username,
       password: password,
     );

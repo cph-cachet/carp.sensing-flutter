@@ -1,3 +1,8 @@
+## 1.3.2
+
+* upgrade of `carp_webservices` package to 2.0.0
+* fix of example
+
 ## 1.3.0
 
 * upgrade of uuid plugins

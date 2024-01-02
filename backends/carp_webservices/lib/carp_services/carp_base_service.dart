@@ -52,7 +52,7 @@ abstract class CarpBaseService {
 
   /// The headers for any authenticated HTTP REST call to a [CarpBaseService].
   Map<String, String> get headers {
-    if (CarpService().currentUser!.token == null) {
+    if (CarpService().currentUser.token == null) {
       throw CarpServiceException(
           message:
               "OAuth token is null. Call 'CarpService().authenticate()' first.");
@@ -60,8 +60,7 @@ abstract class CarpBaseService {
 
     return {
       "Content-Type": "application/json",
-      "Authorization":
-          "bearer ${CarpService().currentUser!.token!.accessToken}",
+      "Authorization": "bearer ${CarpService().currentUser.token!.accessToken}",
       "cache-control": "no-cache"
     };
   }

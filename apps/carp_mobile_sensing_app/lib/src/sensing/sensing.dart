@@ -61,6 +61,7 @@ class Sensing {
     SamplingPackageRegistry().register(PolarSamplingPackage());
     SamplingPackageRegistry().register(MovesenseSamplingPackage());
     SamplingPackageRegistry().register(ESenseSamplingPackage());
+    SamplingPackageRegistry().register(MovisensSamplingPackage());
     SamplingPackageRegistry().register(HealthSamplingPackage());
 
     // Register the CARP data manager for uploading data back to CAWS.
