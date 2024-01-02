@@ -35,6 +35,7 @@ class DeviceModel {
         Smartphone.DEVICE_TYPE: 'Phone',
         ESenseDevice.DEVICE_TYPE: 'eSense',
         PolarDevice.DEVICE_TYPE: 'Polar',
+        MovesenseDevice.DEVICE_TYPE: 'Movesense',
         LocationService.DEVICE_TYPE: 'Location',
         AirQualityService.DEVICE_TYPE: 'Air Quality',
         WeatherService.DEVICE_TYPE: 'Weather',
@@ -45,6 +46,7 @@ class DeviceModel {
         Smartphone.DEVICE_TYPE: 'This phone',
         ESenseDevice.DEVICE_TYPE: 'eSense Ear Plug',
         PolarDevice.DEVICE_TYPE: 'Polar HR Monitor',
+        MovesenseDevice.DEVICE_TYPE: 'Movesense HR Monitor',
         LocationService.DEVICE_TYPE: 'Location Service',
         AirQualityService.DEVICE_TYPE: 'World Air Quality Service',
         WeatherService.DEVICE_TYPE: 'Open Weather Service',
@@ -58,6 +60,8 @@ class DeviceModel {
             Icon(Icons.headset, size: 50, color: CACHET.CACHET_BLUE),
         PolarDevice.DEVICE_TYPE:
             Icon(Icons.monitor_heart, size: 50, color: CACHET.RED),
+        MovesenseDevice.DEVICE_TYPE:
+            Icon(Icons.monitor_heart_rounded, size: 50, color: CACHET.RED),
         LocationService.DEVICE_TYPE:
             Icon(Icons.location_on, size: 50, color: CACHET.GREEN),
         AirQualityService.DEVICE_TYPE:

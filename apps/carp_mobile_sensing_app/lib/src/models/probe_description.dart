@@ -147,6 +147,10 @@ class ProbeDescription {
           'Polar PPI',
           'Polar Pulse-to-Pulse Interval.',
         ),
+        MovesenseSamplingPackage.HR: ProbeDescriptor(
+          'Movesense HR',
+          'Movesense Heart Rate.',
+        ),
       };
 
   static Map<String, Icon> get probeTypeIcon => {
