@@ -138,8 +138,6 @@ HealthService _$HealthServiceFromJson(Map<String, dynamic> json) =>
       types: (json['types'] as List<dynamic>)
           .map((e) => $enumDecode(_$HealthDataTypeEnumMap, e))
           .toList(),
-      useHealthConnectIfAvailable:
-          json['useHealthConnectIfAvailable'] as bool? ?? false,
     )
       ..$type = json['__type'] as String?
       ..isOptional = json['isOptional'] as bool?
@@ -165,6 +163,5 @@ Map<String, dynamic> _$HealthServiceToJson(HealthService instance) {
       'defaultSamplingConfiguration', instance.defaultSamplingConfiguration);
   val['types'] =
       instance.types.map((e) => _$HealthDataTypeEnumMap[e]!).toList();
-  val['useHealthConnectIfAvailable'] = instance.useHealthConnectIfAvailable;
   return val;
 }
