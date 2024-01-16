@@ -8,6 +8,8 @@
 part of health_package;
 
 /// An [OnlineService] for the [health](https://pub.dev/packages/health) service.
+///
+/// On Android, this health package always uses Google [Health Connect](https://developer.android.com/health-and-fitness/guides/health-connect).
 @JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
 class HealthService extends OnlineService {
   /// The type of the health service.
@@ -15,20 +17,16 @@ class HealthService extends OnlineService {
       '${DeviceConfiguration.DEVICE_NAMESPACE}.HealthService';
 
   /// The default role name for a health service.
-  static const String DEFAULT_ROLENAME = 'Health Service';
+  static const String DEFAULT_ROLE_NAME = 'Health Service';
 
   /// Which health data types should this service access.
   List<HealthDataType> types;
 
-  /// Should this health service use the Android Health Connect API?
-  bool useHealthConnectIfAvailable;
-
   HealthService({
     String? roleName,
     required this.types,
-    this.useHealthConnectIfAvailable = false,
   }) : super(
-          roleName: roleName ?? DEFAULT_ROLENAME,
+          roleName: roleName ?? DEFAULT_ROLE_NAME,
         );
 
   @override
@@ -46,18 +44,14 @@ class HealthServiceManager extends OnlineServiceManager<HealthService> {
   /// A handle to the [HealthFactory] plugin.
   /// Returns null if the service is not configured.
   HealthFactory? get service => (configuration != null)
-      ? _service ??= HealthFactory(
-          useHealthConnectIfAvailable:
-              configuration!.useHealthConnectIfAvailable)
+      ? _service ??= HealthFactory(useHealthConnectIfAvailable: true)
       : null;
 
   @override
   String get id => (configuration != null)
       ? (Platform.isIOS)
           ? "Apple Health"
-          : (configuration!.useHealthConnectIfAvailable)
-              ? "Google Health Connect"
-              : "Google Fit"
+          : "Google Health Connect"
       : 'N/A';
 
   @override
