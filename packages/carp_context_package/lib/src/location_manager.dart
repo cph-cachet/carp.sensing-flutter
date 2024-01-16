@@ -95,8 +95,8 @@ class LocationManager {
         accuracy: location.LocationAccuracy.values[
             configuration?.accuracy.index ??
                 GeolocationAccuracy.balanced.index],
-        distanceFilter: configuration?.distance ?? 0,
-        interval: configuration?.interval.inMilliseconds ?? 1000,
+        distanceFilter: configuration?.distance ?? 10,
+        interval: configuration?.interval.inMilliseconds ?? 60 * 1000,
       );
 
       await _provider.changeNotificationOptions(
@@ -150,93 +150,3 @@ enum GeolocationAccuracy {
   high,
   navigation,
 }
-
-/// A manger that knows how to configure and get location.
-// /// Provide access to location data while the app is in the background.
-// ///
-// /// Use as a singleton:
-// ///
-// ///  `LocationManager()...`
-// ///
-// /// Note that this [LocationManager] **does not** handle location permissions.
-// /// This should be handled and granted on an application level before using
-// /// probes that depend on location.
-// ///
-// /// This version of the location manager is based on the `carp_background_location`
-// /// plugin.
-// class LocationManager {
-//   static final LocationManager _instance = LocationManager._();
-//   LocationManager._();
-
-//   /// Get the singleton [LocationManager] instance
-//   factory LocationManager() => _instance;
-
-//   Location? _lastKnownLocation;
-//   bool _enabled = false, _configuring = false;
-
-//   /// Is the location service enabled, which entails that
-//   ///  * location service is enabled
-//   ///  * permissions granted
-//   ///  * configuration is done
-//   bool get enabled => _enabled;
-
-//   // /// Configures the [LocationManager], incl. sending a notification to the
-//   /// Android notification system.
-//   ///
-//   /// Configuration is done based on the [LocationService]. If not provided,
-//   /// as set of default configurations are used.
-//   Future<void> configure([LocationService? configuration]) async {
-//     // fast out if already enabled or is in the process of configuring
-//     if (enabled) return;
-//     if (_configuring) return;
-
-//     _configuring = true;
-//     info('Configuring $runtimeType - configuration: $configuration');
-
-//     _enabled = false;
-
-//     try {
-//       cbl.LocationManager().interval = configuration?.interval.inSeconds ?? 30;
-//       cbl.LocationManager().distanceFilter = configuration?.distance ?? 0;
-//       cbl.LocationManager().accuracy = configuration?.accuracy == null
-//           ? cbl.LocationAccuracy.NAVIGATION
-//           : configuration?.accuracy == GeolocationAccuracy.powerSave
-//               ? cbl.LocationAccuracy.POWERSAVE
-//               : configuration?.accuracy == GeolocationAccuracy.low
-//                   ? cbl.LocationAccuracy.LOW
-//                   : configuration?.accuracy == GeolocationAccuracy.balanced
-//                       ? cbl.LocationAccuracy.BALANCED
-//                       : configuration?.accuracy == GeolocationAccuracy.high
-//                           ? cbl.LocationAccuracy.HIGH
-//                           : cbl.LocationAccuracy.NAVIGATION;
-
-//       cbl.LocationManager().notificationTitle =
-//           configuration?.notificationMessage ??
-//               'The location service is running in the background';
-//       cbl.LocationManager().notificationMsg =
-//           configuration?.notificationMessage ??
-//               'The location service is running in the background';
-//     } catch (error) {
-//       warning('$runtimeType - Configuration failed - $error');
-//       return;
-//     }
-
-//     _enabled = true;
-//   }
-
-//   /// Gets the current location of the phone.
-//   /// Throws an error if the app has no permission to access location.
-//   Future<Location> getLocation() async =>
-//       _lastKnownLocation = Location.fromLocationDto(
-//           await cbl.LocationManager().getCurrentLocation());
-
-//   /// Get the last known location.
-//   Future<Location> getLastKnownLocation() async =>
-//       _lastKnownLocation ?? await getLocation();
-
-//   /// Returns a stream of [Location] objects.
-//   /// Throws an error if the app has no permission to access location.
-//   Stream<Location> get onLocationChanged => cbl.LocationManager()
-//       .locationStream
-//       .map((location) => Location.fromLocationDto(location));
-// }

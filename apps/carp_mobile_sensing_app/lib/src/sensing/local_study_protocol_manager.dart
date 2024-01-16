@@ -232,7 +232,7 @@ class LocalStudyProtocolManager implements StudyProtocolManager {
         BackgroundTask(measures: [
           Measure(type: PolarSamplingPackage.HR),
           // Measure(type: PolarSamplingPackage.ECG),
-          Measure(type: PolarSamplingPackage.PPG),
+          // Measure(type: PolarSamplingPackage.PPG),
           // Measure(type: PolarSamplingPackage.PPI),
         ]),
         polar);
@@ -261,28 +261,30 @@ class LocalStudyProtocolManager implements StudyProtocolManager {
 
     // Add measures to collect data from Apple Health / Google Fit
 
-    // // Define which health types to collect.
-    // var healthDataTypes = [
-    //   HealthDataType.WEIGHT,
-    //   HealthDataType.STEPS,
-    //   HealthDataType.SLEEP_ASLEEP,
-    // ];
+    // Define which health types to collect.
+    var healthDataTypes = [
+      HealthDataType.STEPS,
+      HealthDataType.BASAL_ENERGY_BURNED,
+      HealthDataType.WEIGHT,
+      HealthDataType.SLEEP_SESSION,
+    ];
 
-    // // Create and add a health service (device)
-    // final healthService = HealthService(
-    //   useHealthConnectIfAvailable: true,
-    //   types: healthDataTypes,
-    // );
-    // protocol.addConnectedDevice(healthService, phone);
+    // Create and add a health service (device)
+    final healthService = HealthService(
+      useHealthConnectIfAvailable: true,
+      types: healthDataTypes,
+    );
+    protocol.addConnectedDevice(healthService, phone);
 
-    // protocol.addTaskControl(
-    //     PeriodicTrigger(period: Duration(minutes: 60)),
-    //     BackgroundTask(measures: [
-    //       Measure(type: HealthSamplingPackage.HEALTH)
-    //         ..overrideSamplingConfiguration =
-    //             HealthSamplingConfiguration(healthDataTypes: healthDataTypes)
-    //     ]),
-    //     healthService);
+    protocol.addTaskControl(
+        // PeriodicTrigger(period: Duration(minutes: 60)),
+        PeriodicTrigger(period: Duration(minutes: 1)),
+        BackgroundTask(measures: [
+          Measure(type: HealthSamplingPackage.HEALTH)
+            ..overrideSamplingConfiguration =
+                HealthSamplingConfiguration(healthDataTypes: healthDataTypes)
+        ]),
+        healthService);
 
     return protocol;
   }

@@ -45,9 +45,9 @@
 
     <!-- The Connectivity package needs Bluetooth scan permission to search for BLE devices. 
     The package doesn't use the scan to decide the location so "neverForLocation" permission flag can be used.-->
-    <!-- <uses-permission
+    <uses-permission
         android:name="android.permission.BLUETOOTH_SCAN" 
-        android:usesPermissionFlags="neverForLocation" />  -->
+        android:usesPermissionFlags="neverForLocation" /> 
     
     <!-- The following permissions are used in the Media Package -->
     <uses-permission android:name="android.permission.RECORD_AUDIO"/>
@@ -73,7 +73,6 @@
     <uses-permission
         android:name="android.permission.BLUETOOTH_SCAN" 
         android:usesPermissionFlags="neverForLocation" />  -->
-    <uses-permission android:name="android.permission.BLUETOOTH_SCAN"/>
     <uses-permission android:name="android.permission.BLUETOOTH_CONNECT"/>
 
     <!-- Permissions for Health Connect API -->
@@ -163,6 +162,11 @@
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
                 <category android:name="android.intent.category.LAUNCHER"/>
+            </intent-filter>
+
+            <!-- Intention to show Permissions screen for Health Connect API -->
+            <intent-filter>
+                <action android:name="androidx.health.ACTION_SHOW_PERMISSIONS_RATIONALE" />
             </intent-filter>
         </activity>
 

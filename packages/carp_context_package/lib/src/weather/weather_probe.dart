@@ -31,7 +31,7 @@ class WeatherProbe extends MeasurementProbe {
       }
     }
     warning(
-        '$runtimeType - no service available. Did you remember to add the WeatherService to the study protocol?');
+        '$runtimeType - no service available. Check if the WeatherService has been added to the study protocol?');
     return Measurement.fromData(
         Error(message: '$runtimeType - no service available.'));
   }

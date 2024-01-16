@@ -23,7 +23,7 @@
 /// **Polar Verity Sense optical heart rate sensor**
 ///
 ///  * Heart rate (HR) as beats per minute.
-///  * Photoplethysmograpy (PPG) values.
+///  * Photoplethysmograpy (PPG) values with a sampling rate of 55Hz (see [Polar SDK issue #202](https://github.com/polarofficial/polar-ble-sdk/issues/202#issuecomment-940645360)).
 ///  * PP interval (milliseconds) representing cardiac pulse-to-pulse interval extracted from PPG signal.
 ///  * Accelerometer data with sample rate of 52Hz and range of 8G. Axis specific acceleration data in mG.
 ///  * Gyroscope data with sample rate of 52Hz and ranges of 250dps, 500dps, 1000dps and 2000dps. Axis specific gyroscope data in dps.

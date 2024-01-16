@@ -424,9 +424,9 @@ LocationService _$LocationServiceFromJson(Map<String, dynamic> json) =>
       accuracy:
           $enumDecodeNullable(_$GeolocationAccuracyEnumMap, json['accuracy']) ??
               GeolocationAccuracy.balanced,
-      distance: (json['distance'] as num?)?.toDouble() ?? 0,
+      distance: (json['distance'] as num?)?.toDouble() ?? 10,
       interval: json['interval'] == null
-          ? null
+          ? const Duration(minutes: 1)
           : Duration(microseconds: json['interval'] as int),
       notificationTitle: json['notificationTitle'] as String?,
       notificationMessage: json['notificationMessage'] as String?,

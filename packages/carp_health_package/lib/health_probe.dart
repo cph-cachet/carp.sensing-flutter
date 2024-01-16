@@ -28,9 +28,6 @@ class HealthProbe extends StreamProbe {
   Future<bool> onStart() async {
     super.onStart();
 
-    debug(
-        '$runtimeType - Collecting health data, configuration : $samplingConfiguration');
-
     DateTime start = samplingConfiguration.lastTime ??
         DateTime.now().subtract(samplingConfiguration.past);
     DateTime end = DateTime.now();
