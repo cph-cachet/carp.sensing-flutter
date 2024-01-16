@@ -17,6 +17,7 @@ import 'package:carp_apps_package/apps.dart';
 // import 'package:movisens_flutter/movisens_flutter.dart';
 import 'package:carp_movisens_package/carp_movisens_package.dart';
 import 'package:carp_health_package/health_package.dart';
+import 'package:health/health.dart';
 
 import 'package:carp_webservices/carp_auth/carp_auth.dart';
 import 'package:carp_webservices/carp_services/carp_services.dart';
@@ -49,7 +50,7 @@ void main() async {
 
   // Initialize the bloc, setting the deployment mode.
   await bloc.initialize(
-    deploymentMode: DeploymentMode.development,
+    deploymentMode: DeploymentMode.local,
     // deploymentId: testDeploymentId,
     useCachedStudyDeployment: false,
     resumeSensingOnStartup: false,

@@ -52,9 +52,8 @@ android {
 }
 
 dependencies {
-    // Use to implement health connects
-    // Requires SDK level 34, which conflicts with other things.
-    // implementation "androidx.health.connect:connect-client:1.1.0-alpha03"
+    // Use to implement Health Connect. Requires SDK level 34.
+    implementation "androidx.health.connect:connect-client:1.1.0-alpha03"
 }
 
 flutter {
