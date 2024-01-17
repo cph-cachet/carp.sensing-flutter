@@ -75,7 +75,7 @@
         android:usesPermissionFlags="neverForLocation" />  -->
     <uses-permission android:name="android.permission.BLUETOOTH_CONNECT"/>
 
-    <!-- Permissions for Health Connect API -->
+     <!-- Permissions for new android API (Health Connect) -->
     <uses-permission android:name="android.permission.health.READ_STEPS"/>
     <uses-permission android:name="android.permission.health.WRITE_STEPS"/>
     <uses-permission android:name="android.permission.health.READ_WEIGHT"/>
@@ -116,6 +116,8 @@
     <uses-permission android:name="android.permission.health.READ_BASAL_METABOLIC_RATE"/>
     <uses-permission android:name="android.permission.health.READ_RESPIRATORY_RATE"/>
     <uses-permission android:name="android.permission.health.WRITE_RESPIRATORY_RATE"/>
+    <uses-permission android:name="android.permission.health.WRITE_NUTRITION"/>
+    <uses-permission android:name="android.permission.health.READ_NUTRITION"/>
 
    <application
         android:label="CARP Mobile Sensing"

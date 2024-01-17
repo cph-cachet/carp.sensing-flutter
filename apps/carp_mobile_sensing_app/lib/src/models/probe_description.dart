@@ -173,7 +173,7 @@ class ProbeDescription {
         ),
         HealthSamplingPackage.HEALTH: ProbeDescriptor(
           'Health',
-          'Health data collected from the phone (Apple Health or Google Fit).',
+          'Health data collected from the phone.',
         ),
       };
 

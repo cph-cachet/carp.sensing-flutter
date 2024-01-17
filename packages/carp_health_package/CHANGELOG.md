@@ -1,3 +1,9 @@
+## 2.9.0
+
+* only using Health Connect on Android - discontinued support for Google Fit.
+* checking that a protocol only contains data types that are valid for the selected platform
+* types are no longer to be defined as part of the service
+
 ## 2.8.0
 
 * upgrade to Dart 3.2
