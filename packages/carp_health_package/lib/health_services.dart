@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 Copenhagen Center for Health Technology (CACHET) at the
+ * Copyright 2024 Copenhagen Center for Health Technology (CACHET) at the
  * Technical University of Denmark (DTU).
  * Use of this source code is governed by a MIT-style license that can be
  * found in the LICENSE file.
@@ -19,15 +19,9 @@ class HealthService extends OnlineService {
   /// The default role name for a health service.
   static const String DEFAULT_ROLE_NAME = 'Health Service';
 
-  /// Which health data types should this service access.
-  List<HealthDataType> types;
-
-  HealthService({
-    String? roleName,
-    required this.types,
-  }) : super(
-          roleName: roleName ?? DEFAULT_ROLE_NAME,
-        );
+  /// Create a new [HealthService] with a default role name, if not
+  /// specified.
+  HealthService({super.roleName = HealthService.DEFAULT_ROLE_NAME});
 
   @override
   Function get fromJsonFunction => _$HealthServiceFromJson;
@@ -60,23 +54,28 @@ class HealthServiceManager extends OnlineServiceManager<HealthService> {
   @override
   List<Permission> get permissions => [];
 
+  /// Which health data types should this service access.
+  List<HealthDataType>? types;
+
   HealthServiceManager([
     HealthService? configuration,
   ]) : super(HealthService.DEVICE_TYPE, configuration);
 
   @override
   // ignore: avoid_renaming_method_parameters
-  void onInitialize(HealthService service) {}
+  void onInitialize(HealthService service) {
+    // TODO - Populate [types] based on what is actually in the protocol
+    // and not just "everything", as done below.
+    types = Platform.isIOS ? dataTypesIOS : dataTypesAndroid;
+  }
 
   @override
-  Future<bool> onHasPermissions() async => (configuration?.types != null)
-      ? await service?.hasPermissions(configuration!.types) ?? false
-      : true;
+  Future<bool> onHasPermissions() async =>
+      (types != null) ? await service?.hasPermissions(types!) ?? false : true;
 
   @override
-  Future<void> onRequestPermissions() async => (configuration?.types != null)
-      ? await service?.requestAuthorization(configuration!.types)
-      : null;
+  Future<void> onRequestPermissions() async =>
+      (types != null) ? await service?.requestAuthorization(types!) : null;
 
   @override
   Future<bool> canConnect() async => true;

@@ -8,7 +8,7 @@ import 'package:health/health.dart';
 /// NOTE, however, that the code below will not run.
 /// See the documentation on how to use CAMS: https://github.com/cph-cachet/carp.sensing-flutter/wiki
 void main() async {
-  // register this sampling package before using its measures
+  // Register this sampling package before using its measures
   SamplingPackageRegistry().register(HealthSamplingPackage());
 
   // Create a study protocol
@@ -23,16 +23,8 @@ void main() async {
   final phone = Smartphone();
   protocol.addPrimaryDevice(phone);
 
-  // Define which health types to collect.
-  var healthDataTypes = [
-    HealthDataType.WEIGHT,
-    HealthDataType.EXERCISE_TIME,
-    HealthDataType.STEPS,
-    HealthDataType.SLEEP_ASLEEP,
-  ];
-
   // Create and add a health service (device)
-  final healthService = HealthService(types: healthDataTypes);
+  final healthService = HealthService();
   protocol.addConnectedDevice(healthService, phone);
 
   // Automatically collect the set of health data every hour.
@@ -41,10 +33,14 @@ void main() async {
   // which samples data back in time until last time, data was sampled.
   protocol.addTaskControl(
       PeriodicTrigger(period: Duration(minutes: 60)),
-      BackgroundTask()
-        ..addMeasure(Measure(type: HealthSamplingPackage.HEALTH)
-          ..overrideSamplingConfiguration =
-              HealthSamplingConfiguration(healthDataTypes: healthDataTypes)),
+      BackgroundTask(measures: [
+        HealthSamplingPackage.getHealthMeasure([
+          HealthDataType.STEPS,
+          HealthDataType.BASAL_ENERGY_BURNED,
+          HealthDataType.WEIGHT,
+          HealthDataType.SLEEP_SESSION,
+        ])
+      ]),
       healthService);
 
   // Automatically collect another set of health data every hour
@@ -57,16 +53,14 @@ void main() async {
   protocol.addTaskControl(
       PeriodicTrigger(period: Duration(minutes: 60)),
       BackgroundTask()
-        ..addMeasure(Measure(type: HealthSamplingPackage.HEALTH)
-          ..overrideSamplingConfiguration =
-              HealthSamplingConfiguration(healthDataTypes: [
-            HealthDataType.BLOOD_GLUCOSE,
-            HealthDataType.BLOOD_PRESSURE_DIASTOLIC,
-            HealthDataType.BLOOD_PRESSURE_SYSTOLIC,
-            HealthDataType.BLOOD_PRESSURE_DIASTOLIC,
-            HealthDataType.HEART_RATE,
-            HealthDataType.STEPS,
-          ])),
+        ..addMeasure(HealthSamplingPackage.getHealthMeasure([
+          HealthDataType.BLOOD_GLUCOSE,
+          HealthDataType.BLOOD_PRESSURE_DIASTOLIC,
+          HealthDataType.BLOOD_PRESSURE_SYSTOLIC,
+          HealthDataType.BLOOD_PRESSURE_DIASTOLIC,
+          HealthDataType.HEART_RATE,
+          HealthDataType.STEPS,
+        ])),
       healthService);
 
   // Create an app task for the user to collect his own health data once pr. day
@@ -76,11 +70,15 @@ void main() async {
           type: 'health',
           title: "Press here to collect your physical health data",
           description:
-              "This will collect your weight, exercise time, steps, and sleep time from Apple Health.",
+              "This will collect your weight, exercise time, steps, and sleep "
+              "time from the Health database on the phone.",
           measures: [
-            Measure(type: HealthSamplingPackage.HEALTH)
-              ..overrideSamplingConfiguration =
-                  HealthSamplingConfiguration(healthDataTypes: healthDataTypes)
+            HealthSamplingPackage.getHealthMeasure([
+              HealthDataType.WEIGHT,
+              HealthDataType.STEPS,
+              HealthDataType.BASAL_ENERGY_BURNED,
+              HealthDataType.SLEEP_SESSION,
+            ])
           ]),
       healthService);
 }
