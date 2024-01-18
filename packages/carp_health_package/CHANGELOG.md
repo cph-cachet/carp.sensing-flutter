@@ -1,8 +1,9 @@
-## 2.9.0
+## 2.9.1
 
 * only using Health Connect on Android - discontinued support for Google Fit.
 * checking that a protocol only contains data types that are valid for the selected platform
 * types are no longer to be defined as part of the service
+* update to documentation
 
 ## 2.8.0
 
