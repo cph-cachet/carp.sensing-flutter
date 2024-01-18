@@ -1,5 +1,5 @@
 /*
- * Copyright 2021 Copenhagen Center for Health Technology (CACHET) at the
+ * Copyright 2021-2024 Copenhagen Center for Health Technology (CACHET) at the
  * Technical University of Denmark (DTU).
  * Use of this source code is governed by a MIT-style license that can be
  * found in the LICENSE file.
@@ -10,11 +10,38 @@ part of mobile_sensing_app;
 /// This class implements the sensing layer.
 ///
 /// Call [initialize] to setup a deployment, either locally or using a CAWS
-/// deployment. Once initialized, the runtime [controller] can be used to
+/// deployment.
+///
+/// Once initialized, the runtime [controller] can be used to
 /// control the study execution (e.g., start and stop).
+///
 /// Collected data is available in the [measurements] stream.
+///
+/// Works as a singleton, and can be accessed by `Sensing()`.
 class Sensing {
-  // static final Sensing _instance = Sensing._();
+  static final Sensing _instance = Sensing._();
+  factory Sensing() => _instance;
+
+  Sensing._() : super() {
+    CarpMobileSensing.ensureInitialized();
+
+    // Create and register external sampling packages
+    SamplingPackageRegistry().register(ConnectivitySamplingPackage());
+    SamplingPackageRegistry().register(ContextSamplingPackage());
+    SamplingPackageRegistry().register(MediaSamplingPackage());
+    // SamplingPackageRegistry().register(CommunicationSamplingPackage());
+    SamplingPackageRegistry().register(AppsSamplingPackage());
+    SamplingPackageRegistry().register(PolarSamplingPackage());
+    SamplingPackageRegistry().register(ESenseSamplingPackage());
+    SamplingPackageRegistry().register(MovisensSamplingPackage());
+    SamplingPackageRegistry().register(HealthSamplingPackage());
+
+    // Register the CARP data manager for uploading data back to CAWS.
+    // This is needed in both LOCAL and CAWS deployments, since a local study
+    // protocol may still upload to CAWS
+    DataManagerRegistry().register(CarpDataManagerFactory());
+  }
+
   StudyDeploymentStatus? _status;
 
   DeploymentService? deploymentService;
@@ -26,7 +53,7 @@ class Sensing {
   StudyDeploymentStatus? get status => _status;
 
   /// The role name of this device in the deployed study
-  String? get deviceRolename => _status?.primaryDeviceStatus?.device.roleName;
+  String? get deviceRoleName => _status?.primaryDeviceStatus?.device.roleName;
 
   /// The study runtime controller for this deployment
   SmartphoneDeploymentController? get controller => (study != null)
@@ -48,26 +75,6 @@ class Sensing {
   /// The list of connected devices.
   List<DeviceManager> get connectedDevices =>
       SmartPhoneClientManager().deviceController.connectedDevices.toList();
-
-  Sensing() {
-    CarpMobileSensing.ensureInitialized();
-
-    // Create and register external sampling packages
-    SamplingPackageRegistry().register(ConnectivitySamplingPackage());
-    SamplingPackageRegistry().register(ContextSamplingPackage());
-    SamplingPackageRegistry().register(MediaSamplingPackage());
-    // SamplingPackageRegistry().register(CommunicationSamplingPackage());
-    SamplingPackageRegistry().register(AppsSamplingPackage());
-    SamplingPackageRegistry().register(PolarSamplingPackage());
-    SamplingPackageRegistry().register(ESenseSamplingPackage());
-    SamplingPackageRegistry().register(MovisensSamplingPackage());
-    SamplingPackageRegistry().register(HealthSamplingPackage());
-
-    // Register the CARP data manager for uploading data back to CAWS.
-    // This is needed in both LOCAL and CAWS deployments, since a local study
-    // protocol may still upload to CAWS
-    DataManagerRegistry().register(CarpDataManagerFactory());
-  }
 
   /// Initialize and set up sensing.
   Future<void> initialize() async {
@@ -93,7 +100,7 @@ class Sensing {
 
         // Save the correct deployment id on the phone for later use.
         bloc.studyDeploymentId = _status?.studyDeploymentId;
-        bloc.deviceRolename = _status?.primaryDeviceStatus?.device.roleName;
+        bloc.deviceRoleName = _status?.primaryDeviceStatus?.device.roleName;
 
         break;
       case DeploymentMode.production:
@@ -114,7 +121,7 @@ class Sensing {
     );
     study = await SmartPhoneClientManager().addStudy(
       bloc.studyDeploymentId!,
-      bloc.deviceRolename!,
+      bloc.deviceRoleName!,
     );
     await controller?.tryDeployment(useCached: bloc.useCachedStudyDeployment);
     await controller?.configure();
@@ -123,9 +130,6 @@ class Sensing {
     SmartPhoneClientManager()
         .measurements
         .listen((measurement) => print(toJsonString(measurement)));
-
-    // Listen to all battery events
-    DeviceController().batteryEvents.listen((event) => print(event));
 
     info('$runtimeType initialized');
   }

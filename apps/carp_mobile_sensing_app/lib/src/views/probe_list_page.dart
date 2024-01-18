@@ -1,14 +1,11 @@
 part of mobile_sensing_app;
 
-class ProbesList extends StatefulWidget {
-  const ProbesList({super.key});
-  static const String routeName = '/probelist';
-
+class ProbesListPage extends StatefulWidget {
   @override
   ProbeListState createState() => ProbeListState();
 }
 
-class ProbeListState extends State<ProbesList> {
+class ProbeListState extends State<ProbesListPage> {
   static final GlobalKey<ScaffoldState> scaffoldKey =
       GlobalKey<ScaffoldState>();
 
@@ -45,25 +42,22 @@ class ProbeListState extends State<ProbesList> {
     );
   }
 
-  Widget _probeListTile(BuildContext context, ProbeModel probe) {
+  Widget _probeListTile(BuildContext context, ProbeViewModel probe) {
     return StreamBuilder<ExecutorState>(
       stream: probe.stateEvents,
       initialData: ExecutorState.created,
-      builder: (context, AsyncSnapshot<ExecutorState> snapshot) {
-        if (snapshot.hasData) {
-          return ListTile(
-            isThreeLine: true,
-            leading: probe.icon,
-            title: Text(probe.name ?? 'Unknown'),
-            subtitle: Text(probe.description ?? '...'),
-//            subtitle: Text(probe.measure.toString()),
-            trailing: probe.stateIcon,
-          );
-        } else if (snapshot.hasError) {
-          return Text('Error in probe state - ${snapshot.error}');
-        }
-        return Text('Unknown');
-      },
+      builder: (context, AsyncSnapshot<ExecutorState> snapshot) =>
+          (snapshot.hasData)
+              ? ListTile(
+                  isThreeLine: true,
+                  leading: probe.icon,
+                  title: Text(probe.name ?? 'Unknown'),
+                  subtitle: Text(probe.description ?? '...'),
+                  trailing: probe.stateIcon,
+                )
+              : (snapshot.hasError)
+                  ? Text('Error in probe state - ${snapshot.error}')
+                  : Text('Unknown'),
     );
   }
 

@@ -179,33 +179,33 @@ class ProbeDescription {
 
   static Map<String, Icon> get probeTypeIcon => {
         DeviceSamplingPackage.FREE_MEMORY:
-            Icon(Icons.memory, size: 50, color: CACHET.GREY_4),
+            Icon(Icons.memory, size: 50, color: CachetColors.GREY_4),
         DeviceSamplingPackage.DEVICE_INFORMATION:
-            Icon(Icons.phone_android, size: 50, color: CACHET.GREY_4),
-        DeviceSamplingPackage.BATTERY_STATE:
-            Icon(Icons.battery_charging_full, size: 50, color: CACHET.GREEN),
-        SensorSamplingPackage.STEP_COUNT:
-            Icon(Icons.directions_walk, size: 50, color: CACHET.LIGHT_PURPLE),
+            Icon(Icons.phone_android, size: 50, color: CachetColors.GREY_4),
+        DeviceSamplingPackage.BATTERY_STATE: Icon(Icons.battery_charging_full,
+            size: 50, color: CachetColors.GREEN),
+        SensorSamplingPackage.STEP_COUNT: Icon(Icons.directions_walk,
+            size: 50, color: CachetColors.LIGHT_PURPLE),
         SensorSamplingPackage.ACCELERATION:
-            Icon(Icons.adb, size: 50, color: CACHET.GREY_4),
+            Icon(Icons.adb, size: 50, color: CachetColors.GREY_4),
         SensorSamplingPackage.ROTATION:
-            Icon(Icons.adb, size: 50, color: CACHET.GREY_4),
+            Icon(Icons.adb, size: 50, color: CachetColors.GREY_4),
         SensorSamplingPackage.AMBIENT_LIGHT:
-            Icon(Icons.highlight, size: 50, color: CACHET.YELLOW),
-        ConnectivitySamplingPackage.BLUETOOTH:
-            Icon(Icons.bluetooth_searching, size: 50, color: CACHET.DARK_BLUE),
+            Icon(Icons.highlight, size: 50, color: CachetColors.YELLOW),
+        ConnectivitySamplingPackage.BLUETOOTH: Icon(Icons.bluetooth_searching,
+            size: 50, color: CachetColors.DARK_BLUE),
         ConnectivitySamplingPackage.WIFI:
-            Icon(Icons.wifi, size: 50, color: CACHET.LIGHT_PURPLE),
+            Icon(Icons.wifi, size: 50, color: CachetColors.LIGHT_PURPLE),
         ConnectivitySamplingPackage.CONNECTIVITY:
-            Icon(Icons.cast_connected, size: 50, color: CACHET.GREEN),
+            Icon(Icons.cast_connected, size: 50, color: CachetColors.GREEN),
         MediaSamplingPackage.AUDIO:
-            Icon(Icons.mic, size: 50, color: CACHET.ORANGE),
+            Icon(Icons.mic, size: 50, color: CachetColors.ORANGE),
         MediaSamplingPackage.NOISE:
-            Icon(Icons.hearing, size: 50, color: CACHET.YELLOW),
+            Icon(Icons.hearing, size: 50, color: CachetColors.YELLOW),
         AppsSamplingPackage.APPS:
-            Icon(Icons.apps, size: 50, color: CACHET.LIGHT_GREEN),
+            Icon(Icons.apps, size: 50, color: CachetColors.LIGHT_GREEN),
         AppsSamplingPackage.APP_USAGE:
-            Icon(Icons.get_app, size: 50, color: CACHET.LIGHT_GREEN),
+            Icon(Icons.get_app, size: 50, color: CachetColors.LIGHT_GREEN),
         // CommunicationSamplingPackage.TEXT_MESSAGE_LOG:
         //     Icon(Icons.textsms, size: 50, color: CACHET.LIGHT_PURPLE),
         // CommunicationSamplingPackage.TEXT_MESSAGE:
@@ -215,53 +215,53 @@ class ProbeDescription {
         // CommunicationSamplingPackage.CALENDAR:
         //     Icon(Icons.event, size: 50, color: CACHET.CYAN),
         DeviceSamplingPackage.SCREEN_EVENT: Icon(Icons.screen_lock_portrait,
-            size: 50, color: CACHET.LIGHT_PURPLE),
-        ContextSamplingPackage.CURRENT_LOCATION:
-            Icon(Icons.location_searching, size: 50, color: CACHET.GREY_1),
+            size: 50, color: CachetColors.LIGHT_PURPLE),
+        ContextSamplingPackage.CURRENT_LOCATION: Icon(Icons.location_searching,
+            size: 50, color: CachetColors.GREY_1),
         ContextSamplingPackage.LOCATION:
-            Icon(Icons.location_searching, size: 50, color: CACHET.CYAN),
+            Icon(Icons.location_searching, size: 50, color: CachetColors.CYAN),
         ContextSamplingPackage.ACTIVITY:
-            Icon(Icons.directions_bike, size: 50, color: CACHET.ORANGE),
+            Icon(Icons.directions_bike, size: 50, color: CachetColors.ORANGE),
         ContextSamplingPackage.WEATHER:
-            Icon(Icons.cloud, size: 50, color: CACHET.LIGHT_BLUE_2),
+            Icon(Icons.cloud, size: 50, color: CachetColors.LIGHT_BLUE_2),
         ContextSamplingPackage.AIR_QUALITY:
-            Icon(Icons.air, size: 50, color: CACHET.GREY_3),
+            Icon(Icons.air, size: 50, color: CachetColors.GREY_3),
         ContextSamplingPackage.GEOFENCE:
-            Icon(Icons.location_on, size: 50, color: CACHET.CYAN),
+            Icon(Icons.location_on, size: 50, color: CachetColors.CYAN),
         ContextSamplingPackage.MOBILITY:
-            Icon(Icons.location_on, size: 50, color: CACHET.ORANGE),
+            Icon(Icons.location_on, size: 50, color: CachetColors.ORANGE),
         ESenseSamplingPackage.ESENSE_BUTTON: Icon(Icons.radio_button_checked,
-            size: 50, color: CACHET.LIGHT_PURPLE),
+            size: 50, color: CachetColors.LIGHT_PURPLE),
         ESenseSamplingPackage.ESENSE_SENSOR:
-            Icon(Icons.headset, size: 50, color: CACHET.LIGHT_PURPLE),
+            Icon(Icons.headset, size: 50, color: CachetColors.LIGHT_PURPLE),
         PolarSamplingPackage.ACCELEROMETER:
-            Icon(Icons.moving, size: 50, color: CACHET.LIGHT_PURPLE),
+            Icon(Icons.moving, size: 50, color: CachetColors.LIGHT_PURPLE),
         PolarSamplingPackage.GYROSCOPE:
-            Icon(Icons.moving, size: 50, color: CACHET.LIGHT_PURPLE),
+            Icon(Icons.moving, size: 50, color: CachetColors.LIGHT_PURPLE),
         PolarSamplingPackage.MAGNETOMETER:
-            Icon(Icons.iron, size: 50, color: CACHET.LIGHT_PURPLE),
-        PolarSamplingPackage.ECG:
-            Icon(Icons.monitor_heart_rounded, size: 50, color: CACHET.GREEN),
+            Icon(Icons.iron, size: 50, color: CachetColors.LIGHT_PURPLE),
+        PolarSamplingPackage.ECG: Icon(Icons.monitor_heart_rounded,
+            size: 50, color: CachetColors.GREEN),
         PolarSamplingPackage.HR:
-            Icon(Icons.heart_broken, size: 50, color: CACHET.RED),
+            Icon(Icons.heart_broken, size: 50, color: CachetColors.RED),
         PolarSamplingPackage.PPG:
-            Icon(Icons.add_link, size: 50, color: CACHET.GREY_2),
+            Icon(Icons.add_link, size: 50, color: CachetColors.GREY_2),
         PolarSamplingPackage.PPI:
-            Icon(Icons.link, size: 50, color: CACHET.GREY_3),
+            Icon(Icons.link, size: 50, color: CachetColors.GREY_3),
         MovisensSamplingPackage.HR:
-            Icon(Icons.heart_broken, size: 50, color: CACHET.CYAN),
+            Icon(Icons.heart_broken, size: 50, color: CachetColors.CYAN),
         MovisensSamplingPackage.EDA:
-            Icon(Icons.pin_drop, size: 50, color: CACHET.CYAN),
+            Icon(Icons.pin_drop, size: 50, color: CachetColors.CYAN),
         MovisensSamplingPackage.ACTIVITY:
-            Icon(Icons.directions_bike, size: 50, color: CACHET.CYAN),
+            Icon(Icons.directions_bike, size: 50, color: CachetColors.CYAN),
         MovisensSamplingPackage.RESPIRATION:
-            Icon(Icons.air, size: 50, color: CACHET.CYAN),
+            Icon(Icons.air, size: 50, color: CachetColors.CYAN),
         MovisensSamplingPackage.SKIN_TEMPERATURE:
-            Icon(Icons.boy_rounded, size: 50, color: CACHET.CYAN),
+            Icon(Icons.boy_rounded, size: 50, color: CachetColors.CYAN),
         MovisensSamplingPackage.TAP_MARKER:
-            Icon(Icons.fingerprint, size: 50, color: CACHET.CYAN),
+            Icon(Icons.fingerprint, size: 50, color: CachetColors.CYAN),
         HealthSamplingPackage.HEALTH:
-            Icon(Icons.heart_broken, size: 50, color: CACHET.RED),
+            Icon(Icons.heart_broken, size: 50, color: CachetColors.RED),
       };
 
   static Map<ExecutorState, String> get probeStateLabel => {
@@ -273,13 +273,15 @@ class ProbeDescription {
       };
 
   static Map<ExecutorState, Icon> get probeStateIcon => {
-        ExecutorState.created: Icon(Icons.child_care, color: CACHET.GREY_4),
+        ExecutorState.created:
+            Icon(Icons.child_care, color: CachetColors.GREY_4),
         ExecutorState.initialized:
-            Icon(Icons.check, color: CACHET.LIGHT_PURPLE),
+            Icon(Icons.check, color: CachetColors.LIGHT_PURPLE),
         ExecutorState.started:
-            Icon(Icons.radio_button_checked, color: CACHET.GREEN),
+            Icon(Icons.radio_button_checked, color: CachetColors.GREEN),
         ExecutorState.stopped:
-            Icon(Icons.radio_button_unchecked, color: CACHET.GREEN),
-        ExecutorState.undefined: Icon(Icons.error_outline, color: CACHET.RED),
+            Icon(Icons.radio_button_unchecked, color: CachetColors.GREEN),
+        ExecutorState.undefined:
+            Icon(Icons.error_outline, color: CachetColors.RED),
       };
 }

@@ -1,44 +1,34 @@
 part of mobile_sensing_app;
 
-class DevicesList extends StatefulWidget {
-  const DevicesList({super.key});
-  static const String routeName = '/deviceslist';
-
+class DevicesListPage extends StatefulWidget {
   @override
-  DevicesListState createState() => DevicesListState();
+  DevicesListPageState createState() => DevicesListPageState();
 }
 
-class DevicesListState extends State<DevicesList> {
+class DevicesListPageState extends State<DevicesListPage> {
   static final GlobalKey<ScaffoldState> scaffoldKey =
       GlobalKey<ScaffoldState>();
 
   @override
   Widget build(BuildContext context) {
-    // List<DeviceModel> devices = bloc.availableDevices.toList();
-    List<DeviceModel> devices = bloc.connectedDevices.toList();
+    List<DeviceViewModel> devices = bloc.connectedDevices.toList();
 
     return Scaffold(
       key: scaffoldKey,
       appBar: AppBar(
         title: Text('Devices'),
       ),
-      body: StreamBuilder<UserTask>(
-        stream: AppTaskController().userTaskEvents,
-        builder: (context, AsyncSnapshot<UserTask> snapshot) {
-          return Scrollbar(
-            child: ListView.builder(
-              itemCount: devices.length,
-              padding: EdgeInsets.symmetric(vertical: 8.0),
-              itemBuilder: (context, index) =>
-                  _deviceCard(context, devices[index]),
-            ),
-          );
-        },
+      body: Scrollbar(
+        child: ListView.builder(
+          itemCount: devices.length,
+          padding: EdgeInsets.symmetric(vertical: 8.0),
+          itemBuilder: (context, index) => _deviceCard(context, devices[index]),
+        ),
       ),
     );
   }
 
-  Widget _deviceCard(BuildContext context, DeviceModel device) {
+  Widget _deviceCard(BuildContext context, DeviceViewModel device) {
     return Center(
       child: Card(
         elevation: 10,
