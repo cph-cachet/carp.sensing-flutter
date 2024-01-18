@@ -145,7 +145,7 @@ When deployed, the runtime (`SmartphoneDeploymentController`) is configured and 
     );
     study = await SmartPhoneClientManager().addStudy(
       bloc.studyDeploymentId!,
-      bloc.deviceRolename!,
+      bloc.deviceRoleName!,
     );
     await controller?.tryDeployment();
     await controller?.configure();

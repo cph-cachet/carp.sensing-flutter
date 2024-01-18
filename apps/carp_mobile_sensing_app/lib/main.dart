@@ -1,6 +1,5 @@
 library mobile_sensing_app;
 
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart' hide TimeOfDay;
 import 'package:flutter/services.dart';
 import 'dart:async';
