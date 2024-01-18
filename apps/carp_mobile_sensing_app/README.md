@@ -12,17 +12,17 @@ The UI of the app is shown below, showing (from left to right) the Study Deploym
 The architecture of the app is illustrated below. It follows the [BLoC architecture](https://medium.com/flutterpub/architecting-your-flutter-project-bd04e144a8f1),
 which is recommended by the [Flutter Team](https://www.youtube.com/watch?v=PLHln7wHgPE).
 
-![Bloc Architecture](documentation/architecture_3.png)
+![Bloc Architecture](documentation/architecture_4.png)
 
 All sensing logic is handled via the `Sensing` class responsible for handling sensing via the [`carp_mobile_sensing`](https://pub.dartlang.org/packages/carp_mobile_sensing) package.
 All business logic is handled by the singleton `SensingBLoC` which is the only way the UI models can access and modify data or initiate life cycle events (like pausing and resuming sensing).
-All data to be shown in the UI are handled by (UI) models, and finally each screen is implemented as a [`StatefulWidget`](https://docs.flutter.io/flutter/widgets/StatefulWidget-class.html) in Flutter.
-Each UI widget only knows its corresponding model and the model knows the BloC.
+All data to be shown in the UI are handled by view models, and finally each page is implemented as a [`StatefulWidget`](https://docs.flutter.io/flutter/widgets/StatefulWidget-class.html) in Flutter.
+Each view widget only knows its corresponding view model and the view model knows the BloC.
 **NO** data or control flows between the UI and the Bloc or Sensing layer.
 
 ## Sensing BLoC
 
-Since the [`SensingBLoC`](https://github.com/cph-cachet/carp.sensing-flutter/blob/master/apps/carp_mobile_sensing_app/lib/src/blocs/sensing_bloc.dart) is the controller of the entire app, let's look closer on this class. Below are essential parts shown (omitting some implementation details):
+Since the [`SensingBLoC`](https://github.com/cph-cachet/carp.sensing-flutter/blob/main/apps/carp_mobile_sensing_app/lib/src/blocs/sensing_bloc.dart) is the controller of the entire app, let's look closer on this class. Below are essential parts shown (omitting some implementation details):
 
 ````dart
 class SensingBLoC {
@@ -45,7 +45,7 @@ class SensingBLoC {
   /// The device role name for the currently running deployment.
   /// Returns the role name cached locally on the phone (if available).
   /// Returns `null` if no study is deployed (yet).
-  String? get deviceRolename => ...
+  String? get deviceRoleName => ...
   
   /// Use the cached study deployment?
   bool get useCachedStudyDeployment => _useCached;
@@ -65,17 +65,21 @@ class SensingBLoC {
 
   StudyDeploymentModel? _model;
 
-  /// Get the study deployment model for this app.
-  StudyDeploymentModel get studyDeploymentModel =>
-      _model ??= StudyDeploymentModel(deployment!);
+  /// Get the view model for this study [deployment].
+  StudyDeploymentViewModel get studyDeploymentViewModel =>
+      _model ??= StudyDeploymentViewModel(deployment!);
 
-  /// Get a list of running probes
-  Iterable<ProbeModel> get runningProbes =>
-      bloc.sensing.runningProbes.map((probe) => ProbeModel(probe));
+  /// Get a list of view models for the running probes.
+  Iterable<ProbeViewModel> get runningProbes =>
+      bloc.sensing.runningProbes.map((probe) => ProbeViewModel(probe));
 
-  /// Get a list of running devices
-  Iterable<DeviceModel> get availableDevices =>
-      bloc.sensing.availableDevices.map((device) => DeviceModel(device));
+  /// Get a list of view models for the available devices.
+  Iterable<DeviceViewModel> get availableDevices =>
+      bloc.sensing.availableDevices.map((device) => DeviceViewModel(device));
+
+  /// Get a list of view models for connected devices.
+  Iterable<DeviceViewModel> get connectedDevices =>
+      bloc.sensing.connectedDevices.map((device) => DeviceViewModel(device));
 
   /// Initialize the BLoC.
   Future<void> initialize({
@@ -115,18 +119,17 @@ final bloc = SensingBLoC();
 
 The BLoC basically plays three roles:
 
-* it holds core business data like `studyId`, `deploymentId`, `deviceRolename`, and the `deployment` configuration
-* it can create (UI) models such as the `StudyDeploymentModel` and the list of `ProbeModel`s and `DeviceModel`s
+* it holds core business data like `studyId`, `deploymentId`, `deviceRoleName`, and the `deployment` configuration
+* it can create view models such as the `StudyDeploymentViewModel` and the list of `ProbeViewModel`s and `DeviceViewModel`s
 * it provide a set of life cycle methods for sensing like `initialize`, `connectToDevice` and `start`.
 
 Finally, note that the singleton `bloc` variable is instantiated, which makes the BLoC accessible in the entire app.
 
 ## Sensing
 
-Configuration of sensing is done in the [`Sensing`](https://github.com/cph-cachet/carp.sensing-flutter/blob/master/apps/carp_mobile_sensing_app/lib/src/sensing/sensing.dart) class.
+Configuration of sensing is done in the [`Sensing`](https://github.com/cph-cachet/carp.sensing-flutter/blob/main/apps/carp_mobile_sensing_app/lib/src/sensing/sensing.dart) class.
 
-This class also illustrates how the app can be run both in a "local" deployment mode and in different "CAWS" modes.
-Depending on the "deployment mode" (local or using CAWS), deployment is initialized using the [`SmartphoneDeploymentService`](https://pub.dev/documentation/carp_mobile_sensing/latest/runtime/SmartphoneDeploymentService-class.html) or the [`CarpDeploymentService`](https://pub.dev/documentation/carp_webservices/latest/carp_services/CarpDeploymentService-class.html), respectively.
+This class also illustrates how the app can be run both in a "local" deployment mode and in different "CAWS" modes. Depending on the deployment mode (local or using CAWS), deployment is initialized using the [`SmartphoneDeploymentService`](https://pub.dev/documentation/carp_mobile_sensing/latest/runtime/SmartphoneDeploymentService-class.html) or the [`CarpDeploymentService`](https://pub.dev/documentation/carp_webservices/latest/carp_services/CarpDeploymentService-class.html), respectively.
 
 In the case a local deployment is used, a protocol is fetched from the `LocalStudyProtocolManager`, which is then added to the local `SmartphoneDeploymentService`.
 In the case a CAWS deployment is used, the study deployment configuration will be fetched from the `CarpDeploymentService` based on the `studyDeploymentId` fetched from an invitation (this invitation is fetched as part of the `init` method of the main `App` class).
@@ -148,16 +151,15 @@ When deployed, the runtime (`SmartphoneDeploymentController`) is configured and 
     await controller?.configure();
 ```
 
-## UI Models
+## User Interface View Models
 
-The CARP Mobile Sensing App uses one UI model for each UI widget.
-For example, the UI Model `StudyDeploymentModel` serves the UI Widget `StudyDeploymentPage`.
-The main responsibility of the UI Model is to provide access to data (both getter and setters), which again is available via the BLoC.
+The CARP Mobile Sensing App uses one view model for each UI page. For example, the view model `StudyDeploymentViewModel` serves the UI Widget `StudyDeploymentPage`. The main responsibility of the view model is to provide access to data (both getter and setters), which again is available via the BLoC.
 
-The `StudyDeploymentModel` class looks like this:
+The `StudyDeploymentViewModel` class looks like this:
 
 `````dart
-class StudyDeploymentModel {
+/// A view model for the [StudyDeploymentPage] view.
+class StudyDeploymentViewModel {
   SmartphoneDeployment deployment;
 
   String get title => deployment.studyDescription?.title ?? '';
@@ -165,6 +167,7 @@ class StudyDeploymentModel {
       deployment.studyDescription?.description ?? 'No description available.';
   Image get image => Image.asset('assets/study.png');
   String get studyDeploymentId => deployment.studyDeploymentId;
+  String get deviceRoleName => deployment.deviceConfiguration.roleName;
   String get userID => deployment.userId ?? '';
   String get dataEndpoint => deployment.dataEndPoint.toString();
 
@@ -182,39 +185,31 @@ class StudyDeploymentModel {
   /// The total sampling size so far since this study was started.
   int get samplingSize => bloc.sensing.controller?.samplingSize ?? 0;
 
-  StudyDeploymentModel(this.deployment) : super();
+  StudyDeploymentViewModel(this.deployment) : super();
 }
 `````
 
-In this model there are only data **getters**, since in the current version of the app, you cannot change a study once it is running. However, if modification of a study was to be supported, then **setter** methods would be implemented in the model as well.
-For example, the following method would enable modifying the study title.
+In this view model there are only data **getters**, since in the current version of the app, you cannot change a study once it is running. However, if modification of a study was to be supported, then **setter** methods would be implemented in the model as well.
 
-````dart
-void set title(String title) {
-  ...
-}
-````
+## User Interface Views
 
-## UI Widgets
-
-The top layer contains the UI widgets.
-Each UI widget takes in its constructor its corresponding UI model.
-For example, the `StudyVisualization` widget's `State` takes a `StudyModel` in its constructor:
+The top layer contains the UI views. Each UI view takes in its constructor its corresponding view model. For example, the `StudyDeploymentPage` widget's `State` takes a `StudyDeploymentViewModel` in its constructor:
 
 `````dart
 class StudyDeploymentPage extends StatefulWidget {
-  const StudyDeploymentPage({super.key});
-  static const String routeName = '/study';
-
   @override
   StudyDeploymentPageState createState() =>
-      StudyDeploymentPageState(bloc.studyDeploymentModel);
+      StudyDeploymentPageState(bloc.studyDeploymentViewModel);
 }
 
 class StudyDeploymentPageState extends State<StudyDeploymentPage> {
-  final StudyDeploymentModel studyDeploymentModel;
+  static final GlobalKey<ScaffoldState> _scaffoldKey =
+      GlobalKey<ScaffoldState>();
+  final double _appBarHeight = 256.0;
 
-  _StudyDeploymentPageState(this.studyDeploymentModel) : super();
+  final StudyDeploymentViewModel viewModel;
+
+  StudyDeploymentPageState(this.viewModel) : super();
 
   @override
   Widget build(BuildContext context) {
@@ -223,16 +218,15 @@ class StudyDeploymentPageState extends State<StudyDeploymentPage> {
 }
 `````
 
-In this way, the `studyDeploymentModel` is available in the entire UI Widget.
-This allows us to access data and show it in the UI. For example, to show the study title and image this code is used:
+In this way, the `viewModel` is available in the entire UI Widget. This allows us to access data and show it in the UI. For example, to show the study title and image this code is used:
 
 ````dart
  FlexibleSpaceBar(
-    title: Text(studyDeploymentModel.title),
+    title: Text(viewModel.title),
     background: Stack(
       fit: StackFit.expand,
       children: <Widget>[
-        studyDeploymentModel.image,
+        viewModel.image,
       ],
     ),
  ),
@@ -242,9 +236,10 @@ This allows us to access data and show it in the UI. For example, to show the st
 More sophisticated (reactive) UI implementation can also be done. For example, to show the counter showing sampling size the following `StreamBuilder` is used.
 
 `````dart
- StreamBuilder<Datum>(
-    stream: studyDeploymentModel.samplingEvents,
-    builder: (context, AsyncSnapshot<Datum> snapshot) =>
-      Text('Sample Size: ${studyDeploymentModel.samplingSize}')
-    )
+StreamBuilder<Measurement>(
+    stream: viewModel.measurements,
+    builder: (context,
+            AsyncSnapshot<Measurement> snapshot) =>
+        _StudyControllerLine('${viewModel.samplingSize}',
+            heading: 'Sample Size')),
 `````

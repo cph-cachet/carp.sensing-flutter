@@ -1,12 +1,9 @@
 part of mobile_sensing_app;
 
 class StudyDeploymentPage extends StatefulWidget {
-  const StudyDeploymentPage({super.key});
-  static const String routeName = '/study';
-
   @override
   StudyDeploymentPageState createState() =>
-      StudyDeploymentPageState(bloc.studyDeploymentModel);
+      StudyDeploymentPageState(bloc.studyDeploymentViewModel);
 }
 
 class StudyDeploymentPageState extends State<StudyDeploymentPage> {
@@ -14,17 +11,17 @@ class StudyDeploymentPageState extends State<StudyDeploymentPage> {
       GlobalKey<ScaffoldState>();
   final double _appBarHeight = 256.0;
 
-  final StudyDeploymentModel studyDeploymentModel;
+  final StudyDeploymentViewModel viewModel;
 
-  StudyDeploymentPageState(this.studyDeploymentModel) : super();
+  StudyDeploymentPageState(this.viewModel) : super();
 
   @override
   Widget build(BuildContext context) =>
-      _buildStudyVisualization(context, bloc.studyDeploymentModel);
+      _buildStudyVisualization(context, bloc.studyDeploymentViewModel);
 
   Widget _buildStudyVisualization(
     BuildContext context,
-    StudyDeploymentModel studyDeploymentModel,
+    StudyDeploymentViewModel viewModel,
   ) {
     return Scaffold(
       key: _scaffoldKey,
@@ -47,47 +44,41 @@ class StudyDeploymentPageState extends State<StudyDeploymentPage> {
               ),
             ],
             flexibleSpace: FlexibleSpaceBar(
-              title: Text(studyDeploymentModel.title),
+              title: Text(viewModel.title),
               background: Stack(
                 fit: StackFit.expand,
                 children: <Widget>[
-                  studyDeploymentModel.image,
-//                  Image.asset(
-//                    bloc.study.image,
-//                    fit: BoxFit.cover,
-//                    height: _appBarHeight,
-//                  ),
+                  viewModel.image,
                 ],
               ),
             ),
           ),
           SliverList(
-            delegate: SliverChildListDelegate(
-                _buildStudyPanel(context, studyDeploymentModel)),
+            delegate: SliverChildListDelegate(_studyPanel(context, viewModel)),
           ),
         ],
       ),
     );
   }
 
-  List<Widget> _buildStudyPanel(
-      BuildContext context, StudyDeploymentModel studyDeploymentModel) {
+  List<Widget> _studyPanel(
+      BuildContext context, StudyDeploymentViewModel viewModel) {
     List<Widget> children = [];
 
     children.add(AnnotatedRegion<SystemUiOverlayStyle>(
       value: SystemUiOverlayStyle.dark,
-      child: _buildStudyControllerPanel(context, studyDeploymentModel),
+      child: _studyControllerPanel(context, viewModel),
     ));
 
-    for (var task in studyDeploymentModel.deployment.tasks) {
+    for (var task in viewModel.deployment.tasks) {
       children.add(_TaskPanel(task: task));
     }
 
     return children;
   }
 
-  Widget _buildStudyControllerPanel(
-      BuildContext context, StudyDeploymentModel studyDeploymentModel) {
+  Widget _studyControllerPanel(
+      BuildContext context, StudyDeploymentViewModel viewModel) {
     final ThemeData themeData = Theme.of(context);
     return Container(
       padding: const EdgeInsets.symmetric(vertical: 16.0),
@@ -104,25 +95,23 @@ class StudyDeploymentPageState extends State<StudyDeploymentPage> {
               Container(
                   padding: const EdgeInsets.symmetric(vertical: 24.0),
                   width: 72.0,
-                  child: Icon(Icons.settings,
-                      size: 50, color: CACHET.CACHET_BLUE)),
+                  child:
+                      Icon(Icons.settings, size: 50, color: CachetColors.BLUE)),
               Expanded(
                   child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                    _StudyControllerLine(studyDeploymentModel.title,
-                        heading: 'Title'),
-                    _StudyControllerLine(studyDeploymentModel.description),
-                    _StudyControllerLine(studyDeploymentModel.studyDeploymentId,
+                    _StudyControllerLine(viewModel.title, heading: 'Title'),
+                    _StudyControllerLine(viewModel.description),
+                    _StudyControllerLine(viewModel.studyDeploymentId,
                         heading: 'Deployment ID'),
-                    _StudyControllerLine(studyDeploymentModel.deviceRoleName,
+                    _StudyControllerLine(viewModel.deviceRoleName,
                         heading: 'Device Role Name'),
-                    _StudyControllerLine(studyDeploymentModel.userID,
-                        heading: 'User'),
-                    _StudyControllerLine(studyDeploymentModel.dataEndpoint,
+                    _StudyControllerLine(viewModel.userID, heading: 'User'),
+                    _StudyControllerLine(viewModel.dataEndpoint,
                         heading: 'Data Endpoint'),
                     StreamBuilder<ExecutorState>(
-                        stream: studyDeploymentModel.studyExecutorStateEvents,
+                        stream: viewModel.studyExecutorStateEvents,
                         initialData: ExecutorState.created,
                         builder:
                             (context, AsyncSnapshot<ExecutorState> snapshot) {
@@ -139,12 +128,11 @@ class StudyDeploymentPageState extends State<StudyDeploymentPage> {
                           }
                         }),
                     StreamBuilder<Measurement>(
-                        stream: studyDeploymentModel.measurements,
-                        builder:
-                            (context, AsyncSnapshot<Measurement> snapshot) =>
-                                _StudyControllerLine(
-                                    '${studyDeploymentModel.samplingSize}',
-                                    heading: 'Sample Size')),
+                        stream: viewModel.measurements,
+                        builder: (context,
+                                AsyncSnapshot<Measurement> snapshot) =>
+                            _StudyControllerLine('${viewModel.samplingSize}',
+                                heading: 'Sample Size')),
                   ]))
             ],
           ),
@@ -208,7 +196,7 @@ class _TaskPanel extends StatelessWidget {
               bottom: false,
               child: Column(children: <Widget>[
                 Row(children: <Widget>[
-                  Icon(Icons.description, size: 40, color: CACHET.ORANGE),
+                  Icon(Icons.description, size: 40, color: CachetColors.ORANGE),
                   Text('  ${task!.name}',
                       style: themeData.textTheme.titleLarge),
                 ]),

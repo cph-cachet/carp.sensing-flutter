@@ -1,5 +1,5 @@
 /*
- * Copyright 2019-2022 Copenhagen Center for Health Technology (CACHET) at the
+ * Copyright 2019-2024 Copenhagen Center for Health Technology (CACHET) at the
  * Technical University of Denmark (DTU).
  * Use of this source code is governed by a MIT-style license that can be
  * found in the LICENSE file.
@@ -7,9 +7,8 @@
 
 part of mobile_sensing_app;
 
-/// This is a simple local [StudyProtocolManager].
-///
-/// This class shows how to configure a [SmartphoneStudyProtocol].
+/// This is a local [StudyProtocolManager] which provides a [SmartphoneStudyProtocol]
+/// when running in local mode.
 class LocalStudyProtocolManager implements StudyProtocolManager {
   @override
   Future<void> initialize() async {}

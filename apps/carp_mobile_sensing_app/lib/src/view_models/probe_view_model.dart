@@ -1,6 +1,7 @@
 part of mobile_sensing_app;
 
-class ProbeModel {
+/// A view model for a [Probe].
+class ProbeViewModel {
   Probe probe;
   String? get type => probe.type;
   Measure? get measure => probe.measure;
@@ -19,5 +20,5 @@ class ProbeModel {
   /// The icon for the runtime state of this probe.
   Icon? get stateIcon => ProbeDescription.probeStateIcon[state];
 
-  ProbeModel(this.probe) : super();
+  ProbeViewModel(this.probe) : super();
 }
