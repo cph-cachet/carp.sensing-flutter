@@ -26,8 +26,7 @@ class CarpService extends CarpBaseService {
   /// Before this instance can be used, it must be configured using the
   /// [configure] method.
   factory CarpService() => _instance;
-  CarpService.instance()
-      : this._(); // So we can extend this class and call the private constructor
+  CarpService.instance() : this._();
 
   FlutterAppAuth appAuth = const FlutterAppAuth();
 
@@ -40,10 +39,6 @@ class CarpService extends CarpBaseService {
   // --------------------------------------------------------------------------
 
   /// The URI for the authenticated endpoint for this [CarpService].
-  ///
-  /// The fomat is `https://cans.cachet.dk/forgotten` for the production host
-  /// and `https://cans.cachet.dk/portal/stage/forgotten` for the stage, test,
-  /// and dev hosts.
   Uri get authEndpointUri => app.authURL;
 
   /// Is a user authenticated?
@@ -60,12 +55,13 @@ class CarpService extends CarpBaseService {
   final StreamController<AuthEvent> _authEventController =
       StreamController.broadcast();
 
-  /// Notifies about changes to the user's authentication state (such as sign-in or
-  /// sign-out) as defined in [AuthEvent].
+  /// Notifies about changes to the user's authentication state (such as sign-in
+  /// or sign-out) as defined in [AuthEvent].
   Stream<AuthEvent> get authStateChanges =>
       _authEventController.stream.asBroadcastStream();
 
-  /// Makes sure that the [CarpApp] or [CarpUser] is configured, by throwing a [CarpServiceException] if they are null.
+  /// Makes sure that the [CarpApp] or [CarpUser] is configured, by throwing a
+  /// [CarpServiceException] if they are null.
   /// Otherwise, returns the non-null value.
   T nonNullAble<T>(T? argument) {
     if (argument == null && argument is CarpApp) {
@@ -84,9 +80,9 @@ class CarpService extends CarpBaseService {
   /// Authenticate to this CARP service using a [BuildContext], that opens the
   /// authentication page of the Identity Server using a secure web view from the OS.
   ///
-  /// The discovery URL is used to find the Identity Server.
+  /// The discovery URL in the [app] is used to find the Identity Server.
   ///
-  /// Return the signed in user (with an [OAuthToken] access token), if successful.
+  /// Returns the signed in user (with an [OAuthToken] access token), if successful.
   /// Throws a [CarpServiceException] if not successful.
   Future<CarpUser> authenticate() async {
     final AuthorizationTokenResponse? response =
@@ -122,9 +118,9 @@ class CarpService extends CarpBaseService {
   /// This method needs a [BuildContext] to authenticate but it does not open
   /// a web view. Use this if you want to create your own authentication page.
   ///
-  /// The discovery URL is used to find the Identity Server.
+  /// The discovery URL in the [app] is used to find the Identity Server.
   ///
-  /// Return the signed in user (with an [OAuthToken] access token), if successful.
+  /// Returns the signed in user (with an [OAuthToken] access token), if successful.
   /// Throws a [CarpServiceException] if not successful.
   Future<CarpUser> authenticateWithUsernamePassword({
     required String username,
@@ -164,14 +160,14 @@ class CarpService extends CarpBaseService {
 
   /// Authenticate to this CARP service using a [username] and [password].
   ///
-  /// Use only if you know what you are doing! This method is used only if neither
-  /// [authenticate] nor [authenticateWithUsernamePassword] works for you,
-  /// i.e. you do not have access to a [BuildContext].
+  /// This method is used only if neither [authenticate] nor
+  /// [authenticateWithUsernamePassword] works for you, i.e. you do not have
+  /// access to a [BuildContext].
   ///
   /// This method uses a POST request to the Identity Server to get an access token.
-  /// The discovery URL is used to find the Identity Server.
+  /// The discovery URL in the [app] is used to find the Identity Server.
   ///
-  /// Return the signed in user (with an [OAuthToken] access token), if successful.
+  /// Returns the signed in user (with an [OAuthToken] access token), if successful.
   /// Throws a [CarpServiceException] if not successful.
   Future<CarpUser> authenticateWithUsernamePasswordNoContext({
     required String username,
@@ -196,10 +192,9 @@ class CarpService extends CarpBaseService {
 
     final response = await http.post(url, body: body, headers: headers);
 
-    // Json to map the response
     final jsonResponse = json.decode(response.body);
     final tokenResponse =
-        convertToTokenResponse(jsonResponse as Map<String, dynamic>);
+        _convertToTokenResponse(jsonResponse as Map<String, dynamic>);
     CarpUser user = getCurrentUserProfile(tokenResponse);
     user.authenticated(OAuthToken.fromTokenResponse(tokenResponse));
 
@@ -270,9 +265,9 @@ class CarpService extends CarpBaseService {
   /// previously granted refresh token, using the Identity Server discovery URL.
   /// Need to have run any of the authenticate functions first.
   ///
-  /// Use only if you know what you are doing! This method is used only if the
-  /// [refresh] method does not work for you, i.e. you do not have access to a [BuildContext].
-  ///  Use this if you used [authenticateWithUsernamePasswordNoContext] to authenticate.
+  /// This method is used only if the [refresh] method does not work for you,
+  /// i.e. you do not have access to a [BuildContext].
+  /// Use this if you used [authenticateWithUsernamePasswordNoContext] to authenticate.
   ///
   /// This method uses a POST request to the Identity Server to get an access token.
   /// The discovery URL is used to find the Identity Server.
@@ -303,10 +298,9 @@ class CarpService extends CarpBaseService {
 
     final response = await http.post(url, body: body, headers: headers);
 
-    // Json to map the response
     final jsonResponse = json.decode(response.body);
     final tokenResponse =
-        convertToTokenResponse(jsonResponse as Map<String, dynamic>);
+        _convertToTokenResponse(jsonResponse as Map<String, dynamic>);
     CarpUser user = getCurrentUserProfile(tokenResponse);
     user.authenticated(OAuthToken.fromTokenResponse(tokenResponse));
 
@@ -315,12 +309,12 @@ class CarpService extends CarpBaseService {
     return user;
   }
 
-  /// Log out of this CARP service using a [BuildContext], that opens a
-  /// web view to clear cookies and end the sesion on the Identity Server.
+  /// Log out from this CARP service using a [BuildContext], that opens a
+  /// web view to clear cookies and end the session on the Identity Server.
   ///
   /// Use this if you used [authenticate] to authenticate.
   ///
-  /// The discovery URL is used to find the Identity Server.
+  /// The discovery URL in the [app] is used to find the Identity Server.
   Future<void> logout() async {
     await appAuth.endSession(
       EndSessionRequest(
@@ -333,18 +327,16 @@ class CarpService extends CarpBaseService {
     _currentUser = null;
   }
 
-  /// Logs out of this [CarpService], by clearing the current user.
+  /// Log out of this [CarpService], by clearing the current user.
   ///
-  /// Use only if you know what you are doing! This method is used only if the
-  /// [logout] method does not work for you, i.e. you do not have access to a [BuildContext].
+  /// This method is used only if the [logout] method does not work for you,
+  /// i.e. you do not have access to a [BuildContext].
   ///
   /// Use this if you used [authenticateWithUsernamePassword]
   /// or [authenticateWithUsernamePasswordNoContext] to authenticate.
-  Future<void> logoutNoContext() async {
-    currentUser = null;
-  }
+  Future<void> logoutNoContext() async => currentUser = null;
 
-  TokenResponse convertToTokenResponse(Map<String, dynamic> json) {
+  TokenResponse _convertToTokenResponse(Map<String, dynamic> json) {
     return AuthorizationTokenResponse(
       json['access_token'] as String,
       json['refresh_token'] as String,
