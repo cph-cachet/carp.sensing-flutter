@@ -114,6 +114,17 @@ class CarpDataManager extends AbstractDataManager {
         return;
       }
 
+      // check if token has expired, and try to refresh token, if so
+      if (CarpService().currentUser.token!.hasExpired) {
+        try {
+          await CarpService().refresh();
+        } catch (error) {
+          warning('$runtimeType - Failed to refresh access token - $error. '
+              'Cannot upload data.');
+          return;
+        }
+      }
+
       final batches = await buffer.getDataStreamBatches(
         carpEndPoint.deleteWhenUploaded,
       );
