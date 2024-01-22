@@ -1,5 +1,5 @@
 /*
- * Copyright 2018-2022 Copenhagen Center for Health Technology (CACHET) at the
+ * Copyright 2018-2024 Copenhagen Center for Health Technology (CACHET) at the
  * Technical University of Denmark (DTU).
  * Use of this source code is governed by a MIT-style license that can be
  * found in the LICENSE file.
@@ -7,18 +7,38 @@
 
 part of sensors;
 
+/// An abstract sensor probe used by all sensor probes to get the [samplingPeriod].
+///
+/// The sampling interval can be specified ("overridden") by specifying a [IntervalSamplingConfiguration]
+/// when configuring a [Measure] in the protocol.
+/// Default sampling interval is 200 ms.
+///
+/// Note that it seems like setting the sampling interval does NOT work on Android.
+/// Please see the docs on the [sensor_plus](https://pub.dev/packages/sensors_plus)
+/// package and on the [Android sensor documentation](https://developer.android.com/reference/android/hardware/SensorManager#registerListener(android.hardware.SensorEventListener,%20android.hardware.Sensor,%20int)).
+abstract class SensorProbe extends StreamProbe {
+  Duration get samplingPeriod =>
+      samplingConfiguration is IntervalSamplingConfiguration
+          ? (samplingConfiguration as IntervalSamplingConfiguration).interval
+          : const Duration(milliseconds: 200);
+}
+
 /// A probe collecting raw data from the accelerometer.
-class AccelerometerProbe extends StreamProbe {
+class AccelerometerProbe extends SensorProbe {
   @override
-  Stream<Measurement> get stream => accelerometerEvents.map((event) =>
-      Measurement.fromData(Acceleration(x: event.x, y: event.y, z: event.z)));
+  Stream<Measurement> get stream =>
+      accelerometerEventStream(samplingPeriod: samplingPeriod).map((event) =>
+          Measurement.fromData(
+              Acceleration(x: event.x, y: event.y, z: event.z)));
 }
 
 /// A probe collecting raw data from the user accelerometer.
-class UserAccelerometerProbe extends StreamProbe {
+class UserAccelerometerProbe extends SensorProbe {
   @override
-  Stream<Measurement> get stream => userAccelerometerEvents.map((event) =>
-      Measurement.fromData(Acceleration(x: event.x, y: event.y, z: event.z)));
+  Stream<Measurement> get stream =>
+      userAccelerometerEventStream(samplingPeriod: samplingPeriod).map(
+          (event) => Measurement.fromData(
+              Acceleration(x: event.x, y: event.y, z: event.z)));
 }
 
 /// A probe collecting accelerometer data over a sampling period and calculates
@@ -32,7 +52,7 @@ class AccelerometerFeaturesProbe extends BufferingPeriodicStreamProbe {
   int? sensorEndTime;
 
   @override
-  Stream<dynamic> get bufferingStream => userAccelerometerEvents;
+  Stream<dynamic> get bufferingStream => userAccelerometerEventStream();
 
   @override
   Future<Measurement?> getMeasurement() async =>
@@ -64,15 +84,18 @@ class AccelerometerFeaturesProbe extends BufferingPeriodicStreamProbe {
 }
 
 /// A probe collecting raw data from the gyroscope.
-class GyroscopeProbe extends StreamProbe {
+class GyroscopeProbe extends SensorProbe {
   @override
-  Stream<Measurement> get stream => gyroscopeEvents.map((event) =>
-      Measurement.fromData(Rotation(x: event.x, y: event.y, z: event.z)));
+  Stream<Measurement> get stream =>
+      gyroscopeEventStream(samplingPeriod: samplingPeriod).map((event) =>
+          Measurement.fromData(Rotation(x: event.x, y: event.y, z: event.z)));
 }
 
 /// A probe collecting raw data from the magnetometer.
-class MagnetometerProbe extends StreamProbe {
+class MagnetometerProbe extends SensorProbe {
   @override
-  Stream<Measurement> get stream => magnetometerEvents.map((event) =>
-      Measurement.fromData(MagneticField(x: event.x, y: event.y, z: event.z)));
+  Stream<Measurement> get stream =>
+      magnetometerEventStream(samplingPeriod: samplingPeriod).map((event) =>
+          Measurement.fromData(
+              MagneticField(x: event.x, y: event.y, z: event.z)));
 }

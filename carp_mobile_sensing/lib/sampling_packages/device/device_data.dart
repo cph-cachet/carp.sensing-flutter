@@ -81,6 +81,7 @@ class BatteryState extends Data {
   static const String STATE_FULL = 'full';
   static const String STATE_CHARGING = 'charging';
   static const String STATE_DISCHARGING = 'discharging';
+  static const String STATE_CONNECTED_NOT_CHARGING = 'connectedNotCharging';
   static const String STATE_UNKNOWN = 'unknown';
 
   /// The battery level in percent.
@@ -90,6 +91,7 @@ class BatteryState extends Data {
   ///  - full
   ///  - charging
   ///  - discharging
+  ///  - connectedNotCharging
   ///  - unknown
   String? batteryStatus;
 
@@ -108,6 +110,8 @@ class BatteryState extends Data {
         return STATE_CHARGING;
       case battery.BatteryState.discharging:
         return STATE_DISCHARGING;
+      case battery.BatteryState.connectedNotCharging:
+        return STATE_CONNECTED_NOT_CHARGING;
       default:
         return STATE_UNKNOWN;
     }

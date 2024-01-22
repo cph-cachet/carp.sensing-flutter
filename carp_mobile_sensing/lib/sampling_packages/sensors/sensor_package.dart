@@ -5,14 +5,14 @@ class SensorSamplingPackage extends SmartphoneSamplingPackage {
   /// and z axes in the device's coordinate system.
   ///  * Event-based measure.
   ///  * Uses the [Smartphone] device for data collection.
-  ///  * No sampling configuration needed.
+  ///  * Uses a [IntervalSamplingConfiguration] sampling configuration.
   static const String ACCELERATION = CarpDataTypes.ACCELERATION_TYPE_NAME;
 
   /// Rate of change in velocity, excluding gravity, along perpendicular x, y,
   /// and z axes in the device's coordinate system.
   ///  * Event-based measure.
   ///  * Uses the [Smartphone] device for data collection.
-  ///  * No sampling configuration needed.
+  ///  * Uses a [IntervalSamplingConfiguration] sampling configuration.
   static const String NON_GRAVITATIONAL_ACCELERATION =
       CarpDataTypes.NON_GRAVITATIONAL_ACCELERATION_TYPE_NAME;
 
@@ -24,13 +24,13 @@ class SensorSamplingPackage extends SmartphoneSamplingPackage {
   /// Rotation of the device in x,y,z (typically measured by a gyroscope).
   ///  * Event-based measure.
   ///  * Uses the [Smartphone] device for data collection.
-  ///  * No sampling configuration needed.
+  ///  * Uses a [IntervalSamplingConfiguration] sampling configuration.
   static const String ROTATION = CarpDataTypes.ROTATION_TYPE_NAME;
 
   /// Magnetic field around the device in x,y,z (typically measured by a magnetometer).
   ///  * Event-based measure.
   ///  * Uses the [Smartphone] device for data collection.
-  ///  * No sampling configuration needed.
+  ///  * Uses a [IntervalSamplingConfiguration] sampling configuration.
   static const String MAGNETIC_FIELD = CarpDataTypes.MAGNETIC_FIELD_TYPE_NAME;
 
   /// Ambient light from the phones light sensor.
@@ -50,15 +50,22 @@ class SensorSamplingPackage extends SmartphoneSamplingPackage {
   DataTypeSamplingSchemeMap get samplingSchemes =>
       DataTypeSamplingSchemeMap.from([
         DataTypeSamplingScheme(
-            CarpDataTypes().types[CarpDataTypes.ACCELERATION_TYPE_NAME]!),
-        DataTypeSamplingScheme(CarpDataTypes()
-            .types[CarpDataTypes.NON_GRAVITATIONAL_ACCELERATION_TYPE_NAME]!),
+            CarpDataTypes().types[CarpDataTypes.ACCELERATION_TYPE_NAME]!,
+            IntervalSamplingConfiguration(
+                interval: const Duration(milliseconds: 200))),
         DataTypeSamplingScheme(
-            CarpDataTypes().types[CarpDataTypes.ROTATION_TYPE_NAME]!),
+            CarpDataTypes()
+                .types[CarpDataTypes.NON_GRAVITATIONAL_ACCELERATION_TYPE_NAME]!,
+            IntervalSamplingConfiguration(
+                interval: const Duration(milliseconds: 200))),
         DataTypeSamplingScheme(
-            CarpDataTypes().types[CarpDataTypes.STEP_COUNT_TYPE_NAME]!),
+            CarpDataTypes().types[CarpDataTypes.ROTATION_TYPE_NAME]!,
+            IntervalSamplingConfiguration(
+                interval: const Duration(milliseconds: 200))),
         DataTypeSamplingScheme(
-            CarpDataTypes().types[CarpDataTypes.MAGNETIC_FIELD_TYPE_NAME]!),
+            CarpDataTypes().types[CarpDataTypes.MAGNETIC_FIELD_TYPE_NAME]!,
+            IntervalSamplingConfiguration(
+                interval: const Duration(milliseconds: 200))),
         DataTypeSamplingScheme(
             DataTypeMetaData(
               type: ACCELERATION_FEATURES,
@@ -69,6 +76,8 @@ class SensorSamplingPackage extends SmartphoneSamplingPackage {
               interval: const Duration(minutes: 1),
               duration: const Duration(seconds: 3),
             )),
+        DataTypeSamplingScheme(
+            CarpDataTypes().types[CarpDataTypes.STEP_COUNT_TYPE_NAME]!),
         DataTypeSamplingScheme(
             DataTypeMetaData(
               type: AMBIENT_LIGHT,
@@ -101,10 +110,5 @@ class SensorSamplingPackage extends SmartphoneSamplingPackage {
       default:
         return null;
     }
-  }
-
-  @override
-  void onRegister() {
-    FromJsonFactory().register(AmbientLight(0, 0, 0, 0));
   }
 }

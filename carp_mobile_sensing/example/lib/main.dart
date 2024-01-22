@@ -196,25 +196,19 @@ class LocalStudyProtocolManager implements StudyProtocolManager {
       phone,
     );
 
-    // // Collect IMU data every 10 secs for 1 sec.
-    // protocol.addTaskControl(
-    //   PeriodicTrigger(period: const Duration(seconds: 10)),
-    //   BackgroundTask(
-    //     measures: [
-    //       Measure(type: SensorSamplingPackage.ACCELERATION),
-    //       Measure(type: SensorSamplingPackage.ROTATION),
-    //     ],
-    //     duration: const IsoDuration(seconds: 1),
-    //   ),
-    //   phone,
-    // );
-
     // Collect IMU data every 10 secs for 1 sec.
+    // Also shows how the sampling interval can be specified ("overridden").
+    // Default sampling interval is 200 ms. Note that it seems like setting the
+    // sampling interval does NOT work on Android (see also the docs on the
+    // sensor_plus package and on the Android sensor documentation:
+    //   https://developer.android.com/reference/android/hardware/SensorManager#registerListener(android.hardware.SensorEventListener,%20android.hardware.Sensor,%20int)
     protocol.addTaskControl(
       PeriodicTrigger(period: const Duration(seconds: 10)),
       BackgroundTask(
         measures: [
-          Measure(type: SensorSamplingPackage.ACCELERATION),
+          Measure(type: SensorSamplingPackage.ACCELERATION)
+            ..overrideSamplingConfiguration = IntervalSamplingConfiguration(
+                interval: const Duration(milliseconds: 500)),
           Measure(type: SensorSamplingPackage.ROTATION),
         ],
         duration: const IsoDuration(seconds: 1),
@@ -222,7 +216,7 @@ class LocalStudyProtocolManager implements StudyProtocolManager {
       phone,
     );
 
-    // Collect IMU data every 10 secs for 1 sec.
+    // Extract acceleration features every minute over 10 seconds
     protocol.addTaskControl(
       ImmediateTrigger(),
       BackgroundTask(

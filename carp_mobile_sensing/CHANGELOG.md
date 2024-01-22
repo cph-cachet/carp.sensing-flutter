@@ -1,3 +1,8 @@
+## 1.4.1
+
+* upgrade of plugins (battery_plus, sensor_plus, cron)
+* support for specifying ("overriding") sampling frequency in sensor measures (accelerometer, gyroscope, magnetometer) by using a `IntervalSamplingConfiguration`.
+
 ## 1.4.0+1
 
 * upgrade to Dart 3.2
