@@ -22,6 +22,7 @@ class MovesenseSamplingPackage implements SamplingPackage {
   static const String MOVESENSE_NAMESPACE = "${NameSpace.CARP}.movesense";
 
   static const String HR = "${MOVESENSE_NAMESPACE}.hr";
+  static const String ECG = "${MOVESENSE_NAMESPACE}.ecg";
 
   final DeviceManager _deviceManager =
       MovesenseDeviceManager(MovesenseDevice.DEVICE_TYPE);
@@ -31,6 +32,8 @@ class MovesenseSamplingPackage implements SamplingPackage {
     switch (type) {
       case HR:
         return MovesenseHRProbe();
+      case ECG:
+        return MovesenseECGProbe();
       default:
         return null;
     }
@@ -47,7 +50,8 @@ class MovesenseSamplingPackage implements SamplingPackage {
   @override
   void onRegister() {
     // register all data types
-    FromJsonFactory().registerAll([MovesenseHR(samples: [])]);
+    FromJsonFactory()
+        .registerAll([MovesenseHR(samples: []), MovesenseECG(samples: [])]);
   }
 
   @override
@@ -65,6 +69,13 @@ class MovesenseSamplingPackage implements SamplingPackage {
           DataTypeMetaData(
             type: HR,
             displayName: "Heart Rate (HR)",
+            timeType: DataTimeType.POINT,
+          ),
+        ),
+        DataTypeSamplingScheme(
+          DataTypeMetaData(
+            type: ECG,
+            displayName: "Electrocardiography (ECG)",
             timeType: DataTimeType.POINT,
           ),
         ),

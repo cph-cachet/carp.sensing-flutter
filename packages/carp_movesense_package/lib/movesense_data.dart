@@ -18,6 +18,22 @@ class MovesenseHRSample {
   String toString() => '$runtimeType - hr: $hr';
 }
 
+@JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
+class MovesenseECGSample {
+  final List<int> samples;
+
+  MovesenseECGSample(this.samples);
+
+  //final List<int> rr;
+
+  factory MovesenseECGSample.fromJson(Map<String, dynamic> json) =>
+      _$MovesenseECGSampleFromJson(json);
+  Map<String, dynamic> toJson() => _$MovesenseECGSampleToJson(this);
+
+  @override
+  String toString() => '$runtimeType - samples: $samples';
+}
+
 class MovesensSamples<T> extends SensorData {
   final List<T> samples;
 
@@ -29,7 +45,7 @@ class MovesenseHR extends MovesensSamples<MovesenseHRSample> {
   static const dataType = MovesenseSamplingPackage.HR;
   MovesenseHR({required super.samples});
 
-  static MovesenseHR fromMoveSenseData(dynamic data) {
+  static MovesenseHR fromMovesenseData(dynamic data) {
     Map<String, dynamic> body = data["Body"];
     double hr = body["average"];
     print("heart rate $hr");
@@ -58,4 +74,37 @@ class MovesenseHR extends MovesensSamples<MovesenseHRSample> {
 
   @override
   String toString() => '$runtimeType - hr: $samples';
+}
+
+@JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
+class MovesenseECG extends MovesensSamples<MovesenseECGSample> {
+  static const dataType = MovesenseSamplingPackage.ECG;
+  MovesenseECG({required super.samples});
+
+  static MovesenseECG fromMovesenseData(dynamic data) {
+    print(data);
+    Map<String, dynamic> body = data["Body"];
+    return 0 as MovesenseECG;
+  }
+
+  /* MovesenseHR.fromMoveSenseData(dynamic data)
+      : this(
+            samples: data
+                .map((sample) => MovesenseHRSample(
+                      sample["Body"]["average"],
+                      sample["Body"]["rr"],
+                    ))
+                .toList()); */
+
+  @override
+  Function get fromJsonFunction => _$MovesenseECGFromJson;
+  factory MovesenseECG.fromJson(Map<String, dynamic> json) =>
+      FromJsonFactory().fromJson(json) as MovesenseECG;
+  @override
+  Map<String, dynamic> toJson() => _$MovesenseECGToJson(this);
+  @override
+  String get jsonType => dataType;
+
+  @override
+  String toString() => '$runtimeType - ecg: $samples';
 }

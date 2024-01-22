@@ -16,6 +16,16 @@ Map<String, dynamic> _$MovesenseHRSampleToJson(MovesenseHRSample instance) =>
       'hr': instance.hr,
     };
 
+MovesenseECGSample _$MovesenseECGSampleFromJson(Map<String, dynamic> json) =>
+    MovesenseECGSample(
+      (json['samples'] as List<dynamic>).map((e) => e as int).toList(),
+    );
+
+Map<String, dynamic> _$MovesenseECGSampleToJson(MovesenseECGSample instance) =>
+    <String, dynamic>{
+      'samples': instance.samples,
+    };
+
 MovesenseHR _$MovesenseHRFromJson(Map<String, dynamic> json) => MovesenseHR(
       samples: (json['samples'] as List<dynamic>)
           .map((e) => MovesenseHRSample.fromJson(e as Map<String, dynamic>))
@@ -27,6 +37,31 @@ MovesenseHR _$MovesenseHRFromJson(Map<String, dynamic> json) => MovesenseHR(
           : Data.fromJson(json['sensorSpecificData'] as Map<String, dynamic>);
 
 Map<String, dynamic> _$MovesenseHRToJson(MovesenseHR instance) {
+  final val = <String, dynamic>{};
+
+  void writeNotNull(String key, dynamic value) {
+    if (value != null) {
+      val[key] = value;
+    }
+  }
+
+  writeNotNull('__type', instance.$type);
+  writeNotNull('sensorSpecificData', instance.sensorSpecificData);
+  val['samples'] = instance.samples;
+  return val;
+}
+
+MovesenseECG _$MovesenseECGFromJson(Map<String, dynamic> json) => MovesenseECG(
+      samples: (json['samples'] as List<dynamic>)
+          .map((e) => MovesenseECGSample.fromJson(e as Map<String, dynamic>))
+          .toList(),
+    )
+      ..$type = json['__type'] as String?
+      ..sensorSpecificData = json['sensorSpecificData'] == null
+          ? null
+          : Data.fromJson(json['sensorSpecificData'] as Map<String, dynamic>);
+
+Map<String, dynamic> _$MovesenseECGToJson(MovesenseECG instance) {
   final val = <String, dynamic>{};
 
   void writeNotNull(String key, dynamic value) {

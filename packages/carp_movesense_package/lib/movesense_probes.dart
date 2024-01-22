@@ -14,26 +14,24 @@ abstract class _MovesenseProbe extends StreamProbe {
 
 class MovesenseHRProbe extends _MovesenseProbe {
   @override
-  Stream<Measurement>? get stream {
-    var value = null;
-    print("connected " + deviceManager.isConnected.toString());
-    if (deviceManager.isConnected) {
-      MdsAsync.subscribe(
+  Stream<Measurement>? get stream => (deviceManager.isConnected)
+      ? MdsAsync.subscribe(
               Mds.createSubscriptionUri(deviceManager.serial, "/Meas/HR"), "{}")
-          .listen((event) {
-        value = Measurement.fromData(MovesenseHR.fromMoveSenseData(event));
-        value = Measurement.fromData(
-            MovesenseHR(samples: [MovesenseHRSample(0.0)]));
-      });
-      if (value != null) {
-        print("value type: " + value.runtimeType.toString());
-      } else {
-        print("value null");
-      }
-      return value;
-    } else {
-      print("value null");
-      return null;
-    }
-  }
+          .map((event) =>
+              Measurement.fromData(MovesenseECG.fromMovesenseData(event)))
+          .asBroadcastStream()
+      : null;
+}
+
+/// Collects ECG data from the Movesense device.
+class MovesenseECGProbe extends _MovesenseProbe {
+  @override
+  Stream<Measurement>? get stream => (deviceManager.isConnected)
+      ? MdsAsync.subscribe(
+              Mds.createSubscriptionUri(deviceManager.serial, "/Meas/ECG/125"),
+              "{}")
+          .map((event) =>
+              Measurement.fromData(MovesenseECG.fromMovesenseData(event)))
+          .asBroadcastStream()
+      : null;
 }

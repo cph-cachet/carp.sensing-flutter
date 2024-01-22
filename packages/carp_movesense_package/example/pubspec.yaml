@@ -30,6 +30,10 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+  flutter_activity_recognition: ^3.0.0
+  package_info_plus: ^5.0.0
+  device_info_plus: ^9.1.0
+
   carp_movesense_package:
     # When depending on this package from a real application you should use:
     #   mdsflutter: ^x.y.z

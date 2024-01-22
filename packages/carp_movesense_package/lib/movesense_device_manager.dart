@@ -54,7 +54,7 @@ class MovesenseDeviceManager extends BTLEDeviceManager<MovesenseDevice> {
   }
 
   @override
-  String get id => configuration?.identifier ?? '?????';
+  String get id => configuration?.identifier ?? '233830000615';
 
   String get serial => configuration?.serial ?? '?????';
 
@@ -69,22 +69,17 @@ class MovesenseDeviceManager extends BTLEDeviceManager<MovesenseDevice> {
 
   @override
   Future<DeviceStatus> onConnect() async {
-    print("trying to connect");
     status = DeviceStatus.connecting;
     if (isConnected) return status;
     if (configuration?.identifier == null) {
       warning('$runtimeType - cannot connect to device, identifier is null.');
-      print("id null");
 
       return DeviceStatus.error;
     } else {
       if (btleAddress.isEmpty) {
         status = DeviceStatus.connecting;
-        print("starting to connect");
-
         Mds.startScan((name, address) {
           // Typical name is "Movesense 220330000122" so only check for last part
-          print("name: " + name!);
           if (name?.split(' ').last.compareTo(id) == 0) {
             btleAddress = address!;
             Mds.stopScan();
@@ -95,18 +90,27 @@ class MovesenseDeviceManager extends BTLEDeviceManager<MovesenseDevice> {
                 configuration?.serial = serial;
                 status = DeviceStatus.connected;
 
-                /*
+                debug("successfully connected");
+
+                Mds.get(Mds.createRequestUri(serial, "/System/States/1"), "{}",
+                    ((data, statusCode) {
+                  final dataContent = json.decode(data);
+                  num batteryState = dataContent["Content"];
+                  _batteryLevel = batteryState == 1 ? 20 : 80;
+                  debug("battery level: " + _batteryLevel.toString());
+                }), ((error, statusCode) => {}));
 
                 _batterySubscription = MdsAsync.subscribe(
                         Mds.createSubscriptionUri(serial, "/System/States/1"),
                         "{}")
                     .listen((event) {
                   // Save the battery level locally
+                  debug(" battery event: " + event.toString());
                   num batteryState = event["Body"]["NewState"];
-                  _batteryLevel = batteryState.toInt();
-                  
+                  debug("battery state: " + batteryState.toString());
+                  _batteryLevel = batteryState == 1 ? 20 : 80;
+                  debug("battery level: " + _batteryLevel.toString());
                 });
-                */
               },
               () => status = DeviceStatus.disconnected,
               () => status = DeviceStatus.error,
@@ -116,10 +120,10 @@ class MovesenseDeviceManager extends BTLEDeviceManager<MovesenseDevice> {
       }
     }
     if (status == DeviceStatus.connecting) {
-      print("nothing happened");
       warning('$runtimeType - cannot connect to device.');
       status = DeviceStatus.error;
     }
+    debug("battery level: " + _batteryLevel.toString());
     return status;
   }
 
@@ -131,6 +135,7 @@ class MovesenseDeviceManager extends BTLEDeviceManager<MovesenseDevice> {
       return false;
     }
     Mds.disconnect(btleAddress);
+    _batterySubscription?.cancel();
     return true;
   }
 }
