@@ -110,7 +110,7 @@ class CarpDataManager extends AbstractDataManager {
     try {
       // check if authenticated to CAWS and fast exit if not
       if (!CarpService().authenticated) {
-        warning('No user authenticated to CAWS - cannot upload data.');
+        warning('No user authenticated to CAWS. Cannot upload data.');
         return;
       }
 
