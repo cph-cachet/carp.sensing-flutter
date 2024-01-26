@@ -193,7 +193,6 @@ class PolarDeviceManager extends BTLEDeviceManager<PolarDevice> {
 
         _disconnectedSubscription = polar.deviceDisconnected.listen((event) {
           debug('$runtimeType - Polar event : $event');
-          // disconnect();
           status = DeviceStatus.disconnected;
           _batteryLevel = null;
         });
