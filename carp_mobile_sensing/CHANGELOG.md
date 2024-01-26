@@ -1,7 +1,8 @@
-## 1.4.1
+## 1.4.2
 
 * upgrade of plugins (battery_plus, sensor_plus, cron)
 * support for specifying ("overriding") sampling frequency in sensor measures (accelerometer, gyroscope, magnetometer) by using a `IntervalSamplingConfiguration`.
+* improvement to executor state machine
 
 ## 1.4.0+1
 

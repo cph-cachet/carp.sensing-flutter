@@ -177,7 +177,7 @@ abstract class DeviceManager<TDeviceConfiguration extends DeviceConfiguration>
 
   /// Callback on [connect]. Returns the [DeviceStatus] of the device.
   ///
-  /// Is to be overridden in sub-classes.
+  /// Is to be overridden in sub-classes and implement device-specific connection.
   Future<DeviceStatus> onConnect();
 
   /// Restart sampling of the measures using this device.
@@ -206,6 +206,9 @@ abstract class DeviceManager<TDeviceConfiguration extends DeviceConfiguration>
 
   /// Ask this [DeviceManager] to disconnect from the device.
   ///
+  /// All sampling on this device will be stopped before disconnection is
+  /// initiate.
+  ///
   /// Returns true if successful, false if not.
   @nonVirtual
   Future<bool> disconnect() async {
@@ -218,6 +221,9 @@ abstract class DeviceManager<TDeviceConfiguration extends DeviceConfiguration>
 
     info(
         '$runtimeType - Trying to disconnect to device of type: $typeName and id: $id');
+
+    stop(); // first stop all sampling on this device.
+
     success = await onDisconnect();
     status = (success) ? DeviceStatus.disconnected : DeviceStatus.error;
 
@@ -226,7 +232,7 @@ abstract class DeviceManager<TDeviceConfiguration extends DeviceConfiguration>
 
   /// Callback on [disconnect].
   ///
-  /// Is to be overridden in sub-classes.
+  /// Is to be overridden in sub-classes and implement device-specific disconnection.
   Future<bool> onDisconnect();
 
   @override
