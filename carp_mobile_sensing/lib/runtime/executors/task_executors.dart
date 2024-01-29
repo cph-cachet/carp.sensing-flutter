@@ -50,12 +50,24 @@ abstract class TaskExecutor<TConfig extends TaskConfiguration>
 class BackgroundTaskExecutor extends TaskExecutor<BackgroundTask> {
   @override
   Future<bool> onStart() async {
-    if (configuration?.duration != null) {
-      // if the task has a duration (optional), stop it again after this
-      Timer(Duration(seconds: configuration!.duration!.toSeconds().truncate()),
-          () => stop());
+    // Early out if no probes.
+    if (probes.isEmpty) return true;
+
+    // Check if the device for this task is connected.
+    if (probes.first.deviceManager.isConnected) {
+      if (configuration?.duration != null) {
+        // If the task has a duration (optional), stop it again after this duration has passed.
+        Timer(
+            Duration(seconds: configuration!.duration!.toSeconds().truncate()),
+            () => stop());
+      }
+      return await super.onStart();
+    } else {
+      warning(
+          'A $runtimeType could not be started since the device for this task is not connected. '
+          'Device type: ${probes.first.deviceManager.typeName}');
+      return false;
     }
-    return await super.onStart();
   }
 }
 

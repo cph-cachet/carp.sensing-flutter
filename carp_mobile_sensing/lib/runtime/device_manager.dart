@@ -68,6 +68,11 @@ abstract class DeviceManager<TDeviceConfiguration extends DeviceConfiguration>
     super.configuration = configuration;
     onInitialize(configuration);
 
+    // Listen to status events and when this device is (re)connected, restart sampling.
+    statusEvents
+        .where((status) => status == DeviceStatus.connected)
+        .listen((_) => restart());
+
     status = DeviceStatus.initialized;
   }
 
@@ -378,15 +383,7 @@ abstract class BTLEDeviceManager<
   ]);
 
   @override
-  @mustCallSuper
-  void onInitialize(TDeviceConfiguration configuration) {
-    statusEvents.listen((event) {
-      // when this device is (re)connected, restart sampling
-      if (event == DeviceStatus.connected) {
-        restart();
-      }
-    });
-  }
+  void onInitialize(TDeviceConfiguration configuration) {}
 }
 
 /// Runtime status for a [DeviceManager].
