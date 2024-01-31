@@ -19,8 +19,7 @@ class HealthService extends OnlineService {
   /// The default role name for a health service.
   static const String DEFAULT_ROLE_NAME = 'Health Service';
 
-  /// Create a new [HealthService] with a default role name, if not
-  /// specified.
+  /// Create a new [HealthService] with a default role name, if not specified.
   HealthService({super.roleName = HealthService.DEFAULT_ROLE_NAME});
 
   @override
@@ -64,18 +63,43 @@ class HealthServiceManager extends OnlineServiceManager<HealthService> {
   @override
   // ignore: avoid_renaming_method_parameters
   void onInitialize(HealthService service) {
-    // TODO - Populate [types] based on what is actually in the protocol
-    // and not just "everything", as done below.
+    // TODO - Populate [types] based on what is actually in the protocol and not just "everything", as done below.
     types = Platform.isIOS ? dataTypesIOS : dataTypesAndroid;
+
+    if (Platform.isAndroid) {
+      var sdkLevel = int.parse(DeviceInfo().sdk ?? '-1');
+      if (sdkLevel < 34) {
+        warning(
+            '$runtimeType - Trying to use Google Health Connect on a phone with SDK level < 34 (SDK is $sdkLevel). '
+            'In order to use Health Connect on this phone, you need to install Health Connect as a separate app. '
+            'Please read more about Health Connect at https://developer.android.com/health-and-fitness/guides/health-connect/develop/get-started');
+      }
+    }
   }
 
   @override
-  Future<bool> onHasPermissions() async =>
-      (types != null) ? await service?.hasPermissions(types!) ?? false : true;
+  Future<bool> onHasPermissions() async {
+    if (types != null) {
+      try {
+        await service?.hasPermissions(types!);
+      } catch (error) {
+        warning('$runtimeType - Error getting permission status - $error');
+        return false;
+      }
+    }
+    return true;
+  }
 
   @override
-  Future<void> onRequestPermissions() async =>
-      (types != null) ? await service?.requestAuthorization(types!) : null;
+  Future<void> onRequestPermissions() async {
+    if (types != null) {
+      try {
+        await service?.requestAuthorization(types!);
+      } catch (error) {
+        warning('$runtimeType - Error requesting permissions - $error');
+      }
+    }
+  }
 
   @override
   Future<bool> canConnect() async => true;

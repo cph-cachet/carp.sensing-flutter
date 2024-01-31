@@ -40,7 +40,7 @@ Then, follow the setup guides in the [health](https://pub.dev/packages/health#se
 
 This sampling package **only** supports Google [Health Connect](https://health.google/health-connect-android/). To configure your app to use Health Connect, follow the documentation on the [`health`](https://pub.dev/packages/health#health-connect-android-option-2) package and on the [Android Developer page](https://developer.android.com/guide/health-and-fitness/health-connect/get-started).
 
-Note that Health Connect requires API level 34 and quite some edits to the `Manifest.xml` file, including declaring permissions to access health data. Read more on [Health Connect data types and permissions](https://developer.android.com/health-and-fitness/guides/health-connect/plan/data-types).
+Note that Health Connect requires API level 34 and quite some edits to the `Manifest.xml` file, including declaring permissions to **all** the health data types you want to access. Read more on [Health Connect data types and permissions](https://developer.android.com/health-and-fitness/guides/health-connect/plan/data-types). If you are targeting SDK levels < 34 make sure to install the Health Connect app. Read more on the ["Get started with Health Connect "](https://developer.android.com/health-and-fitness/guides/health-connect/develop/get-started) page.
 
 ```xml
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
@@ -57,7 +57,7 @@ Note that Health Connect requires API level 34 and quite some edits to the `Mani
 
     ...
 
-     <!-- Permissions for new android API (Health Connect) -->
+     <!-- Permissions for Health Connect -->
     <uses-permission android:name="android.permission.health.READ_STEPS"/>
     <uses-permission android:name="android.permission.health.READ_WEIGHT"/>
 
@@ -135,10 +135,7 @@ When defining a study protocol with a health device, it would look like this:
 Data sampling can now be configured by a measure in the protocol. This measure is created using the factory method `getHealthMeasure` that takes a list of of [`HealthDataType`](https://pub.dev/documentation/health/latest/health/HealthDataType.html) types.
 
 ```dart
-  // Automatically collect the set of health data every hour.
-  //
-  // Note that the [HealthSamplingConfiguration] is a [HistoricSamplingConfiguration]
-  // which samples data back in time until last time, data was sampled.
+  // Automatically collect a set of health data every hour.
   protocol.addTaskControl(
       PeriodicTrigger(period: Duration(minutes: 60)),
       BackgroundTask(measures: [
