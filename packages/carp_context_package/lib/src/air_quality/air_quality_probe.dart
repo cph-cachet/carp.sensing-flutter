@@ -8,7 +8,7 @@ class AirQualityProbe extends MeasurementProbe {
 
   @override
   bool onInitialize() {
-    LocationManager().configure().then((_) => super.onInitialize());
+    LocationManager().enable().then((_) => super.onInitialize());
     return true;
   }
 

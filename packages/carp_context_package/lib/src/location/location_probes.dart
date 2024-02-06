@@ -16,7 +16,6 @@ class CurrentLocationProbe extends MeasurementProbe {
 
   @override
   Future<Measurement> getMeasurement() async {
-    debug('$runtimeType - getMeasurement called...');
     try {
       final location = await deviceManager.manager.getLocation();
       return Measurement.fromData(location);

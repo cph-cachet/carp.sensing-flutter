@@ -1,6 +1,7 @@
-## 1.4.1
+## 1.4.2
 
 * default location updated changed to one minute (instead of 1 second)
+* improvements to permission handling in the Location Manager
 
 ## 1.4.0
 

@@ -15,7 +15,7 @@ class WeatherService extends OnlineService {
       '${DeviceConfiguration.DEVICE_NAMESPACE}.WeatherService';
 
   /// The default role name for a weather service.
-  static const String DEFAULT_ROLENAME = 'Weather Service';
+  static const String DEFAULT_ROLE_NAME = 'Weather Service';
 
   /// API key for the Open Weather API.
   String apiKey;
@@ -24,7 +24,7 @@ class WeatherService extends OnlineService {
     String? roleName,
     required this.apiKey,
   }) : super(
-          roleName: roleName ?? DEFAULT_ROLENAME,
+          roleName: roleName ?? DEFAULT_ROLE_NAME,
         );
 
   @override
@@ -49,7 +49,8 @@ class WeatherServiceManager extends OnlineServiceManager<WeatherService> {
 
   @override
   List<Permission> get permissions => [
-        Permission.locationWhenInUse,
+        // Permission.location,
+        // Permission.locationWhenInUse,
       ];
 
   @override
@@ -63,7 +64,13 @@ class WeatherServiceManager extends OnlineServiceManager<WeatherService> {
   ]) : super(WeatherService.DEVICE_TYPE, configuration);
 
   @override
-  Future<void> onRequestPermissions() async {}
+  Future<bool> onHasPermissions() async =>
+      (await LocationManager().hasPermission()) ==
+      location.PermissionStatus.granted;
+
+  @override
+  Future<void> onRequestPermissions() async =>
+      await LocationManager().requestPermission();
 
   @override
   // ignore: avoid_renaming_method_parameters
