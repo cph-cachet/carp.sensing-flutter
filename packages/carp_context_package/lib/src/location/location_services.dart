@@ -108,8 +108,9 @@ class LocationServiceManager extends OnlineServiceManager<LocationService> {
   Future<bool> canConnect() async => true;
 
   @override
-  Future<DeviceStatus> onConnect() async =>
-      manager.enabled ? DeviceStatus.connected : DeviceStatus.disconnected;
+  Future<DeviceStatus> onConnect() async => manager.enabled
+      ? DeviceStatus.connected
+      : (await manager.enable().then((_) => DeviceStatus.connected));
 
   @override
   Future<bool> onDisconnect() async => true;
