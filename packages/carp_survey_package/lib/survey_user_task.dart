@@ -15,6 +15,7 @@ part of survey;
 class SurveyUserTask extends UserTask {
   static const String SURVEY_TYPE = 'survey';
   static const String COGNITIVE_ASSESSMENT_TYPE = 'cognition';
+  static const String HEALTH_ASSESSMENT_TYPE = 'health';
   static const String INFORMED_CONSENT_TYPE = 'informed_consent';
 
   // late BuildContext _context;

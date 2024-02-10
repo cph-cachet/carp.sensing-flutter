@@ -218,21 +218,21 @@ abstract class DeviceManager<TDeviceConfiguration extends DeviceConfiguration>
   @nonVirtual
   Future<bool> disconnect() async {
     bool success = false;
-    if (status != DeviceStatus.connected) {
+    if (status == DeviceStatus.connected || status == DeviceStatus.connecting) {
+      info(
+          '$runtimeType - Trying to disconnect to device of type: $typeName and id: $id');
+
+      stop(); // first stop all sampling on this device.
+
+      success = await onDisconnect();
+      status = (success) ? DeviceStatus.disconnected : DeviceStatus.error;
+
+      return success;
+    } else {
       warning(
           '$runtimeType is not connected, so nothing to disconnect from....');
       return true;
     }
-
-    info(
-        '$runtimeType - Trying to disconnect to device of type: $typeName and id: $id');
-
-    stop(); // first stop all sampling on this device.
-
-    success = await onDisconnect();
-    status = (success) ? DeviceStatus.disconnected : DeviceStatus.error;
-
-    return success;
   }
 
   /// Callback on [disconnect].

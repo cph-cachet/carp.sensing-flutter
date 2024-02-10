@@ -1,3 +1,7 @@
+## 1.4.1
+
+* added support for `HEALTH_ASSESSMENT_TYPE` as a task type, which is typically used in connection with the [carp_health_package](https://pub.dev/packages/carp_health_package)
+
 ## 1.4.0
 
 * upgrade to Dart 3.2
