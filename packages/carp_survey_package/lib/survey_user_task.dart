@@ -13,9 +13,14 @@ part of survey;
 /// and can be accessed from here. When a user starts this user task, the
 /// [onStart] method is called, and the survey (a [RPTask]) is shown.
 class SurveyUserTask extends UserTask {
+  //
+  // A set if predefined commonly used task types.
   static const String SURVEY_TYPE = 'survey';
   static const String COGNITIVE_ASSESSMENT_TYPE = 'cognition';
   static const String HEALTH_ASSESSMENT_TYPE = 'health';
+  static const String AUDIO_TYPE = 'audio';
+  static const String VIDEO_TYPE = 'video';
+  static const String IMAGE_TYPE = 'image';
   static const String INFORMED_CONSENT_TYPE = 'informed_consent';
 
   // late BuildContext _context;

@@ -1,6 +1,6 @@
-## 1.4.1
+## 1.4.2
 
-* added support for `HEALTH_ASSESSMENT_TYPE` as a task type, which is typically used in connection with the [carp_health_package](https://pub.dev/packages/carp_health_package)
+* added support for different commonly used task types.
 
 ## 1.4.0
 
