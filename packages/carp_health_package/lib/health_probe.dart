@@ -90,6 +90,7 @@ class HealthProbe extends StreamProbe {
               data: HealthData.fromHealthDataPoint(data)));
         }
       } catch (exception) {
+        warning("$runtimeType - Error collecting health data. $exception");
         _ctrl.addError(exception);
         return false;
       }
