@@ -54,7 +54,7 @@ class HealthServiceManager extends OnlineServiceManager<HealthService> {
   List<Permission> get permissions => [];
 
   /// Which health data types should this service access.
-  List<HealthDataType>? types;
+  List<HealthDataType> types = [];
 
   HealthServiceManager([
     HealthService? configuration,
@@ -77,24 +77,54 @@ class HealthServiceManager extends OnlineServiceManager<HealthService> {
     }
   }
 
+  // There is an issue with Apple Health.
+  // When asking for "hasPermissions" on the service, it always return "null".
+  //  - https://github.com/cph-cachet/flutter-plugins/issues/892
+  //
+  // So need to keep track of status here.
+  //
+  // There is an issue with Android / Health Connect.
+  // When asking for "requestAuthorization" on the service, it never returns.
+  //  - https://github.com/cph-cachet/flutter-plugins/issues/897
+  //
+  // So - can't await this call.
+
+  bool _hasPermissions = false;
+
   @override
   Future<bool> onHasPermissions() async {
-    if (types != null) {
-      try {
-        await service?.hasPermissions(types!);
-      } catch (error) {
-        warning('$runtimeType - Error getting permission status - $error');
-        return false;
+    if (!_hasPermissions) {
+      if (types.isNotEmpty) {
+        try {
+          if (Platform.isIOS) {
+            // the only way to know if permissions is granted on iOS is via the
+            // requestAuthorization() method (see issue above)
+            _hasPermissions =
+                await service?.requestAuthorization(types) ?? false;
+          } else if (Platform.isAndroid) {
+            _hasPermissions = await service?.hasPermissions(types) ?? false;
+          }
+        } catch (error) {
+          warning('$runtimeType - Error getting permission status - $error');
+        }
+      } else {
+        _hasPermissions = true;
       }
     }
-    return true;
+    return _hasPermissions;
   }
 
   @override
   Future<void> onRequestPermissions() async {
-    if (types != null) {
+    if (types.isNotEmpty) {
       try {
-        await service?.requestAuthorization(types!);
+        if (Platform.isIOS) {
+          _hasPermissions = await service?.requestAuthorization(types) ?? false;
+        } else if (Platform.isAndroid) {
+          // on Android the requestAuthorization() method never returns - so
+          // don't await it
+          service?.requestAuthorization(types);
+        }
       } catch (error) {
         warning('$runtimeType - Error requesting permissions - $error');
       }

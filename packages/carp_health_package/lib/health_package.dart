@@ -138,17 +138,12 @@ const List<HealthDataType> dataTypesIOS = [
   HealthDataType.ELECTRODERMAL_ACTIVITY,
   HealthDataType.FORCED_EXPIRATORY_VOLUME,
   HealthDataType.HEART_RATE,
-  HealthDataType.HEART_RATE_VARIABILITY_SDNN,
+  HealthDataType.WALKING_HEART_RATE,
   HealthDataType.HEIGHT,
-  HealthDataType.HIGH_HEART_RATE_EVENT,
   HealthDataType.RESPIRATORY_RATE,
   HealthDataType.PERIPHERAL_PERFUSION_INDEX,
-  HealthDataType.IRREGULAR_HEART_RATE_EVENT,
-  HealthDataType.LOW_HEART_RATE_EVENT,
-  HealthDataType.RESTING_HEART_RATE,
   HealthDataType.STEPS,
   HealthDataType.WAIST_CIRCUMFERENCE,
-  HealthDataType.WALKING_HEART_RATE,
   HealthDataType.WEIGHT,
   HealthDataType.FLIGHTS_CLIMBED,
   HealthDataType.DISTANCE_WALKING_RUNNING,
@@ -167,7 +162,15 @@ const List<HealthDataType> dataTypesIOS = [
   HealthDataType.HEADACHE_SEVERE,
   HealthDataType.HEADACHE_UNSPECIFIED,
   HealthDataType.AUDIOGRAM,
+
+  // note that a phone cannot write these ECG-based types - only read them
   HealthDataType.ELECTROCARDIOGRAM,
+  HealthDataType.HIGH_HEART_RATE_EVENT,
+  HealthDataType.IRREGULAR_HEART_RATE_EVENT,
+  HealthDataType.LOW_HEART_RATE_EVENT,
+  HealthDataType.RESTING_HEART_RATE,
+  HealthDataType.HEART_RATE_VARIABILITY_SDNN,
+
   HealthDataType.NUTRITION,
 ];
 

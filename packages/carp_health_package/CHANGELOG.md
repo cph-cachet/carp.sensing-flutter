@@ -1,3 +1,8 @@
+## 2.9.3
+
+* update to `health` v. 9.x
+* better handling of different issues on iOS and Health Connect in terms of permissions
+
 ## 2.9.2
 
 * only using Health Connect on Android - discontinued support for Google Fit.
