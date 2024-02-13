@@ -24,7 +24,7 @@ enum PolarDeviceType {
 /// A [DeviceConfiguration] for a Polar device used in a [StudyProtocol].
 ///
 /// This device descriptor defined the basic configuration of the Polar
-/// device, including the [polarDeviceType], the [identifier], and the [name]
+/// device, including the [deviceType], the [identifier], and the [name]
 /// of the device.
 @JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
 class PolarDevice extends BLEHeartRateDevice {
@@ -33,7 +33,7 @@ class PolarDevice extends BLEHeartRateDevice {
       '${DeviceConfiguration.DEVICE_NAMESPACE}.PolarDevice';
 
   /// The default role name for a Polar device.
-  static const String DEFAULT_ROLENAME = 'Polar HR Device';
+  static const String DEFAULT_ROLE_NAME = 'Polar HR Device';
 
   /// The polar sensor settings.
   /// This is know only **after** a polar device is connected.
@@ -48,7 +48,7 @@ class PolarDevice extends BLEHeartRateDevice {
   String? address;
 
   /// The type of Polar device, if known.
-  PolarDeviceType? polarDeviceType;
+  PolarDeviceType? deviceType;
 
   /// The user-friendly name of the sensor.
   String? name;
@@ -58,9 +58,9 @@ class PolarDevice extends BLEHeartRateDevice {
 
   /// Create a new [PolarDevice].
   PolarDevice({
-    super.roleName = PolarDevice.DEFAULT_ROLENAME,
+    super.roleName = PolarDevice.DEFAULT_ROLE_NAME,
     super.isOptional = true,
-    this.polarDeviceType,
+    this.deviceType,
     this.identifier,
     this.name,
   });
@@ -117,16 +117,16 @@ class PolarDeviceManager extends BTLEDeviceManager<PolarDevice> {
 
       switch (btleName.split(' ').elementAt(1).toUpperCase()) {
         case 'H9':
-          configuration?.polarDeviceType = PolarDeviceType.H9;
+          configuration?.deviceType = PolarDeviceType.H9;
           break;
         case 'H10':
-          configuration?.polarDeviceType = PolarDeviceType.H10;
+          configuration?.deviceType = PolarDeviceType.H10;
           break;
         case 'SENSE':
-          configuration?.polarDeviceType = PolarDeviceType.SENSE;
+          configuration?.deviceType = PolarDeviceType.SENSE;
           break;
         default:
-          configuration?.polarDeviceType = PolarDeviceType.UNKNOWN;
+          configuration?.deviceType = PolarDeviceType.UNKNOWN;
           break;
       }
     }
@@ -135,7 +135,6 @@ class PolarDeviceManager extends BTLEDeviceManager<PolarDevice> {
   /// Are the [features] available (i.e., received from the device)?
   bool get polarFeaturesAvailable => _polarFeaturesAvailable;
 
-  /// The latest read of the battery level of the Polar device.
   @override
   int? get batteryLevel => _batteryLevel;
 

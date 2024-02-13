@@ -1,5 +1,38 @@
 part of carp_movesense_package;
 
+/// Different states of the Movensense device.
+///
+/// See https://www.movesense.com/docs/esw/api_reference/#systemstates for an
+/// overview.
+enum MovesenseDeviceState {
+  /// Device is moving.
+  moving,
+
+  /// Device connected to gear (e.g., strap).
+  connected,
+
+  /// Device tapped once.
+  tap,
+
+  /// Device double tapped.
+  doubleTap,
+
+  /// Device is in free fall (no gravity).
+  freeFall,
+}
+
+@JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
+class MovesenseStateChange {
+  final MovesenseDeviceState state;
+
+  MovesenseStateChange(this.state) 
+
+  factory MovesenseStateChange.fromJson(Map<String, dynamic> json) =>
+      _$MovesenseStateChangeFromJson(json);
+  Map<String, dynamic> toJson() => _$MovesenseStateChangeToJson(this);
+
+}
+
 @JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
 class MovesenseHRSample {
   final double hr;

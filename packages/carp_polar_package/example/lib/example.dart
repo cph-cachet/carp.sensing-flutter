@@ -26,7 +26,7 @@ void main() async {
     roleName: 'hr-sensor',
     identifier: '1C709B20',
     name: 'H10',
-    polarDeviceType: PolarDeviceType.H10,
+    deviceType: PolarDeviceType.H10,
   );
 
   protocol

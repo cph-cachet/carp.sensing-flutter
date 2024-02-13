@@ -310,9 +310,9 @@ Map<String, dynamic> _$PolarHRToJson(PolarHR instance) {
 }
 
 PolarDevice _$PolarDeviceFromJson(Map<String, dynamic> json) => PolarDevice(
-      roleName: json['roleName'] as String? ?? PolarDevice.DEFAULT_ROLENAME,
+      roleName: json['roleName'] as String? ?? PolarDevice.DEFAULT_ROLE_NAME,
       isOptional: json['isOptional'] as bool? ?? true,
-      polarDeviceType: $enumDecodeNullable(
+      deviceType: $enumDecodeNullable(
           _$PolarDeviceTypeEnumMap, json['polarDeviceType']),
       identifier: json['identifier'] as String?,
       name: json['name'] as String?,
@@ -348,7 +348,7 @@ Map<String, dynamic> _$PolarDeviceToJson(PolarDevice instance) {
   writeNotNull('identifier', instance.identifier);
   writeNotNull('address', instance.address);
   writeNotNull(
-      'polarDeviceType', _$PolarDeviceTypeEnumMap[instance.polarDeviceType]);
+      'polarDeviceType', _$PolarDeviceTypeEnumMap[instance.deviceType]);
   writeNotNull('name', instance.name);
   writeNotNull('rssi', instance.rssi);
   return val;

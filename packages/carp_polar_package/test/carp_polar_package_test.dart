@@ -38,7 +38,7 @@ void main() {
       roleName: 'Polar H10 HR monitor',
       identifier: deviceId,
       name: 'H10',
-      polarDeviceType: PolarDeviceType.H10,
+      deviceType: PolarDeviceType.H10,
     );
 
     protocol
