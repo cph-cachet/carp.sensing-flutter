@@ -254,11 +254,8 @@ abstract class _ExecutorStateMachine {
 }
 
 abstract class _AbstractExecutorState implements _ExecutorStateMachine {
-  @override
-  ExecutorState state;
-
   AbstractExecutor<dynamic> executor;
-  _AbstractExecutorState(this.executor, this.state);
+  _AbstractExecutorState(this.executor);
 
   // Default behavior is to print a warning.
   // If a state supports this method, this behavior is overwritten in
@@ -274,8 +271,9 @@ abstract class _AbstractExecutorState implements _ExecutorStateMachine {
   // Default stop behavior. A Executor can be stopped in all states.
   @override
   void stop() {
-    executor.onStop();
-    executor._setState(_StoppedState(executor));
+    executor.onStop().then((stopped) {
+      if (stopped) executor._setState(_StoppedState(executor));
+    });
   }
 
   // Default error behavior. A Executor can experience an error and become
@@ -288,12 +286,18 @@ abstract class _AbstractExecutorState implements _ExecutorStateMachine {
 
   void _printWarning(String operation) => warning(
       'Trying to $operation a ${executor.runtimeType} in a state where this cannot be done - state: $state');
+
+  @override
+  String toString() => state.name;
 }
 
 class _CreatedState extends _AbstractExecutorState
     implements _ExecutorStateMachine {
   _CreatedState(Executor<dynamic> executor)
-      : super(executor as AbstractExecutor, ExecutorState.created);
+      : super(executor as AbstractExecutor);
+
+  @override
+  ExecutorState get state => ExecutorState.created;
 
   @override
   void initialize() {
@@ -306,32 +310,15 @@ class _CreatedState extends _AbstractExecutorState
       executor._setState(_UndefinedState(executor));
     }
   }
-
-  @override
-  String toString() => 'created';
 }
 
 class _InitializedState extends _AbstractExecutorState
     implements _ExecutorStateMachine {
   _InitializedState(Executor<dynamic> executor)
-      : super(executor as AbstractExecutor, ExecutorState.initialized);
+      : super(executor as AbstractExecutor);
 
   @override
-  void start() {
-    executor.onStart().then((started) {
-      if (started) executor._setState(_StartedState(executor));
-      executor._isStarting = false;
-    });
-  }
-
-  @override
-  String toString() => 'initialized';
-}
-
-class _StartedState extends _AbstractExecutorState
-    implements _ExecutorStateMachine {
-  _StartedState(Executor<dynamic> executor)
-      : super(executor as AbstractExecutor, ExecutorState.started);
+  ExecutorState get state => ExecutorState.initialized;
 
   @override
   void start() {
@@ -347,39 +334,33 @@ class _StartedState extends _AbstractExecutorState
       if (restarted) executor.start();
     });
   }
-
-  @override
-  void stop() {
-    executor.onStop().then((stopped) {
-      if (stopped) executor._setState(_StoppedState(executor));
-    });
-  }
-
-  @override
-  String toString() => 'started';
 }
 
-class _StoppedState extends _AbstractExecutorState
-    implements _ExecutorStateMachine {
+class _StartedState extends _InitializedState implements _ExecutorStateMachine {
+  _StartedState(Executor<dynamic> executor)
+      : super(executor as AbstractExecutor);
+
+  @override
+  ExecutorState get state => ExecutorState.started;
+}
+
+class _StoppedState extends _InitializedState implements _ExecutorStateMachine {
   _StoppedState(Executor<dynamic> executor)
-      : super(executor as AbstractExecutor, ExecutorState.stopped);
+      : super(executor as AbstractExecutor);
 
   @override
-  void start() {
-    executor.onStart().then((started) {
-      if (started) executor._setState(_StartedState(executor));
-      executor._isStarting = false;
-    });
-  }
+  ExecutorState get state => ExecutorState.stopped;
 
   @override
-  String toString() => 'stopped';
+  void stop() => warning(
+      'Trying to stop a ${executor.runtimeType} but it is already stopped. '
+      'Ignoring this.');
 }
 
 class _UndefinedState extends _AbstractExecutorState
     implements _ExecutorStateMachine {
   _UndefinedState(Executor<dynamic> executor)
-      : super(executor as AbstractExecutor, ExecutorState.undefined);
+      : super(executor as AbstractExecutor);
   @override
-  String toString() => 'undefined';
+  ExecutorState get state => ExecutorState.undefined;
 }

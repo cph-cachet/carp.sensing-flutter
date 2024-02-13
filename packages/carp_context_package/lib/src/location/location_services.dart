@@ -14,8 +14,8 @@ class LocationService extends OnlineService {
   static const String DEVICE_TYPE =
       '${DeviceConfiguration.DEVICE_NAMESPACE}.LocationService';
 
-  /// The default rolename for a location service.
-  static const String DEFAULT_ROLENAME = 'Location Service';
+  /// The default role name for a location service.
+  static const String DEFAULT_ROLE_NAME = 'Location Service';
 
   /// Defines the desired accuracy that should be used to determine the location
   /// data. Default value is [GeolocationAccuracy.balanced].
@@ -24,10 +24,10 @@ class LocationService extends OnlineService {
   /// The minimum distance in meters a device must move horizontally
   /// before an update event is generated.
   /// Specify 0 when you want to be notified of all movements.
-  double distance = 0;
+  double distance = 10;
 
-  /// The interval between location updates.
-  late Duration interval;
+  /// The time interval between location updates.
+  Duration interval = const Duration(minutes: 1);
 
   /// The title of the notification to be shown to the user when
   /// location tracking takes place in the background.
@@ -55,25 +55,21 @@ class LocationService extends OnlineService {
   /// Create and configure a [LocationService].
   ///
   /// Default configuration is:
-  ///  * roleName = "location_service"
+  ///  * roleName = "Location Service"
   ///  * accuracy = balanced
-  ///  * distance = 0
+  ///  * distance = 10 meters
   ///  * interval = 1 minute
   LocationService({
     String? roleName,
     this.accuracy = GeolocationAccuracy.balanced,
-    this.distance = 0,
-    Duration? interval,
+    this.distance = 10,
+    this.interval = const Duration(minutes: 1),
     this.notificationTitle,
     this.notificationMessage,
     this.notificationDescription,
     this.notificationIconName,
     this.notificationOnTapBringToFront = false,
-  }) : super(
-          roleName: roleName ?? DEFAULT_ROLENAME,
-        ) {
-    this.interval = interval ?? const Duration(minutes: 1);
-  }
+  }) : super(roleName: roleName ?? DEFAULT_ROLE_NAME);
 
   @override
   Function get fromJsonFunction => _$LocationServiceFromJson;
@@ -89,7 +85,10 @@ class LocationServiceManager extends OnlineServiceManager<LocationService> {
   LocationManager manager = LocationManager();
 
   @override
-  List<Permission> get permissions => [Permission.locationAlways];
+  List<Permission> get permissions => [
+        // Permission.location,
+        // Permission.locationAlways,
+      ];
 
   @override
   String get id => manager.hashCode.toString();
@@ -103,21 +102,23 @@ class LocationServiceManager extends OnlineServiceManager<LocationService> {
 
   @override
   // ignore: avoid_renaming_method_parameters
-  void onInitialize(LocationService service) {}
+  void onInitialize(LocationService service) => manager.configure(service);
 
   @override
   Future<bool> canConnect() async => true;
 
   @override
-  Future<DeviceStatus> onConnect() async {
-    await manager.configure(configuration);
-    return manager.enabled ? DeviceStatus.connected : DeviceStatus.disconnected;
-  }
+  Future<DeviceStatus> onConnect() async => manager.enabled
+      ? DeviceStatus.connected
+      : (await manager.enable().then((_) => DeviceStatus.connected));
 
   @override
   Future<bool> onDisconnect() async => true;
 
   @override
+  Future<bool> onHasPermissions() async => await manager.isGranted();
+
+  @override
   Future<void> onRequestPermissions() async =>
-      LocationManager().requestPermission();
+      await manager.requestPermission();
 }

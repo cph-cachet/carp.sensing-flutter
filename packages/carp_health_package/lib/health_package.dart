@@ -27,31 +27,31 @@ part 'health_package.g.dart';
 part 'health_probe.dart';
 part 'health_services.dart';
 
-// HealthFactory _healthFactory = HealthFactory();
-
 /// The health sampling package supports the following overall measure type:
 ///
 ///  * `dk.cachet.carp.health`
 ///
-/// In order to specify which health data to collect, a `HealthSamplingConfiguration`
-/// needs to specified.
-/// An example of a configuration of collection of health data once pr. hours is:
+/// In order to specify which health data to collect, a factory method called
+/// `getHealthMeasure` can be used.
+///
+/// An example of a configuration of a study protocol using a health service to
+/// collect a set of health data once pr. hours is:
 ///
 /// ```dart
-///   protocol.addTriggeredTask(
-///         IntervalTrigger(period: Duration(minutes: 60)),
-///         BackgroundTask()
-///           ..addMeasure(Measure(type: HealthSamplingPackage.HEALTH)
-///             ..overrideSamplingConfiguration =
-///                 HealthSamplingConfiguration(healthDataTypes: [
-///               HealthDataType.BLOOD_GLUCOSE,
-///               HealthDataType.BLOOD_PRESSURE_DIASTOLIC,
-///               HealthDataType.BLOOD_PRESSURE_SYSTOLIC,
-///               HealthDataType.BLOOD_PRESSURE_DIASTOLIC,
-///               HealthDataType.HEART_RATE,
-///               HealthDataType.STEPS,
-///             ])),
-///         phone);
+///  final healthService = HealthService(types: healthDataTypes);
+///  protocol.addConnectedDevice(healthService, phone);
+///
+///  protocol.addTaskControl(
+///      PeriodicTrigger(period: Duration(minutes: 60)),
+///      BackgroundTask(measures: [
+///        HealthSamplingPackage.getHealthMeasure([
+///          HealthDataType.STEPS,
+///          HealthDataType.BASAL_ENERGY_BURNED,
+///          HealthDataType.WEIGHT,
+///          HealthDataType.SLEEP_SESSION,
+///        ])
+///      ]),
+///      healthService);
 /// ```
 ///
 /// To use this package, register it in the [carp_mobile_sensing] package using
@@ -62,11 +62,25 @@ part 'health_services.dart';
 class HealthSamplingPackage extends SmartphoneSamplingPackage {
   static const String HEALTH_NAMESPACE = "${NameSpace.CARP}.health";
 
-  /// Measure type for collection of health data from Apple Health or Google Fit.
+  /// Generic measure type for collection of health data from Apple Health or
+  /// Google Health Connect.
   ///  * One-time measure.
-  ///  * Uses the [Smartphone] master device for data collection.
+  ///  * Uses the [HealthService] device for data collection.
   ///  * Use a [HealthSamplingConfiguration] for sampling configuration.
-  static const String HEALTH = "${NameSpace.CARP}.health";
+  ///
+  /// Use [getHealthMeasure] to get specific health measure
+  /// type to collect.
+  static const String HEALTH = HEALTH_NAMESPACE;
+
+  /// Returns a health measure for the specified list of health data [types].
+  /// Data will be collected [days] days back in time. If not specified,
+  /// data will be collected for the last 30 days, which is the maximum
+  /// that Google Health Connect allow.
+  static Measure getHealthMeasure(List<HealthDataType> types,
+          [int days = 30]) =>
+      Measure(type: HealthSamplingPackage.HEALTH)
+        ..overrideSamplingConfiguration = HealthSamplingConfiguration(
+            past: Duration(days: days), healthDataTypes: types);
 
   final _deviceManager = HealthServiceManager();
 
@@ -80,6 +94,7 @@ class HealthSamplingPackage extends SmartphoneSamplingPackage {
               timeType: DataTimeType.TIME_SPAN,
             ),
             HealthSamplingConfiguration(
+                past: Duration(days: 30),
                 healthDataTypes: [HealthDataType.STEPS]))
       ]);
 
@@ -89,7 +104,7 @@ class HealthSamplingPackage extends SmartphoneSamplingPackage {
   @override
   void onRegister() {
     FromJsonFactory().registerAll([
-      HealthService(types: []),
+      HealthService(),
       HealthSamplingConfiguration(healthDataTypes: []),
     ]);
   }
@@ -103,3 +118,92 @@ class HealthSamplingPackage extends SmartphoneSamplingPackage {
   @override
   DeviceManager get deviceManager => _deviceManager;
 }
+
+/// Data types available on iOS.
+const List<HealthDataType> dataTypesIOS = [
+  HealthDataType.ACTIVE_ENERGY_BURNED,
+  HealthDataType.AUDIOGRAM,
+  HealthDataType.BASAL_ENERGY_BURNED,
+  HealthDataType.BLOOD_GLUCOSE,
+  HealthDataType.BLOOD_OXYGEN,
+  HealthDataType.BLOOD_PRESSURE_DIASTOLIC,
+  HealthDataType.BLOOD_PRESSURE_SYSTOLIC,
+  HealthDataType.BODY_FAT_PERCENTAGE,
+  HealthDataType.BODY_MASS_INDEX,
+  HealthDataType.BODY_TEMPERATURE,
+  HealthDataType.DIETARY_CARBS_CONSUMED,
+  HealthDataType.DIETARY_ENERGY_CONSUMED,
+  HealthDataType.DIETARY_FATS_CONSUMED,
+  HealthDataType.DIETARY_PROTEIN_CONSUMED,
+  HealthDataType.ELECTRODERMAL_ACTIVITY,
+  HealthDataType.FORCED_EXPIRATORY_VOLUME,
+  HealthDataType.HEART_RATE,
+  HealthDataType.WALKING_HEART_RATE,
+  HealthDataType.HEIGHT,
+  HealthDataType.RESPIRATORY_RATE,
+  HealthDataType.PERIPHERAL_PERFUSION_INDEX,
+  HealthDataType.STEPS,
+  HealthDataType.WAIST_CIRCUMFERENCE,
+  HealthDataType.WEIGHT,
+  HealthDataType.FLIGHTS_CLIMBED,
+  HealthDataType.DISTANCE_WALKING_RUNNING,
+  HealthDataType.MINDFULNESS,
+  HealthDataType.SLEEP_AWAKE,
+  HealthDataType.SLEEP_ASLEEP,
+  HealthDataType.SLEEP_IN_BED,
+  HealthDataType.SLEEP_DEEP,
+  HealthDataType.SLEEP_REM,
+  HealthDataType.WATER,
+  HealthDataType.EXERCISE_TIME,
+  HealthDataType.WORKOUT,
+  HealthDataType.HEADACHE_NOT_PRESENT,
+  HealthDataType.HEADACHE_MILD,
+  HealthDataType.HEADACHE_MODERATE,
+  HealthDataType.HEADACHE_SEVERE,
+  HealthDataType.HEADACHE_UNSPECIFIED,
+  HealthDataType.AUDIOGRAM,
+
+  // note that a phone cannot write these ECG-based types - only read them
+  HealthDataType.ELECTROCARDIOGRAM,
+  HealthDataType.HIGH_HEART_RATE_EVENT,
+  HealthDataType.IRREGULAR_HEART_RATE_EVENT,
+  HealthDataType.LOW_HEART_RATE_EVENT,
+  HealthDataType.RESTING_HEART_RATE,
+  HealthDataType.HEART_RATE_VARIABILITY_SDNN,
+
+  HealthDataType.NUTRITION,
+];
+
+/// Data types available on Android.
+///
+/// Note that these are only the ones supported in Android's Health Connect API.
+const List<HealthDataType> dataTypesAndroid = [
+  HealthDataType.ACTIVE_ENERGY_BURNED,
+  HealthDataType.BASAL_ENERGY_BURNED,
+  HealthDataType.BLOOD_GLUCOSE,
+  HealthDataType.BLOOD_OXYGEN,
+  HealthDataType.BLOOD_PRESSURE_DIASTOLIC,
+  HealthDataType.BLOOD_PRESSURE_SYSTOLIC,
+  HealthDataType.BODY_FAT_PERCENTAGE,
+  HealthDataType.HEIGHT,
+  HealthDataType.WEIGHT,
+  HealthDataType.FLIGHTS_CLIMBED,
+  HealthDataType.BODY_MASS_INDEX,
+  HealthDataType.BODY_TEMPERATURE,
+  HealthDataType.HEART_RATE,
+  HealthDataType.RESTING_HEART_RATE,
+  HealthDataType.STEPS,
+  HealthDataType.DISTANCE_DELTA,
+  HealthDataType.RESPIRATORY_RATE,
+  HealthDataType.SLEEP_AWAKE,
+  HealthDataType.SLEEP_ASLEEP,
+  HealthDataType.SLEEP_LIGHT,
+  HealthDataType.SLEEP_DEEP,
+  HealthDataType.SLEEP_REM,
+  HealthDataType.SLEEP_SESSION,
+  HealthDataType.WATER,
+  HealthDataType.WORKOUT,
+  HealthDataType.RESTING_HEART_RATE,
+  HealthDataType.FLIGHTS_CLIMBED,
+  HealthDataType.NUTRITION,
+];

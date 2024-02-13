@@ -1,3 +1,11 @@
+## 1.4.4
+
+* upgrade of plugins (battery_plus, sensor_plus, cron)
+* support for specifying ("overriding") sampling frequency in sensor measures (accelerometer, gyroscope, magnetometer) by using a `IntervalSamplingConfiguration`
+* improvement to executor state machine
+* improvement to restarting sampling on device (re)connection, including now also online service like the location service
+* improvements to device manager
+
 ## 1.4.0+1
 
 * upgrade to Dart 3.2

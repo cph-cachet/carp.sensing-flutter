@@ -1,3 +1,9 @@
+## 1.4.3
+
+* default location updated changed to one minute (instead of 1 second)
+* improvements to permission handling in the Location Manager
+* improvements to connection handling in the Location Manager
+
 ## 1.4.0
 
 * upgrade to Dart 3.2

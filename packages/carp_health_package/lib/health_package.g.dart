@@ -134,12 +134,7 @@ Map<String, dynamic> _$HealthDataToJson(HealthData instance) {
 
 HealthService _$HealthServiceFromJson(Map<String, dynamic> json) =>
     HealthService(
-      roleName: json['roleName'] as String?,
-      types: (json['types'] as List<dynamic>)
-          .map((e) => $enumDecode(_$HealthDataTypeEnumMap, e))
-          .toList(),
-      useHealthConnectIfAvailable:
-          json['useHealthConnectIfAvailable'] as bool? ?? false,
+      roleName: json['roleName'] as String? ?? HealthService.DEFAULT_ROLE_NAME,
     )
       ..$type = json['__type'] as String?
       ..isOptional = json['isOptional'] as bool?
@@ -163,8 +158,5 @@ Map<String, dynamic> _$HealthServiceToJson(HealthService instance) {
   writeNotNull('isOptional', instance.isOptional);
   writeNotNull(
       'defaultSamplingConfiguration', instance.defaultSamplingConfiguration);
-  val['types'] =
-      instance.types.map((e) => _$HealthDataTypeEnumMap[e]!).toList();
-  val['useHealthConnectIfAvailable'] = instance.useHealthConnectIfAvailable;
   return val;
 }

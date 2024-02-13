@@ -100,7 +100,8 @@ class CarpDataManager extends AbstractDataManager {
     // fast exit if only upload on wifi and we're not on wifi
     if (carpEndPoint.onlyUploadOnWiFi &&
         connectivity != ConnectivityResult.wifi) {
-      warning('$runtimeType - No wifi connectivity - '
+      warning(
+          '$runtimeType - WiFi required by the data endpoint, but no wifi connectivity - '
           'cannot upload buffered data.');
       return;
     }
@@ -109,8 +110,19 @@ class CarpDataManager extends AbstractDataManager {
     try {
       // check if authenticated to CAWS and fast exit if not
       if (!CarpService().authenticated) {
-        warning('No user authenticated to CAWS - cannot upload data.');
+        warning('No user authenticated to CAWS. Cannot upload data.');
         return;
+      }
+
+      // check if token has expired, and try to refresh token, if so
+      if (CarpService().currentUser.token!.hasExpired) {
+        try {
+          await CarpService().refresh();
+        } catch (error) {
+          warning('$runtimeType - Failed to refresh access token - $error. '
+              'Cannot upload data.');
+          return;
+        }
       }
 
       final batches = await buffer.getDataStreamBatches(

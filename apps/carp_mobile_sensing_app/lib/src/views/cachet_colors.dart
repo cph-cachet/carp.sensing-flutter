@@ -1,7 +1,8 @@
 part of mobile_sensing_app;
 
-class CACHET {
-  static const Color CACHET_BLUE = Color.fromRGBO(97, 195, 217, 1.0);
+/// An implementation of the default CACHET colors.
+class CachetColors {
+  static const Color BLUE = Color.fromRGBO(97, 195, 217, 1.0);
   static const Color RED = Color.fromRGBO(213, 11, 51, 1.0);
   static const Color WHITE = Color.fromRGBO(255, 255, 255, 1.0);
   static const Color BLACK = Color.fromRGBO(1, 1, 1, 1.0);

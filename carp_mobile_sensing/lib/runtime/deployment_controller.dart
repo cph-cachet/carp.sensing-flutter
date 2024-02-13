@@ -99,6 +99,7 @@ class SmartphoneDeploymentController extends StudyRuntime<DeviceRegistration> {
     // if no cache, get the deployment from the deployment service
     // and save a local cache
     status = await super.tryDeployment();
+    debug('$runtimeType - got deployment: $deployment');
     if (status == StudyStatus.Deployed && deployment != null) {
       deployment!.deployed = DateTime.now().toUtc();
       // if no user is specified for this study, look up the local user id

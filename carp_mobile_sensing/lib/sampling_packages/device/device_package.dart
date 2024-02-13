@@ -89,13 +89,4 @@ class DeviceSamplingPackage extends SmartphoneSamplingPackage {
         return null;
     }
   }
-
-  @override
-  void onRegister() {
-    FromJsonFactory().register(DeviceInformation());
-    FromJsonFactory().register(BatteryState());
-    FromJsonFactory().register(FreeMemory());
-    FromJsonFactory().register(ScreenEvent());
-    FromJsonFactory().register(Timezone(''));
-  }
 }

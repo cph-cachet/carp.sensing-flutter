@@ -1,6 +1,7 @@
 part of mobile_sensing_app;
 
-class StudyDeploymentModel {
+/// A view model for the [StudyDeploymentPage] view.
+class StudyDeploymentViewModel {
   SmartphoneDeployment deployment;
 
   String get title => deployment.studyDescription?.title ?? '';
@@ -26,5 +27,5 @@ class StudyDeploymentModel {
   /// The total sampling size so far since this study was started.
   int get samplingSize => bloc.sensing.controller?.samplingSize ?? 0;
 
-  StudyDeploymentModel(this.deployment) : super();
+  StudyDeploymentViewModel(this.deployment) : super();
 }

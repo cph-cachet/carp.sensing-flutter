@@ -84,6 +84,7 @@ class PolarDeviceManager extends BTLEDeviceManager<PolarDevice> {
   StreamSubscription<PolarDeviceInfo>? _connectingSubscription;
   StreamSubscription<PolarDeviceInfo>? _connectedSubscription;
   StreamSubscription<PolarDeviceDisconnectedEvent>? _disconnectedSubscription;
+  StreamSubscription<PolarSdkFeatureReadyEvent>? _sdkFeatureSubscription;
 
   /// The [Polar] device handler.
   Polar get polar => _polar ??= Polar();
@@ -95,7 +96,7 @@ class PolarDeviceManager extends BTLEDeviceManager<PolarDevice> {
   List<PolarDataType> features = [];
 
   @override
-  String get id => configuration?.identifier ?? '?????';
+  String get id => configuration?.identifier ?? '---';
 
   @override
   String? get displayName => btleName;
@@ -107,7 +108,7 @@ class PolarDeviceManager extends BTLEDeviceManager<PolarDevice> {
   set btleName(String btleName) {
     configuration?.name = btleName;
 
-    // the polar BTLE name is typically of the form
+    // the Polar BTLE name is typically of the form
     //  *  Polar Sense B34B4B56
     //  *  Polar H10 B36KB56
     // I.e., on the form "Polar <type> <identifier>
@@ -200,7 +201,7 @@ class PolarDeviceManager extends BTLEDeviceManager<PolarDevice> {
         polar.connectToDevice(id, requestPermissions: true);
 
         // listen for what features the connected Polar device supports
-        polar.sdkFeatureReady.listen((event) {
+        _sdkFeatureSubscription = polar.sdkFeatureReady.listen((event) {
           debug('$runtimeType - Polar event : $event');
 
           if (configuration!.identifier == event.identifier &&
@@ -233,12 +234,17 @@ class PolarDeviceManager extends BTLEDeviceManager<PolarDevice> {
       return false;
     }
 
-    polar.disconnectFromDevice(configuration!.identifier!);
+    stop();
+
+    _batteryLevel = null;
 
     _batterySubscription?.cancel();
     _connectingSubscription?.cancel();
     _connectedSubscription?.cancel();
     _disconnectedSubscription?.cancel();
+    _sdkFeatureSubscription?.cancel();
+
+    await polar.disconnectFromDevice(configuration!.identifier!);
 
     return true;
   }

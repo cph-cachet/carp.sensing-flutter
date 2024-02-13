@@ -1,3 +1,7 @@
+## 1.3.3
+
+* refreshing authetication token on upload, if needed.
+
 ## 1.3.2
 
 * upgrade of `carp_webservices` package to 2.0.0

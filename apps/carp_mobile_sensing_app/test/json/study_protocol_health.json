@@ -23,15 +23,15 @@
             "name": "CARP Web Services",
             "onlyUploadOnWiFi": false,
             "uploadInterval": 10,
-            "deleteWhenUploaded": false
+            "deleteWhenUploaded": true
         }
     },
-    "id": "c29b1330-9dad-11ee-8593-77017332aeff",
-    "createdOn": "2023-12-18T14:00:11.492010Z",
+    "id": "5fddb150-af21-11ee-8305-3d2795ebc443",
+    "createdOn": "2024-01-09T19:00:37.221176Z",
     "version": 0,
     "description": "The default study testing coverage of most measures. Used in the coverage tests.",
     "ownerId": "979b408d-784e-4b1b-bb1e-ff9204e072f3",
-    "name": "CAMS Demo App Protocol - Single Participant Study",
+    "name": "CAMS Health Protocol",
     "participantRoles": [
         {
             "role": "Participant",
@@ -53,7 +53,7 @@
             "isOptional": true,
             "defaultSamplingConfiguration": {},
             "accuracy": "balanced",
-            "distance": 0.0,
+            "distance": 10.0,
             "interval": 60000000,
             "notificationOnTapBringToFront": false
         },
@@ -79,6 +79,21 @@
             "identifier": "B36B5B21",
             "polarDeviceType": "SENSE",
             "name": "Polar HR Sense"
+        },
+        {
+            "__type": "dk.cachet.carp.common.application.devices.HealthService",
+            "roleName": "Health Service",
+            "isOptional": true,
+            "defaultSamplingConfiguration": {},
+            "types": [
+                "DISTANCE_WALKING_RUNNING",
+                "EXERCISE_TIME",
+                "STEPS",
+                "BASAL_ENERGY_BURNED",
+                "WEIGHT",
+                "SLEEP_SESSION"
+            ],
+            "useHealthConnectIfAvailable": true
         }
     ],
     "connections": [
@@ -96,6 +111,10 @@
         },
         {
             "roleName": "Polar HR Device",
+            "connectedToRoleName": "Primary Phone"
+        },
+        {
+            "roleName": "Health Service",
             "connectedToRoleName": "Primary Phone"
         }
     ],
@@ -312,6 +331,47 @@
                     "type": "dk.cachet.carp.polar.hr"
                 }
             ]
+        },
+        {
+            "__type": "dk.cachet.carp.common.application.tasks.BackgroundTask",
+            "name": "Task #21",
+            "measures": [
+                {
+                    "__type": "dk.cachet.carp.common.application.tasks.Measure.DataStream",
+                    "type": "dk.cachet.carp.heartbeat"
+                },
+                {
+                    "__type": "dk.cachet.carp.common.application.tasks.Measure.DataStream",
+                    "type": "dk.cachet.carp.triggeredtask"
+                },
+                {
+                    "__type": "dk.cachet.carp.common.application.tasks.Measure.DataStream",
+                    "type": "dk.cachet.carp.completedtask"
+                }
+            ]
+        },
+        {
+            "__type": "dk.cachet.carp.common.application.tasks.BackgroundTask",
+            "name": "Task #22",
+            "measures": [
+                {
+                    "__type": "dk.cachet.carp.common.application.tasks.Measure.DataStream",
+                    "type": "dk.cachet.carp.health",
+                    "overrideSamplingConfiguration": {
+                        "__type": "dk.cachet.carp.common.application.sampling.HealthSamplingConfiguration",
+                        "past": 86400000000,
+                        "future": 86400000000,
+                        "healthDataTypes": [
+                            "DISTANCE_WALKING_RUNNING",
+                            "EXERCISE_TIME",
+                            "STEPS",
+                            "BASAL_ENERGY_BURNED",
+                            "WEIGHT",
+                            "SLEEP_SESSION"
+                        ]
+                    }
+                }
+            ]
         }
     ],
     "triggers": {
@@ -384,6 +444,15 @@
         "13": {
             "__type": "dk.cachet.carp.common.application.triggers.ImmediateTrigger",
             "sourceDeviceRoleName": "Polar HR Device"
+        },
+        "14": {
+            "__type": "dk.cachet.carp.common.application.triggers.NoOpTrigger",
+            "sourceDeviceRoleName": "Health Service"
+        },
+        "15": {
+            "__type": "dk.cachet.carp.common.application.triggers.PeriodicTrigger",
+            "sourceDeviceRoleName": "Health Service",
+            "period": 3600000000
         }
     },
     "taskControls": [
@@ -469,6 +538,18 @@
             "triggerId": 13,
             "taskName": "Task #20",
             "destinationDeviceRoleName": "Polar HR Device",
+            "control": "Start"
+        },
+        {
+            "triggerId": 14,
+            "taskName": "Task #21",
+            "destinationDeviceRoleName": "Health Service",
+            "control": "Start"
+        },
+        {
+            "triggerId": 15,
+            "taskName": "Task #22",
+            "destinationDeviceRoleName": "Health Service",
             "control": "Start"
         }
     ],

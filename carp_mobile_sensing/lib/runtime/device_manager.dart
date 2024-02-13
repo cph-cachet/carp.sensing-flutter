@@ -68,6 +68,11 @@ abstract class DeviceManager<TDeviceConfiguration extends DeviceConfiguration>
     super.configuration = configuration;
     onInitialize(configuration);
 
+    // Listen to status events and when this device is (re)connected, restart sampling.
+    statusEvents
+        .where((status) => status == DeviceStatus.connected)
+        .listen((_) => restart());
+
     status = DeviceStatus.initialized;
   }
 
@@ -177,7 +182,7 @@ abstract class DeviceManager<TDeviceConfiguration extends DeviceConfiguration>
 
   /// Callback on [connect]. Returns the [DeviceStatus] of the device.
   ///
-  /// Is to be overridden in sub-classes.
+  /// Is to be overridden in sub-classes and implement device-specific connection.
   Future<DeviceStatus> onConnect();
 
   /// Restart sampling of the measures using this device.
@@ -206,27 +211,33 @@ abstract class DeviceManager<TDeviceConfiguration extends DeviceConfiguration>
 
   /// Ask this [DeviceManager] to disconnect from the device.
   ///
+  /// All sampling on this device will be stopped before disconnection is
+  /// initiate.
+  ///
   /// Returns true if successful, false if not.
   @nonVirtual
   Future<bool> disconnect() async {
     bool success = false;
-    if (status != DeviceStatus.connected) {
+    if (status == DeviceStatus.connected || status == DeviceStatus.connecting) {
+      info(
+          '$runtimeType - Trying to disconnect to device of type: $typeName and id: $id');
+
+      stop(); // first stop all sampling on this device.
+
+      success = await onDisconnect();
+      status = (success) ? DeviceStatus.disconnected : DeviceStatus.error;
+
+      return success;
+    } else {
       warning(
           '$runtimeType is not connected, so nothing to disconnect from....');
       return true;
     }
-
-    info(
-        '$runtimeType - Trying to disconnect to device of type: $typeName and id: $id');
-    success = await onDisconnect();
-    status = (success) ? DeviceStatus.disconnected : DeviceStatus.error;
-
-    return success;
   }
 
   /// Callback on [disconnect].
   ///
-  /// Is to be overridden in sub-classes.
+  /// Is to be overridden in sub-classes and implement device-specific disconnection.
   Future<bool> onDisconnect();
 
   @override
@@ -372,15 +383,7 @@ abstract class BTLEDeviceManager<
   ]);
 
   @override
-  @mustCallSuper
-  void onInitialize(TDeviceConfiguration configuration) {
-    statusEvents.listen((event) {
-      // when this device is (re)connected, restart sampling
-      if (event == DeviceStatus.connected) {
-        restart();
-      }
-    });
-  }
+  void onInitialize(TDeviceConfiguration configuration) {}
 }
 
 /// Runtime status for a [DeviceManager].

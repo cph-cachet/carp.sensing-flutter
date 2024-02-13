@@ -17,6 +17,7 @@ part of carp_context_package;
 /// Note that this [LocationManager] **tries** to handle location permissions
 /// during its configuration (via the [configure] method) and the [hasPermission]
 /// and [requestPermission] methods.
+///
 /// **However**, it is much better - and also recommended by both Apple and
 /// Google - to handle permissions on an application level and show the location
 /// permission dialogue to the user **before** using probes that depend on location.
@@ -30,25 +31,31 @@ class LocationManager {
   /// Get the singleton [LocationManager] instance
   factory LocationManager() => _instance;
 
-  bool _enabled = false, _configuring = false;
+  bool _enabled = false, _configured = false;
   final _provider = location.Location();
 
   /// Is the location service enabled, which entails that
   ///  * location service is enabled
   ///  * permissions granted
-  ///  * configuration is done
   bool get enabled => _enabled;
 
-  /// Is service enabled in background mode?
+  /// Is the location service configured via the [configure] method.
+  bool get configured => _configured;
+
+  /// Is the location service enabled in background mode?
   Future<bool> isBackgroundModeEnabled() async =>
       await _provider.isBackgroundModeEnabled();
 
-  /// Has the app permission to access location?
+  /// What kind of location permissions does this manager have?
   ///
   /// If the result is [PermissionStatus.deniedForever], no dialog will be
   /// shown on [requestPermission].
   Future<location.PermissionStatus> hasPermission() async =>
       await _provider.hasPermission();
+
+  /// Has location been granted to this location manager?
+  Future<bool> isGranted() async =>
+      (await hasPermission()) == location.PermissionStatus.granted;
 
   /// Request permissions to access location?
   ///
@@ -57,19 +64,16 @@ class LocationManager {
   Future<location.PermissionStatus> requestPermission() async =>
       await _provider.requestPermission();
 
-  /// Configures the [LocationManager], incl. sending a notification to the
+  /// Enable the [LocationManager], incl. sending a notification to the
   /// Android notification system.
   ///
-  /// Configuration is done based on the [LocationService]. If not provided,
-  /// as set of default configurations are used.
-  Future<void> configure([LocationService? configuration]) async {
-    // fast out if already enabled or is in the process of configuring
+  /// After the location manager is enabled, configuration can be done via the
+  /// [configure] method.
+  Future<void> enable() async {
+    // fast out if already enabled
     if (enabled) return;
-    if (_configuring) return;
 
-    _configuring = true;
-    info('Configuring $runtimeType - configuration: $configuration');
-
+    info('Enabling $runtimeType...');
     _enabled = false;
 
     bool serviceEnabled = await _provider.serviceEnabled();
@@ -86,31 +90,7 @@ class LocationManager {
           "$runtimeType - Permission to collect location data 'Always' in the background has not been granted. "
           "Make sure to grant this BEFORE sensing is resumed. "
           "The context sampling package does not handle permissions. This should be handled on the application level.");
-      _configuring = false;
-      return;
-    }
-
-    try {
-      await _provider.changeSettings(
-        accuracy: location.LocationAccuracy.values[
-            configuration?.accuracy.index ??
-                GeolocationAccuracy.balanced.index],
-        distanceFilter: configuration?.distance ?? 0,
-        interval: configuration?.interval.inMilliseconds ?? 1000,
-      );
-
-      await _provider.changeNotificationOptions(
-          title: configuration?.notificationTitle ?? 'CARP Location Service',
-          subtitle: configuration?.notificationMessage ??
-              'The location service is running in the background',
-          description: configuration?.notificationDescription ??
-              'Background location is on to keep the CARP Mobile Sensing app up-to-date with your location. '
-                  'This is required for main features to work properly when the app is not in use.',
-          onTapBringToFront: configuration?.notificationOnTapBringToFront,
-          iconName: configuration?.notificationIconName);
-    } catch (error) {
-      warning('$runtimeType - Configuration failed - $error');
-      return;
+      // return;
     }
 
     _enabled = true;
@@ -121,7 +101,48 @@ class LocationManager {
     } catch (error) {
       warning('$runtimeType - Could not enable background mode - $error');
     }
-    info('$runtimeType - configured, background mode enabled: $backgroundMode');
+    info('$runtimeType - enabled, background mode enabled: $backgroundMode');
+  }
+
+  /// Configures the [LocationManager], incl. sending a notification to the
+  /// Android notification system.
+  ///
+  /// Configuration is done based on the [LocationService]. If not provided,
+  /// as set of default configurations are used.
+  Future<void> configure(LocationService configuration) async {
+    // fast out if already configured
+    if (configured) return;
+
+    // if not enabled, enable first
+    await enable();
+
+    info('Configuring $runtimeType - configuration: $configuration');
+    _configured = false;
+
+    try {
+      await _provider.changeSettings(
+        accuracy:
+            location.LocationAccuracy.values[configuration.accuracy.index],
+        distanceFilter: configuration.distance,
+        interval: configuration.interval.inMilliseconds,
+      );
+
+      await _provider.changeNotificationOptions(
+          title: configuration.notificationTitle ?? 'CARP Location Service',
+          subtitle: configuration.notificationMessage ??
+              'The location service is running in the background',
+          description: configuration.notificationDescription ??
+              'Background location is on to keep the CARP Mobile Sensing app up-to-date with your location. '
+                  'This is required for main features to work properly when the app is not in use.',
+          onTapBringToFront: configuration.notificationOnTapBringToFront,
+          iconName: configuration.notificationIconName);
+
+      info('$runtimeType - configured successfully.');
+      _configured = true;
+    } catch (error) {
+      warning('$runtimeType - Configuration failed - $error');
+      return;
+    }
   }
 
   /// Gets the current location of the phone.
@@ -150,93 +171,3 @@ enum GeolocationAccuracy {
   high,
   navigation,
 }
-
-/// A manger that knows how to configure and get location.
-// /// Provide access to location data while the app is in the background.
-// ///
-// /// Use as a singleton:
-// ///
-// ///  `LocationManager()...`
-// ///
-// /// Note that this [LocationManager] **does not** handle location permissions.
-// /// This should be handled and granted on an application level before using
-// /// probes that depend on location.
-// ///
-// /// This version of the location manager is based on the `carp_background_location`
-// /// plugin.
-// class LocationManager {
-//   static final LocationManager _instance = LocationManager._();
-//   LocationManager._();
-
-//   /// Get the singleton [LocationManager] instance
-//   factory LocationManager() => _instance;
-
-//   Location? _lastKnownLocation;
-//   bool _enabled = false, _configuring = false;
-
-//   /// Is the location service enabled, which entails that
-//   ///  * location service is enabled
-//   ///  * permissions granted
-//   ///  * configuration is done
-//   bool get enabled => _enabled;
-
-//   // /// Configures the [LocationManager], incl. sending a notification to the
-//   /// Android notification system.
-//   ///
-//   /// Configuration is done based on the [LocationService]. If not provided,
-//   /// as set of default configurations are used.
-//   Future<void> configure([LocationService? configuration]) async {
-//     // fast out if already enabled or is in the process of configuring
-//     if (enabled) return;
-//     if (_configuring) return;
-
-//     _configuring = true;
-//     info('Configuring $runtimeType - configuration: $configuration');
-
-//     _enabled = false;
-
-//     try {
-//       cbl.LocationManager().interval = configuration?.interval.inSeconds ?? 30;
-//       cbl.LocationManager().distanceFilter = configuration?.distance ?? 0;
-//       cbl.LocationManager().accuracy = configuration?.accuracy == null
-//           ? cbl.LocationAccuracy.NAVIGATION
-//           : configuration?.accuracy == GeolocationAccuracy.powerSave
-//               ? cbl.LocationAccuracy.POWERSAVE
-//               : configuration?.accuracy == GeolocationAccuracy.low
-//                   ? cbl.LocationAccuracy.LOW
-//                   : configuration?.accuracy == GeolocationAccuracy.balanced
-//                       ? cbl.LocationAccuracy.BALANCED
-//                       : configuration?.accuracy == GeolocationAccuracy.high
-//                           ? cbl.LocationAccuracy.HIGH
-//                           : cbl.LocationAccuracy.NAVIGATION;
-
-//       cbl.LocationManager().notificationTitle =
-//           configuration?.notificationMessage ??
-//               'The location service is running in the background';
-//       cbl.LocationManager().notificationMsg =
-//           configuration?.notificationMessage ??
-//               'The location service is running in the background';
-//     } catch (error) {
-//       warning('$runtimeType - Configuration failed - $error');
-//       return;
-//     }
-
-//     _enabled = true;
-//   }
-
-//   /// Gets the current location of the phone.
-//   /// Throws an error if the app has no permission to access location.
-//   Future<Location> getLocation() async =>
-//       _lastKnownLocation = Location.fromLocationDto(
-//           await cbl.LocationManager().getCurrentLocation());
-
-//   /// Get the last known location.
-//   Future<Location> getLastKnownLocation() async =>
-//       _lastKnownLocation ?? await getLocation();
-
-//   /// Returns a stream of [Location] objects.
-//   /// Throws an error if the app has no permission to access location.
-//   Stream<Location> get onLocationChanged => cbl.LocationManager()
-//       .locationStream
-//       .map((location) => Location.fromLocationDto(location));
-// }

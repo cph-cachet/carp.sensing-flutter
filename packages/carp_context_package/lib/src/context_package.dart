@@ -181,6 +181,11 @@ class LocationSamplingPackage extends SmartphoneSamplingPackage {
   }
 
   @override
+  List<Permission> get permissions => [
+        Permission.location,
+      ];
+
+  @override
   String get deviceType => LocationService.DEVICE_TYPE;
 
   @override

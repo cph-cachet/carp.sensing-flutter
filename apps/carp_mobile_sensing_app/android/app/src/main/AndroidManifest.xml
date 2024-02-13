@@ -28,6 +28,11 @@
     <uses-permission android:name="android.permission.WAKE_LOCK" />
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
+
+    <!-- for Android 9 (API 28 and below), use: -->
+    <uses-permission 
+        android:name="com.google.android.gms.permission.ACTIVITY_RECOGNITION" 
+        android:maxSdkVersion="28" />
     <!-- for Android 10 (API 29 and later), use: -->
     <uses-permission android:name="android.permission.ACTIVITY_RECOGNITION" />
 
@@ -45,9 +50,9 @@
 
     <!-- The Connectivity package needs Bluetooth scan permission to search for BLE devices. 
     The package doesn't use the scan to decide the location so "neverForLocation" permission flag can be used.-->
-    <!-- <uses-permission
+    <uses-permission
         android:name="android.permission.BLUETOOTH_SCAN" 
-        android:usesPermissionFlags="neverForLocation" />  -->
+        android:usesPermissionFlags="neverForLocation" /> 
     
     <!-- The following permissions are used in the Media Package -->
     <uses-permission android:name="android.permission.RECORD_AUDIO"/>
@@ -73,10 +78,9 @@
     <uses-permission
         android:name="android.permission.BLUETOOTH_SCAN" 
         android:usesPermissionFlags="neverForLocation" />  -->
-    <uses-permission android:name="android.permission.BLUETOOTH_SCAN"/>
     <uses-permission android:name="android.permission.BLUETOOTH_CONNECT"/>
 
-    <!-- Permissions for Health Connect API -->
+     <!-- Permissions for new android API (Health Connect) -->
     <uses-permission android:name="android.permission.health.READ_STEPS"/>
     <uses-permission android:name="android.permission.health.WRITE_STEPS"/>
     <uses-permission android:name="android.permission.health.READ_WEIGHT"/>
@@ -117,6 +121,8 @@
     <uses-permission android:name="android.permission.health.READ_BASAL_METABOLIC_RATE"/>
     <uses-permission android:name="android.permission.health.READ_RESPIRATORY_RATE"/>
     <uses-permission android:name="android.permission.health.WRITE_RESPIRATORY_RATE"/>
+    <uses-permission android:name="android.permission.health.WRITE_NUTRITION"/>
+    <uses-permission android:name="android.permission.health.READ_NUTRITION"/>
 
    <application
         android:label="CARP Mobile Sensing"
@@ -163,6 +169,11 @@
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
                 <category android:name="android.intent.category.LAUNCHER"/>
+            </intent-filter>
+
+            <!-- Intention to show Permissions screen for Health Connect API -->
+            <intent-filter>
+                <action android:name="androidx.health.ACTION_SHOW_PERMISSIONS_RATIONALE" />
             </intent-filter>
         </activity>
 

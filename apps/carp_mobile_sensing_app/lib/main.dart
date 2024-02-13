@@ -27,18 +27,18 @@ import 'package:carp_backend/carp_backend.dart';
 import 'config.dart';
 
 part 'src/app.dart';
-part 'src/sensing/sensing.dart';
-part 'src/models/probe_model.dart';
-part 'src/models/device_model.dart';
-part 'src/models/probe_description.dart';
-part 'src/models/study_deployment_model.dart';
+part 'src/blocs/sensing.dart';
+part 'src/view_models/probe_view_model.dart';
+part 'src/view_models/device_view_model.dart';
+part 'src/view_models/probe_descriptions.dart';
+part 'src/view_models/study_deployment_view_model.dart';
 part 'src/blocs/sensing_bloc.dart';
 part 'src/blocs/carp_backend.dart';
-part 'src/sensing/local_study_protocol_manager.dart';
-part 'src/ui/probe_list.dart';
-part 'src/ui/device_list.dart';
-part 'src/ui/study_deployment_page.dart';
-part 'src/ui/cachet.dart';
+part 'src/blocs/local_study_protocol_manager.dart';
+part 'src/views/probe_list_page.dart';
+part 'src/views/device_list_page.dart';
+part 'src/views/study_deployment_page.dart';
+part 'src/views/cachet_colors.dart';
 
 void main() async {
   // Makes sure to have an instance of the WidgetsBinding, which is required
@@ -59,3 +59,5 @@ void main() async {
 
   runApp(App());
 }
+
+final bloc = SensingBLoC();

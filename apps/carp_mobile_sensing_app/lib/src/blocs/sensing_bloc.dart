@@ -1,36 +1,22 @@
 part of mobile_sensing_app;
 
+/// This is the main Business Logic Component (BLoC) of this sensing app.
 class SensingBLoC {
   static const String STUDY_ID_KEY = 'study_id';
   static const String STUDY_DEPLOYMENT_ID_KEY = 'study_deployment_id';
-  static const String DEVICE_ROLENAME_KEY = 'device_rolename';
+  static const String DEVICE_ROLE_NAME_KEY = 'device_role_name';
 
-  final Sensing _sensing = Sensing();
   String? _studyId;
   String? _studyDeploymentId;
-  String? _deviceRolename;
+  String? _deviceRoleName;
   bool _useCached = true;
   bool _resumeSensingOnStartup = false;
 
   /// The [Sensing] layer used in the app.
-  Sensing get sensing => _sensing;
+  Sensing get sensing => Sensing();
 
   /// What kind of deployment are we running? Default is local.
   DeploymentMode deploymentMode = DeploymentMode.local;
-
-  /// The URI of the CARP server to use depending on the current [deploymentMode].
-  String get uri {
-    switch (deploymentMode) {
-      case DeploymentMode.local:
-        return "";
-      case DeploymentMode.production:
-        return "https://cans.cachet.dk/";
-      case DeploymentMode.staging:
-        return "https://cans.cachet.dk/stage";
-      case DeploymentMode.development:
-        return "https://cans.cachet.dk/dev";
-    }
-  }
 
   /// The study id for the currently running deployment.
   /// Returns the study id cached locally on the phone (if available).
@@ -67,20 +53,19 @@ class SensingBLoC {
   }
 
   /// The device role name for the currently running deployment.
-  /// Returns the role name cached locally on the phone (if available).
+  ///
+  /// The role name is cached locally on the phone.
   /// Returns `null` if no study is deployed (yet).
-  String? get deviceRolename => (_deviceRolename ??=
-      Settings().preferences?.getString(DEVICE_ROLENAME_KEY));
+  String? get deviceRoleName => (_deviceRoleName ??=
+      Settings().preferences?.getString(DEVICE_ROLE_NAME_KEY));
 
-  /// Set the device rolename for the currently running deployment.
-  /// This rolename will be cached locally on the phone.
-  set deviceRolename(String? rolename) {
+  set deviceRoleName(String? roleName) {
     assert(
-        rolename != null,
+        roleName != null,
         'Cannot set device role name to null in Settings. '
         "Use the 'eraseStudyDeployment()' method to erase study deployment information.");
-    _deviceRolename = rolename;
-    Settings().preferences?.setString(DEVICE_ROLENAME_KEY, rolename!);
+    _deviceRoleName = roleName;
+    Settings().preferences?.setString(DEVICE_ROLE_NAME_KEY, roleName!);
   }
 
   /// Use the cached study deployment?
@@ -102,23 +87,23 @@ class SensingBLoC {
   /// [NameSpace]. Default using the [NameSpace.CARP].
   String dataFormat = NameSpace.CARP;
 
-  StudyDeploymentModel? _model;
+  StudyDeploymentViewModel? _model;
 
-  /// Get the study deployment model for this app.
-  StudyDeploymentModel get studyDeploymentModel =>
-      _model ??= StudyDeploymentModel(deployment!);
+  /// Get the view model for this study [deployment].
+  StudyDeploymentViewModel get studyDeploymentViewModel =>
+      _model ??= StudyDeploymentViewModel(deployment!);
 
-  /// Get a list of running probes
-  Iterable<ProbeModel> get runningProbes =>
-      bloc.sensing.runningProbes.map((probe) => ProbeModel(probe));
+  /// Get a list of view models for the running probes.
+  Iterable<ProbeViewModel> get runningProbes =>
+      bloc.sensing.runningProbes.map((probe) => ProbeViewModel(probe));
 
-  /// Get a list of available devices
-  Iterable<DeviceModel> get availableDevices =>
-      bloc.sensing.availableDevices.map((device) => DeviceModel(device));
+  /// Get a list of view models for the available devices.
+  Iterable<DeviceViewModel> get availableDevices =>
+      bloc.sensing.availableDevices.map((device) => DeviceViewModel(device));
 
-  /// Get a list of connected devices
-  Iterable<DeviceModel> get connectedDevices =>
-      bloc.sensing.connectedDevices.map((device) => DeviceModel(device));
+  /// Get a list of view models for connected devices.
+  Iterable<DeviceViewModel> get connectedDevices =>
+      bloc.sensing.connectedDevices.map((device) => DeviceViewModel(device));
 
   /// Initialize the BLoC.
   Future<void> initialize({
@@ -140,12 +125,12 @@ class SensingBLoC {
   }
 
   /// Connect to a [device] which is part of the [deployment].
-  void connectToDevice(DeviceModel device) => SmartPhoneClientManager()
+  void connectToDevice(DeviceViewModel device) => SmartPhoneClientManager()
       .deviceController
       .devices[device.type!]!
       .connect();
 
-  void start() async {
+  void start() {
     SmartPhoneClientManager().notificationController?.createNotification(
           title: 'Sensing Started',
           body:
@@ -154,7 +139,7 @@ class SensingBLoC {
     SmartPhoneClientManager().start();
   }
 
-  void stop() async {
+  void stop() {
     SmartPhoneClientManager().notificationController?.createNotification(
           title: 'Sensing Stopped',
           body:
@@ -163,12 +148,12 @@ class SensingBLoC {
     SmartPhoneClientManager().stop();
   }
 
+  void dispose() => SmartPhoneClientManager().dispose();
+
   /// Is sensing running, i.e. has the study executor been started?
   bool get isRunning =>
       SmartPhoneClientManager().state == ClientManagerState.started;
 }
-
-final bloc = SensingBLoC();
 
 /// How to deploy a study.
 enum DeploymentMode {

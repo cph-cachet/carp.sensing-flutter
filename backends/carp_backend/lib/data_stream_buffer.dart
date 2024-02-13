@@ -11,8 +11,7 @@ part of carp_backend;
 class DataStreamBuffer {
   SQLiteDataManager manager = SQLiteDataManager();
   SmartphoneDeployment? _deployment;
-  Transaction? transaction;
-  Batch? batch;
+  Batch? dbBatch;
 
   SmartphoneDeployment? get deployment => _deployment;
   Database? get database => manager.database;
@@ -46,11 +45,11 @@ class DataStreamBuffer {
 
     if (deployment != null) {
       await database?.transaction((txn) async {
-        transaction = txn;
-        batch = transaction?.batch();
+        dbBatch = txn.batch();
         for (var stream in deployment!.expectedDataStreams) {
           var batch = await getDataStreamBatch(
             stream,
+            txn,
             delete,
           );
           if (batch != null) batches.add(batch);
@@ -67,6 +66,7 @@ class DataStreamBuffer {
   /// Returns null if no data is found.
   Future<DataStreamBatch?> getDataStreamBatch(
     ExpectedDataStream stream, [
+    Transaction? transaction,
     bool delete = false,
   ]) async {
     DataStreamId dataStream = DataStreamId(
@@ -112,22 +112,21 @@ class DataStreamBuffer {
     }
     firstSequenceId = rows.reduce(min);
 
-    // batch ??= executor?.batch();
     final args = rows.join(',');
     String sql;
     if (delete) {
       sql = 'DELETE FROM ${SQLiteDataManager.MEASUREMENT_TABLE_NAME} WHERE '
           '${SQLiteDataManager.ID_COLUMN} IN ($args)';
-      if (batch != null) {
-        batch?.rawDelete(sql);
+      if (dbBatch != null) {
+        dbBatch?.rawDelete(sql);
       } else {
         executor?.rawDelete(sql);
       }
     } else {
       sql = 'UPDATE ${SQLiteDataManager.MEASUREMENT_TABLE_NAME} SET '
           '${SQLiteDataManager.UPLOADED_COLUMN} = 1 WHERE ${SQLiteDataManager.ID_COLUMN} IN ($args)';
-      if (batch != null) {
-        batch?.rawUpdate(sql);
+      if (dbBatch != null) {
+        dbBatch?.rawUpdate(sql);
       } else {
         executor?.rawUpdate(sql);
       }
@@ -145,7 +144,7 @@ class DataStreamBuffer {
   /// Typically called after buffered data has been fetched via the
   /// [getDataStreamBatches] method and successfully uploaded
   Future<void> commit() async =>
-      await batch?.commit(noResult: true, continueOnError: true);
+      await dbBatch?.commit(noResult: true, continueOnError: true);
 
   /// Close this buffer. No more data can be added.
   Future<void> close() async => await database?.close();

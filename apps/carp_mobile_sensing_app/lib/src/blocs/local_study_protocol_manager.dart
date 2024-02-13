@@ -1,5 +1,5 @@
 /*
- * Copyright 2019-2022 Copenhagen Center for Health Technology (CACHET) at the
+ * Copyright 2019-2024 Copenhagen Center for Health Technology (CACHET) at the
  * Technical University of Denmark (DTU).
  * Use of this source code is governed by a MIT-style license that can be
  * found in the LICENSE file.
@@ -7,9 +7,8 @@
 
 part of mobile_sensing_app;
 
-/// This is a simple local [StudyProtocolManager].
-///
-/// This class shows how to configure a [SmartphoneStudyProtocol].
+/// This is a local [StudyProtocolManager] which provides a [SmartphoneStudyProtocol]
+/// when running in local mode.
 class LocalStudyProtocolManager implements StudyProtocolManager {
   @override
   Future<void> initialize() async {}
@@ -232,7 +231,7 @@ class LocalStudyProtocolManager implements StudyProtocolManager {
         BackgroundTask(measures: [
           Measure(type: PolarSamplingPackage.HR),
           // Measure(type: PolarSamplingPackage.ECG),
-          Measure(type: PolarSamplingPackage.PPG),
+          // Measure(type: PolarSamplingPackage.PPG),
           // Measure(type: PolarSamplingPackage.PPI),
         ]),
         polar); */
@@ -265,30 +264,26 @@ class LocalStudyProtocolManager implements StudyProtocolManager {
     //   movisens,
     // );
 
-    // Add measures to collect data from Apple Health / Google Fit
+    // Add measures to collect data from Apple Health / Google Health Connect
 
-    // // Define which health types to collect.
-    // var healthDataTypes = [
-    //   HealthDataType.WEIGHT,
-    //   HealthDataType.STEPS,
-    //   HealthDataType.SLEEP_ASLEEP,
-    // ];
+    // Create and add a health service
+    final healthService = HealthService();
+    protocol.addConnectedDevice(healthService, phone);
 
-    // // Create and add a health service (device)
-    // final healthService = HealthService(
-    //   useHealthConnectIfAvailable: true,
-    //   types: healthDataTypes,
-    // );
-    // protocol.addConnectedDevice(healthService, phone);
-
-    // protocol.addTaskControl(
-    //     PeriodicTrigger(period: Duration(minutes: 60)),
-    //     BackgroundTask(measures: [
-    //       Measure(type: HealthSamplingPackage.HEALTH)
-    //         ..overrideSamplingConfiguration =
-    //             HealthSamplingConfiguration(healthDataTypes: healthDataTypes)
-    //     ]),
-    //     healthService);
+    protocol.addTaskControl(
+        // PeriodicTrigger(period: Duration(minutes: 60)),
+        PeriodicTrigger(period: Duration(minutes: 1)),
+        BackgroundTask(measures: [
+          HealthSamplingPackage.getHealthMeasure([
+            HealthDataType.STEPS,
+            HealthDataType.BASAL_ENERGY_BURNED,
+            HealthDataType.WEIGHT,
+            HealthDataType.SLEEP_SESSION,
+            // EDA is not available on Android - should be removed on runtime
+            HealthDataType.ELECTRODERMAL_ACTIVITY,
+          ])
+        ]),
+        healthService);
 
     return protocol;
   }

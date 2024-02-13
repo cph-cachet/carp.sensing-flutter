@@ -15,7 +15,7 @@ class AirQualityService extends OnlineService {
       '${DeviceConfiguration.DEVICE_NAMESPACE}.AirQualityService';
 
   /// The default role name for an air quality service.
-  static const String DEFAULT_ROLENAME = 'Air Quality Service';
+  static const String DEFAULT_ROLE_NAME = 'Air Quality Service';
 
   /// API key for the WAQI API.
   String apiKey;
@@ -24,7 +24,7 @@ class AirQualityService extends OnlineService {
     String? roleName,
     required this.apiKey,
   }) : super(
-          roleName: roleName ?? DEFAULT_ROLENAME,
+          roleName: roleName ?? DEFAULT_ROLE_NAME,
         );
 
   @override
@@ -48,7 +48,8 @@ class AirQualityServiceManager extends OnlineServiceManager<AirQualityService> {
 
   @override
   List<Permission> get permissions => [
-        Permission.locationWhenInUse,
+        // Permission.location,
+        // Permission.locationWhenInUse,
       ];
 
   @override
@@ -66,7 +67,13 @@ class AirQualityServiceManager extends OnlineServiceManager<AirQualityService> {
   void onInitialize(AirQualityService service) {}
 
   @override
-  Future<void> onRequestPermissions() async {}
+  Future<bool> onHasPermissions() async =>
+      (await LocationManager().hasPermission()) ==
+      location.PermissionStatus.granted;
+
+  @override
+  Future<void> onRequestPermissions() async =>
+      await LocationManager().requestPermission();
 
   @override
   Future<bool> canConnect() async {

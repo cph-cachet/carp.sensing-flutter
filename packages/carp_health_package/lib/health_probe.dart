@@ -24,12 +24,39 @@ class HealthProbe extends StreamProbe {
   HealthServiceManager get deviceManager =>
       super.deviceManager as HealthServiceManager;
 
+  /// Check if the sampling configuration contains a valid list of [HealthDataType]
+  /// for the current platform (iOS or Android).
+  ///
+  /// Removes any health data type(s) which are not supported on this platform.
+  bool validateHealthDataTypes() {
+    List<HealthDataType> toRemove = [];
+    for (var type in samplingConfiguration.healthDataTypes) {
+      // is this type supported on the current platform?
+      bool supported = (Platform.isIOS)
+          ? dataTypesIOS.contains(type)
+          : dataTypesAndroid.contains(type);
+
+      if (!supported) {
+        warning(
+            "$runtimeType - Health data type '$type' is not supported on this platform "
+            "(${Platform.operatingSystem}). "
+            "Type is ignored.");
+        toRemove.add(type);
+      }
+    }
+    // remove all types we don't support on this platform
+    samplingConfiguration.healthDataTypes
+        .removeWhere((element) => toRemove.contains(element));
+
+    return true;
+  }
+
+  @override
+  bool onInitialize() => validateHealthDataTypes();
+
   @override
   Future<bool> onStart() async {
     super.onStart();
-
-    debug(
-        '$runtimeType - Collecting health data, configuration : $samplingConfiguration');
 
     DateTime start = samplingConfiguration.lastTime ??
         DateTime.now().subtract(samplingConfiguration.past);
@@ -37,29 +64,36 @@ class HealthProbe extends StreamProbe {
     List<HealthDataType> healthDataTypes =
         samplingConfiguration.healthDataTypes;
 
-    debug(
-        '$runtimeType - Collecting health data, type: $healthDataTypes, start: ${start.toUtc()}, end: ${end.toUtc()}');
-    try {
-      List<HealthDataPoint>? data =
-          await deviceManager.service?.getHealthDataFromTypes(
-                start,
-                end,
-                healthDataTypes,
-              ) ??
-              [];
+    if (healthDataTypes.isEmpty) {
+      warning(
+          "$runtimeType - Trying to collect health data but the list of health data type to collect is empty. "
+          "Did you add any types to the protocol which are available on this platform (iOS or Android)?");
+    } else {
       debug(
-          '$runtimeType - Retrieved ${data.length} health data points of type. $healthDataTypes');
+          '$runtimeType - Collecting health data, types: $healthDataTypes, start: ${start.toUtc()}, end: ${end.toUtc()}');
+      try {
+        List<HealthDataPoint>? data =
+            await deviceManager.service?.getHealthDataFromTypes(
+                  start,
+                  end,
+                  healthDataTypes,
+                ) ??
+                [];
+        debug(
+            '$runtimeType - Retrieved ${data.length} health data points of types: $healthDataTypes');
 
-      // Convert HealthDataPoint to measurements and add them to the stream.
-      for (var data in data) {
-        _ctrl.add(Measurement(
-            sensorStartTime: data.dateFrom.microsecondsSinceEpoch,
-            sensorEndTime: data.dateTo.microsecondsSinceEpoch,
-            data: HealthData.fromHealthDataPoint(data)));
+        // Convert HealthDataPoint to measurements and add them to the stream.
+        for (var data in data) {
+          _ctrl.add(Measurement(
+              sensorStartTime: data.dateFrom.microsecondsSinceEpoch,
+              sensorEndTime: data.dateTo.microsecondsSinceEpoch,
+              data: HealthData.fromHealthDataPoint(data)));
+        }
+      } catch (exception) {
+        warning("$runtimeType - Error collecting health data. $exception");
+        _ctrl.addError(exception);
+        return false;
       }
-    } catch (exception) {
-      _ctrl.addError(exception);
-      return false;
     }
     return true;
   }

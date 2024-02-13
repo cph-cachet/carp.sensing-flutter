@@ -6,13 +6,13 @@
 [![MIT License](https://img.shields.io/badge/license-MIT-purple.svg)](https://opensource.org/licenses/MIT)
 [![arXiv](https://img.shields.io/badge/arXiv-2006.11904-green.svg)](https://arxiv.org/abs/2006.11904)
 
-This library contains a sampling package for sampling health data from Apple Health and Google Fit or Health Connect to work with the [carp_mobile_sensing](https://pub.dartlang.org/packages/carp_mobile_sensing) framework. It uses the [health](https://pub.dev/packages/health) plugin for this.
-This packages supports sampling of the following [`Measure`](https://pub.dev/documentation/carp_core/latest/carp_core_common/Measure-class.html) types:
+This library contains a sampling package for sampling health data from Apple Health and Google Health Connect to work with the [carp_mobile_sensing](https://pub.dartlang.org/packages/carp_mobile_sensing) framework. It uses the [health](https://pub.dev/packages/health) plugin for this.
+This packages supports sampling of the following [`Measure`](https://pub.dev/documentation/carp_core/latest/carp_core_common/Measure-class.html) type:
 
 * `dk.cachet.carp.health`
 
 See the [wiki](https://github.com/cph-cachet/carp.sensing-flutter/wiki) for further documentation, particularly on available [measure types](https://github.com/cph-cachet/carp.sensing-flutter/wiki/A.-Measure-Types).
-See the [CARP Mobile Sensing App](https://github.com/cph-cachet/carp.sensing-flutter/tree/master/apps/carp_mobile_sensing_app) for an example of how to build a mobile sensing app in Flutter.
+See the [CARP Mobile Sensing App](https://github.com/cph-cachet/carp.sensing-flutter/tree/main/apps/carp_mobile_sensing_app) for an example of how to build a mobile sensing app in Flutter.
 
 For Flutter plugins for other CARP products, see [CARP Mobile Sensing in Flutter](https://github.com/cph-cachet/carp.sensing-flutter).
 
@@ -38,13 +38,46 @@ Then, follow the setup guides in the [health](https://pub.dev/packages/health#se
 
 ### Android Integration
 
-The [health](https://pub.dev/packages/health) plugin supports both [Google Fit](https://www.google.com/fit/) and [Health Connect](https://health.google/health-connect-android/).
+This sampling package **only** supports Google [Health Connect](https://health.google/health-connect-android/). To configure your app to use Health Connect, follow the documentation on the [`health`](https://pub.dev/packages/health#health-connect-android-option-2) package and on the [Android Developer page](https://developer.android.com/guide/health-and-fitness/health-connect/get-started).
 
-Google Fit can be tricky to set up and it requires a separate app to be installed.
-Please follow this [guide to set up Google Fit](https://developers.google.com/fit/android/get-started).
-Check out the documentation of the [`health`](https://pub.dev/packages/health#google-fit-android-option-1) package.
+Note that Health Connect requires API level 34 and quite some edits to the `Manifest.xml` file, including declaring permissions to **all** the health data types you want to access. Read more on [Health Connect data types and permissions](https://developer.android.com/health-and-fitness/guides/health-connect/plan/data-types). If you are targeting SDK levels < 34 make sure to install the Health Connect app. Read more on the ["Get started with Health Connect "](https://developer.android.com/health-and-fitness/guides/health-connect/develop/get-started) page.
 
-[Health Connect](https://developer.android.com/guide/health-and-fitness/health-connect) seems more simple to setup - see the documentation on the [`health`](https://pub.dev/packages/health#health-connect-android-option-2) package and on the [Android Developer page](https://developer.android.com/guide/health-and-fitness/health-connect/get-started).
+```xml
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="dk.cachet.carp_mobile_sensing_app"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <!-- Check whether Health Connect is installed or not -->
+    <queries>
+        <package android:name="com.google.android.apps.healthdata" />
+        <intent>
+            <action android:name="androidx.health.ACTION_SHOW_PERMISSIONS_RATIONALE" />
+        </intent>
+    </queries>    
+
+    ...
+
+     <!-- Permissions for Health Connect -->
+    <uses-permission android:name="android.permission.health.READ_STEPS"/>
+    <uses-permission android:name="android.permission.health.READ_WEIGHT"/>
+
+    ...
+
+   <application
+        <activity
+            android:name=".MainActivity"
+            android:exported="true"
+            android:launchMode="singleTop"
+
+            ...
+
+            <!-- Intention to show Permissions screen for Health Connect API -->
+            <intent-filter>
+                <action android:name="androidx.health.ACTION_SHOW_PERMISSIONS_RATIONALE" />
+            </intent-filter>
+        </activity>
+
+```
 
 ### iOS Integration
 
@@ -94,65 +127,31 @@ When defining a study protocol with a health device, it would look like this:
   final phone = Smartphone();
   protocol.addPrimaryDevice(phone);
 
-  // Define which health types to collect.
-  var healthDataTypes = [
-    HealthDataType.WEIGHT,
-    HealthDataType.EXERCISE_TIME,
-    HealthDataType.STEPS,
-    HealthDataType.SLEEP_ASLEEP,
-  ];
-
   // Create and add a health service (device)
-  final healthService = HealthService(types: healthDataTypes);
+  final healthService = HealthService();
   protocol.addConnectedDevice(healthService, phone);
 ```
 
-Note that a list of [`HealthDataType`](https://pub.dev/documentation/health/latest/health/HealthDataType.html) types is specified for the service. This is later used by the service to request the right permission to access this type of data.
-
-Data sampling can now be configured by a measure in the protocol:
+Data sampling can now be configured by a measure in the protocol. This measure is created using the factory method `getHealthMeasure` that takes a list of of [`HealthDataType`](https://pub.dev/documentation/health/latest/health/HealthDataType.html) types.
 
 ```dart
-  // Automatically collect the set of health data every hour.
-  //
-  // Note that the [HealthSamplingConfiguration] is a [HistoricSamplingConfiguration]
-  // which samples data back in time until last time, data was sampled.
+  // Automatically collect a set of health data every hour.
   protocol.addTaskControl(
       PeriodicTrigger(period: Duration(minutes: 60)),
-      BackgroundTask()
-        ..addMeasure(Measure(type: HealthSamplingPackage.HEALTH)
-          ..overrideSamplingConfiguration =
-              HealthSamplingConfiguration(healthDataTypes: healthDataTypes)),
+      BackgroundTask(measures: [
+        HealthSamplingPackage.getHealthMeasure([
+          HealthDataType.STEPS,
+          HealthDataType.BASAL_ENERGY_BURNED,
+          HealthDataType.WEIGHT,
+          HealthDataType.SLEEP_SESSION,
+        ])
+      ]),
       healthService);
 ```
 
-This would collect health data every hour using the same data types, as configured for the service. Configuration of what data to collect is done via the [`HealthSamplingConfiguration`](https://pub.dev/documentation/carp_health_package/latest/health_package/HealthSamplingConfiguration-class.html) which is used to override the default configuration (default is to collect nothing). Another set of data to collect can be specified, as shown below. However, the user might not have granted access to collect this data.
+This would collect health data every hour as specified in the list. Configuration of what data to collect is done via the [`HealthSamplingConfiguration`](https://pub.dev/documentation/carp_health_package/latest/health_package/HealthSamplingConfiguration-class.html) which is used to override the default configuration (default is to collect nothing). The `getHealthMeasure()` factory method is a convenient way to create a `Measure` with the correct `HealthSamplingConfiguration`.
 
-```dart
-  // Automatically collect another set of health data every hour
-  //
-  // Note, however, that the service defined above DOES NOT have this list of
-  // health data specified, and has therefore not asked for permission to access
-  // this new set of health data.
-  // However, on Apple Health, for example, the user has an option to 
-  // "Turn All Categories On". If the use has done this, the all the data listed 
-  // below is accessible. 
-  protocol.addTaskControl(
-      PeriodicTrigger(period: Duration(minutes: 60)),
-      BackgroundTask()
-        ..addMeasure(Measure(type: HealthSamplingPackage.HEALTH)
-          ..overrideSamplingConfiguration =
-              HealthSamplingConfiguration(healthDataTypes: [
-            HealthDataType.BLOOD_GLUCOSE,
-            HealthDataType.BLOOD_PRESSURE_DIASTOLIC,
-            HealthDataType.BLOOD_PRESSURE_SYSTOLIC,
-            HealthDataType.BLOOD_PRESSURE_DIASTOLIC,
-            HealthDataType.HEART_RATE,
-            HealthDataType.STEPS,
-          ])),
-      healthService);
-```
-
-The `HealthSamplingConfiguration` can be configured to collect a specific set of [`HealthDataType`](https://pub.dev/documentation/health/latest/health/HealthDataType-class.html), like:
+The `HealthSamplingConfiguration` can be configured to collect a set of [`HealthDataType`](https://pub.dev/documentation/health/latest/health/HealthDataType-class.html) data, like:
 
 * BODY_FAT_PERCENTAGE,
 * HEIGHT,
@@ -164,9 +163,7 @@ The `HealthSamplingConfiguration` can be configured to collect a specific set of
 
 See the [`HealthDataType`](https://pub.dev/documentation/health/latest/health/HealthDataType.html) documentation for a complete list.
 
-A `HealthSamplingConfiguration` is a [`HistoricSamplingConfiguration`](https://pub.dev/documentation/carp_mobile_sensing/latest/domain/HistoricSamplingConfiguration-class.html).
-This means that when triggered, the task and measure will try to collect data back to the last time data was collected.
-Hence, this probe is suited for configuration using some trigger that collects data on a regular basis, like the `PeriodicTrigger` used above.
+A `HealthSamplingConfiguration` is a [`HistoricSamplingConfiguration`](https://pub.dev/documentation/carp_mobile_sensing/latest/domain/HistoricSamplingConfiguration-class.html). This means that when triggered, the task and measure will try to collect data back to the last time data was collected. Hence, this probe is suited for configuration using some trigger that collects data on a regular basis, like the `PeriodicTrigger` used above.
 However, it can also be configured using as an [`AppTask`](https://pub.dev/documentation/carp_mobile_sensing/latest/domain/AppTask-class.html) that asks the user to collect the data.
 
 ```dart
@@ -177,11 +174,15 @@ However, it can also be configured using as an [`AppTask`](https://pub.dev/docum
           type: 'health',
           title: "Press here to collect your physical health data",
           description:
-              "This will collect your weight, exercise time, steps, and sleep time from Apple Health.",
+              "This will collect your weight, exercise time, steps, and sleep "
+              "time from the Health database on the phone.",
           measures: [
-            Measure(type: HealthSamplingPackage.HEALTH)
-              ..overrideSamplingConfiguration =
-                  HealthSamplingConfiguration(healthDataTypes: healthDataTypes)
+            HealthSamplingPackage.getHealthMeasure([
+              HealthDataType.WEIGHT,
+              HealthDataType.STEPS,
+              HealthDataType.BASAL_ENERGY_BURNED,
+              HealthDataType.SLEEP_SESSION,
+            ])
           ]),
       healthService);
 ```
@@ -219,4 +220,28 @@ The data collected is contained in a [`HealthData`](https://pub.dev/documentatio
 }
 ```
 
-The type of the collected health data is `dk.cachet.carp.health.workout` and in general, the collected health data has the type of `dk.cachet.carp.health.<health_type>`, where `health_type` is the lower-case version of [`HealthDataType`](https://pub.dev/documentation/health/latest/health/HealthDataType.html).
+Step count collected from Android / Health Connect would look like this.
+
+```json
+{
+  "sensorStartTime": 1704582000000000,
+  "sensorEndTime": 1704668399999000,
+  "data": {
+   "__type": "dk.cachet.carp.health.steps",
+   "uuid": "85328732-41d3-53b2-a81e-007f33bee353",
+   "value": {
+    "numericValue": "1982"
+   },
+   "unit": "COUNT",
+   "date_from": "2024-01-06T23:00:00.000Z",
+   "date_to": "2024-01-07T22:59:59.999Z",
+   "data_type": "STEPS",
+   "platform": "ANDROID",
+   "device_id": "SP1A.210812.016",
+   "source_id": "",
+   "source_name": "com.sec.android.app.shealth"
+  }
+}
+```
+
+The type of the collected health data is `dk.cachet.carp.health.workout` or `dk.cachet.carp.health.steps`. In general, the collected health data has the type of `dk.cachet.carp.health.<health_type>`, where `health_type` is the lower-case version of [`HealthDataType`](https://pub.dev/documentation/health/latest/health/HealthDataType.html).

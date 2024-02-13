@@ -11,13 +11,14 @@ class App extends StatelessWidget {
   }
 }
 
+/// A loading page shown while the app is loading and setting up the sensing layer.
 class LoadingPage extends StatelessWidget {
-  /// This methods is used to initialize the app and the sensing.
+  /// Initialize the app and the sensing.
   ///
   /// If using CAWS, this method also initialize the CAWS backend,
   /// authenticate the user, and gets the study invitation from CAWS.
   ///
-  /// Returns true when done.
+  /// Returns true when successfully done.
   Future<bool> init(BuildContext context) async {
     // Initialize and use the CAWS backend if not in local deployment mode
     if (bloc.deploymentMode != DeploymentMode.local) {
@@ -51,11 +52,12 @@ class LoadingPage extends StatelessWidget {
                 mainAxisSize: MainAxisSize.min,
                 children: [CircularProgressIndicator()],
               )))
-          : CarpMobileSensingApp(key: key),
+          : CarpMobileSensingApp(),
     );
   }
 }
 
+/// The main view of the app, shown once loading is done.
 class CarpMobileSensingApp extends StatefulWidget {
   CarpMobileSensingApp({super.key});
   @override
@@ -67,14 +69,13 @@ class CarpMobileSensingAppState extends State<CarpMobileSensingApp> {
 
   final _pages = [
     StudyDeploymentPage(),
-    ProbesList(),
-    // DataVisualization(),
-    DevicesList(),
+    ProbesListPage(),
+    DevicesListPage(),
   ];
 
   @override
   void dispose() {
-    bloc.stop();
+    bloc.dispose();
     super.dispose();
   }
 
@@ -86,33 +87,20 @@ class CarpMobileSensingAppState extends State<CarpMobileSensingApp> {
         items: <BottomNavigationBarItem>[
           BottomNavigationBarItem(icon: Icon(Icons.school), label: 'Study'),
           BottomNavigationBarItem(icon: Icon(Icons.adb), label: 'Probes'),
-          // BottomNavigationBarItem(icon: Icon(Icons.show_chart), label: 'Data'),
           BottomNavigationBarItem(icon: Icon(Icons.watch), label: 'Devices'),
         ],
         currentIndex: _selectedIndex,
         onTap: _onItemTapped,
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: restart,
-        tooltip: 'Restart study & probes',
+        onPressed: _restart,
         child: bloc.isRunning ? Icon(Icons.pause) : Icon(Icons.play_arrow),
       ),
     );
   }
 
-  void _onItemTapped(int index) {
-    setState(() {
-      _selectedIndex = index;
-    });
-  }
+  void _onItemTapped(int index) => setState(() => _selectedIndex = index);
 
-  void restart() {
-    setState(() {
-      if (bloc.isRunning) {
-        bloc.stop();
-      } else {
-        bloc.start();
-      }
-    });
-  }
+  void _restart() =>
+      setState(() => (bloc.isRunning) ? bloc.stop() : bloc.start());
 }

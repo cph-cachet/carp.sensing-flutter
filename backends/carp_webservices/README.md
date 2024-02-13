@@ -111,9 +111,11 @@ This `CarpUser` object contains the OAuth token in the `.token` (of type `OAuthT
 Since the [CarpUser](https://pub.dev/documentation/carp_webservices/latest/carp_auth/CarpUser-class.html) can be serialized to JSON, the OAuth token can be stored on the phone.
 
 To refresh the OAuth token the client (Flutter) simply calls
+
 ```dart
 await CarpService().refresh()
 ```
+
 This method returns a `CarpUser`, with the new access token.
 
 ### Informed Consent Document
