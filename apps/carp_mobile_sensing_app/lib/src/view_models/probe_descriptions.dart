@@ -175,6 +175,10 @@ class ProbeDescription {
           'Health',
           'Health data collected from the phone.',
         ),
+        MovesenseSamplingPackage.HR: ProbeDescriptor(
+          'Movesense HR',
+          'Movesense Heart Rate.',
+        ),
       };
 
   static Map<String, Icon> get probeTypeIcon => {
