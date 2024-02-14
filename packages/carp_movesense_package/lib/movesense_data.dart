@@ -5,11 +5,20 @@ part of carp_movesense_package;
 /// See https://www.movesense.com/docs/esw/api_reference/#systemstates for an
 /// overview.
 enum MovesenseDeviceState {
+  /// Unknown state.
+  unknown,
+
   /// Device is moving.
   moving,
 
+  /// Device is not moving.
+  notMoving,
+
   /// Device connected to gear (e.g., strap).
   connected,
+
+  /// Device disconnected to gear.
+  disconnected,
 
   /// Device tapped once.
   tap,
@@ -17,84 +26,93 @@ enum MovesenseDeviceState {
   /// Device double tapped.
   doubleTap,
 
+  /// Device is under acceleration.
+  acceleration,
+
   /// Device is in free fall (no gravity).
   freeFall,
 }
 
 @JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
-class MovesenseStateChange {
+class MovesenseStateChange extends SensorData {
+  static const dataType = MovesenseSamplingPackage.STATE;
+
   final MovesenseDeviceState state;
 
-  MovesenseStateChange(this.state) 
+  MovesenseStateChange(this.state);
 
+  factory MovesenseStateChange.fromMovesenseData(dynamic data) {
+    MovesenseStateChange state =
+        MovesenseStateChange(MovesenseDeviceState.unknown);
+
+    debug("MovesenseStateChange - data event: $data");
+
+    num stateId = data["Body"]["StateId"][0] as num;
+    num newState = data["Body"]["NewState"] as num;
+
+    switch (stateId) {
+      case 0: // movement
+        state = (newState == 0)
+            ? MovesenseStateChange(MovesenseDeviceState.notMoving)
+            : MovesenseStateChange(MovesenseDeviceState.moving);
+        break;
+      case 2: // connectors
+        state = (newState == 0)
+            ? MovesenseStateChange(MovesenseDeviceState.disconnected)
+            : MovesenseStateChange(MovesenseDeviceState.connected);
+        break;
+      case 3: // double-tap
+        if (newState == 1) {
+          state = MovesenseStateChange(MovesenseDeviceState.doubleTap);
+        }
+        break;
+      case 4: // tap
+        if (newState == 1) {
+          state = MovesenseStateChange(MovesenseDeviceState.tap);
+        }
+        break;
+      case 5: // free-fall
+        state = (newState == 0)
+            ? MovesenseStateChange(MovesenseDeviceState.acceleration)
+            : MovesenseStateChange(MovesenseDeviceState.freeFall);
+        break;
+
+      default:
+    }
+
+    return state;
+  }
+
+  @override
+  Function get fromJsonFunction => _$MovesenseStateChangeFromJson;
   factory MovesenseStateChange.fromJson(Map<String, dynamic> json) =>
-      _$MovesenseStateChangeFromJson(json);
+      FromJsonFactory().fromJson(json) as MovesenseStateChange;
+  @override
   Map<String, dynamic> toJson() => _$MovesenseStateChangeToJson(this);
 
+  @override
+  String get jsonType => dataType;
 }
 
 @JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
-class MovesenseHRSample {
+class MovesenseHR extends SensorData {
+  static const dataType = MovesenseSamplingPackage.HR;
+
+  /// The average heart rate.
   final double hr;
 
-  //final List<int> rr;
+  /// The list of R-R intervals in this sample.
+  final List<int> rr;
 
-  MovesenseHRSample(this.hr) {
-    print("heart rate sample $hr");
+  MovesenseHR(this.hr, [this.rr = const []]);
+
+  factory MovesenseHR.fromMovesenseData(dynamic data) {
+    debug("MovesenseHR - data event: $data");
+
+    num average = data["Body"]["average"] as num;
+    List<int> rr = data["Body"]["rrData"] as List<int>;
+    return MovesenseHR(average.toDouble(), rr);
   }
-
-  factory MovesenseHRSample.fromJson(Map<String, dynamic> json) =>
-      _$MovesenseHRSampleFromJson(json);
-  Map<String, dynamic> toJson() => _$MovesenseHRSampleToJson(this);
-
-  @override
-  String toString() => '$runtimeType - hr: $hr';
-}
-
-@JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
-class MovesenseECGSample {
-  final List<int> samples;
-
-  MovesenseECGSample(this.samples);
-
-  //final List<int> rr;
-
-  factory MovesenseECGSample.fromJson(Map<String, dynamic> json) =>
-      _$MovesenseECGSampleFromJson(json);
-  Map<String, dynamic> toJson() => _$MovesenseECGSampleToJson(this);
-
-  @override
-  String toString() => '$runtimeType - samples: $samples';
-}
-
-class MovesensSamples<T> extends SensorData {
-  final List<T> samples;
-
-  MovesensSamples({required this.samples});
-}
-
-@JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
-class MovesenseHR extends MovesensSamples<MovesenseHRSample> {
-  static const dataType = MovesenseSamplingPackage.HR;
-  MovesenseHR({required super.samples});
-
-  static MovesenseHR fromMovesenseData(dynamic data) {
-    Map<String, dynamic> body = data["Body"];
-    double hr = body["average"];
-    print("heart rate $hr");
-    var movesensehr = MovesenseHR(samples: [MovesenseHRSample(hr)]);
-    print("heart rate movesenseHR $movesensehr");
-    return movesensehr;
-  }
-
-  /* MovesenseHR.fromMoveSenseData(dynamic data)
-      : this(
-            samples: data
-                .map((sample) => MovesenseHRSample(
-                      sample["Body"]["average"],
-                      sample["Body"]["rr"],
-                    ))
-                .toList()); */
 
   @override
   Function get fromJsonFunction => _$MovesenseHRFromJson;
@@ -102,32 +120,30 @@ class MovesenseHR extends MovesensSamples<MovesenseHRSample> {
       FromJsonFactory().fromJson(json) as MovesenseHR;
   @override
   Map<String, dynamic> toJson() => _$MovesenseHRToJson(this);
-  @override
-  String get jsonType => dataType;
 
   @override
-  String toString() => '$runtimeType - hr: $samples';
+  String get jsonType => dataType;
 }
 
 @JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
-class MovesenseECG extends MovesensSamples<MovesenseECGSample> {
+class MovesenseECG extends SensorData {
   static const dataType = MovesenseSamplingPackage.ECG;
-  MovesenseECG({required super.samples});
 
-  static MovesenseECG fromMovesenseData(dynamic data) {
-    print(data);
-    Map<String, dynamic> body = data["Body"];
-    return 0 as MovesenseECG;
+  /// The timestamp of this ECG sample in milliseconds.
+  final int timestamp;
+
+  /// The ECG samples.
+  final List<int> samples;
+
+  MovesenseECG(this.samples, this.timestamp);
+
+  factory MovesenseECG.fromMovesenseData(dynamic data) {
+    debug("MovesenseECG - data event: $data");
+
+    List<int> samples = data["Body"]["Samples"] as List<int>;
+    num timestamp = data["Body"]["Timestamp"] as num;
+    return MovesenseECG(samples, timestamp.toInt());
   }
-
-  /* MovesenseHR.fromMoveSenseData(dynamic data)
-      : this(
-            samples: data
-                .map((sample) => MovesenseHRSample(
-                      sample["Body"]["average"],
-                      sample["Body"]["rr"],
-                    ))
-                .toList()); */
 
   @override
   Function get fromJsonFunction => _$MovesenseECGFromJson;
@@ -135,9 +151,7 @@ class MovesenseECG extends MovesensSamples<MovesenseECGSample> {
       FromJsonFactory().fromJson(json) as MovesenseECG;
   @override
   Map<String, dynamic> toJson() => _$MovesenseECGToJson(this);
-  @override
-  String get jsonType => dataType;
 
   @override
-  String toString() => '$runtimeType - ecg: $samples';
+  String get jsonType => dataType;
 }

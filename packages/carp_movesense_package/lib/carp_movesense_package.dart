@@ -20,6 +20,7 @@ part 'mds_facade.dart';
 class MovesenseSamplingPackage implements SamplingPackage {
   static const String MOVESENSE_NAMESPACE = "${NameSpace.CARP}.movesense";
 
+  static const String STATE = "$MOVESENSE_NAMESPACE.state";
   static const String HR = "$MOVESENSE_NAMESPACE.hr";
   static const String ECG = "$MOVESENSE_NAMESPACE.ecg";
 
@@ -49,8 +50,11 @@ class MovesenseSamplingPackage implements SamplingPackage {
   @override
   void onRegister() {
     // register all data types
-    FromJsonFactory()
-        .registerAll([MovesenseHR(samples: []), MovesenseECG(samples: [])]);
+    FromJsonFactory().registerAll([
+      MovesenseDevice(),
+      MovesenseStateChange(MovesenseDeviceState.unknown),
+      MovesenseHR(55),
+    ]);
   }
 
   @override

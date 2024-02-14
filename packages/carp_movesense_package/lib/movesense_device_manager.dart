@@ -145,7 +145,7 @@ class MovesenseDeviceManager extends BTLEDeviceManager<MovesenseDevice> {
         "{}",
         ((data, statusCode) {
           final dataContent = json.decode(data);
-          num batteryState = dataContent["Content"] as num;
+          num batteryState = dataContent["content"] as num;
           debug("$runtimeType - Battery state: $batteryState");
           _batteryLevel = batteryState == 1 ? 10 : 80;
           _batteryEventController.add(_batteryLevel ?? 0);
