@@ -33,6 +33,12 @@ enum MovesenseDeviceState {
   freeFall,
 }
 
+/// States API is a uniform, simplistic interface for accessing states of internal
+/// device components.
+///
+/// Currently available states are listed in [MovesenseDeviceState].
+///
+/// See https://www.movesense.com/docs/esw/api_reference/#systemstates
 @JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
 class MovesenseStateChange extends SensorData {
   static const dataType = MovesenseSamplingPackage.STATE;
@@ -41,13 +47,21 @@ class MovesenseStateChange extends SensorData {
 
   MovesenseStateChange(this.state);
 
+  // Example event:
+  //
+  //   Body: {Timestamp: 614897, StateId: 0, NewState: 1}
+  //
+  // NOTE - the json listed on the official Movesense API is wrong!
   factory MovesenseStateChange.fromMovesenseData(dynamic data) {
     MovesenseStateChange state =
         MovesenseStateChange(MovesenseDeviceState.unknown);
 
     debug("MovesenseStateChange - data event: $data");
 
-    num stateId = data["Body"]["StateId"][0] as num;
+    // int stateId = (data["Body"]["StateId"] as List<dynamic>)
+    //     .map((e) => e as int)
+    //     .toList()[0];
+    num stateId = data["Body"]["StateId"] as num;
     num newState = data["Body"]["NewState"] as num;
 
     switch (stateId) {
@@ -94,23 +108,31 @@ class MovesenseStateChange extends SensorData {
   String get jsonType => dataType;
 }
 
+/// Movesense sensor is equipped with analog front-end capable of capturing ECG
+/// signals and calculating user's heart rate from this.
+///
+/// See https://www.movesense.com/docs/esw/api_reference/#meashr
 @JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
 class MovesenseHR extends SensorData {
   static const dataType = MovesenseSamplingPackage.HR;
 
-  /// The average heart rate.
+  /// The average heart rate (Hz).
   final double hr;
 
-  /// The list of R-R intervals in this sample.
-  final List<int> rr;
+  /// The latest R-R measurement (ms).
+  final int? rr;
 
-  MovesenseHR(this.hr, [this.rr = const []]);
+  MovesenseHR(this.hr, [this.rr]);
 
   factory MovesenseHR.fromMovesenseData(dynamic data) {
     debug("MovesenseHR - data event: $data");
 
     num average = data["Body"]["average"] as num;
-    List<int> rr = data["Body"]["rrData"] as List<int>;
+    // returns a list of R-R measures with only one entry (the latest)
+    int rr = (data["Body"]["rrData"] as List<dynamic>)
+        .map((e) => e as int)
+        .toList()[0];
+
     return MovesenseHR(average.toDouble(), rr);
   }
 
@@ -135,14 +157,16 @@ class MovesenseECG extends SensorData {
   /// The ECG samples.
   final List<int> samples;
 
-  MovesenseECG(this.samples, this.timestamp);
+  MovesenseECG(this.timestamp, this.samples);
 
   factory MovesenseECG.fromMovesenseData(dynamic data) {
     debug("MovesenseECG - data event: $data");
 
-    List<int> samples = data["Body"]["Samples"] as List<int>;
+    List<int> samples = (data["Body"]["Samples"] as List<dynamic>)
+        .map((e) => e as int)
+        .toList();
     num timestamp = data["Body"]["Timestamp"] as num;
-    return MovesenseECG(samples, timestamp.toInt());
+    return MovesenseECG(timestamp.toInt(), samples);
   }
 
   @override
@@ -154,4 +178,141 @@ class MovesenseECG extends SensorData {
 
   @override
   String get jsonType => dataType;
+}
+
+/// Movesense sensor is equipped with temperature sensor, which can be used to
+/// measure device's internal temperature. Returned values are in units of
+/// Kelvins (K).
+///
+/// See https://www.movesense.com/docs/esw/api_reference/#meastemperature
+@JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
+class MovesenseTemperature extends SensorData {
+  static const dataType = MovesenseSamplingPackage.TEMPERATURE;
+
+  /// The timestamp of this temperature measurement.
+  final int timestamp;
+
+  /// The device's internal temperature in units of Kelvins (K).
+  final int measurement;
+
+  MovesenseTemperature(this.timestamp, this.measurement);
+
+  factory MovesenseTemperature.fromMovesenseData(dynamic data) {
+    debug("MovesenseTemperature - data event: $data");
+
+    num timestamp = data["Body"]["Timestamp"] as num;
+    num measurement = data["Body"]["Measurement"] as num;
+
+    return MovesenseTemperature(timestamp.toInt(), measurement.toInt());
+  }
+
+  @override
+  Function get fromJsonFunction => _$MovesenseTemperatureFromJson;
+  factory MovesenseTemperature.fromJson(Map<String, dynamic> json) =>
+      FromJsonFactory().fromJson(json) as MovesenseTemperature;
+  @override
+  Map<String, dynamic> toJson() => _$MovesenseTemperatureToJson(this);
+
+  @override
+  String get jsonType => dataType;
+}
+
+/// Provides a synchronized access to combined accelerometer, gyroscope and magnetometer
+/// data samples for easier processing e.g. for AHRS algorithms.
+/// It is more efficient to subscribe to the IMU resource than to subscribe the
+/// individual resources separately.
+///
+/// See https://www.movesense.com/docs/esw/api_reference/#measimu
+@JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
+class MovesenseIMU extends SensorData {
+  static const dataType = MovesenseSamplingPackage.ECG;
+
+  /// The timestamp of this sample in milliseconds.
+  final int timestamp;
+
+  final List<MovesenseAccelerometerSample> accelerometer;
+  final List<MovesenseGyroscopeSample> gyroscope;
+  final List<MovesenseMagnetometerSample> magnetometer;
+
+  MovesenseIMU(
+    this.timestamp,
+    this.accelerometer,
+    this.gyroscope,
+    this.magnetometer,
+  );
+
+  factory MovesenseIMU.fromMovesenseData(dynamic data) {
+    debug("MovesenseAccelerometer - data event: $data");
+
+    num timestamp = data["Body"]["Timestamp"] as num;
+
+    List<MovesenseAccelerometerSample> acc =
+        (data["Body"]["ArrayAcc"] as List<dynamic>)
+            .map((sample) => MovesenseAccelerometerSample(sample['x'] as double,
+                sample['y'] as double, sample['z'] as double))
+            .toList();
+
+    List<MovesenseGyroscopeSample> gyro =
+        (data["Body"]["ArrayAcc"] as List<dynamic>)
+            .map((sample) => MovesenseGyroscopeSample(sample['x'] as double,
+                sample['y'] as double, sample['z'] as double))
+            .toList();
+
+    List<MovesenseMagnetometerSample> mag =
+        (data["Body"]["ArrayAcc"] as List<dynamic>)
+            .map((sample) => MovesenseMagnetometerSample(sample['x'] as double,
+                sample['y'] as double, sample['z'] as double))
+            .toList();
+
+    return MovesenseIMU(timestamp.toInt(), acc, gyro, mag);
+  }
+
+  @override
+  Function get fromJsonFunction => _$MovesenseIMUFromJson;
+  factory MovesenseIMU.fromJson(Map<String, dynamic> json) =>
+      FromJsonFactory().fromJson(json) as MovesenseIMU;
+  @override
+  Map<String, dynamic> toJson() => _$MovesenseIMUToJson(this);
+
+  @override
+  String get jsonType => dataType;
+}
+
+/// Movesense accelerometer sample
+@JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
+class MovesenseAccelerometerSample {
+  /// X,Y,Z value in milli-G (including gravity)
+  final double x, y, z;
+
+  MovesenseAccelerometerSample(this.x, this.y, this.z);
+
+  factory MovesenseAccelerometerSample.fromJson(Map<String, dynamic> json) =>
+      _$MovesenseAccelerometerSampleFromJson(json);
+  Map<String, dynamic> toJson() => _$MovesenseAccelerometerSampleToJson(this);
+}
+
+/// Movesense gyroscope sample
+@JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
+class MovesenseGyroscopeSample {
+  /// X, Y, Z axis value in deg/sec
+  final double x, y, z;
+
+  MovesenseGyroscopeSample(this.x, this.y, this.z);
+
+  factory MovesenseGyroscopeSample.fromJson(Map<String, dynamic> json) =>
+      _$MovesenseGyroscopeSampleFromJson(json);
+  Map<String, dynamic> toJson() => _$MovesenseGyroscopeSampleToJson(this);
+}
+
+/// Movesense magnetometer sample
+@JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
+class MovesenseMagnetometerSample {
+  /// X, Y, Z axis value in Gauss
+  final double x, y, z;
+
+  MovesenseMagnetometerSample(this.x, this.y, this.z);
+
+  factory MovesenseMagnetometerSample.fromJson(Map<String, dynamic> json) =>
+      _$MovesenseMagnetometerSampleFromJson(json);
+  Map<String, dynamic> toJson() => _$MovesenseMagnetometerSampleToJson(this);
 }

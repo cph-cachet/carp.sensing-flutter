@@ -46,7 +46,7 @@ const _$MovesenseDeviceStateEnumMap = {
 
 MovesenseHR _$MovesenseHRFromJson(Map<String, dynamic> json) => MovesenseHR(
       (json['hr'] as num).toDouble(),
-      (json['rr'] as List<dynamic>?)?.map((e) => e as int).toList() ?? const [],
+      json['rr'] as int?,
     )
       ..$type = json['__type'] as String?
       ..sensorSpecificData = json['sensorSpecificData'] == null
@@ -65,13 +65,13 @@ Map<String, dynamic> _$MovesenseHRToJson(MovesenseHR instance) {
   writeNotNull('__type', instance.$type);
   writeNotNull('sensorSpecificData', instance.sensorSpecificData);
   val['hr'] = instance.hr;
-  val['rr'] = instance.rr;
+  writeNotNull('rr', instance.rr);
   return val;
 }
 
 MovesenseECG _$MovesenseECGFromJson(Map<String, dynamic> json) => MovesenseECG(
-      (json['samples'] as List<dynamic>).map((e) => e as int).toList(),
       json['timestamp'] as int,
+      (json['samples'] as List<dynamic>).map((e) => e as int).toList(),
     )
       ..$type = json['__type'] as String?
       ..sensorSpecificData = json['sensorSpecificData'] == null
@@ -93,6 +93,120 @@ Map<String, dynamic> _$MovesenseECGToJson(MovesenseECG instance) {
   val['samples'] = instance.samples;
   return val;
 }
+
+MovesenseTemperature _$MovesenseTemperatureFromJson(
+        Map<String, dynamic> json) =>
+    MovesenseTemperature(
+      json['timestamp'] as int,
+      json['measurement'] as int,
+    )
+      ..$type = json['__type'] as String?
+      ..sensorSpecificData = json['sensorSpecificData'] == null
+          ? null
+          : Data.fromJson(json['sensorSpecificData'] as Map<String, dynamic>);
+
+Map<String, dynamic> _$MovesenseTemperatureToJson(
+    MovesenseTemperature instance) {
+  final val = <String, dynamic>{};
+
+  void writeNotNull(String key, dynamic value) {
+    if (value != null) {
+      val[key] = value;
+    }
+  }
+
+  writeNotNull('__type', instance.$type);
+  writeNotNull('sensorSpecificData', instance.sensorSpecificData);
+  val['timestamp'] = instance.timestamp;
+  val['measurement'] = instance.measurement;
+  return val;
+}
+
+MovesenseIMU _$MovesenseIMUFromJson(Map<String, dynamic> json) => MovesenseIMU(
+      json['timestamp'] as int,
+      (json['accelerometer'] as List<dynamic>)
+          .map((e) =>
+              MovesenseAccelerometerSample.fromJson(e as Map<String, dynamic>))
+          .toList(),
+      (json['gyroscope'] as List<dynamic>)
+          .map((e) =>
+              MovesenseGyroscopeSample.fromJson(e as Map<String, dynamic>))
+          .toList(),
+      (json['magnetometer'] as List<dynamic>)
+          .map((e) =>
+              MovesenseMagnetometerSample.fromJson(e as Map<String, dynamic>))
+          .toList(),
+    )
+      ..$type = json['__type'] as String?
+      ..sensorSpecificData = json['sensorSpecificData'] == null
+          ? null
+          : Data.fromJson(json['sensorSpecificData'] as Map<String, dynamic>);
+
+Map<String, dynamic> _$MovesenseIMUToJson(MovesenseIMU instance) {
+  final val = <String, dynamic>{};
+
+  void writeNotNull(String key, dynamic value) {
+    if (value != null) {
+      val[key] = value;
+    }
+  }
+
+  writeNotNull('__type', instance.$type);
+  writeNotNull('sensorSpecificData', instance.sensorSpecificData);
+  val['timestamp'] = instance.timestamp;
+  val['accelerometer'] = instance.accelerometer;
+  val['gyroscope'] = instance.gyroscope;
+  val['magnetometer'] = instance.magnetometer;
+  return val;
+}
+
+MovesenseAccelerometerSample _$MovesenseAccelerometerSampleFromJson(
+        Map<String, dynamic> json) =>
+    MovesenseAccelerometerSample(
+      (json['x'] as num).toDouble(),
+      (json['y'] as num).toDouble(),
+      (json['z'] as num).toDouble(),
+    );
+
+Map<String, dynamic> _$MovesenseAccelerometerSampleToJson(
+        MovesenseAccelerometerSample instance) =>
+    <String, dynamic>{
+      'x': instance.x,
+      'y': instance.y,
+      'z': instance.z,
+    };
+
+MovesenseGyroscopeSample _$MovesenseGyroscopeSampleFromJson(
+        Map<String, dynamic> json) =>
+    MovesenseGyroscopeSample(
+      (json['x'] as num).toDouble(),
+      (json['y'] as num).toDouble(),
+      (json['z'] as num).toDouble(),
+    );
+
+Map<String, dynamic> _$MovesenseGyroscopeSampleToJson(
+        MovesenseGyroscopeSample instance) =>
+    <String, dynamic>{
+      'x': instance.x,
+      'y': instance.y,
+      'z': instance.z,
+    };
+
+MovesenseMagnetometerSample _$MovesenseMagnetometerSampleFromJson(
+        Map<String, dynamic> json) =>
+    MovesenseMagnetometerSample(
+      (json['x'] as num).toDouble(),
+      (json['y'] as num).toDouble(),
+      (json['z'] as num).toDouble(),
+    );
+
+Map<String, dynamic> _$MovesenseMagnetometerSampleToJson(
+        MovesenseMagnetometerSample instance) =>
+    <String, dynamic>{
+      'x': instance.x,
+      'y': instance.y,
+      'z': instance.z,
+    };
 
 MovesenseDevice _$MovesenseDeviceFromJson(Map<String, dynamic> json) =>
     MovesenseDevice(

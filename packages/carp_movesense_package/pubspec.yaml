@@ -1,6 +1,6 @@
 name: carp_movesense_package
-description: A new Flutter package project.
-version: 0.0.1
+description: The CARP Movesense sampling package. Samples sensor data from the Movesense MD and FLASH devices.
+version: 1.4.0
 homepage:
 publish_to: 'none' # Remove this line if you wish to publish to pub.dev
 
@@ -22,7 +22,7 @@ dependencies:
   flutter_activity_recognition: ^3.0.0
   package_info_plus: ^5.0.0
   device_info_plus: ^9.1.0
-
+  async: ^2.11.0
 
 
 #dependency_overrides:

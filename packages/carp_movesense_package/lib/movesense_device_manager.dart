@@ -20,7 +20,7 @@ class MovesenseDevice extends BLEHeartRateDevice {
   static const String DEVICE_TYPE =
       '${DeviceConfiguration.DEVICE_NAMESPACE}.MovesenseDevice';
 
-  static const String DEFAULT_ROLE_NAME = 'Movesense Device';
+  static const String DEFAULT_ROLE_NAME = 'Movesense ECG Device';
 
   /// The Movesense device address.
   ///
@@ -79,7 +79,7 @@ class MovesenseDeviceManager extends BTLEDeviceManager<MovesenseDevice> {
   @override
   String get id => configuration?.address ?? '???';
 
-  int? _batteryLevel;
+  int? _batteryLevel = 80;
 
   @override
   int? get batteryLevel => _batteryLevel;
@@ -139,15 +139,14 @@ class MovesenseDeviceManager extends BTLEDeviceManager<MovesenseDevice> {
   }
 
   void _setupBatteryMonitoring() {
-    Timer.periodic(const Duration(minutes: 1), (_) {
+    Timer.periodic(const Duration(minutes: 10), (_) {
       Mds.get(
         Mds.createRequestUri(serial, "/System/States/1"),
         "{}",
         ((data, statusCode) {
           final dataContent = json.decode(data);
-          num batteryState = dataContent["content"] as num;
-          debug("$runtimeType - Battery state: $batteryState");
-          _batteryLevel = batteryState == 1 ? 10 : 80;
+          num batteryState = dataContent["Content"] as num;
+          _batteryLevel = batteryState == 0 ? 80 : 10;
           _batteryEventController.add(_batteryLevel ?? 0);
         }),
         (error, statusCode) => {},

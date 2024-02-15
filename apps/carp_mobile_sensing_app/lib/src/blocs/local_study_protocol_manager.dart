@@ -230,13 +230,12 @@ class LocalStudyProtocolManager implements StudyProtocolManager {
     //     ]),
     //     polar);
 
-    // 4B:8B:54:B3:D8:C0
-    // 7A:48:93:F1:E9:44
-    // 56:DB:A3:A8:18:5B
-
+    // Known Movensense devices:
+    //  - Movesense MD : 220330000122 : 0C:8C:DC:3F:B2:CD
+    //  - Movesense    : 233830000687 : 0C:8C:DC:1B:23:3E
     var movesense = MovesenseDevice(
-      address: '4B:8B:54:B3:D8:C0',
-      name: 'Movesense 233830000615',
+      address: '0C:8C:DC:3F:B2:CD',
+      name: 'Movesense MD 2203300 00122',
     );
 
     protocol.addConnectedDevice(movesense, phone);
