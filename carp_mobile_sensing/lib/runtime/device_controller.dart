@@ -92,51 +92,6 @@ class DeviceController implements DeviceDataCollectorFactory {
   @override
   void unregisterDevice(String deviceType) => _devices.remove(deviceType);
 
-  @override
-  void initializeDevices(PrimaryDeviceDeployment primaryDeviceDeployment) {
-    //  first initialize the primary device (i.e. this phone)
-    initializeDevice(primaryDeviceDeployment.deviceConfiguration);
-    // and then initialize all the connected devices (if any)
-    for (var configuration in primaryDeviceDeployment.connectedDevices) {
-      initializeDevice(configuration);
-    }
-  }
-
-  @override
-  void initializeDevice(DeviceConfiguration configuration) {
-    if (hasDevice(configuration.type)) {
-      _devices[configuration.type]?.initialize(configuration);
-    } else {
-      warning(
-          "A device of type '${configuration.type}' is not available on this device. "
-          "This may be because this device is not available on this operating system. "
-          "Or it may be because the sampling package containing this device has not been "
-          "registered in the SamplingPackageRegistry.");
-    }
-  }
-
-  /// Start heartbeat monitoring for all devices, incl. the phone, for the
-  /// deployment controlled by [controller].
-  void startHeartbeatMonitoring(SmartphoneDeploymentController controller) {
-    for (var device in devices.values) {
-      device.startHeartbeatMonitoring(controller);
-    }
-  }
-
-  /// A convenient method for connecting all connectable devices available
-  /// in each [SamplingPackage] that has been registered in the
-  /// [SamplingPackageRegistry].
-  Future<void> connectAllConnectableDevices() async {
-    for (var package in SamplingPackageRegistry().packages) {
-      if (getDevice(package.deviceType) != null &&
-          getDevice(package.deviceType)!.isInitialized) {
-        if (await package.deviceManager.canConnect()) {
-          await getDevice(package.deviceType)?.connect();
-        }
-      }
-    }
-  }
-
   /// A convenient method for disconnecting all connected devices.
   Future<void> disconnectAllConnectedDevices() async {
     for (var device in connectedDevices) {

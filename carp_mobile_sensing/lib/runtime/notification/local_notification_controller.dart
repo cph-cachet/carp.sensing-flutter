@@ -27,7 +27,6 @@ class FlutterLocalNotificationController implements NotificationController {
   /// Initialize and set up the notification controller.
   @override
   Future<void> initialize() async {
-    info('$runtimeType initializing....');
     tz.initializeTimeZones();
 
     await FlutterLocalNotificationsPlugin().initialize(
@@ -41,10 +40,11 @@ class FlutterLocalNotificationController implements NotificationController {
     );
 
     info('$runtimeType initialized.');
-    debug('PENDING NOTIFICATIONS:');
+
+    debug('$runtimeType - Pending Notifications:');
     for (var notification in (await FlutterLocalNotificationsPlugin()
         .pendingNotificationRequests())) {
-      debug('${notification.title}');
+      debug('  - ${notification.title}');
     }
   }
 

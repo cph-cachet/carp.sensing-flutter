@@ -9,18 +9,16 @@ import 'package:carp_mobile_sensing/carp_mobile_sensing.dart';
 import 'package:mdsflutter/Mds.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:json_annotation/json_annotation.dart';
-import 'package:async/async.dart';
 
 part 'carp_movesense_package.g.dart';
 
 part 'movesense_data.dart';
 part 'movesense_probes.dart';
 part 'movesense_device_manager.dart';
-part 'mds_facade.dart';
 
 // Identifiers for CACHET test devices:
 //  - Movesense MD : 220330000122 : 0C:8C:DC:3F:B2:CD
-//  - Movesense    : 233830000687 : 0C:8C:DC:1B:23:3E
+//  - Movesense ?? : 233830000687 : 0C:8C:DC:1B:23:3E
 
 class MovesenseSamplingPackage implements SamplingPackage {
   static const String MOVESENSE_NAMESPACE = "${NameSpace.CARP}.movesense";

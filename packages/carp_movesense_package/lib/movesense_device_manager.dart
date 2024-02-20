@@ -53,6 +53,10 @@ class MovesenseDevice extends BLEHeartRateDevice {
 }
 
 class MovesenseDeviceManager extends BTLEDeviceManager<MovesenseDevice> {
+  int? _batteryLevel;
+  final StreamController<int> _batteryEventController =
+      StreamController.broadcast();
+
   MovesenseDeviceManager(super.type);
 
   @override
@@ -79,8 +83,6 @@ class MovesenseDeviceManager extends BTLEDeviceManager<MovesenseDevice> {
   @override
   String get id => configuration?.address ?? '???';
 
-  int? _batteryLevel = 80;
-
   @override
   int? get batteryLevel => _batteryLevel;
 
@@ -90,14 +92,18 @@ class MovesenseDeviceManager extends BTLEDeviceManager<MovesenseDevice> {
   @override
   String? get displayName => btleName;
 
-  final StreamController<int> _batteryEventController =
-      StreamController.broadcast();
-
   @override
   Stream<int> get batteryEvents => _batteryEventController.stream;
 
+  /// The device info for the connected Movesense device.
+  /// Only available after device is connected.
+  /// See https://www.movesense.com/docs/esw/api_reference/#info
+  Map<String, dynamic>? deviceInfo;
+
+  /// The address of the Movesense device.
   String? get address => configuration?.address;
 
+  /// The serial number of the connected Movesense device.
   String get serial => configuration?.serial ?? '???';
 
   @override
@@ -120,7 +126,8 @@ class MovesenseDeviceManager extends BTLEDeviceManager<MovesenseDevice> {
 
         debug("$runtimeType - Successfully connected.");
 
-        _setupBatteryMonitoring();
+        _getDeviceInfo();
+        _getBatteryStatus();
       },
       // onDisconnected
       () {
@@ -138,7 +145,35 @@ class MovesenseDeviceManager extends BTLEDeviceManager<MovesenseDevice> {
     return status;
   }
 
-  void _setupBatteryMonitoring() {
+  /// Get the detailed info about this Movesense device.
+  ///
+  /// See https://www.movesense.com/docs/esw/api_reference/#info
+  void _getDeviceInfo() {
+    debug('$runtimeType - Getting device info.');
+
+    Mds.get(
+      Mds.createRequestUri(serial, "/Info"),
+      "{}",
+      ((data, statusCode) {
+        debug('$runtimeType - Movesense Device Info:\n$data');
+        final dataContent = json.decode(data);
+        deviceInfo = dataContent["Content"] as Map<String, dynamic>;
+        String type = deviceInfo!["variant"] as String;
+        if (type.toUpperCase() == "MD") {
+          configuration?.deviceType = MovesenseDeviceType.MD;
+        }
+      }),
+      (error, statusCode) => {},
+    );
+  }
+
+  /// Setting up a request (GET) for battery status at a regular interval.
+  /// We can subscribe to battery state changes, but they come so rarely that its
+  /// better to request the status.
+  void _getBatteryStatus() {
+    _batteryLevel = 80;
+    debug('$runtimeType - Setting up battery monitoring.');
+
     Timer.periodic(const Duration(minutes: 10), (_) {
       Mds.get(
         Mds.createRequestUri(serial, "/System/States/1"),
@@ -146,6 +181,7 @@ class MovesenseDeviceManager extends BTLEDeviceManager<MovesenseDevice> {
         ((data, statusCode) {
           final dataContent = json.decode(data);
           num batteryState = dataContent["Content"] as num;
+          // Movesense only reports "OK" (0) or "LOW" (1) battery state
           _batteryLevel = batteryState == 0 ? 80 : 10;
           _batteryEventController.add(_batteryLevel ?? 0);
         }),

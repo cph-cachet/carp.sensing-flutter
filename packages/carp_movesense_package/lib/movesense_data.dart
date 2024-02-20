@@ -43,9 +43,14 @@ enum MovesenseDeviceState {
 class MovesenseStateChange extends SensorData {
   static const dataType = MovesenseSamplingPackage.STATE;
 
+  /// The state event.
   final MovesenseDeviceState state;
 
-  MovesenseStateChange(this.state);
+  /// The timestamp of this state event in milliseconds.
+  late int timestamp;
+
+  MovesenseStateChange(this.state, [int? timestamp])
+      : this.timestamp = timestamp ?? DateTime.now().millisecond;
 
   // Example event:
   //
@@ -53,48 +58,45 @@ class MovesenseStateChange extends SensorData {
   //
   // NOTE - the json listed on the official Movesense API is wrong!
   factory MovesenseStateChange.fromMovesenseData(dynamic data) {
-    MovesenseStateChange state =
-        MovesenseStateChange(MovesenseDeviceState.unknown);
+    MovesenseDeviceState state = MovesenseDeviceState.unknown;
 
     debug("MovesenseStateChange - data event: $data");
 
-    // int stateId = (data["Body"]["StateId"] as List<dynamic>)
-    //     .map((e) => e as int)
-    //     .toList()[0];
+    num timestamp = data["Body"]["Timestamp"] as num;
     num stateId = data["Body"]["StateId"] as num;
     num newState = data["Body"]["NewState"] as num;
 
     switch (stateId) {
       case 0: // movement
         state = (newState == 0)
-            ? MovesenseStateChange(MovesenseDeviceState.notMoving)
-            : MovesenseStateChange(MovesenseDeviceState.moving);
+            ? MovesenseDeviceState.notMoving
+            : MovesenseDeviceState.moving;
         break;
       case 2: // connectors
         state = (newState == 0)
-            ? MovesenseStateChange(MovesenseDeviceState.disconnected)
-            : MovesenseStateChange(MovesenseDeviceState.connected);
+            ? MovesenseDeviceState.disconnected
+            : MovesenseDeviceState.connected;
         break;
       case 3: // double-tap
         if (newState == 1) {
-          state = MovesenseStateChange(MovesenseDeviceState.doubleTap);
+          state = MovesenseDeviceState.doubleTap;
         }
         break;
       case 4: // tap
         if (newState == 1) {
-          state = MovesenseStateChange(MovesenseDeviceState.tap);
+          state = MovesenseDeviceState.tap;
         }
         break;
       case 5: // free-fall
         state = (newState == 0)
-            ? MovesenseStateChange(MovesenseDeviceState.acceleration)
-            : MovesenseStateChange(MovesenseDeviceState.freeFall);
+            ? MovesenseDeviceState.acceleration
+            : MovesenseDeviceState.freeFall;
         break;
 
       default:
     }
 
-    return state;
+    return MovesenseStateChange(state, timestamp.toInt());
   }
 
   @override

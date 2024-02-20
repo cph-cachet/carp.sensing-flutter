@@ -10,6 +10,7 @@ MovesenseStateChange _$MovesenseStateChangeFromJson(
         Map<String, dynamic> json) =>
     MovesenseStateChange(
       $enumDecode(_$MovesenseDeviceStateEnumMap, json['state']),
+      json['timestamp'] as int?,
     )
       ..$type = json['__type'] as String?
       ..sensorSpecificData = json['sensorSpecificData'] == null
@@ -29,6 +30,7 @@ Map<String, dynamic> _$MovesenseStateChangeToJson(
   writeNotNull('__type', instance.$type);
   writeNotNull('sensorSpecificData', instance.sensorSpecificData);
   val['state'] = _$MovesenseDeviceStateEnumMap[instance.state]!;
+  val['timestamp'] = instance.timestamp;
   return val;
 }
 

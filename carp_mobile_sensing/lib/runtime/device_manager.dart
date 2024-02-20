@@ -64,7 +64,7 @@ abstract class DeviceManager<TDeviceConfiguration extends DeviceConfiguration>
   @nonVirtual
   void initialize(TDeviceConfiguration configuration) {
     info(
-        'Initializing device manager, type: $typeName, configuration: $configuration');
+        '$runtimeType - Initializing, type: $typeName, configuration: $configuration');
     super.configuration = configuration;
     onInitialize(configuration);
 
@@ -174,7 +174,7 @@ abstract class DeviceManager<TDeviceConfiguration extends DeviceConfiguration>
       status = await onConnect();
     } catch (error) {
       warning(
-          '$runtimeType - cannot connect to device $configuration - error: $error');
+          '$runtimeType - Error connecting to device of type: $typeName. $error');
     }
 
     return status;

@@ -1,3 +1,7 @@
+## 1.4.5
+
+* improvements to handling connected BLE devices
+
 ## 1.4.4
 
 * upgrade of plugins (battery_plus, sensor_plus, cron)
