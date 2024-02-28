@@ -31,14 +31,14 @@ class MovesenseStateChangeProbe extends _MovesenseProbe {
 
   @override
   Future<bool> onStart() async {
-    // Due to an error in Movesense we can only subscribe to MAX 2 state changes
+    // Due to an error in Movesense we can only subscribe to MAX 1 state changes
     // See https://github.com/petri-lipponen-movesense/mdsflutter/issues/15
     //
     // Seems like the only states we can listen to is the connectors and tap events.....
     // Tested on the MD 00122 device.
 
     // _addStateSubscription(MovensenseStateChange.movement); // error
-    _addStateSubscription(MovensenseStateChange.connectors); // ok
+    // _addStateSubscription(MovensenseStateChange.connectors); // ok
     // _addStateSubscription(MovensenseStateChange.doubleTap); // error
     _addStateSubscription(MovensenseStateChange.tap); // ok
     // _addStateSubscription(MovensenseStateChange.freeFall); // error

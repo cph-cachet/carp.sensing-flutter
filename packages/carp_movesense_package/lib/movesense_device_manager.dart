@@ -100,8 +100,8 @@ class MovesenseDeviceManager extends BTLEDeviceManager<MovesenseDevice> {
   /// See https://www.movesense.com/docs/esw/api_reference/#info
   Map<String, dynamic>? deviceInfo;
 
-  /// The address of the Movesense device.
-  String? get address => configuration?.address;
+  /// The BLE address of the Movesense device.
+  // String? get address => configuration?.address;
 
   /// The serial number of the connected Movesense device.
   String get serial => configuration?.serial ?? '???';
@@ -158,9 +158,20 @@ class MovesenseDeviceManager extends BTLEDeviceManager<MovesenseDevice> {
         debug('$runtimeType - Movesense Device Info:\n$data');
         final dataContent = json.decode(data);
         deviceInfo = dataContent["Content"] as Map<String, dynamic>;
-        String type = deviceInfo!["variant"] as String;
-        if (type.toUpperCase() == "MD") {
-          configuration?.deviceType = MovesenseDeviceType.MD;
+        String hw = (deviceInfo!["hw"] as String).toUpperCase()[0];
+
+        // Try to figure out the type of device based on the "hw" property
+        //
+        // H3 is "HR+", H4 is "HR2", A1 is "MD"
+        switch (hw) {
+          case 'A':
+            configuration?.deviceType = MovesenseDeviceType.MD;
+            break;
+          case 'H':
+            configuration?.deviceType = MovesenseDeviceType.ACTIVE;
+            break;
+          default:
+            configuration?.deviceType = MovesenseDeviceType.ACTIVE;
         }
       }),
       (error, statusCode) => {},
@@ -196,6 +207,10 @@ class MovesenseDeviceManager extends BTLEDeviceManager<MovesenseDevice> {
       warning('$runtimeType - cannot disconnect from device, address is null.');
       return false;
     }
+    debug(
+        "$runtimeType - Disconnecting... address: '${configuration!.address}'");
+    debug("$runtimeType - Disconnecting... btleAddress: '$btleAddress'");
+
     Mds.disconnect(configuration!.address!);
     return true;
   }

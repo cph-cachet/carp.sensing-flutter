@@ -260,7 +260,6 @@ class SmartphoneDeploymentController extends StudyRuntime<DeviceRegistration> {
     // connect all the connected devices and the primary device (i.e. this phone)
     for (var configuration in deployment!.devices) {
       var device = deviceRegistry.getDevice(configuration.type);
-      debug('$runtimeType - starting connecting to device: $device');
       if (device != null && await device.canConnect()) await device.connect();
     }
   }

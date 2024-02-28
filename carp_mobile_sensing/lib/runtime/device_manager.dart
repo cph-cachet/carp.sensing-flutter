@@ -220,7 +220,7 @@ abstract class DeviceManager<TDeviceConfiguration extends DeviceConfiguration>
     bool success = false;
     if (status == DeviceStatus.connected || status == DeviceStatus.connecting) {
       info(
-          '$runtimeType - Trying to disconnect to device of type: $typeName and id: $id');
+          '$runtimeType - Trying to disconnect from device of type: $typeName and id: $id');
 
       stop(); // first stop all sampling on this device.
 

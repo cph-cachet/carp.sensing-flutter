@@ -166,7 +166,8 @@ abstract class IntervalProbe extends MeasurementProbe {
 ///
 /// See [BatteryProbe] for an example.
 abstract class StreamProbe extends Probe {
-  StreamSubscription<dynamic>? subscription;
+  StreamSubscription<dynamic>? _subscription;
+  Stream<Measurement>? _stream;
 
   /// The stream of [Measurement] objects for this [StreamProbe].
   /// Must be implemented by sub-classes.
@@ -174,26 +175,28 @@ abstract class StreamProbe extends Probe {
 
   @override
   Future<bool> onStart() async {
-    if (stream == null) {
+    _stream ??= stream;
+    debug('$runtimeType - stream: $_stream');
+    if (_stream == null) {
       warning(
           "Trying to start the stream probe '$runtimeType' which does not provide a measurement stream. "
           'Have you initialized this probe correctly?');
       return false;
     } else {
-      subscription = stream!.listen(onData, onError: onError, onDone: onDone);
+      _subscription = _stream!.listen(onData, onError: onError, onDone: onDone);
     }
     return true;
   }
 
   @override
   Future<bool> onStop() async {
-    await subscription?.cancel();
+    await _subscription?.cancel();
     return true;
   }
 
   @override
   Future<bool> onRestart() async {
-    await subscription?.cancel();
+    await _subscription?.cancel();
     return true;
   }
 
@@ -202,33 +205,6 @@ abstract class StreamProbe extends Probe {
   void onError(Object error) => addError(error);
   void onDone() => controller.close();
 }
-
-// /// An abstract class used to create a probe that listen continuously to events
-// /// from the [futureStream] of [Datum] objects.
-// /// In contrast to the [StreamProbe], this probes waits until the [futureStream]
-// /// is available.
-// ///
-// /// Sub-classes must implement the
-// ///
-// ///     Future<Stream<Datum>>? get futureStream => ...
-// ///
-// /// method in order to provide the stream to collect data from.
-// abstract class FutureStreamProbe extends StreamProbe {
-//   Stream<Datum>? _stream;
-
-//   @override
-//   Stream<Datum>? get stream => _stream;
-
-//   /// The stream of [Datum] objects for this [FutureStreamProbe].
-//   /// Must be implemented by sub-classes.
-//   Future<Stream<Datum>>? get futureStream;
-
-//   @override
-//   Future<void> onResume() async {
-//     _stream = await futureStream;
-//     super.onResume();
-//   }
-// }
 
 /// A periodic probe listening on a stream. Listening is done periodically as
 /// specified in a [PeriodicSamplingConfiguration] listening on intervals every
@@ -394,7 +370,7 @@ abstract class BufferingIntervalStreamProbe extends StreamProbe {
   Future<bool> onStart() async {
     Duration? interval = samplingConfiguration?.interval;
     if (interval != null) {
-      subscription = bufferingStream.listen(
+      _subscription = bufferingStream.listen(
         onSamplingData,
         onError: onError,
         onDone: onDone,
@@ -419,7 +395,7 @@ abstract class BufferingIntervalStreamProbe extends StreamProbe {
   @override
   Future<bool> onStop() async {
     await super.onStop();
-    await subscription?.cancel();
+    await _subscription?.cancel();
     return true;
   }
 
@@ -478,10 +454,10 @@ abstract class BufferingPeriodicStreamProbe extends PeriodicStreamProbe {
     if (interval != null && duration != null) {
       timer = Timer.periodic(interval, (Timer t) {
         onSamplingStart();
-        subscription = bufferingStream.listen(onSamplingData,
+        _subscription = bufferingStream.listen(onSamplingData,
             onError: onError, onDone: onDone);
         Timer(duration, () async {
-          await subscription?.cancel();
+          await _subscription?.cancel();
           onSamplingEnd();
           try {
             Measurement? measurement = await getMeasurement();

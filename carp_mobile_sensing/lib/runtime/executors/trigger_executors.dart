@@ -287,13 +287,20 @@ class SamplingEventTriggerExecutor
 
   @override
   Future<bool> onStart() async {
-    _subscription = SmartPhoneClientManager()
-        .lookupStudyRuntime(deployment!.studyDeploymentId,
-            deployment!.deviceConfiguration.roleName)
+    _subscription ??= SmartPhoneClientManager()
+        .lookupStudyRuntime(
+          deployment!.studyDeploymentId,
+          deployment!.deviceConfiguration.roleName,
+        )
         ?.measurementsByType(configuration!.measureType)
+        .distinct()
         .listen((measurement) {
+      debug('$runtimeType [$hashCode] - data: ${measurement.data}');
       if ((configuration!.triggerCondition != null) &&
           measurement.data.equivalentTo(configuration!.triggerCondition!)) {
+        debug(
+            '$runtimeType [$hashCode] - TRIGGERING - triggerCondition: ${configuration!.triggerCondition}');
+
         onTrigger();
       }
     });
@@ -314,7 +321,7 @@ class ConditionalSamplingEventTriggerExecutor
 
   @override
   Future<bool> onStart() async {
-    _subscription = SmartPhoneClientManager()
+    _subscription ??= SmartPhoneClientManager()
         .lookupStudyRuntime(deployment!.studyDeploymentId,
             deployment!.deviceConfiguration.roleName)
         ?.measurementsByType(configuration!.measureType)
@@ -478,7 +485,8 @@ class UserTaskTriggerExecutor extends TriggerExecutor<UserTaskTrigger> {
   @override
   Future<bool> onStart() async {
     // listen for event of the specified type and trigger as needed
-    _subscription = AppTaskController().userTaskEvents.listen((userTask) async {
+    _subscription ??=
+        AppTaskController().userTaskEvents.listen((userTask) async {
       if (userTask.task.name == configuration!.taskName &&
           userTask.state == configuration!.triggerCondition) {
         onTrigger();

@@ -11,7 +11,9 @@ part of survey;
 ///
 /// A [SurveyUserTask] is enqueued on the [AppTaskController]'s [userTaskQueue]
 /// and can be accessed from here. When a user starts this user task, the
-/// [onStart] method is called, and the survey (a [RPTask]) is shown.
+/// [onStart] method should be called.
+///
+/// The survey page to show in the app is available as the [widget].
 class SurveyUserTask extends UserTask {
   //
   // A set if predefined commonly used task types.
@@ -23,7 +25,6 @@ class SurveyUserTask extends UserTask {
   static const String IMAGE_TYPE = 'image';
   static const String INFORMED_CONSENT_TYPE = 'informed_consent';
 
-  // late BuildContext _context;
   final _controller = StreamController<Measurement>();
 
   /// The [RPAppTask] from which this user task originates from.
@@ -50,9 +51,11 @@ class SurveyUserTask extends UserTask {
 
   void _onSurveySubmit(RPTaskResult result) {
     executor.stop();
+
     // when we have the survey result, add it to the data stream
-    _controller.add(Measurement.fromData(RPTaskResultData(result)));
-    super.onDone();
+    var data = RPTaskResultData(result);
+    _controller.add(Measurement.fromData(data));
+    super.onDone(result: data);
   }
 
   void _onSurveyCancel([RPTaskResult? result]) {

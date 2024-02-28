@@ -1,3 +1,7 @@
+## 1.4.1
+
+* small update to `DeviceDataCollectorFactory` API.
+
 ## 1.4.0
 
 * upgrade to Dart 3.2

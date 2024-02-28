@@ -42,9 +42,9 @@ class MovesenseSamplingPackage implements SamplingPackage {
       case ECG:
         return MovesenseECGProbe();
       case TEMPERATURE:
-        return MovesenseIMUProbe();
+        return MovesenseTemperatureProbe();
       case IMU:
-        return MovesenseECGProbe();
+        return MovesenseIMUProbe();
       default:
         return null;
     }

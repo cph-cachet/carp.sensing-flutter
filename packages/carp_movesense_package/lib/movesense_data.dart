@@ -39,6 +39,10 @@ enum MovesenseDeviceState {
 /// Currently available states are listed in [MovesenseDeviceState].
 ///
 /// See https://www.movesense.com/docs/esw/api_reference/#systemstates
+///
+/// **NOTE**, however, that currently there is a bug i the Movesense API and the
+/// [MovesenseStateChangeProbe] is only able to collect single tap events.
+/// See issue [#15](https://github.com/petri-lipponen-movesense/mdsflutter/issues/15).
 @JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
 class MovesenseStateChange extends SensorData {
   static const dataType = MovesenseSamplingPackage.STATE;
@@ -59,8 +63,6 @@ class MovesenseStateChange extends SensorData {
   // NOTE - the json listed on the official Movesense API is wrong!
   factory MovesenseStateChange.fromMovesenseData(dynamic data) {
     MovesenseDeviceState state = MovesenseDeviceState.unknown;
-
-    debug("MovesenseStateChange - data event: $data");
 
     num timestamp = data["Body"]["Timestamp"] as num;
     num stateId = data["Body"]["StateId"] as num;
@@ -100,6 +102,10 @@ class MovesenseStateChange extends SensorData {
   }
 
   @override
+  bool equivalentTo(Data other) =>
+      other is MovesenseStateChange && state == other.state;
+
+  @override
   Function get fromJsonFunction => _$MovesenseStateChangeFromJson;
   factory MovesenseStateChange.fromJson(Map<String, dynamic> json) =>
       FromJsonFactory().fromJson(json) as MovesenseStateChange;
@@ -127,8 +133,6 @@ class MovesenseHR extends SensorData {
   MovesenseHR(this.hr, [this.rr]);
 
   factory MovesenseHR.fromMovesenseData(dynamic data) {
-    debug("MovesenseHR - data event: $data");
-
     num average = data["Body"]["average"] as num;
     // returns a list of R-R measures with only one entry (the latest)
     int rr = (data["Body"]["rrData"] as List<dynamic>)
@@ -149,6 +153,10 @@ class MovesenseHR extends SensorData {
   String get jsonType => dataType;
 }
 
+/// Movesense sensor is equipped with analog front-end capable of capturing ECG
+/// signals.
+///
+/// See https://www.movesense.com/docs/esw/api_reference/#measecg
 @JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
 class MovesenseECG extends SensorData {
   static const dataType = MovesenseSamplingPackage.ECG;
@@ -162,8 +170,6 @@ class MovesenseECG extends SensorData {
   MovesenseECG(this.timestamp, this.samples);
 
   factory MovesenseECG.fromMovesenseData(dynamic data) {
-    debug("MovesenseECG - data event: $data");
-
     List<int> samples = (data["Body"]["Samples"] as List<dynamic>)
         .map((e) => e as int)
         .toList();
@@ -182,9 +188,9 @@ class MovesenseECG extends SensorData {
   String get jsonType => dataType;
 }
 
-/// Movesense sensor is equipped with temperature sensor, which can be used to
-/// measure device's internal temperature. Returned values are in units of
-/// Kelvins (K).
+/// The Movesense MD sensor is equipped with temperature sensor, which can be
+/// used to measure device's internal temperature. Returned values are in units
+/// of Kelvins (K).
 ///
 /// See https://www.movesense.com/docs/esw/api_reference/#meastemperature
 @JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
@@ -200,8 +206,6 @@ class MovesenseTemperature extends SensorData {
   MovesenseTemperature(this.timestamp, this.measurement);
 
   factory MovesenseTemperature.fromMovesenseData(dynamic data) {
-    debug("MovesenseTemperature - data event: $data");
-
     num timestamp = data["Body"]["Timestamp"] as num;
     num measurement = data["Body"]["Measurement"] as num;
 
@@ -222,7 +226,7 @@ class MovesenseTemperature extends SensorData {
 /// Provides a synchronized access to combined accelerometer, gyroscope and magnetometer
 /// data samples for easier processing e.g. for AHRS algorithms.
 /// It is more efficient to subscribe to the IMU resource than to subscribe the
-/// individual resources separately.
+/// individual sensors separately.
 ///
 /// See https://www.movesense.com/docs/esw/api_reference/#measimu
 @JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
@@ -244,8 +248,6 @@ class MovesenseIMU extends SensorData {
   );
 
   factory MovesenseIMU.fromMovesenseData(dynamic data) {
-    debug("MovesenseAccelerometer - data event: $data");
-
     num timestamp = data["Body"]["Timestamp"] as num;
 
     List<MovesenseAccelerometerSample> acc =
