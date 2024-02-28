@@ -180,7 +180,7 @@ abstract class StreamProbe extends Probe {
     if (_stream == null) {
       warning(
           "Trying to start the stream probe '$runtimeType' which does not provide a measurement stream. "
-          'Have you initialized this probe correctly?');
+          'Have you initialized this probe correctly or is the device connected?');
       return false;
     } else {
       _subscription = _stream!.listen(onData, onError: onError, onDone: onDone);
@@ -191,12 +191,14 @@ abstract class StreamProbe extends Probe {
   @override
   Future<bool> onStop() async {
     await _subscription?.cancel();
+    _stream = null;
     return true;
   }
 
   @override
   Future<bool> onRestart() async {
     await _subscription?.cancel();
+    _stream = null;
     return true;
   }
 

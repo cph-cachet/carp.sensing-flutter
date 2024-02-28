@@ -8,8 +8,11 @@ enum MovesenseDeviceType {
   /// Movesense Medical sensor
   MD,
 
-  /// Movesense ACTIVE HR+ and HR2 sensor
-  ACTIVE,
+  /// Movesense ACTIVE HR+
+  HR_PLUS,
+
+  /// Movesense ACTIVE HR2 sensor
+  HR2,
 
   /// Movesense FLASH sensor
   FLASH,
@@ -158,20 +161,23 @@ class MovesenseDeviceManager extends BTLEDeviceManager<MovesenseDevice> {
         debug('$runtimeType - Movesense Device Info:\n$data');
         final dataContent = json.decode(data);
         deviceInfo = dataContent["Content"] as Map<String, dynamic>;
-        String hw = (deviceInfo!["hw"] as String).toUpperCase()[0];
+        String hw = (deviceInfo!["hw"] as String).toUpperCase();
 
         // Try to figure out the type of device based on the "hw" property
         //
         // H3 is "HR+", H4 is "HR2", A1 is "MD"
         switch (hw) {
-          case 'A':
+          case 'A1':
             configuration?.deviceType = MovesenseDeviceType.MD;
             break;
-          case 'H':
-            configuration?.deviceType = MovesenseDeviceType.ACTIVE;
+          case 'H3':
+            configuration?.deviceType = MovesenseDeviceType.HR_PLUS;
+            break;
+          case 'H4':
+            configuration?.deviceType = MovesenseDeviceType.HR2;
             break;
           default:
-            configuration?.deviceType = MovesenseDeviceType.ACTIVE;
+            configuration?.deviceType = MovesenseDeviceType.UNKNOWN;
         }
       }),
       (error, statusCode) => {},
@@ -209,7 +215,6 @@ class MovesenseDeviceManager extends BTLEDeviceManager<MovesenseDevice> {
     }
     debug(
         "$runtimeType - Disconnecting... address: '${configuration!.address}'");
-    debug("$runtimeType - Disconnecting... btleAddress: '$btleAddress'");
 
     Mds.disconnect(configuration!.address!);
     return true;

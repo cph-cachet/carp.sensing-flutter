@@ -161,7 +161,7 @@ class MovesenseHR extends SensorData {
 class MovesenseECG extends SensorData {
   static const dataType = MovesenseSamplingPackage.ECG;
 
-  /// The timestamp of this ECG sample in milliseconds.
+  /// The device's internal timestamp of this sample in milliseconds.
   final int timestamp;
 
   /// The ECG samples.
@@ -197,7 +197,7 @@ class MovesenseECG extends SensorData {
 class MovesenseTemperature extends SensorData {
   static const dataType = MovesenseSamplingPackage.TEMPERATURE;
 
-  /// The timestamp of this temperature measurement.
+  /// The device's internal timestamp of this sample in milliseconds.
   final int timestamp;
 
   /// The device's internal temperature in units of Kelvins (K).
@@ -223,8 +223,8 @@ class MovesenseTemperature extends SensorData {
   String get jsonType => dataType;
 }
 
-/// Provides a synchronized access to combined accelerometer, gyroscope and magnetometer
-/// data samples for easier processing e.g. for AHRS algorithms.
+/// Provides a synchronized access to combined accelerometer, gyroscope and
+/// magnetometer data samples for easier processing e.g. for AHRS algorithms.
 /// It is more efficient to subscribe to the IMU resource than to subscribe the
 /// individual sensors separately.
 ///
@@ -233,7 +233,7 @@ class MovesenseTemperature extends SensorData {
 class MovesenseIMU extends SensorData {
   static const dataType = MovesenseSamplingPackage.ECG;
 
-  /// The timestamp of this sample in milliseconds.
+  /// The device's internal timestamp of this sample in milliseconds.
   final int timestamp;
 
   final List<MovesenseAccelerometerSample> accelerometer;
@@ -252,20 +252,20 @@ class MovesenseIMU extends SensorData {
 
     List<MovesenseAccelerometerSample> acc =
         (data["Body"]["ArrayAcc"] as List<dynamic>)
-            .map((sample) => MovesenseAccelerometerSample(sample['x'] as double,
-                sample['y'] as double, sample['z'] as double))
+            .map((sample) => MovesenseAccelerometerSample(
+                sample['x'] as num, sample['y'] as num, sample['z'] as num))
             .toList();
 
     List<MovesenseGyroscopeSample> gyro =
         (data["Body"]["ArrayAcc"] as List<dynamic>)
-            .map((sample) => MovesenseGyroscopeSample(sample['x'] as double,
-                sample['y'] as double, sample['z'] as double))
+            .map((sample) => MovesenseGyroscopeSample(
+                sample['x'] as num, sample['y'] as num, sample['z'] as num))
             .toList();
 
     List<MovesenseMagnetometerSample> mag =
         (data["Body"]["ArrayAcc"] as List<dynamic>)
-            .map((sample) => MovesenseMagnetometerSample(sample['x'] as double,
-                sample['y'] as double, sample['z'] as double))
+            .map((sample) => MovesenseMagnetometerSample(
+                sample['x'] as num, sample['y'] as num, sample['z'] as num))
             .toList();
 
     return MovesenseIMU(timestamp.toInt(), acc, gyro, mag);
@@ -286,7 +286,7 @@ class MovesenseIMU extends SensorData {
 @JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
 class MovesenseAccelerometerSample {
   /// X,Y,Z value in milli-G (including gravity)
-  final double x, y, z;
+  final num x, y, z;
 
   MovesenseAccelerometerSample(this.x, this.y, this.z);
 
@@ -299,7 +299,7 @@ class MovesenseAccelerometerSample {
 @JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
 class MovesenseGyroscopeSample {
   /// X, Y, Z axis value in deg/sec
-  final double x, y, z;
+  final num x, y, z;
 
   MovesenseGyroscopeSample(this.x, this.y, this.z);
 
@@ -312,7 +312,7 @@ class MovesenseGyroscopeSample {
 @JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
 class MovesenseMagnetometerSample {
   /// X, Y, Z axis value in Gauss
-  final double x, y, z;
+  final num x, y, z;
 
   MovesenseMagnetometerSample(this.x, this.y, this.z);
 

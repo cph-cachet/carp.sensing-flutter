@@ -295,12 +295,12 @@ class SamplingEventTriggerExecutor
         ?.measurementsByType(configuration!.measureType)
         .distinct()
         .listen((measurement) {
-      debug('$runtimeType [$hashCode] - data: ${measurement.data}');
-      if ((configuration!.triggerCondition != null) &&
-          measurement.data.equivalentTo(configuration!.triggerCondition!)) {
-        debug(
-            '$runtimeType [$hashCode] - TRIGGERING - triggerCondition: ${configuration!.triggerCondition}');
-
+      if (configuration?.triggerCondition == null) {
+        // always trigger if the condition is null
+        onTrigger();
+      } else
+      // check the trigger condition
+      if (measurement.data.equivalentTo(configuration!.triggerCondition!)) {
         onTrigger();
       }
     });

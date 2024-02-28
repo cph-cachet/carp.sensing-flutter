@@ -1,6 +1,7 @@
-## 1.4.5
+## 1.4.6
 
 * improvements to handling connected BLE devices
+* improvement to triggers and probes using BLE devices
 
 ## 1.4.4
 

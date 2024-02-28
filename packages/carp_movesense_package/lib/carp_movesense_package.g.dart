@@ -165,9 +165,9 @@ Map<String, dynamic> _$MovesenseIMUToJson(MovesenseIMU instance) {
 MovesenseAccelerometerSample _$MovesenseAccelerometerSampleFromJson(
         Map<String, dynamic> json) =>
     MovesenseAccelerometerSample(
-      (json['x'] as num).toDouble(),
-      (json['y'] as num).toDouble(),
-      (json['z'] as num).toDouble(),
+      json['x'] as num,
+      json['y'] as num,
+      json['z'] as num,
     );
 
 Map<String, dynamic> _$MovesenseAccelerometerSampleToJson(
@@ -181,9 +181,9 @@ Map<String, dynamic> _$MovesenseAccelerometerSampleToJson(
 MovesenseGyroscopeSample _$MovesenseGyroscopeSampleFromJson(
         Map<String, dynamic> json) =>
     MovesenseGyroscopeSample(
-      (json['x'] as num).toDouble(),
-      (json['y'] as num).toDouble(),
-      (json['z'] as num).toDouble(),
+      json['x'] as num,
+      json['y'] as num,
+      json['z'] as num,
     );
 
 Map<String, dynamic> _$MovesenseGyroscopeSampleToJson(
@@ -197,9 +197,9 @@ Map<String, dynamic> _$MovesenseGyroscopeSampleToJson(
 MovesenseMagnetometerSample _$MovesenseMagnetometerSampleFromJson(
         Map<String, dynamic> json) =>
     MovesenseMagnetometerSample(
-      (json['x'] as num).toDouble(),
-      (json['y'] as num).toDouble(),
-      (json['z'] as num).toDouble(),
+      json['x'] as num,
+      json['y'] as num,
+      json['z'] as num,
     );
 
 Map<String, dynamic> _$MovesenseMagnetometerSampleToJson(
@@ -252,6 +252,7 @@ Map<String, dynamic> _$MovesenseDeviceToJson(MovesenseDevice instance) {
 const _$MovesenseDeviceTypeEnumMap = {
   MovesenseDeviceType.UNKNOWN: 'UNKNOWN',
   MovesenseDeviceType.MD: 'MD',
-  MovesenseDeviceType.ACTIVE: 'ACTIVE',
+  MovesenseDeviceType.HR_PLUS: 'HR_PLUS',
+  MovesenseDeviceType.HR2: 'HR2',
   MovesenseDeviceType.FLASH: 'FLASH',
 };

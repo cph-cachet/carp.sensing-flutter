@@ -333,13 +333,16 @@ class SmartPhoneClientManager extends SmartphoneClient
 
   /// Called when the system puts the app in the background or returns
   /// the app to the foreground.
+  ///
+  /// Implements the [WidgetsBindingObserver].
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
     debug('$runtimeType - App lifecycle state changed: $state');
     switch (state) {
       case AppLifecycleState.inactive:
-      case AppLifecycleState.paused:
       case AppLifecycleState.hidden:
+        break;
+      case AppLifecycleState.paused:
       case AppLifecycleState.detached:
         deactivate();
         break;
