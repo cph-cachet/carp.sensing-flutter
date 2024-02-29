@@ -121,7 +121,7 @@ Collection of Movesense measures can be added to a study protocol like this.
     ..addConnectedDevice(movesense, phone);
 
   // Add a background task that immediately starts collecting HR and ECG data
-  // from the Polar device.
+  // from the Movesense device.
   protocol.addTaskControl(
       ImmediateTrigger(),
       BackgroundTask(measures: [

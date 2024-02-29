@@ -45,7 +45,7 @@ void main() async {
       phone);
 
   // Add a background task that immediately starts collecting HR and ECG data
-  // from the Polar device.
+  // from the Movesense device.
   protocol.addTaskControl(
       ImmediateTrigger(),
       BackgroundTask(measures: [

@@ -218,8 +218,9 @@ MovesenseDevice _$MovesenseDeviceFromJson(Map<String, dynamic> json) =>
       name: json['name'] as String?,
       address: json['address'] as String?,
       serial: json['serial'] as String?,
-      deviceType:
-          $enumDecodeNullable(_$MovesenseDeviceTypeEnumMap, json['deviceType']),
+      deviceType: $enumDecodeNullable(
+              _$MovesenseDeviceTypeEnumMap, json['deviceType']) ??
+          MovesenseDeviceType.UNKNOWN,
     )
       ..$type = json['__type'] as String?
       ..defaultSamplingConfiguration =
@@ -245,7 +246,7 @@ Map<String, dynamic> _$MovesenseDeviceToJson(MovesenseDevice instance) {
   writeNotNull('address', instance.address);
   writeNotNull('serial', instance.serial);
   writeNotNull('name', instance.name);
-  writeNotNull('deviceType', _$MovesenseDeviceTypeEnumMap[instance.deviceType]);
+  val['deviceType'] = _$MovesenseDeviceTypeEnumMap[instance.deviceType]!;
   return val;
 }
 

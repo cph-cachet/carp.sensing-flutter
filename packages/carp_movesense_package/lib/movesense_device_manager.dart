@@ -37,7 +37,7 @@ class MovesenseDevice extends BLEHeartRateDevice {
   String? name;
 
   /// The type of Movesense device, if known.
-  MovesenseDeviceType? deviceType;
+  MovesenseDeviceType deviceType;
 
   MovesenseDevice(
       {super.roleName = MovesenseDevice.DEFAULT_ROLE_NAME,
@@ -45,7 +45,7 @@ class MovesenseDevice extends BLEHeartRateDevice {
       this.name,
       this.address,
       this.serial,
-      this.deviceType});
+      this.deviceType = MovesenseDeviceType.UNKNOWN});
 
   @override
   Function get fromJsonFunction => _$MovesenseDeviceFromJson;
@@ -162,6 +162,7 @@ class MovesenseDeviceManager extends BTLEDeviceManager<MovesenseDevice> {
         final dataContent = json.decode(data);
         deviceInfo = dataContent["Content"] as Map<String, dynamic>;
         String hw = (deviceInfo!["hw"] as String).toUpperCase();
+        debug('$runtimeType - HW: $hw');
 
         // Try to figure out the type of device based on the "hw" property
         //
@@ -179,6 +180,7 @@ class MovesenseDeviceManager extends BTLEDeviceManager<MovesenseDevice> {
           default:
             configuration?.deviceType = MovesenseDeviceType.UNKNOWN;
         }
+        debug('$runtimeType - deviceType: ${configuration?.deviceType}');
       }),
       (error, statusCode) => {},
     );
@@ -199,6 +201,7 @@ class MovesenseDeviceManager extends BTLEDeviceManager<MovesenseDevice> {
           final dataContent = json.decode(data);
           num batteryState = dataContent["Content"] as num;
           // Movesense only reports "OK" (0) or "LOW" (1) battery state
+          // This is translated to 80% & 10% battery level
           _batteryLevel = batteryState == 0 ? 80 : 10;
           _batteryEventController.add(_batteryLevel ?? 0);
         }),

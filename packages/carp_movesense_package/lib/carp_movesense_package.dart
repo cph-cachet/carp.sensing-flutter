@@ -71,35 +71,38 @@ class MovesenseSamplingPackage implements SamplingPackage {
   static const String TEMPERATURE = "$MOVESENSE_NAMESPACE.temperature";
   static const String IMU = "$MOVESENSE_NAMESPACE.imu";
 
-  final DeviceManager _deviceManager =
+  final MovesenseDeviceManager _deviceManager =
       MovesenseDeviceManager(MovesenseDevice.DEVICE_TYPE);
+
+  @override
+  List<DataTypeMetaData> get dataTypes => samplingSchemes.dataTypes;
+
+  @override
+  MovesenseDeviceManager get deviceManager => _deviceManager;
+
+  @override
+  String get deviceType => MovesenseDevice.DEVICE_TYPE;
 
   @override
   Probe? create(String type) {
     switch (type) {
       case STATE:
-      // return null;
-      // return MovesenseStateChangeProbe();
+        return MovesenseStateChangeProbe();
       case HR:
         return MovesenseHRProbe();
       case ECG:
         return MovesenseECGProbe();
       case TEMPERATURE:
-        return MovesenseTemperatureProbe();
+        // only the MD device supports temperature
+        return deviceManager.configuration?.deviceType == MovesenseDeviceType.MD
+            ? MovesenseTemperatureProbe()
+            : null;
       case IMU:
         return MovesenseIMUProbe();
       default:
         return null;
     }
   }
-
-  @override
-  List<DataTypeMetaData> get dataTypes => samplingSchemes.dataTypes;
-
-  @override
-  DeviceManager get deviceManager => _deviceManager;
-  @override
-  String get deviceType => MovesenseDevice.DEVICE_TYPE;
 
   @override
   void onRegister() {

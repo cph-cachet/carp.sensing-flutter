@@ -8,6 +8,7 @@ part of carp_movesense_package;
 
 abstract class _MovesenseProbe extends StreamProbe {
   int? _subscriptionId;
+
   final StreamController<String> _streamController =
       StreamController.broadcast();
 
@@ -16,44 +17,51 @@ abstract class _MovesenseProbe extends StreamProbe {
       super.deviceManager as MovesenseDeviceManager;
 
   String get serial => deviceManager.serial;
-  String type;
-  Function movesenseConverter;
+  String uri;
+  Function converter;
 
-  _MovesenseProbe(this.type, this.movesenseConverter);
+  _MovesenseProbe(this.uri, this.converter);
 
   @override
   Stream<Measurement>? get stream => deviceManager.isConnected
-      ? _streamController.stream.map((event) => Measurement.fromData(
-          movesenseConverter.call(jsonDecode(event)) as Data))
+      ? _streamController.stream.map((event) =>
+          Measurement.fromData(converter.call(jsonDecode(event)) as Data))
       : null;
 
   @override
-  Future<bool> onStart() async {
+  Future<bool> onStart() {
+    var completer = Completer<bool>();
+
     // fast out of already subscribed to this type of measurement
-    if (_subscriptionId != null) return false;
+    if (_subscriptionId != null) completer.complete(false);
 
     try {
-      _subscriptionId =
-          Mds.subscribe("$serial/Meas/$type", "{}", (data, status) {
+      _subscriptionId = Mds.subscribe("$serial/$uri", "{}", (data, status) {
         debug('$runtimeType - OnSuccess, data: $data, status: $status');
+        completer.complete(super.onStart());
       }, (error, status) {
-        warning('$runtimeType - OnError,data: $error, status: $status');
+        warning('$runtimeType - OnError, error: $error, status: $status');
         _streamController.addError(error);
         _subscriptionId = null;
+        completer.complete(false);
       }, (data) {
-        debug('$runtimeType - OnNotification,  data: $data');
+        debug('$runtimeType - OnNotification, data: $data');
         _streamController.add(data);
       }, (error, status) {
         warning(
-            '$runtimeType - OnSubscriptionError,error: $error, status: $status');
+            '$runtimeType - OnSubscriptionError, error: $error, status: $status');
         _streamController.addError(error);
         _subscriptionId = null;
+        completer.complete(false);
       });
     } catch (error) {
       warning('$runtimeType - Error, error: $error');
       _streamController.addError(error);
+      _subscriptionId = null;
+      completer.complete(false);
     }
-    return super.onStart();
+
+    return completer.future;
   }
 
   @override
@@ -63,18 +71,19 @@ abstract class _MovesenseProbe extends StreamProbe {
 
     if (_subscriptionId != null) Mds.unsubscribe(_subscriptionId!);
     _subscriptionId = null;
+
     return true;
   }
 }
 
 /// A probe collecting [MovesenseHR] events.
 class MovesenseHRProbe extends _MovesenseProbe {
-  MovesenseHRProbe() : super("HR", MovesenseHR.fromMovesenseData);
+  MovesenseHRProbe() : super("Meas/HR", MovesenseHR.fromMovesenseData);
 }
 
 /// A probe collecting [MovesenseECG] events at 125 Hz.
 class MovesenseECGProbe extends _MovesenseProbe {
-  MovesenseECGProbe() : super("ECG/125", MovesenseECG.fromMovesenseData);
+  MovesenseECGProbe() : super("Meas/ECG/125", MovesenseECG.fromMovesenseData);
 }
 
 /// A probe collecting [MovesenseTemperature] events.
@@ -82,13 +91,31 @@ class MovesenseECGProbe extends _MovesenseProbe {
 /// Note that not all type of Movesense devices supports temperature.
 class MovesenseTemperatureProbe extends _MovesenseProbe {
   MovesenseTemperatureProbe()
-      : super("Temp", MovesenseTemperature.fromMovesenseData);
+      : super("Meas/Temp", MovesenseTemperature.fromMovesenseData);
 }
 
 /// A probe collecting [MovesenseIMU] events at 13 Hz (lowest).
 class MovesenseIMUProbe extends _MovesenseProbe {
-  MovesenseIMUProbe() : super("IMU9/13", MovesenseIMU.fromMovesenseData);
+  MovesenseIMUProbe() : super("Meas/IMU9/13", MovesenseIMU.fromMovesenseData);
 }
+
+/// A probe collecting [MovesenseStateChange] events.
+/// See [MovesenseDeviceState] for an enumeration of possible states.
+///
+/// However, due to hardware limitation in Movesense we can only subscribe to
+/// maximum one (!) state changes
+/// See https://github.com/petri-lipponen-movesense/mdsflutter/issues/15
+///
+/// Seems like the only states we can listen to is the connectors and single tap
+/// events. This has been tested on the MD and HR2 devices.
+///
+/// Therefore, this probe **only** listens to single tap events.
+class MovesenseStateChangeProbe extends _MovesenseProbe {
+  MovesenseStateChangeProbe()
+      : super("System/States/4", MovesenseStateChange.fromMovesenseData);
+}
+
+// OLD STATE CHANGE PROBE BELOW - with notes
 
 enum MovensenseStateChange {
   movement,
@@ -99,6 +126,16 @@ enum MovensenseStateChange {
   freeFall,
 }
 
+// State Change overview
+//
+//     type        MD   HR+   HR2
+//    -----------+----+-----+-----
+//    movement   | -  |  ?  |  -
+//    connectors | +  |  ?  |  +
+//    doubleTap  | -  |  ?  |  -
+//    tap        | +  |  ?  |  +
+//    freeFall   | -  |  ?  |  -
+
 /// A probe collecting [MovesenseStateChange] events.
 /// See [MovesenseDeviceState] for an enumeration of possible states.
 ///
@@ -106,30 +143,28 @@ enum MovensenseStateChange {
 /// maximum one (!) state changes
 /// See https://github.com/petri-lipponen-movesense/mdsflutter/issues/15
 ///
-/// Seems like the only states we can listen to is the connectors and tap events.....
-/// Tested on the MD 00122 device.
-class MovesenseStateChangeProbe extends _MovesenseProbe {
+/// Seems like the only states we can listen to is the connectors and single tap
+/// events. This has been tested on the MD and HR2 devices.
+class MovesenseStateChangeProbeOld extends StreamProbe {
   /// A map from state id to subscription id.
   final Map<int, int> _subscriptionIDs = {};
   final StreamController<String> _subscriptionController =
       StreamController.broadcast();
 
-  MovesenseStateChangeProbe()
-      : super("", MovesenseStateChange.fromMovesenseData);
+  @override
+  MovesenseDeviceManager get deviceManager =>
+      super.deviceManager as MovesenseDeviceManager;
 
   @override
   Future<bool> onStart() async {
-    // Due to an error in Movesense we can only subscribe to MAX 1 state changes
+    // Due to limitations in the Movesense hardware we can only subscribe to MAX 1 state changes
     // See https://github.com/petri-lipponen-movesense/mdsflutter/issues/15
-    //
-    // Seems like the only states we can listen to is the connectors and tap events.....
-    // Tested on the MD 00122 device.
 
-    // _addStateSubscription(MovensenseStateChange.movement); // error
-    // _addStateSubscription(MovensenseStateChange.connectors); // ok
-    // _addStateSubscription(MovensenseStateChange.doubleTap); // error
-    _addStateSubscription(MovensenseStateChange.tap); // ok
-    // _addStateSubscription(MovensenseStateChange.freeFall); // error
+    // _addStateSubscription(MovensenseStateChange.movement);
+    // _addStateSubscription(MovensenseStateChange.connectors);
+    // _addStateSubscription(MovensenseStateChange.doubleTap);
+    // _addStateSubscription(MovensenseStateChange.tap);
+    _addStateSubscription(MovensenseStateChange.freeFall);
 
     return super.onStart();
   }
@@ -154,7 +189,7 @@ class MovesenseStateChangeProbe extends _MovesenseProbe {
             '$runtimeType - OnSuccess, stateId: $stateId, data: $data, status: $status');
       }, (error, status) {
         warning(
-            '$runtimeType - OnError, stateId: $stateId, data: $error, status: $status');
+            '$runtimeType - OnError, stateId: $stateId, error: $error, status: $status');
         _subscriptionController.addError(error);
       }, (data) {
         debug('$runtimeType - OnNotification, stateId: $stateId, data: $data');
