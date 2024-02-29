@@ -149,4 +149,8 @@ This should be handled on an app level.
 
 There is currently a hardware limitation in the Movesense device and only **one** movement state (movement, tap, double_tap, free_fall) can be subscribed at the same time.
 See issue [#15](https://github.com/petri-lipponen-movesense/mdsflutter/issues/15).
-Therefore the `MovesenseStateChangeProbe` is only able to collect single tap events and the `STATE` measure hence only reports on tap events.
+Therefore the `MovesenseStateChangeProbe` is only able to collect single tap events and the `STATE` measure hence only reports on single tap events.
+
+### Unstable Subscriptions
+
+When subscribing to multiple high-frequency measures - like HR, ECG, IMU - these subscriptions may time out with an error code `408`. This is probably because the Movesense hardware can't keep up with streaming all the data. So, if you need to stream multiple streams of data, you would often need to reconnect to the device, even multiple times. See also this [thread on stackoverflow](https://stackoverflow.com/questions/78074167/getting-error-status-408-when-subscribing-to-a-movesense-device).
