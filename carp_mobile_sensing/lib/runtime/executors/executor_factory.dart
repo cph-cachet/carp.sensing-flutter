@@ -46,57 +46,54 @@ class ExecutorFactory {
       TriggerExecutor executor = ImmediateTriggerExecutor();
 
       switch (trigger.runtimeType) {
-        case ElapsedTimeTrigger:
+        case const (ElapsedTimeTrigger):
           executor = ElapsedTimeTriggerExecutor();
           break;
-        case ScheduledTrigger:
+        case const (ScheduledTrigger):
           warning("ScheduledTrigger is not implemented yet. "
               "Using an 'ImmediateTriggerExecutor' instead.");
           executor = ImmediateTriggerExecutor();
           break;
-        case NoOpTrigger:
+        case const (NoOpTrigger):
           executor = NoOpTriggerExecutor();
           break;
-        case ImmediateTrigger:
+        case const (ImmediateTrigger):
           executor = ImmediateTriggerExecutor();
           break;
-        case OneTimeTrigger:
+        case const (OneTimeTrigger):
           executor = OneTimeTriggerExecutor();
           break;
-        case DelayedTrigger:
+        case const (DelayedTrigger):
           executor = DelayedTriggerExecutor();
           break;
-        case PeriodicTrigger:
+        case const (PeriodicTrigger):
           executor = PeriodicTriggerExecutor();
           break;
-        // case PeriodicTrigger:
-        //   executor = PeriodicTriggerExecutor();
-        //   break;
-        case DateTimeTrigger:
+        case const (DateTimeTrigger):
           executor = DateTimeTriggerExecutor();
           break;
-        case RecurrentScheduledTrigger:
+        case const (RecurrentScheduledTrigger):
           executor = RecurrentScheduledTriggerExecutor();
           break;
-        case CronScheduledTrigger:
+        case const (CronScheduledTrigger):
           executor = CronScheduledTriggerExecutor();
           break;
-        case SamplingEventTrigger:
+        case const (SamplingEventTrigger):
           executor = SamplingEventTriggerExecutor();
           break;
-        case ConditionalSamplingEventTrigger:
+        case const (ConditionalSamplingEventTrigger):
           executor = ConditionalSamplingEventTriggerExecutor();
           break;
-        case ConditionalPeriodicTrigger:
+        case const (ConditionalPeriodicTrigger):
           executor = ConditionalPeriodicTriggerExecutor();
           break;
-        case RandomRecurrentTrigger:
+        case const (RandomRecurrentTrigger):
           executor = RandomRecurrentTriggerExecutor();
           break;
-        case PassiveTrigger:
+        case const (PassiveTrigger):
           executor = PassiveTriggerExecutor();
           break;
-        case UserTaskTrigger:
+        case const (UserTaskTrigger):
           executor = UserTaskTriggerExecutor();
           break;
         default:
