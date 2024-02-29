@@ -36,7 +36,8 @@ abstract class TaskExecutor<TConfig extends TaskConfiguration>
         } else {
           warning(
               "A probe for measure type '${measure.type}' could not be created. "
-              'This may be because this probe is not available on this operating system. '
+              'This may be because this probe is not available on the operating system '
+              'of this phone (primary device) or on the connected device. '
               'Or it may be because the sampling package containing this probe has not '
               'been registered in the SamplingPackageRegistry.');
         }

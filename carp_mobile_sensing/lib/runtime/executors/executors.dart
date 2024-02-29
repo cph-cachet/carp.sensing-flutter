@@ -285,7 +285,8 @@ abstract class _AbstractExecutorState implements _ExecutorStateMachine {
   }
 
   void _printWarning(String operation) => warning(
-      'Trying to $operation a ${executor.runtimeType} in a state where this cannot be done - state: $state');
+      "Trying to $operation a ${executor.runtimeType} in a state where this cannot be done - state: '${state.name}'. "
+      'Ignoring this.');
 
   @override
   String toString() => state.name;
@@ -336,7 +337,7 @@ class _InitializedState extends _AbstractExecutorState
   }
 }
 
-class _StartedState extends _InitializedState implements _ExecutorStateMachine {
+class _StartedState extends _InitializedState {
   _StartedState(Executor<dynamic> executor)
       : super(executor as AbstractExecutor);
 
@@ -344,7 +345,7 @@ class _StartedState extends _InitializedState implements _ExecutorStateMachine {
   ExecutorState get state => ExecutorState.started;
 }
 
-class _StoppedState extends _InitializedState implements _ExecutorStateMachine {
+class _StoppedState extends _InitializedState {
   _StoppedState(Executor<dynamic> executor)
       : super(executor as AbstractExecutor);
 

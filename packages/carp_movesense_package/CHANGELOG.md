@@ -1,3 +1,3 @@
-## 0.0.1
+## 1.4.0
 
-* TODO: Describe initial release.
+* initial release supporting Movesense device management and sampling of tap events, HR, ECG, temperature, and IMU measures.

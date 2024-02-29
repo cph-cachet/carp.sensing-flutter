@@ -6,30 +6,49 @@ part of 'carp_movesense_package.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-MovesenseHRSample _$MovesenseHRSampleFromJson(Map<String, dynamic> json) =>
-    MovesenseHRSample(
-      (json['hr'] as num).toDouble(),
-    );
+MovesenseStateChange _$MovesenseStateChangeFromJson(
+        Map<String, dynamic> json) =>
+    MovesenseStateChange(
+      $enumDecode(_$MovesenseDeviceStateEnumMap, json['state']),
+      json['timestamp'] as int?,
+    )
+      ..$type = json['__type'] as String?
+      ..sensorSpecificData = json['sensorSpecificData'] == null
+          ? null
+          : Data.fromJson(json['sensorSpecificData'] as Map<String, dynamic>);
 
-Map<String, dynamic> _$MovesenseHRSampleToJson(MovesenseHRSample instance) =>
-    <String, dynamic>{
-      'hr': instance.hr,
-    };
+Map<String, dynamic> _$MovesenseStateChangeToJson(
+    MovesenseStateChange instance) {
+  final val = <String, dynamic>{};
 
-MovesenseECGSample _$MovesenseECGSampleFromJson(Map<String, dynamic> json) =>
-    MovesenseECGSample(
-      (json['samples'] as List<dynamic>).map((e) => e as int).toList(),
-    );
+  void writeNotNull(String key, dynamic value) {
+    if (value != null) {
+      val[key] = value;
+    }
+  }
 
-Map<String, dynamic> _$MovesenseECGSampleToJson(MovesenseECGSample instance) =>
-    <String, dynamic>{
-      'samples': instance.samples,
-    };
+  writeNotNull('__type', instance.$type);
+  writeNotNull('sensorSpecificData', instance.sensorSpecificData);
+  val['state'] = _$MovesenseDeviceStateEnumMap[instance.state]!;
+  val['timestamp'] = instance.timestamp;
+  return val;
+}
+
+const _$MovesenseDeviceStateEnumMap = {
+  MovesenseDeviceState.unknown: 'unknown',
+  MovesenseDeviceState.moving: 'moving',
+  MovesenseDeviceState.notMoving: 'notMoving',
+  MovesenseDeviceState.connected: 'connected',
+  MovesenseDeviceState.disconnected: 'disconnected',
+  MovesenseDeviceState.tap: 'tap',
+  MovesenseDeviceState.doubleTap: 'doubleTap',
+  MovesenseDeviceState.acceleration: 'acceleration',
+  MovesenseDeviceState.freeFall: 'freeFall',
+};
 
 MovesenseHR _$MovesenseHRFromJson(Map<String, dynamic> json) => MovesenseHR(
-      samples: (json['samples'] as List<dynamic>)
-          .map((e) => MovesenseHRSample.fromJson(e as Map<String, dynamic>))
-          .toList(),
+      (json['hr'] as num).toDouble(),
+      json['rr'] as int?,
     )
       ..$type = json['__type'] as String?
       ..sensorSpecificData = json['sensorSpecificData'] == null
@@ -47,14 +66,14 @@ Map<String, dynamic> _$MovesenseHRToJson(MovesenseHR instance) {
 
   writeNotNull('__type', instance.$type);
   writeNotNull('sensorSpecificData', instance.sensorSpecificData);
-  val['samples'] = instance.samples;
+  val['hr'] = instance.hr;
+  writeNotNull('rr', instance.rr);
   return val;
 }
 
 MovesenseECG _$MovesenseECGFromJson(Map<String, dynamic> json) => MovesenseECG(
-      samples: (json['samples'] as List<dynamic>)
-          .map((e) => MovesenseECGSample.fromJson(e as Map<String, dynamic>))
-          .toList(),
+      json['timestamp'] as int,
+      (json['samples'] as List<dynamic>).map((e) => e as int).toList(),
     )
       ..$type = json['__type'] as String?
       ..sensorSpecificData = json['sensorSpecificData'] == null
@@ -72,25 +91,143 @@ Map<String, dynamic> _$MovesenseECGToJson(MovesenseECG instance) {
 
   writeNotNull('__type', instance.$type);
   writeNotNull('sensorSpecificData', instance.sensorSpecificData);
+  val['timestamp'] = instance.timestamp;
   val['samples'] = instance.samples;
   return val;
 }
 
-MovesenseDevice _$MovesenseDeviceFromJson(Map<String, dynamic> json) =>
-    MovesenseDevice(
-      roleName: json['roleName'] as String? ?? MovesenseDevice.DEFAULT_ROLENAME,
-      name: json['name'] as String?,
-      identifier: json['identifier'] as String?,
+MovesenseTemperature _$MovesenseTemperatureFromJson(
+        Map<String, dynamic> json) =>
+    MovesenseTemperature(
+      json['timestamp'] as int,
+      json['measurement'] as int,
     )
       ..$type = json['__type'] as String?
-      ..isOptional = json['isOptional'] as bool?
+      ..sensorSpecificData = json['sensorSpecificData'] == null
+          ? null
+          : Data.fromJson(json['sensorSpecificData'] as Map<String, dynamic>);
+
+Map<String, dynamic> _$MovesenseTemperatureToJson(
+    MovesenseTemperature instance) {
+  final val = <String, dynamic>{};
+
+  void writeNotNull(String key, dynamic value) {
+    if (value != null) {
+      val[key] = value;
+    }
+  }
+
+  writeNotNull('__type', instance.$type);
+  writeNotNull('sensorSpecificData', instance.sensorSpecificData);
+  val['timestamp'] = instance.timestamp;
+  val['measurement'] = instance.measurement;
+  return val;
+}
+
+MovesenseIMU _$MovesenseIMUFromJson(Map<String, dynamic> json) => MovesenseIMU(
+      json['timestamp'] as int,
+      (json['accelerometer'] as List<dynamic>)
+          .map((e) =>
+              MovesenseAccelerometerSample.fromJson(e as Map<String, dynamic>))
+          .toList(),
+      (json['gyroscope'] as List<dynamic>)
+          .map((e) =>
+              MovesenseGyroscopeSample.fromJson(e as Map<String, dynamic>))
+          .toList(),
+      (json['magnetometer'] as List<dynamic>)
+          .map((e) =>
+              MovesenseMagnetometerSample.fromJson(e as Map<String, dynamic>))
+          .toList(),
+    )
+      ..$type = json['__type'] as String?
+      ..sensorSpecificData = json['sensorSpecificData'] == null
+          ? null
+          : Data.fromJson(json['sensorSpecificData'] as Map<String, dynamic>);
+
+Map<String, dynamic> _$MovesenseIMUToJson(MovesenseIMU instance) {
+  final val = <String, dynamic>{};
+
+  void writeNotNull(String key, dynamic value) {
+    if (value != null) {
+      val[key] = value;
+    }
+  }
+
+  writeNotNull('__type', instance.$type);
+  writeNotNull('sensorSpecificData', instance.sensorSpecificData);
+  val['timestamp'] = instance.timestamp;
+  val['accelerometer'] = instance.accelerometer;
+  val['gyroscope'] = instance.gyroscope;
+  val['magnetometer'] = instance.magnetometer;
+  return val;
+}
+
+MovesenseAccelerometerSample _$MovesenseAccelerometerSampleFromJson(
+        Map<String, dynamic> json) =>
+    MovesenseAccelerometerSample(
+      json['x'] as num,
+      json['y'] as num,
+      json['z'] as num,
+    );
+
+Map<String, dynamic> _$MovesenseAccelerometerSampleToJson(
+        MovesenseAccelerometerSample instance) =>
+    <String, dynamic>{
+      'x': instance.x,
+      'y': instance.y,
+      'z': instance.z,
+    };
+
+MovesenseGyroscopeSample _$MovesenseGyroscopeSampleFromJson(
+        Map<String, dynamic> json) =>
+    MovesenseGyroscopeSample(
+      json['x'] as num,
+      json['y'] as num,
+      json['z'] as num,
+    );
+
+Map<String, dynamic> _$MovesenseGyroscopeSampleToJson(
+        MovesenseGyroscopeSample instance) =>
+    <String, dynamic>{
+      'x': instance.x,
+      'y': instance.y,
+      'z': instance.z,
+    };
+
+MovesenseMagnetometerSample _$MovesenseMagnetometerSampleFromJson(
+        Map<String, dynamic> json) =>
+    MovesenseMagnetometerSample(
+      json['x'] as num,
+      json['y'] as num,
+      json['z'] as num,
+    );
+
+Map<String, dynamic> _$MovesenseMagnetometerSampleToJson(
+        MovesenseMagnetometerSample instance) =>
+    <String, dynamic>{
+      'x': instance.x,
+      'y': instance.y,
+      'z': instance.z,
+    };
+
+MovesenseDevice _$MovesenseDeviceFromJson(Map<String, dynamic> json) =>
+    MovesenseDevice(
+      roleName:
+          json['roleName'] as String? ?? MovesenseDevice.DEFAULT_ROLE_NAME,
+      isOptional: json['isOptional'] as bool? ?? true,
+      name: json['name'] as String?,
+      address: json['address'] as String?,
+      serial: json['serial'] as String?,
+      deviceType: $enumDecodeNullable(
+              _$MovesenseDeviceTypeEnumMap, json['deviceType']) ??
+          MovesenseDeviceType.UNKNOWN,
+    )
+      ..$type = json['__type'] as String?
       ..defaultSamplingConfiguration =
           (json['defaultSamplingConfiguration'] as Map<String, dynamic>?)?.map(
         (k, e) => MapEntry(
             k, SamplingConfiguration.fromJson(e as Map<String, dynamic>)),
-      )
-      ..address = json['address'] as String?
-      ..serial = json['serial'] as String?;
+      );
 
 Map<String, dynamic> _$MovesenseDeviceToJson(MovesenseDevice instance) {
   final val = <String, dynamic>{};
@@ -109,6 +246,14 @@ Map<String, dynamic> _$MovesenseDeviceToJson(MovesenseDevice instance) {
   writeNotNull('address', instance.address);
   writeNotNull('serial', instance.serial);
   writeNotNull('name', instance.name);
-  writeNotNull('identifier', instance.identifier);
+  val['deviceType'] = _$MovesenseDeviceTypeEnumMap[instance.deviceType]!;
   return val;
 }
+
+const _$MovesenseDeviceTypeEnumMap = {
+  MovesenseDeviceType.UNKNOWN: 'UNKNOWN',
+  MovesenseDeviceType.MD: 'MD',
+  MovesenseDeviceType.HR_PLUS: 'HR_PLUS',
+  MovesenseDeviceType.HR2: 'HR2',
+  MovesenseDeviceType.FLASH: 'FLASH',
+};

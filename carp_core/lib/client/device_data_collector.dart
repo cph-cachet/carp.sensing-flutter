@@ -62,10 +62,4 @@ abstract class DeviceDataCollectorFactory {
 
   // Remove the device of [deviceType] from this registry.
   void unregisterDevice(String deviceType);
-
-  /// Initialize all devices in a [primaryDeviceDeployment].
-  void initializeDevices(PrimaryDeviceDeployment primaryDeviceDeployment);
-
-  /// Initialize the device specified in the [configuration].
-  void initializeDevice(DeviceConfiguration configuration);
 }

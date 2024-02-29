@@ -58,12 +58,6 @@ class LocalStudyProtocolManager implements StudyProtocolManager {
     Smartphone phone = Smartphone();
     protocol.addPrimaryDevice(phone);
 
-    // 2023-09-04 - the following device assignments should not be needed.
-    // protocol.changeDeviceAssignment(
-    //   phone,
-    //   AssignedTo(roleNames: {participant}),
-    // );
-
     // build-in measure from sensor and device sampling packages
     protocol.addTaskControl(
         ImmediateTrigger(),
@@ -96,17 +90,17 @@ class LocalStudyProtocolManager implements StudyProtocolManager {
             measures: [Measure(type: ContextSamplingPackage.ACTIVITY)]),
         phone);
 
-/*     // Define the online location service and add it as a 'device'
+    // Define the online location service and add it as a 'device'
     LocationService locationService = LocationService();
     protocol.addConnectedDevice(locationService, phone);
 
-    // // Add a background task that collects location on a regular basis
-    // protocol.addTaskControl(
-    //     PeriodicTrigger(period: Duration(minutes: 5)),
-    //     BackgroundTask(measures: [
-    //       Measure(type: ContextSamplingPackage.CURRENT_LOCATION),
-    //     ]),
-    //     locationService);
+    // Add a background task that collects location on a regular basis
+    protocol.addTaskControl(
+        PeriodicTrigger(period: Duration(minutes: 5)),
+        BackgroundTask(measures: [
+          Measure(type: ContextSamplingPackage.CURRENT_LOCATION),
+        ]),
+        locationService);
 
     // Add a background task that continuously collects location and mobility
     protocol.addTaskControl(
@@ -154,7 +148,7 @@ class LocalStudyProtocolManager implements StudyProtocolManager {
         ]),
         phone);
 
- */ // // Add an automatic task that collects SMS messages in/out
+    // // Add an automatic task that collects SMS messages in/out
     // protocol.addTaskControl(
     //     ImmediateTrigger(),
     //     AutomaticTask()
@@ -218,27 +212,30 @@ class LocalStudyProtocolManager implements StudyProtocolManager {
     //   name: 'Polar H10 HR Monitor',
     //   polarDeviceType: PolarDeviceType.H10,
     // );
-    PolarDevice polar = PolarDevice(
-      identifier: 'B36B5B21',
-      name: 'Polar HR Sense',
-      polarDeviceType: PolarDeviceType.SENSE,
-    );
+    // var polar = PolarDevice(
+    //   identifier: 'B36B5B21',
+    //   name: 'Polar HR Sense',
+    //   deviceType: PolarDeviceType.SENSE,
+    // );
 
-    protocol.addConnectedDevice(polar, phone);
+    // protocol.addConnectedDevice(polar, phone);
 
-    protocol.addTaskControl(
-        ImmediateTrigger(),
-        BackgroundTask(measures: [
-          Measure(type: PolarSamplingPackage.HR),
-          // Measure(type: PolarSamplingPackage.ECG),
-          // Measure(type: PolarSamplingPackage.PPG),
-          // Measure(type: PolarSamplingPackage.PPI),
-        ]),
-        polar); */
+    // protocol.addTaskControl(
+    //     ImmediateTrigger(),
+    //     BackgroundTask(measures: [
+    //       Measure(type: PolarSamplingPackage.HR),
+    //       // Measure(type: PolarSamplingPackage.ECG),
+    //       // Measure(type: PolarSamplingPackage.PPG),
+    //       // Measure(type: PolarSamplingPackage.PPI),
+    //     ]),
+    //     polar);
 
-    MovesenseDevice movesense = MovesenseDevice(
-      identifier: '233830000615',
-      name: 'Movesense 233830000615',
+    // Known Movensense devices:
+    //  - Movesense MD : 220330000122 : 0C:8C:DC:3F:B2:CD
+    //  - Movesense    : 233830000687 : 0C:8C:DC:1B:23:3E
+    var movesense = MovesenseDevice(
+      address: '0C:8C:DC:3F:B2:CD',
+      name: 'Movesense MD 2203300 00122',
     );
 
     protocol.addConnectedDevice(movesense, phone);
@@ -246,12 +243,11 @@ class LocalStudyProtocolManager implements StudyProtocolManager {
     protocol.addTaskControl(
         ImmediateTrigger(),
         BackgroundTask(measures: [
+          Measure(type: MovesenseSamplingPackage.STATE),
           Measure(type: MovesenseSamplingPackage.HR),
-          // Measure(type: PolarSamplingPackage.ECG),
-          // Measure(type: PolarSamplingPackage.PPG),
-          // Measure(type: PolarSamplingPackage.PPI),
+          Measure(type: MovesenseSamplingPackage.ECG),
         ]),
-        polar);
+        movesense);
 
     // // add a measure for ECG monitoring using the Movisens device
     // protocol.addTaskControl(
@@ -266,24 +262,24 @@ class LocalStudyProtocolManager implements StudyProtocolManager {
 
     // Add measures to collect data from Apple Health / Google Health Connect
 
-    // Create and add a health service
-    final healthService = HealthService();
-    protocol.addConnectedDevice(healthService, phone);
+    // // Create and add a health service
+    // final healthService = HealthService();
+    // protocol.addConnectedDevice(healthService, phone);
 
-    protocol.addTaskControl(
-        // PeriodicTrigger(period: Duration(minutes: 60)),
-        PeriodicTrigger(period: Duration(minutes: 1)),
-        BackgroundTask(measures: [
-          HealthSamplingPackage.getHealthMeasure([
-            HealthDataType.STEPS,
-            HealthDataType.BASAL_ENERGY_BURNED,
-            HealthDataType.WEIGHT,
-            HealthDataType.SLEEP_SESSION,
-            // EDA is not available on Android - should be removed on runtime
-            HealthDataType.ELECTRODERMAL_ACTIVITY,
-          ])
-        ]),
-        healthService);
+    // protocol.addTaskControl(
+    //     // PeriodicTrigger(period: Duration(minutes: 60)),
+    //     PeriodicTrigger(period: Duration(minutes: 1)),
+    //     BackgroundTask(measures: [
+    //       HealthSamplingPackage.getHealthMeasure([
+    //         HealthDataType.STEPS,
+    //         HealthDataType.BASAL_ENERGY_BURNED,
+    //         HealthDataType.WEIGHT,
+    //         HealthDataType.SLEEP_SESSION,
+    //         // EDA is not available on Android - should be removed on runtime
+    //         HealthDataType.ELECTRODERMAL_ACTIVITY,
+    //       ])
+    //     ]),
+    //     healthService);
 
     return protocol;
   }
@@ -356,7 +352,7 @@ class LocalStudyProtocolManager implements StudyProtocolManager {
           ..addMeasure(Measure(type: ContextSamplingPackage.ACTIVITY)),
         motherPhone);
 
-/*     // Define the online location service and add it as a 'device'
+    // Define the online location service and add it as a 'device'
     LocationService locationService = LocationService();
     protocol.addConnectedDevice(locationService, fatherPhone);
     protocol.addConnectedDevice(locationService, motherPhone);
@@ -416,7 +412,7 @@ class LocalStudyProtocolManager implements StudyProtocolManager {
           ]),
         motherPhone);
 
- */ // // Add an automatic task that collects SMS messages in/out
+    // // Add an automatic task that collects SMS messages in/out
     // protocol.addTaskControl(
     //     ImmediateTrigger(),
     //     AutomaticTask()
@@ -460,7 +456,7 @@ class LocalStudyProtocolManager implements StudyProtocolManager {
     //     phone);
 
     // define the sSense device and add its measures
-/*     ESenseDevice eSense = ESenseDevice(
+    var eSense = ESenseDevice(
       deviceName: 'eSense-0332',
       samplingRate: 10,
     );
@@ -479,10 +475,10 @@ class LocalStudyProtocolManager implements StudyProtocolManager {
     //   name: 'Polar H10 HR Monitor',
     //   polarDeviceType: PolarDeviceType.H10,
     // );
-    PolarDevice polar = PolarDevice(
+    var polar = PolarDevice(
       identifier: 'B36B5B21',
       name: 'Polar PVS',
-      polarDeviceType: PolarDeviceType.SENSE,
+      deviceType: PolarDeviceType.SENSE,
     );
 
     protocol.addConnectedDevice(polar, fatherPhone);
@@ -494,20 +490,6 @@ class LocalStudyProtocolManager implements StudyProtocolManager {
         // ..addMeasure(Measure(type: PolarSamplingPackage.PPG))
         // ..addMeasure(Measure(type: PolarSamplingPackage.PPI)),
         polar);
- */
-    MovesenseDevice movesense = MovesenseDevice(
-      identifier: '233830000615',
-      name: 'Movesense 233830000615',
-    );
-
-    protocol.addConnectedDevice(movesense, fatherPhone);
-
-    protocol.addTaskControl(
-        PeriodicTrigger(period: Duration(seconds: 30)),
-        BackgroundTask(measures: [
-          Measure(type: MovesenseSamplingPackage.HR),
-        ]),
-        movesense);
 
     return protocol;
   }

@@ -167,7 +167,7 @@ class SmartphoneDeploymentController extends StudyRuntime<DeviceRegistration> {
     info('Configuring $runtimeType');
 
     // initialize all devices from the primary deployment, incl. this smartphone.
-    deviceRegistry.initializeDevices(deployment!);
+    initializeDevices();
 
     // try to register relevant connected devices
     super.tryRegisterRemainingDevicesToRegister();
@@ -193,15 +193,13 @@ class SmartphoneDeploymentController extends StudyRuntime<DeviceRegistration> {
     );
 
     // connect to all connectable devices, incl. this phone
-    await deviceRegistry.connectAllConnectableDevices();
+    await connectAllConnectableDevices();
 
     _executor.initialize(deployment!, deployment!);
     measurements.listen((_) => _samplingSize++);
 
     // start heartbeat monitoring
-    if (SmartPhoneClientManager().heartbeat) {
-      deviceRegistry.startHeartbeatMonitoring(this);
-    }
+    if (SmartPhoneClientManager().heartbeat) startHeartbeatMonitoring();
 
     status = StudyStatus.Deployed;
 
@@ -218,6 +216,52 @@ class SmartphoneDeploymentController extends StudyRuntime<DeviceRegistration> {
     print('  data manager : $_dataManager');
     print('        status : ${status.toString().split('.').last}');
     print('===============================================================');
+  }
+
+  /// Initialize all devices in this [deployment].
+  void initializeDevices() {
+    assert(deployment != null, 'Deployment is null.');
+
+    for (var configuration in deployment!.devices) {
+      initializeDevice(configuration);
+    }
+  }
+
+  /// Initialize the device specified in the [configuration].
+  void initializeDevice(DeviceConfiguration configuration) {
+    if (deviceRegistry.hasDevice(configuration.type)) {
+      deviceRegistry.devices[configuration.type]?.initialize(configuration);
+    } else {
+      warning(
+          "A device of type '${configuration.type}' is not available on this device. "
+          "This may be because this device is not available on this operating system. "
+          "Or it may be because the sampling package containing this device has not been "
+          "registered in the SamplingPackageRegistry.");
+    }
+  }
+
+  /// Start heartbeat monitoring for all devices, incl. the phone, for the
+  /// [deployment] controlled by this controller.
+  void startHeartbeatMonitoring() {
+    for (var configuration in deployment!.devices) {
+      deviceRegistry
+          .getDevice(configuration.type)
+          ?.startHeartbeatMonitoring(this);
+    }
+  }
+
+  /// Connect all connectable devices to be used in the [deployment]
+  /// and which are available on this phone.
+  Future<void> connectAllConnectableDevices() async {
+    assert(deployment != null, 'Deployment is null.');
+
+    debug('$runtimeType - Trying to connect to all connectable devices.');
+
+    // connect all the connected devices and the primary device (i.e. this phone)
+    for (var configuration in deployment!.devices) {
+      var device = deviceRegistry.getDevice(configuration.type);
+      if (device != null && await device.canConnect()) await device.connect();
+    }
   }
 
   /// Start this controller.

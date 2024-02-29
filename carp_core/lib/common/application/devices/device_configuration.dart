@@ -105,7 +105,7 @@ class PrimaryDeviceConfiguration<TRegistration extends DeviceRegistration>
     extends DeviceConfiguration<TRegistration> {
   PrimaryDeviceConfiguration({
     required super.roleName,
-  }) : super(isOptional: null);
+  }) : super(isOptional: false);
 
   // This property is only here for (de)serialization purposes.
   // For unknown types we need to know whether to treat them as primary

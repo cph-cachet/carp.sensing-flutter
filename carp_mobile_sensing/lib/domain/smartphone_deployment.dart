@@ -21,6 +21,12 @@ class SmartphoneDeployment extends PrimaryDeviceDeployment
   /// The unique id of this study deployment.
   String get studyDeploymentId => _studyDeploymentId;
 
+  /// All devices this deployment is using.
+  ///
+  /// This set combines the [deviceConfiguration] with all [connectedDevices].
+  Set<DeviceConfiguration> get devices =>
+      Set.from(connectedDevices)..add(deviceConfiguration);
+
   /// The timestamp (in UTC) when this deployment was deployed on this smartphone.
   /// Is `null` if not deployed yet.
   DateTime? deployed;

@@ -1,6 +1,6 @@
 import 'package:carp_core/carp_core.dart';
 import 'package:carp_mobile_sensing/carp_mobile_sensing.dart';
-import 'package:carp_polar_package/carp_polar_package.dart';
+import 'package:carp_movesense_package/carp_movesense_package.dart';
 
 /// This is a very simple example of how this sampling package is used as part
 /// of defining a study protocol in CARP Mobile Sensing (CAMS).
@@ -12,26 +12,26 @@ import 'package:carp_polar_package/carp_polar_package.dart';
 /// https://github.com/cph-cachet/carp.sensing-flutter/wiki
 void main() async {
   // register this sampling package before using its measures
-  SamplingPackageRegistry().register(PolarSamplingPackage());
+  SamplingPackageRegistry().register(MovesenseSamplingPackage());
 
   // Create a study protocol
   StudyProtocol protocol = StudyProtocol(
     ownerId: 'owner@dtu.dk',
-    name: 'Polar Sensing Example',
+    name: 'Movesense Sensing Example',
   );
 
   // define which devices are used for data collection - both phone and eSense
   var phone = Smartphone();
-  var polar = PolarDevice(
-    roleName: 'hr-sensor',
-    identifier: '1C709B20',
-    name: 'H10',
-    deviceType: PolarDeviceType.H10,
+  var movesense = MovesenseDevice(
+    serial: '220330000122',
+    address: '0C:8C:DC:3F:B2:CD',
+    name: 'Movesense Medical',
+    deviceType: MovesenseDeviceType.MD,
   );
 
   protocol
     ..addPrimaryDevice(phone)
-    ..addConnectedDevice(polar, phone);
+    ..addConnectedDevice(movesense, phone);
 
   // Add a background task that immediately starts collecting step counts,
   //ambient light, screen activity, and battery level from the phone.
@@ -45,12 +45,12 @@ void main() async {
       phone);
 
   // Add a background task that immediately starts collecting HR and ECG data
-  // from the Polar device.
+  // from the Movesense device.
   protocol.addTaskControl(
       ImmediateTrigger(),
       BackgroundTask(measures: [
-        Measure(type: PolarSamplingPackage.HR),
-        Measure(type: PolarSamplingPackage.ECG),
+        Measure(type: MovesenseSamplingPackage.HR),
+        Measure(type: MovesenseSamplingPackage.ECG),
       ]),
-      polar);
+      movesense);
 }

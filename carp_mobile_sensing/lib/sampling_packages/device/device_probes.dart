@@ -40,7 +40,7 @@ class BatteryProbe extends StreamProbe {
           onDone: () => controller.close(),
         );
 
-    return controller.stream;
+    return controller.stream.asBroadcastStream();
   }
 }
 
