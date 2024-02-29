@@ -54,7 +54,7 @@ class MovesenseStateChange extends SensorData {
   late int timestamp;
 
   MovesenseStateChange(this.state, [int? timestamp])
-      : this.timestamp = timestamp ?? DateTime.now().millisecond;
+      : timestamp = timestamp ?? DateTime.now().millisecond;
 
   // Example event:
   //

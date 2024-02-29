@@ -1,5 +1,6 @@
 name: carp_polar_package_example
 description: Example project for the CAMS Polar Sampling Package.
+homepage: https://github.com/cph-cachet/carp.sensing-flutter
 publish_to: 'none'
 version: 1.2.0
 

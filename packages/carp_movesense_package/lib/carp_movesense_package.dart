@@ -10,9 +10,9 @@
 //  - Movesense ?? : 233830000687 : 0C:8C:DC:1B:23:3E
 
 /// A [CARP Mobile Sensing](https://pub.dev/packages/carp_mobile_sensing)
-/// sampling package for collecting data from the Movesense MD, HR+, and HR2 heart
-/// rate sensors. From these sensors, this package can collect the following
-/// measures:
+/// sampling package for collecting data from the Movesense MD and Active
+/// (HR+ and HR2) heart rate sensors. From these sensors, this package can
+/// collect the following measures:
 ///
 /// * `dk.cachet.carp.movesense.state` : State changes (like moving, tapping, etc.)
 /// * `dk.cachet.carp.movesense.hr` : Heart rate
@@ -20,26 +20,37 @@
 /// * `dk.cachet.carp.movesense.temperature` : Device temperature
 /// * `dk.cachet.carp.movesense.imu` : 9-axis Inertial Movement Unit (IMU)
 ///
-/// **H10 Heart rate sensor**
+/// **Movesense Active (HR+ & HR2)r**
 ///
-///  * Heart rate as beats per minute. RR Interval in ms and 1/1024 format.
-///  * Electrocardiography (ECG) data in µV with sample rate 130Hz. Default epoch for timestamp is 1.1.2000.
-///  * Accelerometer data with sample rates of 25Hz, 50Hz, 100Hz and 200Hz and range of 2G, 4G and 8G. Axis specific acceleration data in mG. Default epoch for timestamp is 1.1.2000
-///  * Start and stop of internal recording and request for internal recording status. Recording supports RR, HR with one second sample time or HR with five second sample time.
+/// Optimized for exercise and daily activities, Movesense Active is an ideal
+/// platform for creating new smart wearables for well-being and sports.
 ///
-/// **Polar Verity Sense optical heart rate sensor**
+/// With integrated heart rate, movement measurement, and an open API, Movesense
+/// Active can provide new insights into all sports in the world.
 ///
-///  * Heart rate (HR) as beats per minute.
-///  * Photoplethysmograpy (PPG) values with a sampling rate of 55Hz (see [Polar SDK issue #202](https://github.com/polarofficial/polar-ble-sdk/issues/202#issuecomment-940645360)).
-///  * PP interval (milliseconds) representing cardiac pulse-to-pulse interval extracted from PPG signal.
-///  * Accelerometer data with sample rate of 52Hz and range of 8G. Axis specific acceleration data in mG.
-///  * Gyroscope data with sample rate of 52Hz and ranges of 250dps, 500dps, 1000dps and 2000dps. Axis specific gyroscope data in dps.
-///  * Magnetometer data with sample rates of 10Hz, 20Hz, 50HZ and 100Hz and range of +/-50 Gauss. Axis specific magnetometer data in Gauss.
+/// Features:
 ///
-/// **H9 Heart rate sensor**
+/// * Movement measurement (9-axis IMU: accelerometer, gyroscope, magnetometer)
+/// * Heart rate (bpm), R-R intervals, single channel ECG (non-medical), Bluetooth heart rate profile
+/// * Small and lightweight (9.4g/0.33oz with battery)
+/// * Wireless data transmission with Bluetooth Low Energy
+/// * Memory for data logging and for custom sensor apps
+/// * User replaceable CR 2025 battery
+/// * Swim and shock proof
 ///
-///  * Heart rate as beats per minute. RR Interval in ms and 1/1024 format.
-///  * Heart rate broadcast.
+/// **Movesense Medical**
+///
+/// Wearable ECG monitor and movement sensor for health wearables.
+/// Class IIa certified for medical use, Movesense Medical sensor is an essential
+/// building block to transform your big idea into a new healthcare solution.
+///
+/// Key features:
+///  * Single channel ECG, heart rate, R-R intervals
+///  * Movement measurement (9-axis IMU: accelerometer, gyroscope, magnetometer)
+///  * Wireless data transmission with Bluetooth Low Energy
+///  * Small and lightweight (9.4g/0.33oz with battery)
+///  * User replaceable CR 2025 battery
+///  * Class IIa Medical Device, EU Medical Device Regulation MDR 2017/745
 ///
 /// This package uses the Flutter [mdsflutter](https://pub.dev/packages/mdsflutter) plugin,
 /// which again is based on the official [Movesense Mobile API](https://www.movesense.com/docs/mobile/mobile_sw_overview/).
