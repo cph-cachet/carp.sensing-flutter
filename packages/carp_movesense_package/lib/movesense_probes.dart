@@ -115,8 +115,10 @@ class MovesenseStateChangeProbe extends _MovesenseProbe {
       : super("System/States/4", MovesenseStateChange.fromMovesenseData);
 }
 
-// OLD STATE CHANGE PROBE BELOW - with notes
+// MULTI STATE CHANGE PROBE BELOW - with notes
 
+/// Enumeration of the type of state changes available on the Movesense device.
+/// See https://www.movesense.com/docs/esw/api_reference/#systemstates
 enum MovensenseStateChange {
   movement,
   battery,
@@ -126,26 +128,27 @@ enum MovensenseStateChange {
   freeFall,
 }
 
-// State Change overview
+// State Change overview. The following table shows the state change types
+// available on the different devices. This is based on testing of physical
+// device. Can't find any documentation on this in the Movesense documentation
 //
-//     type        MD   HR+   HR2
-//    -----------+----+-----+-----
-//    movement   | -  |  ?  |  -
-//    connectors | +  |  ?  |  +
-//    doubleTap  | -  |  ?  |  -
-//    tap        | +  |  ?  |  +
-//    freeFall   | -  |  ?  |  -
+//   type      | MD | HR+ | HR2
+//  -----------+----+-----+-----
+//  movement   | -  |  ?  |  -
+//  connectors | +  |  ?  |  +
+//  doubleTap  | -  |  ?  |  -
+//  tap        | +  |  ?  |  +
+//  freeFall   | -  |  ?  |  -
 
-/// A probe collecting [MovesenseStateChange] events.
+/// A probe collecting all possible [MovesenseStateChange] events.
 /// See [MovesenseDeviceState] for an enumeration of possible states.
 ///
-/// However, due to hardware limitation in Movesense we can only subscribe to
-/// maximum one (!) state changes
-/// See https://github.com/petri-lipponen-movesense/mdsflutter/issues/15
+/// In contrast to the [MovesenseStateChangeProbe], this probe tries to
+/// collect all the different types of state changes. However, due to hardware
+/// limitation on the device, this often will not succeed.
 ///
-/// Seems like the only states we can listen to is the connectors and single tap
-/// events. This has been tested on the MD and HR2 devices.
-class MovesenseStateChangeProbeOld extends StreamProbe {
+/// Therefore, this probe is not used at the moment.
+class MovesenseMultiStateChangeProbe extends StreamProbe {
   /// A map from state id to subscription id.
   final Map<int, int> _subscriptionIDs = {};
   final StreamController<String> _subscriptionController =
@@ -157,13 +160,10 @@ class MovesenseStateChangeProbeOld extends StreamProbe {
 
   @override
   Future<bool> onStart() async {
-    // Due to limitations in the Movesense hardware we can only subscribe to MAX 1 state changes
-    // See https://github.com/petri-lipponen-movesense/mdsflutter/issues/15
-
-    // _addStateSubscription(MovensenseStateChange.movement);
-    // _addStateSubscription(MovensenseStateChange.connectors);
-    // _addStateSubscription(MovensenseStateChange.doubleTap);
-    // _addStateSubscription(MovensenseStateChange.tap);
+    _addStateSubscription(MovensenseStateChange.movement);
+    _addStateSubscription(MovensenseStateChange.connectors);
+    _addStateSubscription(MovensenseStateChange.doubleTap);
+    _addStateSubscription(MovensenseStateChange.tap);
     _addStateSubscription(MovensenseStateChange.freeFall);
 
     return super.onStart();

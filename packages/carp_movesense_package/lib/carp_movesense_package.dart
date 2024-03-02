@@ -30,13 +30,14 @@
 ///
 /// Features:
 ///
-/// * Movement measurement (9-axis IMU: accelerometer, gyroscope, magnetometer)
-/// * Heart rate (bpm), R-R intervals, single channel ECG (non-medical), Bluetooth heart rate profile
-/// * Small and lightweight (9.4g/0.33oz with battery)
-/// * Wireless data transmission with Bluetooth Low Energy
-/// * Memory for data logging and for custom sensor apps
-/// * User replaceable CR 2025 battery
-/// * Swim and shock proof
+///  * Movement measurement (9-axis IMU: accelerometer, gyroscope, magnetometer)
+///  * Heart rate (bpm), R-R intervals, single channel ECG (non-medical),
+///  * Bluetooth heart rate profile
+///  * Small and lightweight (9.4g/0.33oz with battery)
+///  * Wireless data transmission with Bluetooth Low Energy
+///  * Memory for data logging and for custom sensor apps
+///  * User replaceable CR 2025 battery
+///  * Swim and shock proof
 ///
 /// **Movesense Medical**
 ///

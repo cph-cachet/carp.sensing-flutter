@@ -1,6 +1,6 @@
 part of carp_movesense_package;
 
-/// Enumeration of supported Polar devices.
+/// Enumeration of supported Movesense devices.
 enum MovesenseDeviceType {
   /// Unknown Movesense type
   UNKNOWN,

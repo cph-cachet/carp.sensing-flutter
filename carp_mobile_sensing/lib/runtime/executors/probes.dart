@@ -176,7 +176,6 @@ abstract class StreamProbe extends Probe {
   @override
   Future<bool> onStart() async {
     _stream ??= stream;
-    debug('$runtimeType - stream: $_stream');
     if (_stream == null) {
       warning(
           "Trying to start the stream probe '$runtimeType' which does not provide a measurement stream. "

@@ -3,7 +3,7 @@
 This library contains a sampling package for
 the [`carp_mobile_sensing`](https://pub.dartlang.org/packages/carp_mobile_sensing) framework
 to work with the [Movesense](https://www.movesense.com/) heart rate devices.
-This packages supports sampling of the following [`Measure`](https://pub.dev/documentation/carp_core/latest/carp_core_protocols/Measure-class.html) types (note that the package defines its own namespace of `dk.cachet.carp.polar`):
+This packages supports sampling of the following [`Measure`](https://pub.dev/documentation/carp_core/latest/carp_core_protocols/Measure-class.html) types (note that the package defines its own namespace of `dk.cachet.carp.movesense`):
 
 * `dk.cachet.carp.movesense.state` : State changes (like moving, tapping, etc.)
 * `dk.cachet.carp.movesense.hr` : Heart rate
@@ -20,12 +20,11 @@ The following heart rate devices are supported:
 
 See the `carp_mobile_sensing` [wiki](https://github.com/cph-cachet/carp.sensing-flutter/wiki) for further documentation, particularly on available [measure types](https://github.com/cph-cachet/carp.sensing-flutter/wiki/A.-Measure-Types).
 See the [CARP Mobile Sensing App](https://github.com/cph-cachet/carp.sensing-flutter/tree/master/apps/carp_mobile_sensing_app) for an example of how to build a mobile sensing app in Flutter.
-This demo app also includes support for this Polar sampling package.
 
 For Flutter plugins for other CARP products, see [CARP Mobile Sensing in Flutter](https://github.com/cph-cachet/carp.sensing-flutter).
 
 If you are interested in writing your own sampling packages for CARP, see the description on
-how to [extend](https://github.com/cph-cachet/carp.sensing-flutter/wiki/4.-Extending-CARP-Mobile-Sensing) CARP on the wiki.
+how to [extend](https://github.com/cph-cachet/carp.sensing-flutter/wiki/5.-Extending-CARP-Mobile-Sensing#Adding-New-Sampling-Capabilities) CARP on the wiki.
 
 ## Installing
 
@@ -34,8 +33,6 @@ this package only works together with `carp_mobile_sensing`.
 
 `````dart
 dependencies:
-  flutter:
-    sdk: flutter
   carp_core: ^latest
   carp_mobile_sensing: ^latest
   carp_movesense_package: ^latest
