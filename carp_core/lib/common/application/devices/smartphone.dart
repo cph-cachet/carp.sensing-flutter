@@ -16,7 +16,7 @@ class Smartphone
       '${DeviceConfiguration.DEVICE_NAMESPACE}.Smartphone';
 
   /// The default role name for a smartphone.
-  static const String DEFAULT_ROLENAME = 'Primary Phone';
+  static const String DEFAULT_ROLE_NAME = 'Primary Phone';
 
   @override
   DataTypeSamplingSchemeMap? get dataTypeSamplingSchemes =>
@@ -35,9 +35,9 @@ class Smartphone
       ]);
 
   /// Create a new Smartphone device descriptor.
-  /// If [roleName] is not specified, then the [DEFAULT_ROLENAME] is used.
+  /// If [roleName] is not specified, then the [DEFAULT_ROLE_NAME] is used.
   Smartphone({
-    super.roleName = Smartphone.DEFAULT_ROLENAME,
+    super.roleName = Smartphone.DEFAULT_ROLE_NAME,
   });
 
   @override

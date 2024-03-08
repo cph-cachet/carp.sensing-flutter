@@ -16,12 +16,12 @@ class PersonalComputer
       '${DeviceConfiguration.DEVICE_NAMESPACE}.PersonalComputer';
 
   /// The default role name for a personal computer.
-  static const String DEFAULT_ROLENAME = 'Primary PC';
+  static const String DEFAULT_ROLE_NAME = 'Primary PC';
 
   /// Create a new personal computer device descriptor.
-  /// If [roleName] is not specified, then the [DEFAULT_ROLENAME] is used.
+  /// If [roleName] is not specified, then the [DEFAULT_ROLE_NAME] is used.
   PersonalComputer({
-    super.roleName = PersonalComputer.DEFAULT_ROLENAME,
+    super.roleName = PersonalComputer.DEFAULT_ROLE_NAME,
   });
 
   @override

@@ -132,12 +132,12 @@ class PrimaryDeviceConfiguration<TRegistration extends DeviceRegistration>
 @JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
 class CustomProtocolDevice extends PrimaryDeviceConfiguration {
   /// The default role name for a custom protocol device.
-  static const String DEFAULT_ROLENAME = 'Custom device';
+  static const String DEFAULT_ROLE_NAME = 'Custom device';
 
   /// Create a new [CustomProtocolDevice] device descriptor.
-  /// If [roleName] is not specified, then the  [DEFAULT_ROLENAME] is used.
+  /// If [roleName] is not specified, then the  [DEFAULT_ROLE_NAME] is used.
   CustomProtocolDevice({
-    super.roleName = CustomProtocolDevice.DEFAULT_ROLENAME,
+    super.roleName = CustomProtocolDevice.DEFAULT_ROLE_NAME,
   });
 
   @override

@@ -423,7 +423,7 @@ CustomProtocolDevice _$CustomProtocolDeviceFromJson(
         Map<String, dynamic> json) =>
     CustomProtocolDevice(
       roleName:
-          json['roleName'] as String? ?? CustomProtocolDevice.DEFAULT_ROLENAME,
+          json['roleName'] as String? ?? CustomProtocolDevice.DEFAULT_ROLE_NAME,
     )
       ..$type = json['__type'] as String?
       ..isOptional = json['isOptional'] as bool?
@@ -511,7 +511,7 @@ Map<String, dynamic> _$MACAddressDeviceRegistrationToJson(
     };
 
 Smartphone _$SmartphoneFromJson(Map<String, dynamic> json) => Smartphone(
-      roleName: json['roleName'] as String? ?? Smartphone.DEFAULT_ROLENAME,
+      roleName: json['roleName'] as String? ?? Smartphone.DEFAULT_ROLE_NAME,
     )
       ..$type = json['__type'] as String?
       ..isOptional = json['isOptional'] as bool?
@@ -578,7 +578,7 @@ Map<String, dynamic> _$SmartphoneDeviceRegistrationToJson(
 PersonalComputer _$PersonalComputerFromJson(Map<String, dynamic> json) =>
     PersonalComputer(
       roleName:
-          json['roleName'] as String? ?? PersonalComputer.DEFAULT_ROLENAME,
+          json['roleName'] as String? ?? PersonalComputer.DEFAULT_ROLE_NAME,
     )
       ..$type = json['__type'] as String?
       ..isOptional = json['isOptional'] as bool?
@@ -639,7 +639,7 @@ Map<String, dynamic> _$PersonalComputerRegistrationToJson(
     };
 
 WebBrowser _$WebBrowserFromJson(Map<String, dynamic> json) => WebBrowser(
-      roleName: json['roleName'] as String? ?? WebBrowser.DEFAULT_ROLENAME,
+      roleName: json['roleName'] as String? ?? WebBrowser.DEFAULT_ROLE_NAME,
     )
       ..$type = json['__type'] as String?
       ..isOptional = json['isOptional'] as bool?

@@ -15,12 +15,12 @@ class WebBrowser extends PrimaryDeviceConfiguration<WebBrowserRegistration> {
       '${DeviceConfiguration.DEVICE_NAMESPACE}.WebBrowser';
 
   /// The default role name for a web browser device.
-  static const String DEFAULT_ROLENAME = 'Primary Web Browser';
+  static const String DEFAULT_ROLE_NAME = 'Primary Web Browser';
 
   /// Create a new web browser device descriptor.
-  /// If [roleName] is not specified, then the [DEFAULT_ROLENAME] is used.
+  /// If [roleName] is not specified, then the [DEFAULT_ROLE_NAME] is used.
   WebBrowser({
-    super.roleName = WebBrowser.DEFAULT_ROLENAME,
+    super.roleName = WebBrowser.DEFAULT_ROLE_NAME,
   });
 
   @override
