@@ -1,8 +1,9 @@
-## 1.4.3
+## 1.4.4
 
 * default location updated changed to one minute (instead of 1 second)
 * improvements to permission handling in the Location Manager
 * improvements to connection handling in the Location Manager
+* only requesting ACTIVITY permissions once
 
 ## 1.4.0
 

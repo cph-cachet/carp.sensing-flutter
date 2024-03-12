@@ -16,16 +16,18 @@ part of carp_context_package;
 ///  * TILTING - when the phone is tilted (only on Android)
 ///  * Activities with a low confidence level (<50%)
 class ActivityProbe extends StreamProbe {
+  static bool requestingPermissions = false;
   Stream<Measurement>? _stream;
 
   @override
   Future<bool> onStart() async {
     // check permission to access the AR on Android
     final status = await Permission.activityRecognition.status;
-    if (!status.isGranted) {
+    if (!status.isGranted && !requestingPermissions) {
       warning(
           '$runtimeType - permission not granted to use to activity recognition: $status - trying to request it');
       try {
+        requestingPermissions = true; // only request once
         await Permission.activityRecognition.request();
       } catch (error) {
         warning(
