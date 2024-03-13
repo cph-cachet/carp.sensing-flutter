@@ -107,6 +107,14 @@ class CommunicationSamplingPackage extends SmartphoneSamplingPackage {
 
   @override
   void onRegister() {
+    // register all data types
+    FromJsonFactory().registerAll([
+      TextMessageLog(),
+      TextMessage(),
+      PhoneLog(DateTime.now(), DateTime.now()),
+      Calendar(DateTime.now(), DateTime.now()),
+    ]);
+
     // register the default privacy transformers
     DataTransformerSchemaRegistry()
         .lookup(PrivacySchema.DEFAULT)!

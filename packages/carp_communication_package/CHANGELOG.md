@@ -1,6 +1,7 @@
-## 1.4.1
+## 1.4.2
 
 * `Permission.calendarFullAccess` used instead of deprecated `Permission.calendar`.
+* fix of bug in deserialization from JSON
 
 ## 1.4.0
 
