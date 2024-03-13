@@ -122,6 +122,7 @@ class MovesenseSamplingPackage implements SamplingPackage {
       MovesenseDevice(),
       MovesenseStateChange(MovesenseDeviceState.unknown),
       MovesenseHR(55),
+      MovesenseECG(0, []),
       MovesenseTemperature(0, 0),
       MovesenseIMU(0, [], [], []),
     ]);

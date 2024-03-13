@@ -162,11 +162,11 @@ class CarpDataManager extends AbstractDataManager {
         }
       }
 
-      // if everything is uploaded successfully, then commit the transaction
-      await buffer.commit();
-
       info(
           "$runtimeType - Upload of data batches done - ${batches.length} batches uploaded.");
+
+      // if everything is uploaded successfully, then commit the transaction
+      await buffer.commit();
     } catch (error) {
       warning('$runtimeType - Data upload failed - $error');
     }

@@ -106,6 +106,8 @@ class HealthSamplingPackage extends SmartphoneSamplingPackage {
     FromJsonFactory().registerAll([
       HealthService(),
       HealthSamplingConfiguration(healthDataTypes: []),
+      HealthData('', NumericHealthValue(6), '', '', DateTime.now(),
+          DateTime.now(), '', '', '', ''),
     ]);
   }
 

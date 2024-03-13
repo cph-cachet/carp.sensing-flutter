@@ -1,7 +1,8 @@
-## 2.9.3
+## 2.9.4
 
 * update to `health` v. 9.x
 * better handling of different issues on iOS and Health Connect in terms of permissions
+* fix of bug in deserialization from JSON
 
 ## 2.9.2
 

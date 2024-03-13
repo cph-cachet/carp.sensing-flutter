@@ -22,8 +22,10 @@ class SurveySamplingPackage extends SmartphoneSamplingPackage {
     ResearchPackage.ensureInitialized();
     CognitionPackage.ensureInitialized();
 
-    FromJsonFactory()
-        .register(RPAppTask(type: '', rpTask: RPTask(identifier: 'ignored')));
+    FromJsonFactory().registerAll([
+      RPAppTask(type: '', rpTask: RPTask(identifier: 'ignored')),
+      RPTaskResultData()
+    ]);
     AppTaskController().registerUserTaskFactory(SurveyUserTaskFactory());
   }
 

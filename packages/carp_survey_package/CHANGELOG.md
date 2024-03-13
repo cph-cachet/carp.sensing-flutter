@@ -1,7 +1,8 @@
-## 1.4.3
+## 1.4.4
 
 * added support for different commonly used task types.
 * improvement to handling results from surveys
+* fix of bug in deserialization from JSON
 
 ## 1.4.0
 
