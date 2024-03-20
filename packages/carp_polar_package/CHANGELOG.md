@@ -1,6 +1,7 @@
-## 1.4.1
+## 1.4.2
 
 * small update to disconnection handling.
+* samples uses Dart DateTime timestamps instead of int (milliseconds)
 
 ## 1.4.0
 

@@ -13,13 +13,9 @@ part of carp_polar_package;
 /// Base class for all Polar samples.
 abstract class PolarSample {
   /// The timestamp when this sample was taken in microseconds.
-  ///
-  /// In CARP we prefer microseconds over milliseconds for higher precision.
-  final int timeStamp;
+  final DateTime timeStamp;
 
-  PolarSample({
-    required DateTime timeStamp,
-  }) : timeStamp = timeStamp.microsecondsSinceEpoch;
+  PolarSample({required this.timeStamp});
 }
 
 /// Polar accelerometer sample

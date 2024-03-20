@@ -141,7 +141,7 @@ abstract class AbstractExecutor<TConfig> implements Executor<TConfig> {
 
   @override
   void initialize(TConfig configuration, [SmartphoneDeployment? deployment]) {
-    info('Initializing $runtimeType');
+    info('Initializing $this');
     _deployment = deployment;
     _configuration = configuration;
     _stateMachine.initialize();
@@ -150,19 +150,19 @@ abstract class AbstractExecutor<TConfig> implements Executor<TConfig> {
   @override
   void start() {
     _isStarting = true;
-    info('Starting $runtimeType');
+    info('Starting $this');
     _stateMachine.start();
   }
 
   @override
   void restart() {
-    info('Restarting $runtimeType');
+    info('Restarting $this');
     _stateMachine.restart();
   }
 
   @override
   void stop() {
-    info('Stopping $runtimeType');
+    info('Stopping $this');
     _stateMachine.stop();
   }
 
@@ -195,7 +195,7 @@ abstract class AbstractExecutor<TConfig> implements Executor<TConfig> {
   Future<bool> onStop();
 
   @override
-  String toString() => '$runtimeType - state: $state';
+  String toString() => '$runtimeType [$hashCode] (${state.name})';
 }
 
 /// An abstract class used to implement aggregated executors (i.e., executors
@@ -343,6 +343,11 @@ class _StartedState extends _InitializedState {
 
   @override
   ExecutorState get state => ExecutorState.started;
+
+  @override
+  void start() => warning(
+      'Trying to start a ${executor.runtimeType} but it is already started. '
+      'Ignoring this.');
 }
 
 class _StoppedState extends _InitializedState {

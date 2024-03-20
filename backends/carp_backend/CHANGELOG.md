@@ -1,3 +1,7 @@
+## 1.4.1
+
+* fix of missing data streaming upload (CAWS issue [#16](https://github.com/cph-cachet/carp-webservices-spring/issues/16))
+
 ## 1.3.3
 
 * refreshing authetication token on upload, if needed.
