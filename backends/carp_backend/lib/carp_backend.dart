@@ -73,7 +73,7 @@ class CarpDataEndPoint extends DataEndPoint {
 
   @override
   String toString() =>
-      '$runtimeType [$name] - method: ${uploadMethod.toString().split('.').last}';
+      '$runtimeType [$name] - method: ${uploadMethod.name}, interval: $uploadInterval';
 }
 
 /// A enumeration of upload methods to CAWS

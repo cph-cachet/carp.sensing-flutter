@@ -46,7 +46,7 @@ abstract class DeviceManager<TDeviceConfiguration extends DeviceConfiguration>
 
   /// Change the runtime status of this device.
   set status(DeviceStatus newStatus) {
-    debug('$runtimeType - setting device status: $newStatus');
+    debug('$runtimeType - setting device status: ${newStatus.name}');
     _status = newStatus;
     _eventController.add(_status);
   }
@@ -194,6 +194,7 @@ abstract class DeviceManager<TDeviceConfiguration extends DeviceConfiguration>
     info('$runtimeType - Restarting sampling...');
 
     for (var executor in executors) {
+      debug('$runtimeType - Restarting $executor');
       executor.restart();
     }
   }

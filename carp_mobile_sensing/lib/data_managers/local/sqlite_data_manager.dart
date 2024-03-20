@@ -42,7 +42,7 @@ class SQLiteDataManager extends AbstractDataManager {
   static const String UPLOADED_COLUMN = 'uploaded';
   static const String DEPLOYMENT_ID_COLUMN = 'deployment_id';
   static const String TRIGGER_ID_COLUMN = 'trigger_id';
-  static const String ROLE_NAME_COLUMN = 'device_rolename';
+  static const String DEVICE_ROLE_NAME_COLUMN = 'device_role_name';
   static const String DATATYPE_COLUMN = 'data_type';
   static const String MEASUREMENT_COLUMN = 'measurement';
 
@@ -84,7 +84,7 @@ class SQLiteDataManager extends AbstractDataManager {
             '$UPLOADED_COLUMN INTEGER, '
             '$DEPLOYMENT_ID_COLUMN TEXT, '
             '$TRIGGER_ID_COLUMN INTEGER, '
-            '$ROLE_NAME_COLUMN TEXT, '
+            '$DEVICE_ROLE_NAME_COLUMN TEXT, '
             '$DATATYPE_COLUMN TEXT, '
             '$MEASUREMENT_COLUMN TEXT)');
 
@@ -95,23 +95,31 @@ class SQLiteDataManager extends AbstractDataManager {
 
   @override
   Future<void> onMeasurement(Measurement measurement) async {
+    // if the database hasn't been created yet, wait for 3 secs
+    if (database == null) {
+      return Future.delayed(
+          const Duration(seconds: 3), () => onMeasurement(measurement));
+    }
+
     final Map<String, dynamic> map = {
       UPLOADED_COLUMN: 0,
       DEPLOYMENT_ID_COLUMN: deployment.studyDeploymentId,
       TRIGGER_ID_COLUMN: measurement.taskControl?.triggerId ?? 0,
-      ROLE_NAME_COLUMN: measurement.taskControl?.targetDevice?.roleName ??
-          deployment.deviceConfiguration.roleName,
+      DEVICE_ROLE_NAME_COLUMN:
+          measurement.taskControl?.destinationDeviceRoleName ??
+              deployment.deviceConfiguration.roleName,
       DATATYPE_COLUMN: measurement.dataType.toString(),
       MEASUREMENT_COLUMN: jsonEncode(measurement),
     };
     int? id = await database?.insert(
       MEASUREMENT_TABLE_NAME,
       map,
-      conflictAlgorithm: ConflictAlgorithm.replace,
+      conflictAlgorithm: ConflictAlgorithm.ignore,
     );
 
-    debug(
-        '$runtimeType - wrote measurement to SQLite - id: $id, type: ${measurement.data.format}');
+    debug('$runtimeType - wrote measurement to SQLite - '
+        'id: $id, type: ${measurement.data.format}, '
+        'device role name: ${measurement.taskControl?.destinationDeviceRoleName}.');
   }
 
   @override

@@ -18,7 +18,7 @@ PolarAccelerometerSample _$PolarAccelerometerSampleFromJson(
 Map<String, dynamic> _$PolarAccelerometerSampleToJson(
         PolarAccelerometerSample instance) =>
     <String, dynamic>{
-      'timeStamp': instance.timeStamp,
+      'timeStamp': instance.timeStamp.toIso8601String(),
       'x': instance.x,
       'y': instance.y,
       'z': instance.z,
@@ -36,7 +36,7 @@ PolarGyroscopeSample _$PolarGyroscopeSampleFromJson(
 Map<String, dynamic> _$PolarGyroscopeSampleToJson(
         PolarGyroscopeSample instance) =>
     <String, dynamic>{
-      'timeStamp': instance.timeStamp,
+      'timeStamp': instance.timeStamp.toIso8601String(),
       'x': instance.x,
       'y': instance.y,
       'z': instance.z,
@@ -54,7 +54,7 @@ PolarMagnetometerSample _$PolarMagnetometerSampleFromJson(
 Map<String, dynamic> _$PolarMagnetometerSampleToJson(
         PolarMagnetometerSample instance) =>
     <String, dynamic>{
-      'timeStamp': instance.timeStamp,
+      'timeStamp': instance.timeStamp.toIso8601String(),
       'x': instance.x,
       'y': instance.y,
       'z': instance.z,
@@ -70,7 +70,7 @@ PolarPPGSample _$PolarPPGSampleFromJson(Map<String, dynamic> json) =>
 
 Map<String, dynamic> _$PolarPPGSampleToJson(PolarPPGSample instance) =>
     <String, dynamic>{
-      'timeStamp': instance.timeStamp,
+      'timeStamp': instance.timeStamp.toIso8601String(),
       'channelSamples': instance.channelSamples,
     };
 
@@ -118,7 +118,7 @@ PolarECGSample _$PolarECGSampleFromJson(Map<String, dynamic> json) =>
 
 Map<String, dynamic> _$PolarECGSampleToJson(PolarECGSample instance) =>
     <String, dynamic>{
-      'timeStamp': instance.timeStamp,
+      'timeStamp': instance.timeStamp.toIso8601String(),
       'voltage': instance.voltage,
     };
 
@@ -312,8 +312,8 @@ Map<String, dynamic> _$PolarHRToJson(PolarHR instance) {
 PolarDevice _$PolarDeviceFromJson(Map<String, dynamic> json) => PolarDevice(
       roleName: json['roleName'] as String? ?? PolarDevice.DEFAULT_ROLE_NAME,
       isOptional: json['isOptional'] as bool? ?? true,
-      deviceType: $enumDecodeNullable(
-          _$PolarDeviceTypeEnumMap, json['polarDeviceType']),
+      deviceType:
+          $enumDecodeNullable(_$PolarDeviceTypeEnumMap, json['deviceType']),
       identifier: json['identifier'] as String?,
       name: json['name'] as String?,
     )
@@ -347,8 +347,7 @@ Map<String, dynamic> _$PolarDeviceToJson(PolarDevice instance) {
   writeNotNull('settings', instance.settings);
   writeNotNull('identifier', instance.identifier);
   writeNotNull('address', instance.address);
-  writeNotNull(
-      'polarDeviceType', _$PolarDeviceTypeEnumMap[instance.deviceType]);
+  writeNotNull('deviceType', _$PolarDeviceTypeEnumMap[instance.deviceType]);
   writeNotNull('name', instance.name);
   writeNotNull('rssi', instance.rssi);
   return val;

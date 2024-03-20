@@ -192,15 +192,17 @@ class SmartphoneDeploymentController extends StudyRuntime<DeviceRegistration> {
       measurements,
     );
 
-    // connect to all connectable devices, incl. this phone
-    await connectAllConnectableDevices();
-
+    // initialize the executor, which recursively initializes all executors and probes
     _executor.initialize(deployment!, deployment!);
-    measurements.listen((_) => _samplingSize++);
+
+    // Connect to all connectable devices, incl. this phone.
+    // (Re-)connecting a device will trigger that sampling is (re)started
+    await connectAllConnectableDevices();
 
     // start heartbeat monitoring
     if (SmartPhoneClientManager().heartbeat) startHeartbeatMonitoring();
 
+    measurements.listen((_) => _samplingSize++);
     status = StudyStatus.Deployed;
 
     print('===============================================================');
