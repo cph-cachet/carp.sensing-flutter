@@ -1,8 +1,9 @@
-## 1.4.6
+## 1.4.7
 
 * improvements to handling connected BLE devices
 * improvement to triggers and probes using BLE devices
 * improvements to restarting sampling on device reconnect
+* upgrade of packages
 
 ## 1.4.4
 

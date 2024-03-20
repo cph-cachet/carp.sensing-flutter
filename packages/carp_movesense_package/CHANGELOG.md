@@ -1,3 +1,7 @@
+## 1.4.4
+
+* upgrade of plugin versions
+
 ## 1.4.2
 
 * added unit tests
