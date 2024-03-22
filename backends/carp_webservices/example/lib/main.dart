@@ -44,14 +44,27 @@ class _HomePageState extends State<HomePage> {
             height: 80,
             width: 200,
             decoration: BoxDecoration(borderRadius: BorderRadius.circular(10)),
-            child: TextButton.icon(
-              onPressed: () async =>
-                  bloc.currentUser = await CarpService().authenticate(),
-              icon: Icon(Icons.login),
-              label: Text(
-                'LOGIN',
-                style: TextStyle(fontSize: 35),
-              ),
+            child: StreamBuilder(
+              stream: CarpService().authStateChanges,
+              builder: (BuildContext context, AsyncSnapshot<AuthEvent> event) =>
+                  CarpService().authenticated
+                      ? TextButton.icon(
+                          onPressed: () => CarpService().logout(),
+                          icon: Icon(Icons.logout),
+                          label: Text(
+                            'LOGOUT',
+                            style: TextStyle(fontSize: 35),
+                          ),
+                        )
+                      : TextButton.icon(
+                          onPressed: () async => bloc.currentUser =
+                              await CarpService().authenticate(),
+                          icon: Icon(Icons.login),
+                          label: Text(
+                            'LOGIN',
+                            style: TextStyle(fontSize: 35),
+                          ),
+                        ),
             ),
           ),
           Container(
@@ -90,10 +103,9 @@ class AppBLoC {
   CarpApp? get app => _app;
   Uri uri = Uri(
     scheme: 'https',
-    host: 'carp.computerome.dk',
+    host: 'dev.carp.dk',
     pathSegments: [
       'auth',
-      'dev',
       'realms',
       'Carp',
     ],
@@ -105,17 +117,18 @@ class AppBLoC {
 
   late CarpApp mockCarpApp = CarpApp(
     name: "CAWS @ DTU",
-    uri: uri.replace(pathSegments: ['dev']),
+    uri: uri.replace(pathSegments: []),
     authURL: uri,
-    clientId: 'carp-webservices-dart',
-    redirectURI: Uri.base,
-    discoveryURL: Uri.base,
+    clientId: 'studies-app',
+    redirectURI: Uri.parse('carp-studies-auth://auth'),
+    discoveryURL: uri.replace(pathSegments: [
+      ...uri.pathSegments,
+      '.well-known',
+      'openid-configuration'
+    ]),
   );
 
   Future<void> init() async {
-
-
-
     CarpService().configure(mockCarpApp);
   }
 
