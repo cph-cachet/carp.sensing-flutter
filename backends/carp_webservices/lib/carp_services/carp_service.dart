@@ -92,6 +92,7 @@ class CarpService extends CarpBaseService {
         clientSecret: app.clientSecret ?? '',
         discoveryUrl: "${app.discoveryURL}",
         scopes: ['openid'], // To get an ID token
+        preferEphemeralSession: true, // on iOS, don't store the session in cookie
       ),
     );
 
@@ -232,6 +233,7 @@ class CarpService extends CarpBaseService {
   /// Returns the signed in user (with a new [OAuthToken] access token), if successful.
   /// Throws a [CarpServiceException] if not successful.
   Future<CarpUser> refresh() async {
+    print(currentUser.token!.refreshToken);
     final TokenResponse? response = await appAuth.token(
       TokenRequest(
         app.clientId,
@@ -316,14 +318,19 @@ class CarpService extends CarpBaseService {
   ///
   /// The discovery URL in the [app] is used to find the Identity Server.
   Future<void> logout() async {
-    await appAuth.endSession(
-      EndSessionRequest(
-        discoveryUrl: "${app.discoveryURL}",
-        idTokenHint: currentUser.token!.idToken,
-        postLogoutRedirectUrl: "${app.logoutRedirectURI ?? app.redirectURI}",
-      ),
-    );
+    // if on android:
 
+    if (Platform.isAndroid) {
+      await appAuth.endSession(
+        EndSessionRequest(
+          discoveryUrl: "${app.discoveryURL}",
+          idTokenHint: currentUser.token!.idToken,
+          postLogoutRedirectUrl: "${app.logoutRedirectURI ?? app.redirectURI}",
+        ),
+      );
+    }
+
+    _authEventController.add(AuthEvent.unauthenticated);
     _currentUser = null;
   }
 
