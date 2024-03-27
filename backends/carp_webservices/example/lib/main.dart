@@ -123,8 +123,6 @@ class AppBLoC {
     redirectURI: Uri.parse('carp-studies-auth://auth'),
     discoveryURL: uri.replace(pathSegments: [
       ...uri.pathSegments,
-      '.well-known',
-      'openid-configuration'
     ]),
   );
 

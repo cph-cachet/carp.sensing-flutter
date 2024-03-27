@@ -1,5 +1,5 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools">
+  xmlns:tools="http://schemas.android.com/tools">
 
   <!-- To eable that the "reset password" url can be launched -->
   <!-- Provide required visibility configuration for API level 30 and above
@@ -14,11 +14,13 @@
   <application
     android:name="${applicationName}"
     android:label="example"
-    android:icon="@mipmap/ic_launcher">
+    android:fullBackupContent="@xml/backup_rules"
+    android:dataExtractionRules="@xml/data_extraction_rules" android:icon="@mipmap/ic_launcher"
+  >
     <activity
-        android:name="net.openid.appauth.RedirectUriReceiverActivity"
-        android:exported="true"
-        tools:node="replace">
+      android:name="net.openid.appauth.RedirectUriReceiverActivity"
+      android:exported="true"
+      tools:node="replace">
       <intent-filter>
         <action android:name="android.intent.action.VIEW" />
 

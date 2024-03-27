@@ -28,7 +28,50 @@ class CarpService extends CarpBaseService {
   factory CarpService() => _instance;
   CarpService.instance() : this._();
 
-  FlutterAppAuth appAuth = const FlutterAppAuth();
+  late OidcUserManager _manager;
+  OidcUserManager get manager => _manager;
+
+  @override
+  void configure(CarpApp app) {
+    super.configure(app);
+
+    _manager = OidcUserManager.lazy(
+      discoveryDocumentUri: OidcUtils.getOpenIdConfigWellKnownUri(
+        Uri.parse(app.discoveryURL.toString()),
+      ),
+      clientCredentials: OidcClientAuthentication.none(
+        clientId: app.clientId,
+      ),
+      store: OidcDefaultStore(),
+      settings: OidcUserManagerSettings(
+        redirectUri: Uri.parse(app.redirectURI.toString()),
+        scope: ['openid'],
+        prompt: ['login'],
+        options: const OidcPlatformSpecificOptions(
+          ios: OidcPlatformSpecificOptions_AppAuth_IosMacos(
+            preferEphemeralSession: true,
+          ),
+          web: OidcPlatformSpecificOptions_Web(
+            navigationMode:
+                OidcPlatformSpecificOptions_Web_NavigationMode.newPage,
+          ),
+        ),
+      ),
+    );
+
+    _manager.init();
+
+    _manager.userChanges().listen((user) {
+      print('current user $user');
+      if (user == null) {
+        _currentUser = null;
+        _authEventController.add(AuthEvent.unauthenticated);
+      } else {
+        _currentUser = getCurrentUserProfile(user);
+        _authEventController.add(AuthEvent.authenticated);
+      }
+    });
+  }
 
   // RPC is not used in the CarpService endpoints which are named differently.
   @override
@@ -85,20 +128,11 @@ class CarpService extends CarpBaseService {
   /// Returns the signed in user (with an [OAuthToken] access token), if successful.
   /// Throws a [CarpServiceException] if not successful.
   Future<CarpUser> authenticate() async {
-    final AuthorizationTokenResponse? response =
-        await appAuth.authorizeAndExchangeCode(
-      AuthorizationTokenRequest(
-        app.clientId, "${app.redirectURI}",
-        clientSecret: app.clientSecret ?? '',
-        discoveryUrl: "${app.discoveryURL}",
-        scopes: ['openid'], // To get an ID token
-        preferEphemeralSession: true, // on iOS, don't store the session in cookie
-      ),
-    );
+    OidcUser? response = await manager.loginAuthorizationCodeFlow();
 
     if (response != null) {
       _currentUser = getCurrentUserProfile(response);
-      currentUser.authenticated(OAuthToken.fromTokenResponse(response));
+      currentUser.authenticated(OAuthToken.fromTokenResponse(response.token));
       _authEventController.add(AuthEvent.authenticated);
       return currentUser;
     }
@@ -123,41 +157,41 @@ class CarpService extends CarpBaseService {
   ///
   /// Returns the signed in user (with an [OAuthToken] access token), if successful.
   /// Throws a [CarpServiceException] if not successful.
-  Future<CarpUser> authenticateWithUsernamePassword({
-    required String username,
-    required String password,
-  }) async {
-    final TokenResponse? response = await appAuth.token(
-      TokenRequest(
-        app.clientId,
-        "${app.redirectURI}",
-        clientSecret: app.clientSecret ?? '',
-        discoveryUrl: "${app.discoveryURL}",
-        grantType: 'password',
-        additionalParameters: Map.fromEntries([
-          MapEntry('username', username),
-          MapEntry('password', password),
-        ]),
-      ),
-    );
+  // Future<CarpUser> authenticateWithUsernamePassword({
+  //   required String username,
+  //   required String password,
+  // }) async {
+  //   final TokenResponse? response = await appAuth.token(
+  //     TokenRequest(
+  //       app.clientId,
+  //       "${app.redirectURI}",
+  //       clientSecret: app.clientSecret ?? '',
+  //       discoveryUrl: "${app.discoveryURL}",
+  //       grantType: 'password',
+  //       additionalParameters: Map.fromEntries([
+  //         MapEntry('username', username),
+  //         MapEntry('password', password),
+  //       ]),
+  //     ),
+  //   );
 
-    if (response != null) {
-      currentUser.authenticated(OAuthToken.fromTokenResponse(response));
-      _authEventController.add(AuthEvent.refreshed);
-      return currentUser;
-    }
+  //   if (response != null) {
+  //     currentUser.authenticated(OAuthToken.fromTokenResponse(response));
+  //     _authEventController.add(AuthEvent.refreshed);
+  //     return currentUser;
+  //   }
 
-    // All other cases are treated as a failed attempt and throws an error
-    _authEventController.add(AuthEvent.failed);
-    _currentUser = null;
+  //   // All other cases are treated as a failed attempt and throws an error
+  //   _authEventController.add(AuthEvent.failed);
+  //   _currentUser = null;
 
-    // auth error response from CARP is on the form
-    //      {error: invalid_grant, error_description: Bad credentials}
-    throw CarpServiceException(
-      httpStatus: HTTPStatus(401),
-      message: 'Authentication failed.',
-    );
-  }
+  //   // auth error response from CARP is on the form
+  //   //      {error: invalid_grant, error_description: Bad credentials}
+  //   throw CarpServiceException(
+  //     httpStatus: HTTPStatus(401),
+  //     message: 'Authentication failed.',
+  //   );
+  // }
 
   /// Authenticate to this CARP service using a [username] and [password].
   ///
@@ -170,39 +204,39 @@ class CarpService extends CarpBaseService {
   ///
   /// Returns the signed in user (with an [OAuthToken] access token), if successful.
   /// Throws a [CarpServiceException] if not successful.
-  Future<CarpUser> authenticateWithUsernamePasswordNoContext({
-    required String username,
-    required String password,
-  }) async {
-    final url = app.authURL.replace(pathSegments: [
-      ...app.authURL.pathSegments,
-      'protocol',
-      'openid-connect',
-      'token',
-    ]);
-    final body = {
-      'client_id': app.clientId,
-      'client_secret': app.clientSecret ?? '',
-      'username': username,
-      'password': password,
-      'grant_type': 'password',
-    };
-    final headers = {
-      'Content-Type': 'application/x-www-form-urlencoded',
-    };
+  // Future<CarpUser> authenticateWithUsernamePasswordNoContext({
+  //   required String username,
+  //   required String password,
+  // }) async {
+  //   final url = app.authURL.replace(pathSegments: [
+  //     ...app.authURL.pathSegments,
+  //     'protocol',
+  //     'openid-connect',
+  //     'token',
+  //   ]);
+  //   final body = {
+  //     'client_id': app.clientId,
+  //     'client_secret': app.clientSecret ?? '',
+  //     'username': username,
+  //     'password': password,
+  //     'grant_type': 'password',
+  //   };
+  //   final headers = {
+  //     'Content-Type': 'application/x-www-form-urlencoded',
+  //   };
 
-    final response = await http.post(url, body: body, headers: headers);
+  //   final response = await http.post(url, body: body, headers: headers);
 
-    final jsonResponse = json.decode(response.body);
-    final tokenResponse =
-        _convertToTokenResponse(jsonResponse as Map<String, dynamic>);
-    CarpUser user = getCurrentUserProfile(tokenResponse);
-    user.authenticated(OAuthToken.fromTokenResponse(tokenResponse));
+  //   final jsonResponse = json.decode(response.body);
+  //   final tokenResponse =
+  //       _convertToTokenResponse(jsonResponse as Map<String, dynamic>);
+  //   CarpUser user = getCurrentUserProfile(tokenResponse);
+  //   user.authenticated(OAuthToken.fromTokenResponse(tokenResponse));
 
-    currentUser = user;
+  //   currentUser = user;
 
-    return user;
-  }
+  //   return user;
+  // }
 
   /// Authenticate to this CARP Service using a [OAuthToken] access token
   /// and a [CarpUser].
@@ -233,20 +267,11 @@ class CarpService extends CarpBaseService {
   /// Returns the signed in user (with a new [OAuthToken] access token), if successful.
   /// Throws a [CarpServiceException] if not successful.
   Future<CarpUser> refresh() async {
-    print(currentUser.token!.refreshToken);
-    final TokenResponse? response = await appAuth.token(
-      TokenRequest(
-        app.clientId,
-        clientSecret: app.clientSecret ?? '',
-        "${app.redirectURI}",
-        discoveryUrl: "${app.discoveryURL}",
-        refreshToken: currentUser.token!.refreshToken,
-      ),
-    );
+    final OidcUser? response = await manager.refreshToken();
 
     if (response != null) {
       currentUser = getCurrentUserProfile(response);
-      currentUser.authenticated(OAuthToken.fromTokenResponse(response));
+      currentUser.authenticated(OAuthToken.fromTokenResponse(response.token));
       _authEventController.add(AuthEvent.refreshed);
       return currentUser;
     }
@@ -280,36 +305,36 @@ class CarpService extends CarpBaseService {
   ///
   /// Returns the signed in user (with a new [OAuthToken] access token), if successful.
   /// Throws a [CarpServiceException] if not successful.
-  Future<CarpUser> refreshNoContext() async {
-    final url = app.authURL.replace(pathSegments: [
-      ...app.authURL.pathSegments,
-      'protocol',
-      'openid-connect',
-      'token',
-    ]);
+  // Future<CarpUser> refreshNoContext() async {
+  //   final url = app.authURL.replace(pathSegments: [
+  //     ...app.authURL.pathSegments,
+  //     'protocol',
+  //     'openid-connect',
+  //     'token',
+  //   ]);
 
-    final body = {
-      'client_id': app.clientId,
-      'client_secret': app.clientSecret ?? '',
-      'grant_type': 'refresh_token',
-      'refresh_token': currentUser.token!.refreshToken,
-    };
-    final headers = {
-      'Content-Type': 'application/x-www-form-urlencoded',
-    };
+  //   final body = {
+  //     'client_id': app.clientId,
+  //     'client_secret': app.clientSecret ?? '',
+  //     'grant_type': 'refresh_token',
+  //     'refresh_token': currentUser.token!.refreshToken,
+  //   };
+  //   final headers = {
+  //     'Content-Type': 'application/x-www-form-urlencoded',
+  //   };
 
-    final response = await http.post(url, body: body, headers: headers);
+  //   final response = await http.post(url, body: body, headers: headers);
 
-    final jsonResponse = json.decode(response.body);
-    final tokenResponse =
-        _convertToTokenResponse(jsonResponse as Map<String, dynamic>);
-    CarpUser user = getCurrentUserProfile(tokenResponse);
-    user.authenticated(OAuthToken.fromTokenResponse(tokenResponse));
+  //   final jsonResponse = json.decode(response.body);
+  //   final tokenResponse =
+  //       _convertToTokenResponse(jsonResponse as Map<String, dynamic>);
+  //   CarpUser user = getCurrentUserProfile(tokenResponse);
+  //   user.authenticated(OAuthToken.fromTokenResponse(tokenResponse));
 
-    currentUser = user;
+  //   currentUser = user;
 
-    return user;
-  }
+  //   return user;
+  // }
 
   /// Log out from this CARP service using a [BuildContext], that opens a
   /// web view to clear cookies and end the session on the Identity Server.
@@ -318,18 +343,10 @@ class CarpService extends CarpBaseService {
   ///
   /// The discovery URL in the [app] is used to find the Identity Server.
   Future<void> logout() async {
-    // if on android:
-
     if (Platform.isAndroid) {
-      await appAuth.endSession(
-        EndSessionRequest(
-          discoveryUrl: "${app.discoveryURL}",
-          idTokenHint: currentUser.token!.idToken,
-          postLogoutRedirectUrl: "${app.logoutRedirectURI ?? app.redirectURI}",
-        ),
-      );
+      await manager.logout();
     }
-
+    await manager.forgetUser();
     _authEventController.add(AuthEvent.unauthenticated);
     _currentUser = null;
   }
@@ -341,23 +358,23 @@ class CarpService extends CarpBaseService {
   ///
   /// Use this if you used [authenticateWithUsernamePassword]
   /// or [authenticateWithUsernamePasswordNoContext] to authenticate.
-  Future<void> logoutNoContext() async => currentUser = null;
+  // Future<void> logoutNoContext() async => currentUser = null;
 
-  TokenResponse _convertToTokenResponse(Map<String, dynamic> json) {
-    return AuthorizationTokenResponse(
-      json['access_token'] as String,
-      json['refresh_token'] as String,
-      // Expires in is in seconds, but the DateTime expects milliseconds.
-      DateTime.now().add(
-        Duration(seconds: json['expires_in'] as int),
-      ),
-      json['session_state'] as String,
-      json['token_type'] as String,
-      (json['scope'] as String).split(' '),
-      null,
-      null,
-    );
-  }
+  // TokenResponse _convertToTokenResponse(Map<String, dynamic> json) {
+  //   return AuthorizationTokenResponse(
+  //     json['access_token'] as String,
+  //     json['refresh_token'] as String,
+  //     // Expires in is in seconds, but the DateTime expects milliseconds.
+  //     DateTime.now().add(
+  //       Duration(seconds: json['expires_in'] as int),
+  //     ),
+  //     json['session_state'] as String,
+  //     json['token_type'] as String,
+  //     (json['scope'] as String).split(' '),
+  //     null,
+  //     null,
+  //   );
+  // }
 
   /// -------------------------------------------------------------------------
   /// Deprecated authentication methods
@@ -380,8 +397,8 @@ class CarpService extends CarpBaseService {
   // --------------------------------------------------------------------------
 
   /// Gets the CARP profile of the current user from the JWT token
-  CarpUser getCurrentUserProfile(TokenResponse response) {
-    var jwt = JwtDecoder.decode(response.accessToken!);
+  CarpUser getCurrentUserProfile(OidcUser response) {
+    var jwt = JwtDecoder.decode(response.token.accessToken!);
     return CarpUser.fromJWT(jwt);
   }
 
@@ -508,8 +525,6 @@ class CarpService extends CarpBaseService {
     http.Response response =
         await httpr.get(Uri.encodeFull(url), headers: headers);
     int httpStatusCode = response.statusCode;
-
-    print(response.body);
 
     switch (httpStatusCode) {
       case 200:
