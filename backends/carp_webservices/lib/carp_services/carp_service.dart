@@ -45,8 +45,10 @@ class CarpService extends CarpBaseService {
       store: OidcDefaultStore(),
       settings: OidcUserManagerSettings(
         redirectUri: Uri.parse(app.redirectURI.toString()),
-        scope: ['openid'],
+        scope: ['openid', 'offline_access'],
         prompt: ['login'],
+        postLogoutRedirectUri:
+            Uri.parse((app.logoutRedirectURI ?? app.redirectURI).toString()),
         options: const OidcPlatformSpecificOptions(
           ios: OidcPlatformSpecificOptions_AppAuth_IosMacos(
             preferEphemeralSession: true,
@@ -345,6 +347,9 @@ class CarpService extends CarpBaseService {
   Future<void> logout() async {
     if (Platform.isAndroid) {
       await manager.logout();
+      //       discoveryUrl: "${app.discoveryURL}",
+      // idTokenHint: currentUser.token!.idToken,
+      // postLogoutRedirectUrl: "${app.logoutRedirectURI ?? app.redirectURI}",
     }
     await manager.forgetUser();
     _authEventController.add(AuthEvent.unauthenticated);

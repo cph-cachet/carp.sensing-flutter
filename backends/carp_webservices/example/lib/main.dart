@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:carp_webservices/carp_services/carp_services.dart';
 import 'package:carp_webservices/carp_auth/carp_auth.dart';
 import 'package:carp_core/carp_core.dart';
+import 'package:oidc/oidc.dart';
 
 void main() {
   CarpMobileSensing.ensureInitialized();
@@ -40,53 +41,50 @@ class _HomePageState extends State<HomePage> {
           child: Column(
         mainAxisSize: MainAxisSize.min,
         children: <Widget>[
-          Container(
-            height: 80,
-            width: 200,
-            decoration: BoxDecoration(borderRadius: BorderRadius.circular(10)),
-            child: StreamBuilder(
-              stream: CarpService().authStateChanges,
-              builder: (BuildContext context, AsyncSnapshot<AuthEvent> event) =>
-                  CarpService().authenticated
-                      ? TextButton.icon(
-                          onPressed: () => CarpService().logout(),
-                          icon: Icon(Icons.logout),
-                          label: Text(
-                            'LOGOUT',
-                            style: TextStyle(fontSize: 35),
-                          ),
-                        )
-                      : TextButton.icon(
-                          onPressed: () async => bloc.currentUser =
-                              await CarpService().authenticate(),
-                          icon: Icon(Icons.login),
-                          label: Text(
-                            'LOGIN',
-                            style: TextStyle(fontSize: 35),
-                          ),
-                        ),
-            ),
-          ),
-          Container(
-            height: 80,
-            width: 400,
-            decoration: BoxDecoration(borderRadius: BorderRadius.circular(10)),
-            child: TextButton.icon(
-              onPressed: () => bloc.getStudyInvitation(context),
-              icon: Icon(Icons.mail),
-              label: Text(
-                'GET STUDY',
-                style: TextStyle(fontSize: 35),
-              ),
+          StreamBuilder(
+              stream: CarpService().manager.userChanges(),
+              builder: (BuildContext context, AsyncSnapshot<OidcUser?> event) {
+                if (!event.hasData) {
+                  return TextButton.icon(
+                    onPressed: () async =>
+                        bloc.currentUser = await CarpService().authenticate(),
+                    icon: Icon(Icons.login),
+                    label: Text(
+                      'LOGIN',
+                      style: TextStyle(fontSize: 35),
+                    ),
+                  );
+                } else {
+                  return TextButton.icon(
+                    onPressed: () => CarpService().logout(),
+                    icon: Icon(Icons.logout),
+                    label: Text(
+                      'LOGOUT',
+                      style: TextStyle(fontSize: 35),
+                    ),
+                  );
+                }
+              }),
+          TextButton.icon(
+            onPressed: () => bloc.getStudyInvitation(context),
+            icon: Icon(Icons.mail),
+            label: Text(
+              'GET STUDY',
+              style: TextStyle(fontSize: 35),
             ),
           ),
           StreamBuilder(
             stream: CarpService().authStateChanges,
             builder: (BuildContext context, AsyncSnapshot<AuthEvent> event) =>
                 Padding(
-                    padding: EdgeInsets.fromLTRB(10, 30, 10, 0),
-                    child: Text(
-                        'Authentication status: ${(CarpService().authenticated) ? 'Authenticated' : 'Not authenticated'}')),
+              padding: EdgeInsets.fromLTRB(10, 30, 10, 0),
+              child: Text(
+                (CarpService().authenticated)
+                    ? 'Authenticated as ${CarpService().currentUser.firstName} ${CarpService().currentUser.lastName}'
+                    : 'Not authenticated',
+                textAlign: TextAlign.center,
+              ),
+            ),
           )
         ],
       )),
