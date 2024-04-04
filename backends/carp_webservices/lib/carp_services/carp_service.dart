@@ -49,9 +49,6 @@ class CarpService extends CarpBaseService {
         postLogoutRedirectUri:
             Uri.parse((app.logoutRedirectURI ?? app.redirectURI).toString()),
         options: const OidcPlatformSpecificOptions(
-          ios: OidcPlatformSpecificOptions_AppAuth_IosMacos(
-            preferEphemeralSession: true,
-          ),
           web: OidcPlatformSpecificOptions_Web(
             navigationMode:
                 OidcPlatformSpecificOptions_Web_NavigationMode.newPage,
@@ -331,10 +328,7 @@ class CarpService extends CarpBaseService {
   ///
   /// The discovery URL in the [app] is used to find the Identity Server.
   Future<void> logout() async {
-    if (Platform.isAndroid) {
-      await manager.logout();
-    }
-    await manager.forgetUser();
+    await manager.logout();
     _authEventController.add(AuthEvent.unauthenticated);
     _currentUser = null;
   }
