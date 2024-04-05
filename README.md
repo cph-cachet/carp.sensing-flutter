@@ -35,9 +35,9 @@ These are the available CARP Mobile Sensing Flutter components in this repositor
 | [carp_backend](./backends/carp_backend) | Data manager for uploading data to a CAWS data backend. | [![pub package](https://img.shields.io/pub/v/carp_backend.svg)](https://pub.dartlang.org/packages/carp_backend) |
 | [carp_firebase_backend](./backends/carp_firebase_backend) | Data manager for uploading data to Firebase as both zipped files and JSON data| [![pub package](https://img.shields.io/pub/v/carp_firebase_backend.svg)](https://pub.dartlang.org/packages/carp_firebase_backend) |
 | **Utilities** | **Misc. CAMS utilities** |  |
-| [carp_study_generator](./utilities/carp_study_generator) | A simple command line interface (CLI) to upload study protocols, informed consent and localization files to the CARP backend.  | [![pub package](https://img.shields.io/pub/v/carp_study_generator.svg)](https://pub.dartlang.org/packages/carp_study_generator) |
+| [carp_study_generator](./utilities/carp_study_generator) | A simple command line interface (CLI) to upload study protocols, informed consent, and localization files to a CAWS backend.  | [![pub package](https://img.shields.io/pub/v/carp_study_generator.svg)](https://pub.dartlang.org/packages/carp_study_generator) |
 | **Apps** | **Misc. mobile sensing demo apps** |  |
-| [carp_mobile_sensing_app](./apps/carp_mobile_sensing_app) | Demonstrates how basic mobile sensing can be implemented in a Flutter app using CAMS. Also demonstrates how to integrate to wearable devices over BLE connections.  |  |
+| [carp_mobile_sensing_app](./apps/carp_mobile_sensing_app) | Demonstrates how basic mobile sensing can be implemented in a Flutter app using CAMS. Also demonstrates how to integrate wearable devices over BLE connections.  |  |
 | [pulmonary_monitor_app](https://github.com/cph-cachet/pulmonary_monitor_app) | Demonstrates how user tasks (aka. [AppTask](https://pub.dev/documentation/carp_mobile_sensing/latest/domain/AppTask-class.html)) are supported in CAMS. |  |
 
 ## Documentation
