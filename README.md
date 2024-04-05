@@ -31,7 +31,7 @@ These are the available CARP Mobile Sensing Flutter components in this repositor
 | [carp_polar_package](./packages/carp_polar_package) | Sampling package for the [Polar heart rate monitors](https://www.polar.com/) | [![pub package](https://img.shields.io/pub/v/carp_polar_package.svg)](https://pub.dartlang.org/packages/carp_polar_package) |
 | [carp_movesense_package](./packages/carp_movesense_package) | Sampling package for the [Movesense heart rate monitors](https://www.movesense.com/) | [![pub package](https://img.shields.io/pub/v/carp_movesense_package.svg)](https://pub.dartlang.org/packages/carp_movesense_package) |
 | **Backends** | **Backend data upload components** |  |
-| [carp_webservices](./backends/carp_webservices) | Flutter API for CARP web services | [![pub package](https://img.shields.io/pub/v/carp_webservices.svg)](https://pub.dartlang.org/packages/carp_webservices) |
+| [carp_webservices](./backends/carp_webservices) | Flutter API for CARP Web Services (CAWS) | [![pub package](https://img.shields.io/pub/v/carp_webservices.svg)](https://pub.dartlang.org/packages/carp_webservices) |
 | [carp_backend](./backends/carp_backend) | Data manager for uploading data to a CAWS data backend. | [![pub package](https://img.shields.io/pub/v/carp_backend.svg)](https://pub.dartlang.org/packages/carp_backend) |
 | [carp_firebase_backend](./backends/carp_firebase_backend) | Data manager for uploading data to Firebase as both zipped files and JSON data| [![pub package](https://img.shields.io/pub/v/carp_firebase_backend.svg)](https://pub.dartlang.org/packages/carp_firebase_backend) |
 | **Utilities** | **Misc. CAMS utilities** |  |
