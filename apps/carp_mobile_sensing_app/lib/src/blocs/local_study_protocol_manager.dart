@@ -300,9 +300,9 @@ class LocalStudyProtocolManager implements StudyProtocolManager {
     protocol.addParticipantRole(ParticipantRole(mother));
 
     // define and assign the primary device(s)
-    Smartphone fatherPhone = Smartphone(roleName: "Father's Phone");
+    Smartphone fatherPhone = Smartphone(roleName: "$father's Phone");
     protocol.addPrimaryDevice(fatherPhone);
-    Smartphone motherPhone = Smartphone(roleName: "Mother's Phone");
+    Smartphone motherPhone = Smartphone(roleName: "$mother's Phone");
     protocol.addPrimaryDevice(motherPhone);
 
     protocol.changeDeviceAssignment(

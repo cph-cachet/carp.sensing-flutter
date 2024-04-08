@@ -1,10 +1,10 @@
 part of carp_mobile_sensing;
 
-bool _fromJsonFunctionsRegistrered = false;
+bool _fromJsonFunctionsRegistered = false;
 
 /// Register all the fromJson functions for the domain classes.
 void _registerFromJsonFunctions() {
-  if (_fromJsonFunctionsRegistrered) return;
+  if (_fromJsonFunctionsRegistered) return;
 
   // Protocol classes
   FromJsonFactory().registerAll([
@@ -97,5 +97,5 @@ void _registerFromJsonFunctions() {
     '',
   ));
 
-  _fromJsonFunctionsRegistrered = true;
+  _fromJsonFunctionsRegistered = true;
 }
