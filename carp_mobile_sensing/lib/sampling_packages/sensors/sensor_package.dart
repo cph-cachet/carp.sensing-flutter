@@ -9,7 +9,7 @@ class SensorSamplingPackage extends SmartphoneSamplingPackage {
   static const String ACCELERATION = CarpDataTypes.ACCELERATION_TYPE_NAME;
 
   /// Rate of change in velocity, excluding gravity, along perpendicular x, y,
-  /// and z axes in the device's coordinate system.
+  /// and z axes in the phone's coordinate system.
   ///  * Event-based measure.
   ///  * Uses the [Smartphone] device for data collection.
   ///  * Uses a [IntervalSamplingConfiguration] sampling configuration.
@@ -18,29 +18,31 @@ class SensorSamplingPackage extends SmartphoneSamplingPackage {
 
   /// A set of acceleration (non-gravitational) features calculated over a
   /// specific sampling period.
+  ///  * Event-based measure.
+  ///  * Uses the [Smartphone] device for data collection.
   ///  * Uses a [PeriodicSamplingConfiguration] for configuration.
   static const String ACCELERATION_FEATURES = 'accelerationfeatures';
 
-  /// Rotation of the device in x,y,z (typically measured by a gyroscope).
+  /// Rotation of the phone in x,y,z (typically measured by a gyroscope).
   ///  * Event-based measure.
   ///  * Uses the [Smartphone] device for data collection.
   ///  * Uses a [IntervalSamplingConfiguration] sampling configuration.
   static const String ROTATION = CarpDataTypes.ROTATION_TYPE_NAME;
 
-  /// Magnetic field around the device in x,y,z (typically measured by a magnetometer).
+  /// Magnetic field around the phone in x,y,z (typically measured by a magnetometer).
   ///  * Event-based measure.
   ///  * Uses the [Smartphone] device for data collection.
   ///  * Uses a [IntervalSamplingConfiguration] sampling configuration.
   static const String MAGNETIC_FIELD = CarpDataTypes.MAGNETIC_FIELD_TYPE_NAME;
 
-  /// Ambient light from the phones light sensor.
+  /// Ambient light from the phone's light sensor.
   ///  * Event-based measure.
   ///  * Uses the [Smartphone] device for data collection.
   ///  * Uses a [PeriodicSamplingConfiguration] for configuration.
   static const String AMBIENT_LIGHT =
       '${CarpDataTypes.CARP_NAMESPACE}.ambientlight';
 
-  /// The number of steps taken in a specified time interval.
+  /// Step count events from the phone's pedometer.
   ///  * Event-based measure.
   ///  * Uses the [Smartphone] device for data collection.
   ///  * No sampling configuration needed.

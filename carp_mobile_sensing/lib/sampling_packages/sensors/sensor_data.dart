@@ -43,7 +43,7 @@ class AmbientLight extends SensorData {
 ///
 /// The set of features is inspired from the Medium article on
 /// [Feature Engineering on Time-Series Data for Human Activity Recognition](https://medium.com/towards-data-science/feature-engineering-on-time-series-data-transforming-signal-data-of-a-smartphone-accelerometer-for-72cbe34b8a60)
-/// and contains the following 1 simple statistical features:
+/// and contains the following 15 simple statistical features:
 ///   1. mean
 ///   2. standard deviation
 ///   3. average absolute deviation
