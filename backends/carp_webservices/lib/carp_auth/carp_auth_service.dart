@@ -38,7 +38,6 @@ class CarpAuthService extends CarpAuthBaseService {
   @override
   Future<void> configure(CarpAuthProperties authProperties) async {
     super.configure(authProperties);
-
     _manager = OidcUserManager.lazy(
       discoveryDocumentUri: OidcUtils.getOpenIdConfigWellKnownUri(
         Uri.parse(authProperties.discoveryURL.toString()),
@@ -61,7 +60,11 @@ class CarpAuthService extends CarpAuthBaseService {
         ),
       ),
     );
+    
+    await initManager();
+  }
 
+  Future<void> initManager() async {
     await _manager.init();
 
     _manager.userChanges().listen((user) {
@@ -80,6 +83,10 @@ class CarpAuthService extends CarpAuthBaseService {
   /// Returns the signed in user (with an [OAuthToken] access token), if successful.
   /// Throws a [CarpServiceException] if not successful.
   Future<CarpUser> authenticate() async {
+    if (!_manager.didInit) {
+      await initManager();
+    }
+
     OidcUser? response = await manager.loginAuthorizationCodeFlow();
 
     if (response != null) {
