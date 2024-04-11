@@ -26,7 +26,7 @@ void main() {
       username: username,
       password: password,
     );
-    CarpService().currentUser = mockUser;
+    CarpAuthService().currentUser = mockUser;
 
     CarpDataStreamService().configureFrom(CarpService());
   });

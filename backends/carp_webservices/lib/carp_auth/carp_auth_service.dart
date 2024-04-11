@@ -50,8 +50,9 @@ class CarpAuthService extends CarpAuthBaseService {
       settings: OidcUserManagerSettings(
         redirectUri: Uri.parse(authProperties.redirectURI.toString()),
         scope: ['openid', 'offline_access'],
-        postLogoutRedirectUri:
-            Uri.parse((authProperties.logoutRedirectURI ?? authProperties.redirectURI).toString()),
+        postLogoutRedirectUri: Uri.parse(
+            (authProperties.logoutRedirectURI ?? authProperties.redirectURI)
+                .toString()),
         options: const OidcPlatformSpecificOptions(
           web: OidcPlatformSpecificOptions_Web(
             navigationMode:
@@ -71,7 +72,7 @@ class CarpAuthService extends CarpAuthBaseService {
     });
   }
 
-  /// Authenticate to this CARP service, that opens the authentication page 
+  /// Authenticate to this CARP service, that opens the authentication page
   /// of the Identity Server using a secure web view from the OS.
   ///
   /// The discovery URL in the [app] is used to find the Identity Server.
@@ -163,8 +164,7 @@ class CarpAuthService extends CarpAuthBaseService {
     );
   }
 
-
-  /// Log out from this CARP service 
+  /// Log out from this CARP service
   ///
   /// opens a web view to clear cookies and end the session on the Identity Server.
   ///
@@ -195,7 +195,6 @@ class CarpAuthService extends CarpAuthBaseService {
     return CarpUser.fromJWT(jwt, response.token);
   }
 
-
   /// Makes sure that the [CarpApp] or [CarpUser] is configured, by throwing a
   /// [CarpServiceException] if they are null.
   /// Otherwise, returns the non-null value.
@@ -203,11 +202,11 @@ class CarpAuthService extends CarpAuthBaseService {
     if (argument == null && argument is CarpApp) {
       throw CarpServiceException(
           message:
-              "CARP Service not initialized. Call 'CarpService().configure()' first.");
+              "CARP Service not initialized. Call 'CarpAuthService().configure()' first.");
     } else if (argument == null && argument is CarpUser) {
       throw CarpServiceException(
           message:
-              "CARP User not authenticated. Call 'CarpService().authenticate()' first.");
+              "CARP User not authenticated. Call 'CarpAuthService().authenticate()' first.");
     } else {
       return argument!;
     }

@@ -109,15 +109,15 @@ class CarpDataManager extends AbstractDataManager {
     // now start trying to upload data...
     // try {
     // check if authenticated to CAWS and fast exit if not
-    if (!CarpService().authenticated) {
+    if (!CarpAuthService().authenticated) {
       warning('No user authenticated to CAWS. Cannot upload data.');
       return;
     }
 
     // check if token has expired, and try to refresh token, if so
-    if (CarpService().currentUser.token!.hasExpired) {
+    if (CarpAuthService().currentUser.token!.hasExpired) {
       try {
-        await CarpService().refresh();
+        await CarpAuthService().refresh();
       } catch (error) {
         warning('$runtimeType - Failed to refresh access token - $error. '
             'Cannot upload data.');

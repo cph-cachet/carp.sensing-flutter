@@ -46,7 +46,8 @@ class CarpService extends CarpBaseService {
 
     return {
       "Content-Type": "application/json",
-      "Authorization": "bearer ${CarpAuthService().currentUser.token!.accessToken}",
+      "Authorization":
+          "bearer ${CarpAuthService().currentUser.token!.accessToken}",
       "cache-control": "no-cache"
     };
   }
@@ -275,11 +276,11 @@ class CarpService extends CarpBaseService {
     if (argument == null && argument is CarpApp) {
       throw CarpServiceException(
           message:
-              "CARP Service not initialized. Call 'CarpService().configure()' first.");
+              "CARP Service not initialized. Call 'CarpAuthService().configure()' first.");
     } else if (argument == null && argument is CarpUser) {
       throw CarpServiceException(
           message:
-              "CARP User not authenticated. Call 'CarpService().authenticate()' first.");
+              "CARP User not authenticated. Call 'CarpAuthService().authenticate()' first.");
     } else {
       return argument!;
     }

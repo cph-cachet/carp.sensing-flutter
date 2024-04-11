@@ -18,7 +18,7 @@ void main() {
     CarpMobileSensing.ensureInitialized();
 
     CarpProtocolService().configureFrom(CarpService());
-    ownerId = CarpService().currentUser.id;
+    ownerId = CarpAuthService().currentUser.id;
     var phone = Smartphone(roleName: phoneRoleName);
     phone.defaultSamplingConfiguration?.addAll({
       Geolocation.dataType: BatteryAwareSamplingConfiguration(

@@ -54,7 +54,7 @@ void main() {
       password: password,
     );
 
-    CarpService().currentUser = mockUser;
+    CarpAuthService().currentUser = mockUser;
   });
 
   /// Close connection to CARP.
@@ -606,7 +606,7 @@ void main() {
 
         test('- expire token and the upload document', () async {
           print('expiring token...');
-          CarpService().currentUser.token!.expire();
+          CarpAuthService().currentUser.token!.expire();
 
           print('trying to upload a document w/o a name...');
           DocumentSnapshot d = await CarpService()

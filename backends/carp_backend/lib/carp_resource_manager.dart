@@ -44,7 +44,7 @@ class CarpResourceManager
   void _assertCarpService() {
     assert(CarpService().isConfigured,
         "CARP Service has not been configured - call 'CarpService().configure()' first.");
-    assert(CarpService().currentUser.isAuthenticated,
+    assert(CarpAuthService().currentUser.isAuthenticated,
         "No user is authenticated - call 'CarpService().authenticate()' first.");
   }
 

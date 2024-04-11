@@ -42,12 +42,12 @@ class _HomePageState extends State<HomePage> {
         mainAxisSize: MainAxisSize.min,
         children: <Widget>[
           StreamBuilder(
-              stream: CarpService().manager.userChanges(),
+              stream: CarpAuthService().manager.userChanges(),
               builder: (BuildContext context, AsyncSnapshot<OidcUser?> event) {
                 if (!event.hasData) {
                   return TextButton.icon(
-                    onPressed: () async =>
-                        bloc.currentUser = await CarpService().authenticate(),
+                    onPressed: () async => bloc.currentUser =
+                        await CarpAuthService().authenticate(),
                     icon: Icon(Icons.login),
                     label: Text(
                       'LOGIN',
@@ -56,7 +56,7 @@ class _HomePageState extends State<HomePage> {
                   );
                 } else {
                   return TextButton.icon(
-                    onPressed: () => CarpService().logout(),
+                    onPressed: () => CarpAuthService().logout(),
                     icon: Icon(Icons.logout),
                     label: Text(
                       'LOGOUT',
@@ -74,13 +74,13 @@ class _HomePageState extends State<HomePage> {
             ),
           ),
           StreamBuilder(
-            stream: CarpService().authStateChanges,
+            stream: CarpAuthService().authStateChanges,
             builder: (BuildContext context, AsyncSnapshot<AuthEvent> event) =>
                 Padding(
               padding: EdgeInsets.fromLTRB(10, 30, 10, 0),
               child: Text(
-                (CarpService().authenticated)
-                    ? 'Authenticated as ${CarpService().currentUser.firstName} ${CarpService().currentUser.lastName}'
+                (CarpAuthService().authenticated)
+                    ? 'Authenticated as ${CarpAuthService().currentUser.firstName} ${CarpAuthService().currentUser.lastName}'
                     : 'Not authenticated',
                 textAlign: TextAlign.center,
               ),

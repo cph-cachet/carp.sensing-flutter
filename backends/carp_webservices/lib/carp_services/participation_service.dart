@@ -38,7 +38,7 @@ class CarpParticipationService extends CarpBaseService
   @override
   Future<List<ActiveParticipationInvitation>> getActiveParticipationInvitations(
       [String? accountId]) async {
-    accountId ??= currentUser!.id;
+    accountId ??= CarpAuthService().currentUser.id;
 
     Map<String, dynamic> responseJson =
         await _rpc(GetActiveParticipationInvitations(accountId));
@@ -75,10 +75,10 @@ class CarpParticipationService extends CarpBaseService
               "CARP Service not initialized. Call 'CarpService().configure()' first.");
     }
 
-    if (!CarpService().authenticated) {
+    if (!CarpAuthService().authenticated) {
       throw CarpServiceException(
           message:
-              "The current user is not authenticated to CARP. Call 'CarpService().authenticate...()' first.");
+              "The current user is not authenticated to CARP. Call 'CarpAuthService().authenticate...()' first.");
     }
 
     List<ActiveParticipationInvitation> invitations =
