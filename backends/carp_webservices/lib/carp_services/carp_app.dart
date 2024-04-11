@@ -4,7 +4,7 @@
  * Use of this source code is governed by a MIT-style license that can be
  * found in the LICENSE file.
  */
-part of carp_services;
+part of 'carp_services.dart';
 
 /// Represents a CARP web service app endpoint.
 class CarpApp {
@@ -14,24 +14,6 @@ class CarpApp {
   /// URI of the CARP web service
   final Uri uri;
 
-  /// The OAuth endpoint for this app.
-  final Uri authURL;
-
-  /// OAuth client id
-  final String clientId;
-
-  /// OAuth client secret
-  String? clientSecret;
-
-  /// Redirect URI for OAuth
-  final Uri redirectURI;
-
-  /// Redirect uri for OAuth after logout
-  /// If not specified, the [redirectURI] is used.
-  Uri? logoutRedirectURI;
-
-  /// Discovery URI for OAuth
-  final Uri discoveryURL;
 
   /// The CARP study id for this app.
   String? studyId;
@@ -49,14 +31,8 @@ class CarpApp {
   CarpApp({
     required this.name,
     required this.uri,
-    required this.authURL,
-    required this.clientId,
-    this.clientSecret,
-    required this.redirectURI,
-    required this.discoveryURL,
     this.studyDeploymentId,
     this.studyId,
-    this.logoutRedirectURI,
   });
 
   @override

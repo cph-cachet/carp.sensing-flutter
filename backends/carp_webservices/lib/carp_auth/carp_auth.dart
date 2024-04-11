@@ -9,10 +9,13 @@
 library carp_auth;
 
 import 'dart:async';
-import 'package:flutter_appauth/flutter_appauth.dart';
+import 'package:carp_webservices/carp_services/carp_services.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:oidc/oidc.dart';
 
 part 'oauth.dart';
 part 'carp_user.dart';
 part 'carp_auth.g.dart';
+part 'carp_auth_base_service.dart';
+part 'carp_auth_properties.dart';
+part 'carp_auth_service.dart';
