@@ -276,31 +276,14 @@ class CarpService extends CarpBaseService {
     if (argument == null && argument is CarpApp) {
       throw CarpServiceException(
           message:
-              "CARP Service not initialized. Call 'CarpAuthService().configure()' first.");
+              "CARP Service not initialized. Call 'CarpService().configure()' first.");
     } else if (argument == null && argument is CarpUser) {
       throw CarpServiceException(
           message:
-              "CARP User not authenticated. Call 'CarpAuthService().authenticate()' first.");
+              "CARP User not authenticated. Call 'CarpService().authenticate()' first.");
     } else {
       return argument!;
     }
   }
 }
 
-/// Authentication state change events.
-enum AuthEvent {
-  /// The user has successfully been authenticated (signed in).
-  authenticated,
-
-  /// The user has been unauthenticated (signed out).
-  unauthenticated,
-
-  /// Authentication failed.
-  failed,
-
-  /// The user's token has successfully been refreshed.
-  refreshed,
-
-  /// A password reset email has been send to the user.
-  reset,
-}

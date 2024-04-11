@@ -212,3 +212,21 @@ class CarpAuthService extends CarpAuthBaseService {
     }
   }
 }
+
+/// Authentication state change events.
+enum AuthEvent {
+  /// The user has successfully been authenticated (signed in).
+  authenticated,
+
+  /// The user has been unauthenticated (signed out).
+  unauthenticated,
+
+  /// Authentication failed.
+  failed,
+
+  /// The user's token has successfully been refreshed.
+  refreshed,
+
+  /// A password reset email has been send to the user.
+  reset,
+}
