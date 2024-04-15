@@ -6,10 +6,11 @@ import 'package:carp_webservices/carp_services/carp_services.dart';
 import 'package:test/test.dart';
 
 import 'credentials.dart';
-import 'mock_authentication_service.dart';
+import 'carp_properties.dart';
 
 void main() {
   CarpApp app;
+  CarpAuthProperties authProperties;
   CarpUser? mockUser;
 
   /// Setup CARP and authenticate.
@@ -20,10 +21,14 @@ void main() {
     // Initialization of serialization
     CarpMobileSensing.ensureInitialized();
 
-    app = MockAuthenticationService().app;
+    app = CarpProperties().app;
+    authProperties = CarpProperties().authProperties;
+
+    await CarpAuthService().configure(authProperties);
     CarpService().configure(app);
 
-    CarpUser mockUser = await MockAuthenticationService().authenticate(
+    CarpUser mockUser =
+        await CarpAuthService().authenticateWithUsernamePassword(
       username: username,
       password: password,
     );

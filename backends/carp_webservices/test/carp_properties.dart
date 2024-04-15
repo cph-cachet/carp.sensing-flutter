@@ -1,15 +1,11 @@
-import 'dart:async';
-
 import 'package:carp_webservices/carp_auth/carp_auth.dart';
 import 'package:carp_webservices/carp_services/carp_services.dart';
 import 'credentials.dart';
 
-class MockAuthenticationService extends CarpAuthService {
-  static final MockAuthenticationService _instance =
-      MockAuthenticationService._();
-  MockAuthenticationService._() : super.instance();
+class CarpProperties {
+  static final CarpProperties _instance = CarpProperties();
 
-  factory MockAuthenticationService() => _instance;
+  factory CarpProperties() => _instance;
 
   /// The URI of the CANS server - depending on deployment mode.
   Uri uri = Uri(
@@ -22,6 +18,13 @@ class MockAuthenticationService extends CarpAuthService {
     ],
   );
 
+  late CarpAuthProperties authProperties = CarpAuthProperties(
+    authURL: uri,
+    clientId: 'carp-webservices-dart',
+    redirectURI: Uri.base,
+    discoveryURL: Uri.base,
+  );
+
   late CarpApp mockCarpApp = CarpApp(
     name: "CAWS @ DigitalOcean [DEV]",
     uri: uri.replace(pathSegments: []),
@@ -30,14 +33,4 @@ class MockAuthenticationService extends CarpAuthService {
   );
 
   CarpApp get app => mockCarpApp;
-
-  @override
-  Future<CarpUser> authenticate({
-    String? username,
-    String? password,
-  }) {
-    assert(username != null && password != null);
-    return CarpAuthService().authenticateWithUsernamePassword(
-        username: username!, password: password!);
-  }
 }
