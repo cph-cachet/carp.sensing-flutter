@@ -11,16 +11,9 @@
 // HOWEVER, remember to add the file to .gitignore in order not to commit
 // the authentication details.
 
-// CARP client ID and secret
-const String clientID = "carp_client_id";
-const String clientSecret = "carp_client_secret";
-
 // Username + password for the user doing the testing
 const String username = 'a_username';
 const String password = 'the_password';
-
-// The URI of the CAWS server
-const String uri = "https://cans.cachet.dk";
 
 // Protocol details
 //
