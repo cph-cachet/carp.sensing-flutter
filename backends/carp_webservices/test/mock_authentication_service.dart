@@ -4,7 +4,7 @@ import 'package:carp_webservices/carp_auth/carp_auth.dart';
 import 'package:carp_webservices/carp_services/carp_services.dart';
 import 'credentials.dart';
 
-class MockAuthenticationService extends CarpService {
+class MockAuthenticationService extends CarpAuthService {
   static final MockAuthenticationService _instance =
       MockAuthenticationService._();
   MockAuthenticationService._() : super.instance();
@@ -14,27 +14,21 @@ class MockAuthenticationService extends CarpService {
   /// The URI of the CANS server - depending on deployment mode.
   Uri uri = Uri(
     scheme: 'https',
-    host: 'carp.computerome.dk',
+    host: 'dev.carp.dk',
     pathSegments: [
       'auth',
-      'dev',
       'realms',
       'Carp',
     ],
   );
 
   late CarpApp mockCarpApp = CarpApp(
-    name: "CAWS @ Computerome",
-    uri: uri.replace(pathSegments: ['dev']),
-    authURL: uri,
-    clientId: 'carp-webservices-dart',
-    redirectURI: Uri.base,
-    discoveryURL: Uri.base,
+    name: "CAWS @ DigitalOcean [DEV]",
+    uri: uri.replace(pathSegments: []),
     studyDeploymentId: testDeploymentId,
     studyId: testStudyId,
   );
 
-  @override
   CarpApp get app => mockCarpApp;
 
   @override
@@ -43,20 +37,7 @@ class MockAuthenticationService extends CarpService {
     String? password,
   }) {
     assert(username != null && password != null);
-    return authenticateWithUsernamePasswordNoContext(
+    return CarpAuthService().authenticateWithUsernamePassword(
         username: username!, password: password!);
-  }
-
-  @override
-  Future<CarpUser> refresh({
-    String? username,
-    String? password,
-  }) =>
-      refreshNoContext();
-
-  /// Logout from CARP
-  @override
-  Future<void> logout() async {
-    currentUser = null;
   }
 }
