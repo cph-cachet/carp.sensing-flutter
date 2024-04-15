@@ -6,6 +6,7 @@ import 'package:carp_mobile_sensing/carp_mobile_sensing.dart';
 import 'package:carp_webservices/carp_auth/carp_auth.dart';
 import 'package:carp_webservices/carp_services/carp_services.dart';
 import 'package:test/test.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import 'carp_properties.dart';
 import 'credentials.dart';
@@ -14,6 +15,7 @@ String _encode(Object? object) =>
     const JsonEncoder.withIndent(' ').convert(object);
 
 void main() {
+  SharedPreferences.setMockInitialValues({});
   const String userId = "jakob@bardram.net";
   const String studyId = "test_1234";
   const String collectionName = 'test_patients';

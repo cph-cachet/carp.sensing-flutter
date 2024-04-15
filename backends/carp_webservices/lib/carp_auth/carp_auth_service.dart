@@ -37,7 +37,6 @@ class CarpAuthService extends CarpAuthBaseService {
 
   @override
   Future<void> configure(CarpAuthProperties authProperties) async {
-    super.configure(authProperties);
     _manager = OidcUserManager.lazy(
       discoveryDocumentUri: OidcUtils.getOpenIdConfigWellKnownUri(
         Uri.parse(authProperties.discoveryURL.toString()),

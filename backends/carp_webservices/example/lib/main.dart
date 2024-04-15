@@ -116,6 +116,9 @@ class AppBLoC {
   late CarpApp mockCarpApp = CarpApp(
     name: "CAWS @ DTU",
     uri: uri.replace(pathSegments: []),
+  );
+
+  late CarpAuthProperties authProperties = CarpAuthProperties(
     authURL: uri,
     clientId: 'studies-app',
     redirectURI: Uri.parse('carp-studies-auth://auth'),
@@ -125,6 +128,7 @@ class AppBLoC {
   );
 
   Future<void> init() async {
+    await CarpAuthService().configure(authProperties);
     CarpService().configure(mockCarpApp);
   }
 
