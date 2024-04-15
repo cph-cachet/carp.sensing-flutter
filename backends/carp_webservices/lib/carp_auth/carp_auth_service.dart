@@ -60,7 +60,7 @@ class CarpAuthService extends CarpAuthBaseService {
         ),
       ),
     );
-    
+
     await initManager();
   }
 
@@ -117,12 +117,17 @@ class CarpAuthService extends CarpAuthBaseService {
     required String username,
     required String password,
   }) async {
+    if (!_manager.didInit) {
+      await initManager();
+    }
+
     final OidcUser? response = await manager.loginPassword(
       username: username,
       password: password,
     );
 
     if (response != null) {
+      _currentUser = getCurrentUserProfile(response);
       currentUser.authenticated(OAuthToken.fromTokenResponse(response.token));
       _authEventController.add(AuthEvent.refreshed);
       return currentUser;
@@ -150,6 +155,10 @@ class CarpAuthService extends CarpAuthBaseService {
   /// Returns the signed in user (with a new [OAuthToken] access token), if successful.
   /// Throws a [CarpServiceException] if not successful.
   Future<CarpUser> refresh() async {
+    if (!_manager.didInit) {
+      await initManager();
+    }
+
     final OidcUser? response = await manager.refreshToken();
 
     if (response != null) {
@@ -177,6 +186,10 @@ class CarpAuthService extends CarpAuthBaseService {
   ///
   /// Use this if you used [authenticate] to authenticate.
   Future<void> logout() async {
+    if (!_manager.didInit) {
+      await initManager();
+    }
+
     await manager.logout();
     _authEventController.add(AuthEvent.unauthenticated);
     _currentUser = null;
