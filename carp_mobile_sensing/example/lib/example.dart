@@ -840,6 +840,9 @@ void appTaskControllerExample() async {
       case UserTaskState.done:
         userTask.executor.stop();
         break;
+      case UserTaskState.notified:
+        print('Task id: ${userTask.id} was clicked in the OS.');
+        break;
       default:
         //
         break;

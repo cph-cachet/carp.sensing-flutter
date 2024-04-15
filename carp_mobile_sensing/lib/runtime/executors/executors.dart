@@ -343,11 +343,6 @@ class _StartedState extends _InitializedState {
 
   @override
   ExecutorState get state => ExecutorState.started;
-
-  @override
-  void start() => warning(
-      'Trying to start a ${executor.runtimeType} but it is already started. '
-      'Ignoring this.');
 }
 
 class _StoppedState extends _InitializedState {

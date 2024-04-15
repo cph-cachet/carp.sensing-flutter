@@ -168,22 +168,14 @@ class FlutterLocalNotificationController implements NotificationController {
   }
 }
 
+/// Callback method called when a notification is clicked in the operating system.
 @pragma('vm:entry-point')
 void onDidReceiveNotificationResponse(NotificationResponse response) {
   String? payload = response.payload;
-
   debug('NotificationController - callback on notification, payload: $payload');
 
   if (payload != null) {
-    UserTask? task = AppTaskController().getUserTask(payload);
-    info('NotificationController - User Task notification selected - $task');
-    if (task != null) {
-      task.state = UserTaskState.notified;
-      task.onNotification();
-    } else {
-      warning(
-          'NotificationController - Error in callback from notification - no task found.');
-    }
+    AppTaskController().onNotification(payload);
   } else {
     warning(
         "NotificationController - Error in callback from notification - payload is '$payload'");
