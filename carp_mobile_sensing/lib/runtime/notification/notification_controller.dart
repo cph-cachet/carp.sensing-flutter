@@ -75,6 +75,9 @@ abstract class NotificationController {
   Future<void> cancelTaskNotification(UserTask task);
 
   /// The number of pending notifications.
+  ///
+  /// Note that on iOS there is a limit of 64 pending notifications.
+  /// See https://pub.dev/packages/flutter_local_notifications#ios-pending-notifications-limit
   Future<int> get pendingNotificationRequestsCount;
 }
 

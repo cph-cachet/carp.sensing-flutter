@@ -105,7 +105,6 @@ class FlutterLocalNotificationController implements NotificationController {
   Future<void> cancelNotification(int id) async =>
       await FlutterLocalNotificationsPlugin().cancel(id);
 
-  /// Send an immediate notification for a [task].
   @override
   Future<void> createTaskNotification(UserTask task) async {
     if (task.notification) {
@@ -120,7 +119,6 @@ class FlutterLocalNotificationController implements NotificationController {
     }
   }
 
-  /// Schedule a notification for a [task] at the [UserTask.triggerTime].
   @override
   Future<void> scheduleTaskNotification(UserTask task) async {
     // early out if not to be scheduled
@@ -149,16 +147,11 @@ class FlutterLocalNotificationController implements NotificationController {
     }
   }
 
-  /// The number of pending notifications.
-  ///
-  /// Note that on iOS there is a limit of 64 pending notifications.
-  /// See https://pub.dev/packages/flutter_local_notifications#ios-pending-notifications-limit
   @override
   Future<int> get pendingNotificationRequestsCount async =>
       (await FlutterLocalNotificationsPlugin().pendingNotificationRequests())
           .length;
 
-  /// Cancel (i.e., remove) the notification for the [task].
   @override
   Future<void> cancelTaskNotification(UserTask task) async {
     if (task.notification) {
