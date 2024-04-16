@@ -218,6 +218,10 @@ class SmartPhoneClientManager extends SmartphoneClient
   /// Should be called before sensing is started, if not already done as part of
   /// [configure].
   Future<void> askForAllPermissions() async {
+    // needed for local notifications
+    SamplingPackageRegistry().permissions.add(Permission.notification);
+    SamplingPackageRegistry().permissions.add(Permission.scheduleExactAlarm);
+
     if (SamplingPackageRegistry().permissions.isNotEmpty) {
       info('Asking for permission for all measure types.');
       permissions = await SamplingPackageRegistry().permissions.request();
