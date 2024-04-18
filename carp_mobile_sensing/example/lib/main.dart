@@ -297,24 +297,25 @@ class LocalStudyProtocolManager implements StudyProtocolManager {
     //   phone,
     // );
 
-    // Add two app tasks with notifications.
+    // Add app tasks with notifications.
     //
     // These App Tasks are added for demo purpose and you should see notifications
     // on the phone. However, nothing will happen when you click on it.
     // See the PulmonaryMonitor demo app for a full-scale example of how to use
     // the App Task model.
 
-    // Add a task 1 minute after deployment and make a notification.
-    // protocol.addTaskControl(
-    //   ElapsedTimeTrigger(elapsedTime: const IsoDuration(seconds: 30)),
-    //   AppTask(
-    //     type: BackgroundSensingUserTask.ONE_TIME_SENSING_TYPE,
-    //     title: "Elapsed Time - App Task",
-    //     measures: [Measure(type: DeviceSamplingPackage.DEVICE_INFORMATION)],
-    //     notification: true,
-    //   ),
-    //   phone,
-    // );
+    // Add a task after deployment and make a notification.
+    protocol.addTaskControl(
+      ElapsedTimeTrigger(elapsedTime: const IsoDuration(seconds: 30)),
+      AppTask(
+        type: BackgroundSensingUserTask.ONE_TIME_SENSING_TYPE,
+        title: "Elapsed Time Trigger - App Task",
+        description: 'Collection of Device Information.',
+        measures: [Measure(type: DeviceSamplingPackage.DEVICE_INFORMATION)],
+        notification: true,
+      ),
+      phone,
+    );
 
     // // Add a cron job every day at 11:45
     // protocol.addTaskControl(

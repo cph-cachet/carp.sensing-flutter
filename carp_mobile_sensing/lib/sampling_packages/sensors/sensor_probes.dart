@@ -1,11 +1,11 @@
 /*
- * Copyright 2018-2024 Copenhagen Center for Health Technology (CACHET) at the
+ * Copyright 2018 Copenhagen Center for Health Technology (CACHET) at the
  * Technical University of Denmark (DTU).
  * Use of this source code is governed by a MIT-style license that can be
  * found in the LICENSE file.
  */
 
-part of sensors;
+part of 'sensors.dart';
 
 /// An abstract sensor probe used by all sensor probes to get the [samplingPeriod].
 ///

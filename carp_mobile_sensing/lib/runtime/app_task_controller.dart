@@ -5,7 +5,7 @@
  * found in the LICENSE file.
  */
 
-part of runtime;
+part of 'runtime.dart';
 
 /// A controller of [UserTask]s which is accessible in the [userTaskQueue].
 class AppTaskController {

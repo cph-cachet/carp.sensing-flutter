@@ -5,7 +5,7 @@
  * found in the LICENSE file.
  */
 
-part of device;
+part of 'device.dart';
 
 /// The [BatteryProbe] listens to the hardware battery and collect a [BatteryState]
 /// every time the battery state changes. For example, battery level or charging mode.

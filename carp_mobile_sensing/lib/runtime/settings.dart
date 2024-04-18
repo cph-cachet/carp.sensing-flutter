@@ -1,4 +1,4 @@
-part of runtime;
+part of 'runtime.dart';
 
 /// Misc. settings for CAMS.
 ///

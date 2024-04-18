@@ -5,7 +5,7 @@
  * found in the LICENSE file.
  */
 
-part of device;
+part of 'device.dart';
 
 /// Holds basic information about the mobile device from where the data is collected.
 ///

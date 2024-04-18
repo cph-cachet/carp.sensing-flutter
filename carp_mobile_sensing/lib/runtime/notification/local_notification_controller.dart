@@ -29,6 +29,11 @@ class FlutterLocalNotificationController implements NotificationController {
   Future<void> initialize() async {
     tz.initializeTimeZones();
 
+    List<Permission> permissions =
+        List.from([Permission.notification, Permission.scheduleExactAlarm]);
+    var status = await permissions.request();
+    debug('$runtimeType - permissions: $status');
+
     await FlutterLocalNotificationsPlugin().initialize(
       const InitializationSettings(
         android: AndroidInitializationSettings('app_icon'),
@@ -96,6 +101,37 @@ class FlutterLocalNotificationController implements NotificationController {
       androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
       uiLocalNotificationDateInterpretation:
           UILocalNotificationDateInterpretation.absoluteTime,
+    );
+
+    return id;
+  }
+
+  @override
+  Future<int> scheduleRecurrentNotifications(
+      {int? id,
+      required String title,
+      String? body,
+      required RecurrentScheduledTrigger schedule}) async {
+    id ??= _random.nextInt(1000);
+    final time = tz.TZDateTime.from(
+        schedule.firstOccurrence, tz.getLocation(Settings().timezone));
+
+    DateTimeComponents recurrence = switch (schedule.type) {
+      RecurrentType.daily => DateTimeComponents.time,
+      RecurrentType.weekly => DateTimeComponents.dayOfWeekAndTime,
+      RecurrentType.monthly => DateTimeComponents.dayOfMonthAndTime,
+    };
+
+    await FlutterLocalNotificationsPlugin().zonedSchedule(
+      id,
+      title,
+      body,
+      time,
+      _platformChannelSpecifics,
+      androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
+      uiLocalNotificationDateInterpretation:
+          UILocalNotificationDateInterpretation.absoluteTime,
+      matchDateTimeComponents: recurrence,
     );
 
     return id;

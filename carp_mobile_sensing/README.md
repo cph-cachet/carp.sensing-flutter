@@ -28,19 +28,25 @@ dependencies:
 
 When you want to add CAMS to you app, there are a few things to do in terms of configuring your app.
 
-First, since CAMS rely on the [flutter_local_notifications](https://pub.dev/packages/flutter_local_notifications) plugin, you should configure your app to the [platforms it supports](https://pub.dev/packages/flutter_local_notifications#-supported-platforms) and configure your app for both [Android](https://pub.dev/packages/flutter_local_notifications#-android-setup) and [iOS](https://pub.dev/packages/flutter_local_notifications#-ios-setup).
+First, CAMS rely on the [flutter_local_notifications](https://pub.dev/packages/flutter_local_notifications) plugin. So **if you want to use App Tasks and notifications** you should configure your app to the [platforms it supports](https://pub.dev/packages/flutter_local_notifications#-supported-platforms) and configure your app for both [Android](https://pub.dev/packages/flutter_local_notifications#-android-setup) and [iOS](https://pub.dev/packages/flutter_local_notifications#-ios-setup). There is a lot of details in configuring for notifications - especially for Android - so read this carefully.
 
 ### Android Integration
 
-Set the minimum android SDK to 23 and Java SDK Version to 33 by setting the `minSdkVersion`, the `compileSdkVersion`, and `targetSdkVersion` in the `build.gradle` file, located in the `android/app/` folder:
+Set the minimum android SDK to 26 and Java SDK Version to 34 by setting the `minSdkVersion`, the `compileSdkVersion`, and `targetSdkVersion` in the `build.gradle` file, located in the `android/app/` folder:
 
 ```gradle
 android {
-    compileSdkVersion 33
+    compileSdkVersion 34
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
 
     defaultConfig {
-        minSdkVersion 23
-        targetSdkVersion 33
+        ...
+        minSdkVersion 26
+        targetSdkVersion flutter.targetSdkVersion
         ...
     }
     ...
@@ -48,14 +54,37 @@ android {
 ```
 
 The pedometer (step count) probe needs permission to `ACTIVITY_RECOGNITION`.
-Schedule notifications (if using `AppTask`) needs permissions to `SCHEDULE_EXACT_ALARM` and `USE_EXACT_ALARM`. Add the following to your app's `manifest.xml` file located in `android/app/src/main`:
+Scheduled notifications (if using `AppTask`) needs a set of permissions, such as `USE_EXACT_ALARM` and `VIBRATE`.
+If collecting step counts or using notifications in your app, add the following to your app's `manifest.xml` file located in `android/app/src/main`:
 
 ````xml
+<!-- Used for activity recognition (step count) -->
 <uses-permission android:name="android.permission.ACTIVITY_RECOGNITION"/>
-<uses-permission android:name="android.permission.SCHEDULE_EXACT_ALARM"
-    android:maxSdkVersion="32" />
+
+<!-- Used for sending and scheduling notifications -->
+<uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+<uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
+<uses-permission android:name="android.permission.VIBRATE" />
+<uses-permission android:name="android.permission.POST_NOTIFICATIONS"/>
 <uses-permission android:name="android.permission.USE_EXACT_ALARM" />
+<uses-permission android:name="android.permission.SCHEDULE_EXACT_ALARM"
+        android:maxSdkVersion="32" />
 ````
+
+Also specify the following between the `<application>` tags so that the plugin can show the scheduled notifications:
+
+```xml
+<!-- Used for scheduling notifications -->
+<receiver android:exported="false" android:name="com.dexterous.flutterlocalnotifications.ScheduledNotificationReceiver" />
+<receiver android:exported="false" android:name="com.dexterous.flutterlocalnotifications.ScheduledNotificationBootReceiver">
+    <intent-filter>
+        <action android:name="android.intent.action.BOOT_COMPLETED"/>
+        <action android:name="android.intent.action.MY_PACKAGE_REPLACED"/>
+        <action android:name="android.intent.action.QUICKBOOT_POWERON" />
+        <action android:name="com.htc.intent.action.QUICKBOOT_POWERON"/>
+    </intent-filter>
+</receiver>
+```
 
 ### iOS Integration
 
