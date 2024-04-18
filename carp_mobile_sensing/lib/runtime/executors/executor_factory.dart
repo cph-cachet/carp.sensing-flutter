@@ -5,7 +5,7 @@
  * found in the LICENSE file.
  */
 
-part of runtime;
+part of '../runtime.dart';
 
 class ExecutorFactory {
   static final ExecutorFactory _instance = ExecutorFactory._();

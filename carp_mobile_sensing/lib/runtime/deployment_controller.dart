@@ -275,6 +275,9 @@ class SmartphoneDeploymentController extends StudyRuntime<DeviceRegistration> {
   /// [configure] must be called before starting sampling.
   @override
   void start([bool start = true]) {
+    info(
+        '$runtimeType - Starting data sampling for study deployment: ${deployment?.studyDeploymentId}');
+
     // if this study has not yet been deployed, do this first.
     if (status.index < StudyStatus.Deployed.index) {
       tryDeployment().then((value) {
@@ -287,8 +290,6 @@ class SmartphoneDeploymentController extends StudyRuntime<DeviceRegistration> {
       super.start();
       if (start) _executor.start();
     }
-    info(
-        '$runtimeType - Starting data sampling for study deployment: ${deployment?.studyDeploymentId}');
   }
 
   /// Stop this controller and data sampling.

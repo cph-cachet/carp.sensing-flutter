@@ -4,7 +4,8 @@
  * Use of this source code is governed by a MIT-style license that can be
  * found in the LICENSE file.
  */
-part of domain;
+
+part of 'domain.dart';
 
 /// A sampling configuration that saves the last time it was sampled.
 @JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)

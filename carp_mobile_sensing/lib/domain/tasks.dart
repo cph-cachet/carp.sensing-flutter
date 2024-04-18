@@ -5,7 +5,7 @@
  * found in the LICENSE file.
  */
 
-part of domain;
+part of 'domain.dart';
 
 /// Signature of Dart function that have no arguments and returns no data.
 typedef VoidFunction = void Function();

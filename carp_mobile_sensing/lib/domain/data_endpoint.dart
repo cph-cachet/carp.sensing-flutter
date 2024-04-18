@@ -5,7 +5,7 @@
  * found in the LICENSE file.
  */
 
-part of domain;
+part of 'domain.dart';
 
 /// Specify an endpoint where a [DataManager] can upload data.
 @JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)

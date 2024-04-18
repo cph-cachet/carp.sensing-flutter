@@ -5,7 +5,7 @@
  * found in the LICENSE file.
  */
 
-part of domain;
+part of 'domain.dart';
 
 /// Contains the entire description and configuration for how a smartphone
 /// device participates in the deployment of a study on a smartphone.

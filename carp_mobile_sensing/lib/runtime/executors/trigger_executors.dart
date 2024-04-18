@@ -5,7 +5,7 @@
  * found in the LICENSE file.
  */
 
-part of runtime;
+part of '../runtime.dart';
 
 class TriggerEvent {
   // TriggerConfiguration? trigger;
@@ -43,9 +43,14 @@ abstract class TriggerExecutor<TConfig extends TriggerConfiguration>
   Future<bool> onStart() async => true;
 
   @override
-  Future<bool> onRestart() async => true;
+  @mustCallSuper
+  Future<bool> onRestart() async {
+    _timer?.cancel();
+    return true;
+  }
 
   @override
+  @mustCallSuper
   Future<bool> onStop() async {
     _timer?.cancel();
     return true;
@@ -176,9 +181,9 @@ class PeriodicTriggerExecutor
 
   @override
   Future<bool> onStart() async {
-    _timer = Timer.periodic(configuration!.period, (t) {
-      onTrigger();
-    });
+    _timer = Timer.periodic(configuration!.period, (_) => onTrigger());
+    debug('$this - starting timer: ${_timer.hashCode}');
+
     return true;
   }
 }
@@ -275,7 +280,7 @@ class CronScheduledTriggerExecutor
   @override
   Future<bool> onStop() async {
     _task?.cancel();
-    return true;
+    return super.onStop();
   }
 }
 
@@ -310,7 +315,7 @@ class SamplingEventTriggerExecutor
   @override
   Future<bool> onStop() async {
     _subscription?.cancel();
-    return true;
+    return super.onStop();
   }
 }
 
@@ -335,7 +340,7 @@ class ConditionalSamplingEventTriggerExecutor
   @override
   Future<bool> onStop() async {
     _subscription?.cancel();
-    return true;
+    return super.onStop();
   }
 }
 
@@ -498,6 +503,6 @@ class UserTaskTriggerExecutor extends TriggerExecutor<UserTaskTrigger> {
   @override
   Future<bool> onStop() async {
     _subscription?.cancel();
-    return true;
+    return super.onStop();
   }
 }

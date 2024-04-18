@@ -5,7 +5,7 @@
  * found in the LICENSE file.
  */
 
-part of runtime;
+part of '../runtime.dart';
 
 /// The [TaskExecutor] is responsible for executing a [TaskConfiguration].
 /// For each measure in the task, it looks up an appropriate [Probe] to

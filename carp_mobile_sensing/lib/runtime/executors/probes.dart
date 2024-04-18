@@ -5,7 +5,7 @@
  * found in the LICENSE file.
  */
 
-part of runtime;
+part of '../runtime.dart';
 
 /// A [Probe] is a specialized [Executor] responsible for collecting data from
 /// the device sensors as configured in a [Measure].

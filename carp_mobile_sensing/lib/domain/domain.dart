@@ -1,7 +1,13 @@
+/*
+ * Copyright 2018-2022 Copenhagen Center for Health Technology (CACHET) at the
+ * Technical University of Denmark (DTU).
+ * Use of this source code is governed by a MIT-style license that can be
+ * found in the LICENSE file.
+ */
+
 /// The CAMS implementation of the core CARP domain classes like
 /// [StudyProtocol], [TaskConfiguration], and [Measure].
-/// Also hold JSON serialization and deseralization logic to handle seraialization
-/// of the domain objects.
+/// Also hold JSON logic to handle de/serialization of the domain objects.
 library domain;
 
 import 'dart:io';
@@ -22,7 +28,6 @@ part 'smartphone_deployment.dart';
 part 'app_task.dart';
 part 'tasks.dart';
 part 'triggers.dart';
-// part 'datum.dart';
 part 'data.dart';
 part 'data_types.dart';
 part 'device_info.dart';
