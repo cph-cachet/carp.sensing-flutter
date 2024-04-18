@@ -4,6 +4,7 @@
   * support app-specific methods to create, schedule, and cancel app-specific notifications
   * asks for permission on Android (Issue [#375](https://github.com/cph-cachet/carp.sensing-flutter/issues/375))
   * tapping a notification takes the user to the right task in the app (Issue [#376](https://github.com/cph-cachet/carp.sensing-flutter/issues/376))
+* fix of [#379](https://github.com/cph-cachet/carp.sensing-flutter/issues/379)
 
 ## 1.4.7
 
