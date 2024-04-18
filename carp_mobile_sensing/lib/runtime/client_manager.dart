@@ -5,7 +5,7 @@
  * found in the LICENSE file.
  */
 
-part of runtime;
+part of 'runtime.dart';
 
 /// The possible states of the [SmartPhoneClientManager].
 enum ClientManagerState {
@@ -23,6 +23,7 @@ class SmartPhoneClientManager extends SmartphoneClient
   bool _heartbeat = true;
   final StreamGroup<Measurement> _group = StreamGroup.broadcast();
   ClientManagerState _state = ClientManagerState.created;
+  Map<Permission, PermissionStatus>? _permissions;
 
   /// The runtime state of this client manager.
   ClientManagerState get state => _state;
@@ -33,7 +34,7 @@ class SmartPhoneClientManager extends SmartphoneClient
   Stream<Measurement> get measurements => _group.stream;
 
   /// The permissions granted to this client from the OS.
-  Map<Permission, PermissionStatus>? permissions;
+  Map<Permission, PermissionStatus> get permissions => _permissions ?? {};
 
   SmartPhoneClientManager._() {
     WidgetsFlutterBinding.ensureInitialized();
@@ -89,6 +90,7 @@ class SmartPhoneClientManager extends SmartphoneClient
   /// If [askForPermissions] is true (default), this client manager will
   /// automatically ask for permissions for all sampling packages at once.
   /// If you want the app to handle permissions itself, set this to false.
+  /// You can later use the [askForAllPermissions] to ask for all permissions.
   ///
   /// If [heartbeat] is true, a [Heartbeat] data point will be uploaded for all
   /// devices (including the phone) in all studies running on this client
@@ -220,12 +222,9 @@ class SmartPhoneClientManager extends SmartphoneClient
   Future<void> askForAllPermissions() async {
     if (SamplingPackageRegistry().permissions.isNotEmpty) {
       info('Asking for permission for all measure types.');
-      permissions = await SamplingPackageRegistry().permissions.request();
-
-      for (var permission in SamplingPackageRegistry().permissions) {
-        PermissionStatus status = await permission.status;
-        info('Permissions for $permission : $status');
-      }
+      _permissions = await SamplingPackageRegistry().permissions.request();
+      permissions.forEach((permission, status) =>
+          info('Permissions for $permission : $status'));
     }
   }
 

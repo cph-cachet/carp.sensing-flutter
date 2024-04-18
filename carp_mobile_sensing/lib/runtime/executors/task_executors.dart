@@ -5,7 +5,7 @@
  * found in the LICENSE file.
  */
 
-part of runtime;
+part of '../runtime.dart';
 
 /// The [TaskExecutor] is responsible for executing a [TaskConfiguration].
 /// For each measure in the task, it looks up an appropriate [Probe] to
@@ -53,6 +53,13 @@ class BackgroundTaskExecutor extends TaskExecutor<BackgroundTask> {
   Future<bool> onStart() async {
     // Early out if no probes.
     if (probes.isEmpty) return true;
+
+    // Early out if already running (this is a background task)
+    if (state == ExecutorState.started) {
+      warning(
+          'Trying to start a $runtimeType but it is already started. Ignoring this.');
+      return false;
+    }
 
     // Check if the device for this task is connected.
     if (probes.first.deviceManager.isConnected) {
@@ -119,15 +126,16 @@ class AppTaskExecutor<TConfig extends AppTask> extends TaskExecutor<TConfig> {
 
   @override
   Future<bool> onStart() async {
-    // when an app task is started simply put it on the queue
+    // when an app task is started, create a UserTask and put it on the queue
     userTask = await AppTaskController().enqueue(this);
+    state; // = ExecutorState.stopped;
     return true;
   }
 
   @override
   Future<bool> onStop() async {
     backgroundTaskExecutor.stop();
-    // if an app task is stopped, removed it from the queue again
+    // if an app task is stopped, remove the user task from the queue again
     if (userTask != null) AppTaskController().dequeue(userTask!.id);
     userTask = null;
     return true;

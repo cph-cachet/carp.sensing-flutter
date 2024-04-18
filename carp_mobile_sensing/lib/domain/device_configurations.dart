@@ -5,7 +5,7 @@
  * found in the LICENSE file.
  */
 
-part of domain;
+part of 'domain.dart';
 
 /// An online service which works as a "software device" in a protocol.
 @JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)

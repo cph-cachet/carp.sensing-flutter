@@ -4,7 +4,8 @@
  * Use of this source code is governed by a MIT-style license that can be
  * found in the LICENSE file.
  */
-part of domain;
+
+part of 'domain.dart';
 
 /// A trigger that does nothing.
 @JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
@@ -144,22 +145,22 @@ class DateTimeTrigger extends TriggerConfiguration implements Schedulable {
 /// Here are a couple of examples:
 ///
 /// ```
-///  // collect every day at 13:30
+///  // trigger every day at 13:30
 ///  RecurrentScheduledTrigger(type: RecurrentType.daily, time: TimeOfDay(hour: 13, minute: 30));
 ///
-///  // collect every other day at 13:30
+///  // trigger every other day at 13:30
 ///  RecurrentScheduledTrigger(type: RecurrentType.daily, separationCount: 1, time: TimeOfDay(hour: 13, minute: 30));
 ///
-///  // collect every wednesday at 12:23
+///  // trigger every wednesday at 12:23
 ///  RecurrentScheduledTrigger(type: RecurrentType.weekly, dayOfWeek: DateTime.wednesday, time: TimeOfDay(hour: 12, minute: 23));
 ///
-///  // collect every 2nd monday at 12:23
+///  // trigger every 2nd monday at 12:23
 ///  RecurrentScheduledTrigger(type: RecurrentType.weekly, dayOfWeek: DateTime.monday, separationCount: 1, time: TimeOfDay(hour: 12, minute: 23));
 ///
-///  // collect monthly in the second week on a monday at 14:30
+///  // trigger monthly in the second week on a monday at 14:30
 ///  RecurrentScheduledTrigger(type: RecurrentType.monthly, weekOfMonth: 2, dayOfWeek: DateTime.monday, time: TimeOfDay(hour: 14, minute: 30));
 ///
-///  // collect quarterly on the 11th day of the first month in each quarter at 21:30
+///  // trigger quarterly on the 11th day of the first month in each quarter at 21:30
 ///  RecurrentScheduledTrigger(type: RecurrentType.monthly, dayOfMonth: 11, separationCount: 2, time: TimeOfDay(hour: 21, minute: 30));
 /// ```
 ///

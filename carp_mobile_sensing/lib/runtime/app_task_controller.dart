@@ -5,7 +5,7 @@
  * found in the LICENSE file.
  */
 
-part of runtime;
+part of 'runtime.dart';
 
 /// A controller of [UserTask]s which is accessible in the [userTaskQueue].
 class AppTaskController {
@@ -122,7 +122,7 @@ class AppTaskController {
   }) async {
     if (_userTaskFactories[executor.task.type] == null) {
       warning(
-          'Could not enqueue AppTask. Could not find a factory for creating '
+          '$runtimeType - Could not enqueue AppTask. Could not find a factory for creating '
           "a UserTask for type '${executor.task.type}'");
       return null;
     } else {
@@ -155,18 +155,38 @@ class AppTaskController {
   void dequeue(String id) {
     UserTask? userTask = _userTaskMap[id];
     if (userTask == null) {
-      warning("Could not dequeue AppTask - id is not valid: '$id'");
+      warning(
+          "$runtimeType - Could not dequeue AppTask - id is not valid: '$id'");
     } else {
       userTask.state = UserTaskState.dequeued;
       _userTaskMap.remove(id);
       _controller.sink.add(userTask);
-      info('Dequeued $userTask');
+      info('$runtimeType - Dequeued $userTask');
 
       if (notificationsEnabled) {
         SmartPhoneClientManager()
             .notificationController
             ?.cancelTaskNotification(userTask);
       }
+    }
+  }
+
+  /// Callback when a notification in the OS is clicked.
+  void onNotification(String id) {
+    UserTask? userTask = getUserTask(id);
+    if (userTask != null) {
+      info('$runtimeType - User Task notification clicked - $userTask');
+
+      // only notify if this task is still active
+      if (userTask.state == UserTaskState.enqueued ||
+          userTask.state == UserTaskState.canceled) {
+        userTask.state = UserTaskState.notified;
+        _controller.sink.add(userTask);
+        userTask.onNotification();
+      }
+    } else {
+      warning(
+          "$runtimeType - Error in callback from notification - no task with id '$id' found.");
     }
   }
 
@@ -177,12 +197,13 @@ class AppTaskController {
   void done(String id, [Data? result]) {
     UserTask? userTask = _userTaskMap[id];
     if (userTask == null) {
-      warning("Could not find AppTask - id is not valid: '$id'");
+      warning(
+          "$runtimeType - Could not find User Task - id is not valid: '$id'");
     } else {
       userTask.state = UserTaskState.done;
       userTask.result = result;
       _controller.sink.add(userTask);
-      info('Marked $userTask as done');
+      info('$runtimeType - Marked $userTask as done');
 
       SmartPhoneClientManager()
           .notificationController
@@ -196,13 +217,14 @@ class AppTaskController {
   void expire(String id) {
     UserTask? userTask = _userTaskMap[id];
     if (userTask == null) {
-      warning("Could not expire AppTask - id is not valid: '$id'");
+      warning(
+          "$runtimeType - Could not expire AppTask - id is not valid: '$id'");
     } else {
       // only expire tasks which are not already done or expired
       if (userTask.state != UserTaskState.done) {
         userTask.state = UserTaskState.expired;
         _controller.sink.add(userTask);
-        info('Expired $userTask');
+        info('$runtimeType - Expired $userTask');
       }
       SmartPhoneClientManager()
           .notificationController
@@ -255,7 +277,7 @@ class AppTaskController {
           // now put the restored task back on the queue
           if (_userTaskFactories[executor.task.type] == null) {
             warning(
-                'Could not enqueue AppTask. Could not find a factory for creating '
+                '$runtimeType - Could not enqueue AppTask. Could not find a factory for creating '
                 "a UserTask for type '${executor.task.type}'");
           } else {
             UserTask userTask =

@@ -5,7 +5,7 @@
  * found in the LICENSE file.
  */
 
-part of runtime;
+part of '../runtime.dart';
 
 /// The [SmartphoneDeploymentExecutor] is responsible for executing a [SmartphoneDeployment].
 /// For each task control in this deployment, it starts a [TaskControlExecutor].

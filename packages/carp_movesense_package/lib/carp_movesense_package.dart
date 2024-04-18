@@ -129,12 +129,7 @@ class MovesenseSamplingPackage implements SamplingPackage {
   }
 
   @override
-  List<Permission> get permissions => [
-        Permission.location,
-        Permission.bluetooth,
-        Permission.bluetoothConnect,
-        Permission.bluetoothScan,
-      ];
+  List<Permission> get permissions => [];
 
   @override
   DataTypeSamplingSchemeMap get samplingSchemes =>

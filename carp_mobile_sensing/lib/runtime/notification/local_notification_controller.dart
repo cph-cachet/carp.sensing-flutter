@@ -4,7 +4,8 @@
  * Use of this source code is governed by a MIT-style license that can be
  * found in the LICENSE file.
  */
-part of runtime;
+
+part of '../runtime.dart';
 
 /// A [NotificationController] based on the [flutter_local_notifications](https://pub.dev/packages/flutter_local_notifications)
 /// Flutter plugin.
@@ -28,6 +29,11 @@ class FlutterLocalNotificationController implements NotificationController {
   @override
   Future<void> initialize() async {
     tz.initializeTimeZones();
+
+    List<Permission> permissions =
+        List.from([Permission.notification, Permission.scheduleExactAlarm]);
+    var status = await permissions.request();
+    debug('$runtimeType - permissions: $status');
 
     await FlutterLocalNotificationsPlugin().initialize(
       const InitializationSettings(
@@ -102,10 +108,40 @@ class FlutterLocalNotificationController implements NotificationController {
   }
 
   @override
+  Future<int> scheduleRecurrentNotifications(
+      {int? id,
+      required String title,
+      String? body,
+      required RecurrentScheduledTrigger schedule}) async {
+    id ??= _random.nextInt(1000);
+    final time = tz.TZDateTime.from(
+        schedule.firstOccurrence, tz.getLocation(Settings().timezone));
+
+    DateTimeComponents recurrence = switch (schedule.type) {
+      RecurrentType.daily => DateTimeComponents.time,
+      RecurrentType.weekly => DateTimeComponents.dayOfWeekAndTime,
+      RecurrentType.monthly => DateTimeComponents.dayOfMonthAndTime,
+    };
+
+    await FlutterLocalNotificationsPlugin().zonedSchedule(
+      id,
+      title,
+      body,
+      time,
+      _platformChannelSpecifics,
+      androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
+      uiLocalNotificationDateInterpretation:
+          UILocalNotificationDateInterpretation.absoluteTime,
+      matchDateTimeComponents: recurrence,
+    );
+
+    return id;
+  }
+
+  @override
   Future<void> cancelNotification(int id) async =>
       await FlutterLocalNotificationsPlugin().cancel(id);
 
-  /// Send an immediate notification for a [task].
   @override
   Future<void> createTaskNotification(UserTask task) async {
     if (task.notification) {
@@ -120,7 +156,6 @@ class FlutterLocalNotificationController implements NotificationController {
     }
   }
 
-  /// Schedule a notification for a [task] at the [UserTask.triggerTime].
   @override
   Future<void> scheduleTaskNotification(UserTask task) async {
     // early out if not to be scheduled
@@ -149,16 +184,11 @@ class FlutterLocalNotificationController implements NotificationController {
     }
   }
 
-  /// The number of pending notifications.
-  ///
-  /// Note that on iOS there is a limit of 64 pending notifications.
-  /// See https://pub.dev/packages/flutter_local_notifications#ios-pending-notifications-limit
   @override
   Future<int> get pendingNotificationRequestsCount async =>
       (await FlutterLocalNotificationsPlugin().pendingNotificationRequests())
           .length;
 
-  /// Cancel (i.e., remove) the notification for the [task].
   @override
   Future<void> cancelTaskNotification(UserTask task) async {
     if (task.notification) {
@@ -168,22 +198,14 @@ class FlutterLocalNotificationController implements NotificationController {
   }
 }
 
+/// Callback method called when a notification is clicked in the operating system.
 @pragma('vm:entry-point')
 void onDidReceiveNotificationResponse(NotificationResponse response) {
   String? payload = response.payload;
-
   debug('NotificationController - callback on notification, payload: $payload');
 
   if (payload != null) {
-    UserTask? task = AppTaskController().getUserTask(payload);
-    info('NotificationController - User Task notification selected - $task');
-    if (task != null) {
-      task.state = UserTaskState.notified;
-      task.onNotification();
-    } else {
-      warning(
-          'NotificationController - Error in callback from notification - no task found.');
-    }
+    AppTaskController().onNotification(payload);
   } else {
     warning(
         "NotificationController - Error in callback from notification - payload is '$payload'");

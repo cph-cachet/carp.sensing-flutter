@@ -5,7 +5,7 @@
  * found in the LICENSE file.
  */
 
-part of runtime;
+part of '../runtime.dart';
 
 /// Responsible for handling the execution of a [TaskControl].
 ///
@@ -51,15 +51,10 @@ class TaskControlExecutor extends AbstractExecutor<TaskControl> {
         ExecutorFactory().getTriggerExecutor(taskControl.triggerId);
     triggerExecutor?.triggerEvents.listen((_) => onTrigger());
 
-    // if not already created, get the task executor and add the
-    // measurements it collects to the stream group
-    if (ExecutorFactory().getTaskExecutor(task) == null) {
-      taskExecutor = ExecutorFactory().createTaskExecutor(task);
-      taskExecutor?.initialize(task, deployment);
-      _group.add(taskExecutor!.measurements);
-    } else {
-      taskExecutor = ExecutorFactory().getTaskExecutor(task);
-    }
+    // get the task executor and add the measurements it collects to the stream group
+    taskExecutor = ExecutorFactory().createTaskExecutor(task);
+    taskExecutor?.initialize(task, deployment);
+    _group.add(taskExecutor!.measurements);
 
     return true;
   }

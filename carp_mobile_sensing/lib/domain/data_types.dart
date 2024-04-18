@@ -4,7 +4,8 @@
  * Use of this source code is governed by a MIT-style license that can be
  * found in the LICENSE file.
  */
-part of domain;
+
+part of 'domain.dart';
 
 /// Contains CAMS data type definitions similar to CARP Core [CarpDataTypes].
 class CAMSDataType {

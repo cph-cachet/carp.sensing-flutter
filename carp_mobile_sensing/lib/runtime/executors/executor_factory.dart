@@ -5,7 +5,7 @@
  * found in the LICENSE file.
  */
 
-part of runtime;
+part of '../runtime.dart';
 
 class ExecutorFactory {
   static final ExecutorFactory _instance = ExecutorFactory._();
@@ -13,7 +13,6 @@ class ExecutorFactory {
   factory ExecutorFactory() => _instance;
 
   final Map<int, TriggerExecutor> _triggerExecutors = {};
-  final Map<String, TaskExecutor> _taskExecutors = {};
 
   /// Returns the relevant [TaskControlExecutor] based on the type of [trigger]
   /// and [task].
@@ -107,22 +106,10 @@ class ExecutorFactory {
     return _triggerExecutors[triggerId]!;
   }
 
-  /// Get the [TaskExecutor] for a [task].
-  TaskExecutor? getTaskExecutor(TaskConfiguration task) =>
-      _taskExecutors[task.name];
-
   /// Create a [TaskExecutor] for a [task] based on the task type.
-  /// If already created, returns this.
   TaskExecutor createTaskExecutor(TaskConfiguration task) {
-    if (_taskExecutors[task.name] == null) {
-      TaskExecutor executor = BackgroundTaskExecutor();
-      if (task is AppTask) {
-        executor = AppTaskExecutor();
-      } else if (task is FunctionTask) {
-        executor = FunctionTaskExecutor();
-      }
-      _taskExecutors[task.name] = executor;
-    }
-    return _taskExecutors[task.name]!;
+    if (task is AppTask) return AppTaskExecutor();
+    if (task is FunctionTask) return FunctionTaskExecutor();
+    return BackgroundTaskExecutor();
   }
 }

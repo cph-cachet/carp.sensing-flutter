@@ -1,4 +1,4 @@
-part of carp_mobile_sensing;
+part of 'carp_mobile_sensing.dart';
 
 bool _fromJsonFunctionsRegistered = false;
 

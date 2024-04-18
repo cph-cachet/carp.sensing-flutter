@@ -1,5 +1,13 @@
+/*
+ * Copyright 2018 Copenhagen Center for Health Technology (CACHET) at the
+ * Technical University of Denmark (DTU).
+ * Use of this source code is governed by a MIT-style license that can be
+ * found in the LICENSE file.
+ */
+
 /// A library containing a sampling package for collecting data from the basic
 /// device sensors:
+///
 ///  - accelerometer
 ///  - gyroscope
 ///  - magnetometer
@@ -18,6 +26,7 @@ import 'package:json_annotation/json_annotation.dart';
 import 'package:pedometer/pedometer.dart' as pedometer;
 import 'package:statistics/statistics.dart';
 import 'package:sample_statistics/sample_statistics.dart';
+import 'package:permission_handler/permission_handler.dart';
 
 import 'package:carp_serializable/carp_serializable.dart';
 import 'package:carp_core/carp_core.dart';

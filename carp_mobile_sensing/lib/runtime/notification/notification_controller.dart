@@ -4,10 +4,23 @@
  * Use of this source code is governed by a MIT-style license that can be
  * found in the LICENSE file.
  */
-part of runtime;
 
-/// A controller of user notifications based on [UserTask]s.
-/// Works closely with the [AppTaskController].
+part of '../runtime.dart';
+
+/// A controller of user notifications allow for creating, scheduling, and
+/// canceling user notifications.
+///
+/// This controller serves two purposes:
+///
+/// 1. It is used by the [AppTaskController] to send notification about
+/// [UserTask]s (which are created based on [AppTask] in the [StudyProtocol]).
+/// This happens automatically, if the app task is configured to
+/// send a notification.
+///
+/// 2. It can be used by the app to create, schedule, and cancel app-specific
+/// notifications. This is done using the [createNotification], [scheduleNotification],
+/// and [scheduleRecurrentNotifications] methods, which
+/// creates an immediate, scheduled, or recurrent notification, respectively.
 abstract class NotificationController {
   /// The upper limit of scheduled notification on iOS.
   static const PENDING_NOTIFICATION_LIMIT = 64;
@@ -44,7 +57,7 @@ abstract class NotificationController {
   /// Create an immediate notification with [id], [title], and [body].
   /// If the [id] is not specified, a random id will be generated.
   ///
-  /// Returns the id of the notification.
+  /// Returns the id of the notification created.
   Future<int> createNotification({
     int? id,
     required String title,
@@ -54,12 +67,33 @@ abstract class NotificationController {
   /// Schedule a notification with [id], [title], and [body] at the [schedule] time.
   /// If the [id] is not specified, a random id will be generated.
   ///
-  /// Returns the id of the notification.
+  /// Returns the id of the notification created.
   Future<int> scheduleNotification({
     int? id,
     required String title,
     String? body,
     required DateTime schedule,
+  });
+
+  /// Schedule recurrent notifications with [id], [title], and [body] at the
+  /// [schedule] time.
+  ///
+  /// Allows for daily, weekly, and monthly recurrence according to the [schedule].
+  ///
+  /// Note that [RecurrentScheduledTrigger.separationCount] and
+  /// [RecurrentScheduledTrigger.end] are **not used**, i.e. days /
+  /// weeks / months cannot be skipped in the scheduled and the notifications
+  /// keeps recurring indefinitely. If you want to stop a recurrent notification
+  /// schedule, use the [cancelNotification] method.
+  ///
+  /// If the [id] is not specified, a random id will be generated.
+  ///
+  /// Returns the id of the notification created.
+  Future<int> scheduleRecurrentNotifications({
+    int? id,
+    required String title,
+    String? body,
+    required RecurrentScheduledTrigger schedule,
   });
 
   /// Cancel (i.e., remove) the notification with [id].
@@ -75,14 +109,23 @@ abstract class NotificationController {
   Future<void> cancelTaskNotification(UserTask task);
 
   /// The number of pending notifications.
+  ///
+  /// Note that on iOS there is a limit of 64 pending notifications.
+  /// See https://pub.dev/packages/flutter_local_notifications#ios-pending-notifications-limit
   Future<int> get pendingNotificationRequestsCount;
 }
 
 /// A no-operation notification controller that does nothing.
 class NoOpNotificationController implements NotificationController {
   @override
-  Future<int> createNotification(
-          {int? id, required String title, String? body}) async =>
+  Future<void> initialize() async {}
+
+  @override
+  Future<int> createNotification({
+    int? id,
+    required String title,
+    String? body,
+  }) async =>
       0;
 
   @override
@@ -94,18 +137,24 @@ class NoOpNotificationController implements NotificationController {
       0;
 
   @override
-  Future<void> cancelNotification(int id) async {}
-  @override
-  Future<void> cancelTaskNotification(UserTask task) async {}
+  Future<int> scheduleRecurrentNotifications(
+          {int? id,
+          required String title,
+          String? body,
+          required RecurrentScheduledTrigger schedule}) async =>
+      0;
 
   @override
-  Future<void> initialize() async {}
+  Future<void> cancelNotification(int id) async {}
 
   @override
   Future<void> scheduleTaskNotification(UserTask task) async {}
 
   @override
   Future<void> createTaskNotification(UserTask task) async {}
+
+  @override
+  Future<void> cancelTaskNotification(UserTask task) async {}
 
   @override
   Future<int> get pendingNotificationRequestsCount async => 0;

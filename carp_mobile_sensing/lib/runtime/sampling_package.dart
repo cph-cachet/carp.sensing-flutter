@@ -1,4 +1,4 @@
-part of runtime;
+part of 'runtime.dart';
 
 /// A registry of [SamplingPackage] packages.
 ///
@@ -151,6 +151,11 @@ abstract class SamplingPackage {
   DeviceManager get deviceManager;
 
   /// The list of permissions that this package need in order to run.
+  ///
+  /// Note that this is the list of permissions used for the probes in this
+  /// sampling package. It **should not** include permission to access the device
+  /// itself, such as Bluetooth permissions.
+  /// Such permissions should be handled on the app level.
   ///
   /// See [PermissionGroup](https://pub.dev/documentation/permission_handler/latest/permission_handler/PermissionGroup-class.html)
   /// for a list of possible permissions.

@@ -358,16 +358,18 @@ void example_3() async {
   final client = SmartPhoneClientManager();
 
   // default configuration using:
-  // * [AwesomeNotificationController]
+  // * [FlutterLocalNotificationController]
   // * [SmartphoneDeploymentService]
   // * [DeviceController]
+  // * asking for permissions
+  // * notifications enabled
   await client.configure();
 
-  // use flutter_local_notification for notifications
+  // disabling notifications, device heartbeat, and permissions handling
   await client.configure(
-    notificationController: FlutterLocalNotificationController(),
-    askForPermissions: false,
     enableNotifications: false,
+    heartbeat: false,
+    askForPermissions: false,
   );
 
   // add and deploy the protocol
@@ -839,6 +841,9 @@ void appTaskControllerExample() async {
         break;
       case UserTaskState.done:
         userTask.executor.stop();
+        break;
+      case UserTaskState.notified:
+        print('Task id: ${userTask.id} was clicked in the OS.');
         break;
       default:
         //

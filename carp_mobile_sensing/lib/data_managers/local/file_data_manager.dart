@@ -5,7 +5,7 @@
  * found in the LICENSE file.
  */
 
-part of data_managers;
+part of '../data_managers.dart';
 
 class FileDataManagerFactory implements DataManagerFactory {
   @override

@@ -4,7 +4,8 @@
  * Use of this source code is governed by a MIT-style license that can be
  * found in the LICENSE file.
  */
-part of domain;
+
+part of 'domain.dart';
 
 /// Signature of a data transformer.
 typedef DataTransformer = Data Function(Data);

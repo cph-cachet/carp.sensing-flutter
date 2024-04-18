@@ -6,7 +6,8 @@
  * Use of this source code is governed by a MIT-style license that can be
  * found in the LICENSE file.
  */
-part of runtime;
+
+part of 'runtime.dart';
 
 /// A [DeviceManager] handles a hardware device or online service on runtime.
 abstract class DeviceManager<TDeviceConfiguration extends DeviceConfiguration>

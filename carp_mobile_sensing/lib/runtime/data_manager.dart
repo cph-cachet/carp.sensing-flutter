@@ -4,7 +4,8 @@
  * Use of this source code is governed by a MIT-style license that can be
  * found in the LICENSE file.
  */
-part of runtime;
+
+part of 'runtime.dart';
 
 /// The [DataManager] interface is used to upload [Measurement] objects to any
 /// data manager that implements this interface.

@@ -1,4 +1,11 @@
-part of sensors;
+/*
+ * Copyright 2018 Copenhagen Center for Health Technology (CACHET) at the
+ * Technical University of Denmark (DTU).
+ * Use of this source code is governed by a MIT-style license that can be
+ * found in the LICENSE file.
+ */
+
+part of 'sensors.dart';
 
 class SensorSamplingPackage extends SmartphoneSamplingPackage {
   /// Rate of change in velocity, including gravity, along perpendicular x, y,
@@ -47,6 +54,11 @@ class SensorSamplingPackage extends SmartphoneSamplingPackage {
   ///  * Uses the [Smartphone] device for data collection.
   ///  * No sampling configuration needed.
   static const String STEP_COUNT = CarpDataTypes.STEP_COUNT_TYPE_NAME;
+
+  @override
+  List<Permission> get permissions => [
+        Permission.activityRecognition,
+      ];
 
   @override
   DataTypeSamplingSchemeMap get samplingSchemes =>

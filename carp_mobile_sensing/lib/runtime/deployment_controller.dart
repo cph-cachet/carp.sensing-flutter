@@ -4,7 +4,8 @@
  * Use of this source code is governed by a MIT-style license that can be
  * found in the LICENSE file.
  */
-part of runtime;
+
+part of 'runtime.dart';
 
 /// A [SmartphoneDeploymentController] controls the execution of a [SmartphoneDeployment].
 class SmartphoneDeploymentController extends StudyRuntime<DeviceRegistration> {
@@ -274,6 +275,9 @@ class SmartphoneDeploymentController extends StudyRuntime<DeviceRegistration> {
   /// [configure] must be called before starting sampling.
   @override
   void start([bool start = true]) {
+    info(
+        '$runtimeType - Starting data sampling for study deployment: ${deployment?.studyDeploymentId}');
+
     // if this study has not yet been deployed, do this first.
     if (status.index < StudyStatus.Deployed.index) {
       tryDeployment().then((value) {
@@ -286,8 +290,6 @@ class SmartphoneDeploymentController extends StudyRuntime<DeviceRegistration> {
       super.start();
       if (start) _executor.start();
     }
-    info(
-        '$runtimeType - Starting data sampling for study deployment: ${deployment?.studyDeploymentId}');
   }
 
   /// Stop this controller and data sampling.
