@@ -5,6 +5,8 @@ import 'package:carp_webservices/carp_auth/carp_auth.dart';
 import 'package:carp_core/carp_core.dart';
 import 'package:oidc/oidc.dart';
 
+// The URI of the CAWS server to connect to.
+const String cawsUri = 'dev.carp.dk';
 void main() {
   CarpMobileSensing.ensureInitialized();
   runApp(MyApp());
@@ -94,14 +96,10 @@ class _HomePageState extends State<HomePage> {
 
 class AppBLoC {
   ActiveParticipationInvitation? _invitation;
-  String? get studyId => _invitation?.studyId;
-  String? get studyDeploymentId => _invitation?.studyDeploymentId;
 
-  CarpApp? _app;
-  CarpApp? get app => _app;
-  Uri uri = Uri(
+  final Uri _uri = Uri(
     scheme: 'https',
-    host: 'dev.carp.dk',
+    host: cawsUri,
     pathSegments: [
       'auth',
       'realms',
@@ -109,27 +107,29 @@ class AppBLoC {
     ],
   );
 
-  bool get authenticated => currentUser != null;
-
-  CarpUser? currentUser;
-
-  late CarpApp mockCarpApp = CarpApp(
+  late CarpApp _app = CarpApp(
     name: "CAWS @ DTU",
-    uri: uri.replace(pathSegments: []),
+    uri: _uri.replace(pathSegments: []),
   );
 
-  late CarpAuthProperties authProperties = CarpAuthProperties(
-    authURL: uri,
+  late CarpAuthProperties _authProperties = CarpAuthProperties(
+    authURL: _uri,
     clientId: 'studies-app',
     redirectURI: Uri.parse('carp-studies-auth://auth'),
-    discoveryURL: uri.replace(pathSegments: [
-      ...uri.pathSegments,
+    discoveryURL: _uri.replace(pathSegments: [
+      ..._uri.pathSegments,
     ]),
   );
 
+  CarpApp get app => _app;
+  CarpUser? currentUser;
+  bool get authenticated => currentUser != null;
+  String? get studyId => _invitation?.studyId;
+  String? get studyDeploymentId => _invitation?.studyDeploymentId;
+
   Future<void> init() async {
-    await CarpAuthService().configure(authProperties);
-    CarpService().configure(mockCarpApp);
+    await CarpAuthService().configure(_authProperties);
+    CarpService().configure(app);
   }
 
   void dispose() async {}
@@ -141,8 +141,7 @@ class AppBLoC {
     _invitation = await CarpParticipationService().getStudyInvitation(context);
     print('CARP Study Invitation: $_invitation');
     // check that the app has been updated to reflect the study id and deployment id
-    print(
-        'Study ID: ${app?.studyId}, Deployment ID: ${app?.studyDeploymentId}');
+    print('Study ID: ${app.studyId}, Deployment ID: ${app.studyDeploymentId}');
     return _invitation;
   }
 }

@@ -132,7 +132,7 @@ class CarpAuthService extends CarpAuthBaseService {
       return currentUser;
     }
 
-    //   // All other cases are treated as a failed attempt and throws an error
+    // All other cases are treated as a failed attempt and throws an error
     _authEventController.add(AuthEvent.failed);
     _currentUser = null;
 
@@ -181,7 +181,7 @@ class CarpAuthService extends CarpAuthBaseService {
 
   /// Log out from this CARP service
   ///
-  /// opens a web view to clear cookies and end the session on the Identity Server.
+  /// Opens a web view to clear cookies and end the session on the Identity Server.
   ///
   /// Use this if you used [authenticate] to authenticate.
   Future<void> logout() async {
