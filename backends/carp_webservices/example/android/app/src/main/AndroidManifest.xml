@@ -1,45 +1,36 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
   xmlns:tools="http://schemas.android.com/tools">
 
-  <!-- To eable that the "reset password" url can be launched -->
-  <!-- Provide required visibility configuration for API level 30 and above
-    <queries>
-      <intent>
-        <action android:name="android.intent.action.VIEW" />
-        <data android:scheme="https" />
-     </intent>
-    </queries>
-    -->
+    <uses-permission android:name="android.permission.INTERNET"/>
 
-  <application
-    android:name="${applicationName}"
-    android:label="example"
-    android:fullBackupContent="@xml/backup_rules"
-    android:dataExtractionRules="@xml/data_extraction_rules" android:icon="@mipmap/ic_launcher"
-  >
+    <application
+      android:name="${applicationName}"
+      android:label="CAWS Example"
+      android:fullBackupContent="@xml/backup_rules"
+      android:dataExtractionRules="@xml/data_extraction_rules" 
+      android:icon="@mipmap/ic_launcher">
+
+    <!-- Used by authentication redirect to/from web view -->
     <activity
       android:name="net.openid.appauth.RedirectUriReceiverActivity"
       android:exported="true"
       tools:node="replace">
       <intent-filter>
         <action android:name="android.intent.action.VIEW" />
-
         <category android:name="android.intent.category.DEFAULT" />
         <category android:name="android.intent.category.BROWSABLE" />
-
         <data android:scheme="carp-studies-auth" android:pathPrefix="/auth" />
       </intent-filter>
       <intent-filter>
         <action android:name="android.intent.action.VIEW" />
-
         <category android:name="android.intent.category.DEFAULT" />
         <category android:name="android.intent.category.BROWSABLE" />
-
         <data android:scheme="http" />
         <data android:host="carp.computerome.dk" />
-        <data android:pathPrefix="/auth/dev" />
+        <data android:pathPrefix="/auth" />
       </intent-filter>
     </activity>
+
     <activity
       android:name=".MainActivity"
       android:exported="true"
@@ -70,6 +61,7 @@
         <category android:name="android.intent.category.LAUNCHER" />
       </intent-filter>
     </activity>
+
     <!-- Don't delete the meta-data below.
              This is used by the Flutter tool to generate GeneratedPluginRegistrant.java -->
     <meta-data

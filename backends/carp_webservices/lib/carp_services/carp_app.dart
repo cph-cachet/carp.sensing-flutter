@@ -14,7 +14,6 @@ class CarpApp {
   /// URI of the CARP web service
   final Uri uri;
 
-
   /// The CARP study id for this app.
   String? studyId;
 
@@ -23,10 +22,9 @@ class CarpApp {
 
   /// Create a [CarpApp] which know how to access a CARP backend.
   ///
-  /// [name], [uri], and [oauth] are required parameters in order to identify,
-  /// address, and authenticate this client.
-  ///
-  /// A [studyDeploymentId] and a [study] may be specified, if known at the
+  /// [name] and [uri] are required parameters in order to identify and
+  /// know the CAWS endpoint URI.
+  /// The [studyDeploymentId] and a [studyId] may be specified, if known at the
   /// creation time.
   CarpApp({
     required this.name,

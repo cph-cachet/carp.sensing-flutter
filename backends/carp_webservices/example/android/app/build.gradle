@@ -49,6 +49,8 @@ android {
         targetSdkVersion flutter.targetSdkVersion
         versionCode flutterVersionCode.toInteger()
         versionName flutterVersionName
+        
+        // From the oidc plugin
         manifestPlaceholders += [
             'appAuthRedirectScheme': 'dk.cachet.example'
         ]

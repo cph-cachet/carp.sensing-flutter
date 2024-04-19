@@ -17,33 +17,64 @@ For an overview of CARP and other Flutter CARP libraries, see [CARP Mobile Sensi
 
 1. Add `carp_services` as a [dependency in your pubspec.yaml file](https://flutter.io/platform-plugins/).
 
-In order to show the "Reset Password" button in the login dialog, which will launch the "Reset Password" web page on CAWS, add the following parameters on iOS and Android. Note that the "Reset Password" button will not be shown, if the app cannot launch the URL pointing to the web page.
-
-### iOS
-
-Add the following `LSApplicationQueriesSchemes` entry in your `Info.plist` file:
-
-```xml
-<key>LSApplicationQueriesSchemes</key>
-<array>
-  <string>https</string>
-</array>
-```
+This package uses the [oidc](https://pub.dev/packages/oidc) plugin for authentication. Please follow their [getting started](https://bdaya-dev.github.io/oidc/oidc-getting-started/) guide and take a look at their [example app](https://github.com/Bdaya-Dev/oidc/tree/main/packages/oidc/example).
 
 ### Android
 
-Starting from API 30, Android requires package visibility configuration in your `AndroidManifest.xml` file in order to launch the "reset password" URL. A `<queries>` element must be added to your manifest as a child of the root element:
+On Android you need to edit both the `build.gradle` file and the `AndroidManifest.xml` file plus disable some backup settings.
+You also need to add an activity to the `AndroidManifest.xml` to allow for redirection to/from the web view for authentication (if you are using the `authenticate()` method in the package). You manifest file would look something like this:
 
 ```xml
-<!-- To enable that the "reset password" url can be launched -->
-<!-- Provide required visibility configuration for API level 30 and above -->
-<queries>
-  <intent>
-    <action android:name="android.intent.action.VIEW" />
-    <data android:scheme="https" />
-  </intent>
-</queries>
+  ...
+
+  <application
+    android:name="${applicationName}"
+    android:label="CAWS Example"
+    android:fullBackupContent="@xml/backup_rules"
+    android:dataExtractionRules="@xml/data_extraction_rules" 
+    android:icon="@mipmap/ic_launcher">
+
+  <!-- Used by authentication redirect to/from web view -->
+  <activity
+    android:name="net.openid.appauth.RedirectUriReceiverActivity"
+    android:exported="true"
+    tools:node="replace">
+    <intent-filter>
+      <action android:name="android.intent.action.VIEW" />
+      <category android:name="android.intent.category.DEFAULT" />
+      <category android:name="android.intent.category.BROWSABLE" />
+      <data android:scheme="carp-studies-auth" android:pathPrefix="/auth" />
+    </intent-filter>
+    <intent-filter>
+      <action android:name="android.intent.action.VIEW" />
+      <category android:name="android.intent.category.DEFAULT" />
+      <category android:name="android.intent.category.BROWSABLE" />
+      <data android:scheme="http" />
+      <data android:host="carp.computerome.dk" />
+      <data android:pathPrefix="/auth" />
+    </intent-filter>
+  </activity>
 ```
+
+### iOS
+
+Add the following `CFBundleURLTypes` entry in your `Info.plist` file:
+
+```xml
+<key>CFBundleURLTypes</key>
+<array>
+    <dict>
+        <key>CFBundleTypeRole</key>
+        <string>Editor</string>
+        <key>CFBundleURLSchemes</key>
+        <array>
+            <string>com.my.app</string>
+        </array>
+    </dict>
+</array>
+```
+
+Replace `com.my.app` with your application id.
 
 ## Usage
 
@@ -58,53 +89,53 @@ import 'package:carp_webservices/carp_services/carp_services.dart';
 
 ### Configuration
 
-The [`CarpService`](https://pub.dartlang.org/documentation/carp_webservices/latest/carp_services/CarpService-class.html) is a singleton and needs to be configured once.
+The [`CarpService`](https://pub.dartlang.org/documentation/carp_webservices/latest/carp_services/CarpService-class.html) is a singleton and needs to be configured once via the `CarpApp` configuration.
 
 ````dart
-  Uri get uri => Uri(
-        scheme: 'https',
-        host: 'carp.computerome.dk',
-        pathSegments: [
-          'auth',
-          'dev',
-          'realms',
-          'Carp',
-        ], // Depends on your specific instance
-      );
-CarpApp app;
+final Uri uri = Uri(
+  scheme: 'https',
+  host: 'dev.carp.dk',
+  pathSegments: [
+    'auth',
+    'realms',
+    'Carp',
+  ],
+);
 
-app = CarpApp(
-      name: "CAWS @ DTU",
-      uri: uri.replace(pathSegments: [uris[bloc.deploymentMode]!]),
-      authURL: uri,
-      clientId: '<your personal client id from keycloak>',
-      redirectURI: Uri.parse('<your-custom-redirect URL>'), // E.g. carp-studies-auth://auth
-      discoveryURL: uri.replace(pathSegments: [
-        ...uri.pathSegments,
-        '.well-known',
-        'openid-configuration'
-      ]),
-      studyId: studyId, // From an invitation
-      studyDeploymentId: studyDeploymentId, //
-  );
+final app = CarpApp(
+  name: "CAWS @ DTU",
+  uri: uri.replace(pathSegments: []),
+);
 
 // Configure the CARP Service with this app.
 CarpService().configure(app);
 ````
 
-Note that the custom scheme for the redirect URIs has to be set up in platform configurations according to [`Flutter_AppAuth`](https://pub.dev/packages/flutter_appauth).
+The `CarpApp` can also hold information about the `studyId` and `studyDeploymentId` for a specific study and deployment hosted at a CAWS server. This information is used in the methods below for handling e.g., informed consent, data points, documents and folders, etc.
 
-Note that you need a valid `clientID` and `clientSecret` (if you have a secret) from a CAWS instance to use it.
-Also note that you need the `studyId` and  `studyDeploymentId` for a study deployed in your CAWS instance. On the client side (in Flutter), these can be obtained from an invitation (see below). But if you want to use the CAWS endpoints directly, you have to specify these IDs in the `CarpApp` configuration, as shown above.
-
-The singleton can now be accessed via `CarpService()`.
+The singleton can now be accessed via `CarpService()`. However, in order to access the CARP Web Service endpoint, authentication is needed first.
 
 ### Authentication
 
-Basic authentication is using the CAWS keycloak login page, which the system opens when running:
+Authentication is done using the `CarpAuthService` singleton, which is configured using the `CarpAuthProperties` properties:
 
 ```dart
-CarpUser user = await CarpService().authenticate();
+final authProperties = CarpAuthProperties(
+  authURL: uri,
+  clientId: 'studies-app',
+  redirectURI: Uri.parse('carp-studies-auth://auth'),
+  discoveryURL: uri.replace(pathSegments: [
+    ...uri.pathSegments,
+  ]),
+);
+
+await CarpAuthService().configure(authProperties);
+```
+
+Basic authentication is using the CAWS Keycloak login page, which the system opens when running:
+
+```dart
+CarpUser user = await CarpAuthService().authenticate();
 ```
 
 This `CarpUser` object contains the OAuth token in the `.token` (of type `OAuthToken`) parameter.
@@ -113,10 +144,22 @@ Since the [CarpUser](https://pub.dev/documentation/carp_webservices/latest/carp_
 To refresh the OAuth token the client (Flutter) simply calls
 
 ```dart
-await CarpService().refresh()
+await CarpAuthService().refresh()
 ```
 
 This method returns a `CarpUser`, with the new access token.
+
+To authenticate using username and password without opening the web view, use the `authenticateWithUsernamePassword` method:
+
+```dart
+CarpUser user = await CarpAuthService().authenticateWithUsernamePassword('username', 'password');
+```
+
+To log out, just call the `logout` or `logoutNoContext` methods:
+
+```dart
+await CarpAuthService().logout()
+```
 
 ### Informed Consent Document
 

@@ -78,7 +78,7 @@ class CarpParticipationService extends CarpBaseService
     if (!CarpAuthService().authenticated) {
       throw CarpServiceException(
           message:
-              "The current user is not authenticated to CARP. Call 'CarpAuthService().authenticate...()' first.");
+              "The current user is not authenticated to CAWS. Call 'CarpAuthService().authenticate...()' first.");
     }
 
     List<ActiveParticipationInvitation> invitations =
