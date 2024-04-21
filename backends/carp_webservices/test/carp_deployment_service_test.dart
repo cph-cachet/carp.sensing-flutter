@@ -29,7 +29,6 @@ void main() {
       password: password,
     );
     CarpProtocolService().configureFrom(CarpService());
-
     CarpParticipationService().configureFrom(CarpService());
     CarpDeploymentService().configureFrom(CarpService());
   });

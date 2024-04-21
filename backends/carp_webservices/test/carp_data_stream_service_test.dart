@@ -3,30 +3,27 @@ import 'package:carp_core/carp_core.dart';
 import 'package:carp_mobile_sensing/carp_mobile_sensing.dart';
 import 'package:carp_webservices/carp_auth/carp_auth.dart';
 import 'package:carp_webservices/carp_services/carp_services.dart';
+import 'package:flutter/cupertino.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:test/test.dart';
 
 import 'carp_properties.dart';
 import 'credentials.dart';
 
 void main() {
-  CarpApp app;
-  CarpAuthProperties authProperties;
-  CarpUser? mockUser;
+  CarpUser? user;
 
   /// Runs once before all tests.
   setUpAll(() async {
     Settings().debugLevel = DebugLevel.debug;
-
-    // Initialization of serialization
+    SharedPreferences.setMockInitialValues({});
+    WidgetsFlutterBinding.ensureInitialized();
     CarpMobileSensing.ensureInitialized();
 
-    authProperties = CarpProperties().authProperties;
-    app = CarpProperties().app;
+    await CarpAuthService().configure(CarpProperties().authProperties);
+    CarpService().configure(CarpProperties().app);
 
-    await CarpAuthService().configure(authProperties);
-    CarpService().configure(app);
-
-    await CarpAuthService().authenticateWithUsernamePassword(
+    user = await CarpAuthService().authenticateWithUsernamePassword(
       username: username,
       password: password,
     );
@@ -40,8 +37,7 @@ void main() {
   group("Base services", () {
     test('- authentication', () async {
       print('CarpService : ${CarpService().app}');
-      print(" - signed in as: $mockUser");
-      //expect(user.accountId, testParticipantId);
+      print(" - signed in as: $user");
     }, skip: false);
   });
 
@@ -97,42 +93,25 @@ void main() {
     test(
       '- append - measurements UNKNOWN to carp-core.kotlin',
       () async {
+        print('Start uploading...');
+
         var m1 = Measurement(
-            sensorStartTime: 1642505045000000,
-            data: Heartbeat(
-                period: 5,
-                deviceType: 'carp_webservices_unit_test',
-                deviceRoleName: 'smartphone'));
-        var m2 = Measurement(
-            sensorStartTime: 1642505045000000,
-            data: Heartbeat(
-                period: 5,
-                deviceType: 'carp_webservices_unit_test',
-                deviceRoleName: 'smartphone'));
-        var m3 = Measurement(
           sensorStartTime: 1642505045000000,
           data: BatteryState(100),
         );
-        var m4 = Measurement(
+        var m2 = Measurement(
           sensorStartTime: 1642505045000000,
           data: BatteryState(100),
         );
 
         var batch = [
-          // can't add heartbeat measurements to this study, since it's not part of the protocol
-          //         studyDeploymentId: testDeploymentId,
-          //         deviceRoleName: phoneRoleName,
-          //         dataType: Heartbeat.dataType),
-          //     firstSequenceId: 0,
-          //     measurements: [m1, m2],
-          //     triggerIds: {0}),
           DataStreamBatch(
               dataStream: DataStreamId(
                   studyDeploymentId: testDeploymentId,
                   deviceRoleName: phoneRoleName,
                   dataType: BatteryState.dataType),
               firstSequenceId: 0,
-              measurements: [m3, m4],
+              measurements: [m1, m2],
               triggerIds: {0}),
         ];
 
@@ -140,23 +119,81 @@ void main() {
 
         await CarpDataStreamService()
             .appendToDataStreams(testDeploymentId, batch);
+        print('Done uploading.');
       },
     );
 
     test(
       '- get',
       () async {
+        print('Getting 100 ...');
         var list = await CarpDataStreamService().getDataStream(
           DataStreamId(
             studyDeploymentId: testDeploymentId,
             deviceRoleName: phoneRoleName,
-            dataType: 'dk.cachet.carp.geolocation',
+            dataType: Geolocation.dataType,
           ),
           0,
           100,
         );
         print(toJsonString(list));
         print('N = ${list.length}');
+      },
+    );
+
+    List<DataStreamBatch> geoLocationBatch = [
+      DataStreamBatch(
+          dataStream: DataStreamId(
+              studyDeploymentId: testDeploymentId,
+              deviceRoleName: phoneRoleName,
+              dataType: Geolocation.dataType),
+          firstSequenceId: 0,
+          measurements: [
+            Measurement(
+              sensorStartTime: 1642505045000000,
+              data: Geolocation(
+                  latitude: 55.68061908805645, longitude: 12.582050313435703)
+                ..sensorSpecificData = SignalStrength(rssi: 0),
+            ),
+            Measurement(
+                sensorStartTime: 1642505144000000,
+                data: Geolocation(
+                    latitude: 55.680802203873114,
+                    longitude: 12.581802212861367)),
+          ],
+          triggerIds: {
+            0
+          })
+    ];
+
+    Future<List<DataStreamBatch>> getGeoLocationBatches() async =>
+        await CarpDataStreamService().getDataStream(
+          DataStreamId(
+            studyDeploymentId: testDeploymentId,
+            deviceRoleName: phoneRoleName,
+            dataType: Geolocation.dataType,
+          ),
+          0,
+          100,
+        );
+
+    // This test tests for data upload/download consistency as reported in Issue #16
+    // - https://github.com/cph-cachet/carp-webservices-spring/issues/16
+    test(
+      '- upload & get - checking consistency (Issue #16)',
+      () async {
+        print('Getting Geolocation measurements ...');
+        var list = await getGeoLocationBatches();
+        print('N = ${list.length}');
+
+        print('Uploading another batch of Geolocation measurements...');
+        await CarpDataStreamService()
+            .appendToDataStreams(testDeploymentId, geoLocationBatch);
+
+        var list2 = await getGeoLocationBatches();
+        print('N = ${list2.length}');
+
+        expect(list2.length, list.length + 1);
       },
     );
   });
