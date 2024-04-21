@@ -1,7 +1,7 @@
 [
  {
   "carp_header": {
-   "start_time": "2023-07-26T10:19:36.001462Z",
+   "start_time": "2024-04-21T15:47:25.686608Z",
    "data_format": {
     "namespace": "dk.cachet.carp",
     "name": "ambientlight"
@@ -9,15 +9,15 @@
   },
   "carp_body": {
    "__type": "dk.cachet.carp.ambientlight",
-   "meanLux": 23,
-   "stdLux": 0.4,
+   "meanLux": 12,
+   "stdLux": 23,
    "minLux": 0.3,
-   "maxLux": 12
+   "maxLux": 0.4
   }
  },
  {
   "carp_header": {
-   "start_time": "2023-07-26T10:19:36.001469Z",
+   "start_time": "2024-04-21T15:47:25.686617Z",
    "data_format": {
     "namespace": "dk.cachet.carp",
     "name": "ambientlight"
@@ -25,15 +25,15 @@
   },
   "carp_body": {
    "__type": "dk.cachet.carp.ambientlight",
-   "meanLux": 23,
-   "stdLux": 0.4,
+   "meanLux": 12,
+   "stdLux": 23,
    "minLux": 0.3,
-   "maxLux": 12
+   "maxLux": 0.4
   }
  },
  {
   "carp_header": {
-   "start_time": "2023-07-26T10:19:36.001476Z",
+   "start_time": "2024-04-21T15:47:25.686626Z",
    "data_format": {
     "namespace": "dk.cachet.carp",
     "name": "deviceinformation"
@@ -48,7 +48,7 @@
  },
  {
   "carp_header": {
-   "start_time": "2023-07-26T10:19:36.001478Z",
+   "start_time": "2024-04-21T15:47:25.686628Z",
    "data_format": {
     "namespace": "dk.cachet.carp",
     "name": "deviceinformation"
@@ -63,7 +63,7 @@
  },
  {
   "carp_header": {
-   "start_time": "2023-07-26T10:19:36.001480Z",
+   "start_time": "2024-04-21T15:47:25.686629Z",
    "data_format": {
     "namespace": "dk.cachet.carp",
     "name": "deviceinformation"

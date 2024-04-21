@@ -44,7 +44,7 @@ class _HomePageState extends State<HomePage> {
         mainAxisSize: MainAxisSize.min,
         children: <Widget>[
           StreamBuilder(
-              stream: CarpAuthService().manager.userChanges(),
+              stream: CarpAuthService().manager?.userChanges(),
               builder: (BuildContext context, AsyncSnapshot<OidcUser?> event) {
                 if (!event.hasData) {
                   return TextButton.icon(

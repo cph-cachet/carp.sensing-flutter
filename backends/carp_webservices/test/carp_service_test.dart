@@ -1,7 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
 
-import 'package:carp_core/carp_core.dart';
 import 'package:carp_mobile_sensing/carp_mobile_sensing.dart';
 import 'package:carp_webservices/carp_auth/carp_auth.dart';
 import 'package:carp_webservices/carp_services/carp_services.dart';
@@ -21,11 +20,6 @@ void main() {
   const String collectionName = 'test_patients';
   const String newCollectionName = 'new_patients';
 
-  StudyProtocol protocol;
-  Smartphone phone;
-  CarpApp app;
-  CarpAuthProperties authProperties;
-
   final lightData = AmbientLight(12, 23, 0.3, 0.4);
 
   final deviceData = DeviceInformation(
@@ -38,21 +32,8 @@ void main() {
   setUpAll(() async {
     Settings().debugLevel = DebugLevel.debug;
 
-    // Create a new study protocol.
-    protocol = StudyProtocol(
-      ownerId: 'owner@dtu.dk',
-      name: 'CARP Web Services Test',
-    );
-
-    // Define which devices are used for data collection.
-    phone = Smartphone();
-
-    protocol.addPrimaryDevice(phone);
-    authProperties = CarpProperties().authProperties;
-    app = CarpProperties().app;
-
-    await CarpAuthService().configure(authProperties);
-    CarpService().configure(app);
+    await CarpAuthService().configure(CarpProperties().authProperties);
+    CarpService().configure(CarpProperties().app);
 
     await CarpAuthService().authenticateWithUsernamePassword(
       username: username,
@@ -62,14 +43,13 @@ void main() {
 
   /// Close connection to CARP.
   /// Runs once after all tests.
-  tearDownAll(() {});
+  tearDownAll(() {
+    CarpAuthService().logoutNoContext();
+  });
 
   group(
     "CARP Base Services",
     () {
-      // test('- service', () async {
-      //   print('CarpService : ${MockAuthenticationService().app}');
-      // });
       group('authentication', () {
         test('- authentication w. username and password', () async {
           CarpUser user =
