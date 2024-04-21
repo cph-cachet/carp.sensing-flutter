@@ -3,36 +3,32 @@ import 'package:carp_core/carp_core.dart';
 import 'package:carp_mobile_sensing/carp_mobile_sensing.dart';
 import 'package:carp_webservices/carp_auth/carp_auth.dart';
 import 'package:carp_webservices/carp_services/carp_services.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:test/test.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import 'credentials.dart';
 import 'carp_properties.dart';
 
 void main() {
-  CarpApp app;
-  CarpAuthProperties authProperties;
-  CarpUser? mockUser;
+  CarpUser? user;
 
   /// Setup CARP and authenticate.
   /// Runs once before all tests.
   setUpAll(() async {
     Settings().debugLevel = DebugLevel.debug;
-
-    // Initialization of serialization
+    SharedPreferences.setMockInitialValues({});
+    WidgetsFlutterBinding.ensureInitialized();
     CarpMobileSensing.ensureInitialized();
 
-    app = CarpProperties().app;
-    authProperties = CarpProperties().authProperties;
+    await CarpAuthService().configure(CarpProperties().authProperties);
+    CarpService().configure(CarpProperties().app);
 
-    await CarpAuthService().configure(authProperties);
-    CarpService().configure(app);
-
-    CarpUser mockUser =
-        await CarpAuthService().authenticateWithUsernamePassword(
+    user = await CarpAuthService().authenticateWithUsernamePassword(
       username: username,
       password: password,
     );
-    CarpAuthService().currentUser = mockUser;
+    CarpProtocolService().configureFrom(CarpService());
 
     CarpParticipationService().configureFrom(CarpService());
     CarpDeploymentService().configureFrom(CarpService());
@@ -45,8 +41,7 @@ void main() {
   group("Base services", () {
     test('- authentication', () async {
       print('CarpService : ${CarpService().app}');
-      print(" - signed in as: $mockUser");
-      //expect(user.accountId, testParticipantId);
+      print(" - signed in as: $user");
     }, skip: false);
 
     test('- device ID', () async {
