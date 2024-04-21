@@ -44,14 +44,14 @@ class OAuthToken {
     this.idToken,
   );
 
-  factory OAuthToken.fromTokenResponse(TokenResponse response) {
+  factory OAuthToken.fromTokenResponse(OidcToken response) {
     return OAuthToken(
       response.accessToken.toString(),
       response.refreshToken.toString(),
       response.tokenType.toString(),
       response
-          .accessTokenExpirationDateTime!, // Throw an error if there is no access token expiration date
-      response.scopes ?? [],
+          .calculateExpiresAt()!, // Throw an error if there is no access token expiration date
+      response.scope ?? [],
       response.idToken.toString(),
     );
   }

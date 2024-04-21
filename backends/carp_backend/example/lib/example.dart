@@ -1,4 +1,5 @@
 import 'package:carp_backend/carp_backend.dart';
+import 'package:carp_webservices/carp_auth/carp_auth.dart';
 import 'package:carp_webservices/carp_services/carp_services.dart';
 import 'package:carp_core/carp_core.dart';
 import 'package:carp_mobile_sensing/carp_mobile_sensing.dart';
@@ -30,9 +31,7 @@ void main() async {
   //   ),
   // );
 
-  CarpApp app = CarpApp(
-    name: "CAWS @ DTU",
-    uri: uri.replace(pathSegments: ['dev']),
+  CarpAuthProperties authProperties = CarpAuthProperties(
     authURL: uri,
     clientId: 'carp-webservices-dart',
     redirectURI: uri,
@@ -41,6 +40,13 @@ void main() async {
       '.well-known',
       'openid-configuration'
     ]),
+  );
+
+  CarpAuthService().configure(authProperties);
+
+  CarpApp app = CarpApp(
+    name: "CAWS @ DTU",
+    uri: uri.replace(pathSegments: ['dev']),
     studyId: '<the_study_id_if_known>',
     studyDeploymentId: '<the_study_deployment_id_if_known>',
   );
@@ -49,7 +55,7 @@ void main() async {
   CarpService().configure(app);
 
   // Authenticate at CAWS
-  await CarpService().authenticateWithUsernamePassword(
+  await CarpAuthService().authenticateWithUsernamePassword(
     username: 'the_username',
     password: 'the_password',
   );

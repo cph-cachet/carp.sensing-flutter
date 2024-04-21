@@ -14,7 +14,6 @@ part of carp_services;
 ///  * [ParticipationService]
 abstract class CarpBaseService {
   CarpApp? _app;
-  CarpUser? _currentUser;
   String? _endpointName;
 
   /// The CARP app associated with the CARP Web Service.
@@ -34,12 +33,7 @@ abstract class CarpBaseService {
   /// and potentially authenticated.
   void configureFrom(CarpBaseService service) {
     _app = service._app;
-    _currentUser = service._currentUser;
   }
-
-  /// Gets the current user.
-  /// Returns `null` if no user is authenticated.
-  CarpUser? get currentUser => _currentUser;
 
   /// The endpoint name for this service at CARP.
   String get rpcEndpointName;
@@ -52,15 +46,15 @@ abstract class CarpBaseService {
 
   /// The headers for any authenticated HTTP REST call to a [CarpBaseService].
   Map<String, String> get headers {
-    if (CarpService().currentUser.token == null) {
+    if (CarpAuthService().currentUser.token == null) {
       throw CarpServiceException(
           message:
-              "OAuth token is null. Call 'CarpService().authenticate()' first.");
+              "OAuth token is null. Call 'CarpAuthService().authenticate()' first.");
     }
 
     return {
       "Content-Type": "application/json",
-      "Authorization": "bearer ${CarpService().currentUser.token!.accessToken}",
+      "Authorization": "bearer ${CarpAuthService().currentUser.token!.accessToken}",
       "cache-control": "no-cache"
     };
   }

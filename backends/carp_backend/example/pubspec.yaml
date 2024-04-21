@@ -30,5 +30,7 @@ dependencies:
   carp_backend:
     path: ../
 
-dev_dependencies:
+dependency_overrides:
+  uuid: "^4.3.3"
 
+dev_dependencies:

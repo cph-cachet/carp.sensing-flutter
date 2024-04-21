@@ -56,7 +56,7 @@ class CarpUser {
     token = null;
   }
 
-  factory CarpUser.fromJWT(Map<String, dynamic> jwt) {
+  factory CarpUser.fromJWT(Map<String, dynamic> jwt, OidcToken token) {
     return CarpUser(
       username: jwt['preferred_username'] as String,
       id: jwt['sub'] as String,
@@ -64,6 +64,7 @@ class CarpUser {
       lastName: jwt['family_name'] as String,
       email: jwt['email'] as String,
       roles: jwt['realm_access']['roles'] as List<dynamic>,
+      token: OAuthToken.fromTokenResponse(token),
     );
   }
 

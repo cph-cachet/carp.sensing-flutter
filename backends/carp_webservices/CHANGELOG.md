@@ -1,3 +1,9 @@
+## 3.0.0
+
+Refactor of authentication API based on the [`oidc`](https://pub.dev/packages/oidc) package
+
+* see [PR #374](https://github.com/cph-cachet/carp.sensing-flutter/pull/374) for details.
+
 ## 2.0.1
 
 * Support for client secret for a CARP app for authentication.

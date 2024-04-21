@@ -3,9 +3,13 @@ import 'package:carp_core/carp_core.dart';
 import 'package:carp_mobile_sensing/carp_mobile_sensing.dart';
 import 'package:carp_webservices/carp_auth/carp_auth.dart';
 import 'package:carp_webservices/carp_services/carp_services.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:test/test.dart';
 import 'package:iso_duration_parser/iso_duration_parser.dart';
+// import 'package:flutter_test/flutter_test.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
+import 'carp_properties.dart';
 import 'credentials.dart';
 
 void main() {
@@ -15,10 +19,20 @@ void main() {
 
   setUpAll(() async {
     Settings().debugLevel = DebugLevel.debug;
+    SharedPreferences.setMockInitialValues({});
+    WidgetsFlutterBinding.ensureInitialized();
     CarpMobileSensing.ensureInitialized();
 
+    await CarpAuthService().configure(CarpProperties().authProperties);
+    CarpService().configure(CarpProperties().app);
+
+    user = await CarpAuthService().authenticateWithUsernamePassword(
+      username: username,
+      password: password,
+    );
     CarpProtocolService().configureFrom(CarpService());
-    ownerId = CarpService().currentUser.id;
+    ownerId = CarpAuthService().currentUser.id;
+
     var phone = Smartphone(roleName: phoneRoleName);
     phone.defaultSamplingConfiguration?.addAll({
       Geolocation.dataType: BatteryAwareSamplingConfiguration(

@@ -1,6 +1,6 @@
 name: carp_webservices
 description: Flutter API for accessing the CARP web services - authentication, file management, data points, and app-specific collections of documents.
-version: 2.0.1
+version: 3.0.0
 homepage: https://github.com/cph-cachet/carp.sensing-flutter/tree/master/backends/carp_webservices
 
 environment:
@@ -23,8 +23,10 @@ dependencies:
   meta: ^1.7.0
   form_field_validator: ^1.1.0
   url_launcher: ^6.0.9
-  flutter_appauth: ^6.0.2
   jwt_decoder: ^2.0.1
+  oidc: ^0.5.2
+  oidc_default_store: ^0.2.0+8
+
 
 # Overriding carp libraries to use the local copy
 # Remove this before release of package
@@ -42,6 +44,10 @@ dev_dependencies:
   test: any
   flutter_lints: any
   mockito: any
+  flutter_test:
+    sdk: flutter
+  shared_preferences: ^2.2.3
+  iso_duration_parser: ^1.1.1
 
 flutter:
   uses-material-design: true
