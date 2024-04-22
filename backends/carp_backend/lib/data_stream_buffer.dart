@@ -5,7 +5,7 @@
  * found in the LICENSE file.
  */
 
-part of carp_backend;
+part of 'carp_backend.dart';
 
 /// A local buffer of data streams using the [SQLiteDataManager].
 /// Works as a singleton accessed by `DataStreamBuffer()`.

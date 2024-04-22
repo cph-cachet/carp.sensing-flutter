@@ -31,6 +31,7 @@ Add `carp_backend` as a [dependency in your pubspec.yaml](https://flutter.io/pla
 ```dart
 import 'package:carp_core/carp_core.dart';
 import 'package:carp_mobile_sensing/carp_mobile_sensing.dart';
+import 'package:carp_webservices/carp_auth/carp_auth.dart';
 import 'package:carp_webservices/carp_services/carp_services.dart';
 import 'package:carp_backend/carp_backend.dart';
 ```
@@ -40,26 +41,41 @@ import 'package:carp_backend/carp_backend.dart';
 This library uses the [`carp_webservices`](https://pub.dev/packages/carp_webservices) API for accessing CAWS. In order to access CAWS, a [`CarpApp`](https://pub.dev/documentation/carp_webservices/latest/carp_services/CarpApp-class.html) needs to be configured like this:
 
 ```dart
-final String uri = "https://cans.cachet.dk";
+  // Configure an app that points to the CARP web services (CAWS)
+  final Uri uri = Uri(
+    scheme: 'https',
+    host: 'dev.carp.dk',
+  );
 
-// Configure an app that points to the CARP web services (CAWS)
-CarpApp app = CarpApp(
-  name: 'any_display_friendly_name_is_fine',
-  uri: Uri.parse(uri),
-  oauth: OAuthEndPoint(
-    clientID: 'the_client_id',
-    clientSecret: 'the_client_secret',
-  ),
-);
+  late CarpApp app = CarpApp(
+    name: "CAWS @ DTU",
+    uri: uri,
+    studyId: '<the_study_id_if_known>',
+    studyDeploymentId: '<the_study_deployment_id_if_known>',
+  );
 
-// Configure the CAWS service
-CarpService().configure(app);
+  // The authentication configuration
+  late CarpAuthProperties authProperties = CarpAuthProperties(
+    authURL: uri,
+    clientId: 'studies-app',
+    redirectURI: Uri.parse('carp-studies-auth://auth'),
+    // For authentication at CAWS the path is '/auth/realms/Carp'
+    discoveryURL: uri.replace(pathSegments: [
+      'auth',
+      'realms',
+      'Carp',
+    ]),
+  );
 
-// Authenticate at CAWS
-await CarpService().authenticate(
-  username: 'the_username',
-  password: 'the_password',
-);
+  // Configure the CAWS services
+  await CarpAuthService().configure(authProperties);
+  CarpService().configure(app);
+
+  // Authenticate at CAWS using username and password
+  await CarpAuthService().authenticateWithUsernamePassword(
+    username: 'the_username',
+    password: 'the_password',
+  );
 
 // Configure the other services needed.
 // Note that these CAWS services work as singletons and can be

@@ -13,14 +13,14 @@ import 'carp_properties.dart';
 void main() {
   CarpUser? user;
 
+  Settings().debugLevel = DebugLevel.debug;
+  SharedPreferences.setMockInitialValues({});
+  WidgetsFlutterBinding.ensureInitialized();
+  CarpMobileSensing.ensureInitialized();
+
   /// Setup CARP and authenticate.
   /// Runs once before all tests.
   setUpAll(() async {
-    Settings().debugLevel = DebugLevel.debug;
-    SharedPreferences.setMockInitialValues({});
-    WidgetsFlutterBinding.ensureInitialized();
-    CarpMobileSensing.ensureInitialized();
-
     await CarpAuthService().configure(CarpProperties().authProperties);
     CarpService().configure(CarpProperties().app);
 
@@ -41,6 +41,8 @@ void main() {
     test('- authentication', () async {
       print('CarpService : ${CarpService().app}');
       print(" - signed in as: $user");
+
+      print(CarpAuthService().manager?.discoveryDocument);
     }, skip: false);
 
     test('- device ID', () async {

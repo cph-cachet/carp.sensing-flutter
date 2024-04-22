@@ -1,3 +1,7 @@
+## 1.5.0
+
+* upgrade to web_service version 3.0.0
+
 ## 1.4.1
 
 * fix of missing data streaming upload (CAWS issue [#16](https://github.com/cph-cachet/carp-webservices-spring/issues/16))

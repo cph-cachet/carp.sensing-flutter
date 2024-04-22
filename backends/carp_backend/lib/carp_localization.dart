@@ -1,4 +1,4 @@
-part of carp_backend;
+part of 'carp_backend.dart';
 
 /// A Localization implementation that support loading localization from the
 /// CARP web service.

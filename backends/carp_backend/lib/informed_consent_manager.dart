@@ -5,7 +5,7 @@
  * found in the LICENSE file.
  */
 
-part of carp_backend;
+part of 'carp_backend.dart';
 
 /// Handles retrieving and storing informed consent definitions as [RPOrderedTask]
 /// json definitions.

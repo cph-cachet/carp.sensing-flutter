@@ -92,19 +92,15 @@ import 'package:carp_webservices/carp_services/carp_services.dart';
 The [`CarpService`](https://pub.dartlang.org/documentation/carp_webservices/latest/carp_services/CarpService-class.html) is a singleton and needs to be configured once via the `CarpApp` configuration.
 
 ````dart
+// The URI of the CAWS server to connect to.
 final Uri uri = Uri(
   scheme: 'https',
   host: 'dev.carp.dk',
-  pathSegments: [
-    'auth',
-    'realms',
-    'Carp',
-  ],
 );
 
-final app = CarpApp(
-  name: "CAWS @ DTU",
-  uri: uri.replace(pathSegments: []),
+final CarpApp _app = CarpApp(
+  name: "CAWS @ DTU [DEV]",
+  uri: uri,
 );
 
 // Configure the CARP Service with this app.
@@ -120,12 +116,16 @@ The singleton can now be accessed via `CarpService()`. However, in order to acce
 Authentication is done using the `CarpAuthService` singleton, which is configured using the `CarpAuthProperties` properties:
 
 ```dart
-final authProperties = CarpAuthProperties(
+// The authentication configuration
+late CarpAuthProperties authProperties = CarpAuthProperties(
   authURL: uri,
   clientId: 'studies-app',
   redirectURI: Uri.parse('carp-studies-auth://auth'),
+  // For authentication at CAWS the path is '/auth/realms/Carp'
   discoveryURL: uri.replace(pathSegments: [
-    ...uri.pathSegments,
+    'auth',
+    'realms',
+    'Carp',
   ]),
 );
 

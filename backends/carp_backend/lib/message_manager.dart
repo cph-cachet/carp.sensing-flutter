@@ -5,7 +5,7 @@
  * found in the LICENSE file.
  */
 
-part of carp_backend;
+part of 'carp_backend.dart';
 
 /// A message to be shown in the message list
 @JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)

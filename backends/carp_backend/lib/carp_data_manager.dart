@@ -5,7 +5,7 @@
  * found in the LICENSE file.
  */
 
-part of carp_backend;
+part of 'carp_backend.dart';
 
 class CarpDataManagerFactory implements DataManagerFactory {
   @override
