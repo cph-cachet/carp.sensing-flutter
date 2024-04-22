@@ -19,9 +19,9 @@ dependencies:
   carp_serializable: ^1.1.0
   carp_core: ^1.4.0
   carp_mobile_sensing: ^1.4.0
-  carp_webservices: ^2.0.0
+  carp_webservices: ^3.0.0
 
-  research_package: ^1.4.0
+  research_package: ^1.5.0
   cognition_package: ^1.5.0
 
 # Overriding carp libraries to use the local copy

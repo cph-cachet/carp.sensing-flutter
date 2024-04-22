@@ -1,3 +1,8 @@
+## 1.5.0
+
+* bump dependencies - location version to 6.0.0 & openmhealth_schemas to 0.3.0
+* bump Dart minimum version to 3.2 & Flutter to minimum version to 3.16
+
 ## 1.4.4
 
 * default location updated changed to one minute (instead of 1 second)
