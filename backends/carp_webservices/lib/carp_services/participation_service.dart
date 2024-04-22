@@ -5,7 +5,7 @@
  * found in the LICENSE file.
  */
 
-part of carp_services;
+part of 'carp_services.dart';
 
 /// A [ParticipationService] that talks to the CARP backend server(s).
 class CarpParticipationService extends CarpBaseService

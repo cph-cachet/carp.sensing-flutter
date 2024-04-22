@@ -5,7 +5,7 @@
  * found in the LICENSE file.
  */
 
-part of carp_auth;
+part of 'carp_auth.dart';
 
 /// Holds information of a token issued by an OAuth authorization endpoint.
 @JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)

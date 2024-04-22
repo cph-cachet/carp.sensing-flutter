@@ -5,7 +5,7 @@
  * found in the LICENSE file.
  */
 
-part of carp_services;
+part of 'carp_services.dart';
 
 /// An abstract base service class for all CARP Services:
 ///  * [CarpService]
@@ -54,7 +54,8 @@ abstract class CarpBaseService {
 
     return {
       "Content-Type": "application/json",
-      "Authorization": "bearer ${CarpAuthService().currentUser.token!.accessToken}",
+      "Authorization":
+          "bearer ${CarpAuthService().currentUser.token!.accessToken}",
       "cache-control": "no-cache"
     };
   }

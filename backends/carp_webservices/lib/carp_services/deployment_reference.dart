@@ -4,7 +4,7 @@
  * Use of this source code is governed by a MIT-style license that can be
  * found in the LICENSE file.
  */
-part of carp_services;
+part of 'carp_services.dart';
 
 /// Provides a reference to the deployment endpoint in a CARP web service that can
 /// handle a specific [PrimaryDeviceDeployment].
