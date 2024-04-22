@@ -11,36 +11,34 @@ void main() async {
   // -----------------------------------------------
 
   // Configure an app that points to the CARP web services (CAWS)
-  Uri uri = Uri(
+  // The URI of the CAWS server to connect to.
+  final Uri uri = Uri(
     scheme: 'https',
     host: 'dev.carp.dk',
-    pathSegments: [
-      'auth',
-      'dev',
-      'realms',
-      'Carp',
-    ],
   );
 
   late CarpApp app = CarpApp(
     name: "CAWS @ DTU",
-    uri: uri.replace(pathSegments: []),
+    uri: uri,
     studyId: '<the_study_id_if_known>',
     studyDeploymentId: '<the_study_deployment_id_if_known>',
   );
 
+  // The authentication configuration
   late CarpAuthProperties authProperties = CarpAuthProperties(
     authURL: uri,
     clientId: 'studies-app',
     redirectURI: Uri.parse('carp-studies-auth://auth'),
+    // For authentication at CAWS the path is '/auth/realms/Carp'
     discoveryURL: uri.replace(pathSegments: [
-      ...uri.pathSegments,
+      'auth',
+      'realms',
+      'Carp',
     ]),
   );
 
+  // Configure the CAWS services
   CarpAuthService().configure(authProperties);
-
-  // Configure the CAWS service
   CarpService().configure(app);
 
   // Authenticate at CAWS

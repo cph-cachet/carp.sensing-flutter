@@ -22,7 +22,7 @@ import 'package:carp_serializable/carp_serializable.dart';
 import 'package:carp_core/carp_core.dart';
 import 'package:carp_mobile_sensing/carp_mobile_sensing.dart';
 import 'package:carp_webservices/carp_services/carp_services.dart';
-import 'package:research_package/model.dart';
+import 'package:research_package/research_package.dart';
 
 part 'carp_data_manager.dart';
 part 'data_stream_buffer.dart';

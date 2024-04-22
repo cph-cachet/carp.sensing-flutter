@@ -2,12 +2,14 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:test/test.dart';
 // import 'package:flutter_test/flutter_test.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import 'package:carp_core/carp_core.dart';
 import 'package:carp_mobile_sensing/carp_mobile_sensing.dart';
+import 'package:carp_webservices/carp_auth/carp_auth.dart';
 import 'package:carp_webservices/carp_services/carp_services.dart';
 import 'package:carp_backend/carp_backend.dart';
-import 'package:research_package/model.dart';
+import 'package:research_package/research_package.dart';
 
 // import the context, eSense & audio sampling package
 // this is used to be able to deserialize the downloaded protocol
@@ -23,10 +25,8 @@ String _encode(Object? object) =>
     const JsonEncoder.withIndent(' ').convert(object);
 
 void main() {
-  // TestWidgetsFlutterBinding.ensureInitialized();
-
-  CarpApp app;
-  // CarpStudyProtocolManager manager = CarpStudyProtocolManager();
+  SharedPreferences.setMockInitialValues({});
+  WidgetsFlutterBinding.ensureInitialized();
 
   // Initialization of serialization
   CarpMobileSensing.ensureInitialized();
@@ -42,43 +42,44 @@ void main() {
   /// Setup CARP and authenticate.
   /// Runs once before all tests.
   setUpAll(() async {
-    Uri uri = Uri(
-      scheme: 'https',
-      host: 'carp.computerome.dk',
-      pathSegments: [
-        'auth',
-        'dev',
-        'realms',
-        'Carp',
-      ],
-    );
-
     Settings().saveAppTaskQueue = false;
     Settings().debugLevel = DebugLevel.debug;
+    StudyProtocol(ownerId: 'user@dtu.dk', name: 'ignored');
 
-    StudyProtocol(ownerId: 'user@dtu.dk', name: 'ignored'); // ...
+    // Configure an app that points to the CARP web services (DEV)
+    final Uri uri = Uri(
+      scheme: 'https',
+      host: hostName,
+    );
 
-    app = CarpApp(
+    late CarpApp app = CarpApp(
       name: "CAWS @ DTU",
-      uri: uri.replace(pathSegments: ['dev']),
-      authURL: uri,
-      clientId: 'carp-webservices-dart',
-      redirectURI: uri,
-      discoveryURL: uri.replace(pathSegments: [
-        ...uri.pathSegments,
-        '.well-known',
-        'openid-configuration'
-      ]),
+      uri: uri.replace(pathSegments: []),
       studyId: testStudyId,
       studyDeploymentId: testDeploymentId,
     );
 
+    // The authentication configuration
+    late CarpAuthProperties authProperties = CarpAuthProperties(
+      authURL: uri,
+      clientId: 'studies-app',
+      redirectURI: Uri.parse('carp-studies-auth://auth'),
+      // For authentication at CAWS the path is '/auth/realms/Carp'
+      discoveryURL: uri.replace(pathSegments: [
+        'auth',
+        'realms',
+        'Carp',
+      ]),
+    );
+
+    // Configure the CAWS services
+    await CarpAuthService().configure(authProperties);
     CarpService().configure(app);
 
     // create a carp data manager in order to initialize json serialization
     CarpDataManager();
 
-    await CarpService().authenticateWithUsernamePasswordNoContext(
+    await CarpAuthService().authenticateWithUsernamePassword(
       username: username,
       password: password,
     );
@@ -88,7 +89,24 @@ void main() {
     CarpDeploymentService().configureFrom(CarpService());
   });
 
-  tearDownAll(() {});
+  tearDownAll(() {
+    CarpAuthService().logoutNoContext();
+  });
+
+  group('Base Services', () {
+    test('- authentication w. username and password', () async {
+      CarpUser user = await CarpAuthService().authenticateWithUsernamePassword(
+        username: username,
+        password: password,
+      );
+
+      expect(user.token, isNotNull);
+      expect(user.isAuthenticated, true);
+
+      print("User  : $user");
+      // print("Token : ${user.token}");
+    });
+  });
 
   group("Informed Consent", () {
     test('- get', () async {

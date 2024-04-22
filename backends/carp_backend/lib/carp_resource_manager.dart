@@ -5,7 +5,7 @@
  * found in the LICENSE file.
  */
 
-part of carp_backend;
+part of 'carp_backend.dart';
 
 /// Implementation of [InformedConsentManager], [LocalizationManager], and
 /// [MessageManager] in the CARP service.

@@ -12,25 +12,23 @@ class CarpProperties {
   Uri get uri => Uri(
         scheme: 'https',
         host: 'dev.carp.dk',
-        pathSegments: [
-          'auth',
-          'realms',
-          'Carp',
-        ],
       );
 
   CarpAuthProperties get authProperties => CarpAuthProperties(
         authURL: uri,
         clientId: 'studies-app',
         redirectURI: Uri.parse('carp-studies-auth://auth'),
+        // For authentication at CAWS the path is '/auth/realms/Carp'
         discoveryURL: uri.replace(pathSegments: [
-          ...uri.pathSegments,
+          'auth',
+          'realms',
+          'Carp',
         ]),
       );
 
   CarpApp get app => CarpApp(
         name: "CAWS @ DigitalOcean [DEV]",
-        uri: uri.replace(pathSegments: []),
+        uri: uri,
         studyDeploymentId: testDeploymentId,
         studyId: testStudyId,
       );
