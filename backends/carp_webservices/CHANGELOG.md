@@ -1,8 +1,7 @@
-## 3.0.0
+## 3.0.1
 
-Refactor of authentication API based on the [`oidc`](https://pub.dev/packages/oidc) package
-
-* see [PR #374](https://github.com/cph-cachet/carp.sensing-flutter/pull/374) for details.
+* Refactor of authentication API based on the [`oidc`](https://pub.dev/packages/oidc) package. See [PR #374](https://github.com/cph-cachet/carp.sensing-flutter/pull/374) for details.
+* added linter
 
 ## 2.0.1
 

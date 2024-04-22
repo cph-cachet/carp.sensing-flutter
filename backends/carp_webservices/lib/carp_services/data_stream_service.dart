@@ -5,7 +5,7 @@
  * found in the LICENSE file.
  */
 
-part of carp_services;
+part of 'carp_services.dart';
 
 /// A [DataStreamService] that talks to the CARP Web Services.
 class CarpDataStreamService extends CarpBaseService

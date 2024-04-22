@@ -5,7 +5,7 @@
  * found in the LICENSE file.
  */
 
-part of carp_auth;
+part of 'carp_auth.dart';
 
 /// Represents a CARP Web Service (CAWS) account and user.
 @JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)

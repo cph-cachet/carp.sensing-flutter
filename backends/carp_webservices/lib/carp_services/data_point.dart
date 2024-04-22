@@ -5,7 +5,7 @@
  * found in the LICENSE file.
  */
 
-part of carp_services;
+part of 'carp_services.dart';
 
 /// A data point storing meta-information and the data.
 ///

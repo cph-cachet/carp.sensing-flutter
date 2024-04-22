@@ -1,10 +1,11 @@
 /*
- * Copyright 2020-2023 Copenhagen Center for Health Technology (CACHET) at the
+ * Copyright 2020 Copenhagen Center for Health Technology (CACHET) at the
  * Technical University of Denmark (DTU).
  * Use of this source code is governed by a MIT-style license that can be
  * found in the LICENSE file.
  */
-part of carp_services;
+
+part of 'carp_services.dart';
 
 /// The HTTP Retry method.
 final HTTPRetry httpr = HTTPRetry();

@@ -5,7 +5,7 @@
  * found in the LICENSE file.
  */
 
-part of carp_services;
+part of 'carp_services.dart';
 
 /// Provide access to a CARP web service endpoint.
 ///
@@ -286,4 +286,3 @@ class CarpService extends CarpBaseService {
     }
   }
 }
-
