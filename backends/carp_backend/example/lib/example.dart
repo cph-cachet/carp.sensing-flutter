@@ -1,8 +1,8 @@
-import 'package:carp_backend/carp_backend.dart';
-import 'package:carp_webservices/carp_auth/carp_auth.dart';
-import 'package:carp_webservices/carp_services/carp_services.dart';
 import 'package:carp_core/carp_core.dart';
 import 'package:carp_mobile_sensing/carp_mobile_sensing.dart';
+import 'package:carp_webservices/carp_auth/carp_auth.dart';
+import 'package:carp_webservices/carp_services/carp_services.dart';
+import 'package:carp_backend/carp_backend.dart';
 import 'package:research_package/model.dart';
 
 void main() async {
@@ -10,9 +10,10 @@ void main() async {
   // CONFIGURING THE CAWS APP
   // -----------------------------------------------
 
+  // Configure an app that points to the CARP web services (CAWS)
   Uri uri = Uri(
     scheme: 'https',
-    host: 'carp.computerome.dk',
+    host: 'dev.carp.dk',
     pathSegments: [
       'auth',
       'dev',
@@ -21,35 +22,23 @@ void main() async {
     ],
   );
 
-  // Configure an app that points to the CARP web services (CAWS)
-  // CarpApp app = CarpApp(
-  //   name: 'any_display_friendly_name_is_fine',
-  //   uri: Uri.parse(uri),
-  //   oauth: OAuthEndPoint(
-  //     clientID: 'the_client_id',
-  //     clientSecret: 'the_client_secret',
-  //   ),
-  // );
+  late CarpApp app = CarpApp(
+    name: "CAWS @ DTU",
+    uri: uri.replace(pathSegments: []),
+    studyId: '<the_study_id_if_known>',
+    studyDeploymentId: '<the_study_deployment_id_if_known>',
+  );
 
-  CarpAuthProperties authProperties = CarpAuthProperties(
+  late CarpAuthProperties authProperties = CarpAuthProperties(
     authURL: uri,
-    clientId: 'carp-webservices-dart',
-    redirectURI: uri,
+    clientId: 'studies-app',
+    redirectURI: Uri.parse('carp-studies-auth://auth'),
     discoveryURL: uri.replace(pathSegments: [
       ...uri.pathSegments,
-      '.well-known',
-      'openid-configuration'
     ]),
   );
 
   CarpAuthService().configure(authProperties);
-
-  CarpApp app = CarpApp(
-    name: "CAWS @ DTU",
-    uri: uri.replace(pathSegments: ['dev']),
-    studyId: '<the_study_id_if_known>',
-    studyDeploymentId: '<the_study_deployment_id_if_known>',
-  );
 
   // Configure the CAWS service
   CarpService().configure(app);

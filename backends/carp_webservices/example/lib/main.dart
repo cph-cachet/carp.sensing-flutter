@@ -5,8 +5,6 @@ import 'package:carp_webservices/carp_auth/carp_auth.dart';
 import 'package:carp_core/carp_core.dart';
 import 'package:oidc/oidc.dart';
 
-// The URI of the CAWS server to connect to.
-const String cawsUri = 'dev.carp.dk';
 void main() {
   CarpMobileSensing.ensureInitialized();
   runApp(MyApp());
@@ -97,38 +95,37 @@ class _HomePageState extends State<HomePage> {
 class AppBLoC {
   ActiveParticipationInvitation? _invitation;
 
-  final Uri _uri = Uri(
+  // The URI of the CAWS server to connect to.
+  final Uri uri = Uri(
     scheme: 'https',
-    host: cawsUri,
-    pathSegments: [
+    host: 'dev.carp.dk',
+  );
+
+  late CarpApp app = CarpApp(
+    name: "CAWS @ DTU [DEV]",
+    uri: uri,
+  );
+
+  // The authentication configuration
+  late CarpAuthProperties authProperties = CarpAuthProperties(
+    authURL: uri,
+    clientId: 'studies-app',
+    redirectURI: Uri.parse('carp-studies-auth://auth'),
+    // For authentication at CAWS the path is '/auth/realms/Carp'
+    discoveryURL: uri.replace(pathSegments: [
       'auth',
       'realms',
       'Carp',
-    ],
-  );
-
-  late CarpApp _app = CarpApp(
-    name: "CAWS @ DTU",
-    uri: _uri.replace(pathSegments: []),
-  );
-
-  late CarpAuthProperties _authProperties = CarpAuthProperties(
-    authURL: _uri,
-    clientId: 'studies-app',
-    redirectURI: Uri.parse('carp-studies-auth://auth'),
-    discoveryURL: _uri.replace(pathSegments: [
-      ..._uri.pathSegments,
     ]),
   );
 
-  CarpApp get app => _app;
   CarpUser? currentUser;
   bool get authenticated => currentUser != null;
   String? get studyId => _invitation?.studyId;
   String? get studyDeploymentId => _invitation?.studyDeploymentId;
 
   Future<void> init() async {
-    await CarpAuthService().configure(_authProperties);
+    await CarpAuthService().configure(authProperties);
     CarpService().configure(app);
   }
 
