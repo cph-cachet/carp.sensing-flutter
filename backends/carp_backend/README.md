@@ -49,7 +49,7 @@ This library uses the [`carp_webservices`](https://pub.dev/packages/carp_webserv
 
   late CarpApp app = CarpApp(
     name: "CAWS @ DTU",
-    uri: uri.replace(pathSegments: []),
+    uri: uri,
     studyId: '<the_study_id_if_known>',
     studyDeploymentId: '<the_study_deployment_id_if_known>',
   );
@@ -68,7 +68,7 @@ This library uses the [`carp_webservices`](https://pub.dev/packages/carp_webserv
   );
 
   // Configure the CAWS services
-  CarpAuthService().configure(authProperties);
+  await CarpAuthService().configure(authProperties);
   CarpService().configure(app);
 
   // Authenticate at CAWS using username and password

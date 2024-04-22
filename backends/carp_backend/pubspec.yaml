@@ -44,13 +44,14 @@ dependency_overrides:
   #    path: ../../packages/carp_audio_package/
   #  carp_context_package:
   #    path: ../../packages/carp_context_package/
-  uuid: "^4.3.3"
+  # uuid: "^4.3.3"
 
 dev_dependencies:
   build_runner: any
   json_serializable: any
   test: any
   flutter_lints: any
+  shared_preferences: ^2.2.3
 
 flutter:
   uses-material-design: true # need this since both RP and carp_webservices uses MD

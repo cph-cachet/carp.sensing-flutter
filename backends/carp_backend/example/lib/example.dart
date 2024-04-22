@@ -38,7 +38,7 @@ void main() async {
   );
 
   // Configure the CAWS services
-  CarpAuthService().configure(authProperties);
+  await CarpAuthService().configure(authProperties);
   CarpService().configure(app);
 
   // Authenticate at CAWS
