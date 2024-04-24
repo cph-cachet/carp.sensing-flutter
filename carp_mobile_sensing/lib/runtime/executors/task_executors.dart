@@ -128,8 +128,7 @@ class AppTaskExecutor<TConfig extends AppTask> extends TaskExecutor<TConfig> {
   Future<bool> onStart() async {
     // when an app task is started, create a UserTask and put it on the queue
     userTask = await AppTaskController().enqueue(this);
-    state; // = ExecutorState.stopped;
-    return true;
+    return userTask != null;
   }
 
   @override

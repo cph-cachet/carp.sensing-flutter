@@ -1,3 +1,7 @@
+## 1.5.0
+
+* durations are now specified using the Dart `Duration` class (rather than ISO 8061 format)
+
 ## 1.4.1
 
 * small update to `DeviceDataCollectorFactory` API.

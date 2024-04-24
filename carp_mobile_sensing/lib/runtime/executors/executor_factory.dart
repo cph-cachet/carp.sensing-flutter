@@ -13,6 +13,7 @@ class ExecutorFactory {
   factory ExecutorFactory() => _instance;
 
   final Map<int, TriggerExecutor> _triggerExecutors = {};
+  final Map<String, TaskExecutor> _taskExecutors = {};
 
   /// Returns the relevant [TaskControlExecutor] based on the type of [trigger]
   /// and [task].
@@ -106,10 +107,17 @@ class ExecutorFactory {
     return _triggerExecutors[triggerId]!;
   }
 
-  /// Create a [TaskExecutor] for a [task] based on the task type.
-  TaskExecutor createTaskExecutor(TaskConfiguration task) {
-    if (task is AppTask) return AppTaskExecutor();
-    if (task is FunctionTask) return FunctionTaskExecutor();
-    return BackgroundTaskExecutor();
+  /// Get the [TaskExecutor] for a [task] based on the task name. If the task
+  /// executor does not exist, a new one is created based on the type of the task.
+  TaskExecutor getTaskExecutor(TaskConfiguration task) {
+    if (_taskExecutors[task.name] == null) {
+      TaskExecutor executor = BackgroundTaskExecutor();
+      if (task is AppTask) executor = AppTaskExecutor();
+      if (task is FunctionTask) executor = FunctionTaskExecutor();
+
+      _taskExecutors[task.name] = executor;
+    }
+
+    return _taskExecutors[task.name]!;
   }
 }

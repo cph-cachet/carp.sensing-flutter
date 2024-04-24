@@ -1,28 +1,41 @@
 {
-    "id": "d6a479e0-f414-11ed-9c45-9d4ff4c270d0",
-    "createdOn": "2023-05-16T18:09:45.598066Z",
+    "id": "faf40280-3485-1f8e-90e5-c7f5b019674d",
+    "createdOn": "2024-04-24T11:58:44.380332Z",
     "version": 0,
-    "ownerId": "xyz@dtu.dk",
+    "ownerId": "979b408d-784e-4b1b-bb1e-ff9204e072f3",
     "name": "Test Study Protocol",
     "description": "For testing purposes.",
+    "participantRoles": [
+        {
+            "role": "Runner",
+            "isOptional": false
+        },
+        {
+            "role": "Cyclist",
+            "isOptional": false
+        }
+    ],
     "primaryDevices": [
         {
             "__type": "dk.cachet.carp.common.application.devices.Smartphone",
             "roleName": "phone_1",
+            "isOptional": false,
             "defaultSamplingConfiguration": {},
             "isPrimaryDevice": true
         },
         {
             "__type": "dk.cachet.carp.common.application.devices.Smartphone",
             "roleName": "phone_2",
+            "isOptional": false,
             "defaultSamplingConfiguration": {},
             "isPrimaryDevice": true
         }
     ],
     "connectedDevices": [
         {
-            "__type": "dk.cachet.carp.common.application.devices.DefaultDeviceConfiguration",
+            "__type": "dk.cachet.carp.common.application.devices.AltBeacon",
             "roleName": "hr_monitor",
+            "isOptional": true,
             "defaultSamplingConfiguration": {}
         },
         {
@@ -42,6 +55,14 @@
             "connectedToRoleName": "phone_1"
         }
     ],
+    "assignedDevices": {
+        "phone_1": [
+            "Runner"
+        ],
+        "phone_2": [
+            "Cyclist"
+        ]
+    },
     "tasks": [
         {
             "__type": "dk.cachet.carp.common.application.tasks.BackgroundTask",
@@ -60,11 +81,11 @@
                     "type": "dk.cachet.carp.stepcount"
                 }
             ],
-            "duration": "PT1H"
+            "duration": "PT3600S"
         },
         {
             "__type": "dk.cachet.carp.common.application.tasks.BackgroundTask",
-            "name": "Start Heart Monitor",
+            "name": "Task #4",
             "measures": [
                 {
                     "__type": "dk.cachet.carp.common.application.tasks.Measure.DataStream",
@@ -79,11 +100,11 @@
                     "type": "dk.cachet.carp.heartrate"
                 }
             ],
-            "duration": "PT1H"
+            "duration": "PT3600S"
         },
         {
             "__type": "dk.cachet.carp.common.application.tasks.BackgroundTask",
-            "name": "Start Heart Monitor",
+            "name": "Task #5",
             "measures": [
                 {
                     "__type": "dk.cachet.carp.common.application.tasks.Measure.DataStream",
@@ -94,32 +115,7 @@
                     "type": "dk.cachet.carp.signalstrength"
                 }
             ],
-            "duration": "PT1H"
-        },
-        {
-            "__type": "dk.cachet.carp.common.application.tasks.BackgroundTask",
-            "name": "Task #4",
-            "measures": [
-                {
-                    "__type": "dk.cachet.carp.common.application.tasks.Measure.DataStream",
-                    "type": "dk.cachet.carp.steps",
-                    "overrideSamplingConfiguration": {
-                        "__type": "dk.cachet.carp.common.application.sampling.BatteryAwareSamplingConfiguration",
-                        "normal": {
-                            "__type": "dk.cachet.carp.common.application.sampling.GranularitySamplingConfiguration",
-                            "granularity": "Detailed"
-                        },
-                        "low": {
-                            "__type": "dk.cachet.carp.common.application.sampling.GranularitySamplingConfiguration",
-                            "granularity": "Balanced"
-                        },
-                        "critical": {
-                            "__type": "dk.cachet.carp.common.application.sampling.GranularitySamplingConfiguration",
-                            "granularity": "Coarse"
-                        }
-                    }
-                }
-            ]
+            "duration": "PT3600S"
         }
     ],
     "triggers": {
@@ -130,16 +126,12 @@
         "1": {
             "__type": "dk.cachet.carp.common.application.triggers.ElapsedTimeTrigger",
             "sourceDeviceRoleName": "phone_1",
-            "elapsedTime": "PT1H"
+            "elapsedTime": "PT3600S"
         },
         "2": {
             "__type": "dk.cachet.carp.common.application.triggers.ElapsedTimeTrigger",
             "sourceDeviceRoleName": "phone_2",
-            "elapsedTime": "PT1H"
-        },
-        "3": {
-            "__type": "dk.cachet.carp.common.application.triggers.ManualTrigger",
-            "sourceDeviceRoleName": "phone_1"
+            "elapsedTime": "PT3600S"
         }
     },
     "taskControls": [
@@ -151,40 +143,16 @@
         },
         {
             "triggerId": 1,
-            "taskName": "Start Heart Monitor",
+            "taskName": "Task #4",
             "destinationDeviceRoleName": "phone_1",
             "control": "Start"
         },
         {
             "triggerId": 2,
-            "taskName": "Start Heart Monitor",
+            "taskName": "Task #5",
             "destinationDeviceRoleName": "phone_2",
-            "control": "Start"
-        },
-        {
-            "triggerId": 3,
-            "taskName": "Task #4",
-            "destinationDeviceRoleName": "phone_1",
-            "control": "Start"
+            "control": "Stop"
         }
     ],
-    "participantRoles": [
-        {
-            "role": "Runner",
-            "isOptional": false
-        },
-        {
-            "role": "Cyclist",
-            "isOptional": false
-        }
-    ],
-    "assignedDevices": {
-        "phone_1": [
-            "Runner"
-        ],
-        "phone_2": [
-            "Cyclist"
-        ]
-    },
     "expectedParticipantData": []
 }

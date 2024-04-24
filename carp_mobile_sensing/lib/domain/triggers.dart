@@ -448,29 +448,6 @@ class SamplingEventTrigger extends TriggerConfiguration {
   Map<String, dynamic> toJson() => _$SamplingEventTriggerToJson(this);
 }
 
-// /// Specified the configuration of an event in a [SamplingEventTrigger].
-// ///
-// /// The [condition] is a key-value map of values that can be checked in
-// /// the [Datum.equivalentTo] method.
-// /// This `equivalentTo` method must be implemented for each [Datum] used
-// /// in a [SamplingEventTrigger].
-// @JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
-// class ConditionalEvent extends Serializable {
-//   Map<String, dynamic> condition;
-
-//   /// Create a conditional event.
-//   ConditionalEvent(this.condition) : super();
-
-//   dynamic operator [](String index) => condition[index];
-
-//   @override
-//   Function get fromJsonFunction => _$ConditionalEventFromJson;
-//   factory ConditionalEvent.fromJson(Map<String, dynamic> json) =>
-//       FromJsonFactory().fromJson(json) as ConditionalEvent;
-//   @override
-//   Map<String, dynamic> toJson() => _$ConditionalEventToJson(this);
-// }
-
 /// Takes a [Measurement] from a sampling stream and evaluates if an event has
 /// occurred. Returns [true] if the event has occurred, [false] otherwise.
 typedef ConditionalEventEvaluator = bool Function(Measurement measurement);

@@ -161,75 +161,86 @@ class LocalStudyProtocolManager implements StudyProtocolManager {
     var phone = Smartphone();
     protocol.addPrimaryDevice(phone);
 
-    // Collect timezone info every time the app restarts.
+    // Issue #384
     protocol.addTaskControl(
-        ImmediateTrigger(),
-        BackgroundTask(measures: [
-          Measure(type: DeviceSamplingPackage.TIMEZONE),
+        PeriodicTrigger(period: const Duration(seconds: 5)),
+        BackgroundTask(duration: const IsoDuration(seconds: 2), measures: [
+          Measure(type: DeviceSamplingPackage.DEVICE_INFORMATION)
         ]),
         phone);
 
-    // Collect device info only once, when this study is deployed.
-    protocol.addTaskControl(
-      OneTimeTrigger(),
-      BackgroundTask(
-          measures: [Measure(type: DeviceSamplingPackage.DEVICE_INFORMATION)]),
-      phone,
-    );
+    // // Collect timezone info every time the app restarts.
+    // protocol.addTaskControl(
+    //     ImmediateTrigger(),
+    //     BackgroundTask(measures: [
+    //       Measure(type: DeviceSamplingPackage.TIMEZONE),
+    //     ]),
+    //     phone);
+
+    // // Collect device info only once, when this study is deployed.
+    // protocol.addTaskControl(
+    //   OneTimeTrigger(),
+    //   BackgroundTask(
+    //       measures: [Measure(type: DeviceSamplingPackage.DEVICE_INFORMATION)]),
+    //   phone,
+    // );
 
     // Add background measures from the [DeviceSamplingPackage] and
     // [SensorSamplingPackage] sampling packages.
 
-    // Note that some of these measures only works on Android:
-    //  * screen events
-    //  * ambient light
-    //  * free memory (there seems to be a bug in the underlying sysinfo plugin)
-    protocol.addTaskControl(
-      ImmediateTrigger(),
-      BackgroundTask(measures: [
-        Measure(type: DeviceSamplingPackage.FREE_MEMORY),
-        Measure(type: DeviceSamplingPackage.BATTERY_STATE),
-        Measure(type: DeviceSamplingPackage.SCREEN_EVENT),
-        Measure(type: CarpDataTypes.STEP_COUNT_TYPE_NAME),
-        Measure(type: SensorSamplingPackage.AMBIENT_LIGHT)
-      ]),
-      phone,
-    );
+    // // Note that some of these measures only works on Android:
+    // //  * screen events
+    // //  * ambient light
+    // //  * free memory (there seems to be a bug in the underlying sysinfo plugin)
+    // protocol.addTaskControl(
+    //   ImmediateTrigger(),
+    //   BackgroundTask(measures: [
+    //     Measure(type: DeviceSamplingPackage.FREE_MEMORY)
+    //       ..overrideSamplingConfiguration = IntervalSamplingConfiguration(
+    //           interval: const Duration(seconds: 10)),
 
-    // Collect IMU data every 10 secs for 1 sec.
-    // Also shows how the sampling interval can be specified ("overridden").
-    // Default sampling interval is 200 ms. Note that it seems like setting the
-    // sampling interval does NOT work on Android (see also the docs on the
-    // sensor_plus package and on the Android sensor documentation:
-    //   https://developer.android.com/reference/android/hardware/SensorManager#registerListener(android.hardware.SensorEventListener,%20android.hardware.Sensor,%20int)
-    protocol.addTaskControl(
-      PeriodicTrigger(period: const Duration(seconds: 10)),
-      BackgroundTask(
-        measures: [
-          Measure(type: SensorSamplingPackage.ACCELERATION)
-            ..overrideSamplingConfiguration = IntervalSamplingConfiguration(
-                interval: const Duration(milliseconds: 500)),
-          Measure(type: SensorSamplingPackage.ROTATION),
-        ],
-        duration: const IsoDuration(seconds: 1),
-      ),
-      phone,
-    );
+    //     // Measure(type: DeviceSamplingPackage.BATTERY_STATE),
+    //     // Measure(type: DeviceSamplingPackage.SCREEN_EVENT),
+    //     // Measure(type: CarpDataTypes.STEP_COUNT_TYPE_NAME),
+    //     // Measure(type: SensorSamplingPackage.AMBIENT_LIGHT)
+    //   ]),
+    //   phone,
+    // );
 
-    // Extract acceleration features every minute over 10 seconds
-    protocol.addTaskControl(
-      ImmediateTrigger(),
-      BackgroundTask(
-        measures: [
-          Measure(type: SensorSamplingPackage.ACCELERATION_FEATURES)
-            ..overrideSamplingConfiguration = PeriodicSamplingConfiguration(
-              interval: const Duration(minutes: 1),
-              duration: const Duration(seconds: 10),
-            ),
-        ],
-      ),
-      phone,
-    );
+    // // Collect IMU data every 10 secs for 1 sec.
+    // // Also shows how the sampling interval can be specified ("overridden").
+    // // Default sampling interval is 200 ms. Note that it seems like setting the
+    // // sampling interval does NOT work on Android (see also the docs on the
+    // // sensor_plus package and on the Android sensor documentation:
+    // //   https://developer.android.com/reference/android/hardware/SensorManager#registerListener(android.hardware.SensorEventListener,%20android.hardware.Sensor,%20int)
+    // protocol.addTaskControl(
+    //   PeriodicTrigger(period: const Duration(seconds: 10)),
+    //   BackgroundTask(
+    //     measures: [
+    //       Measure(type: SensorSamplingPackage.ACCELERATION)
+    //         ..overrideSamplingConfiguration = IntervalSamplingConfiguration(
+    //             interval: const Duration(milliseconds: 500)),
+    //       Measure(type: SensorSamplingPackage.ROTATION),
+    //     ],
+    //     duration: const IsoDuration(seconds: 1),
+    //   ),
+    //   phone,
+    // );
+
+    // // Extract acceleration features every minute over 10 seconds
+    // protocol.addTaskControl(
+    //   ImmediateTrigger(),
+    //   BackgroundTask(
+    //     measures: [
+    //       Measure(type: SensorSamplingPackage.ACCELERATION_FEATURES)
+    //         ..overrideSamplingConfiguration = PeriodicSamplingConfiguration(
+    //           interval: const Duration(minutes: 1),
+    //           duration: const Duration(seconds: 10),
+    //         ),
+    //     ],
+    //   ),
+    //   phone,
+    // );
 
     // // Example of how to start and stop sampling using the Control.Start and
     // // Control.Stop method
@@ -246,7 +257,7 @@ class LocalStudyProtocolManager implements StudyProtocolManager {
     //   ],
     // );
 
-    // // Collect IMU data
+    // // Start both task_1 and task_2
     // protocol.addTaskControls(
     //   ImmediateTrigger(),
     //   [task_1, task_2],
@@ -254,9 +265,9 @@ class LocalStudyProtocolManager implements StudyProtocolManager {
     //   Control.Start,
     // );
 
-    // // After a while, stop it again
+    // // After a while, stop task_1 again
     // protocol.addTaskControl(
-    //   DelayedTrigger(delay: Duration(seconds: 10)),
+    //   DelayedTrigger(delay: const Duration(seconds: 10)),
     //   task_1,
     //   phone,
     //   Control.Stop,
@@ -304,18 +315,18 @@ class LocalStudyProtocolManager implements StudyProtocolManager {
     // See the PulmonaryMonitor demo app for a full-scale example of how to use
     // the App Task model.
 
-    // Add a task after deployment and make a notification.
-    protocol.addTaskControl(
-      ElapsedTimeTrigger(elapsedTime: const IsoDuration(seconds: 30)),
-      AppTask(
-        type: BackgroundSensingUserTask.ONE_TIME_SENSING_TYPE,
-        title: "Elapsed Time Trigger - App Task",
-        description: 'Collection of Device Information.',
-        measures: [Measure(type: DeviceSamplingPackage.DEVICE_INFORMATION)],
-        notification: true,
-      ),
-      phone,
-    );
+    // // Add a task after deployment and make a notification.
+    // protocol.addTaskControl(
+    //   ElapsedTimeTrigger(elapsedTime: const IsoDuration(seconds: 30)),
+    //   AppTask(
+    //     type: BackgroundSensingUserTask.ONE_TIME_SENSING_TYPE,
+    //     title: "Elapsed Time Trigger - App Task",
+    //     description: 'Collection of Device Information.',
+    //     measures: [Measure(type: DeviceSamplingPackage.DEVICE_INFORMATION)],
+    //     notification: true,
+    //   ),
+    //   phone,
+    // );
 
     // // Add a cron job every day at 11:45
     // protocol.addTaskControl(

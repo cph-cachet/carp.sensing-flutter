@@ -72,10 +72,10 @@ class TaskConfiguration extends Serializable {
 @JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
 class BackgroundTask extends TaskConfiguration {
   /// The optional duration over the course of which the [measures] need to
-  /// be sampled. Duration is specified in the ISO 8061 standard.
+  /// be sampled.
   /// Null implies infinite by default.
   @JsonKey(toJson: _$IsoDurationToJson, fromJson: _$IsoDurationFromJson)
-  IsoDuration? duration;
+  Duration? duration;
 
   /// Create a new task which can run in the background.
   BackgroundTask({

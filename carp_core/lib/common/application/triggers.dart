@@ -57,16 +57,9 @@ abstract class Schedulable {}
 @JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
 class ElapsedTimeTrigger extends TriggerConfiguration implements Schedulable {
   /// Elapsed time since start of the study deployment.
-  /// Specified in the ISO 8061 standard.
   /// If null, sampling starts immediately.
   @JsonKey(toJson: _$IsoDurationToJson, fromJson: _$IsoDurationFromJson)
-  IsoDuration? elapsedTime;
-
-  /// Elapsed time since start of the study deployment.
-  /// Specified in the Dart [Duration] format.
-  Duration get elapsedTimeAsDuration => elapsedTime != null
-      ? Duration(seconds: elapsedTime!.toSeconds().round())
-      : const Duration();
+  Duration? elapsedTime;
 
   /// Create a trigger that starts after [elapsedTime] has elapsed since the start
   /// of the study deployment.

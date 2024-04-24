@@ -120,7 +120,7 @@ abstract class MeasurementProbe extends Probe {
 ///
 /// See [MemoryProbe] for an example.
 abstract class IntervalProbe extends MeasurementProbe {
-  Timer? timer;
+  Timer? _timer;
 
   @override
   IntervalSamplingConfiguration? get samplingConfiguration =>
@@ -131,9 +131,9 @@ abstract class IntervalProbe extends MeasurementProbe {
     Duration? interval = samplingConfiguration?.interval;
     if (interval != null) {
       // create a recurrent timer that gets the data point every [frequency].
-      timer = Timer.periodic(interval, (Timer t) async {
+      _timer ??= Timer.periodic(interval, (Timer t) async {
         try {
-          Measurement? measurement = await getMeasurement();
+          var measurement = await getMeasurement();
           if (measurement != null) addMeasurement(measurement);
         } catch (error) {
           addError(error);
@@ -150,7 +150,8 @@ abstract class IntervalProbe extends MeasurementProbe {
 
   @override
   Future<bool> onStop() async {
-    timer?.cancel();
+    _timer?.cancel();
+    _timer = null;
     return true;
   }
 }

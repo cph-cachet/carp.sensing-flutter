@@ -52,7 +52,7 @@ class TaskControlExecutor extends AbstractExecutor<TaskControl> {
     triggerExecutor?.triggerEvents.listen((_) => onTrigger());
 
     // get the task executor and add the measurements it collects to the stream group
-    taskExecutor = ExecutorFactory().createTaskExecutor(task);
+    taskExecutor = ExecutorFactory().getTaskExecutor(task);
     taskExecutor?.initialize(task, deployment);
     _group.add(taskExecutor!.measurements);
 
@@ -92,7 +92,7 @@ class TaskControlExecutor extends AbstractExecutor<TaskControl> {
 
   @override
   Future<bool> onStop() async {
-    // stop the triggers so they don't trigger any more.
+    // stop the trigger executor so it don't trigger any more.
     triggerExecutor?.stop();
 
     // stop the task executor
