@@ -504,7 +504,7 @@ void protocolExample() async {
         Measure(type: CarpDataTypes.ACCELERATION_TYPE_NAME),
         Measure(type: CarpDataTypes.ROTATION_TYPE_NAME),
       ],
-      duration: const IsoDuration(seconds: 1),
+      duration: const Duration(seconds: 1),
     ),
     phone,
   );
@@ -566,7 +566,7 @@ void protocolExample() async {
 
   // // Collect device info after 30 secs
   // protocol.addTaskControl(
-  //   ElapsedTimeTrigger(elapsedTime: IsoDuration(seconds: 30)),
+  //   ElapsedTimeTrigger(elapsedTime: Duration(seconds: 30)),
   //   BackgroundTask(
   //     measures: [
   //       Measure(type: DeviceSamplingPackage.DEVICE_INFORMATION),
@@ -582,9 +582,9 @@ void protocolExample() async {
   // See the PulmonaryMonitor demo app for a full-scale example of how to use
   // the App Task model.
 
-  // Add a task 1 minute after deployment and make a notification.
+  // Add a task 1/2 minute after deployment and make a notification.
   protocol.addTaskControl(
-    ElapsedTimeTrigger(elapsedTime: const IsoDuration(seconds: 30)),
+    ElapsedTimeTrigger(elapsedTime: const Duration(seconds: 30)),
     AppTask(
       type: BackgroundSensingUserTask.ONE_TIME_SENSING_TYPE,
       title: "Elapsed Time - App Task",

@@ -133,7 +133,8 @@ class ElapsedTimeTriggerExecutor
   @override
   List<DateTime> getSchedule(DateTime from, DateTime to, [int? max]) {
     if (deployment?.deployed == null) return [];
-    final dd = deployment!.deployed!.add(configuration!.elapsedTimeAsDuration);
+    if (configuration?.elapsedTime == null) return [];
+    final dd = deployment!.deployed!.add(configuration!.elapsedTime!);
     return (dd.isAfter(from) && dd.isBefore(to)) ? [dd] : [];
   }
 
@@ -141,20 +142,26 @@ class ElapsedTimeTriggerExecutor
   Future<bool> onStart() async {
     if (deployment?.deployed == null) {
       warning(
-          '$runtimeType >> this deployment does not have a start time. Cannot execute this trigger.');
+          '$runtimeType - This deployment does not have a start time. Cannot execute this trigger.');
       return false;
-    } else {
-      int delay = configuration!.elapsedTimeAsDuration.inMilliseconds -
-          (DateTime.now().millisecondsSinceEpoch -
-              deployment!.deployed!.millisecondsSinceEpoch);
+    }
 
-      if (delay > 0) {
-        _timer = Timer(Duration(milliseconds: delay), () => onTrigger());
-      } else {
-        warning(
-            '$runtimeType - the trigger time is in the past and should have happened already.');
-        return false;
-      }
+    if (configuration?.elapsedTime == null) {
+      warning(
+          '$runtimeType - This ElapsedTimeTrigger does not have a elapsedTime specified. Cannot execute this trigger.');
+      return false;
+    }
+
+    int delay = configuration!.elapsedTime!.inMilliseconds -
+        (DateTime.now().millisecondsSinceEpoch -
+            deployment!.deployed!.millisecondsSinceEpoch);
+
+    if (delay > 0) {
+      _timer = Timer(Duration(milliseconds: delay), () => onTrigger());
+    } else {
+      warning(
+          '$runtimeType - the trigger time is in the past and should have happened already.');
+      return false;
     }
 
     return true;

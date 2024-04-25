@@ -49,9 +49,12 @@ abstract class Snapshot {
   }
 }
 
-/// Deserialization of [isoString] to [IsoDuration] according to the ISO 8061 standard.
-IsoDuration? _$IsoDurationFromJson(String? isoString) =>
-    (isoString != null) ? IsoDuration.tryParse(isoString) : null;
+/// Deserialization of [isoString] according to the ISO 8061 standard to [Duration]
+Duration? _$IsoDurationFromJson(String? isoString) => (isoString != null)
+    ? Duration(seconds: IsoDuration.tryParse(isoString)!.toSeconds().round())
+    : null;
 
-/// Serialization of [IsoDuration] to a ISO 8061 string.
-String? _$IsoDurationToJson(IsoDuration? duration) => duration?.toIso();
+/// Serialization of [Duration] to a ISO 8061 string.
+String? _$IsoDurationToJson(Duration? duration) => (duration != null)
+    ? IsoDuration(seconds: duration.inSeconds.roundToDouble()).toIso()
+    : null;

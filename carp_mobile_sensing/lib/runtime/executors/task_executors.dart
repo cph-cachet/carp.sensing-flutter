@@ -16,11 +16,17 @@ part of '../runtime.dart';
 /// to [Executor.measurements] from a task executor.
 abstract class TaskExecutor<TConfig extends TaskConfiguration>
     extends AggregateExecutor<TConfig> {
+  final StreamGroup<ExecutorState> _statesGroup = StreamGroup.broadcast();
+
+  /// The [TaskConfiguration] for this task executor.
   TConfig get task => configuration!;
 
-  /// Returns a list of the running probes in this task executor.
+  /// Returns a list of the probes in this task executor.
   List<Probe> get probes =>
       executors.map((executor) => executor as Probe).toList();
+
+  /// The combines state event from all [probes] in this task executor.
+  Stream<ExecutorState> get states => _statesGroup.stream;
 
   @override
   bool onInitialize() {
@@ -32,6 +38,8 @@ abstract class TaskExecutor<TConfig extends TaskConfiguration>
         if (probe != null) {
           executors.add(probe);
           group.add(probe.measurements);
+          _statesGroup.add(probe.stateEvents);
+
           probe.initialize(measure, deployment!);
         } else {
           warning(
@@ -49,6 +57,12 @@ abstract class TaskExecutor<TConfig extends TaskConfiguration>
 
 /// Executes a [BackgroundTask].
 class BackgroundTaskExecutor extends TaskExecutor<BackgroundTask> {
+  StreamSubscription<ExecutorState>? _subscription;
+
+  /// Are all [probes] in a stopped state?
+  bool get haveAllProbesStopped =>
+      !probes.any((probe) => probe.state != ExecutorState.stopped);
+
   @override
   Future<bool> onStart() async {
     // Early out if no probes.
@@ -61,14 +75,26 @@ class BackgroundTaskExecutor extends TaskExecutor<BackgroundTask> {
       return false;
     }
 
+    // Listen to stop this background executor when all of its underlying
+    // probes have stopped - Issue #384
+    _subscription =
+        states.where((event) => event == ExecutorState.stopped).listen((_) {
+      if (haveAllProbesStopped) {
+        debug(
+            '$runtimeType - all probes have stopped - stopping this $runtimeType too.');
+        stop();
+      }
+    });
+
     // Check if the device for this task is connected.
     if (probes.first.deviceManager.isConnected) {
       if (configuration?.duration != null) {
         // If the task has a duration (optional), stop it again after this duration has passed.
-        Timer(
-            Duration(seconds: configuration!.duration!.toSeconds().truncate()),
+        Timer(Duration(seconds: configuration!.duration!.inSeconds.truncate()),
             () => stop());
       }
+
+      // Now - finally - we can start the probes.
       return await super.onStart();
     } else {
       warning(
@@ -76,6 +102,18 @@ class BackgroundTaskExecutor extends TaskExecutor<BackgroundTask> {
           'Device type: ${probes.first.deviceManager.typeName}');
       return false;
     }
+  }
+
+  @override
+  Future<bool> onRestart() async {
+    _subscription?.cancel();
+    return super.onRestart();
+  }
+
+  @override
+  Future<bool> onStop() async {
+    _subscription?.cancel();
+    return super.onStop();
   }
 }
 
@@ -128,8 +166,7 @@ class AppTaskExecutor<TConfig extends AppTask> extends TaskExecutor<TConfig> {
   Future<bool> onStart() async {
     // when an app task is started, create a UserTask and put it on the queue
     userTask = await AppTaskController().enqueue(this);
-    state; // = ExecutorState.stopped;
-    return true;
+    return userTask != null;
   }
 
   @override

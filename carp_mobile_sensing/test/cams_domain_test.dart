@@ -159,7 +159,8 @@ void main() {
         json.decode(plainJson) as Map<String, dynamic>);
 
     expect(protocol.ownerId, primaryProtocol.ownerId);
-    expect(protocol.primaryDevices.first.roleName, Smartphone.DEFAULT_ROLENAME);
+    expect(
+        protocol.primaryDevices.first.roleName, Smartphone.DEFAULT_ROLE_NAME);
     expect(protocol.dataEndPoint?.type, DataEndPointTypes.SQLITE);
     expect(protocol.expectedParticipantData?.length, 1);
     expect(protocol.getApplicationData('uiTheme'), 'black');
@@ -418,7 +419,7 @@ void main() {
     expect(status_1.deviceStatusList.length, 2);
     expect(status_1.status, StudyDeploymentStatusTypes.Invited);
     expect(status_1.deviceStatusList[0].device.roleName,
-        Smartphone.DEFAULT_ROLENAME);
+        Smartphone.DEFAULT_ROLE_NAME);
     // the phone as a primary device is always registered by the SmartphoneDeploymentService
     expect(status_1.deviceStatusList[0].status,
         DeviceDeploymentStatusTypes.Registered);

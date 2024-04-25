@@ -115,7 +115,7 @@ class PrimaryDeviceConfiguration<TRegistration extends DeviceRegistration>
   /// A trigger which fires immediately at the start of a study deployment.
   TriggerConfiguration get atStartOfStudy => ElapsedTimeTrigger(
         sourceDeviceRoleName: roleName,
-        elapsedTime: const IsoDuration(),
+        elapsedTime: const Duration(),
       );
 
   @override

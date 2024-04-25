@@ -1,3 +1,8 @@
+## 1.5.1
+
+* automatically stopping a background task if all of its underlying probes have stopped (fix of [384](https://github.com/cph-cachet/carp.sensing-flutter/issues/384))
+* upgrade to carp_core v. 1.5.0 (getting rid of `IsoDuration`)
+
 ## 1.5.0
 
 * Improvements to the Notification Controller

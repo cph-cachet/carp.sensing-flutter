@@ -58,7 +58,7 @@ void _registerFromJsonFunctions() {
 
   FromJsonFactory().registerAll([
     TriggerConfiguration(),
-    ElapsedTimeTrigger(elapsedTime: const IsoDuration()),
+    ElapsedTimeTrigger(elapsedTime: const Duration()),
     ManualTrigger(),
     ScheduledTrigger(
         recurrenceRule: RecurrenceRule(Frequency.DAILY),

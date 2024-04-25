@@ -233,11 +233,6 @@ abstract class AggregateExecutor<TConfig> extends AbstractExecutor<TConfig> {
     }
     return true;
   }
-
-  /// Close this executor permanently. Rarely used once sensing is started.
-  Future<void> close() async {
-    group.close();
-  }
 }
 
 // All of the below executor state machine classes are private and only used

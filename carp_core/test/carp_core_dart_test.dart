@@ -4,26 +4,28 @@ import 'package:uuid/uuid.dart';
 import 'package:test/test.dart';
 import 'package:carp_core/carp_core.dart';
 import 'package:carp_serializable/carp_serializable.dart';
-import 'package:iso_duration_parser/iso_duration_parser.dart';
 
 void main() {
   late StudyProtocol protocol;
 
   setUp(() {
-    Core();
+    Core.ensureInitialized();
 
     protocol = StudyProtocol(
-      ownerId: 'xyz@dtu.dk',
+      // Note that CAWS require a UUID for ownerId.
+      // You can put anything here (as long as it is a valid UUID), and this will be replaced with
+      // the ID of the user uploading the protocol.
+      ownerId: '979b408d-784e-4b1b-bb1e-ff9204e072f3',
       name: 'Test Study Protocol',
       description: 'For testing purposes.',
     );
 
     final phone_1 = Smartphone(roleName: 'phone_1');
     final phone_2 = Smartphone(roleName: 'phone_2');
-    final monitor = DefaultDeviceConfiguration(roleName: 'hr_monitor');
+    // final monitor = DefaultDeviceConfiguration(roleName: 'hr_monitor');
+    // final bike = AltBeacon(roleName: 'bike' );
+    final monitor = AltBeacon(roleName: 'hr_monitor');
     final bike = AltBeacon(roleName: 'bike');
-    // final monitor = AltBeacon(roleName: 'hr_monitor');
-    // final bike = AltBeacon(roleName: 'bike');
 
     protocol
       ..addParticipantRole(ParticipantRole('Runner'))
@@ -40,7 +42,7 @@ void main() {
       TriggerConfiguration(),
       BackgroundTask(
           name: 'Start measures',
-          duration: const IsoDuration(hours: 1),
+          duration: const Duration(hours: 1),
           measures: [
             Measure(type: Acceleration.dataType),
             Measure(type: Geolocation.dataType),
@@ -52,12 +54,12 @@ void main() {
 
     protocol.addTaskControl(
       ElapsedTimeTrigger(
-        // sourceDeviceRoleName: phone.roleName,
-        elapsedTime: const IsoDuration(hours: 1),
+        sourceDeviceRoleName: phone_1.roleName,
+        elapsedTime: const Duration(hours: 1),
       ),
       BackgroundTask(
-          name: 'Start Heart Monitor',
-          duration: const IsoDuration(hours: 1),
+          // name: 'Start Heart Monitor',
+          duration: const Duration(hours: 1),
           measures: [
             Measure(type: ECG.dataType),
             Measure(type: EDA.dataType),
@@ -70,41 +72,41 @@ void main() {
     protocol.addTaskControl(
       ElapsedTimeTrigger(
         // sourceDeviceRoleName: phone.roleName,
-        elapsedTime: const IsoDuration(hours: 1),
+        elapsedTime: const Duration(hours: 1),
       ),
       BackgroundTask(
-          name: 'Start Heart Monitor',
-          duration: const IsoDuration(hours: 1),
+          // name: 'Start Heart Monitor',
+          duration: const Duration(hours: 1),
           measures: [
             Measure(type: Acceleration.dataType),
             Measure(type: SignalStrength.dataType),
           ]),
       phone_2,
-      Control.Start,
+      Control.Stop,
     );
 
-    Measure measure = Measure(type: 'dk.cachet.carp.steps');
-    measure.overrideSamplingConfiguration = BatteryAwareSamplingConfiguration(
-        normal: GranularitySamplingConfiguration(Granularity.Detailed),
-        low: GranularitySamplingConfiguration(Granularity.Balanced),
-        critical: GranularitySamplingConfiguration(Granularity.Coarse));
+    // The following override with a BatteryAwareSamplingConfiguration does NOT WORK
+    // when uploading to CAWS.....
+    // Measure measure = Measure(type: 'dk.cachet.carp.steps');
+    // measure.overrideSamplingConfiguration = BatteryAwareSamplingConfiguration(
+    //     normal: GranularitySamplingConfiguration(Granularity.Detailed),
+    //     low: GranularitySamplingConfiguration(Granularity.Balanced),
+    //     critical: GranularitySamplingConfiguration(Granularity.Coarse));
 
-    protocol.addTaskControl(
-      ManualTrigger(),
-      BackgroundTask()..addMeasure(measure),
-      phone_1,
-      Control.Start,
-    );
+    // protocol.addTaskControl(
+    //   ManualTrigger(),
+    //   BackgroundTask()..addMeasure(measure),
+    //   phone_1,
+    //   Control.Start,
+    // );
   });
 
   test('StudyProtocol -> JSON', () async {
-    print(protocol);
     print(toJsonString(protocol));
-    expect(protocol.ownerId, 'xyz@dtu.dk');
-    expect(protocol.triggers.length, 4);
+    expect(protocol.triggers.length, 3);
     expect(protocol.triggers.keys.first, '0');
-    expect(protocol.tasks.length, 4);
-    expect(protocol.taskControls.length, 4);
+    expect(protocol.tasks.length, 3);
+    expect(protocol.taskControls.length, 3);
     expect(protocol.participantRoles?.length, 2);
     expect(protocol.assignedDevices?.length, 2);
   });
@@ -115,17 +117,24 @@ void main() {
   });
 
   test('JSON -> StudyProtocol', () async {
-    final plainJson =
+    final loadedJson =
         File('test/json/carp.core-dart/study_protocol.json').readAsStringSync();
 
-    final protocol =
-        StudyProtocol.fromJson(json.decode(plainJson) as Map<String, dynamic>);
+    final loadedProtocol =
+        StudyProtocol.fromJson(json.decode(loadedJson) as Map<String, dynamic>);
+    print(toJsonString(loadedProtocol));
 
-    expect(protocol.ownerId, 'xyz@dtu.dk');
-    expect(protocol.primaryDevices.first.roleName, 'phone_1');
-    print(toJsonString(protocol));
+    expect(loadedProtocol.ownerId, protocol.ownerId);
+    expect(loadedProtocol.primaryDevices.first.roleName,
+        protocol.primaryDevices.first.roleName);
+    expect(loadedProtocol.triggers['1'], isA<ElapsedTimeTrigger>());
+    expect(
+        (loadedProtocol.triggers['1'] as ElapsedTimeTrigger)
+            .elapsedTime
+            ?.inHours,
+        1);
 
-    final studyJson = toJsonString(protocol);
+    final studyJson = toJsonString(loadedProtocol);
 
     final protocolFromJson =
         StudyProtocol.fromJson(json.decode(studyJson) as Map<String, dynamic>);
