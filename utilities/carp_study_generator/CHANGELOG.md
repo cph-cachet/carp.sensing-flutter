@@ -1,3 +1,9 @@
+## 1.5.0
+
+* upgrade to carp_mobile_sensing: ^1.5.0
+* upgrade to carp_webservices: ^3.0.0
+* upgrade to carp_backend: ^1.5.0
+
 ## 1.4.0
 
 * upgrade to Dart 3.2
