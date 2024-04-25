@@ -8,12 +8,11 @@
 part of connectivity;
 
 /// The [ConnectivityProbe] listens to the connectivity status of the phone and
-/// collect a [ConnectivityDatum] every time the connectivity state changes.
+/// collect a [Connectivity] data point every time the connectivity state changes.
 class ConnectivityProbe extends StreamProbe {
   @override
-  Stream<Measurement> get stream => connectivity.Connectivity()
-      .onConnectivityChanged
-      .map((connectivity.ConnectivityResult event) =>
+  Stream<Measurement> get stream =>
+      connectivity.Connectivity().onConnectivityChanged.map((event) =>
           Measurement.fromData(Connectivity.fromConnectivityResult(event)));
 }
 

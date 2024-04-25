@@ -33,7 +33,7 @@ class CarpDataManager extends AbstractDataManager {
   late CarpDataEndPoint carpEndPoint;
   DataStreamBuffer buffer = DataStreamBuffer();
   Timer? uploadTimer;
-  ConnectivityResult _connectivity = ConnectivityResult.none;
+  List<ConnectivityResult> _connectivity = [ConnectivityResult.none];
 
   /// Make sure to create and initialize the [CarpDataManager].
   static void ensureInitialized() =>
@@ -48,10 +48,10 @@ class CarpDataManager extends AbstractDataManager {
   String get type => DataEndPointTypes.CAWS;
 
   /// The connectivity status of this data manager.
-  ConnectivityResult get connectivity => _connectivity;
-  set connectivity(ConnectivityResult status) {
+  List<ConnectivityResult> get connectivity => _connectivity;
+  set connectivity(List<ConnectivityResult> status) {
     _connectivity = status;
-    info("$runtimeType - Network connectivity status set to '${status.name}'");
+    info("$runtimeType - Network connectivity status set to '$status'");
   }
 
   @override
@@ -92,14 +92,14 @@ class CarpDataManager extends AbstractDataManager {
     debug("$runtimeType - Starting upload of data batches...");
 
     // fast exit if not connected
-    if (connectivity == ConnectivityResult.none) {
+    if (connectivity.contains(ConnectivityResult.none)) {
       warning('$runtimeType - Offline - cannot upload buffered data.');
       return;
     }
 
     // fast exit if only upload on wifi and we're not on wifi
     if (carpEndPoint.onlyUploadOnWiFi &&
-        connectivity != ConnectivityResult.wifi) {
+        !connectivity.contains(ConnectivityResult.wifi)) {
       warning(
           '$runtimeType - WiFi required by the data endpoint, but no wifi connectivity - '
           'cannot upload buffered data.');

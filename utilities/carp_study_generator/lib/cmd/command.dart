@@ -1,4 +1,4 @@
-part of carp_study_generator;
+part of '../carp_study_generator.dart';
 
 /// The interface for all CARP Commands.
 abstract class Command {
@@ -10,6 +10,7 @@ abstract class Command {
 abstract class AbstractCommand implements Command {
   static dynamic _yaml;
   CarpApp? _app;
+  CarpAuthProperties? _authProperties;
 
   Uri? get _uri => Uri.parse(_yaml['server']['uri'] as String);
   Uri get uri {
@@ -37,7 +38,7 @@ abstract class AbstractCommand implements Command {
   List<dynamic> get locales =>
       _yaml['localization']['locales'] as List<dynamic>;
 
-  String get ownerId => CarpService().currentUser.id;
+  String get ownerId => CarpAuthService().currentUser.id;
 
   AbstractCommand() {
     WidgetsFlutterBinding.ensureInitialized();
@@ -76,23 +77,33 @@ abstract class AbstractCommand implements Command {
       } catch (e) {
         throw Exception("A valid study ID is not provided");
       }
+
       _app = CarpApp(
         name: "CAWS @ DTU",
-        uri: uri.replace(pathSegments: ['dev']),
-        authURL: uri,
-        clientId: clientId,
-        clientSecret: clientSecret,
-        redirectURI: Uri.parse('carp-studies-auth://auth'),
-        discoveryURL: uri.replace(pathSegments: [
-          ...uri.pathSegments,
-          '.well-known',
-          'openid-configuration'
-        ]),
+        uri: uri,
         studyId: studyId,
       );
+
       print(_app);
     }
     return _app!;
+  }
+
+  // The authentication configuration
+  CarpAuthProperties get authProperties {
+    if (_authProperties == null) {}
+    CarpAuthProperties(
+      authURL: uri,
+      clientId: 'studies-app',
+      redirectURI: Uri.parse('carp-studies-auth://auth'),
+      // For authentication at CAWS the path is '/auth/realms/Carp'
+      discoveryURL: uri.replace(pathSegments: [
+        'auth',
+        'realms',
+        'Carp',
+      ]),
+    );
+    return _authProperties!;
   }
 
   /// Authenticate at the CARP server.
@@ -100,7 +111,7 @@ abstract class AbstractCommand implements Command {
     print('CARP app: $app');
     CarpService().configure(app);
     print('Authenticating to the CARP Server...');
-    await CarpService().authenticateWithUsernamePasswordNoContext(
+    await CarpAuthService().authenticateWithUsernamePassword(
         username: username, password: password);
     print("Authenticated as user: '$username'");
     CarpProtocolService().configureFrom(CarpService());

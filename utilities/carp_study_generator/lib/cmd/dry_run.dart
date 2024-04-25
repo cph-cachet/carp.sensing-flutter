@@ -1,4 +1,4 @@
-part of carp_study_generator;
+part of '../carp_study_generator.dart';
 
 /// A [Command] that makes a dry run of the configuration of a CAMS study.
 /// It checks the following:
@@ -26,7 +26,7 @@ class DryRunCommand extends AbstractCommand {
     }
 
     try {
-      await CarpService().authenticateWithUsernamePasswordNoContext(
+      await CarpAuthService().authenticateWithUsernamePassword(
           username: username, password: password);
       print('\x1B[32m[✓]\x1B[0m CARP Server \t username: $username');
     } catch (error) {

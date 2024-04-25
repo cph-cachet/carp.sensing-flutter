@@ -1,4 +1,4 @@
-part of carp_study_generator;
+part of '../carp_study_generator.dart';
 
 class CreateStudyProtocolCommand extends AbstractCommand {
   String? _protocolJson;
