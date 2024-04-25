@@ -34,7 +34,7 @@ dependencies:
 # Overriding carp libraries to use the local copy
 # Remove this before release of package
 dependency_overrides:
-  uuid: "^4.3.3"
+  uuid: ^4.3.3
 #   carp_serializable:
 #     path: ../../carp_serializable/
 #   carp_core:
