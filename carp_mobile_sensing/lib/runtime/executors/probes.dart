@@ -101,7 +101,8 @@ abstract class MeasurementProbe extends Probe {
   Future<bool> onStart() async {
     getMeasurement().then((measurement) {
       if (measurement != null) addMeasurement(measurement);
-      stop();
+      // automatically stop this probe after it is done collecting the measurement
+      Future.delayed(const Duration(seconds: 1), () => stop());
     }, onError: (Object error) => addError(error));
 
     return true;

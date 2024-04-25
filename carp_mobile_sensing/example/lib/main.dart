@@ -164,9 +164,9 @@ class LocalStudyProtocolManager implements StudyProtocolManager {
     // Issue #384
     protocol.addTaskControl(
         PeriodicTrigger(period: const Duration(seconds: 5)),
-        BackgroundTask(duration: const IsoDuration(seconds: 2), measures: [
-          Measure(type: DeviceSamplingPackage.DEVICE_INFORMATION)
-        ]),
+        BackgroundTask(
+          measures: [Measure(type: DeviceSamplingPackage.DEVICE_INFORMATION)],
+        ),
         phone);
 
     // // Collect timezone info every time the app restarts.
@@ -222,7 +222,7 @@ class LocalStudyProtocolManager implements StudyProtocolManager {
     //             interval: const Duration(milliseconds: 500)),
     //       Measure(type: SensorSamplingPackage.ROTATION),
     //     ],
-    //     duration: const IsoDuration(seconds: 1),
+    //     duration: const Duration(seconds: 1),
     //   ),
     //   phone,
     // );
@@ -290,8 +290,8 @@ class LocalStudyProtocolManager implements StudyProtocolManager {
     // // add a ConditionalPeriodicTrigger to check periodically
     // protocol.addTaskControl(
     //     ConditionalPeriodicTrigger(
-    //         period: Duration(seconds: 20),
-    //         triggerCondition: () => ('jakob'.length == 5)),
+    //         period: const Duration(seconds: 20),
+    //         triggerCondition: () => ('Jakob'.length == 5)),
     //     BackgroundTask()
     //       ..addMeasure(Measure(type: DeviceSamplingPackage.DEVICE_INFORMATION)),
     //     phone,
@@ -299,7 +299,7 @@ class LocalStudyProtocolManager implements StudyProtocolManager {
 
     // // Collect device info after 30 secs
     // protocol.addTaskControl(
-    //   ElapsedTimeTrigger(elapsedTime: IsoDuration(seconds: 30)),
+    //   ElapsedTimeTrigger(elapsedTime: const Duration(seconds: 30)),
     //   BackgroundTask(
     //     measures: [
     //       Measure(type: DeviceSamplingPackage.DEVICE_INFORMATION),
@@ -317,7 +317,7 @@ class LocalStudyProtocolManager implements StudyProtocolManager {
 
     // // Add a task after deployment and make a notification.
     // protocol.addTaskControl(
-    //   ElapsedTimeTrigger(elapsedTime: const IsoDuration(seconds: 30)),
+    //   ElapsedTimeTrigger(elapsedTime: const Duration(seconds: 10)),
     //   AppTask(
     //     type: BackgroundSensingUserTask.ONE_TIME_SENSING_TYPE,
     //     title: "Elapsed Time Trigger - App Task",
