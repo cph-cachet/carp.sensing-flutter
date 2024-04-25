@@ -37,13 +37,17 @@ class Connectivity extends Data {
   static const dataType = ConnectivitySamplingPackage.CONNECTIVITY;
 
   /// The status of the connectivity.
-  ConnectivityStatus connectivityStatus = ConnectivityStatus.unknown;
+  List<ConnectivityStatus> connectivityStatus = [];
 
   Connectivity() : super();
 
-  Connectivity.fromConnectivityResult(connectivity.ConnectivityResult result)
-      : connectivityStatus = _parseConnectivityStatus(result),
-        super();
+  Connectivity.fromConnectivityResult(
+      List<connectivity.ConnectivityResult> result)
+      : super() {
+    connectivityStatus = result
+        .map((connectivity.ConnectivityResult e) => _parseConnectivityStatus(e))
+        .toList();
+  }
 
   @override
   Function get fromJsonFunction => _$ConnectivityFromJson;
@@ -74,7 +78,7 @@ class Connectivity extends Data {
 
   @override
   String toString() =>
-      '${super.toString()}, connectivityStatus: ${connectivityStatus.name}';
+      '${super.toString()}, connectivityStatus: $connectivityStatus';
 }
 
 /// A [Datum] that holds information of nearby Bluetooth devices.

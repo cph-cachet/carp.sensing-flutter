@@ -1,4 +1,4 @@
-part of carp_study_generator;
+part of '../carp_study_generator.dart';
 
 /// A [Command] that take the informed consent specified in the file
 /// `consent/InformedConsent.dart` and uploads it to the CARP server.

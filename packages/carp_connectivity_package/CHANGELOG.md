@@ -1,3 +1,8 @@
+## 1.5.0
+
+* upgrade to network_info_plus: ^5.0.0
+* upgrade to connectivity_plus: ^6.0.0
+
 ## 1.4.0
 
 * upgrade to Dart 3.2

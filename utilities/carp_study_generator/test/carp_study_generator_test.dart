@@ -4,7 +4,7 @@ import 'dart:convert';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:carp_core/carp_core.dart';
 import 'package:carp_mobile_sensing/carp_mobile_sensing.dart';
-import 'package:research_package/model.dart';
+import 'package:research_package/research_package.dart';
 import 'package:carp_apps_package/apps.dart';
 // import 'package:carp_communication_package/communication.dart';
 import 'package:carp_context_package/carp_context_package.dart';

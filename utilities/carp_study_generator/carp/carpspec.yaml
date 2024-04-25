@@ -10,8 +10,8 @@ server:
   uri: https://carp.computerome.dk/auth/dev/realms/Carp
   client_id: xxxxx
   client_secret: xxxxx
-  username: researcher@cachet.dk
-  password: researcher
+  username: xxx@cachet.dk
+  password: xxx
 
 # configuration of the study ID - used for upload of informed consent and translations
 study:

@@ -1,6 +1,7 @@
-## 1.5.0
+## 1.6.0
 
-* upgrade to web_service version 3.0.0
+* upgrade to web_service version ^3.0.0
+* upgrade to connectivity_plus: ^6.0.0
 
 ## 1.4.1
 

@@ -1,4 +1,4 @@
-part of carp_study_generator;
+part of '../carp_study_generator.dart';
 
 class DeleteAllMessagesCommand extends AbstractCommand {
   DeleteAllMessagesCommand() : super();

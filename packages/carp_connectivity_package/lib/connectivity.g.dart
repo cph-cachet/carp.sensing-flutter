@@ -8,8 +8,9 @@ part of 'connectivity.dart';
 
 Connectivity _$ConnectivityFromJson(Map<String, dynamic> json) => Connectivity()
   ..$type = json['__type'] as String?
-  ..connectivityStatus =
-      $enumDecode(_$ConnectivityStatusEnumMap, json['connectivityStatus']);
+  ..connectivityStatus = (json['connectivityStatus'] as List<dynamic>)
+      .map((e) => $enumDecode(_$ConnectivityStatusEnumMap, e))
+      .toList();
 
 Map<String, dynamic> _$ConnectivityToJson(Connectivity instance) {
   final val = <String, dynamic>{};
@@ -21,8 +22,9 @@ Map<String, dynamic> _$ConnectivityToJson(Connectivity instance) {
   }
 
   writeNotNull('__type', instance.$type);
-  val['connectivityStatus'] =
-      _$ConnectivityStatusEnumMap[instance.connectivityStatus]!;
+  val['connectivityStatus'] = instance.connectivityStatus
+      .map((e) => _$ConnectivityStatusEnumMap[e]!)
+      .toList();
   return val;
 }
 
@@ -71,8 +73,8 @@ BluetoothDevice _$BluetoothDeviceFromJson(Map<String, dynamic> json) =>
       bluetoothDeviceId: json['bluetoothDeviceId'] as String,
       bluetoothDeviceName: json['bluetoothDeviceName'] as String,
       connectable: json['connectable'] as bool,
-      rssi: json['rssi'] as int,
-      txPowerLevel: json['txPowerLevel'] as int?,
+      rssi: (json['rssi'] as num).toInt(),
+      txPowerLevel: (json['txPowerLevel'] as num?)?.toInt(),
     );
 
 Map<String, dynamic> _$BluetoothDeviceToJson(BluetoothDevice instance) {
