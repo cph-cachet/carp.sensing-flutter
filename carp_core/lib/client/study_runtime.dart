@@ -5,7 +5,7 @@
  * found in the LICENSE file.
  */
 
-part of carp_core_client;
+part of 'carp_core_client.dart';
 
 /// Manage data collection for a specific primary device [deployment] on a
 /// client device.

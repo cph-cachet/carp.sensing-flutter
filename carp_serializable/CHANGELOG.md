@@ -1,3 +1,7 @@
+## 1.2.0
+
+* added support for generating universal unique IDs (UUIDs) via the `UUID.v1` construct
+
 ## 1.1.1
 
 * Dart type annotation in json is changed from `$type` to `__type` since there were conflict in the Javascript world. This also follows the [CARP Core](https://github.com/cph-cachet/carp.core-kotlin) serialization approach.

@@ -8,7 +8,10 @@
 part of 'runtime.dart';
 
 /// A [DeviceController] handles runtime management of all devices and services
-/// connected to this phone, including the phone itself.
+/// available to this phone, including the phone itself.
+///
+/// Each specific device is handled by a [DeviceManager] which are available as
+/// a map of [devices].
 class DeviceController implements DeviceDataCollectorFactory {
   static final DeviceController _instance = DeviceController._();
   final Map<String, DeviceManager> _devices = {};
@@ -24,9 +27,13 @@ class DeviceController implements DeviceDataCollectorFactory {
   @override
   Map<String, DeviceManager> get devices => _devices;
 
-  /// The list of connected devices defined in the study deployment.
+  /// The smartphone (primary device) manager.
+  SmartphoneDeviceManager get smartphoneDeviceManager =>
+      devices.values.whereType<SmartphoneDeviceManager>().first;
+
+  /// The list of connected devices on runtime.
   List<DeviceManager> get connectedDevices =>
-      _devices.values.where((manager) => manager.isInitialized).toList();
+      _devices.values.where((manager) => manager.isConnected).toList();
 
   /// The stream of all battery events from all connected devices.
   Stream<BatteryStatus> get batteryEvents => _batteryEventGroup.stream;

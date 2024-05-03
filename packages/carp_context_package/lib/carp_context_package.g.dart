@@ -8,7 +8,7 @@ part of 'carp_context_package.dart';
 
 Activity _$ActivityFromJson(Map<String, dynamic> json) => Activity(
       type: $enumDecode(_$ActivityTypeEnumMap, json['type']),
-      confidence: json['confidence'] as int,
+      confidence: (json['confidence'] as num).toInt(),
     )..$type = json['__type'] as String?;
 
 Map<String, dynamic> _$ActivityToJson(Activity instance) {
@@ -51,7 +51,7 @@ Location _$LocationFromJson(Map<String, dynamic> json) => Location(
       elapsedRealtimeNanos: (json['elapsedRealtimeNanos'] as num?)?.toDouble(),
       elapsedRealtimeUncertaintyNanos:
           (json['elapsedRealtimeUncertaintyNanos'] as num?)?.toDouble(),
-      satellites: json['satellites'] as int?,
+      satellites: (json['satellites'] as num?)?.toInt(),
       provider: json['provider'] as String?,
     )
       ..$type = json['__type'] as String?
@@ -224,7 +224,7 @@ GeofenceSamplingConfiguration _$GeofenceSamplingConfigurationFromJson(
     GeofenceSamplingConfiguration(
       center: GeoPosition.fromJson(json['center'] as Map<String, dynamic>),
       radius: (json['radius'] as num).toDouble(),
-      dwell: Duration(microseconds: json['dwell'] as int),
+      dwell: Duration(microseconds: (json['dwell'] as num).toInt()),
       name: json['name'] as String,
     )
       ..$type = json['__type'] as String?
@@ -278,7 +278,7 @@ const _$GeofenceTypeEnumMap = {
 };
 
 AirQuality _$AirQualityFromJson(Map<String, dynamic> json) => AirQuality(
-      airQualityIndex: json['airQualityIndex'] as int,
+      airQualityIndex: (json['airQualityIndex'] as num).toInt(),
       source: json['source'] as String?,
       place: json['place'] as String?,
       latitude: (json['latitude'] as num).toDouble(),
@@ -355,7 +355,7 @@ Mobility _$MobilityFromJson(Map<String, dynamic> json) => Mobility(
           : DateTime.parse(json['timestamp'] as String),
       date:
           json['date'] == null ? null : DateTime.parse(json['date'] as String),
-      numberOfPlaces: json['numberOfPlaces'] as int?,
+      numberOfPlaces: (json['numberOfPlaces'] as num?)?.toInt(),
       locationVariance: (json['locationVariance'] as num?)?.toDouble(),
       entropy: (json['entropy'] as num?)?.toDouble(),
       normalizedEntropy: (json['normalizedEntropy'] as num?)?.toDouble(),
@@ -392,7 +392,7 @@ MobilitySamplingConfiguration _$MobilitySamplingConfigurationFromJson(
       placeRadius: (json['placeRadius'] as num?)?.toDouble() ?? 50,
       stopDuration: json['stopDuration'] == null
           ? null
-          : Duration(microseconds: json['stopDuration'] as int),
+          : Duration(microseconds: (json['stopDuration'] as num).toInt()),
     )
       ..$type = json['__type'] as String?
       ..lastTime = json['lastTime'] == null
@@ -427,7 +427,7 @@ LocationService _$LocationServiceFromJson(Map<String, dynamic> json) =>
       distance: (json['distance'] as num?)?.toDouble() ?? 10,
       interval: json['interval'] == null
           ? const Duration(minutes: 1)
-          : Duration(microseconds: json['interval'] as int),
+          : Duration(microseconds: (json['interval'] as num).toInt()),
       notificationTitle: json['notificationTitle'] as String?,
       notificationMessage: json['notificationMessage'] as String?,
       notificationDescription: json['notificationDescription'] as String?,

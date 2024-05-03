@@ -79,7 +79,7 @@ void main() {
         StudyProtocol.fromJson(json.decode(plainJson) as Map<String, dynamic>);
 
     expect(protocol.ownerId, 'alex@uni.dk');
-    expect(protocol.primaryDevice.roleName, Smartphone.DEFAULT_ROLENAME);
+    expect(protocol.primaryDevice.roleName, Smartphone.DEFAULT_ROLE_NAME);
     expect((protocol.tasks.last as RPAppTask).type, SurveyUserTask.SURVEY_TYPE);
     print(toJsonString(protocol));
   });

@@ -5,7 +5,7 @@
  * found in the LICENSE file.
  */
 
-part of carp_core_common;
+part of '../carp_core_common.dart';
 
 /// Describes a participant playing a [role] in a study, and whether this
 /// role [isOptional].

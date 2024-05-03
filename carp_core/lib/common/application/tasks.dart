@@ -5,7 +5,7 @@
  * found in the LICENSE file.
  */
 
-part of carp_core_common;
+part of '../carp_core_common.dart';
 
 /// Describes requested measures and/or output to be presented on a device.
 ///

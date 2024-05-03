@@ -84,17 +84,20 @@ class MemoryProbe extends IntervalProbe {
 /// A probe that collects the device info about this device.
 class DeviceProbe extends MeasurementProbe {
   @override
-  Future<Measurement?> getMeasurement() async =>
-      Measurement.fromData(DeviceInformation(
-        deviceData: DeviceInfo().deviceData,
-        platform: DeviceInfo().platform,
-        deviceId: DeviceInfo().deviceID,
-        deviceName: DeviceInfo().deviceName,
-        deviceModel: DeviceInfo().deviceModel,
-        deviceManufacturer: DeviceInfo().deviceManufacturer,
-        operatingSystem: DeviceInfo().operatingSystemName,
-        hardware: DeviceInfo().hardware,
-      ));
+  Future<Measurement?> getMeasurement() async {
+    await DeviceInfo().init();
+
+    return Measurement.fromData(DeviceInformation(
+      deviceData: DeviceInfo().deviceData,
+      platform: DeviceInfo().platform,
+      deviceId: DeviceInfo().deviceID,
+      deviceName: DeviceInfo().deviceName,
+      deviceModel: DeviceInfo().deviceModel,
+      deviceManufacturer: DeviceInfo().deviceManufacturer,
+      operatingSystem: DeviceInfo().operatingSystemName,
+      hardware: DeviceInfo().hardware,
+    ));
+  }
 }
 
 /// A probe that collects the device's current timezone.

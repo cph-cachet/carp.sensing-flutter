@@ -46,7 +46,7 @@ SmartphoneStudyProtocol _$SmartphoneStudyProtocolFromJson(
       ..applicationData = json['applicationData'] as Map<String, dynamic>?
       ..id = json['id'] as String
       ..createdOn = DateTime.parse(json['createdOn'] as String)
-      ..version = json['version'] as int
+      ..version = (json['version'] as num).toInt()
       ..description = json['description'] as String
       ..participantRoles = (json['participantRoles'] as List<dynamic>?)
           ?.map((e) => ParticipantRole.fromJson(e as Map<String, dynamic>))
@@ -199,7 +199,7 @@ FileDataEndPoint _$FileDataEndPointFromJson(Map<String, dynamic> json) =>
     FileDataEndPoint(
       type: json['type'] as String? ?? DataEndPointTypes.FILE,
       dataFormat: json['dataFormat'] as String? ?? NameSpace.CARP,
-      bufferSize: json['bufferSize'] as int? ?? 500 * 1000,
+      bufferSize: (json['bufferSize'] as num?)?.toInt() ?? 500 * 1000,
       zip: json['zip'] as bool? ?? true,
       encrypt: json['encrypt'] as bool? ?? false,
       publicKey: json['publicKey'] as String?,
@@ -273,10 +273,10 @@ HistoricSamplingConfiguration _$HistoricSamplingConfigurationFromJson(
     HistoricSamplingConfiguration(
       past: json['past'] == null
           ? null
-          : Duration(microseconds: json['past'] as int),
+          : Duration(microseconds: (json['past'] as num).toInt()),
       future: json['future'] == null
           ? null
-          : Duration(microseconds: json['future'] as int),
+          : Duration(microseconds: (json['future'] as num).toInt()),
     )
       ..$type = json['__type'] as String?
       ..lastTime = json['lastTime'] == null
@@ -303,7 +303,7 @@ Map<String, dynamic> _$HistoricSamplingConfigurationToJson(
 IntervalSamplingConfiguration _$IntervalSamplingConfigurationFromJson(
         Map<String, dynamic> json) =>
     IntervalSamplingConfiguration(
-      interval: Duration(microseconds: json['interval'] as int),
+      interval: Duration(microseconds: (json['interval'] as num).toInt()),
     )
       ..$type = json['__type'] as String?
       ..lastTime = json['lastTime'] == null
@@ -329,8 +329,8 @@ Map<String, dynamic> _$IntervalSamplingConfigurationToJson(
 PeriodicSamplingConfiguration _$PeriodicSamplingConfigurationFromJson(
         Map<String, dynamic> json) =>
     PeriodicSamplingConfiguration(
-      interval: Duration(microseconds: json['interval'] as int),
-      duration: Duration(microseconds: json['duration'] as int),
+      interval: Duration(microseconds: (json['interval'] as num).toInt()),
+      duration: Duration(microseconds: (json['duration'] as num).toInt()),
     )
       ..$type = json['__type'] as String?
       ..lastTime = json['lastTime'] == null
@@ -490,10 +490,10 @@ AppTask _$AppTaskFromJson(Map<String, dynamic> json) => AppTask(
       title: json['title'] as String? ?? '',
       description: json['description'] as String? ?? '',
       instructions: json['instructions'] as String? ?? '',
-      minutesToComplete: json['minutesToComplete'] as int?,
+      minutesToComplete: (json['minutesToComplete'] as num?)?.toInt(),
       expire: json['expire'] == null
           ? null
-          : Duration(microseconds: json['expire'] as int),
+          : Duration(microseconds: (json['expire'] as num).toInt()),
       notification: json['notification'] as bool? ?? false,
     )..$type = json['__type'] as String?;
 
@@ -626,7 +626,7 @@ Map<String, dynamic> _$PassiveTriggerToJson(PassiveTrigger instance) {
 
 DelayedTrigger _$DelayedTriggerFromJson(Map<String, dynamic> json) =>
     DelayedTrigger(
-      delay: Duration(microseconds: json['delay'] as int),
+      delay: Duration(microseconds: (json['delay'] as num).toInt()),
     )
       ..$type = json['__type'] as String?
       ..sourceDeviceRoleName = json['sourceDeviceRoleName'] as String?;
@@ -648,7 +648,7 @@ Map<String, dynamic> _$DelayedTriggerToJson(DelayedTrigger instance) {
 
 PeriodicTrigger _$PeriodicTriggerFromJson(Map<String, dynamic> json) =>
     PeriodicTrigger(
-      period: Duration(microseconds: json['period'] as int),
+      period: Duration(microseconds: (json['period'] as num).toInt()),
     )
       ..$type = json['__type'] as String?
       ..sourceDeviceRoleName = json['sourceDeviceRoleName'] as String?;
@@ -696,15 +696,15 @@ RecurrentScheduledTrigger _$RecurrentScheduledTriggerFromJson(
       type: $enumDecode(_$RecurrentTypeEnumMap, json['type']),
       time: TimeOfDay.fromJson(json['time'] as Map<String, dynamic>),
       end: json['end'] == null ? null : DateTime.parse(json['end'] as String),
-      separationCount: json['separationCount'] as int? ?? 0,
-      maxNumberOfSampling: json['maxNumberOfSampling'] as int?,
-      dayOfWeek: json['dayOfWeek'] as int?,
-      weekOfMonth: json['weekOfMonth'] as int?,
-      dayOfMonth: json['dayOfMonth'] as int?,
+      separationCount: (json['separationCount'] as num?)?.toInt() ?? 0,
+      maxNumberOfSampling: (json['maxNumberOfSampling'] as num?)?.toInt(),
+      dayOfWeek: (json['dayOfWeek'] as num?)?.toInt(),
+      weekOfMonth: (json['weekOfMonth'] as num?)?.toInt(),
+      dayOfMonth: (json['dayOfMonth'] as num?)?.toInt(),
     )
       ..$type = json['__type'] as String?
       ..sourceDeviceRoleName = json['sourceDeviceRoleName'] as String?
-      ..period = Duration(microseconds: json['period'] as int);
+      ..period = Duration(microseconds: (json['period'] as num).toInt());
 
 Map<String, dynamic> _$RecurrentScheduledTriggerToJson(
     RecurrentScheduledTrigger instance) {
@@ -814,7 +814,7 @@ Map<String, dynamic> _$ConditionalSamplingEventTriggerToJson(
 ConditionalPeriodicTrigger _$ConditionalPeriodicTriggerFromJson(
         Map<String, dynamic> json) =>
     ConditionalPeriodicTrigger(
-      period: Duration(microseconds: json['period'] as int),
+      period: Duration(microseconds: (json['period'] as num).toInt()),
     )
       ..$type = json['__type'] as String?
       ..sourceDeviceRoleName = json['sourceDeviceRoleName'] as String?;
@@ -838,8 +838,8 @@ Map<String, dynamic> _$ConditionalPeriodicTriggerToJson(
 RandomRecurrentTrigger _$RandomRecurrentTriggerFromJson(
         Map<String, dynamic> json) =>
     RandomRecurrentTrigger(
-      minNumberOfTriggers: json['minNumberOfTriggers'] as int? ?? 0,
-      maxNumberOfTriggers: json['maxNumberOfTriggers'] as int? ?? 1,
+      minNumberOfTriggers: (json['minNumberOfTriggers'] as num?)?.toInt() ?? 0,
+      maxNumberOfTriggers: (json['maxNumberOfTriggers'] as num?)?.toInt() ?? 1,
       startTime: TimeOfDay.fromJson(json['startTime'] as Map<String, dynamic>),
       endTime: TimeOfDay.fromJson(json['endTime'] as Map<String, dynamic>),
     )
@@ -933,7 +933,7 @@ Map<String, dynamic> _$FileDataToJson(FileData instance) {
 }
 
 Heartbeat _$HeartbeatFromJson(Map<String, dynamic> json) => Heartbeat(
-      period: json['period'] as int,
+      period: (json['period'] as num).toInt(),
       deviceType: json['deviceType'] as String,
       deviceRoleName: json['deviceRoleName'] as String,
     )..$type = json['__type'] as String?;

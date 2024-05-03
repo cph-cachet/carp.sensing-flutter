@@ -5,7 +5,7 @@
  * found in the LICENSE file.
  */
 
-part of carp_core_common;
+part of '../../carp_core_common.dart';
 
 /// A Bluetooth Low Energy (BLE) device which implements a GATT Heart
 /// Rate service (https://www.bluetooth.com/specifications/gatt/services/).

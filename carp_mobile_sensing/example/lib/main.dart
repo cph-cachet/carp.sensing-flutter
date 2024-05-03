@@ -85,13 +85,22 @@ class Console extends State<ConsolePage> {
 
   /// Restart (start/stop) sampling.
   void restart() => setState(() {
-        if (_sensing.isRunning) {
-          _sensing.stop();
-          log('\nSensing stopped ...');
-        } else {
-          _sensing.start();
-          log('\nSensing started ...');
-        }
+        log('\nRestarting sensing ...');
+
+        _sensing.restart();
+
+        //   if (_sensing.isRunning) {
+        //     SmartPhoneClientManager().stop();
+        //     log('\nSensing stopped ...');
+        //   } else {
+        //     LocalStudyProtocolManager().getStudyProtocol('$protocolId').then(
+        //         (protocol) => SmartPhoneClientManager()
+        //             .addStudyProtocol(protocol)
+        //             .then((study) => SmartPhoneClientManager().start()));
+        //     protocolId++;
+        //     // _sensing.start();
+        //     log('\nSensing started ...');
+        //   }
       });
 }
 
@@ -103,16 +112,20 @@ class Console extends State<ConsolePage> {
 /// For a much more elaborate example of a app using CAMS, see the CARP Mobile
 /// Sensing App at https://github.com/cph-cachet/carp.sensing-flutter/tree/master/apps/carp_mobile_sensing_app
 class Sensing {
+  int protocolId = 0;
+  Study? study;
+  bool _isRunning = false;
+
   /// Initialize sensing.
   Future<void> init() async {
     // Get the protocol. See below for how to configure a study protocol.
-    final protocol =
-        await LocalStudyProtocolManager().getStudyProtocol('ignored');
+    // final protocol = await LocalStudyProtocolManager().getStudyProtocol('0');
 
     // Create and configure a client manager for this phone and add the protocol.
-    SmartPhoneClientManager()
-        .configure()
-        .then((_) => SmartPhoneClientManager().addStudyProtocol(protocol));
+    SmartPhoneClientManager().configure();
+    // .then((_) => SmartPhoneClientManager()
+    //     .addStudyProtocol(protocol)
+    //     .then((value) => study = value));
 
     // Listening on the data stream and print them as json.
     SmartPhoneClientManager()
@@ -121,8 +134,29 @@ class Sensing {
   }
 
   /// Is sensing running, i.e. has the study executor been started?
-  bool get isRunning =>
-      SmartPhoneClientManager().state == ClientManagerState.started;
+  bool get isRunning => _isRunning;
+  // SmartPhoneClientManager().state == ClientManagerState.started;
+
+  void restart() {
+    if (isRunning) {
+      SmartPhoneClientManager().removeStudy(study!);
+      _isRunning = false;
+    } else {
+      LocalStudyProtocolManager().getStudyProtocol('$protocolId').then(
+          (protocol) => SmartPhoneClientManager()
+                  .addStudyProtocol(protocol)
+                  .then((value) {
+                study = value;
+                debugPrint(toJsonString(protocol));
+                print('>> study: $study');
+                print('>> studies: ${SmartPhoneClientManager().studies}');
+                SmartPhoneClientManager().start();
+                _isRunning = true;
+              }));
+      protocolId++;
+      // _sensing.start();
+    }
+  }
 
   /// Start sensing
   void start() => SmartPhoneClientManager().start();
@@ -148,7 +182,7 @@ class LocalStudyProtocolManager implements StudyProtocolManager {
     // Create a protocol. Note that the [id] is not used for anything.
     SmartphoneStudyProtocol protocol = SmartphoneStudyProtocol(
         ownerId: 'AB',
-        name: 'Track patient movement',
+        name: 'Protocol - id: $id',
         dataEndPoint: SQLiteDataEndPoint());
 
     // Define which devices are used for data collection.
@@ -160,21 +194,24 @@ class LocalStudyProtocolManager implements StudyProtocolManager {
     var phone = Smartphone();
     protocol.addPrimaryDevice(phone);
 
-    // Issue #384
-    protocol.addTaskControl(
-        PeriodicTrigger(period: const Duration(seconds: 5)),
-        BackgroundTask(
-          measures: [Measure(type: DeviceSamplingPackage.DEVICE_INFORMATION)],
-        ),
-        phone);
+    if (id == '1') {
+      print('>> adding DEVICE_INFO');
+      // Issue #384
+      protocol.addTaskControl(
+          PeriodicTrigger(period: const Duration(seconds: 5)),
+          BackgroundTask(
+            measures: [Measure(type: DeviceSamplingPackage.DEVICE_INFORMATION)],
+          ),
+          phone);
+    }
 
-    // // Collect timezone info every time the app restarts.
-    // protocol.addTaskControl(
-    //     ImmediateTrigger(),
-    //     BackgroundTask(measures: [
-    //       Measure(type: DeviceSamplingPackage.TIMEZONE),
-    //     ]),
-    //     phone);
+    // Collect timezone info every time the app restarts.
+    protocol.addTaskControl(
+        ImmediateTrigger(),
+        BackgroundTask(measures: [
+          Measure(type: DeviceSamplingPackage.TIMEZONE),
+        ]),
+        phone);
 
     // // Collect device info only once, when this study is deployed.
     // protocol.addTaskControl(
@@ -187,25 +224,31 @@ class LocalStudyProtocolManager implements StudyProtocolManager {
     // Add background measures from the [DeviceSamplingPackage] and
     // [SensorSamplingPackage] sampling packages.
 
-    // // Note that some of these measures only works on Android:
-    // //  * screen events
-    // //  * ambient light
-    // //  * free memory (there seems to be a bug in the underlying sysinfo plugin)
-    // protocol.addTaskControl(
-    //   ImmediateTrigger(),
-    //   BackgroundTask(measures: [
-    //     Measure(type: DeviceSamplingPackage.FREE_MEMORY)
-    //       ..overrideSamplingConfiguration = IntervalSamplingConfiguration(
-    //           interval: const Duration(seconds: 10)),
+    // Note that some of these measures only works on Android:
+    //  * screen events
+    //  * ambient light
+    //  * free memory (there seems to be a bug in the underlying sysinfo plugin)
+    if (id == '0') {
+      print('>> adding FREE_MEMORY');
 
-    //     // Measure(type: DeviceSamplingPackage.BATTERY_STATE),
-    //     // Measure(type: DeviceSamplingPackage.SCREEN_EVENT),
-    //     // Measure(type: CarpDataTypes.STEP_COUNT_TYPE_NAME),
-    //     // Measure(type: SensorSamplingPackage.AMBIENT_LIGHT)
-    //   ]),
-    //   phone,
-    // );
-
+      protocol.addTaskControl(
+        ImmediateTrigger(),
+        BackgroundTask(measures: [
+          Measure(type: DeviceSamplingPackage.FREE_MEMORY)
+            ..overrideSamplingConfiguration = IntervalSamplingConfiguration(
+                interval: const Duration(seconds: 10)),
+          Measure(type: DeviceSamplingPackage.BATTERY_STATE),
+          Measure(type: DeviceSamplingPackage.SCREEN_EVENT),
+          Measure(type: SensorSamplingPackage.STEP_COUNT),
+          Measure(type: SensorSamplingPackage.AMBIENT_LIGHT)
+            ..overrideSamplingConfiguration = PeriodicSamplingConfiguration(
+              interval: const Duration(seconds: 20),
+              duration: const Duration(seconds: 5),
+            ),
+        ]),
+        phone,
+      );
+    }
     // // Collect IMU data every 10 secs for 1 sec.
     // // Also shows how the sampling interval can be specified ("overridden").
     // // Default sampling interval is 200 ms. Note that it seems like setting the

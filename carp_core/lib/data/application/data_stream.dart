@@ -5,7 +5,7 @@
  * found in the LICENSE file.
  */
 
-part of carp_core_data;
+part of '../carp_core_data.dart';
 
 /// Configures the set of [ExpectedDataStream] for a study deployment.
 @JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)

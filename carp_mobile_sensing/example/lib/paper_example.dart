@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'package:uuid/uuid.dart';
 import 'package:carp_serializable/carp_serializable.dart';
 import 'package:carp_core/carp_core.dart';
 import 'package:carp_mobile_sensing/carp_mobile_sensing.dart';
@@ -35,7 +34,7 @@ void sensing() async {
   );
 
   var invitation = ParticipantInvitation(
-      participantId: const Uuid().v1(),
+      participantId: UUID.v1,
       assignedRoles: AssignedTo.all(),
       identity: EmailAccountIdentity("test@test.com"),
       invitation: StudyInvitation(

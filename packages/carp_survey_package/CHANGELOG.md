@@ -1,3 +1,7 @@
+## 1.5.0
+
+* update to `carp_mobile_sensing` v. 1.6.0
+
 ## 1.4.4
 
 * added support for different commonly used task types.

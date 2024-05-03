@@ -11,12 +11,9 @@
 /// definition in Kotlin.
 library carp_core_deployment;
 
+import 'package:carp_core/carp_core.dart';
 import 'package:json_annotation/json_annotation.dart';
-import 'package:uuid/uuid.dart';
 import 'package:carp_serializable/carp_serializable.dart';
-import 'package:carp_core/common/carp_core_common.dart';
-import 'package:carp_core/protocols/carp_core_protocols.dart';
-import 'package:carp_core/data/carp_core_data.dart';
 
 part 'application/deployment_service.dart';
 part 'application/participation_service.dart';

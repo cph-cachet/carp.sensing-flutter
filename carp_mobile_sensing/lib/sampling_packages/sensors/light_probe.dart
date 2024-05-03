@@ -13,9 +13,9 @@ part of 'sensors.dart';
 ///
 /// This probe is only available on Android.
 class LightProbe extends BufferingPeriodicStreamProbe {
-  List<num> luxValues = [];
-  int sensorStartTime = 0;
-  int? sensorEndTime;
+  final List<num> _luxValues = [];
+  int _sensorStartTime = 0;
+  int? _sensorEndTime;
 
   late Stream<dynamic> _bufferingStream;
 
@@ -29,26 +29,26 @@ class LightProbe extends BufferingPeriodicStreamProbe {
   }
 
   @override
-  Future<Measurement?> getMeasurement() async => (luxValues.isEmpty)
+  Future<Measurement?> getMeasurement() async => (_luxValues.isEmpty)
       ? null
       : Measurement(
-          sensorStartTime: sensorStartTime,
-          sensorEndTime: sensorEndTime,
-          data: AmbientLight.fromLuxReadings(luxValues));
+          sensorStartTime: _sensorStartTime,
+          sensorEndTime: _sensorEndTime,
+          data: AmbientLight.fromLuxReadings(_luxValues));
 
   @override
   void onSamplingStart() {
-    sensorStartTime = DateTime.now().microsecondsSinceEpoch;
-    luxValues.clear();
+    _sensorStartTime = DateTime.now().microsecondsSinceEpoch;
+    _luxValues.clear();
   }
 
   @override
   void onSamplingEnd() {
-    sensorEndTime = DateTime.now().microsecondsSinceEpoch;
+    _sensorEndTime = DateTime.now().microsecondsSinceEpoch;
   }
 
   @override
   void onSamplingData(event) {
-    if (event is num) luxValues.add(event);
+    if (event is num) _luxValues.add(event);
   }
 }

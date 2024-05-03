@@ -14,7 +14,7 @@ StudyProtocol _$StudyProtocolFromJson(Map<String, dynamic> json) =>
     )
       ..id = json['id'] as String
       ..createdOn = DateTime.parse(json['createdOn'] as String)
-      ..version = json['version'] as int
+      ..version = (json['version'] as num).toInt()
       ..participantRoles = (json['participantRoles'] as List<dynamic>?)
           ?.map((e) => ParticipantRole.fromJson(e as Map<String, dynamic>))
           .toSet()

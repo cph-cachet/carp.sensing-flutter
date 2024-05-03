@@ -1,5 +1,3 @@
-import 'package:uuid/uuid.dart';
-
 import 'package:carp_core/carp_core.dart';
 import 'package:carp_serializable/carp_serializable.dart';
 
@@ -18,7 +16,7 @@ import 'package:carp_serializable/carp_serializable.dart';
 void carpCoreProtocolExample() async {
   // Create a new study protocol.
   var protocol = StudyProtocol(
-    ownerId: Uuid().v1(),
+    ownerId: UUID.v1,
     name: 'Track patient movement',
   );
 
@@ -67,13 +65,13 @@ void carpCoreDeploymentExample() async {
 
   // This is called by `StudyService` when deploying a participant group.
   var invitation = ParticipantInvitation(
-      participantId: const Uuid().v1(),
+      participantId: UUID.v1,
       assignedRoles: AssignedTo.all(),
       identity: EmailAccountIdentity("test@test.com"),
       invitation: StudyInvitation(
           "Movement study", "This study tracks your movements."));
 
-  String studyDeploymentId = const Uuid().v1();
+  String studyDeploymentId = UUID.v1;
   await deploymentService?.createStudyDeployment(
     trackPatientStudy,
     [invitation],

@@ -36,8 +36,7 @@ abstract class TaskExecutor<TConfig extends TaskConfiguration>
         // multiple measures of the same type, each using its own probe instance
         Probe? probe = SamplingPackageRegistry().create(measure.type);
         if (probe != null) {
-          executors.add(probe);
-          group.add(probe.measurements);
+          addExecutor(probe);
           _statesGroup.add(probe.stateEvents);
 
           probe.initialize(measure, deployment!);
@@ -130,8 +129,8 @@ class FunctionTaskExecutor extends TaskExecutor<FunctionTask> {
 
 /// Executes an [AppTask].
 ///
-/// An [AppTaskExecutor] simply wraps a [TaskExecutor], which is executed
-/// when the app (user) wants to do this.
+/// An [AppTaskExecutor] wraps a [BackgroundTaskExecutor], which is started
+/// by the app (user) and starts collecting the measures defined in this task.
 ///
 /// This executor works closely with the singleton [AppTaskController].
 /// Whenever an [AppTaskExecutor] is started (e.g. in a [PeriodicTrigger]),
@@ -156,7 +155,7 @@ class AppTaskExecutor<TConfig extends AppTask> extends TaskExecutor<TConfig> {
 
   AppTaskExecutor() : super() {
     // add the events from the embedded executor to the overall stream of events
-    group.add(backgroundTaskExecutor.measurements);
+    addExecutor(backgroundTaskExecutor);
   }
 
   @override

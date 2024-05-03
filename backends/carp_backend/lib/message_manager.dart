@@ -55,7 +55,7 @@ class Message {
     this.image,
     DateTime? timestamp,
   }) {
-    this.id = id ?? const Uuid().v1();
+    this.id = id ?? UUID.v1;
     this.timestamp = timestamp ?? DateTime.now();
   }
 

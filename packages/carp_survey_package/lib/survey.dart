@@ -9,7 +9,6 @@
 ///  * survey
 library survey;
 
-import 'dart:async';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:flutter/material.dart';
@@ -26,6 +25,3 @@ part 'survey_package.dart';
 part 'survey_ui.dart';
 part 'who5.dart';
 part 'survey_user_task.dart';
-
-// auto generate json code (.g files) with:
-//   dart run build_runner build --delete-conflicting-outputs

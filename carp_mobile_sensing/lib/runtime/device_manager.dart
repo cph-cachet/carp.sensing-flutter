@@ -15,9 +15,13 @@ abstract class DeviceManager<TDeviceConfiguration extends DeviceConfiguration>
   final StreamController<DeviceStatus> _eventController =
       StreamController.broadcast();
 
+  bool _restartOnReconnect;
   bool _hasPermissions = false;
   Timer? _heartbeatTimer;
   DeviceStatus _status = DeviceStatus.unknown;
+
+  /// Is data sampling resumed when this device is (re)connected?
+  bool get restartOnReconnect => _restartOnReconnect;
 
   /// The set of task control executors that use this device manager.
   final Set<TaskControlExecutor> executors = {};
@@ -34,6 +38,7 @@ abstract class DeviceManager<TDeviceConfiguration extends DeviceConfiguration>
   DeviceManager(
     super.type, [
     super.configuration,
+    this._restartOnReconnect = true,
   ]);
 
   @override
@@ -59,7 +64,8 @@ abstract class DeviceManager<TDeviceConfiguration extends DeviceConfiguration>
   bool get isInitialized => status.index >= DeviceStatus.initialized.index;
 
   /// Is this device manager connected to the real device?
-  bool get isConnected => status == DeviceStatus.connected;
+  bool get isConnected =>
+      status == DeviceStatus.connected || status == DeviceStatus.connecting;
 
   /// Initialize the device manager by specifying its [configuration].
   @nonVirtual
@@ -70,10 +76,11 @@ abstract class DeviceManager<TDeviceConfiguration extends DeviceConfiguration>
     onInitialize(configuration);
 
     // Listen to status events and when this device is (re)connected, restart sampling.
-    statusEvents
-        .where((status) => status == DeviceStatus.connected)
-        .listen((_) => restart());
-
+    if (restartOnReconnect) {
+      statusEvents
+          .where((status) => status == DeviceStatus.connected)
+          .listen((_) => restart());
+    }
     status = DeviceStatus.initialized;
   }
 
@@ -224,7 +231,9 @@ abstract class DeviceManager<TDeviceConfiguration extends DeviceConfiguration>
       info(
           '$runtimeType - Trying to disconnect from device of type: $typeName and id: $id');
 
-      stop(); // first stop all sampling on this device.
+      // Stop all sampling and heartbeat monitoring on this device.
+      stop();
+      stopHeartbeatMonitoring();
 
       success = await onDisconnect();
       status = (success) ? DeviceStatus.disconnected : DeviceStatus.error;
@@ -253,6 +262,7 @@ abstract class OnlineServiceManager<TDeviceConfiguration extends OnlineService>
   OnlineServiceManager(
     super.type, [
     super.configuration,
+    super.restartOnReconnect,
   ]);
 }
 
@@ -274,6 +284,7 @@ abstract class HardwareDeviceManager<
   HardwareDeviceManager(
     super.type, [
     super.configuration,
+    super.restartOnReconnect,
   ]);
 }
 
@@ -297,7 +308,7 @@ class SmartphoneDeviceManager extends HardwareDeviceManager<Smartphone> {
 
   SmartphoneDeviceManager([
     Smartphone? configuration,
-  ]) : super(Smartphone.DEVICE_TYPE, configuration);
+  ]) : super(Smartphone.DEVICE_TYPE, configuration, false);
 
   @override
   void onInitialize(Smartphone configuration) {
@@ -382,6 +393,7 @@ abstract class BTLEDeviceManager<
   BTLEDeviceManager(
     super.type, [
     super.configuration,
+    super.restartOnReconnect,
   ]);
 
   @override

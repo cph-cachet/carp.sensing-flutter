@@ -5,7 +5,7 @@
  * found in the LICENSE file.
  */
 
-part of carp_core_client;
+part of 'carp_core_client.dart';
 
 /// A study deployment, identified by [studyDeploymentId], which a client
 /// device participates in with the role [deviceRoleName].

@@ -1,3 +1,7 @@
+## 3.1.0
+
+* upgrade of carp_serialization and carp_core
+
 ## 3.0.1
 
 * Refactor of authentication API based on the [`oidc`](https://pub.dev/packages/oidc) package. See [PR #374](https://github.com/cph-cachet/carp.sensing-flutter/pull/374) for details.

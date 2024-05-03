@@ -25,8 +25,6 @@ class SurveyUserTask extends UserTask {
   static const String IMAGE_TYPE = 'image';
   static const String INFORMED_CONSENT_TYPE = 'informed_consent';
 
-  final _controller = StreamController<Measurement>();
-
   /// The [RPAppTask] from which this user task originates from.
   RPAppTask get rpAppTask => task as RPAppTask;
 
@@ -45,23 +43,22 @@ class SurveyUserTask extends UserTask {
   @override
   void onStart() {
     super.onStart();
-    executor.group.add(_controller.stream);
     executor.start();
   }
 
   void _onSurveySubmit(RPTaskResult result) {
-    executor.stop();
-
-    // when we have the survey result, add it to the data stream
+    // when we have the survey result, add it to the measurement stream
     var data = RPTaskResultData(result);
-    _controller.add(Measurement.fromData(data));
+    executor.addMeasurement(Measurement.fromData(data));
+    // and then stop the background executor
+    executor.stop();
     super.onDone(result: data);
   }
 
   void _onSurveyCancel([RPTaskResult? result]) {
-    executor.stop();
     // also saved result even though it was canceled by the user
-    _controller.add(Measurement.fromData(RPTaskResultData(result)));
+    executor.addMeasurement(Measurement.fromData(RPTaskResultData(result)));
+    executor.stop();
     super.onCancel();
   }
 }

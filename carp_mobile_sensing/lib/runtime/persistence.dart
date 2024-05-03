@@ -15,7 +15,7 @@ class Persistence {
   static const String TASK_QUEUE_TABLE_NAME = 'task_queue';
 
   static const String DEPLOYMENT_ID_COLUMN = 'deployment_id';
-  static const String ROLENAME_COLUMN = 'device_rolename';
+  static const String ROLE_NAME_COLUMN = 'device_role_name';
   static const String DEPLOYMENT_STATUS_COLUMN = 'deployment_status';
   static const String UPDATED_AT_COLUMN = 'updated_at';
   static const String DEPLOYED_AT_COLUMN = 'deployed_at';
@@ -52,7 +52,7 @@ class Persistence {
       onCreate: (Database db, int version) async {
         // when creating the database, create the tables
         await db.execute(
-            'CREATE TABLE $DEPLOYMENT_TABLE_NAME ($DEPLOYMENT_ID_COLUMN TEXT PRIMARY KEY, $ROLENAME_COLUMN TEXT, $DEPLOYMENT_STATUS_COLUMN INTEGER, $UPDATED_AT_COLUMN TEXT, $DEPLOYED_AT_COLUMN TEXT, $USER_ID_COLUMN TEXT, $DEPLOYMENT_COLUMN TEXT)');
+            'CREATE TABLE $DEPLOYMENT_TABLE_NAME ($DEPLOYMENT_ID_COLUMN TEXT PRIMARY KEY, $ROLE_NAME_COLUMN TEXT, $DEPLOYMENT_STATUS_COLUMN INTEGER, $UPDATED_AT_COLUMN TEXT, $DEPLOYED_AT_COLUMN TEXT, $USER_ID_COLUMN TEXT, $DEPLOYMENT_COLUMN TEXT)');
         await db.execute(
             'CREATE TABLE $TASK_QUEUE_TABLE_NAME ($ID_COLUMN INTEGER PRIMARY KEY, $DEPLOYMENT_ID_COLUMN TEXT, $TASK_ID_COLUMN TEXT, $TASK_COLUMN TEXT)');
 
@@ -69,10 +69,9 @@ class Persistence {
     info('$runtimeType - SQLite DB initialized - name: $databaseName');
   }
 
-  /// Called when the app is closing.
-  Future<void> close() async {
-    await database?.close();
-  }
+  /// Close the persistence layer. After close is called, no deployment can be
+  /// accessed or saved.
+  Future<void> close() async => await database?.close();
 
   /// Get the list of all study deployments previously stored on this phone.
   ///
@@ -85,17 +84,16 @@ class Persistence {
             DEPLOYMENT_TABLE_NAME,
             columns: [
               DEPLOYMENT_ID_COLUMN,
-              ROLENAME_COLUMN,
+              ROLE_NAME_COLUMN,
               DEPLOYMENT_STATUS_COLUMN,
             ],
           ) ??
           [];
-      debug('$runtimeType - maps: $maps');
       if (maps.isNotEmpty) {
         for (var map in maps) {
           final study = Study(
             map[DEPLOYMENT_ID_COLUMN] as String,
-            map[ROLENAME_COLUMN] as String,
+            map[ROLE_NAME_COLUMN] as String,
           );
           final status = map[DEPLOYMENT_STATUS_COLUMN] as int;
           study.status = StudyStatus.values[status];
@@ -117,7 +115,7 @@ class Persistence {
     try {
       final Map<String, dynamic> map = {
         DEPLOYMENT_ID_COLUMN: deployment.studyDeploymentId,
-        ROLENAME_COLUMN: deployment.deviceConfiguration.roleName,
+        ROLE_NAME_COLUMN: deployment.deviceConfiguration.roleName,
         DEPLOYMENT_STATUS_COLUMN: deployment.status.index,
         UPDATED_AT_COLUMN: DateTime.now().toUtc().toIso8601String(),
         DEPLOYED_AT_COLUMN: deployment.deployed?.toUtc().toIso8601String(),
@@ -149,14 +147,13 @@ class Persistence {
             whereArgs: [deploymentId],
           ) ??
           [];
-      // debug('$runtimeType - maps: $maps');
       if (maps.isNotEmpty) {
         final jsonString = maps[0][DEPLOYMENT_COLUMN] as String;
         deployment = SmartphoneDeployment.fromJson(
             json.decode(jsonString) as Map<String, dynamic>);
       }
     } catch (exception) {
-      warning('$runtimeType - Failed to load deployment - $exception');
+      warning('$runtimeType - Failed to restore deployment - $exception');
     }
 
     return deployment;

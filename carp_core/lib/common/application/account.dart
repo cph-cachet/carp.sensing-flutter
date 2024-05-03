@@ -4,7 +4,7 @@
  * Use of this source code is governed by a MIT-style license that can be
  * found in the LICENSE file.
  */
-part of carp_core_common;
+part of '../carp_core_common.dart';
 
 /// Uniquely identifies an account and its associated identity.
 @JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
@@ -14,7 +14,7 @@ class Account {
   late String id;
 
   Account({String? id, required this.identity}) {
-    this.id = id ?? const Uuid().v1();
+    this.id = id ?? UUID.v1;
   }
 
   /// Create a new [Account] uniquely identified by the specified [emailAddress].

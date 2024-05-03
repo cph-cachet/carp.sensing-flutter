@@ -5,7 +5,7 @@
  * found in the LICENSE file.
  */
 
-part of carp_core_common;
+part of '../../carp_core_common.dart';
 
 /// A [DeviceRegistration] configures a [DeviceConfiguration] as part of the
 /// deployment of a [StudyProtocol].
@@ -35,7 +35,7 @@ class DeviceRegistration extends Serializable {
   }) : super() {
     this.registrationCreatedOn =
         registrationCreatedOn ?? DateTime.now().toUtc();
-    this.deviceId = deviceId ?? const Uuid().v1();
+    this.deviceId = deviceId ?? UUID.v1;
   }
 
   @override

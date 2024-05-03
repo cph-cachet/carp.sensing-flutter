@@ -1,3 +1,7 @@
+## 1.7.0
+
+* upgrade of packages - carp_serialization, carp_core, carp_mobile_sensing, carp_webservices
+
 ## 1.6.0
 
 * upgrade to web_service version ^3.0.0

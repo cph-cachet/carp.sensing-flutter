@@ -39,7 +39,7 @@ class AudioProbe extends MeasurementProbe {
       debug('Audio recording resumed - sound file : $_soundFileName');
     } catch (error) {
       warning('An error occurred trying to start audio recording - $error');
-      controller.addError(error);
+      addError(error);
       return false;
     }
     return true;
@@ -52,11 +52,11 @@ class AudioProbe extends MeasurementProbe {
       try {
         await _stopAudioRecording();
         final measurement = await getMeasurement();
-        if (measurement != null) controller.add(measurement);
+        if (measurement != null) addMeasurement(measurement);
         debug('Audio recording paused - sound file : $_soundFileName');
       } catch (error) {
         warning('An error occurred trying to stop audio recording - $error');
-        controller.addError(error);
+        addError(error);
       }
     }
     return true;

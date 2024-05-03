@@ -20,9 +20,6 @@ dependencies:
   carp_mobile_sensing:
     path: ../../carp_mobile_sensing/
 
-  uuid: ^4.0.0
-  iso_duration_parser: ^1.1.0
-
 dependency_overrides:
 
 dev_dependencies:

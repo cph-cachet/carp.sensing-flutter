@@ -5,7 +5,7 @@
  * found in the LICENSE file.
  */
 
-part of carp_core_common;
+part of '../carp_core_common.dart';
 
 /// Custom input data as requested by a researcher.
 abstract class InputType {

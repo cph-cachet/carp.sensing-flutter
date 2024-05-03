@@ -52,6 +52,19 @@ void main() {
     print(toJsonString(newA.toJson()));
     print(toJsonString(newB.toJson()));
   });
+
+  test('UUID - version 4.0', () async {
+    List<String> list = [];
+    for (var i = 0; i < 5; i++) {
+      list.add((UUID.v1));
+      list.add((UUID.v1));
+    }
+    list.forEach(print);
+
+    // check that all UUIDs are unique
+    var unique = list.toSet().toList();
+    expect(unique.length, list.length);
+  });
 }
 
 /// An example class.

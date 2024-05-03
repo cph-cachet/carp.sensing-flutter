@@ -17,6 +17,8 @@ class TaskControlExecutor extends AbstractExecutor<TaskControl> {
       StreamController<Measurement>.broadcast();
   final StreamGroup<Measurement> _group = StreamGroup.broadcast();
 
+  final ExecutorFactory _executorFactory = ExecutorFactory();
+
   late TriggerConfiguration _trigger;
   late TaskConfiguration _task;
   late TaskControl _taskControl;
@@ -42,17 +44,17 @@ class TaskControlExecutor extends AbstractExecutor<TaskControl> {
     _group.add(_controller.stream);
 
     // get the trigger executor and initialize with this task control executor
-    if (ExecutorFactory().getTriggerExecutor(taskControl.triggerId) == null) {
-      triggerExecutor = ExecutorFactory()
-          .createTriggerExecutor(taskControl.triggerId, trigger);
+    if (_executorFactory.getTriggerExecutor(taskControl.triggerId) == null) {
+      triggerExecutor = _executorFactory.createTriggerExecutor(
+          taskControl.triggerId, trigger);
       triggerExecutor?.initialize(trigger, deployment);
     }
     triggerExecutor =
-        ExecutorFactory().getTriggerExecutor(taskControl.triggerId);
+        _executorFactory.getTriggerExecutor(taskControl.triggerId);
     triggerExecutor?.triggerEvents.listen((_) => onTrigger());
 
     // get the task executor and add the measurements it collects to the stream group
-    taskExecutor = ExecutorFactory().getTaskExecutor(task);
+    taskExecutor = _executorFactory.getTaskExecutor(task);
     taskExecutor?.initialize(task, deployment);
     _group.add(taskExecutor!.measurements);
 
@@ -99,6 +101,13 @@ class TaskControlExecutor extends AbstractExecutor<TaskControl> {
     taskExecutor?.stop();
 
     return true;
+  }
+
+  @override
+  Future<void> onDispose() async {
+    // dispose both trigger and task executors so it don't trigger any more.
+    triggerExecutor?.dispose();
+    taskExecutor?.dispose();
   }
 
   @override

@@ -5,7 +5,7 @@
  * found in the LICENSE file.
  */
 
-part of carp_core_deployment;
+part of '../carp_core_deployment.dart';
 
 /// The information which needs to be provided when inviting a participant to a deployment.
 @JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
@@ -28,7 +28,7 @@ class ParticipantInvitation {
     required this.identity,
     required this.invitation,
   }) : super() {
-    this.participantId = participantId ?? const Uuid().v1();
+    this.participantId = participantId ?? UUID.v1;
   }
 
   factory ParticipantInvitation.fromJson(Map<String, dynamic> json) =>
