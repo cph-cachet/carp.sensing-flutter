@@ -1,4 +1,4 @@
-part of carp_context_package;
+part of '../../carp_context_package.dart';
 
 /// Collects local air quality information using the [AirQuality] plugin.
 class AirQualityProbe extends MeasurementProbe {

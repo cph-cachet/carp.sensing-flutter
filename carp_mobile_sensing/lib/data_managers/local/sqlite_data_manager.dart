@@ -95,7 +95,7 @@ class SQLiteDataManager extends AbstractDataManager {
 
   @override
   Future<void> onMeasurement(Measurement measurement) async {
-    // if the database hasn't been created yet, wait for 3 secs
+    // If the database hasn't been created yet, wait for 3 secs
     if (database == null) {
       return Future.delayed(
           const Duration(seconds: 3), () => onMeasurement(measurement));
@@ -111,15 +111,25 @@ class SQLiteDataManager extends AbstractDataManager {
       DATATYPE_COLUMN: measurement.dataType.toString(),
       MEASUREMENT_COLUMN: jsonEncode(measurement),
     };
-    int? id = await database?.insert(
-      MEASUREMENT_TABLE_NAME,
-      map,
-      conflictAlgorithm: ConflictAlgorithm.ignore,
-    );
 
-    debug('$runtimeType - wrote measurement to SQLite - '
-        'id: $id, type: ${measurement.data.format}, '
-        'device role name: ${measurement.taskControl?.destinationDeviceRoleName}.');
+    // Fast out if DB has been closed.
+    // This may happen when the data manager is closed while some probes are still
+    // running and sampling measurements.
+    if (!database!.isOpen) return;
+
+    try {
+      int? id = await database?.insert(
+        MEASUREMENT_TABLE_NAME,
+        map,
+        conflictAlgorithm: ConflictAlgorithm.ignore,
+      );
+
+      debug('$runtimeType - wrote measurement to SQLite - '
+          'id: $id, type: ${measurement.data.format}, '
+          'device role name: ${measurement.taskControl?.destinationDeviceRoleName}.');
+    } catch (error) {
+      warning('$runtimeType - Error writing measurement to database - $error');
+    }
   }
 
   @override

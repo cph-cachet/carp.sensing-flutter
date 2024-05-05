@@ -170,7 +170,7 @@ class SmartPhoneClientManager extends SmartphoneClient
       deviceRoleName,
     );
 
-    // always create a new controller
+    // Always create a new controller
     final controller =
         SmartphoneDeploymentController(deploymentService!, deviceController);
     repository[study] = controller;
@@ -210,8 +210,15 @@ class SmartPhoneClientManager extends SmartphoneClient
   @override
   Future<void> removeStudy(Study study) async {
     info('Removing study from $runtimeType - $study');
-    AppTaskController().removeStudyDeployment(study.studyDeploymentId);
+
+    // Disconnecting from all devices will stop sensing on each of them.
     await deviceController.disconnectAllConnectedDevices();
+
+    AppTaskController().removeStudyDeployment(study.studyDeploymentId);
+
+    var m = getStudyRuntime(study)?.measurements;
+    if (m != null) _group.remove(m);
+
     await super.removeStudy(study);
   }
 

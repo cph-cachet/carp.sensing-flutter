@@ -1,11 +1,4 @@
-/*
- * Copyright 2022 Copenhagen Center for Health Technology (CACHET) at the
- * Technical University of Denmark (DTU).
- * Use of this source code is governed by a MIT-style license that can be
- * found in the LICENSE file.
- */
-
-part of carp_context_package;
+part of '../../carp_context_package.dart';
 
 /// An [OnlineService] for the location manager.
 @JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
@@ -59,6 +52,7 @@ class LocationService extends OnlineService {
   ///  * accuracy = balanced
   ///  * distance = 10 meters
   ///  * interval = 1 minute
+  ///  * notificationOnTapBringToFront = false
   LocationService({
     String? roleName,
     this.accuracy = GeolocationAccuracy.balanced,

@@ -1,6 +1,6 @@
 name: carp_serializable
 description: Polymorphic JSON serialization based on json_serializable annotations.
-version: 1.1.1
+version: 1.2.0
 homepage: https://github.com/cph-cachet/carp.sensing-flutter
 
 environment:
@@ -18,7 +18,7 @@ dev_dependencies:
   flutter_test:
     sdk: flutter
   flutter_lints: any
-  build_runner: any   # For building json serialization
+  build_runner: any 
   json_serializable: any
   test: any
 

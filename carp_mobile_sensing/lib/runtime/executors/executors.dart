@@ -16,13 +16,11 @@ part of '../runtime.dart';
 /// The runtime state has the following state machine:
 ///
 /// ```
-///    +----------------------------------------------------------------+
-///    |  +---------+    +-------------+    +---------+     +---------+ |     +-----------+
-///    |  | created | -> | initialized | -> | started | <-> | stopped | |  -> | undefined |
-///    |  +---------+    +-------------+    +---------+     +---------+ |     +-----------+
-///    |                                       |  ^                     |
-///    |                                       +--+                     |
-///    +----------------------------------------------------------------+
+///    +----------------------------------------------------------------+      +-----------+
+///    |  +---------+    +-------------+    +---------+     +---------+ |   -> | undefined |
+///    |  | created | -> | initialized | -> | started | <-> | stopped | |      +-----------+
+///    |  +---------+    +-------------+    +---------+     +---------+ |   -> | disposed  |
+///    +----------------------------------------------------------------+      +-----------+
 /// ```
 enum ExecutorState {
   /// Created and ready to be initialized.
@@ -36,6 +34,9 @@ enum ExecutorState {
 
   /// Stopped and not collecting data.
   stopped,
+
+  /// Permanently disposed. Cannot be used anymore.
+  disposed,
 
   /// Undefined state.
   ///
@@ -104,10 +105,20 @@ abstract class Executor<TConfig> {
 
   /// Stop the executor. Stopped until [start] or [restart] is called.
   void stop();
+
+  /// Dispose of this executor.
+  ///
+  /// Is not stopped, [stop] will be called first.
+  ///
+  /// Once disposed, the executor cannot be used anymore and nothing will happen
+  /// if any of the life cycle methods are called.
+  void dispose();
 }
 
 /// An abstract implementation of a [Executor] to extend from.
 abstract class AbstractExecutor<TConfig> implements Executor<TConfig> {
+  final StreamController<Measurement> _measurementsController =
+      StreamController.broadcast();
   final StreamController<ExecutorState> _stateEventController =
       StreamController.broadcast();
   late _ExecutorStateMachine _stateMachine;
@@ -125,6 +136,9 @@ abstract class AbstractExecutor<TConfig> implements Executor<TConfig> {
   Stream<ExecutorState> get stateEvents => _stateEventController.stream;
 
   @override
+  Stream<Measurement> get measurements => _measurementsController.stream;
+
+  @override
   ExecutorState get state => _stateMachine.state;
 
   @override
@@ -138,6 +152,14 @@ abstract class AbstractExecutor<TConfig> implements Executor<TConfig> {
     _stateMachine = state;
     _stateEventController.add(state.state);
   }
+
+  /// Add a data point to the [measurements] stream.
+  void addMeasurement(Measurement measurement) =>
+      _measurementsController.add(measurement);
+
+  /// Add an error to the [measurements] stream.
+  void addError(Object error, [StackTrace? stacktrace]) =>
+      _measurementsController.addError(error, stacktrace);
 
   @override
   void initialize(TConfig configuration, [SmartphoneDeployment? deployment]) {
@@ -164,6 +186,14 @@ abstract class AbstractExecutor<TConfig> implements Executor<TConfig> {
   void stop() {
     info('Stopping $this');
     _stateMachine.stop();
+  }
+
+  @override
+  void dispose() {
+    info('Disposing $this');
+    // stop();
+    _stateMachine.dispose();
+    // _measurementsController.close();
   }
 
   void error() => _stateMachine.error();
@@ -194,6 +224,13 @@ abstract class AbstractExecutor<TConfig> implements Executor<TConfig> {
   @protected
   Future<bool> onStop();
 
+  /// Callback when this executor is disposed.
+  ///
+  /// Subclasses should override this, to implement any cleanup to be
+  /// done before disposing.
+  @protected
+  Future<void> onDispose() async {}
+
   @override
   String toString() => '$runtimeType [$hashCode] (${state.name})';
 }
@@ -204,15 +241,34 @@ abstract class AbstractExecutor<TConfig> implements Executor<TConfig> {
 /// See [SmartphoneDeploymentExecutor] and [TaskExecutor] for examples.
 abstract class AggregateExecutor<TConfig> extends AbstractExecutor<TConfig> {
   static final DeviceInfo deviceInfo = DeviceInfo();
-  final StreamGroup<Measurement> group = StreamGroup.broadcast();
-  final List<Executor<dynamic>> executors = [];
+  final StreamGroup<Measurement> _group = StreamGroup.broadcast();
+  final List<Executor<dynamic>> _executors = [];
+
+  List<Executor<dynamic>> get executors => _executors;
+
+  AggregateExecutor() : super() {
+    _group.add(super.measurements);
+  }
 
   @override
-  Stream<Measurement> get measurements => group.stream;
+  Stream<Measurement> get measurements => _group.stream;
+
+  /// Add the [executor] to the list of [executors] and forwards its measurements
+  /// to this aggregate executor's stream of [measurements].
+  void addExecutor(Executor<dynamic> executor) {
+    _executors.add(executor);
+    _group.add(executor.measurements);
+  }
+
+  /// Remove the [executor] to the list of [executors].
+  void removeExecutor(Executor<dynamic> executor) {
+    _group.remove(executor.measurements);
+    _executors.remove(executor);
+  }
 
   @override
   Future<bool> onStart() async {
-    for (var executor in executors) {
+    for (var executor in _executors) {
       executor.start();
     }
     return true;
@@ -220,7 +276,7 @@ abstract class AggregateExecutor<TConfig> extends AbstractExecutor<TConfig> {
 
   @override
   Future<bool> onRestart() async {
-    for (var executor in executors) {
+    for (var executor in _executors) {
       executor.restart();
     }
     return true;
@@ -228,10 +284,18 @@ abstract class AggregateExecutor<TConfig> extends AbstractExecutor<TConfig> {
 
   @override
   Future<bool> onStop() async {
-    for (var executor in executors) {
+    for (var executor in _executors) {
       executor.stop();
     }
     return true;
+  }
+
+  @override
+  Future<void> onDispose() async {
+    for (var executor in _executors) {
+      executor.dispose();
+    }
+    _group.close();
   }
 }
 
@@ -245,6 +309,7 @@ abstract class _ExecutorStateMachine {
   void start();
   void restart();
   void stop();
+  void dispose();
   void error();
 }
 
@@ -262,12 +327,19 @@ abstract class _AbstractExecutorState implements _ExecutorStateMachine {
   void start() => _printWarning('start');
   @override
   void restart() => _printWarning('restart');
-
-  // Default stop behavior. A Executor can be stopped in all states.
   @override
-  void stop() {
-    executor.onStop().then((stopped) {
-      if (stopped) executor._setState(_StoppedState(executor));
+  void stop() => _printWarning('stop');
+
+  // Default dispose behavior. A Executor can be disposed in all states.
+  @override
+  void dispose() {
+    if (state == ExecutorState.started) {
+      warning(
+          "Trying to dispose a ${executor.runtimeType} in a 'started' state."
+          "Consider stopping it first.");
+    }
+    executor.onDispose().then((_) {
+      executor._setState(_DisposedState(executor));
     });
   }
 
@@ -330,6 +402,14 @@ class _InitializedState extends _AbstractExecutorState
       if (restarted) executor.start();
     });
   }
+
+  @override
+  void stop() {
+    executor.onStop().then((stopped) {
+      if (stopped) executor._setState(_StoppedState(executor));
+      debug('$executor - stopped');
+    });
+  }
 }
 
 class _StartedState extends _InitializedState {
@@ -351,6 +431,14 @@ class _StoppedState extends _InitializedState {
   void stop() => warning(
       'Trying to stop a ${executor.runtimeType} but it is already stopped. '
       'Ignoring this.');
+}
+
+class _DisposedState extends _AbstractExecutorState
+    implements _ExecutorStateMachine {
+  _DisposedState(Executor<dynamic> executor)
+      : super(executor as AbstractExecutor);
+  @override
+  ExecutorState get state => ExecutorState.disposed;
 }
 
 class _UndefinedState extends _AbstractExecutorState

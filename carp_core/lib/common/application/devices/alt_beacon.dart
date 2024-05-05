@@ -5,7 +5,7 @@
  * found in the LICENSE file.
  */
 
-part of carp_core_common;
+part of '../../carp_core_common.dart';
 
 /// A beacon meeting the open AltBeacon standard.
 @JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)

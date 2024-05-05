@@ -16,7 +16,6 @@ import 'package:carp_serializable/carp_serializable.dart';
 import 'package:carp_webservices/carp_auth/carp_auth.dart';
 import 'package:http/http.dart' as http;
 import 'package:retry/retry.dart';
-import 'package:uuid/uuid.dart';
 import 'package:flutter/material.dart';
 import 'package:json_annotation/json_annotation.dart';
 

@@ -125,7 +125,7 @@ void main() {
     expect(protocolFromFile.ownerId, protocol.ownerId);
     expect(
       protocolFromFile.primaryDevices.first.roleName,
-      Smartphone.DEFAULT_ROLENAME,
+      Smartphone.DEFAULT_ROLE_NAME,
     );
     expect(
       protocolFromFile.taskControls.length,

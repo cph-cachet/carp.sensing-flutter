@@ -1,3 +1,12 @@
+## 1.6.0
+
+* improvement to removing studies (linked to issue [#283](https://github.com/cph-cachet/carp_studies_app/issues/283) in the CARP Studies App)
+  * adding a new "disposed" sensing state
+  * removing study deployment runtime
+  * better handling of restarting sampling on device reconnection
+* upgrade of carp_serialization and carp_core
+* getting rid of uuid package dependency
+
 ## 1.5.1
 
 * automatically stopping a background task if all of its underlying probes have stopped (fix of [384](https://github.com/cph-cachet/carp.sensing-flutter/issues/384))

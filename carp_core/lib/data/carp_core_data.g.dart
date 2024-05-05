@@ -51,12 +51,13 @@ DataStreamBatch _$DataStreamBatchFromJson(Map<String, dynamic> json) =>
     DataStreamBatch(
       dataStream:
           DataStreamId.fromJson(json['dataStream'] as Map<String, dynamic>),
-      firstSequenceId: json['firstSequenceId'] as int,
+      firstSequenceId: (json['firstSequenceId'] as num).toInt(),
       measurements: (json['measurements'] as List<dynamic>)
           .map((e) => Measurement.fromJson(e as Map<String, dynamic>))
           .toList(),
-      triggerIds:
-          (json['triggerIds'] as List<dynamic>).map((e) => e as int).toSet(),
+      triggerIds: (json['triggerIds'] as List<dynamic>)
+          .map((e) => (e as num).toInt())
+          .toSet(),
     );
 
 Map<String, dynamic> _$DataStreamBatchToJson(DataStreamBatch instance) =>
@@ -68,8 +69,8 @@ Map<String, dynamic> _$DataStreamBatchToJson(DataStreamBatch instance) =>
     };
 
 Measurement _$MeasurementFromJson(Map<String, dynamic> json) => Measurement(
-      sensorStartTime: json['sensorStartTime'] as int,
-      sensorEndTime: json['sensorEndTime'] as int?,
+      sensorStartTime: (json['sensorStartTime'] as num).toInt(),
+      sensorEndTime: (json['sensorEndTime'] as num?)?.toInt(),
       data: Data.fromJson(json['data'] as Map<String, dynamic>),
     );
 
@@ -141,8 +142,8 @@ Map<String, dynamic> _$AppendToDataStreamsToJson(AppendToDataStreams instance) {
 GetDataStream _$GetDataStreamFromJson(Map<String, dynamic> json) =>
     GetDataStream(
       DataStreamId.fromJson(json['dataStream'] as Map<String, dynamic>),
-      json['fromSequenceId'] as int,
-      json['toSequenceIdInclusive'] as int?,
+      (json['fromSequenceId'] as num).toInt(),
+      (json['toSequenceIdInclusive'] as num?)?.toInt(),
     )
       ..$type = json['__type'] as String?
       ..apiVersion = json['apiVersion'] as String;

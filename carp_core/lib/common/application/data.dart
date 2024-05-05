@@ -5,7 +5,7 @@
  * found in the LICENSE file.
  */
 
-part of carp_core_common;
+part of '../carp_core_common.dart';
 
 // This file holds all the CARP Core defined data type.
 // In CARP Core Kotlin, this is the "dk.cachet.carp.common.application.data" domain.

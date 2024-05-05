@@ -189,8 +189,6 @@ class PeriodicTriggerExecutor
   @override
   Future<bool> onStart() async {
     _timer = Timer.periodic(configuration!.period, (_) => onTrigger());
-    debug('$this - starting timer: ${_timer.hashCode}');
-
     return true;
   }
 }

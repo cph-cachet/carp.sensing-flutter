@@ -5,7 +5,7 @@
  * found in the LICENSE file.
  */
 
-part of carp_context_package;
+part of '../../carp_context_package.dart';
 
 /// Collects location information from the underlying OS's location API.
 /// Is a [MeasurementProbe] that collects one [Location] at a time.

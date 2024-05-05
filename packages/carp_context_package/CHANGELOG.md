@@ -1,3 +1,9 @@
+## 1.6.0
+
+* replacing the location plugin with the geolocator plugin
+* fix of [#389](https://github.com/cph-cachet/carp.sensing-flutter/issues/389) - timeout to getCurrentLocation() method
+* fix of linter issues
+
 ## 1.5.0
 
 * bump dependencies - location version to 6.0.0 & openmhealth_schemas to 0.3.0

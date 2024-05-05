@@ -5,7 +5,7 @@
  * found in the LICENSE file.
  */
 
-part of carp_context_package;
+part of '../../carp_context_package.dart';
 
 /// Collects activity information from the underlying OS's activity recognition
 /// API. It generates an [Activity] every time an activity is detected.

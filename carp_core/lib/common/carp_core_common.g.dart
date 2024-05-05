@@ -288,7 +288,7 @@ Map<String, dynamic> _$WebTaskToJson(WebTask instance) {
 }
 
 TaskControl _$TaskControlFromJson(Map<String, dynamic> json) => TaskControl(
-      triggerId: json['triggerId'] as int,
+      triggerId: (json['triggerId'] as num).toInt(),
       control: $enumDecodeNullable(_$ControlEnumMap, json['control']) ??
           Control.Start,
     )
@@ -617,7 +617,7 @@ PersonalComputerRegistration _$PersonalComputerRegistrationFromJson(
           : DateTime.parse(json['registrationCreatedOn'] as String),
       platform: json['platform'] as String?,
       computerName: json['computerName'] as String?,
-      memorySize: json['memorySize'] as int?,
+      memorySize: (json['memorySize'] as num?)?.toInt(),
       deviceModel: json['deviceModel'] as String?,
       operatingSystem: json['operatingSystem'] as String?,
       version: json['version'] as String?,
@@ -677,11 +677,11 @@ WebBrowserRegistration _$WebBrowserRegistrationFromJson(
           ? null
           : DateTime.parse(json['registrationCreatedOn'] as String),
       browserName: json['browserName'] as String?,
-      deviceMemory: json['deviceMemory'] as int?,
+      deviceMemory: (json['deviceMemory'] as num?)?.toInt(),
       language: json['language'] as String?,
       vendor: json['vendor'] as String?,
-      maxTouchPoints: json['maxTouchPoints'] as int?,
-      hardwareConcurrency: json['hardwareConcurrency'] as int?,
+      maxTouchPoints: (json['maxTouchPoints'] as num?)?.toInt(),
+      hardwareConcurrency: (json['hardwareConcurrency'] as num?)?.toInt(),
     )..$type = json['__type'] as String?;
 
 Map<String, dynamic> _$WebBrowserRegistrationToJson(
@@ -735,11 +735,11 @@ AltBeaconDeviceRegistration _$AltBeaconDeviceRegistrationFromJson(
       registrationCreatedOn: json['registrationCreatedOn'] == null
           ? null
           : DateTime.parse(json['registrationCreatedOn'] as String),
-      manufacturerId: json['manufacturerId'] as int?,
+      manufacturerId: (json['manufacturerId'] as num?)?.toInt(),
       organizationId: json['organizationId'] as String?,
-      majorId: json['majorId'] as int?,
-      minorId: json['minorId'] as int?,
-      referenceRssi: json['referenceRssi'] as int?,
+      majorId: (json['majorId'] as num?)?.toInt(),
+      minorId: (json['minorId'] as num?)?.toInt(),
+      referenceRssi: (json['referenceRssi'] as num?)?.toInt(),
     )..$type = json['__type'] as String?;
 
 Map<String, dynamic> _$AltBeaconDeviceRegistrationToJson(
@@ -875,9 +875,9 @@ Map<String, dynamic> _$ScheduledTriggerToJson(ScheduledTrigger instance) {
 }
 
 TimeOfDay _$TimeOfDayFromJson(Map<String, dynamic> json) => TimeOfDay(
-      hour: json['hour'] as int? ?? 0,
-      minute: json['minute'] as int? ?? 0,
-      second: json['second'] as int? ?? 0,
+      hour: (json['hour'] as num?)?.toInt() ?? 0,
+      minute: (json['minute'] as num?)?.toInt() ?? 0,
+      second: (json['second'] as num?)?.toInt() ?? 0,
     );
 
 Map<String, dynamic> _$TimeOfDayToJson(TimeOfDay instance) => <String, dynamic>{
@@ -889,7 +889,7 @@ Map<String, dynamic> _$TimeOfDayToJson(TimeOfDay instance) => <String, dynamic>{
 RecurrenceRule _$RecurrenceRuleFromJson(Map<String, dynamic> json) =>
     RecurrenceRule(
       $enumDecode(_$FrequencyEnumMap, json['frequency']),
-      interval: json['interval'] as int? ?? 1,
+      interval: (json['interval'] as num?)?.toInt() ?? 1,
       end: json['end'] == null
           ? null
           : End.fromJson(json['end'] as Map<String, dynamic>),
@@ -916,8 +916,8 @@ End _$EndFromJson(Map<String, dynamic> json) => End(
       $enumDecode(_$EndTypeEnumMap, json['type']),
       elapsedTime: json['elapsedTime'] == null
           ? null
-          : Duration(microseconds: json['elapsedTime'] as int),
-      count: json['count'] as int?,
+          : Duration(microseconds: (json['elapsedTime'] as num).toInt()),
+      count: (json['count'] as num?)?.toInt(),
     );
 
 Map<String, dynamic> _$EndToJson(End instance) {
@@ -1161,7 +1161,7 @@ Map<String, dynamic> _$GeolocationToJson(Geolocation instance) {
 
 SignalStrength _$SignalStrengthFromJson(Map<String, dynamic> json) =>
     SignalStrength(
-      rssi: json['rssi'] as int? ?? 0,
+      rssi: (json['rssi'] as num?)?.toInt() ?? 0,
     )
       ..$type = json['__type'] as String?
       ..sensorSpecificData = json['sensorSpecificData'] == null
@@ -1184,7 +1184,7 @@ Map<String, dynamic> _$SignalStrengthToJson(SignalStrength instance) {
 }
 
 StepCount _$StepCountFromJson(Map<String, dynamic> json) => StepCount(
-      steps: json['steps'] as int? ?? 0,
+      steps: (json['steps'] as num?)?.toInt() ?? 0,
     )
       ..$type = json['__type'] as String?
       ..sensorSpecificData = json['sensorSpecificData'] == null
@@ -1207,7 +1207,7 @@ Map<String, dynamic> _$StepCountToJson(StepCount instance) {
 }
 
 HeartRate _$HeartRateFromJson(Map<String, dynamic> json) => HeartRate(
-      bpm: json['bpm'] as int? ?? 0,
+      bpm: (json['bpm'] as num?)?.toInt() ?? 0,
     )
       ..$type = json['__type'] as String?
       ..sensorSpecificData = json['sensorSpecificData'] == null
@@ -1300,7 +1300,7 @@ Map<String, dynamic> _$CompletedTaskToJson(CompletedTask instance) {
 
 TriggeredTask _$TriggeredTaskFromJson(Map<String, dynamic> json) =>
     TriggeredTask(
-      triggerId: json['triggerId'] as int,
+      triggerId: (json['triggerId'] as num).toInt(),
       taskName: json['taskName'] as String,
       destinationDeviceRoleName: json['destinationDeviceRoleName'] as String,
       control: $enumDecode(_$ControlEnumMap, json['control']),

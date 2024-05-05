@@ -42,7 +42,7 @@ AccelerationFeatures _$AccelerationFeaturesFromJson(
       ..sensorSpecificData = json['sensorSpecificData'] == null
           ? null
           : Data.fromJson(json['sensorSpecificData'] as Map<String, dynamic>)
-      ..count = json['count'] as int
+      ..count = (json['count'] as num).toInt()
       ..xMean = json['xMean'] as num?
       ..yMean = json['yMean'] as num?
       ..zMean = json['zMean'] as num?

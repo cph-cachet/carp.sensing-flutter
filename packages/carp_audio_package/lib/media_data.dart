@@ -5,7 +5,7 @@
  * found in the LICENSE file.
  */
 
-part of media;
+part of 'media.dart';
 
 /// Type of media.
 enum MediaType { audio, video, image }

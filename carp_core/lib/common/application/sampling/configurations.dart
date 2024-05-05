@@ -4,7 +4,7 @@
  * Use of this source code is governed by a MIT-style license that can be
  * found in the LICENSE file.
  */
-part of carp_core_common;
+part of '../../carp_core_common.dart';
 
 /// Contains configuration on how to sample a data stream of a given type.
 @JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)

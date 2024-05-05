@@ -5,7 +5,7 @@
  * found in the LICENSE file.
  */
 
-part of carp_core_deployment;
+part of '../carp_core_deployment.dart';
 
 /// Expected participant [data] for all participants in a study deployment
 /// with [studyDeploymentId].

@@ -54,7 +54,7 @@ android {
 ```
 
 The pedometer (step count) probe needs permission to `ACTIVITY_RECOGNITION`.
-Scheduled notifications (if using `AppTask`) needs a set of permissions, such as `USE_EXACT_ALARM` and `VIBRATE`.
+Scheduled notifications (if using `AppTask`) needs a set of permissions, such as `SCHEDULE_EXACT_ALARM` and `VIBRATE`.
 If collecting step counts or using notifications in your app, add the following to your app's `manifest.xml` file located in `android/app/src/main`:
 
 ````xml
@@ -66,7 +66,6 @@ If collecting step counts or using notifications in your app, add the following 
 <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
 <uses-permission android:name="android.permission.VIBRATE" />
 <uses-permission android:name="android.permission.POST_NOTIFICATIONS"/>
-<uses-permission android:name="android.permission.USE_EXACT_ALARM" />
 <uses-permission android:name="android.permission.SCHEDULE_EXACT_ALARM"
         android:maxSdkVersion="32" />
 ````

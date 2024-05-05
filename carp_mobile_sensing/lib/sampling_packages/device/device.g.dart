@@ -45,7 +45,7 @@ Map<String, dynamic> _$DeviceInformationToJson(DeviceInformation instance) {
 }
 
 BatteryState _$BatteryStateFromJson(Map<String, dynamic> json) => BatteryState(
-      json['batteryLevel'] as int?,
+      (json['batteryLevel'] as num?)?.toInt(),
       json['batteryStatus'] as String?,
     )..$type = json['__type'] as String?;
 
@@ -65,8 +65,8 @@ Map<String, dynamic> _$BatteryStateToJson(BatteryState instance) {
 }
 
 FreeMemory _$FreeMemoryFromJson(Map<String, dynamic> json) => FreeMemory(
-      json['freePhysicalMemory'] as int?,
-      json['freeVirtualMemory'] as int?,
+      (json['freePhysicalMemory'] as num?)?.toInt(),
+      (json['freeVirtualMemory'] as num?)?.toInt(),
     )..$type = json['__type'] as String?;
 
 Map<String, dynamic> _$FreeMemoryToJson(FreeMemory instance) {

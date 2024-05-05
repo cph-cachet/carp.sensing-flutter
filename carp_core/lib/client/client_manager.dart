@@ -5,7 +5,7 @@
  * found in the LICENSE file.
  */
 
-part of carp_core_client;
+part of 'carp_core_client.dart';
 
 /// Allows managing [StudyRuntime]s on a client device.
 abstract class ClientManager<
@@ -106,25 +106,26 @@ abstract class ClientManager<
 
   /// Remove [study] from this client manager.
   ///
-  /// Note that by removing a study, it isn't stopped. Hence, the study can later
-  /// be added again using the [addStudy] method.
-  /// If a study is to be permanently stopped, use the [stopStudy] method.
+  /// Note that by removing a study, the deployment is not marked as stopped
+  /// permanently in the deployment service.
+  /// Hence, the study can later be added and deployed again using the [addStudy]
+  /// and [tryDeployment] methods.
+  ///
+  /// If a study deployment is to be permanently stopped, use the [stopStudy] method.
   @mustCallSuper
   Future<void> removeStudy(Study study) async {
-    await repository[study]?.remove();
     var runtime = repository[study];
     repository.remove(study);
-    if (runtime != null) runtime.remove();
+    if (runtime != null) await runtime.remove();
   }
 
-  /// Permanently stop collecting data for [study] and then remove it.
+  /// Permanently stop collecting data for [study] and mark it as stopped.
   ///
   /// Once a study is stopped it cannot be deployed anymore since it will
-  /// be marked as permanently stopped in the [DeploymentService] via the [stop]
-  /// method.
+  /// be marked as permanently stopped in the [DeploymentService].
   ///
-  /// If you only want to remove the study from this client, use the
-  /// [removeStudy] method instead.
+  /// If you only want to remove the study from this client and be able to
+  /// redeploy it later, use the [removeStudy] method instead.
   @mustCallSuper
   Future<void> stopStudy(Study study) async {
     var runtime = repository[study];

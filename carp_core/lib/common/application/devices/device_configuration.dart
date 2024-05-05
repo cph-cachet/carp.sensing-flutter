@@ -5,7 +5,7 @@
  * found in the LICENSE file.
  */
 
-part of carp_core_common;
+part of '../../carp_core_common.dart';
 
 /// Describes any type of electronic device, such as a sensor, video camera,
 /// desktop computer, or smartphone that collects data which can be incorporated

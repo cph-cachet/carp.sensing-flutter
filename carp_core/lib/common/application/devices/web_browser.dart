@@ -5,7 +5,7 @@
  * found in the LICENSE file.
  */
 
-part of carp_core_common;
+part of '../../carp_core_common.dart';
 
 /// Configuration of an internet-connected web browser device with no built-in [sensors].
 @JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)

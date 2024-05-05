@@ -4,7 +4,7 @@
  * Use of this source code is governed by a MIT-style license that can be
  * found in the LICENSE file.
  */
-part of media;
+part of 'media.dart';
 
 /// A probe recording audio from the microphone. It starts recording on [start]
 /// and stops recording on [stop], and post the recorded [Media] object to the
@@ -39,7 +39,7 @@ class AudioProbe extends MeasurementProbe {
       debug('Audio recording resumed - sound file : $_soundFileName');
     } catch (error) {
       warning('An error occurred trying to start audio recording - $error');
-      controller.addError(error);
+      addError(error);
       return false;
     }
     return true;
@@ -52,11 +52,11 @@ class AudioProbe extends MeasurementProbe {
       try {
         await _stopAudioRecording();
         final measurement = await getMeasurement();
-        if (measurement != null) controller.add(measurement);
+        if (measurement != null) addMeasurement(measurement);
         debug('Audio recording paused - sound file : $_soundFileName');
       } catch (error) {
         warning('An error occurred trying to stop audio recording - $error');
-        controller.addError(error);
+        addError(error);
       }
     }
     return true;

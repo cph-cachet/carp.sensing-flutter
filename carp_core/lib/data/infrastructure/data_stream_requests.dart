@@ -5,7 +5,7 @@
  * found in the LICENSE file.
  */
 
-part of carp_core_data;
+part of '../carp_core_data.dart';
 
 abstract class DataStreamServiceRequest extends ServiceRequest {
   final String _infrastructurePackageNamespace =

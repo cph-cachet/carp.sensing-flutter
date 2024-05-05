@@ -5,7 +5,7 @@
  * found in the LICENSE file.
  */
 
-part of carp_context_package;
+part of '../../carp_context_package.dart';
 
 /// An [OnlineService] for the [Open Weather](https://openweathermap.org/) service.
 @JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
@@ -65,8 +65,7 @@ class WeatherServiceManager extends OnlineServiceManager<WeatherService> {
 
   @override
   Future<bool> onHasPermissions() async =>
-      (await LocationManager().hasPermission()) ==
-      location.PermissionStatus.granted;
+      (await Permission.locationWhenInUse.status).isGranted;
 
   @override
   Future<void> onRequestPermissions() async =>

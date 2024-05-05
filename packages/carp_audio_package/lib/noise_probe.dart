@@ -5,7 +5,7 @@
  * found in the LICENSE file.
  */
 
-part of media;
+part of 'media.dart';
 
 /// A probe collecting noise sampling from the microphone.
 ///

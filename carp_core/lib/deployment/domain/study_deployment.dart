@@ -5,7 +5,7 @@
  * found in the LICENSE file.
  */
 
-part of carp_core_deployment;
+part of '../carp_core_deployment.dart';
 
 /// A single instantiation of a [StudyProtocol], taking care of common concerns
 /// related to devices when 'running' a study.
@@ -87,7 +87,7 @@ class StudyDeployment {
   /// [studyDeploymentId] specify the study deployment id.
   /// If not specified, an UUID v1 id is generated.
   StudyDeployment(StudyProtocol protocol, [String? studyDeploymentId]) {
-    _studyDeploymentId = studyDeploymentId ?? const Uuid().v1();
+    _studyDeploymentId = studyDeploymentId ?? UUID.v1;
     _protocol = protocol;
     _creationDate = DateTime.now();
     _status = StudyDeploymentStatus(studyDeploymentId: _studyDeploymentId);

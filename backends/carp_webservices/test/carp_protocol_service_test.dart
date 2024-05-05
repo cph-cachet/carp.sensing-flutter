@@ -5,8 +5,6 @@ import 'package:carp_webservices/carp_auth/carp_auth.dart';
 import 'package:carp_webservices/carp_services/carp_services.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:test/test.dart';
-import 'package:iso_duration_parser/iso_duration_parser.dart';
-// import 'package:flutter_test/flutter_test.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'carp_properties.dart';
@@ -51,7 +49,7 @@ void main() {
       ..addPrimaryDevice(phone)
       ..addConnectedDevice(bike, phone);
 
-    var trigger = ElapsedTimeTrigger(elapsedTime: IsoDuration.tryParse('PT0S'));
+    var trigger = ElapsedTimeTrigger(elapsedTime: const Duration(hours: 1));
 
     protocol
       ..addTaskControl(
@@ -59,7 +57,7 @@ void main() {
         BackgroundTask(
             name: 'Monitor movement',
             description: 'Track step count and geolocation for one week.',
-            duration: IsoDuration.tryParse('PT168H'),
+            duration: const Duration(hours: 1),
             measures: [
               Measure(type: Geolocation.dataType)
                 ..overrideSamplingConfiguration =
@@ -80,7 +78,7 @@ void main() {
         BackgroundTask(
             name: 'Bike proximity',
             description: 'Monitor proximity to bike',
-            duration: IsoDuration.tryParse('PT168H'),
+            duration: const Duration(hours: 1),
             measures: [
               Measure(type: SignalStrength.dataType),
             ]),

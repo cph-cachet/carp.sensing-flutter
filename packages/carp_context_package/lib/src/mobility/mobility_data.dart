@@ -1,4 +1,4 @@
-part of carp_context_package;
+part of '../../carp_context_package.dart';
 
 /// Holds mobility features information.
 @JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)

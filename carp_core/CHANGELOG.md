@@ -1,3 +1,9 @@
+## 1.6.0
+
+* fix of linter issues
+* better support for disposing of a study deployment
+* upgrade to UUID in carp_serialization (v. 1.2.0)
+
 ## 1.5.0
 
 * durations are now specified using the Dart `Duration` class (rather than ISO 8061 format)

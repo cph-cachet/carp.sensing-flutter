@@ -1,4 +1,4 @@
-part of carp_context_package;
+part of '../../carp_context_package.dart';
 
 /// Collects mobility features using the [MobilityFeatures] API.
 class MobilityProbe extends StreamProbe {

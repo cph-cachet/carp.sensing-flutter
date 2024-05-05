@@ -1,4 +1,4 @@
-part of carp_core;
+part of 'carp_core.dart';
 
 bool _fromJsonFunctionsRegistered = false;
 

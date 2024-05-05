@@ -1,4 +1,4 @@
-part of carp_context_package;
+part of '../../carp_context_package.dart';
 
 /// Listen on location movements and reports a [Geofence] to the [stream]
 /// when a geofence event happens. This probe can handle only one measure.

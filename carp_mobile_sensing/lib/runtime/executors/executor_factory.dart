@@ -7,31 +7,18 @@
 
 part of '../runtime.dart';
 
+/// A factory that can create a:
+///
+///  * [TriggerExecutor] using the [createTriggerExecutor] method
+///  * [TaskExecutor] using the [getTaskExecutor] method
+///
+/// Note that each deployment has its own [ExecutorFactory].
+/// This is because trigger executors needs to be reused across tasks in the same
+/// deployment (in the task control), while avoiding them to be reused across
+/// deployments (if the task has the same name).
 class ExecutorFactory {
-  static final ExecutorFactory _instance = ExecutorFactory._();
-  ExecutorFactory._();
-  factory ExecutorFactory() => _instance;
-
   final Map<int, TriggerExecutor> _triggerExecutors = {};
   final Map<String, TaskExecutor> _taskExecutors = {};
-
-  /// Returns the relevant [TaskControlExecutor] based on the type of [trigger]
-  /// and [task].
-  TaskControlExecutor getTaskControlExecutor(
-    TaskControl taskControl,
-    TriggerConfiguration trigger,
-    TaskConfiguration task,
-  ) {
-    // a TriggeredAppTaskExecutor need BOTH a [Schedulable] trigger and an [AppTask]
-    // to schedule
-    if (trigger is Schedulable && task is AppTask) {
-      return AppTaskControlExecutor(taskControl, trigger, task);
-    }
-
-    // all other cases we use the normal background triggering relying on the app
-    // running in the background
-    return TaskControlExecutor(taskControl, trigger, task);
-  }
 
   /// Get the [TriggerExecutor] for a [triggerId], if available.
   TriggerExecutor? getTriggerExecutor(int triggerId) =>

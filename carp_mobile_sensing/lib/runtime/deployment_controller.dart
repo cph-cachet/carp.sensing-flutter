@@ -71,76 +71,6 @@ class SmartphoneDeploymentController extends StudyRuntime<DeviceRegistration> {
   /// of a study deployment.
   SmartphoneDeploymentController(super.deploymentService, super.deviceRegistry);
 
-  /// Verifies whether the primary device is ready for deployment and in case
-  /// it is, deploy the [study] previously added.
-  ///
-  /// If [useCached] is true (default), a previously cached [deployment] will be
-  /// retrieved from the phone locally.
-  /// If [useCached] is false, the [deployment] will be retrieved from the
-  /// [deploymentService], based on the [study].
-  ///
-  /// In case already deployed, nothing happens and the current [status] is returned.
-  @override
-  Future<StudyStatus> tryDeployment({bool useCached = true}) async {
-    assert(
-        study != null,
-        'Cannot deploy without a valid study deployment id and device role name. '
-        "Call 'addStudy()' or 'addStudyProtocol()' first.");
-
-    info('$runtimeType - trying to deploy study: $study');
-    if (useCached) {
-      // restore the deployment and app task queue
-      bool success = await restoreDeployment();
-      if (success) {
-        await AppTaskController().restoreQueue();
-        return status = deployment?.status ?? StudyStatus.Deployed;
-      }
-    }
-
-    // if no cache, get the deployment from the deployment service
-    // and save a local cache
-    status = await super.tryDeployment();
-    debug('$runtimeType - got deployment: $deployment');
-    if (status == StudyStatus.Deployed && deployment != null) {
-      deployment!.deployed = DateTime.now().toUtc();
-      // if no user is specified for this study, look up the local user id
-      deployment!.userId ??= await Settings().userId;
-      deployment?.status = status;
-      await saveDeployment();
-    }
-
-    return status;
-  }
-
-  /// Save the [deployment] persistently to a cache.
-  /// Returns `true` if successful.
-  Future<bool> saveDeployment() async => (deployment != null)
-      ? await Persistence().saveDeployment(deployment!)
-      : false;
-
-  /// Restore the [deployment] from a local cache.
-  /// Returns `true` if successful.
-  Future<bool> restoreDeployment() async => (studyDeploymentId != null)
-      ? (deployment =
-              await Persistence().restoreDeployment(studyDeploymentId!)) !=
-          null
-      : false;
-
-  /// Erase study deployment information cached locally on this phone.
-  Future<void> eraseDeployment() async {
-    if (studyDeploymentId == null) return;
-
-    try {
-      info("Erasing deployment cache for deployment '$studyDeploymentId'.");
-      await Persistence().eraseDeployment(studyDeploymentId!);
-
-      final name = await Settings().getCacheBasePath(studyDeploymentId!);
-      await File(name).delete(recursive: true);
-    } catch (exception) {
-      warning('Failed to delete deployment - $exception');
-    }
-  }
-
   /// Configure this [SmartphoneDeploymentController].
   ///
   /// Must be called after a deployment is ready using [tryDeployment] and
@@ -267,6 +197,79 @@ class SmartphoneDeploymentController extends StudyRuntime<DeviceRegistration> {
     }
   }
 
+  /// Verifies whether the primary device is ready for deployment and in case
+  /// it is, deploy the [study] previously added.
+  ///
+  /// If [useCached] is true (default), a previously cached [deployment] will be
+  /// retrieved from the phone locally.
+  /// If [useCached] is false, the [deployment] will be retrieved from the
+  /// [deploymentService], based on the [study].
+  ///
+  /// In case already deployed, nothing happens and the current [status] is returned.
+  @override
+  Future<StudyStatus> tryDeployment({bool useCached = true}) async {
+    assert(
+        study != null,
+        'Cannot deploy without a valid study deployment id and device role name. '
+        "Call 'addStudy()' or 'addStudyProtocol()' first.");
+
+    info('$runtimeType - Trying to deploy study: $study');
+    if (useCached) {
+      // restore the deployment and app task queue
+      bool success = await restoreDeployment();
+      if (success) {
+        await AppTaskController().restoreQueue();
+        return status = deployment?.status ?? StudyStatus.Deployed;
+      }
+    }
+
+    // if no cache, get the deployment from the deployment service
+    // and save a local cache
+    status = await super.tryDeployment();
+    debug('$runtimeType - Got deployment: $deployment');
+    if (status == StudyStatus.Deployed && deployment != null) {
+      deployment!.deployed = DateTime.now().toUtc();
+      Settings().getCacheBasePath(deployment!.studyDeploymentId);
+
+      // if no user is specified for this study, look up the local user id
+      deployment!.userId ??= await Settings().userId;
+      deployment?.status = status;
+      await saveDeployment();
+    }
+
+    return status;
+  }
+
+  /// Save the [deployment] persistently to the local cache.
+  /// Returns `true` if successful.
+  Future<bool> saveDeployment() async => (deployment != null)
+      ? await Persistence().saveDeployment(deployment!)
+      : false;
+
+  /// Restore the [deployment] from a local cache.
+  /// Returns `true` if successful.
+  Future<bool> restoreDeployment() async => (studyDeploymentId != null)
+      ? (deployment =
+              await Persistence().restoreDeployment(studyDeploymentId!)) !=
+          null
+      : false;
+
+  /// Erase study deployment information cached locally on this phone.
+  Future<void> eraseDeployment() async {
+    if (studyDeploymentId == null) return;
+
+    try {
+      info(
+          "$runtimeType - Erasing deployment cache for deployment '$studyDeploymentId'.");
+      await Persistence().eraseDeployment(studyDeploymentId!);
+
+      final name = await Settings().getCacheBasePath(studyDeploymentId!);
+      await File(name).delete(recursive: true);
+    } catch (exception) {
+      warning('Failed to delete deployment - $exception');
+    }
+  }
+
   /// Start this controller.
   ///
   /// If [start] is true, immediately start data collection
@@ -317,7 +320,7 @@ class SmartphoneDeploymentController extends StudyRuntime<DeviceRegistration> {
   @override
   Future<void> remove() async {
     info('$runtimeType - Removing deployment from this smartphone...');
-    executor.stop();
+    executor.dispose();
     await dataManager?.close();
 
     await eraseDeployment();
@@ -332,8 +335,6 @@ class SmartphoneDeploymentController extends StudyRuntime<DeviceRegistration> {
   @override
   void dispose() {
     info('$runtimeType - Disposing ...');
-    saveDeployment();
-    executor.stop();
-    dataManager?.close().then((_) => super.dispose());
+    remove().then((_) => super.dispose());
   }
 }

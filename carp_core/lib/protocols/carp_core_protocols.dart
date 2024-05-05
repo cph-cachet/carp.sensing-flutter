@@ -21,6 +21,3 @@ part 'application/protocol_service.dart';
 part 'infrastructure/protocol_requests.dart';
 
 part 'carp_core_protocols.g.dart';
-
-// auto generate json code (.g files) with:
-//   flutter pub run build_runner build --delete-conflicting-outputs

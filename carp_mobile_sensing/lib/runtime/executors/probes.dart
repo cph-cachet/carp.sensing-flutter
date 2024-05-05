@@ -11,10 +11,10 @@ part of '../runtime.dart';
 /// the device sensors as configured in a [Measure].
 abstract class Probe extends AbstractExecutor<Measure> {
   /// A stream controller to add [Measurement]s to.
-  StreamController<Measurement> controller = StreamController.broadcast();
+  // StreamController<Measurement> controller = StreamController.broadcast();
 
-  @override
-  Stream<Measurement> get measurements => controller.stream;
+  // @override
+  // Stream<Measurement> get measurements => controller.stream;
 
   /// The device that this probes uses to collect data.
   late DeviceManager deviceManager;
@@ -53,20 +53,26 @@ abstract class Probe extends AbstractExecutor<Measure> {
           .samplingSchemes[measure?.type]
           ?.defaultSamplingConfiguration;
 
-  /// Add a data point to the [measurements] stream.
-  @protected
+  // /// Add a data point to the [measurements] stream.
+  // @protected
+  // void addMeasurement(Measurement measurement) {
+  //   // timestamp this sampling
+  //   if (samplingConfiguration is PersistentSamplingConfiguration) {
+  //     (samplingConfiguration as PersistentSamplingConfiguration).lastTime =
+  //         DateTime.now().toUtc();
+  //   }
+  //   controller.add(measurement);
+  // }
+
+  @override
   void addMeasurement(Measurement measurement) {
     // timestamp this sampling
     if (samplingConfiguration is PersistentSamplingConfiguration) {
       (samplingConfiguration as PersistentSamplingConfiguration).lastTime =
           DateTime.now().toUtc();
     }
-    controller.add(measurement);
+    super.addMeasurement(measurement);
   }
-
-  /// Add an error to the [measurements] stream.
-  @protected
-  void addError(Object error) => controller.addError(error);
 
   // default no-op implementation of callback methods below
 
@@ -75,9 +81,6 @@ abstract class Probe extends AbstractExecutor<Measure> {
 
   @override
   Future<bool> onStart() async => true;
-
-  @override
-  Future<bool> onRestart() async => true;
 
   @override
   Future<bool> onStop() async => true;
@@ -102,7 +105,7 @@ abstract class MeasurementProbe extends Probe {
     getMeasurement().then((measurement) {
       if (measurement != null) addMeasurement(measurement);
       // automatically stop this probe after it is done collecting the measurement
-      Future.delayed(const Duration(seconds: 1), () => stop());
+      Future.delayed(const Duration(seconds: 5), () => stop());
     }, onError: (Object error) => addError(error));
 
     return true;
@@ -168,7 +171,7 @@ abstract class IntervalProbe extends MeasurementProbe {
 ///
 /// See [BatteryProbe] for an example.
 abstract class StreamProbe extends Probe {
-  StreamSubscription<dynamic>? _subscription;
+  StreamSubscription<Measurement>? _subscription;
   Stream<Measurement>? _stream;
 
   /// The stream of [Measurement] objects for this [StreamProbe].
@@ -184,7 +187,8 @@ abstract class StreamProbe extends Probe {
           'Have you initialized this probe correctly or is the device connected?');
       return false;
     } else {
-      _subscription = _stream!.listen(onData, onError: onError, onDone: onDone);
+      _subscription =
+          _stream!.listen(_onData, onError: _onError, onDone: _onDone);
     }
     return true;
   }
@@ -203,10 +207,9 @@ abstract class StreamProbe extends Probe {
     return true;
   }
 
-  // just forwarding to the controller
-  void onData(Measurement measurement) => addMeasurement(measurement);
-  void onError(Object error) => addError(error);
-  void onDone() => controller.close();
+  void _onData(Measurement measurement) => addMeasurement(measurement);
+  void _onError(Object error) => addError(error);
+  void _onDone() => _measurementsController.close();
 }
 
 /// A periodic probe listening on a stream. Listening is done periodically as
@@ -224,7 +227,7 @@ abstract class StreamProbe extends Probe {
 /// Hence, data can still be generated from this probe, even if stopped.
 /// Stopping this probe will stop the creation of new collection periods.
 abstract class PeriodicStreamProbe extends StreamProbe {
-  Timer? timer;
+  Timer? _timer;
 
   @override
   PeriodicSamplingConfiguration? get samplingConfiguration =>
@@ -242,13 +245,11 @@ abstract class PeriodicStreamProbe extends StreamProbe {
       Duration? duration = samplingConfiguration?.duration;
       if (interval != null && duration != null) {
         // create a recurrent timer that starts sampling
-        timer = Timer.periodic(interval, (timer) {
-          final StreamSubscription<Measurement> newSubscription =
-              stream!.listen(onData, onError: onError, onDone: onDone);
+        _timer = Timer.periodic(interval, (timer) {
+          _subscription =
+              stream!.listen(_onData, onError: _onError, onDone: _onDone);
           // create a timer that stops the sampling after the specified duration.
-          Timer(duration, () async {
-            await newSubscription.cancel();
-          });
+          Timer(duration, () async => await _subscription?.cancel());
         });
       } else {
         warning(
@@ -261,9 +262,8 @@ abstract class PeriodicStreamProbe extends StreamProbe {
 
   @override
   Future<bool> onStop() async {
-    timer?.cancel();
-    await super.onStop();
-    return true;
+    _timer?.cancel();
+    return await super.onStop();
   }
 }
 
@@ -363,7 +363,8 @@ abstract class BufferingPeriodicProbe extends MeasurementProbe {
 /// windows specified by the [interval] and [duration] parameters of the
 /// [samplingConfiguration].
 abstract class BufferingIntervalStreamProbe extends StreamProbe {
-  Timer? timer;
+  Timer? _timer;
+  StreamSubscription<dynamic>? _bufferingStreamSubscription;
 
   @override
   IntervalSamplingConfiguration? get samplingConfiguration =>
@@ -373,12 +374,12 @@ abstract class BufferingIntervalStreamProbe extends StreamProbe {
   Future<bool> onStart() async {
     Duration? interval = samplingConfiguration?.interval;
     if (interval != null) {
-      _subscription = bufferingStream.listen(
+      _bufferingStreamSubscription = bufferingStream.listen(
         onSamplingData,
-        onError: onError,
-        onDone: onDone,
+        onError: _onError,
+        onDone: _onDone,
       );
-      timer = Timer.periodic(interval, (_) async {
+      _timer = Timer.periodic(interval, (_) async {
         try {
           Measurement? measurement = await getMeasurement();
           if (measurement != null) addMeasurement(measurement);
@@ -397,9 +398,9 @@ abstract class BufferingIntervalStreamProbe extends StreamProbe {
 
   @override
   Future<bool> onStop() async {
-    await super.onStop();
-    await _subscription?.cancel();
-    return true;
+    _timer?.cancel();
+    await _bufferingStreamSubscription?.cancel();
+    return await super.onStop();
   }
 
   /// The stream of events to be buffered. Must be specified by sub-classes.
@@ -446,6 +447,9 @@ abstract class BufferingIntervalStreamProbe extends StreamProbe {
 /// into an overall measurement for light, calculated in the [getMeasurement]
 /// method.
 abstract class BufferingPeriodicStreamProbe extends PeriodicStreamProbe {
+  StreamSubscription<dynamic>? _bufferingStreamSubscription;
+  Timer? _durationTimer;
+
   // we don't use the stream in the super class so we give it an empty non-null stream
   @override
   Stream<Measurement> get stream => const Stream.empty();
@@ -455,12 +459,12 @@ abstract class BufferingPeriodicStreamProbe extends PeriodicStreamProbe {
     Duration? interval = samplingConfiguration?.interval;
     Duration? duration = samplingConfiguration?.duration;
     if (interval != null && duration != null) {
-      timer = Timer.periodic(interval, (Timer t) {
+      _timer = Timer.periodic(interval, (Timer t) {
         onSamplingStart();
-        _subscription = bufferingStream.listen(onSamplingData,
-            onError: onError, onDone: onDone);
-        Timer(duration, () async {
-          await _subscription?.cancel();
+        _bufferingStreamSubscription = bufferingStream.listen(onSamplingData,
+            onError: _onError, onDone: _onDone);
+        _durationTimer = Timer(duration, () async {
+          await _bufferingStreamSubscription?.cancel();
           onSamplingEnd();
           try {
             Measurement? measurement = await getMeasurement();
@@ -481,15 +485,10 @@ abstract class BufferingPeriodicStreamProbe extends PeriodicStreamProbe {
 
   @override
   Future<bool> onStop() async {
-    await super.onStop();
-    onSamplingEnd();
-    try {
-      Measurement? measurement = await getMeasurement();
-      if (measurement != null) addMeasurement(measurement);
-    } catch (error) {
-      addError(error);
-    }
-    return true;
+    _durationTimer?.cancel();
+    await _bufferingStreamSubscription?.cancel();
+
+    return await super.onStop();
   }
 
   // Sub-classes should implement the following handler methods.

@@ -5,7 +5,7 @@
  * found in the LICENSE file.
  */
 
-part of carp_context_package;
+part of '../../carp_context_package.dart';
 
 /// Position coordinated in Degrees (i.e. GPS-style).
 @JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)

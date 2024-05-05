@@ -11,7 +11,6 @@ import 'dart:convert';
 import 'package:carp_core/carp_core.dart';
 import 'package:carp_mobile_sensing/carp_mobile_sensing.dart';
 import 'package:carp_serializable/carp_serializable.dart';
-import 'package:iso_duration_parser/iso_duration_parser.dart';
 
 /// This is an example of how to set up a the most minimal study.
 /// Used in the README file.
@@ -340,7 +339,7 @@ void example_2() async {
 /// An example of how to configure a [SmartphoneStudyProtocol] with the
 /// default privacy schema.
 void privacySchemaExample() async {
-  SmartphoneStudyProtocol protocol = SmartphoneStudyProtocol(
+  var protocol = SmartphoneStudyProtocol(
     ownerId: 'AB',
     name: 'Track patient movement',
     privacySchemaName: PrivacySchema.DEFAULT,
@@ -433,7 +432,7 @@ void example_4() async {
 
 void transformedExample() async {
   // Create a study protocol storing data in files using the OMH data format
-  SmartphoneStudyProtocol protocol = SmartphoneStudyProtocol(
+  var protocol = SmartphoneStudyProtocol(
     ownerId: 'AB',
     name: 'Track patient movement',
     dataEndPoint: FileDataEndPoint(

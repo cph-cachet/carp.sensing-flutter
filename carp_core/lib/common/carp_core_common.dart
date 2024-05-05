@@ -4,7 +4,6 @@ library carp_core_common;
 import 'package:iso_duration_parser/iso_duration_parser.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:carp_serializable/carp_serializable.dart';
-import 'package:uuid/uuid.dart';
 
 part 'application/account.dart';
 part 'infrastructure/service_request.dart';
@@ -44,7 +43,7 @@ abstract class Snapshot {
 
   Snapshot([String? id]) {
     version = 0;
-    this.id = id ?? const Uuid().v1();
+    this.id = id ?? UUID.v1;
     createdOn = DateTime.now().toUtc();
   }
 }

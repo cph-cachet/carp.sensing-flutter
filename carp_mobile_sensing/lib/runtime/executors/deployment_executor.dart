@@ -7,7 +7,7 @@
 
 part of '../runtime.dart';
 
-/// The [SmartphoneDeploymentExecutor] is responsible for executing a [SmartphoneDeployment].
+/// A [SmartphoneDeploymentExecutor] is responsible for executing a [SmartphoneDeployment].
 /// For each task control in this deployment, it starts a [TaskControlExecutor].
 ///
 /// Note that the [SmartphoneDeploymentExecutor] in itself is an [Executor] and hence work
@@ -26,20 +26,27 @@ class SmartphoneDeploymentExecutor
       return false;
     }
 
-    group.add(_manualMeasurementController.stream);
+    _group.add(_manualMeasurementController.stream);
 
     for (var taskControl in configuration!.taskControls) {
       // get the trigger and task based on the trigger id and task name
       final trigger = configuration!.triggers['${taskControl.triggerId}']!;
       final task = configuration!.getTaskByName(taskControl.taskName)!;
 
-      final executor = ExecutorFactory().getTaskControlExecutor(
-        taskControl,
-        trigger,
-        task,
-      );
+      TaskControlExecutor executor;
+
+      // a TriggeredAppTaskExecutor need BOTH a [Schedulable] trigger and an [AppTask]
+      // to schedule
+      if (trigger is Schedulable && task is AppTask) {
+        executor = AppTaskControlExecutor(taskControl, trigger, task);
+      } else {
+        // all other cases we use the normal background triggering relying on the app
+        // running in the background
+        executor = TaskControlExecutor(taskControl, trigger, task);
+      }
 
       executor.initialize(taskControl, deployment!);
+      addExecutor(executor);
 
       // let the device manger know about this executor
       if (taskControl.destinationDeviceRoleName != null) {
@@ -52,20 +59,33 @@ class SmartphoneDeploymentExecutor
               .add(executor);
         }
       }
-
-      group.add(executor.measurements);
-      executors.add(executor);
     }
     return true;
   }
 
-  /// Add [measurement] to the stream of [measurements].
-  void addMeasurement(Measurement measurement) =>
-      _manualMeasurementController.add(measurement);
+  @override
+  Future<void> onDispose() async {
+    await super.onDispose();
 
-  /// Add error to the stream of [measurements].
-  void addError(Object error, [StackTrace? stacktrace]) =>
-      _manualMeasurementController.addError(error, stacktrace);
+    // remove the executors from the device managers
+    for (var element in executors) {
+      TaskControlExecutor executor = element as TaskControlExecutor;
+
+      if (executor.taskControl.destinationDeviceRoleName != null) {
+        DeviceConfiguration? targetDevice =
+            configuration?.getDeviceFromRoleName(
+                executor.taskControl.destinationDeviceRoleName!);
+        if (targetDevice != null) {
+          DeviceController()
+              .getDevice(targetDevice.type)
+              ?.executors
+              .remove(executor);
+        }
+      }
+    }
+
+    // executors.clear();
+  }
 
   /// A list of the running probes in this study deployment executor.
   List<Probe> get probes {
