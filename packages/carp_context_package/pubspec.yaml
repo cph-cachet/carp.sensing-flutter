@@ -13,7 +13,7 @@ dependencies:
  
   carp_serializable: ^1.1.0
   carp_core: ^1.4.0
-  carp_mobile_sensing: ^1.4.0
+  carp_mobile_sensing: ^1.6.0
  
   json_annotation: ^4.8.0
   permission_handler: ^11.0.0  
@@ -24,6 +24,8 @@ dependencies:
   mobility_features: ^4.0.0
   # location: ^6.0.0
   geolocator: ^11.0.0
+  geolocator_apple: ^2.3.0
+  geolocator_android: ^4.5.0
   # carp_background_location: ^4.0.0 # the CARP location plugin
 
 # Overriding carp libraries to use the local copy
