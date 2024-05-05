@@ -33,6 +33,7 @@ class LocationManager {
 
   bool _enabled = false, _configured = false;
   final _provider = location.Location();
+  Location? _lastKnownLocation;
 
   /// Is the location service enabled, which entails that
   ///  * location service is enabled
@@ -90,7 +91,6 @@ class LocationManager {
           "$runtimeType - Permission to collect location data 'Always' in the background has not been granted. "
           "Make sure to grant this BEFORE sensing is resumed. "
           "The context sampling package does not handle permissions. This should be handled on the application level.");
-      // return;
     }
 
     _enabled = true;
@@ -101,7 +101,7 @@ class LocationManager {
     } catch (error) {
       warning('$runtimeType - Could not enable background mode - $error');
     }
-    info('$runtimeType - enabled, background mode enabled: $backgroundMode');
+    info('$runtimeType - enabled, background mode: $backgroundMode');
   }
 
   /// Configures the [LocationManager], incl. sending a notification to the
@@ -113,7 +113,7 @@ class LocationManager {
     // fast out if already configured
     if (configured) return;
 
-    // if not enabled, enable first
+    // ensured that this location manager is enable first
     await enable();
 
     info('Configuring $runtimeType - configuration: $configuration');
@@ -145,15 +145,24 @@ class LocationManager {
     }
   }
 
+  /// The last know location, if any.
+  Location? get lastKnownLocation => _lastKnownLocation;
+
   /// Gets the current location of the phone.
-  /// Throws an error if the app has no permission to access location.
-  Future<Location> getLocation() async =>
-      Location.fromLocationData(await _provider.getLocation());
+  ///
+  /// Throws an error if location cannot be obtained within a few seconds or
+  /// if the app has no permission to access location.
+  Future<Location> getLocation() async => _lastKnownLocation =
+      Location.fromLocationData(await _provider.getLocation().timeout(
+            const Duration(seconds: 6),
+            // onTimeout: () => lastKnownLocation,
+          ));
 
   /// Returns a stream of [Location] objects.
+  ///
   /// Throws an error if the app has no permission to access location.
-  Stream<Location> get onLocationChanged => _provider.onLocationChanged
-      .map((location) => Location.fromLocationData(location));
+  Stream<Location> get onLocationChanged => _provider.onLocationChanged.map(
+      (location) => _lastKnownLocation = Location.fromLocationData(location));
 }
 
 /// The precision of the Location. A lower precision will provide a greater
