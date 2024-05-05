@@ -17,8 +17,8 @@ dependencies:
 
   carp_serializable: ^1.1.0
   carp_core: ^1.6.0
-  # carp_mobile_sensing: ^1.6.0
-  # carp_webservices: ^3.0.0
+  carp_mobile_sensing: ^1.6.0
+  carp_webservices: ^3.1.0
 
   research_package: ^1.5.0
   cognition_package: ^1.5.0
@@ -30,10 +30,10 @@ dependency_overrides:
   #   path: ../../carp_serializable/
   # carp_core:
   #   path: ../../carp_core/
-  carp_mobile_sensing:
-    path: ../../carp_mobile_sensing/
-  carp_webservices:
-    path: ../carp_webservices/
+  # carp_mobile_sensing:
+  #   path: ../../carp_mobile_sensing/
+  # carp_webservices:
+  #   path: ../carp_webservices/
   # research_package:
   #   path: ../../../../research.package/
   # the following sampling packages are only used for unit testing
