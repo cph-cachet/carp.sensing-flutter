@@ -7,6 +7,7 @@
 library carp_context_package;
 
 import 'dart:async';
+import 'dart:io';
 import 'dart:math' as math;
 import 'package:json_annotation/json_annotation.dart';
 import 'package:weather/weather.dart' as weather;
@@ -14,7 +15,10 @@ import 'package:openmhealth_schemas/openmhealth_schemas.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:air_quality/air_quality.dart' as waqi;
 import 'package:mobility_features/mobility_features.dart';
-import 'package:location/location.dart' as location;
+// import 'package:location/location.dart' as location;
+import 'package:geolocator/geolocator.dart' as geolocator;
+import 'package:geolocator_apple/geolocator_apple.dart';
+import 'package:geolocator_android/geolocator_android.dart';
 // import 'package:carp_background_location/carp_background_location.dart' as cbl;
 // import 'package:activity_recognition_flutter/activity_recognition_flutter.dart';
 import 'package:flutter_activity_recognition/flutter_activity_recognition.dart'

@@ -83,24 +83,39 @@ class Location extends Geolocation {
     this.provider,
   }) : super();
 
-  /// Create a [Location] object based on a [LocationData] from the `location` plugin.
-  Location.fromLocationData(location.LocationData location) : super() {
-    latitude = location.latitude ?? 0;
-    longitude = location.longitude ?? 0;
-    altitude = location.altitude;
-    accuracy = location.accuracy;
-    verticalAccuracy = location.verticalAccuracy;
-    speed = location.speed;
-    speedAccuracy = location.speedAccuracy;
-    heading = location.heading;
-    time = (location.time != null)
-        ? DateTime.fromMillisecondsSinceEpoch(location.time!.toInt())
-        : null;
-    isMock = location.isMock;
-    headingAccuracy = location.headingAccuracy;
-    elapsedRealtimeNanos = location.elapsedRealtimeNanos;
-    elapsedRealtimeUncertaintyNanos = location.elapsedRealtimeUncertaintyNanos;
-    satellites = location.satelliteNumber;
+  // /// Create a [Location] object based on a [LocationData] from the `location` plugin.
+  // Location.fromLocationData(location.LocationData location) : super() {
+  //   latitude = location.latitude ?? 0;
+  //   longitude = location.longitude ?? 0;
+  //   altitude = location.altitude;
+  //   accuracy = location.accuracy;
+  //   verticalAccuracy = location.verticalAccuracy;
+  //   speed = location.speed;
+  //   speedAccuracy = location.speedAccuracy;
+  //   heading = location.heading;
+  //   time = (location.time != null)
+  //       ? DateTime.fromMillisecondsSinceEpoch(location.time!.toInt())
+  //       : null;
+  //   isMock = location.isMock;
+  //   headingAccuracy = location.headingAccuracy;
+  //   elapsedRealtimeNanos = location.elapsedRealtimeNanos;
+  //   elapsedRealtimeUncertaintyNanos = location.elapsedRealtimeUncertaintyNanos;
+  //   satellites = location.satelliteNumber;
+  // }
+
+  /// Create a [Location] object based on a [Position] from the `geolocator` plugin.
+  Location.fromPositionData(geolocator.Position position) : super() {
+    latitude = position.latitude;
+    longitude = position.longitude;
+    altitude = position.altitude;
+    accuracy = position.accuracy;
+    verticalAccuracy = position.altitudeAccuracy;
+    speed = position.speed;
+    speedAccuracy = position.speedAccuracy;
+    heading = position.heading;
+    time = position.timestamp.toUtc();
+    isMock = position.isMocked;
+    headingAccuracy = position.headingAccuracy;
   }
 
   // /// Create a [Location] object based on a [LocationDto] from the
