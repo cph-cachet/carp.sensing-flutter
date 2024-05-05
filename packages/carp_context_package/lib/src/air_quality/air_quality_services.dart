@@ -5,7 +5,7 @@
  * found in the LICENSE file.
  */
 
-part of carp_context_package;
+part of '../../carp_context_package.dart';
 
 /// An [OnlineService] for the air quality service.
 @JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
@@ -68,8 +68,7 @@ class AirQualityServiceManager extends OnlineServiceManager<AirQualityService> {
 
   @override
   Future<bool> onHasPermissions() async =>
-      (await LocationManager().hasPermission()) ==
-      location.PermissionStatus.granted;
+      (await Permission.locationWhenInUse.status).isGranted;
 
   @override
   Future<void> onRequestPermissions() async =>

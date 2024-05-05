@@ -5,7 +5,7 @@
  * found in the LICENSE file.
  */
 
-part of carp_context_package;
+part of '../carp_context_package.dart';
 
 /// This is the base class for this context sampling package.
 ///

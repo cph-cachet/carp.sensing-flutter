@@ -1,4 +1,4 @@
-part of carp_context_package;
+part of '../../carp_context_package.dart';
 
 /// Specify the configuration on how to measure mobility features.
 @JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)

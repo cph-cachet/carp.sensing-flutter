@@ -5,7 +5,7 @@
  * found in the LICENSE file.
  */
 
-part of carp_context_package;
+part of '../../carp_context_package.dart';
 
 /// A [Data] that holds air quality information collected via the
 /// [World's Air Quality Index (WAQI)](https://waqi.info) API.

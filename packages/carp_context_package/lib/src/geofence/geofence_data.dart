@@ -5,7 +5,7 @@
  * found in the LICENSE file.
  */
 
-part of carp_context_package;
+part of '../../carp_context_package.dart';
 
 /// Holds information about a geofence event of entering, exiting, or dwelling.
 @JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)

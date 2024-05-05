@@ -1,4 +1,4 @@
-part of carp_context_package;
+part of '../../carp_context_package.dart';
 
 /// Collects local weather information using the [WeatherServiceManager].
 class WeatherProbe extends MeasurementProbe {

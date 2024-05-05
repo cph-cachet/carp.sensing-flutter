@@ -5,7 +5,7 @@
  * found in the LICENSE file.
  */
 
-part of carp_context_package;
+part of '../carp_context_package.dart';
 
 /// A manger that knows how to get location information.
 /// Provide access to location data while the app is in the background.
@@ -22,7 +22,7 @@ part of carp_context_package;
 /// Google - to handle permissions on an application level and show the location
 /// permission dialogue to the user **before** using probes that depend on location.
 ///
-/// This version of the location manager is based on the [location](https://pub.dev/packages/location)
+/// This [LocationManager] based on the [location](https://pub.dev/packages/location)
 /// plugin.
 class LocationManager {
   static final LocationManager _instance = LocationManager._();
@@ -47,23 +47,23 @@ class LocationManager {
   Future<bool> isBackgroundModeEnabled() async =>
       await _provider.isBackgroundModeEnabled();
 
-  /// What kind of location permissions does this manager have?
+  /// Does this location manger have permission to access location "always"?
   ///
-  /// If the result is [PermissionStatus.deniedForever], no dialog will be
+  /// If the result is [PermissionStatus.permanentlyDenied], no dialog will be
   /// shown on [requestPermission].
-  Future<location.PermissionStatus> hasPermission() async =>
-      await _provider.hasPermission();
+  Future<PermissionStatus> hasPermission() async =>
+      await Permission.locationAlways.status;
 
   /// Has location been granted to this location manager?
   Future<bool> isGranted() async =>
-      (await hasPermission()) == location.PermissionStatus.granted;
+      (await hasPermission()) == PermissionStatus.granted;
 
-  /// Request permissions to access location?
+  /// Request permissions to access location.
   ///
-  /// If the result is [PermissionStatus.deniedForever], no dialog will be
+  /// If the result is [PermissionStatus.permanentlyDenied], no dialog will be
   /// shown on [requestPermission].
-  Future<location.PermissionStatus> requestPermission() async =>
-      await _provider.requestPermission();
+  Future<PermissionStatus> requestPermission() async =>
+      await Permission.locationAlways.request();
 
   /// Enable the [LocationManager], incl. sending a notification to the
   /// Android notification system.

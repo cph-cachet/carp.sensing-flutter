@@ -5,7 +5,7 @@
  * found in the LICENSE file.
  */
 
-part of carp_context_package;
+part of '../../carp_context_package.dart';
 
 /// Holds weather information collected through OpenWeather API.
 @JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)

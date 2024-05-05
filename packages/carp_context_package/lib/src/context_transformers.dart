@@ -1,4 +1,4 @@
-part of carp_context_package;
+part of '../carp_context_package.dart';
 
 /// A [Data] which can hold an OMH [DataPoint](https://www.openmhealth.org/documentation/#/schema-docs/schema-library/schemas/omh_data-point)
 /// and provide its correct OMH [format] and [provenance].

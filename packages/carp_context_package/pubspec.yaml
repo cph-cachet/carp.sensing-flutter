@@ -22,8 +22,8 @@ dependencies:
   flutter_activity_recognition: ^3.0.0
   openmhealth_schemas: ^0.3.0
   mobility_features: ^4.0.0
-  location: '>=5.0.0 <7.0.0'
-
+  location: ^6.0.0
+  # geolocator: ^11.0.0
   # carp_background_location: ^4.0.0 # the CARP location plugin
 
 # Overriding carp libraries to use the local copy
