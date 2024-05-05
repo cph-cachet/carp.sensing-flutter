@@ -4,7 +4,7 @@
  * Use of this source code is governed by a MIT-style license that can be
  * found in the LICENSE file.
  */
-part of media;
+part of 'media.dart';
 
 /// A probe recording audio from the microphone. It starts recording on [start]
 /// and stops recording on [stop], and post the recorded [Media] object to the

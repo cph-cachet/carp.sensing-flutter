@@ -5,7 +5,7 @@
  * found in the LICENSE file.
  */
 
-part of media;
+part of 'media.dart';
 
 // TODO -- audio recording and noise is conflicting... can't run at the same time...
 
