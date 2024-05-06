@@ -1,4 +1,4 @@
-## 1.6.0
+## 1.6.1
 
 * improvement to removing studies (linked to issue [#283](https://github.com/cph-cachet/carp_studies_app/issues/283) in the CARP Studies App)
   * adding a new "disposed" sensing state
@@ -6,6 +6,7 @@
   * better handling of restarting sampling on device reconnection
 * upgrade of carp_serialization and carp_core
 * getting rid of uuid package dependency
+* fix of [#394](https://github.com/cph-cachet/carp.sensing-flutter/issues/394)
 
 ## 1.5.1
 

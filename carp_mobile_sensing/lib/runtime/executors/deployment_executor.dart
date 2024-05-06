@@ -18,6 +18,8 @@ class SmartphoneDeploymentExecutor
   final StreamController<Measurement> _manualMeasurementController =
       StreamController.broadcast();
 
+  final ExecutorFactory executorFactory = ExecutorFactory();
+
   @override
   bool onInitialize() {
     if (configuration == null) {
@@ -38,27 +40,21 @@ class SmartphoneDeploymentExecutor
       // a TriggeredAppTaskExecutor need BOTH a [Schedulable] trigger and an [AppTask]
       // to schedule
       if (trigger is Schedulable && task is AppTask) {
-        executor = AppTaskControlExecutor(taskControl, trigger, task);
+        executor = AppTaskControlExecutor(this, taskControl, trigger, task);
       } else {
         // all other cases we use the normal background triggering relying on the app
         // running in the background
-        executor = TaskControlExecutor(taskControl, trigger, task);
+        executor = TaskControlExecutor(this, taskControl, trigger, task);
       }
 
       executor.initialize(taskControl, deployment!);
       addExecutor(executor);
 
       // let the device manger know about this executor
-      if (taskControl.destinationDeviceRoleName != null) {
-        DeviceConfiguration? targetDevice = configuration
-            ?.getDeviceFromRoleName(taskControl.destinationDeviceRoleName!);
-        if (targetDevice != null) {
-          DeviceController()
-              .getDevice(targetDevice.type)
-              ?.executors
-              .add(executor);
-        }
-      }
+      getDeviceManagerFromRoleName(
+              executor.taskControl.destinationDeviceRoleName)
+          ?.executors
+          .add(executor);
     }
     return true;
   }
@@ -71,20 +67,24 @@ class SmartphoneDeploymentExecutor
     for (var element in executors) {
       TaskControlExecutor executor = element as TaskControlExecutor;
 
-      if (executor.taskControl.destinationDeviceRoleName != null) {
-        DeviceConfiguration? targetDevice =
-            configuration?.getDeviceFromRoleName(
-                executor.taskControl.destinationDeviceRoleName!);
-        if (targetDevice != null) {
-          DeviceController()
-              .getDevice(targetDevice.type)
-              ?.executors
-              .remove(executor);
-        }
-      }
+      getDeviceManagerFromRoleName(
+              executor.taskControl.destinationDeviceRoleName)
+          ?.executors
+          .remove(executor);
     }
-
     // executors.clear();
+  }
+
+  /// Get the [DeviceManager] based on the [roleName].
+  /// This includes both the primary device and the connected devices.
+  /// Returns null if no device with [roleName] is found.
+  DeviceManager? getDeviceManagerFromRoleName(String? roleName) {
+    if (roleName == null) return null;
+
+    var targetDevice = configuration?.getDeviceFromRoleName(roleName);
+    return (targetDevice != null)
+        ? DeviceController().getDevice(targetDevice.type)
+        : null;
   }
 
   /// A list of the running probes in this study deployment executor.
