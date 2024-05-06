@@ -15,7 +15,7 @@ part of '../runtime.dart';
 /// Note that each deployment has its own [ExecutorFactory].
 /// This is because trigger executors needs to be reused across tasks in the same
 /// deployment (in the task control), while avoiding them to be reused across
-/// deployments (if the task has the same name).
+/// deployments (if the trigger or task has the same name).
 class ExecutorFactory {
   final Map<int, TriggerExecutor> _triggerExecutors = {};
   final Map<String, TaskExecutor> _taskExecutors = {};

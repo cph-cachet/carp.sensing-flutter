@@ -214,7 +214,8 @@ class TimeOfDay {
 /// repeating events: https://tools.ietf.org/html/rfc5545#section-3.3.10
 ///
 /// However, since date times are relative to the start time of a study,
-/// they are replaced with time spans representing elapsed time since the start of the study.
+/// they are replaced with time spans representing elapsed time since the
+/// start of the study.
 @JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
 class RecurrenceRule {
   /// Specifies the type of interval at which to repeat events, or multiples thereof.
