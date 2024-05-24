@@ -21,6 +21,7 @@ import 'package:json_annotation/json_annotation.dart';
 
 import 'package:carp_core/carp_core.dart';
 import 'package:carp_mobile_sensing/carp_mobile_sensing.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 
 part 'carp_base_service.dart';
 part 'carp_service.dart';
@@ -43,6 +44,7 @@ part 'file_reference.dart';
 part 'http_retry.dart';
 part 'push_id_generator.dart';
 part 'invitations_dialog.dart';
+part 'notification_service.dart';
 
 part 'carp_services.g.dart';
 
