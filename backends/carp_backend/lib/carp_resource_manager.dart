@@ -154,13 +154,22 @@ class CarpResourceManager
 
   @override
   Future<RPOrderedTask?> getInformedConsent({bool refresh = false}) async {
-    // initialize json serialization for RP classes
-    ResearchPackage();
+    // make sure json serialization for RP classes is initialized
+    ResearchPackage.ensureInitialized();
     Map<String, dynamic>? json =
         await _getResource(RPOrderedTask, refresh: refresh);
 
-    return informedConsent =
-        (json != null) ? RPOrderedTask.fromJson(json) : null;
+    if (json == null) return null;
+
+    RPOrderedTask? informedConsent;
+
+    try {
+      informedConsent = RPOrderedTask.fromJson(json);
+    } catch (error) {
+      warning('$runtimeType - Error parsing informed consent - $error');
+    }
+
+    return informedConsent;
   }
 
   @override

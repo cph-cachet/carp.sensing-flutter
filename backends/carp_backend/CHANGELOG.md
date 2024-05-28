@@ -1,6 +1,7 @@
-## 1.7.0
+## 1.7.1
 
 * upgrade of packages - carp_serialization, carp_core, carp_mobile_sensing, carp_webservices
+* more robust handling of ill-formatted informed consent JSON documents
 
 ## 1.6.0
 
