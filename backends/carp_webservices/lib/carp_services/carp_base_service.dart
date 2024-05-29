@@ -95,8 +95,8 @@ abstract class CarpBaseService {
     // debug(
     //     'RESPONSE: $httpStatusCode\n${toJsonString(json.decode(responseBody))}');
 
-    // check if this is a json list or an empty string
-    // if so turn it into a valid json map
+    // Check if this is a json list or an empty string
+    // If so turn it into a valid json map
     if (responseBody.startsWith('[')) responseBody = '{"items":$responseBody}';
     if (responseBody.isEmpty) responseBody = '{}';
 

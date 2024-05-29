@@ -7,10 +7,10 @@
 
 part of 'carp_services.dart';
 
-/// Provide access to a CARP web service endpoint.
+/// Provide access to a CARP Web Services (CAWS) endpoints.
 ///
 /// The (current) assumption is that each Flutter app (using this library) will
-/// only connect to one CARP web service backend.
+/// only connect to one CARP web services backend.
 /// Therefore a [CarpService] is a singleton and can be used like:
 ///
 /// ```dart
@@ -65,10 +65,11 @@ class CarpService extends CarpBaseService {
   Future<ConsentDocument> createConsentDocument(
       Map<String, dynamic> document) async {
     // POST the document to the CARP web service
-    http.Response response = await http.post(
-        Uri.parse(Uri.encodeFull(consentDocumentEndpointUri)),
-        headers: headers,
-        body: json.encode(document));
+    http.Response response = await httpr.post(
+      consentDocumentEndpointUri,
+      headers: headers,
+      body: json.encode(document),
+    );
 
     int httpStatusCode = response.statusCode;
     Map<String, dynamic> responseJson =
@@ -161,7 +162,7 @@ class CarpService extends CarpBaseService {
     int httpStatusCode = response.statusCode;
 
     switch (httpStatusCode) {
-      case 200:
+      case HttpStatus.ok:
         {
           List<dynamic> list = json.decode(response.body) as List<dynamic>;
           List<CarpFileResponse> fileList = [];

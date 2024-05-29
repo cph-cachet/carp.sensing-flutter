@@ -88,8 +88,8 @@ class FileUploadTask extends CarpServiceTask {
 
         switch (httpStatusCode) {
           // CARP web service returns "201 Created" when a file is created on the server.
-          case 200:
-          case 201:
+          case HttpStatus.ok:
+          case HttpStatus.created:
             {
               // save the id generated from the server
               reference.id = map["id"] as int;
@@ -152,7 +152,7 @@ class FileDownloadTask extends CarpServiceTask {
       final int httpStatusCode = response.statusCode;
 
       switch (httpStatusCode) {
-        case 200:
+        case HttpStatus.ok:
           {
             _state = TaskStateType.success;
             file.writeAsBytes(response.bodyBytes);

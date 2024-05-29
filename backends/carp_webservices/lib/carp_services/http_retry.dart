@@ -101,19 +101,21 @@ class HTTPRetry {
   }
 
   /// Sends an HTTP GET request with the given [headers] to the given [url].
-  Future<http.Response> get(String url, {Map<String, String>? headers}) async =>
-      await retry(
-        () => client
-            .get(
-              Uri.parse(Uri.encodeFull(url)),
-              headers: headers,
-            )
-            .timeout(const Duration(seconds: 20)),
-        delayFactor: const Duration(seconds: 5),
-        maxAttempts: 15,
-        retryIf: (e) => e is SocketException || e is TimeoutException,
-        onRetry: (e) => print('${e.runtimeType} - Retrying to GET $url'),
-      );
+  Future<http.Response> get(String url, {Map<String, String>? headers}) async {
+    final response = await retry(
+      () => client
+          .get(
+            Uri.parse(Uri.encodeFull(url)),
+            headers: headers,
+          )
+          .timeout(const Duration(seconds: 20)),
+      delayFactor: const Duration(seconds: 5),
+      maxAttempts: 15,
+      retryIf: (e) => e is SocketException || e is TimeoutException,
+      onRetry: (e) => print('${e.runtimeType} - Retrying to GET $url'),
+    );
+    return clean(response);
+  }
 
   /// Sends an HTTP POST request with the given [headers] and [body] to the given [url].
   Future<http.Response> post(
@@ -123,7 +125,7 @@ class HTTPRetry {
     Encoding? encoding,
   }) async {
     // calling the http POST method using the retry approach
-    final http.Response response = await retry(
+    final response = await retry(
       () => client
           .post(
             Uri.parse(Uri.encodeFull(url)),
@@ -137,7 +139,8 @@ class HTTPRetry {
       retryIf: (e) => e is SocketException || e is TimeoutException,
       onRetry: (e) => print('${e.runtimeType} - Retrying to POST $url'),
     );
-    return response;
+
+    return clean(response);
   }
 
   /// Sends an HTTP PUT request with the given [headers] and [body] to the given [url].
@@ -148,7 +151,7 @@ class HTTPRetry {
     Encoding? encoding,
   }) async {
     // calling the http PUT method using the retry approach
-    final http.Response response = await retry(
+    final response = await retry(
       () => client
           .put(
             Uri.parse(Uri.encodeFull(url)),
@@ -162,7 +165,7 @@ class HTTPRetry {
       retryIf: (e) => e is SocketException || e is TimeoutException,
       onRetry: (e) => print('${e.runtimeType} - Retrying to PUT $url'),
     );
-    return response;
+    return clean(response);
   }
 
   /// Sends an HTTP DELETE request with the given [headers] to the given [url].
@@ -171,7 +174,7 @@ class HTTPRetry {
     Map<String, String>? headers,
   }) async {
     // calling the http DELETE method using the retry approach
-    final http.Response response = await retry(
+    final response = await retry(
       () => client
           .delete(
             Uri.parse(Uri.encodeFull(url)),
@@ -183,6 +186,27 @@ class HTTPRetry {
       retryIf: (e) => e is SocketException || e is TimeoutException,
       onRetry: (e) => print('${e.runtimeType} - Retrying to DELETE $url'),
     );
-    return response;
+    return clean(response);
   }
+
+  /// Check if we get an Nginx reverse proxy error in HTML format, and if so
+  /// convert it to a JSON error message.
+  ///
+  /// See issue : https://github.com/cph-cachet/carp.sensing-flutter/issues/369
+  http.Response clean(http.Response response) =>
+      response.body.startsWith('<html>')
+          ? http.Response(
+              '{'
+              '"statusCode": 502,'
+              '"message": "502 Bad Gateway.",'
+              '"path": "POST ${response.request?.url}"'
+              '}',
+              response.statusCode,
+              headers: response.headers,
+              isRedirect: response.isRedirect,
+              persistentConnection: response.persistentConnection,
+              reasonPhrase: response.reasonPhrase,
+              request: response.request,
+            )
+          : response;
 }

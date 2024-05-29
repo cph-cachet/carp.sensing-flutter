@@ -58,7 +58,7 @@ class FileStorageReference extends CarpReference {
     print(response.body);
 
     switch (httpStatusCode) {
-      case 200:
+      case HttpStatus.ok:
         {
           return CarpFileResponse._(map);
         }
@@ -84,8 +84,8 @@ class FileStorageReference extends CarpReference {
     int httpStatusCode = response.statusCode;
 
     switch (httpStatusCode) {
-      case 200:
-      case 204:
+      case HttpStatus.ok:
+      case HttpStatus.noContent:
         {
           return httpStatusCode;
         }
