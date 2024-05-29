@@ -22,8 +22,8 @@ part of '../runtime.dart';
 /// and [scheduleRecurrentNotifications] methods, which
 /// creates an immediate, scheduled, or recurrent notification, respectively.
 abstract class NotificationController {
-  /// The upper limit of scheduled notification on iOS.
-  static const PENDING_NOTIFICATION_LIMIT = 64;
+  /// The upper limit of scheduled notification, platform dependent.
+  static final pendingNotificationLimit = Platform.isIOS ? 64 : 500;
 
   /// The id of the notification channel.
   static const CHANNEL_ID = 'carp_mobile_sensing_notifications';
