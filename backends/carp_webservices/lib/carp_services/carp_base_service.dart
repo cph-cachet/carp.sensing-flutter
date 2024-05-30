@@ -86,9 +86,12 @@ abstract class CarpBaseService {
     final String body = toJsonString(request.toJson());
     _endpointName = endpointName ?? rpcEndpointName;
 
-    debug('REQUEST: $rpcEndpointUri\n$body');
-    http.Response response = await httpr.post(Uri.encodeFull(rpcEndpointUri),
-        headers: headers, body: body);
+    debug('REQUEST: POST $rpcEndpointUri\n$body');
+    http.Response response = await httpr.post(
+      Uri.encodeFull(rpcEndpointUri),
+      headers: headers,
+      body: body,
+    );
     int httpStatusCode = response.statusCode;
     String responseBody = response.body;
     debug('RESPONSE: $httpStatusCode\n$responseBody');
@@ -115,4 +118,91 @@ abstract class CarpBaseService {
       path: responseJson["path"].toString(),
     );
   }
+
+  /// Sends an HTTP GET request to the given [url] for this CAWS service.
+  Future<http.Response> _get(String url) async {
+    debug('REQUEST: GET $url');
+
+    var response = await httpr.get(url, headers: headers);
+
+    debug('RESPONSE: ${response.statusCode}\n${response.body}');
+
+    // If we get a 403 forbidden response try to refresh token and retry once.
+    // See issue : https://github.com/cph-cachet/carp.sensing-flutter/issues/392
+    if (response.statusCode == HttpStatus.forbidden) {
+      await CarpAuthService().refresh();
+      response = await httpr.get(url, headers: headers);
+    }
+
+    return _clean(response);
+  }
+
+  /// Sends an HTTP POST request with [body] to the given [url] for this CAWS service.
+  Future<http.Response> _post(String url, {Object? body}) async {
+    debug('REQUEST: POST $url\n$body');
+
+    var response = await httpr.post(url, headers: headers, body: body);
+
+    debug('RESPONSE: ${response.statusCode}\n${response.body}');
+
+    if (response.statusCode == HttpStatus.forbidden) {
+      await CarpAuthService().refresh();
+      response = await httpr.post(url, headers: headers, body: body);
+    }
+
+    return _clean(response);
+  }
+
+  /// Sends an HTTP PUT request with [body] to the given [url] for this CAWS service.
+  Future<http.Response> _put(String url, {Object? body}) async {
+    debug('REQUEST: PUT $url\n$body');
+
+    var response = await httpr.put(url, headers: headers, body: body);
+
+    debug('RESPONSE: ${response.statusCode}\n${response.body}');
+
+    if (response.statusCode == HttpStatus.forbidden) {
+      await CarpAuthService().refresh();
+      response = await httpr.put(url, headers: headers, body: body);
+    }
+
+    return _clean(response);
+  }
+
+  /// Sends an HTTP DELETE request to the given [url] for this CAWS service.
+  Future<http.Response> _delete(String url) async {
+    debug('REQUEST: DELETE $url');
+
+    var response = await httpr.delete(url, headers: headers);
+
+    debug('RESPONSE: ${response.statusCode}\n${response.body}');
+
+    if (response.statusCode == HttpStatus.forbidden) {
+      await CarpAuthService().refresh();
+      response = await httpr.delete(url, headers: headers);
+    }
+
+    return _clean(response);
+  }
+
+  /// Check if we get an Nginx reverse proxy error in HTML format, and if so
+  /// convert it to a JSON error message.
+  ///
+  /// See issue : https://github.com/cph-cachet/carp.sensing-flutter/issues/369
+  http.Response _clean(http.Response response) =>
+      response.body.startsWith('<html>')
+          ? http.Response(
+              '{'
+              '"statusCode": 502,'
+              '"message": "502 Bad Gateway.",'
+              '"path": "POST ${response.request?.url}"'
+              '}',
+              response.statusCode,
+              headers: response.headers,
+              isRedirect: response.isRedirect,
+              persistentConnection: response.persistentConnection,
+              reasonPhrase: response.reasonPhrase,
+              request: response.request,
+            )
+          : response;
 }

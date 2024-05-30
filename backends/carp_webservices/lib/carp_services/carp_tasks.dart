@@ -75,14 +75,9 @@ class FileUploadTask extends CarpServiceTask {
 
     request.files.add(ClonableMultipartFile.fromFileSync(file.path));
 
-    print('files # : ${request.files.length}');
-
     httpr.send(request).then((http.StreamedResponse response) {
       response.stream.toStringStream().first.then((body) {
         final int httpStatusCode = response.statusCode;
-        print("httpStatusCode: $httpStatusCode");
-        print("response:\n$response");
-        print("body:\n$body");
         final Map<String, dynamic> map =
             json.decode(body) as Map<String, dynamic>;
 

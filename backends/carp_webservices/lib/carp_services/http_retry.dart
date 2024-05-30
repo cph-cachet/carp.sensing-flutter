@@ -83,7 +83,7 @@ class HTTPRetry {
       maxAttempts: 15,
       retryIf: (e) => e is SocketException || e is TimeoutException,
       onRetry: (e) {
-        print('${e.runtimeType} - Retrying to SEND ${request.url}');
+        debugPrint('${e.runtimeType} - Retrying to SEND ${request.url}');
 
         // when retrying sending form data, the request needs to be cloned
         // see e.g. >> https://github.com/flutterchina/dio/issues/482
@@ -101,31 +101,19 @@ class HTTPRetry {
   }
 
   /// Sends an HTTP GET request with the given [headers] to the given [url].
-  Future<http.Response> get(String url, {Map<String, String>? headers}) async {
-    final response = await retry(
-      () => client
-          .get(
-            Uri.parse(Uri.encodeFull(url)),
-            headers: headers,
-          )
-          .timeout(const Duration(seconds: 20)),
-      delayFactor: const Duration(seconds: 5),
-      maxAttempts: 15,
-      retryIf: (e) => e is SocketException || e is TimeoutException,
-      onRetry: (e) => print('${e.runtimeType} - Retrying to GET $url'),
-    );
-
-    // Check if we are accessing a newly created resource and refresh token once
-    // if we get a 403 forbidden response.
-    //
-    // See issue : https://github.com/cph-cachet/carp.sensing-flutter/issues/392
-    if (response.statusCode == HttpStatus.forbidden) {
-      await CarpAuthService().refresh();
-      return get(url, headers: headers);
-    }
-
-    return clean(response);
-  }
+  Future<http.Response> get(String url, {Map<String, String>? headers}) async =>
+      await retry(
+        () => client
+            .get(
+              Uri.parse(Uri.encodeFull(url)),
+              headers: headers,
+            )
+            .timeout(const Duration(seconds: 20)),
+        delayFactor: const Duration(seconds: 5),
+        maxAttempts: 15,
+        retryIf: (e) => e is SocketException || e is TimeoutException,
+        onRetry: (e) => debugPrint('${e.runtimeType} - Retrying to GET $url'),
+      );
 
   /// Sends an HTTP POST request with the given [headers] and [body] to the given [url].
   Future<http.Response> post(
@@ -133,34 +121,21 @@ class HTTPRetry {
     Map<String, String>? headers,
     Object? body,
     Encoding? encoding,
-  }) async {
-    // calling the http POST method using the retry approach
-    final response = await retry(
-      () => client
-          .post(
-            Uri.parse(Uri.encodeFull(url)),
-            headers: headers,
-            body: body,
-            encoding: encoding,
-          )
-          .timeout(const Duration(seconds: 20)),
-      delayFactor: const Duration(seconds: 5),
-      maxAttempts: 15,
-      retryIf: (e) => e is SocketException || e is TimeoutException,
-      onRetry: (e) => print('${e.runtimeType} - Retrying to POST $url'),
-    );
-
-    // Check if we are accessing a newly created resource and refresh token once
-    // if we get a 403 forbidden response.
-    //
-    // See issue : https://github.com/cph-cachet/carp.sensing-flutter/issues/392
-    if (response.statusCode == HttpStatus.forbidden) {
-      await CarpAuthService().refresh();
-      return post(url, headers: headers, body: body, encoding: encoding);
-    }
-
-    return clean(response);
-  }
+  }) async =>
+      await retry(
+        () => client
+            .post(
+              Uri.parse(Uri.encodeFull(url)),
+              headers: headers,
+              body: body,
+              encoding: encoding,
+            )
+            .timeout(const Duration(seconds: 20)),
+        delayFactor: const Duration(seconds: 5),
+        maxAttempts: 15,
+        retryIf: (e) => e is SocketException || e is TimeoutException,
+        onRetry: (e) => debugPrint('${e.runtimeType} - Retrying to POST $url'),
+      );
 
   /// Sends an HTTP PUT request with the given [headers] and [body] to the given [url].
   Future<http.Response> put(
@@ -168,84 +143,38 @@ class HTTPRetry {
     Map<String, String>? headers,
     Object? body,
     Encoding? encoding,
-  }) async {
-    // calling the http PUT method using the retry approach
-    final response = await retry(
-      () => client
-          .put(
-            Uri.parse(Uri.encodeFull(url)),
-            headers: headers,
-            body: body,
-            encoding: encoding,
-          )
-          .timeout(const Duration(seconds: 20)),
-      delayFactor: const Duration(seconds: 5),
-      maxAttempts: 15,
-      retryIf: (e) => e is SocketException || e is TimeoutException,
-      onRetry: (e) => print('${e.runtimeType} - Retrying to PUT $url'),
-    );
-
-    // Check if we are accessing a newly created resource and refresh token once
-    // if we get a 403 forbidden response.
-    //
-    // See issue : https://github.com/cph-cachet/carp.sensing-flutter/issues/392
-    if (response.statusCode == HttpStatus.forbidden) {
-      await CarpAuthService().refresh();
-      return put(url, headers: headers, body: body, encoding: encoding);
-    }
-
-    return clean(response);
-  }
+  }) async =>
+      await retry(
+        () => client
+            .put(
+              Uri.parse(Uri.encodeFull(url)),
+              headers: headers,
+              body: body,
+              encoding: encoding,
+            )
+            .timeout(const Duration(seconds: 20)),
+        delayFactor: const Duration(seconds: 5),
+        maxAttempts: 15,
+        retryIf: (e) => e is SocketException || e is TimeoutException,
+        onRetry: (e) => debugPrint('${e.runtimeType} - Retrying to PUT $url'),
+      );
 
   /// Sends an HTTP DELETE request with the given [headers] to the given [url].
   Future<http.Response> delete(
     String url, {
     Map<String, String>? headers,
-  }) async {
-    // calling the http DELETE method using the retry approach
-    final response = await retry(
-      () => client
-          .delete(
-            Uri.parse(Uri.encodeFull(url)),
-            headers: headers,
-          )
-          .timeout(const Duration(seconds: 15)),
-      delayFactor: const Duration(seconds: 5),
-      maxAttempts: 15,
-      retryIf: (e) => e is SocketException || e is TimeoutException,
-      onRetry: (e) => print('${e.runtimeType} - Retrying to DELETE $url'),
-    );
-
-    // Check if we are accessing a newly created resource and refresh token once
-    // if we get a 403 forbidden response.
-    //
-    // See issue : https://github.com/cph-cachet/carp.sensing-flutter/issues/392
-    if (response.statusCode == HttpStatus.forbidden) {
-      await CarpAuthService().refresh();
-      return put(url, headers: headers);
-    }
-
-    return clean(response);
-  }
-
-  /// Check if we get an Nginx reverse proxy error in HTML format, and if so
-  /// convert it to a JSON error message.
-  ///
-  /// See issue : https://github.com/cph-cachet/carp.sensing-flutter/issues/369
-  http.Response clean(http.Response response) =>
-      response.body.startsWith('<html>')
-          ? http.Response(
-              '{'
-              '"statusCode": 502,'
-              '"message": "502 Bad Gateway.",'
-              '"path": "POST ${response.request?.url}"'
-              '}',
-              response.statusCode,
-              headers: response.headers,
-              isRedirect: response.isRedirect,
-              persistentConnection: response.persistentConnection,
-              reasonPhrase: response.reasonPhrase,
-              request: response.request,
+  }) async =>
+      await retry(
+        () => client
+            .delete(
+              Uri.parse(Uri.encodeFull(url)),
+              headers: headers,
             )
-          : response;
+            .timeout(const Duration(seconds: 15)),
+        delayFactor: const Duration(seconds: 5),
+        maxAttempts: 15,
+        retryIf: (e) => e is SocketException || e is TimeoutException,
+        onRetry: (e) =>
+            debugPrint('${e.runtimeType} - Retrying to DELETE $url'),
+      );
 }

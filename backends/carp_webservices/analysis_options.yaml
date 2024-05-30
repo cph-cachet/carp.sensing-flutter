@@ -15,4 +15,5 @@ linter:
     cancel_subscriptions: true
     constant_identifier_names: false
     depend_on_referenced_packages: true
-    avoid_print: false
+    avoid_print: true
+    

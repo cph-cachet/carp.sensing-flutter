@@ -48,12 +48,12 @@ class CollectionReference extends CarpReference {
   /// Returns the path of this collection (relative to the root of the web service).
   String get path => _path;
 
-  /// The full CARP web service path to this collection.
-  String get carpPath =>
+  /// The full CARP Web Service (CAWS) path to this collection.
+  String get cawsPath =>
       '/api/studies/${service.app!.studyId}/collections/$path';
 
   /// The full URI for the collection endpoint for this [CollectionReference].
-  String get collectionUri => "${service.app!.uri.toString()}$carpPath";
+  String get collectionUri => "${service.app!.uri.toString()}$cawsPath";
 
   /// The full URI for the collection endpoint for this [CollectionReference] by its unique [id].
   String get collectionUriByID =>
@@ -63,15 +63,8 @@ class CollectionReference extends CarpReference {
   ///
   /// If no collection exists on the server (yet), this local CollectionReference is returned.
   Future<CollectionReference> get() async {
-    final restHeaders = headers;
-
-    debug('REQUEST: GET $collectionUri\n');
-
-    final response =
-        await httpr.get(Uri.encodeFull(collectionUri), headers: restHeaders);
+    final response = await service._get(collectionUri);
     int httpStatusCode = response.statusCode;
-
-    debug('RESPONSE: $httpStatusCode\n${response.body}\n');
 
     Map<String, dynamic> responseJson =
         json.decode(response.body) as Map<String, dynamic>;
@@ -91,10 +84,7 @@ class CollectionReference extends CarpReference {
 
   /// Get the documents in this collection.
   Future<List<DocumentSnapshot>> get documents async {
-    final restHeaders = headers;
-
-    final response =
-        await httpr.get(Uri.encodeFull(collectionUri), headers: restHeaders);
+    final response = await service._get(collectionUri);
     int httpStatusCode = response.statusCode;
 
     final responseJson = json.decode(response.body) as Map<String, dynamic>;
@@ -107,7 +97,6 @@ class CollectionReference extends CarpReference {
           documents.add(DocumentSnapshot._('$path/$key', documentJson));
         }
       }
-
       return documents;
     }
 
@@ -150,8 +139,10 @@ class CollectionReference extends CarpReference {
   /// Rename this collection.
   Future<void> rename(String newName) async {
     // PUT the new name of this collection to the CARP web service
-    final response = await httpr.put(Uri.encodeFull(collectionUriByID),
-        headers: headers, body: '{"name":"$newName"}');
+    final response = await service._put(
+      collectionUriByID,
+      body: '{"name":"$newName"}',
+    );
     int httpStatusCode = response.statusCode;
     Map<String, dynamic> responseJson =
         json.decode(response.body) as Map<String, dynamic>;
@@ -172,8 +163,7 @@ class CollectionReference extends CarpReference {
 
   /// Deletes the collection referred to by this [CollectionReference].
   Future<void> delete() async {
-    final response =
-        await httpr.delete(Uri.encodeFull(collectionUriByID), headers: headers);
+    final response = await service._delete(collectionUriByID);
 
     int httpStatusCode = response.statusCode;
     if (httpStatusCode == HttpStatus.ok) {

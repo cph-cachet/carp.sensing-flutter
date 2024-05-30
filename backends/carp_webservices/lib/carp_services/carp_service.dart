@@ -35,23 +35,6 @@ class CarpService extends CarpBaseService {
   @override
   CarpApp get app => nonNullAble(_app);
 
-  /// The headers for any authenticated HTTP REST call to this [CarpService].
-  @override
-  Map<String, String> get headers {
-    if (CarpAuthService().currentUser.token == null) {
-      throw CarpServiceException(
-          message:
-              "OAuth token is null. Call 'CarpAuthService().authenticate()' first.");
-    }
-
-    return {
-      "Content-Type": "application/json",
-      "Authorization":
-          "bearer ${CarpAuthService().currentUser.token!.accessToken}",
-      "cache-control": "no-cache"
-    };
-  }
-
   // --------------------------------------------------------------------------
   // CONSENT DOCUMENT
   // --------------------------------------------------------------------------
@@ -64,10 +47,11 @@ class CarpService extends CarpBaseService {
   /// Returns the created [ConsentDocument] if the document is uploaded correctly.
   Future<ConsentDocument> createConsentDocument(
       Map<String, dynamic> document) async {
+    debug('REQUEST: POST $consentDocumentEndpointUri');
+
     // POST the document to the CARP web service
-    http.Response response = await httpr.post(
+    http.Response response = await _post(
       consentDocumentEndpointUri,
-      headers: headers,
       body: json.encode(document),
     );
 
@@ -93,8 +77,9 @@ class CarpService extends CarpBaseService {
     String url = "$consentDocumentEndpointUri/$id";
 
     // GET the consent document from the CARP web service
-    http.Response response =
-        await httpr.get(Uri.encodeFull(url), headers: headers);
+    http.Response response = await _get(Uri.encodeFull(url));
+
+    debug('RESPONSE: ${response.statusCode}\n${response.body}');
 
     int httpStatusCode = response.statusCode;
     Map<String, dynamic> responseJson =

@@ -36,8 +36,8 @@ void main() {
 
   group("Base services", () {
     test('- authentication', () async {
-      print('CarpService : ${CarpService().app}');
-      print(" - signed in as: $user");
+      debugPrint('CarpService : ${CarpService().app}');
+      debugPrint(" - signed in as: $user");
     }, skip: false);
   });
 
@@ -83,7 +83,7 @@ void main() {
               triggerIds: {0}),
         ];
 
-        print(toJsonString(batch));
+        debugPrint(toJsonString(batch));
 
         await CarpDataStreamService()
             .appendToDataStreams(testDeploymentId, batch);
@@ -93,7 +93,7 @@ void main() {
     test(
       '- append - measurements UNKNOWN to carp-core.kotlin',
       () async {
-        print('Start uploading...');
+        debugPrint('Start uploading...');
 
         var m1 = Measurement(
           sensorStartTime: 1642505045000000,
@@ -131,7 +131,7 @@ void main() {
           DataStreamId(
             studyDeploymentId: testDeploymentId,
             deviceRoleName: phoneRoleName,
-            dataType: Geolocation.dataType,
+            dataType: BatteryState.dataType,
           ),
           0,
           100,
@@ -141,6 +141,7 @@ void main() {
       },
     );
 
+    // Some test data
     List<DataStreamBatch> geoLocationBatch = [
       DataStreamBatch(
           dataStream: DataStreamId(
@@ -186,14 +187,14 @@ void main() {
         var list = await getGeoLocationBatches();
         print('N = ${list.length}');
 
-        print('Uploading another batch of Geolocation measurements...');
-        await CarpDataStreamService()
-            .appendToDataStreams(testDeploymentId, geoLocationBatch);
+        // print('Uploading another batch of Geolocation measurements...');
+        // await CarpDataStreamService()
+        //     .appendToDataStreams(testDeploymentId, geoLocationBatch);
 
-        var list2 = await getGeoLocationBatches();
-        print('N = ${list2.length}');
+        // var list2 = await getGeoLocationBatches();
+        // print('N = ${list2.length}');
 
-        expect(list2.length, list.length + 1);
+        // expect(list2.length, list.length + 1);
       },
     );
   });

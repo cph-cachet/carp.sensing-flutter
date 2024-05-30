@@ -49,13 +49,10 @@ class FileStorageReference extends CarpReference {
     assert(id > 0);
     final String url = "$fileEndpointUri/$id";
 
-    http.Response response =
-        await httpr.get(Uri.encodeFull(url), headers: headers);
+    final response = await service._get(url);
     int httpStatusCode = response.statusCode;
     Map<String, dynamic> map =
         json.decode(response.body) as Map<String, dynamic>;
-
-    print(response.body);
 
     switch (httpStatusCode) {
       case HttpStatus.ok:
@@ -79,8 +76,7 @@ class FileStorageReference extends CarpReference {
     assert(id > 0);
     final String url = "$fileEndpointUri/$id";
 
-    http.Response response =
-        await httpr.delete(Uri.encodeFull(url), headers: headers);
+    final response = await service._delete(url);
     int httpStatusCode = response.statusCode;
 
     switch (httpStatusCode) {

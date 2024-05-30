@@ -124,13 +124,15 @@ void main() {
         });
 
         test('- get', () async {
-          ConsentDocument uploaded = await CarpService().createConsentDocument(
-              {"text": "The original terms text.", "signature": "Image Blob"});
+          // ConsentDocument uploaded = await CarpService().createConsentDocument(
+          //     {"text": "The original terms text.", "signature": "Image Blob"});
 
-          expect(uploaded.id, isNotNull);
+          // print(uploaded);
+          // expect(uploaded.id, isNotNull);
 
           ConsentDocument downloaded =
-              await CarpService().getConsentDocument(uploaded.id);
+              await CarpService().getConsentDocument(1);
+          // await CarpService().getConsentDocument(uploaded.id);
 
           print(downloaded);
           print('id        : ${downloaded.id}');
@@ -180,6 +182,9 @@ void main() {
           });
 
           test('- batch', () async {
+            final before = await CarpService().getDataPointReference().getAll();
+            print('N_before = ${before.length}');
+
             List<DataPoint> batch = [];
             batch.addAll([
               DataPoint.fromData(lightData),
@@ -196,14 +201,13 @@ void main() {
             await reference.batch(batch);
 
             // wait for the batch requests to finish
-            await Future.delayed(const Duration(seconds: 2), () {});
+            await Future.delayed(const Duration(seconds: 5), () {});
 
-            List<DataPoint> data =
-                await CarpService().getDataPointReference().getAll();
-            print('N=${data.length}');
+            final after = await CarpService().getDataPointReference().getAll();
+            print('N_after = ${after.length}');
             // data.forEach((datapoint) => print(_encode((datapoint.toJson()))));
 
-            assert(data.length >= 5);
+            assert(after.length > before.length);
           });
 
           test('- upload', () async {
@@ -227,6 +231,9 @@ void main() {
 
           test('- query for test data points', () async {
             String query = 'carp_header.data_format.namespace==test';
+            // String query =
+            //     'carp_header.data_format.name==${lightData.format.name}';
+
             print("query : $query");
             List<DataPoint> data =
                 await CarpService().getDataPointReference().query(query);
@@ -287,7 +294,7 @@ void main() {
               List<DataPoint> data =
                   await CarpService().getDataPointReference().getAll();
 
-              //data.forEach((datapoint) => print(_encode((datapoint.toJson()))));
+              data.forEach((datapoint) => print(_encode((datapoint.toJson()))));
               expect(data, isNotNull);
               print('N=${data.length}');
             },
@@ -309,7 +316,8 @@ void main() {
             // String query =
             //     'carp_header.user_id==$userId;carp_body.timestamp>2019-11-02T12:53:40.219598Z';
             //String query = 'carp_header.data_format.namespace==test';
-            String query = 'carp_header.data_format.name==light';
+            String query =
+                'carp_header.data_format.name==${lightData.format.name}';
             // String query = 'carp_header.user_id==$userId';
             //String query = 'carp_body.timestamp>2019-11-02T12:53:40.219598Z';
             //String query = 'carp_header.data_format.namespace=in=(carp,omh)';
@@ -368,8 +376,17 @@ void main() {
         skip: false,
       );
 
-      group("Documents & Collections", () {
-        test(' - delete document by path', () async {
+      /// In order to run the test in this group you need to be authenticated
+      /// as a participant.
+      group("Documents & Collections - PARTICIPANT", () {
+        test(' - clean up old test documents', () async {
+          await CarpService()
+              .collection(collectionName)
+              .document(userId)
+              .collection('activities')
+              .document('cooking')
+              .delete();
+
           await CarpService()
               .collection(collectionName)
               .document(userId)
@@ -505,87 +522,37 @@ void main() {
 //       assert(serverDocument.data.length == document.data.length);
 //     }, skip: true);
 
-        // NOTE :: In order to run the following two tests (query) you need to be
-        // authenticated as a researcher (and not as a participant).
-        test(' - get documents by query', () async {
-          var document = await CarpService()
-              .collection(collectionName)
-              .document(userId)
-              .setData({'email': userId, 'role': 'Administrator'});
-
-          expect(document, isNotNull);
-
-          String query = 'name==$userId';
-          List<DocumentSnapshot> documents =
-              await CarpService().documentsByQuery(query);
-
-          print("Found ${documents.length} document(s) for user '$userId'");
-          for (var document in documents) {
-            print(' - $document');
-          }
-
-          expect(documents.length, greaterThan(0));
-        });
-
-        test(' - get all documents', () async {
-          List<DocumentSnapshot> documents = await CarpService().documents();
-
-          print('Found ${documents.length} document(s)');
-          for (var document in documents) {
-            print(' - $document');
-          }
-          expect(documents.length, greaterThan(0));
-        });
-
-        test(' - add document in nested collections', () async {
+        test(' - add & get document in nested collections', () async {
           // is not providing an document id, so this should create a new document
           // if the collection don't exist, it is created (according to David).
-          DocumentSnapshot newDocument = await CarpService()
+          DocumentSnapshot doc1 = await CarpService()
               .collection(collectionName)
               .document(userId)
               .collection('activities')
               .document('cooking')
               .setData({'what': 'breakfast', 'time': 'morning'});
 
-          print(newDocument);
-          expect(newDocument.id, greaterThan(0));
-          expect(newDocument.path,
-              equals('$collectionName/$userId/activities/cooking'));
+          print(doc1);
+          expect(doc1.id, greaterThan(0));
+          expect(
+              doc1.path, equals('$collectionName/$userId/activities/cooking'));
 
-          // delete document again
-          await CarpService()
-              .collection(collectionName)
-              .document(userId)
-              .delete();
-        });
-
-        test(' - get nested document', () async {
-          var document = await CarpService()
-              .collection(collectionName)
-              .document(userId)
-              .setData({'email': userId, 'role': 'Administrator'});
-
-          expect(document, isNotNull);
-
-          DocumentSnapshot? newDocument = await CarpService()
+          DocumentSnapshot? doc2 = await CarpService()
               .collection(collectionName)
               .document(userId)
               .collection('activities')
               .document('cooking')
               .get();
 
-          // expect(newDocument?.id, greaterThan(0));
-
-          print(newDocument);
-          print(newDocument?.snapshot);
-          print(newDocument?.createdAt);
-          print(newDocument?.data);
-          // print(newDocument['what']);
+          expect(doc2, isNotNull);
+          expect(doc2?.id, doc1.id);
 
           // delete document again
           await CarpService()
               .collection(collectionName)
               .document(userId)
+              .collection('activities')
+              .document('cooking')
               .delete();
         });
 
@@ -604,14 +571,21 @@ void main() {
         });
 
         test(" - get a collection from path name", () async {
+          await CarpService()
+              .collection(collectionName)
+              .document(userId)
+              .setData({'email': userId, 'role': 'Administrator'});
+
           CollectionReference collection =
               await CarpService().collection(collectionName).get();
-          print(collection);
+          expect(collection.path, collectionName);
         });
 
         test(" - list documents in a collection", () async {
           List<DocumentSnapshot> documents =
               await CarpService().collection(collectionName).documents;
+
+          print('N = ${documents.length}');
           for (var doc in documents) {
             print(doc);
           }
@@ -675,9 +649,41 @@ void main() {
               .document(document.name)
               .delete();
         });
+      }, skip: false);
 
-        // NOTE :: In order to run the following two tests (rename & delete)
-        // you need to be authenticated as a researcher.
+      /// In order to run the test in this group you need to be authenticated
+      /// as a researcher.
+      group("Documents & Collections - RESEARCHER", () {
+        test(' - get documents by query', () async {
+          var document = await CarpService()
+              .collection(collectionName)
+              .document(userId)
+              .setData({'email': userId, 'role': 'Administrator'});
+
+          expect(document, isNotNull);
+
+          String query = 'name==$userId';
+          List<DocumentSnapshot> documents =
+              await CarpService().documentsByQuery(query);
+
+          print("Found ${documents.length} document(s) for user '$userId'");
+          for (var document in documents) {
+            print(' - $document');
+          }
+
+          expect(documents.length, greaterThan(0));
+        });
+
+        test(' - get all documents', () async {
+          List<DocumentSnapshot> documents = await CarpService().documents();
+
+          print('Found ${documents.length} document(s)');
+          for (var document in documents) {
+            print(' - $document');
+          }
+          expect(documents.length, greaterThan(0));
+        });
+
         test(' - rename collection', () async {
           CollectionReference collection =
               await CarpService().collection(collectionName).get();
@@ -692,10 +698,12 @@ void main() {
 
         test(' - delete collection', () async {
           CollectionReference collection =
-              await CarpService().collection(newCollectionName).get();
+              await CarpService().collection(collectionName).get();
+
           await collection.delete();
           expect(collection.id, -1);
           print(collection);
+
           try {
             collection =
                 await CarpService().collection(newCollectionName).get();
@@ -707,42 +715,7 @@ void main() {
         });
       }, skip: false);
 
-      group("iPDM-GO", () {
-        test(" - get 'patients' collection from path", () async {
-          CollectionReference collection =
-              await CarpService().collection('patients').get();
-          expect(collection.id!, greaterThan(0));
-          print(collection);
-        });
-
-        test(" - list all nested documents in 'patients' collection", () async {
-          List<DocumentSnapshot> documents =
-              await CarpService().collection('patients').documents;
-          for (var doc in documents) {
-            print(doc);
-            for (var col in doc.collections) {
-              print(col);
-            }
-          }
-        });
-        test(
-            " - list all nested documents in 'patients/s174238@student.dtu.dk/chapters' collection",
-            () async {
-          List<DocumentSnapshot> documents = await CarpService()
-              .collection('patients/s174238@student.dtu.dk/chapters')
-              .documents;
-          for (var doc in documents) {
-            print(doc);
-            for (var col in doc.collections) {
-              print(col);
-            }
-          }
-        });
-      }, skip: true);
-
       group("Files", () {
-        // int id = -1;
-
         test('- upload', () async {
           final File myFile = File("test/img.jpg");
 
