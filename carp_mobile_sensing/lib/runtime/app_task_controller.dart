@@ -139,8 +139,6 @@ class AppTaskController {
 
       if (notificationsEnabled && sendNotification) {
         // create notification
-        // TODO - iOS has a limit where it will only keep 64 notifications that will fire the soonest...
-        // See the flutter_local_notifications plugin.
         (triggerTime == null)
             ? await SmartPhoneClientManager()
                 .notificationController
@@ -154,8 +152,7 @@ class AppTaskController {
   }
 
   /// Buffer a particular task from a [TaskControl] for later scheduling.
-  /// We need to collect all the tasks, sort them and then schedule the first N
-  /// tasks where N is the number of available notification slots.
+  /// The buffered tasks can later be enqueued using [enqueueBufferedTasks].
   void buffer(
     AppTaskExecutor executor,
     TaskControl taskControl, {
@@ -171,7 +168,7 @@ class AppTaskController {
     ));
   }
 
-  /// Enqueue all buffered tasks.
+  /// Enqueue all tasks buffered with [buffer].
   /// This method is called by the [DeploymentExecutor] when a deployment is
   /// finished.
   /// It will sort the tasks based on their trigger time and then schedule
@@ -195,14 +192,18 @@ class AppTaskController {
 
     for (var item in toEnqueue) {
       item.taskControl.hasBeenScheduledUntil = item.triggerTime;
-      enqueue(
+      await enqueue(
         item.taskExecutor,
         triggerTime: item.triggerTime,
         sendNotification: item.sendNotification,
       );
     }
 
+    // discard the tasks that we couldn't queue, they will be re-queued later
     _userTaskBuffer.clear();
+
+    // persist the tasks that were just enqueued
+    SmartPhoneClientManager().deactivate();
   }
 
   /// De-queue (remove) an [UserTask] from the [userTasks].
