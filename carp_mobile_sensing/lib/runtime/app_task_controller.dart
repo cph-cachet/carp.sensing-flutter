@@ -24,7 +24,8 @@ class AppTaskController {
   /// and which are planned to trigger in the future.
   List<UserTask> get userTasks => _userTaskMap.values.toList();
 
-  List<UserTaskBufferItem> _userTaskBuffer = [];
+  /// A buffer of tasks that are not yet scheduled.
+  final List<UserTaskBufferItem> _userTaskBuffer = [];
 
   /// The queue of [UserTask]s that the user need to attend to.
   List<UserTask> get userTaskQueue => _userTaskMap.values
