@@ -8,6 +8,7 @@ class CarpAuthService extends CarpAuthBaseService {
   /// Before this instance can be used, it must be configured using the
   /// [configure] method.
   factory CarpAuthService() => _instance;
+
   CarpAuthService.instance() : this._();
 
   /// Is a user authenticated?

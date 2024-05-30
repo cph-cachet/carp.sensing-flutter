@@ -11,7 +11,7 @@ class CarpProperties {
 
   Uri get uri => Uri(
         scheme: 'https',
-        host: 'dev.carp.dk',
+        host: cawsUri,
       );
 
   CarpAuthProperties get authProperties => CarpAuthProperties(
@@ -27,7 +27,7 @@ class CarpProperties {
       );
 
   CarpApp get app => CarpApp(
-        name: "CAWS @ DigitalOcean [DEV]",
+        name: "CAWS @ $cawsUri",
         uri: uri,
         studyDeploymentId: testDeploymentId,
         studyId: testStudyId,

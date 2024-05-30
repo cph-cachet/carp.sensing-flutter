@@ -114,6 +114,16 @@ class HTTPRetry {
       retryIf: (e) => e is SocketException || e is TimeoutException,
       onRetry: (e) => print('${e.runtimeType} - Retrying to GET $url'),
     );
+
+    // Check if we are accessing a newly created resource and refresh token once
+    // if we get a 403 forbidden response.
+    //
+    // See issue : https://github.com/cph-cachet/carp.sensing-flutter/issues/392
+    if (response.statusCode == HttpStatus.forbidden) {
+      await CarpAuthService().refresh();
+      return get(url, headers: headers);
+    }
+
     return clean(response);
   }
 
@@ -140,6 +150,15 @@ class HTTPRetry {
       onRetry: (e) => print('${e.runtimeType} - Retrying to POST $url'),
     );
 
+    // Check if we are accessing a newly created resource and refresh token once
+    // if we get a 403 forbidden response.
+    //
+    // See issue : https://github.com/cph-cachet/carp.sensing-flutter/issues/392
+    if (response.statusCode == HttpStatus.forbidden) {
+      await CarpAuthService().refresh();
+      return post(url, headers: headers, body: body, encoding: encoding);
+    }
+
     return clean(response);
   }
 
@@ -165,6 +184,16 @@ class HTTPRetry {
       retryIf: (e) => e is SocketException || e is TimeoutException,
       onRetry: (e) => print('${e.runtimeType} - Retrying to PUT $url'),
     );
+
+    // Check if we are accessing a newly created resource and refresh token once
+    // if we get a 403 forbidden response.
+    //
+    // See issue : https://github.com/cph-cachet/carp.sensing-flutter/issues/392
+    if (response.statusCode == HttpStatus.forbidden) {
+      await CarpAuthService().refresh();
+      return put(url, headers: headers, body: body, encoding: encoding);
+    }
+
     return clean(response);
   }
 
@@ -186,6 +215,16 @@ class HTTPRetry {
       retryIf: (e) => e is SocketException || e is TimeoutException,
       onRetry: (e) => print('${e.runtimeType} - Retrying to DELETE $url'),
     );
+
+    // Check if we are accessing a newly created resource and refresh token once
+    // if we get a 403 forbidden response.
+    //
+    // See issue : https://github.com/cph-cachet/carp.sensing-flutter/issues/392
+    if (response.statusCode == HttpStatus.forbidden) {
+      await CarpAuthService().refresh();
+      return put(url, headers: headers);
+    }
+
     return clean(response);
   }
 
