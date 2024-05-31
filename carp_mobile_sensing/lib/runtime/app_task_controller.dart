@@ -152,8 +152,8 @@ class AppTaskController {
     }
   }
 
-  /// Buffer a particular task from a [TaskControl] for later scheduling.
-  /// The buffered tasks can later be enqueued using [enqueueBufferedTasks].
+  /// Buffer the [executor] originating from [taskControl] for later scheduling.
+  /// The buffered task executors is enqueued by calling [enqueueBufferedTasks].
   void buffer(
     AppTaskExecutor executor,
     TaskControl taskControl, {
@@ -185,7 +185,9 @@ class AppTaskController {
 
     var numberOfTasksToEnqueue =
         min(remainingNotifications, _userTaskBuffer.length);
-    // being mindful of the OS limitations, only schedule however many tasks as remaining notification slots
+
+    // Being mindful of the OS limitations, only schedule however many
+    // tasks as remaining notification slots
     List<UserTaskBufferItem> toEnqueue =
         _userTaskBuffer.sublist(0, numberOfTasksToEnqueue);
 
@@ -200,11 +202,11 @@ class AppTaskController {
       );
     }
 
-    // discard the tasks that we couldn't queue, they will be re-queued later
+    // Discard the tasks that we couldn't queue, they will be re-queued later.
     _userTaskBuffer.clear();
 
-    // persist the tasks that were just enqueued
-    SmartPhoneClientManager().deactivate();
+    // Persist the tasks that were just enqueued
+    SmartPhoneClientManager().save();
   }
 
   /// De-queue (remove) an [UserTask] from the [userTasks].

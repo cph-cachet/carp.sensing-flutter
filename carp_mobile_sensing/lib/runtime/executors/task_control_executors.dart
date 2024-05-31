@@ -157,10 +157,9 @@ class AppTaskControlExecutor extends TaskControlExecutor {
   @override
   Future<bool> onStart() async {
     debug(
-        '$runtimeType - ${taskControl.taskName} hasBeenScheduledUntil ${taskControl.hasBeenScheduledUntil}');
+        '$runtimeType - ${taskControl.taskName} hasBeenScheduledUntil: ${taskControl.hasBeenScheduledUntil}');
     final from = taskControl.hasBeenScheduledUntil ?? DateTime.now();
-    final to =
-        DateTime.now().add(const Duration(days: 15)); // look 15 days ahead
+    final to = DateTime.now().add(const Duration(days: 15)); // 15 days ahead
     // get all the instances where the task should be scheduled in the given range
     final schedule = triggerExecutor.getSchedule(from, to);
 
@@ -169,7 +168,7 @@ class AppTaskControlExecutor extends TaskControlExecutor {
       stop();
     } else {
       info(
-          '$runtimeType Enqueuing ${schedule.length} app tasks ($schedule) for task ${taskExecutor.task.name}');
+          '$runtimeType Buffering ${schedule.length} app tasks ($schedule) for task ${taskExecutor.task.name}');
 
       Iterator<DateTime> it = schedule.iterator;
       DateTime current = DateTime.now();
@@ -197,6 +196,5 @@ class AppTaskControlExecutor extends TaskControlExecutor {
   }
 
   @override
-  Future<bool> onStop() async =>
-      true; // do nothing - this executor is never stopped
+  Future<bool> onStop() async => true; // do nothing
 }
