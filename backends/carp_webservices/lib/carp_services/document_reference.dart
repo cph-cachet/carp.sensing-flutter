@@ -106,10 +106,6 @@ class DocumentReference extends CarpReference {
       return DocumentSnapshot._(path, responseJson);
     }
 
-    print('$httpStatusCode - ${response.reasonPhrase}');
-    print(responseJson["message"]);
-    print(responseJson["path"]);
-
     throw CarpServiceException(
       httpStatus: HTTPStatus(httpStatusCode, response.reasonPhrase),
       message: responseJson["message"].toString(),

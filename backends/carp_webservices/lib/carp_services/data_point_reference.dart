@@ -273,7 +273,6 @@ class DataPointReference extends CarpReference {
     int httpStatusCode = response.statusCode;
 
     if (httpStatusCode == HttpStatus.ok) {
-      print('count response = ${response.body}');
       return int.tryParse(response.body) ?? 0;
     }
     // All other cases are treated as an error.
