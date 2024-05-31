@@ -25,11 +25,8 @@ class DataPointReference extends CarpReference {
   ///
   /// Returns the server-generated ID for this data point.
   Future<int> post(DataPoint data) async {
-    final String url = dataEndpointUri;
-
-    // POST the data point to the CARP web service
-    http.Response response = await httpr.post(Uri.encodeFull(url),
-        headers: headers, body: json.encode(data));
+    final response =
+        await service._post(dataEndpointUri, body: json.encode(data));
 
     int httpStatusCode = response.statusCode;
     Map<String, dynamic> responseJson =
@@ -80,7 +77,7 @@ class DataPointReference extends CarpReference {
 
   /// Batch upload a list of [DataPoint]s.
   ///
-  /// Returns when successful. Throws an [CarpServiceException] if not.
+  /// Returns when successful. Throws a [CarpServiceException] if not.
   Future<void> batch(List<DataPoint> batch) async {
     if (batch.isEmpty) return;
 
@@ -96,7 +93,7 @@ class DataPointReference extends CarpReference {
   /// The [file] can be created using a [FileDataManager] in `carp_mobile_sensing`.
   /// Note that the file should be raw JSON, and hence _not_ zipped.
   ///
-  /// Returns when successful. Throws an [CarpServiceException] if not.
+  /// Returns when successful. Throws a [CarpServiceException] if not.
   Future<void> upload(File file) async {
     final String url = "$dataEndpointUri/batch";
 
@@ -130,11 +127,8 @@ class DataPointReference extends CarpReference {
 
   /// Get a [DataPoint] based on its [id] from the CARP backend.
   Future<DataPoint> get(int id) async {
-    String url = "$dataEndpointUri/$id";
-
-    // GET the data point from the CARP web service
-    http.Response response =
-        await httpr.get(Uri.encodeFull(url), headers: headers);
+    final url = "$dataEndpointUri/$id";
+    final response = await service._get(url);
 
     int httpStatusCode = response.statusCode;
     Map<String, dynamic> responseJson =
@@ -244,7 +238,7 @@ class DataPointReference extends CarpReference {
     // GET the data points from the CARP web service
     // TODO - for some reason the CARP web service don't like encoded url's....
     // http.Response response = await httpr.get(Uri.encodeFull(url), headers: restHeaders);
-    http.Response response = await httpr.get(url, headers: headers);
+    final response = await service._get(url);
 
     int httpStatusCode = response.statusCode;
 
@@ -279,7 +273,6 @@ class DataPointReference extends CarpReference {
     int httpStatusCode = response.statusCode;
 
     if (httpStatusCode == HttpStatus.ok) {
-      print('count response = ${response.body}');
       return int.tryParse(response.body) ?? 0;
     }
     // All other cases are treated as an error.
@@ -297,10 +290,9 @@ class DataPointReference extends CarpReference {
   /// Returns on success. Throws a [CarpServiceException] if data point is not
   /// found or otherwise unsuccessful.
   Future<void> delete(int id) async {
-    String url = "$dataEndpointUri/$id";
+    final url = "$dataEndpointUri/$id";
 
-    http.Response response =
-        await httpr.delete(Uri.encodeFull(url), headers: headers);
+    final response = await service._delete(url);
     final int httpStatusCode = response.statusCode;
 
     if (httpStatusCode == HttpStatus.ok) return;

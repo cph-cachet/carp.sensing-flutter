@@ -75,21 +75,16 @@ class FileUploadTask extends CarpServiceTask {
 
     request.files.add(ClonableMultipartFile.fromFileSync(file.path));
 
-    print('files # : ${request.files.length}');
-
     httpr.send(request).then((http.StreamedResponse response) {
       response.stream.toStringStream().first.then((body) {
         final int httpStatusCode = response.statusCode;
-        print("httpStatusCode: $httpStatusCode");
-        print("response:\n$response");
-        print("body:\n$body");
         final Map<String, dynamic> map =
             json.decode(body) as Map<String, dynamic>;
 
         switch (httpStatusCode) {
           // CARP web service returns "201 Created" when a file is created on the server.
-          case 200:
-          case 201:
+          case HttpStatus.ok:
+          case HttpStatus.created:
             {
               // save the id generated from the server
               reference.id = map["id"] as int;
@@ -152,7 +147,7 @@ class FileDownloadTask extends CarpServiceTask {
       final int httpStatusCode = response.statusCode;
 
       switch (httpStatusCode) {
-        case 200:
+        case HttpStatus.ok:
           {
             _state = TaskStateType.success;
             file.writeAsBytes(response.bodyBytes);

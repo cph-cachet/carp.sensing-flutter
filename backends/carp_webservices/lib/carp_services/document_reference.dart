@@ -34,16 +34,16 @@ class DocumentReference extends CarpReference {
   /// The path to this document
   String get path => _path;
 
-  /// The full CARP web service path to this document.
+  /// The full CARP Web Service (CAWS) path to this document.
   ///
   /// If the id of this document is known, use the `documents` CARP endpoint,
   /// otherwise use the `collections` endpoint.
-  String get carpPath => (_id != null)
+  String get cawsPath => (_id != null)
       ? "/api/studies/${service.app!.studyId}/documents/$id"
       : "/api/studies/${service.app!.studyId}/collections/$path";
 
   /// The full URI for the document endpoint for this document.
-  String get documentUri => "${service.app!.uri.toString()}$carpPath";
+  String get documentUri => "${service.app!.uri.toString()}$cawsPath";
 
   /// Writes to the document referred to by this [DocumentReference].
   ///
@@ -55,8 +55,10 @@ class DocumentReference extends CarpReference {
 
     // If this document does not already exist on the server (i.e., have an ID), then create it
     if (id == null) {
-      http.Response response = await httpr.post(Uri.encodeFull(documentUri),
-          headers: headers, body: json.encode(data));
+      final response = await service._post(
+        documentUri,
+        body: json.encode(data),
+      );
       int httpStatusCode = response.statusCode;
       Map<String, dynamic> responseJson =
           json.decode(response.body) as Map<String, dynamic>;
@@ -91,23 +93,18 @@ class DocumentReference extends CarpReference {
 
     Map<String, dynamic> payload = {'name': name, 'data': data};
 
-    debug('REQUEST: PUT $documentUri\n$payload');
-
-    http.Response response = await httpr.put(Uri.encodeFull(documentUri),
-        headers: headers, body: json.encode(payload));
+    final response = await service._put(
+      documentUri,
+      body: json.encode(payload),
+    );
 
     int httpStatusCode = response.statusCode;
-    debug('RESPONSE: $httpStatusCode\n${response.body}');
     Map<String, dynamic> responseJson =
         json.decode(response.body) as Map<String, dynamic>;
 
     if (httpStatusCode == HttpStatus.ok) {
       return DocumentSnapshot._(path, responseJson);
     }
-
-    print('$httpStatusCode - ${response.reasonPhrase}');
-    print(responseJson["message"]);
-    print(responseJson["path"]);
 
     throw CarpServiceException(
       httpStatus: HTTPStatus(httpStatusCode, response.reasonPhrase),
@@ -131,9 +128,8 @@ class DocumentReference extends CarpReference {
     }
 
     Map<String, dynamic> payload = {'name': name};
-    http.Response response = await httpr.put(
+    final response = await service._put(
       Uri.encodeFull(documentUri),
-      headers: headers,
       body: json.encode(payload),
     );
 
@@ -156,14 +152,8 @@ class DocumentReference extends CarpReference {
   ///
   /// If no document exists, the read will return `null`.
   Future<DocumentSnapshot?> get() async {
-    debug('REQUEST: GET $documentUri\n');
-
-    http.Response response =
-        await httpr.get(Uri.encodeFull(documentUri), headers: headers);
-
+    final response = await service._get(documentUri);
     int httpStatusCode = response.statusCode;
-
-    debug('RESPONSE: $httpStatusCode\n${response.body}');
 
     if (httpStatusCode == HttpStatus.ok) {
       Map<String, dynamic> jsonResponse =
@@ -181,10 +171,9 @@ class DocumentReference extends CarpReference {
     if (id == null) _id = (await get())?.id;
     if (_id == null) return; // early out if this document does not exist
 
-    http.Response response = await http
-        .delete(Uri.parse(Uri.encodeFull(documentUri)), headers: headers);
-
+    final response = await service._delete(documentUri);
     int httpStatusCode = response.statusCode;
+
     if (httpStatusCode == HttpStatus.ok) {
       return;
     } else {
@@ -286,7 +275,9 @@ class DocumentSnapshot {
   }
 
   /// Contains all the data of this snapshot
-  Map<String, dynamic> get data => _snapshot['data'] as Map<String, dynamic>;
+  Map<String, dynamic> get data => _snapshot['data'] != null
+      ? _snapshot['data'] as Map<String, dynamic>
+      : {};
 
   /// Reads individual data values from the snapshot
   dynamic operator [](String key) => data[key];

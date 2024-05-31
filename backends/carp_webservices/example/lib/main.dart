@@ -132,13 +132,16 @@ class AppBLoC {
   void dispose() async {}
 
   Future<ActiveParticipationInvitation?> getStudyInvitation(
-      BuildContext context) async {
+    BuildContext context,
+  ) async {
     // configure a participant service based on the carp service already configured
     CarpParticipationService().configureFrom(CarpService());
     _invitation = await CarpParticipationService().getStudyInvitation(context);
-    print('CARP Study Invitation: $_invitation');
+    debugPrint('CARP Study Invitation: $_invitation');
+
     // check that the app has been updated to reflect the study id and deployment id
-    print('Study ID: ${app.studyId}, Deployment ID: ${app.studyDeploymentId}');
+    debugPrint(
+        'Study ID: ${app.studyId}, Deployment ID: ${app.studyDeploymentId}');
     return _invitation;
   }
 }

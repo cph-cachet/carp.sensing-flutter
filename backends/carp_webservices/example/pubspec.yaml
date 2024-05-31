@@ -20,6 +20,8 @@ dependencies:
   carp_webservices:
     path: ../
 
+  oidc: ^0.5.2
+
 dev_dependencies:
 
 # The following section is specific to Flutter.

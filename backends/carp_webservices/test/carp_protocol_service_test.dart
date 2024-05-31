@@ -103,8 +103,8 @@ void main() {
 
   group("Base services", () {
     test('- authentication', () async {
-      print('CarpService : ${CarpService().app}');
-      print(" - signed in as: $user");
+      debugPrint('CarpService : ${CarpService().app}');
+      debugPrint(" - signed in as: $user");
     });
   });
 
@@ -113,7 +113,7 @@ void main() {
     test(
       '- define',
       () async {
-        print(toJsonString(protocol));
+        debugPrint(toJsonString(protocol));
       },
     );
 
@@ -139,17 +139,17 @@ void main() {
       '- getBy',
       () async {
         var p = await CarpProtocolService().getBy(testProtocolId);
-        print(toJsonString(p));
+        debugPrint(toJsonString(p));
       },
     );
 
     test(
       '- getAllFor',
       () async {
-        print('Getting protocols for owner id: $ownerId');
+        debugPrint('Getting protocols for owner id: $ownerId');
         List<StudyProtocol> protocols =
             await CarpProtocolService().getAllForOwner(ownerId!);
-        print(toJsonString(protocols));
+        debugPrint(toJsonString(protocols));
       },
     );
 
@@ -158,7 +158,7 @@ void main() {
       () async {
         List<ProtocolVersion> versions =
             await CarpProtocolService().getVersionHistoryFor(testProtocolId);
-        print(toJsonString(versions));
+        debugPrint(toJsonString(versions));
       },
     );
 
@@ -176,7 +176,7 @@ void main() {
             )
           ],
         );
-        print(toJsonString(p));
+        debugPrint(toJsonString(p));
       },
     );
 
@@ -192,7 +192,7 @@ void main() {
           '{"version":1}',
         );
 
-        print(toJsonString(protocol));
+        debugPrint(toJsonString(protocol));
       },
     );
   });

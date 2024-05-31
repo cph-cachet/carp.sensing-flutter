@@ -11,6 +11,8 @@
 // HOWEVER, remember to add the file to .gitignore in order not to commit
 // the authentication details.
 
+const String cawsUri = 'dev.carp.dk';
+
 // Username + password for the user doing the testing
 const String username = 'a_username';
 const String password = 'the_password';

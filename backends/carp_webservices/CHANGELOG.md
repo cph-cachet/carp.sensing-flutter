@@ -1,6 +1,7 @@
-## 3.1.0
+## 3.2.0
 
 * upgrade of carp_serialization and carp_core
+* fix of issues [#392](https://github.com/cph-cachet/carp.sensing-flutter/issues/392) and [#369](https://github.com/cph-cachet/carp.sensing-flutter/issues/369).
 
 ## 3.0.1
 
