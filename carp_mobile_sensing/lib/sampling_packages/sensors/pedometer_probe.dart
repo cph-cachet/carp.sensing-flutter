@@ -12,13 +12,16 @@ part of 'sensors.dart';
 /// It samples step counts directly from the native OS and reports step counts
 /// as they are sensed, typically for each step taken.
 ///
-/// Note that the [Pedometer] plugin returns the total steps taken since last
+/// Note that the 'pedometer' plugin returns the total steps taken since last
 /// system boot.
 class PedometerProbe extends StreamProbe {
   @override
   Future<bool> onStart() async {
     // Ask for permission before starting probe.
-    var status = await Permission.activityRecognition.request();
+    // Only relevant for Android - on iOS permission is automatically requested.
+    var status = Platform.isAndroid
+        ? await Permission.activityRecognition.request()
+        : PermissionStatus.granted;
 
     return (status == PermissionStatus.granted)
         ? super.onStart()
