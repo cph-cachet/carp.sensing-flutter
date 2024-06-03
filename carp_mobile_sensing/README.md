@@ -91,7 +91,7 @@ The pedometer (step count) probe uses `NSMotion` on iOS and the `NSMotionUsageDe
 
 ```xml
 <key>NSMotionUsageDescription</key>
-<string>Collecting step count.</string>
+<string>This application tracks your steps</string>
 ```
 
 -------------------------------------

@@ -161,13 +161,13 @@ class LocalStudyProtocolManager implements StudyProtocolManager {
     var phone = Smartphone();
     protocol.addPrimaryDevice(phone);
 
-    // Issue #384
-    protocol.addTaskControl(
-        PeriodicTrigger(period: const Duration(seconds: 5)),
-        BackgroundTask(
-          measures: [Measure(type: DeviceSamplingPackage.DEVICE_INFORMATION)],
-        ),
-        phone);
+    // // Issue #384
+    // protocol.addTaskControl(
+    //     PeriodicTrigger(period: const Duration(seconds: 5)),
+    //     BackgroundTask(
+    //       measures: [Measure(type: DeviceSamplingPackage.DEVICE_INFORMATION)],
+    //     ),
+    //     phone);
 
     // Collect timezone info every time the app restarts.
     protocol.addTaskControl(

@@ -228,10 +228,10 @@ class SmartPhoneClientManager extends SmartphoneClient
   /// [configure].
   Future<void> askForAllPermissions() async {
     if (SamplingPackageRegistry().permissions.isNotEmpty) {
-      info('Asking for permission for all measure types.');
+      info('Asking for permission for all measure types - status:');
       _permissions = await SamplingPackageRegistry().permissions.request();
       permissions.forEach((permission, status) =>
-          info('Permissions for $permission : $status'));
+          info(' - ${permission.toString().split('.').last} : ${status.name}'));
     }
   }
 
