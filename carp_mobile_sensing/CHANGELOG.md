@@ -1,3 +1,14 @@
+## 1.7.0
+
+- Refactor task and notification enqueueing process:
+  - Move from sequential scheduling for each TaskControl to buffering tasks in AppTaskController.
+  - Buffered tasks are sorted by time and scheduled in batches based on platform limits (iOS and Android notification limits).
+- Enhance consistency in task scheduling:
+  - Ensured all necessary tasks in the foreseeable future are queued.
+  - Prevent task and notification drops due to notification slot limitations.
+- Resolve issue with duplicate tasks being scheduled:
+  - Ensure tasks are stored in the database after being scheduled the first time.
+
 ## 1.6.1
 
 * improvement to removing studies (linked to issue [#283](https://github.com/cph-cachet/carp_studies_app/issues/283) in the CARP Studies App)

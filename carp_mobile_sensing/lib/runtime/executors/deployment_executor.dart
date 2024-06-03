@@ -59,6 +59,18 @@ class SmartphoneDeploymentExecutor
     return true;
   }
 
+  /// Run the deployment, and after the deployment is finished, enqueue all buffered tasks.
+  @override
+  Future<bool> onStart() async {
+    bool val = await super.onStart();
+
+    await AppTaskController().enqueueBufferedTasks();
+    debug(
+        '$runtimeType - Deployment finished - ${await SmartPhoneClientManager().notificationController?.pendingNotificationRequestsCount} notifications are currently pending.');
+
+    return val;
+  }
+
   @override
   Future<void> onDispose() async {
     await super.onDispose();

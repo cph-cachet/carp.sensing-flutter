@@ -156,35 +156,30 @@ class AppTaskControlExecutor extends TaskControlExecutor {
 
   @override
   Future<bool> onStart() async {
+    debug(
+        '$runtimeType - ${taskControl.taskName} hasBeenScheduledUntil: ${taskControl.hasBeenScheduledUntil}');
     final from = taskControl.hasBeenScheduledUntil ?? DateTime.now();
-    final to = from.add(const Duration(days: 10)); // look 10 days ahead
-    final schedule = triggerExecutor.getSchedule(from, to, 10);
+    final to = DateTime.now().add(const Duration(days: 15)); // 15 days ahead
+    // get all the instances where the task should be scheduled in the given range
+    final schedule = triggerExecutor.getSchedule(from, to);
 
     if (schedule.isEmpty) {
       // Stop since the schedule is empty and there is not more to schedule.
       stop();
     } else {
-      // Enqueue the first 6 (max) app tasks in the future
-      var remainingNotifications =
-          NotificationController.PENDING_NOTIFICATION_LIMIT -
-              (await SmartPhoneClientManager()
-                      .notificationController
-                      ?.pendingNotificationRequestsCount ??
-                  0);
-      remainingNotifications = min(remainingNotifications, 6);
+      info(
+          '$runtimeType Buffering ${schedule.length} app tasks ($schedule) for task ${taskExecutor.task.name}');
+
       Iterator<DateTime> it = schedule.iterator;
-      var count = 0;
       DateTime current = DateTime.now();
-      while (it.moveNext() && count++ < remainingNotifications) {
+      while (it.moveNext()) {
         current = it.current;
-        await AppTaskController().enqueue(
+        AppTaskController().buffer(
           taskExecutor,
+          taskControl,
           triggerTime: current,
         );
       }
-
-      // Save timestamp
-      taskControl.hasBeenScheduledUntil = current;
 
       // Now stop since the schedule has all been enqueued.
       stop();
@@ -201,6 +196,5 @@ class AppTaskControlExecutor extends TaskControlExecutor {
   }
 
   @override
-  Future<bool> onStop() async =>
-      true; // do nothing - this executor is never stopped
+  Future<bool> onStop() async => true; // do nothing
 }

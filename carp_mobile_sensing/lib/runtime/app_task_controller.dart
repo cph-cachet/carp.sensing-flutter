@@ -24,6 +24,9 @@ class AppTaskController {
   /// and which are planned to trigger in the future.
   List<UserTask> get userTasks => _userTaskMap.values.toList();
 
+  /// A buffer of tasks that are not yet scheduled.
+  final List<UserTaskBufferItem> _userTaskBuffer = [];
+
   /// The queue of [UserTask]s that the user need to attend to.
   List<UserTask> get userTaskQueue => _userTaskMap.values
       .where((task) => task.triggerTime.isBefore(DateTime.now()))
@@ -137,8 +140,6 @@ class AppTaskController {
 
       if (notificationsEnabled && sendNotification) {
         // create notification
-        // TODO - iOS has a limit where it will only keep 64 notifications that will fire the soonest...
-        // See the flutter_local_notifications plugin.
         (triggerTime == null)
             ? await SmartPhoneClientManager()
                 .notificationController
@@ -149,6 +150,63 @@ class AppTaskController {
       }
       return userTask;
     }
+  }
+
+  /// Buffer the [executor] originating from [taskControl] for later scheduling.
+  /// The buffered task executors is enqueued by calling [enqueueBufferedTasks].
+  void buffer(
+    AppTaskExecutor executor,
+    TaskControl taskControl, {
+    DateTime? triggerTime,
+    bool sendNotification = true,
+  }) {
+    debug('$runtimeType - Buffering task $executor for later scheduling.');
+    _userTaskBuffer.add(UserTaskBufferItem(
+      taskControl,
+      executor,
+      sendNotification,
+      triggerTime ?? DateTime.now(),
+    ));
+  }
+
+  /// Enqueue all tasks buffered with [buffer].
+  /// This method is called by the [DeploymentExecutor] when a deployment is
+  /// finished.
+  /// It will sort the tasks based on their trigger time and then schedule
+  /// the first N tasks where N is the number of available notification slots.
+  Future<void> enqueueBufferedTasks() async {
+    _userTaskBuffer.sort((a, b) => a.triggerTime.compareTo(b.triggerTime));
+    var remainingNotifications =
+        NotificationController.pendingNotificationLimit -
+            (await SmartPhoneClientManager()
+                    .notificationController
+                    ?.pendingNotificationRequestsCount ??
+                0);
+
+    var numberOfTasksToEnqueue =
+        min(remainingNotifications, _userTaskBuffer.length);
+
+    // Being mindful of the OS limitations, only schedule however many
+    // tasks as remaining notification slots
+    List<UserTaskBufferItem> toEnqueue =
+        _userTaskBuffer.sublist(0, numberOfTasksToEnqueue);
+
+    debug('$runtimeType - Enqueuing ${toEnqueue.length} tasks.');
+
+    for (var item in toEnqueue) {
+      item.taskControl.hasBeenScheduledUntil = item.triggerTime;
+      await enqueue(
+        item.taskExecutor,
+        triggerTime: item.triggerTime,
+        sendNotification: item.sendNotification,
+      );
+    }
+
+    // Discard the tasks that we couldn't queue, they will be re-queued later.
+    _userTaskBuffer.clear();
+
+    // Persist the tasks that were just enqueued
+    SmartPhoneClientManager().save();
   }
 
   /// De-queue (remove) an [UserTask] from the [userTasks].
@@ -299,6 +357,16 @@ class AppTaskController {
     }
     return success;
   }
+}
+
+class UserTaskBufferItem {
+  AppTaskExecutor<AppTask> taskExecutor;
+  TaskControl taskControl;
+  DateTime triggerTime;
+  bool sendNotification;
+
+  UserTaskBufferItem(this.taskControl, this.taskExecutor, this.sendNotification,
+      this.triggerTime);
 }
 
 /// A snapshot of a [UserTask] at any given time. Used for saving user tasks

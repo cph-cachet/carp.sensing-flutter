@@ -235,6 +235,14 @@ class SmartPhoneClientManager extends SmartphoneClient
     }
   }
 
+  /// Persistently save information related to this client manger.
+  /// Typically used for later resuming when app is restarted. See [resume].
+  Future<void> save() async {
+    for (var study in studies) {
+      await getStudyRuntime(study)?.saveDeployment();
+    }
+  }
+
   /// Called when this client manager is being (re-)activated by the OS.
   ///
   /// Implementations of this method should start with a call to the inherited
@@ -250,11 +258,7 @@ class SmartPhoneClientManager extends SmartphoneClient
   /// method, as in `super.deactivate()`.
   @protected
   @mustCallSuper
-  Future<void> deactivate() async {
-    for (var study in studies) {
-      await getStudyRuntime(study)?.saveDeployment();
-    }
-  }
+  Future<void> deactivate() async => await save();
 
   /// Start all studies in this client manager.
   void start() {
