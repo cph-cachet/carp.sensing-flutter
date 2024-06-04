@@ -66,7 +66,7 @@ abstract class UserTask {
   /// The returned [Duration] will be negative if [this] has expired.
   /// Returns `null` if this task never expires.
   Duration? get expiresIn => (task.expire != null)
-      ? enqueued.add(task.expire!).difference(DateTime.now())
+      ? triggerTime.add(task.expire!).difference(DateTime.now())
       : null;
 
   /// The state of this task.
