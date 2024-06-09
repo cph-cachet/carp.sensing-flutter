@@ -15,7 +15,7 @@ abstract class DeviceManager<TDeviceConfiguration extends DeviceConfiguration>
   final StreamController<DeviceStatus> _eventController =
       StreamController.broadcast();
 
-  bool _restartOnReconnect;
+  final bool _restartOnReconnect;
   bool _hasPermissions = false;
   Timer? _heartbeatTimer;
   DeviceStatus _status = DeviceStatus.unknown;
