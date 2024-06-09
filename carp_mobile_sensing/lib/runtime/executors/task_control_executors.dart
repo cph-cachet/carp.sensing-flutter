@@ -25,7 +25,6 @@ class TaskControlExecutor extends AbstractExecutor<TaskControl> {
   TaskExecutor? taskExecutor;
 
   SmartphoneDeploymentExecutor get deploymentExecutor => _deploymentExecutor;
-  ExecutorFactory get executorFactory => _deploymentExecutor.executorFactory;
   TriggerConfiguration get trigger => _trigger;
   TaskConfiguration get task => _task;
   TaskControl get taskControl => _taskControl;
@@ -47,16 +46,17 @@ class TaskControlExecutor extends AbstractExecutor<TaskControl> {
     _group.add(_controller.stream);
 
     // get the trigger executor and initialize with this task control executor
-    if (executorFactory.getTriggerExecutor(taskControl.triggerId) == null) {
-      triggerExecutor =
-          executorFactory.createTriggerExecutor(taskControl.triggerId, trigger);
+    if (ExecutorFactory().getTriggerExecutor(taskControl.triggerId) == null) {
+      triggerExecutor = ExecutorFactory()
+          .createTriggerExecutor(taskControl.triggerId, trigger);
       triggerExecutor?.initialize(trigger, deployment);
     }
-    triggerExecutor = executorFactory.getTriggerExecutor(taskControl.triggerId);
+    triggerExecutor =
+        ExecutorFactory().getTriggerExecutor(taskControl.triggerId);
     triggerExecutor?.triggerEvents.listen((_) => onTrigger());
 
     // get the task executor and add the measurements it collects to the stream group
-    taskExecutor = executorFactory.getTaskExecutor(task);
+    taskExecutor = ExecutorFactory().getTaskExecutor(task);
     taskExecutor?.initialize(task, deployment);
     _group.add(taskExecutor!.measurements);
 
