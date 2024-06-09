@@ -5,7 +5,7 @@
  * found in the LICENSE file.
  */
 
-part of '../data_managers.dart';
+part of '../infrastructure.dart';
 
 class SQLiteDataManagerFactory implements DataManagerFactory {
   @override

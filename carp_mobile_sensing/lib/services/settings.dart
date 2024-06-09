@@ -1,4 +1,4 @@
-part of 'runtime.dart';
+part of 'services.dart';
 
 /// Misc. settings for CAMS.
 ///

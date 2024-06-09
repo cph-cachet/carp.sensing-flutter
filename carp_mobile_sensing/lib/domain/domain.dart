@@ -1,12 +1,16 @@
 /*
- * Copyright 2018-2022 Copenhagen Center for Health Technology (CACHET) at the
+ * Copyright 2018 Copenhagen Center for Health Technology (CACHET) at the
  * Technical University of Denmark (DTU).
  * Use of this source code is governed by a MIT-style license that can be
  * found in the LICENSE file.
  */
 
-/// The CAMS implementation of the core CARP domain classes like
+/// The CAMS extensions and implementation of the core CARP domain classes like
 /// [StudyProtocol], [TaskConfiguration], and [Measure].
+///
+/// The CAMS domain model extends the [carp_core](https://pub.dev/packages/carp_core)
+/// domain model.
+///
 /// Also hold JSON logic to handle de/serialization of the domain objects.
 library domain;
 
