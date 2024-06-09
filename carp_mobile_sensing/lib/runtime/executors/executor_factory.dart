@@ -11,10 +11,14 @@ part of '../runtime.dart';
 /// of an [TriggerConfiguration].
 abstract class TriggerFactory {
   /// The set of supported [TriggerConfiguration] runtime types.
-  Set<Type> types = {};
+  Set<Type> get types => {};
+
+  /// Callback method when this package is being registered.
+  void onRegister();
 
   /// Create a [TriggerExecutor] based on [trigger].
-  TriggerExecutor create(TriggerConfiguration trigger);
+  /// Returns null if [trigger] is not supported by this factory.
+  TriggerExecutor? create(TriggerConfiguration trigger);
 }
 
 /// A factory that can create a:
@@ -54,6 +58,7 @@ class ExecutorFactory {
     for (var type in factory.types) {
       _triggerFactories[type] = factory;
     }
+    factory.onRegister();
   }
 
   /// Get the [TriggerExecutor] for a [triggerId], if available.
@@ -61,23 +66,26 @@ class ExecutorFactory {
       _triggerExecutors[triggerId];
 
   /// Create a [TriggerExecutor] based on the [trigger] type.
-  TriggerExecutor createTriggerExecutor(
+  /// Returns null if [trigger] is not supported by any registered [TriggerFactory]
+  /// factories.
+  TriggerExecutor? createTriggerExecutor(
     int triggerId,
     TriggerConfiguration trigger,
   ) {
     if (_triggerExecutors[triggerId] == null) {
-      TriggerExecutor executor = ImmediateTriggerExecutor();
+      TriggerExecutor? executor;
 
       if (_triggerFactories[trigger.runtimeType] != null) {
         executor = _triggerFactories[trigger.runtimeType]!.create(trigger);
-      } else {
-        warning(
-            "Unknown trigger used - cannot find a TriggerExecutor for the trigger of type '${trigger.runtimeType}'. "
-            "Using an 'ImmediateTriggerExecutor' instead.");
-        executor = ImmediateTriggerExecutor();
       }
 
-      _triggerExecutors[triggerId] = executor;
+      if (executor != null) {
+        _triggerExecutors[triggerId] = executor;
+      } else {
+        warning(
+            "$runtimeType - Unknown trigger type. Cannot find a TriggerExecutor for the trigger of type '${trigger.runtimeType}'.");
+        return null;
+      }
     }
     return _triggerExecutors[triggerId]!;
   }
@@ -107,25 +115,38 @@ class ExecutorFactory {
 
 /// A [TriggerFactory] for all triggers coming with CAMS.
 class SmartphoneTriggerFactory implements TriggerFactory {
-  @override
-  Set<Type> types = {
-    ElapsedTimeTrigger,
-    ScheduledTrigger,
-    NoOpTrigger,
-    ImmediateTrigger,
-    OneTimeTrigger,
-    DelayedTrigger,
-    PeriodicTrigger,
-    DateTimeTrigger,
-    RecurrentScheduledTrigger,
-    CronScheduledTrigger,
-    SamplingEventTrigger,
-    ConditionalSamplingEventTrigger,
-    ConditionalPeriodicTrigger,
-    RandomRecurrentTrigger,
-    PassiveTrigger,
-    UserTaskTrigger,
+  final Set<Serializable> _triggers = {
+    NoOpTrigger(),
+    ImmediateTrigger(),
+    OneTimeTrigger(),
+    DelayedTrigger(delay: const Duration()),
+    PeriodicTrigger(period: const Duration()),
+    DateTimeTrigger(schedule: DateTime.now()),
+    RecurrentScheduledTrigger(
+      type: RecurrentType.daily,
+      time: const TimeOfDay(),
+    ),
+    SamplingEventTrigger(measureType: ''),
+    ConditionalPeriodicTrigger(period: const Duration()),
+    ConditionalSamplingEventTrigger(measureType: ''),
+    CronScheduledTrigger(),
+    RandomRecurrentTrigger(
+      startTime: const TimeOfDay(hour: 1),
+      endTime: const TimeOfDay(hour: 2),
+    ),
+    UserTaskTrigger(
+      taskName: 'ignored',
+      triggerCondition: UserTaskState.done,
+    )
   };
+
+  @override
+  Set<Type> get types => _triggers.map((e) => e.runtimeType).toSet();
+
+  @override
+  void onRegister() {
+    FromJsonFactory().registerAll(_triggers.toList());
+  }
 
   @override
   TriggerExecutor<TriggerConfiguration> create(TriggerConfiguration trigger) {

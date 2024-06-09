@@ -9,6 +9,8 @@ import 'package:carp_core/carp_core.dart';
 import 'package:carp_mobile_sensing/carp_mobile_sensing.dart';
 import 'package:flutter/material.dart' hide TimeOfDay;
 
+import 'trigger_example.dart';
+
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   CarpMobileSensing.ensureInitialized();
@@ -97,7 +99,9 @@ class Console extends State<ConsolePage> {
 /// Sensing App at https://github.com/cph-cachet/carp.sensing-flutter/tree/master/apps/carp_mobile_sensing_app
 class Sensing {
   static final Sensing _instance = Sensing._();
-  Sensing._();
+  Sensing._() {
+    ExecutorFactory().registerTriggerFactory(RemoteTriggerFactory());
+  }
 
   /// The singleton Sensing instance.
   factory Sensing() => _instance;
@@ -160,6 +164,15 @@ class LocalStudyProtocolManager implements StudyProtocolManager {
     // services (e.g., a weather service).
     var phone = Smartphone();
     protocol.addPrimaryDevice(phone);
+
+    // Issue #403
+    protocol.addTaskControl(
+      RemoteTrigger(
+          interval: const Duration(seconds: 5), uri: 'http://google.com/'),
+      BackgroundTask(
+          measures: [Measure(type: DeviceSamplingPackage.DEVICE_INFORMATION)]),
+      phone,
+    );
 
     // // Issue #384
     // protocol.addTaskControl(
