@@ -1,5 +1,5 @@
 /*
- * Copyright 2018-2022 Copenhagen Center for Health Technology (CACHET) at the
+ * Copyright 2018 Copenhagen Center for Health Technology (CACHET) at the
  * Technical University of Denmark (DTU).
  * Use of this source code is governed by a MIT-style license that can be
  * found in the LICENSE file.
@@ -17,8 +17,6 @@ class SmartphoneDeploymentExecutor
     extends AggregateExecutor<SmartphoneDeployment> {
   final StreamController<Measurement> _manualMeasurementController =
       StreamController.broadcast();
-
-  final ExecutorFactory executorFactory = ExecutorFactory();
 
   @override
   bool onInitialize() {
@@ -84,7 +82,8 @@ class SmartphoneDeploymentExecutor
           ?.executors
           .remove(executor);
     }
-    // executors.clear();
+
+    ExecutorFactory().dispose();
   }
 
   /// Get the [DeviceManager] based on the [roleName].

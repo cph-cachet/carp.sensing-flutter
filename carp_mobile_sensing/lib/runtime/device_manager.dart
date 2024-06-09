@@ -1,7 +1,7 @@
 // ignore_for_file: unnecessary_getters_setters
 
 /*
- * Copyright 2021-2022 Copenhagen Center for Health Technology (CACHET) at the
+ * Copyright 2021 Copenhagen Center for Health Technology (CACHET) at the
  * Technical University of Denmark (DTU).
  * Use of this source code is governed by a MIT-style license that can be
  * found in the LICENSE file.
@@ -15,7 +15,7 @@ abstract class DeviceManager<TDeviceConfiguration extends DeviceConfiguration>
   final StreamController<DeviceStatus> _eventController =
       StreamController.broadcast();
 
-  bool _restartOnReconnect;
+  final bool _restartOnReconnect;
   bool _hasPermissions = false;
   Timer? _heartbeatTimer;
   DeviceStatus _status = DeviceStatus.unknown;

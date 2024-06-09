@@ -27,8 +27,8 @@ abstract class TriggerExecutor<TConfig extends TriggerConfiguration>
   /// The stream of events triggered from this trigger executor.
   Stream<TriggerEvent> get triggerEvents => _controller.stream;
 
-  // a lot of trigger executors use a timer, so we declare one here
-  Timer? _timer;
+  /// A lot of trigger executors use a timer, so we declare one here
+  Timer? timer;
 
   @override
   Stream<Measurement> get measurements => const Stream.empty();
@@ -45,14 +45,14 @@ abstract class TriggerExecutor<TConfig extends TriggerConfiguration>
   @override
   @mustCallSuper
   Future<bool> onRestart() async {
-    _timer?.cancel();
+    timer?.cancel();
     return true;
   }
 
   @override
   @mustCallSuper
   Future<bool> onStop() async {
-    _timer?.cancel();
+    timer?.cancel();
     return true;
   }
 
@@ -121,7 +121,7 @@ class PassiveTriggerExecutor extends TriggerExecutor<PassiveTrigger> {
 class DelayedTriggerExecutor extends TriggerExecutor<DelayedTrigger> {
   @override
   Future<bool> onStart() async {
-    _timer = Timer(configuration!.delay, () => onTrigger());
+    timer = Timer(configuration!.delay, () => onTrigger());
     return true;
   }
 }
@@ -157,7 +157,7 @@ class ElapsedTimeTriggerExecutor
             deployment!.deployed!.millisecondsSinceEpoch);
 
     if (delay > 0) {
-      _timer = Timer(Duration(milliseconds: delay), () => onTrigger());
+      timer = Timer(Duration(milliseconds: delay), () => onTrigger());
     } else {
       warning(
           '$runtimeType - the trigger time is in the past and should have happened already.');
@@ -188,7 +188,7 @@ class PeriodicTriggerExecutor
 
   @override
   Future<bool> onStart() async {
-    _timer = Timer.periodic(configuration!.period, (_) => onTrigger());
+    timer = Timer.periodic(configuration!.period, (_) => onTrigger());
     return true;
   }
 }
@@ -210,7 +210,7 @@ class DateTimeTriggerExecutor
       return false;
     } else {
       var delay = configuration!.schedule.difference(DateTime.now());
-      _timer = Timer(delay, () => onTrigger());
+      timer = Timer(delay, () => onTrigger());
     }
     return true;
   }
@@ -239,7 +239,7 @@ class RecurrentScheduledTriggerExecutor
     Duration delay = configuration!.firstOccurrence.difference(DateTime.now());
     if (configuration!.end == null ||
         configuration!.end!.isAfter(DateTime.now())) {
-      _timer = Timer(delay, () async => onTrigger());
+      timer = Timer(delay, () async => onTrigger());
     }
     return true;
   }
@@ -355,7 +355,7 @@ class ConditionalPeriodicTriggerExecutor
   @override
   Future<bool> onStart() async {
     // create a recurrent timer that checks the conditions periodically
-    _timer = Timer.periodic(configuration!.period, (_) {
+    timer = Timer.periodic(configuration!.period, (_) {
       if (configuration!.triggerCondition != null &&
           configuration!.triggerCondition!()) onTrigger();
     });

@@ -20,12 +20,17 @@ dependencies:
   #   path: ../../carp_core
   carp_mobile_sensing:
     path: ../../carp_mobile_sensing/
+  
+  http: ^1.2.1
+  json_annotation: ^4.8.0
 
 dependency_overrides:
 
 dev_dependencies:
   test: any
   flutter_lints: any
+  build_runner: any
+  json_serializable: any
 
 flutter:
   uses-material-design: true

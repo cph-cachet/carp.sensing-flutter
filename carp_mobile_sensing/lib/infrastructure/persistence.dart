@@ -5,7 +5,7 @@
  * found in the LICENSE file.
  */
 
-part of 'runtime.dart';
+part of 'infrastructure.dart';
 
 /// A persistence layer that knows how to persistently store deployment and
 /// app task information across app restart.

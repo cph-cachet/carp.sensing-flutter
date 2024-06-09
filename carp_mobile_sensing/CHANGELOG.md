@@ -1,3 +1,8 @@
+## 1.8.0
+
+- Added support for extension of triggers, [#403](https://github.com/cph-cachet/carp.sensing-flutter/issues/403). See the section on [Adding new Trigger](https://github.com/cph-cachet/carp.sensing-flutter/wiki/5.-Extending-CARP-Mobile-Sensing#adding-new-triggers) on the CAMS wiki.
+- Refactor of the software architecture to align better with a domain-driven design architecture.
+
 ## 1.7.1
 
 - Fix of [#390](https://github.com/cph-cachet/carp.sensing-flutter/issues/390)
