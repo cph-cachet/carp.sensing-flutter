@@ -163,9 +163,9 @@ enum DeploymentMode {
   /// Use the CAWS production server to get the study deployment and store data.
   production,
 
-  /// Use the CAWS staging server to get the study deployment and store data.
-  staging,
+  /// Use the CAWS test server to get the study deployment and store data.
+  test,
 
   /// Use the CAWS development server to get the study deployment and store data.
-  development,
+  dev,
 }

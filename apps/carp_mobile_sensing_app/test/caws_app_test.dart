@@ -1,6 +1,3 @@
-// import 'dart:convert';
-// import 'dart:io';
-// import 'package:test/test.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 import 'package:carp_serializable/carp_serializable.dart';
@@ -17,15 +14,15 @@ import 'package:carp_apps_package/apps.dart';
 import 'package:carp_backend/carp_backend.dart';
 import 'package:carp_webservices/carp_auth/carp_auth.dart';
 import 'package:carp_webservices/carp_services/carp_services.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
-// import '../lib/main.dart';
 import 'credentials.dart';
 
 void main() {
-  TestWidgetsFlutterBinding.ensureInitialized();
+  SharedPreferences.setMockInitialValues({});
   CarpMobileSensing.ensureInitialized();
 
-  CarpApp app;
+  // CarpApp app;
   late CarpUser user;
 
   setUp(() async {
@@ -46,41 +43,37 @@ void main() {
     // create a data manager in order to register the json functions
     CarpDataManager();
 
-    var uri = Uri(
+    /// The URI of the CAWS server
+    final uri = Uri(
       scheme: 'https',
-      host: 'carp.computerome.dk',
-      pathSegments: [
-        'auth',
-        'dev',
-        'realms',
-        'Carp',
-      ],
+      host: 'dev.carp.dk',
     );
 
-    // app = CarpApp(
-    //   name: "Test",
-    //   uri: Uri.parse(uri),
-    //   oauth: OAuthEndPoint(clientID: clientID, clientSecret: clientSecret),
-    // );
-
-    app = CarpApp(
-      name: "Test",
-      uri: uri.replace(pathSegments: ['dev']),
-      authURL: uri,
-      clientId: 'carp-webservices-dart',
-      redirectURI: Uri.parse('carp-studies-auth://auth'),
-      discoveryURL: uri.replace(pathSegments: [
-        ...uri.pathSegments,
-        '.well-known',
-        'openid-configuration'
-      ]),
+    /// The CAWS app configuration.
+    final app = CarpApp(
+      name: "CAWS @ DTU",
+      uri: uri,
       studyId: testStudyId,
       studyDeploymentId: testDeploymentId,
     );
 
+    /// The authentication configuration
+    final authProperties = CarpAuthProperties(
+      authURL: uri,
+      clientId: 'studies-app',
+      redirectURI: Uri.parse('carp-studies-auth://auth'),
+      // For authentication at CAWS the path is '/auth/realms/Carp'
+      discoveryURL: uri.replace(pathSegments: [
+        'auth',
+        'realms',
+        'Carp',
+      ]),
+    );
+
+    await CarpAuthService().configure(authProperties);
     CarpService().configure(app);
 
-    user = await CarpService().authenticateWithUsernamePassword(
+    user = await CarpAuthService().authenticateWithUsernamePassword(
       username: username,
       password: password,
     );
