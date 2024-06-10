@@ -1,6 +1,7 @@
-## 1.4.4
+## 1.4.5
 
 * upgrade of plugin versions
+* cleanup in pubspec
 
 ## 1.4.2
 

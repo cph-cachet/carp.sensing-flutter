@@ -120,15 +120,14 @@ class MovisensDeviceManager extends BTLEDeviceManager<MovisensDevice> {
       // listen for BTLE connection events
       _subscription = device?.state?.listen((state) {
         switch (state) {
-          case BluetoothConnectionState.connecting:
-            status = DeviceStatus.connecting;
-            break;
           case BluetoothConnectionState.connected:
             status = DeviceStatus.connected;
             break;
-          case BluetoothConnectionState.disconnecting:
           case BluetoothConnectionState.disconnected:
             status = DeviceStatus.disconnected;
+            break;
+          default:
+            status = DeviceStatus.unknown;
             break;
         }
       });
