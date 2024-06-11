@@ -6,53 +6,69 @@ part of mobile_sensing_app;
 class CarpBackend {
   static const String HOST_URI = "carp.computerome.dk";
 
+  /// The URIs of the CARP Web Service (CAWS) host for each [DeploymentMode].
   static const Map<DeploymentMode, String> uris = {
-    DeploymentMode.development: 'dev',
-    DeploymentMode.staging: 'stage',
-    DeploymentMode.production: '',
+    DeploymentMode.dev: 'dev.carp.dk',
+    DeploymentMode.test: 'test.carp.dk',
+    DeploymentMode.production: 'carp.computerome.dk',
   };
 
   static final CarpBackend _instance = CarpBackend._();
   CarpBackend._() : super();
   factory CarpBackend() => _instance;
 
-  CarpApp? _app;
-
   /// The signed in user
-  CarpUser? get user => CarpService().currentUser;
+  CarpUser? get user => CarpAuthService().currentUser;
 
   /// The username of the signed in user.
-  String? get username => CarpService().currentUser.username;
+  String? get username => CarpAuthService().currentUser.username;
 
-  /// The URI of the CANS server - depending on deployment mode.
+  /// The URI of the CAWS server - depending on deployment mode.
   Uri get uri => Uri(
         scheme: 'https',
-        host: HOST_URI,
+        host: uris[bloc.deploymentMode],
+      );
+
+  /// The URI of the CAWS authentication service.
+  ///
+  /// Of the form:
+  ///    https://dev.carp.dk/auth/realms/Carp/
+  Uri get authUri => Uri(
+        scheme: 'https',
+        host: uris[bloc.deploymentMode],
         pathSegments: [
           'auth',
-          uris[bloc.deploymentMode]!,
           'realms',
           'Carp',
         ],
       );
 
-  CarpApp? get app => _app;
+  /// The CAWS app configuration.
+  late final CarpApp _app = CarpApp(
+    name: "CAWS @ DTU",
+    uri: uri,
+    studyId: bloc.studyId,
+    studyDeploymentId: bloc.studyDeploymentId,
+  );
+
+  CarpApp get app => _app;
+
+  /// The authentication configuration
+  CarpAuthProperties get authProperties => CarpAuthProperties(
+        authURL: uri,
+        clientId: 'studies-app',
+        redirectURI: Uri.parse('carp-studies-auth://auth'),
+        // For authentication at CAWS the path is '/auth/realms/Carp'
+        discoveryURL: uri.replace(pathSegments: [
+          'auth',
+          'realms',
+          'Carp',
+        ]),
+      );
 
   Future<void> initialize() async {
-    _app = CarpApp(
-      name: 'CAWS -${bloc.deploymentMode.name}',
-      uri: uri.replace(pathSegments: [uris[bloc.deploymentMode]!]),
-      authURL: uri,
-      clientId: 'carp-webservices-dart',
-      redirectURI: Uri.parse('carp-studies-auth://auth'),
-      discoveryURL: uri.replace(pathSegments: [
-        ...uri.pathSegments,
-        '.well-known',
-        'openid-configuration'
-      ]),
-    );
-
-    CarpService().configure(app!);
+    await CarpAuthService().configure(authProperties);
+    CarpService().configure(app);
 
     // register CARP as a data backend where data can be uploaded
     DataManagerRegistry().register(CarpDataManagerFactory());
@@ -62,12 +78,12 @@ class CarpBackend {
 
   /// Authenticate to the CAWS host.
   Future<CarpUser> authenticate() async {
-    var response = await CarpService().authenticate();
+    var user = await CarpAuthService().authenticate();
 
     // Configure the participation service in order to get the invitations
     CarpParticipationService().configureFrom(CarpService());
 
-    return response;
+    return user;
   }
 
   /// Get the study invitation.

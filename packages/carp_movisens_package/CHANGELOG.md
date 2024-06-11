@@ -1,3 +1,7 @@
+## 1.4.1
+
+* upgrade of pubspec dependencies
+
 ## 1.1.0
 
 * update to `carp_mobile_sensing` v. 1.1.0

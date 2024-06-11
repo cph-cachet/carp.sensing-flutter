@@ -45,7 +45,7 @@ void main() {
     CarpDataManager();
 
     // configure the BLOC w. deployment and data format
-    bloc.deploymentMode = DeploymentMode.development;
+    bloc.deploymentMode = DeploymentMode.dev;
     bloc.dataFormat = NameSpace.CARP;
 
     // generate the protocol to be used in testing below
