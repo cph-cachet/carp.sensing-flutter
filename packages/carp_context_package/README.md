@@ -23,7 +23,7 @@ See the [CARP Mobile Sensing App](https://github.com/cph-cachet/carp.sensing-flu
 For Flutter plugins for other CARP products, see [CARP Mobile Sensing in Flutter](https://github.com/cph-cachet/carp.sensing-flutter).
 
 If you're interested in writing you own sampling packages for CARP, see the description on
-how to [extend](https://github.com/cph-cachet/carp.sensing-flutter/wiki/5.-Extending-CARP-Mobile-Sensing) CARP on the wiki.
+how to [extend](https://github.com/cph-cachet/carp.sensing-flutter/wiki/5.-Extending-CARP-Mobile-Sensing) CARP Mobile Sensing on the wiki.
 
 ## Installing
 
@@ -153,7 +153,9 @@ Before creating a study and running it, register this package in the [SamplingPa
 SamplingPackageRegistry().register(ContextSamplingPackage());
 ````
 
-The context package uses different "services" to collect data.
+The context package uses different "services" (incl. the phone itself) to collect data.
+
+### Activity Measure
 
 The `ACTIVITY` measure uses the phone itself and can be added like this:
 
@@ -177,6 +179,8 @@ protocol.addTaskControl(
     phone);
 ```
 
+### Location Measures
+
 All of the location-based measures;
 
 * `LOCATION`
@@ -184,7 +188,7 @@ All of the location-based measures;
 * `GEOFENCE`
 * `MOBILITY`
 
-uses the `LocationService` service as a "connected device" to collect data and can be added to a protocol like this:
+use the `LocationService` service as a "connected device" to collect data and can be added to a protocol like this:
 
 ```dart
 // Define the online location service and add it as a 'connected device'
@@ -206,8 +210,10 @@ protocol.addTaskControl(
 
 > Note that you would often need to balance the configuration of the `LocationService` with the measure you are collecting. For example, if only using the `MOBILITY` measure, a lower `accuracy`, `distance`, and sampling `interval` could be used.
 
+### Weather and Air Quality Measures
+
 The `WEATHER` and `AIR_QUALITY` measures uses the online [Open Weather API](https://openweathermap.org/api) and [Air Quality Open Data Platform](https://aqicn.org/data-platform/token/#/), respectively.
-In order to use these service, you need to obtain an API key from each of them.
+In order to use these services, you need to obtain an API key from each of them.
 Once you have this, these services can be configured and added to a protocol like this:
 
 ```dart

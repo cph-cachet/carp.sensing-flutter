@@ -1,5 +1,6 @@
 /// A library for collecting context information on:
 ///  * location
+///  * geofence
 ///  * activity
 ///  * weather
 ///  * air quality
@@ -7,7 +8,6 @@
 library carp_context_package;
 
 import 'dart:async';
-import 'dart:io';
 import 'dart:math' as math;
 import 'package:json_annotation/json_annotation.dart';
 import 'package:weather/weather.dart' as weather;
