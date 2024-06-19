@@ -1,4 +1,4 @@
-part of mobile_sensing_app;
+part of '../../main.dart';
 
 /// This is the main Business Logic Component (BLoC) of this sensing app.
 class SensingBLoC {
@@ -104,6 +104,10 @@ class SensingBLoC {
   /// Get a list of view models for connected devices.
   Iterable<DeviceViewModel> get connectedDevices =>
       bloc.sensing.connectedDevices.map((device) => DeviceViewModel(device));
+
+  /// The list of all devices in this deployment.
+  Iterable<DeviceViewModel> get deployedDevices =>
+      bloc.sensing.deployedDevices!.map((device) => DeviceViewModel(device));
 
   /// Initialize the BLoC.
   Future<void> initialize({

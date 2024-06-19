@@ -1,4 +1,4 @@
-part of mobile_sensing_app;
+part of '../../main.dart';
 
 /// A view model for a [DeviceManager].
 class DeviceViewModel {

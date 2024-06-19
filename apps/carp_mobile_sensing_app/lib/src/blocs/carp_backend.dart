@@ -1,4 +1,4 @@
-part of mobile_sensing_app;
+part of '../../main.dart';
 
 /// Handling communication to the CARP Web Services infrastructure.
 ///

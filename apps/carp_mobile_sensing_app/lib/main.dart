@@ -1,8 +1,9 @@
 library mobile_sensing_app;
 
+import 'dart:async';
+
 import 'package:flutter/material.dart' hide TimeOfDay;
 import 'package:flutter/services.dart';
-import 'dart:async';
 
 import 'package:carp_serializable/carp_serializable.dart';
 import 'package:carp_core/carp_core.dart';

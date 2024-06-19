@@ -1,4 +1,4 @@
-part of mobile_sensing_app;
+part of '../../main.dart';
 
 class ProbeDescriptor {
   String name, description;
@@ -9,7 +9,7 @@ class ProbeDescription {
   static Map<String, ProbeDescriptor> get descriptors => {
         DeviceSamplingPackage.FREE_MEMORY: ProbeDescriptor(
           'Memory',
-          'Collecting free physical and virtual memory.',
+          'Free physical and virtual memory.',
         ),
         DeviceSamplingPackage.DEVICE_INFORMATION: ProbeDescriptor(
           'Device',
@@ -17,19 +17,19 @@ class ProbeDescription {
         ),
         DeviceSamplingPackage.BATTERY_STATE: ProbeDescriptor(
           'Battery',
-          'Collecting battery level and charging status.',
+          'Battery level and charging status.',
         ),
         SensorSamplingPackage.STEP_COUNT: ProbeDescriptor(
           'Pedometer',
-          'Collecting step counts on a regular basis.',
+          'Step count events as steps are detected by the phone.',
         ),
         SensorSamplingPackage.ACCELERATION: ProbeDescriptor(
           'Accelerometer',
-          "Collecting sensor data from the phone's onboard accelerometer.",
+          "Sensor data from the phone's onboard accelerometer.",
         ),
         SensorSamplingPackage.ROTATION: ProbeDescriptor(
           'Gyroscope',
-          "Collecting sensor data from the phone's onboard gyroscope.",
+          "Sensor data from the phone's onboard gyroscope.",
         ),
         SensorSamplingPackage.AMBIENT_LIGHT: ProbeDescriptor(
           'Light',
@@ -37,27 +37,27 @@ class ProbeDescription {
         ),
         ConnectivitySamplingPackage.BLUETOOTH: ProbeDescriptor(
           'Bluetooth',
-          'Collecting nearby bluetooth devices on a regular basis.',
+          'Scans for nearby bluetooth devices on a regular basis.',
         ),
         ConnectivitySamplingPackage.WIFI: ProbeDescriptor(
           'Wifi',
-          'Collecting names of connected wifi networks (SSID and BSSID)',
+          'Collects names of connected wifi networks (SSID and BSSID)',
         ),
         ConnectivitySamplingPackage.CONNECTIVITY: ProbeDescriptor(
           'Connectivity',
-          'Collecting information on connectivity status and mode.',
+          'Information on connectivity status and mode.',
         ),
         MediaSamplingPackage.AUDIO: ProbeDescriptor(
           'Audio',
-          'Records ambient sound on a regular basis.',
+          'Ambient sound in the proximity of the phone.',
         ),
         MediaSamplingPackage.NOISE: ProbeDescriptor(
           'Noise',
-          'Measures noise level in decibel on a regular basis.',
+          "Ambient noise level in decibel as detected by the phone's microphone.",
         ),
         AppsSamplingPackage.APPS: ProbeDescriptor(
           'Apps',
-          'Collecting a list of installed apps.',
+          'Collects a list of installed apps.',
         ),
         AppsSamplingPackage.APP_USAGE: ProbeDescriptor(
           'App Usage',
@@ -81,31 +81,31 @@ class ProbeDescription {
         // ),
         DeviceSamplingPackage.SCREEN_EVENT: ProbeDescriptor(
           'Screen',
-          'Collecting screen events (on/off/unlock).',
+          'Screen events (on/off/unlock).',
         ),
         ContextSamplingPackage.CURRENT_LOCATION: ProbeDescriptor(
           'Current Location',
-          'Collecting location information.',
+          "Current location colleted from the phone's GPS sensor.",
         ),
         ContextSamplingPackage.LOCATION: ProbeDescriptor(
           'Location Tracking',
-          'Collecting location information.',
+          "Continuous location tracking from the phone's GPS sensor.",
         ),
         ContextSamplingPackage.ACTIVITY: ProbeDescriptor(
           'Activity',
-          'Recognize physical activity, e.g. sitting, walking, biking.',
+          'Physical activity as detected by the phone, e.g., sitting, walking, biking.',
         ),
         ContextSamplingPackage.WEATHER: ProbeDescriptor(
           'Weather',
-          'Collects local weather.',
+          'Collects local weather information.',
         ),
         ContextSamplingPackage.AIR_QUALITY: ProbeDescriptor(
           'Air Quality',
-          'Collects local air quality.',
+          'Collects local air quality information.',
         ),
         ContextSamplingPackage.GEOFENCE: ProbeDescriptor(
           'Geofence',
-          'Track movement in/out of this geofence.',
+          'Track movement in/out of a geographical ares (geofence).',
         ),
         ContextSamplingPackage.MOBILITY: ProbeDescriptor(
           'Mobility',

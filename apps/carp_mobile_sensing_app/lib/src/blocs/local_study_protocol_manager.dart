@@ -1,11 +1,4 @@
-/*
- * Copyright 2019-2024 Copenhagen Center for Health Technology (CACHET) at the
- * Technical University of Denmark (DTU).
- * Use of this source code is governed by a MIT-style license that can be
- * found in the LICENSE file.
- */
-
-part of mobile_sensing_app;
+part of '../../main.dart';
 
 /// This is a local [StudyProtocolManager] which provides a [SmartphoneStudyProtocol]
 /// when running in local mode.
@@ -70,33 +63,38 @@ class LocalStudyProtocolManager implements StudyProtocolManager {
         ]),
         phone);
 
-    // a random trigger - 3-8 times during time period of 8-20
-    protocol.addTaskControl(
-        RandomRecurrentTrigger(
-          startTime: TimeOfDay(hour: 8),
-          endTime: TimeOfDay(hour: 20),
-          minNumberOfTriggers: 3,
-          maxNumberOfTriggers: 8,
-        ),
-        BackgroundTask(measures: [
-          Measure(type: DeviceSamplingPackage.DEVICE_INFORMATION)
-        ]),
-        phone);
+    // // a random trigger - 3-8 times during time period of 8-20
+    // protocol.addTaskControl(
+    //     RandomRecurrentTrigger(
+    //       startTime: TimeOfDay(hour: 8),
+    //       endTime: TimeOfDay(hour: 20),
+    //       minNumberOfTriggers: 3,
+    //       maxNumberOfTriggers: 8,
+    //     ),
+    //     BackgroundTask(measures: [
+    //       Measure(type: DeviceSamplingPackage.DEVICE_INFORMATION)
+    //     ]),
+    //     phone);
 
-    // activity measure using the phone
-    protocol.addTaskControl(
-        ImmediateTrigger(),
-        BackgroundTask(
-            measures: [Measure(type: ContextSamplingPackage.ACTIVITY)]),
-        phone);
+    // // activity measure using the phone
+    // protocol.addTaskControl(
+    //     ImmediateTrigger(),
+    //     BackgroundTask(
+    //         measures: [Measure(type: ContextSamplingPackage.ACTIVITY)]),
+    //     phone);
 
     // Define the online location service and add it as a 'device'
-    LocationService locationService = LocationService();
+    // final locationService = LocationService();
+
+    final locationService = LocationService(
+      // used for debugging when the phone is laying still on the table
+      distance: 0,
+    );
     protocol.addConnectedDevice(locationService, phone);
 
     // Add a background task that collects location on a regular basis
     protocol.addTaskControl(
-        PeriodicTrigger(period: Duration(minutes: 5)),
+        PeriodicTrigger(period: Duration(seconds: 20)),
         BackgroundTask(measures: [
           Measure(type: ContextSamplingPackage.CURRENT_LOCATION),
         ]),
@@ -117,36 +115,36 @@ class LocalStudyProtocolManager implements StudyProtocolManager {
 
     // Add a background task that collects weather every 30 minutes.
     protocol.addTaskControl(
-        PeriodicTrigger(period: Duration(minutes: 30)),
+        PeriodicTrigger(period: Duration(seconds: 30)),
         BackgroundTask()
           ..addMeasure(Measure(type: ContextSamplingPackage.WEATHER)),
         weatherService);
 
-    // Define the online air quality service and add it as a 'device'
-    AirQualityService airQualityService =
-        AirQualityService(apiKey: airQualityApiKey);
-    protocol.addConnectedDevice(airQualityService, phone);
+    // // Define the online air quality service and add it as a 'device'
+    // AirQualityService airQualityService =
+    //     AirQualityService(apiKey: airQualityApiKey);
+    // protocol.addConnectedDevice(airQualityService, phone);
 
-    // Add a background task that air quality every 30 minutes.
-    protocol.addTaskControl(
-        PeriodicTrigger(period: Duration(minutes: 30)),
-        BackgroundTask()
-          ..addMeasure(Measure(type: ContextSamplingPackage.AIR_QUALITY)),
-        airQualityService);
+    // // Add a background task that air quality every 30 minutes.
+    // protocol.addTaskControl(
+    //     PeriodicTrigger(period: Duration(minutes: 30)),
+    //     BackgroundTask()
+    //       ..addMeasure(Measure(type: ContextSamplingPackage.AIR_QUALITY)),
+    //     airQualityService);
 
-    protocol.addTaskControl(
-        ImmediateTrigger(),
-        BackgroundTask()..addMeasure(Measure(type: MediaSamplingPackage.NOISE)),
-        phone);
+    // protocol.addTaskControl(
+    //     ImmediateTrigger(),
+    //     BackgroundTask()..addMeasure(Measure(type: MediaSamplingPackage.NOISE)),
+    //     phone);
 
-    protocol.addTaskControl(
-        ImmediateTrigger(),
-        BackgroundTask(measures: [
-          Measure(type: ConnectivitySamplingPackage.CONNECTIVITY),
-          Measure(type: ConnectivitySamplingPackage.WIFI),
-          Measure(type: ConnectivitySamplingPackage.BLUETOOTH),
-        ]),
-        phone);
+    // protocol.addTaskControl(
+    //     ImmediateTrigger(),
+    //     BackgroundTask(measures: [
+    //       Measure(type: ConnectivitySamplingPackage.CONNECTIVITY),
+    //       Measure(type: ConnectivitySamplingPackage.WIFI),
+    //       Measure(type: ConnectivitySamplingPackage.BLUETOOTH),
+    //     ]),
+    //     phone);
 
     // // Add an automatic task that collects SMS messages in/out
     // protocol.addTaskControl(
@@ -230,24 +228,24 @@ class LocalStudyProtocolManager implements StudyProtocolManager {
     //     ]),
     //     polar);
 
-    // Known Movensense devices:
-    //  - Movesense MD : 220330000122 : 0C:8C:DC:3F:B2:CD
-    //  - Movesense    : 233830000687 : 0C:8C:DC:1B:23:3E
-    var movesense = MovesenseDevice(
-      address: '0C:8C:DC:3F:B2:CD',
-      name: 'Movesense MD 2203300 00122',
-    );
+    // // Known Movensense devices:
+    // //  - Movesense MD : 220330000122 : 0C:8C:DC:3F:B2:CD
+    // //  - Movesense    : 233830000687 : 0C:8C:DC:1B:23:3E
+    // var movesense = MovesenseDevice(
+    //   address: '0C:8C:DC:3F:B2:CD',
+    //   name: 'Movesense MD 2203300 00122',
+    // );
 
-    protocol.addConnectedDevice(movesense, phone);
+    // protocol.addConnectedDevice(movesense, phone);
 
-    protocol.addTaskControl(
-        ImmediateTrigger(),
-        BackgroundTask(measures: [
-          Measure(type: MovesenseSamplingPackage.STATE),
-          Measure(type: MovesenseSamplingPackage.HR),
-          Measure(type: MovesenseSamplingPackage.ECG),
-        ]),
-        movesense);
+    // protocol.addTaskControl(
+    //     ImmediateTrigger(),
+    //     BackgroundTask(measures: [
+    //       Measure(type: MovesenseSamplingPackage.STATE),
+    //       Measure(type: MovesenseSamplingPackage.HR),
+    //       Measure(type: MovesenseSamplingPackage.ECG),
+    //     ]),
+    //     movesense);
 
     // // add a measure for ECG monitoring using the Movisens device
     // protocol.addTaskControl(

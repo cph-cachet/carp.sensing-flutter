@@ -26,22 +26,42 @@
 	<string>$(FLUTTER_BUILD_NUMBER)</string>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
-	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
-	<string>This app needs access to location when open and in the background.</string>
-	<key>NSLocationAlwaysUsageDescription</key>
-	<string>This app needs access to location when in the background.</string>
-	<key>NSLocationWhenInUseUsageDescription</key>
-	<string>This app needs access to location when open.</string>
+
+	<!-- Permissions for Bluetooth -->
+	<key>NSBluetoothAlwaysUsageDescription</key>
+	<string>CARP uses bluetooth to connect to wearable devices</string>
+	<key>NSBluetoothPeripheralUsageDescription</key>
+	<string>CARP uses bluetooth to connect to wearable devices</string>
+	
+	<!-- Permissions for accessing `health` data -->
 	<key>NSHealthShareUsageDescription</key>
 	<string>We will sync your data with the Apple Health app to give you better insights</string>
 	<key>NSHealthUpdateUsageDescription</key>
-	<string>We will sync your data with the Apple Health app to give you better insights</string>	
+	<string>We will sync your data with the Apple Health app to give you better insights</string>
+
+	<!-- Permission options for the `location` group -->
+	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
+	<string>The CARP app needs access to location when open and in the background.</string>
+	<key>NSLocationAlwaysUsageDescription</key>
+	<string>The CARP app needs access to location when in the background.</string>
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>The CARP app needs access to location when open.</string>
+	<key>NSLocationUsageDescription</key>
+	<string>The CARP app needs access to location when open and in the background.</string>
+	
+	<key>NSMotionUsageDescription</key>
+	<string>The CARP app uses the motion system to detects activities such as walking and biking</string>
+
+	<key>NSMicrophoneUsageDescription</key>
+	<string>The CARP app uses the microphone to record ambient noise in the phone's environment</string>
+
 	<key>UIApplicationSupportsIndirectInputEvents</key>
 	<true/>
 	<key>UIBackgroundModes</key>
 	<array>
+		<string>bluetooth-central</string>
 		<string>location</string>
-		<string>bluetooth-central</string>		
+		<string>processing</string>
 	</array>
 	<key>UILaunchStoryboardName</key>
 	<string>LaunchScreen</string>
@@ -50,15 +70,10 @@
 	<key>UISupportedInterfaceOrientations</key>
 	<array>
 		<string>UIInterfaceOrientationPortrait</string>
-		<string>UIInterfaceOrientationLandscapeLeft</string>
-		<string>UIInterfaceOrientationLandscapeRight</string>
 	</array>
 	<key>UISupportedInterfaceOrientations~ipad</key>
 	<array>
 		<string>UIInterfaceOrientationPortrait</string>
-		<string>UIInterfaceOrientationPortraitUpsideDown</string>
-		<string>UIInterfaceOrientationLandscapeLeft</string>
-		<string>UIInterfaceOrientationLandscapeRight</string>
 	</array>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<false/>

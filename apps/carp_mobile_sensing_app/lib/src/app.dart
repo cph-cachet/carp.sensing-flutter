@@ -1,4 +1,4 @@
-part of mobile_sensing_app;
+part of '../main.dart';
 
 class App extends StatelessWidget {
   @override
@@ -37,6 +37,7 @@ class LoadingPage extends StatelessWidget {
     }
 
     await bloc.sensing.initialize();
+
     return true;
   }
 
@@ -94,7 +95,7 @@ class CarpMobileSensingAppState extends State<CarpMobileSensingApp> {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: _restart,
-        child: bloc.isRunning ? Icon(Icons.pause) : Icon(Icons.play_arrow),
+        child: bloc.isRunning ? Icon(Icons.stop) : Icon(Icons.play_arrow),
       ),
     );
   }

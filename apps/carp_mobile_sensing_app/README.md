@@ -175,7 +175,7 @@ class StudyDeploymentViewModel {
   Stream<ExecutorState> get studyExecutorStateEvents =>
       bloc.sensing.controller!.executor.stateEvents;
 
-  /// Current state of the study executor (e.g., resumed, paused, ...)
+  /// Current state of the study executor (e.g., started, stopped, ...)
   ExecutorState get studyState => bloc.sensing.controller!.executor.state;
 
   /// Get all sensing events (i.e. all [Measurement] objects being collected).
