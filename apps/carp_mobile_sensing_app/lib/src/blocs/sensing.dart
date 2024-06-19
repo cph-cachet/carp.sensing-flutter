@@ -1,11 +1,4 @@
-/*
- * Copyright 2021-2024 Copenhagen Center for Health Technology (CACHET) at the
- * Technical University of Denmark (DTU).
- * Use of this source code is governed by a MIT-style license that can be
- * found in the LICENSE file.
- */
-
-part of mobile_sensing_app;
+part of '../../main.dart';
 
 /// This class implements the sensing layer.
 ///
@@ -50,6 +43,10 @@ class Sensing {
   /// The study running on this phone.
   Study? study;
 
+  /// The deployment running on this phone.
+  /// Only available after [addStudy] is called.
+  SmartphoneDeployment? get deployment => controller?.deployment;
+
   /// Get the latest status of the study deployment.
   StudyDeploymentStatus? get status => _status;
 
@@ -76,6 +73,17 @@ class Sensing {
   /// The list of connected devices.
   List<DeviceManager> get connectedDevices =>
       SmartPhoneClientManager().deviceController.connectedDevices.toList();
+
+  /// The list of devices in the current deployment.
+  List<DeviceManager>? get deployedDevices => deployment != null
+      ? SmartPhoneClientManager()
+          .deviceController
+          .devices
+          .values
+          .where((manager) => deployment!.devices
+              .any((registration) => registration.type == manager.type))
+          .toList()
+      : [];
 
   /// Initialize and set up sensing.
   Future<void> initialize() async {

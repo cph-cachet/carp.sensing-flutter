@@ -1,4 +1,4 @@
-part of mobile_sensing_app;
+part of '../../main.dart';
 
 class ProbeDescriptor {
   String name, description;

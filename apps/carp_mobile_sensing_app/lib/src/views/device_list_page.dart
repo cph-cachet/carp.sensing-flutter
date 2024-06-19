@@ -1,4 +1,4 @@
-part of mobile_sensing_app;
+part of '../../main.dart';
 
 class DevicesListPage extends StatefulWidget {
   @override
@@ -11,7 +11,7 @@ class DevicesListPageState extends State<DevicesListPage> {
 
   @override
   Widget build(BuildContext context) {
-    List<DeviceViewModel> devices = bloc.connectedDevices.toList();
+    List<DeviceViewModel> devices = bloc.deployedDevices.toList();
 
     return Scaffold(
       key: scaffoldKey,
@@ -47,10 +47,10 @@ class DevicesListPageState extends State<DevicesListPage> {
                 subtitle: Text(device.description),
                 trailing: device.stateIcon,
               ),
-              const Divider(),
-              TextButton(
-                  child: const Text('How to use this device?'),
-                  onPressed: () => print('Use the $device')),
+              // const Divider(),
+              // TextButton(
+              //     child: const Text('How to use this device?'),
+              //     onPressed: () => print('Use the $device')),
               FutureBuilder<bool>(
                   future: device.deviceManager.hasPermissions(),
                   builder: (

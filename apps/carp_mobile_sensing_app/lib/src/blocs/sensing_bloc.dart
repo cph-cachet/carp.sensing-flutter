@@ -1,4 +1,4 @@
-part of mobile_sensing_app;
+part of '../../main.dart';
 
 /// This is the main Business Logic Component (BLoC) of this sensing app.
 class SensingBLoC {
@@ -105,6 +105,10 @@ class SensingBLoC {
   Iterable<DeviceViewModel> get connectedDevices =>
       bloc.sensing.connectedDevices.map((device) => DeviceViewModel(device));
 
+  /// The list of all devices in this deployment.
+  Iterable<DeviceViewModel> get deployedDevices =>
+      bloc.sensing.deployedDevices!.map((device) => DeviceViewModel(device));
+
   /// Initialize the BLoC.
   Future<void> initialize({
     DeploymentMode deploymentMode = DeploymentMode.local,
@@ -129,6 +133,13 @@ class SensingBLoC {
       .deviceController
       .devices[device.type!]!
       .connect();
+
+  /// Request permissions to access location.
+  ///
+  /// If the result is [PermissionStatus.permanentlyDenied], no dialog will be
+  /// shown on [requestPermission].
+  Future<PermissionStatus> requestPermission() async =>
+      await Permission.locationAlways.request();
 
   void start() {
     SmartPhoneClientManager().notificationController?.createNotification(

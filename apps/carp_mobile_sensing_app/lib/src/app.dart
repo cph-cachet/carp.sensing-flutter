@@ -1,4 +1,4 @@
-part of mobile_sensing_app;
+part of '../main.dart';
 
 class App extends StatelessWidget {
   @override
@@ -37,6 +37,8 @@ class LoadingPage extends StatelessWidget {
     }
 
     await bloc.sensing.initialize();
+    // await bloc.requestPermission();
+
     return true;
   }
 

@@ -12,6 +12,7 @@ dependencies:
   flutter:
     sdk: flutter
   flutter_launcher_icons: ^0.13.0
+  permission_handler: ^11.0.1
   
   carp_serializable: ^1.1.0
   #carp_core: ^0.30.0
