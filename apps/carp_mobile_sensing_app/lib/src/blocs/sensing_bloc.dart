@@ -134,13 +134,6 @@ class SensingBLoC {
       .devices[device.type!]!
       .connect();
 
-  /// Request permissions to access location.
-  ///
-  /// If the result is [PermissionStatus.permanentlyDenied], no dialog will be
-  /// shown on [requestPermission].
-  Future<PermissionStatus> requestPermission() async =>
-      await Permission.locationAlways.request();
-
   void start() {
     SmartPhoneClientManager().notificationController?.createNotification(
           title: 'Sensing Started',

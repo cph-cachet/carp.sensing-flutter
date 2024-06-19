@@ -38,7 +38,11 @@ dependencies:
   ...
 `````
 
-### Android Integration
+## Location Permissions
+
+> This context package make use of what Apple and Google denote as sensitive information, especially location. Therefore it is important to configure the app to access location information. Please read carefully the [**instrucutions on how to setup the permission_handler plugin**]( https://pub.dev/packages/permission_handler#setup) - both for Android and iOS.
+
+### Android
 
 Add the following to your app's `AndroidManifest.xml` file located in `android/app/src/main`:
 
@@ -71,12 +75,43 @@ Add the following to your app's `AndroidManifest.xml` file located in `android/a
 >
 > See [Privacy changes in Android 10](https://developer.android.com/about/versions/10/privacy/changes#physical-activity-recognition).
 
-### iOS Integration
+### iOS
 
-In order to use Location, you need to set your minimum deployment target to iOS 13.0 or later. Change the second line in your `ios/Podfile` into:
+In order to use Location, you need to set your minimum deployment target to iOS 13.0 or later. Furthermore, you need to enable the macros from the [permission_handler]( https://pub.dev/packages/permission_handler#setup) plugin. Please see the [setup instructions]( https://pub.dev/packages/permission_handler#setup) for iOS.
+
+Change the `post_install` part of your `ios/Podfile`:
 
 ```ruby
-platform :ios, '13.0'
+platform :ios, '14.0'
+
+
+...
+
+post_install do |installer|
+  installer.generated_projects.each do |project|
+    project.targets.each do |target|
+      target.build_configurations.each do |config|
+          config.build_settings['IPHONEOS_DEPLOYMENT_TARGET'] = '14.0'
+      end
+    end
+  end
+  installer.pods_project.targets.each do |target|
+    flutter_additional_ios_build_settings(target)
+
+    target.build_configurations.each do |config|
+      config.build_settings['GCC_PREPROCESSOR_DEFINITIONS'] ||= [
+        '$(inherited)',
+        # See https://pub.dev/packages/permission_handler#setup - under iOS setup
+
+        # the app uses the following permissions:
+        'PERMISSION_LOCATION=1',      # Location access
+        'PERMISSION_NOTIFICATIONS=1', # CARP Mobile Sensing uses notifications
+        'PERMISSION_SENSORS=1',       # Core Motion sensors on iOS (pedometer)
+      ]
+    end
+  end
+end
+
 ```
 
 Add the following permissions in the `Info.plist` file located in `ios/Runner` (use your own text for explanation in the `<string>` tags):
@@ -97,7 +132,7 @@ Add the following permissions in the `Info.plist` file located in `ios/Runner` (
   </array>
 ```
 
-You also need to activate Background mode for your Runner. Open XCode and go to "Signing & Capabilities". Add the "Background Modes" section and add "Location updates" to the list:
+Also - make sure to activate Background mode for your Runner. Open XCode and go to "Signing & Capabilities". Add the "Background Modes" section and add "Location updates" to the list:
 
 ![iOS Setup](https://raw.githubusercontent.com/wiki/rekab-app/background_locator/images/background_location_update.png)
 

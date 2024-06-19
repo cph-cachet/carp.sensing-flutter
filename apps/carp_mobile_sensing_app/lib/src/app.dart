@@ -37,7 +37,6 @@ class LoadingPage extends StatelessWidget {
     }
 
     await bloc.sensing.initialize();
-    // await bloc.requestPermission();
 
     return true;
   }

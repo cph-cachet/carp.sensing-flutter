@@ -79,9 +79,6 @@ class LocationManager {
       await _provider.isBackgroundModeEnabled();
 
   /// Does this location manger have permission to access location "always"?
-  ///
-  /// If the result is [PermissionStatus.permanentlyDenied], no dialog will be
-  /// shown on [requestPermission].
   Future<PermissionStatus> hasPermission() async =>
       await Permission.locationAlways.status;
 
@@ -91,27 +88,59 @@ class LocationManager {
 
   /// Request permissions to access location.
   ///
-  /// If the result is [PermissionStatus.permanentlyDenied], no dialog will be
-  /// shown on [requestPermission].
+  /// Requesting access to location is a two step process on both Android and iOS:
+  ///
+  ///  1. First, ask for using location 'when in use'
+  ///  2. Then, ask for using location 'always'
+  ///
+  /// See the [FAQ in the permission_handler](https://pub.dev/packages/permission_handler#requesting-permissionlocationalways-always-returns-denied-on-android-10-api-29-what-can-i-do)
+  /// plugin or the [Android](https://developer.android.com/develop/sensors-and-location/location/permissions#request-only-foreground)
+  /// or [iOS](https://developer.apple.com/documentation/corelocation/requesting-authorization-to-use-location-services)
+  /// documentation.
+  ///
+  /// Note that if the permission is [PermissionStatus.permanentlyDenied], no dialog will be
+  /// shown on [requestPermission]. In this case, the Settings page from the
+  /// OS needs to be shown and the user needs to manually allow access to location.
+  /// The permission_handler plugin has a method named `openAppSettings()` which
+  /// opens the Settings page on Android / iOS.
+  /// This method is, however, **NOT** used by this context sampling package, since
+  /// handling of permissions should be taken care of on an app level.
   Future<PermissionStatus> requestPermission() async {
-    var serviceEnabled =
-        await Permission.locationWhenInUse.serviceStatus.isEnabled;
+    bool serviceEnabled =
+        await Permission.locationAlways.serviceStatus.isEnabled;
 
-    // return await Permission.locationAlways.request();
-    var permission = await Permission.location.request();
+    if (!serviceEnabled) {
+      serviceEnabled = await _provider.requestService();
+      if (!serviceEnabled) {
+        warning('$runtimeType - Location service could not be enabled.');
+        return PermissionStatus.restricted;
+      }
+    }
 
-    debug('$runtimeType'
+    var permission = await Permission.locationWhenInUse.status;
+
+    switch (permission) {
+      case PermissionStatus.permanentlyDenied:
+        warning(
+            "$runtimeType - The user opted to never again see the permission request dialog for this "
+            "app. The only way to change the permission's status now is to let the "
+            "user manually enables it in the system settings.");
+        // openAppSettings();
+        break;
+      case PermissionStatus.denied:
+      case PermissionStatus.restricted:
+      case PermissionStatus.limited:
+      case PermissionStatus.provisional:
+        permission = await Permission.locationWhenInUse.request();
+        break;
+      case PermissionStatus.granted:
+        permission = await Permission.locationAlways.request();
+        break;
+    }
+
+    debug('$runtimeType.requestPermission()'
         ' - Location service enabled: $serviceEnabled'
         ' - permission: $permission');
-
-    // if (await Permission.location.isPermanentlyDenied) {
-    if (permission == PermissionStatus.permanentlyDenied) {
-      // The user opted to never again see the permission request dialog for this
-      // app. The only way to change the permission's status now is to let the
-      // user manually enables it in the system settings.
-      debug('$runtimeType - trying to open app settings.');
-      openAppSettings();
-    }
 
     return permission;
   }
