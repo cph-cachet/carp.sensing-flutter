@@ -397,21 +397,6 @@ class _InitializedState extends _AbstractExecutorState
       executor._isStarting = false;
     });
   }
-
-  // @override
-  // void restart() {
-  //   executor.onRestart().then((restarted) {
-  //     if (restarted) executor.start();
-  //   });
-  // }
-
-  // @override
-  // void stop() {
-  //   executor.onStop().then((stopped) {
-  //     if (stopped) executor._setState(_StoppedState(executor));
-  //     debug('$executor - stopped');
-  //   });
-  // }
 }
 
 class _StartedState extends _AbstractExecutorState {
