@@ -237,12 +237,20 @@ class LocationManager {
   /// Gets the current location of the phone.
   ///
   /// Throws an error if location cannot be obtained within a few seconds or
-  /// if the app has no permission to access location.
+  /// if the app does not have permission to access location.
   Future<Location> getLocation() async => _lastKnownLocation =
-      Location.fromLocationData(await _provider.getLocation().timeout(
-            const Duration(seconds: 6),
-            // onTimeout: () => lastKnownLocation,
-          ));
+      await onLocationChanged.first.timeout(const Duration(seconds: 6));
+
+  // The following implementation of getLocation() does not work, since the
+  // _provider.getLocation() method sometimes never returns.
+  //
+  // See issue https://github.com/cph-cachet/carp.sensing-flutter/issues/389
+  //
+  // Future<Location> getLocation() async => _lastKnownLocation =
+  //     Location.fromLocationData(await _provider.getLocation().timeout(
+  //           const Duration(seconds: 6),
+  //           // onTimeout: () => lastKnownLocation,
+  //         ));
 
   /// Returns a stream of [Location] objects.
   ///

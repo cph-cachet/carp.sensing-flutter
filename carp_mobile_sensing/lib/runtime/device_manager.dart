@@ -202,7 +202,6 @@ abstract class DeviceManager<TDeviceConfiguration extends DeviceConfiguration>
     info('$runtimeType - Restarting sampling...');
 
     for (var executor in executors) {
-      debug('$runtimeType - Restarting $executor');
       executor.restart();
     }
   }
@@ -231,9 +230,8 @@ abstract class DeviceManager<TDeviceConfiguration extends DeviceConfiguration>
       info(
           '$runtimeType - Trying to disconnect from device of type: $typeName and id: $id');
 
-      // Stop all sampling and heartbeat monitoring on this device.
+      // Stop all sampling on this device.
       stop();
-      stopHeartbeatMonitoring();
 
       success = await onDisconnect();
       status = (success) ? DeviceStatus.disconnected : DeviceStatus.error;

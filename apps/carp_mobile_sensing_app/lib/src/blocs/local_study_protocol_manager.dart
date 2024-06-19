@@ -84,36 +84,41 @@ class LocalStudyProtocolManager implements StudyProtocolManager {
     //     phone);
 
     // Define the online location service and add it as a 'device'
-    LocationService locationService = LocationService();
+    // final locationService = LocationService();
+
+    final locationService = LocationService(
+      // used for debugging when the phone is laying still on the table
+      distance: 0,
+    );
     protocol.addConnectedDevice(locationService, phone);
 
     // Add a background task that collects location on a regular basis
     protocol.addTaskControl(
-        PeriodicTrigger(period: Duration(seconds: 30)),
+        PeriodicTrigger(period: Duration(seconds: 20)),
         BackgroundTask(measures: [
           Measure(type: ContextSamplingPackage.CURRENT_LOCATION),
         ]),
         locationService);
 
-    // // Add a background task that continuously collects location and mobility
-    // protocol.addTaskControl(
-    //     ImmediateTrigger(),
-    //     BackgroundTask(measures: [
-    //       Measure(type: ContextSamplingPackage.LOCATION),
-    //       Measure(type: ContextSamplingPackage.MOBILITY),
-    //     ]),
-    //     locationService);
+    // Add a background task that continuously collects location and mobility
+    protocol.addTaskControl(
+        ImmediateTrigger(),
+        BackgroundTask(measures: [
+          Measure(type: ContextSamplingPackage.LOCATION),
+          Measure(type: ContextSamplingPackage.MOBILITY),
+        ]),
+        locationService);
 
-    // // Define the online weather service and add it as a 'device'
-    // WeatherService weatherService = WeatherService(apiKey: openWeatherApiKey);
-    // protocol.addConnectedDevice(weatherService, phone);
+    // Define the online weather service and add it as a 'device'
+    WeatherService weatherService = WeatherService(apiKey: openWeatherApiKey);
+    protocol.addConnectedDevice(weatherService, phone);
 
-    // // Add a background task that collects weather every 30 minutes.
-    // protocol.addTaskControl(
-    //     PeriodicTrigger(period: Duration(minutes: 30)),
-    //     BackgroundTask()
-    //       ..addMeasure(Measure(type: ContextSamplingPackage.WEATHER)),
-    //     weatherService);
+    // Add a background task that collects weather every 30 minutes.
+    protocol.addTaskControl(
+        PeriodicTrigger(period: Duration(seconds: 30)),
+        BackgroundTask()
+          ..addMeasure(Measure(type: ContextSamplingPackage.WEATHER)),
+        weatherService);
 
     // // Define the online air quality service and add it as a 'device'
     // AirQualityService airQualityService =

@@ -95,7 +95,7 @@ class CarpMobileSensingAppState extends State<CarpMobileSensingApp> {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: _restart,
-        child: bloc.isRunning ? Icon(Icons.pause) : Icon(Icons.play_arrow),
+        child: bloc.isRunning ? Icon(Icons.stop) : Icon(Icons.play_arrow),
       ),
     );
   }

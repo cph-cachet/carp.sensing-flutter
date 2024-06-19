@@ -19,7 +19,9 @@ part of '../runtime.dart';
 ///    +----------------------------------------------------------------+      +-----------+
 ///    |  +---------+    +-------------+    +---------+     +---------+ |   -> | undefined |
 ///    |  | created | -> | initialized | -> | started | <-> | stopped | |      +-----------+
-///    |  +---------+    +-------------+    +---------+     +---------+ |   -> | disposed  |
+///    |  +---------+    +-------------+    +---------+     +---------+ |
+///    |                                         |                      |      +-----------+
+///    |                                      restart                   |   -> | disposed  |
 ///    +----------------------------------------------------------------+      +-----------+
 /// ```
 enum ExecutorState {
@@ -29,10 +31,10 @@ enum ExecutorState {
   /// Initialized and ready to be started.
   initialized,
 
-  /// Started and active in data collection.
+  /// Started and active in data collection. Can be restarted in this state.
   started,
 
-  /// Stopped and not collecting data.
+  /// Stopped and not collecting data. Can be started again in this state.
   stopped,
 
   /// Permanently disposed. Cannot be used anymore.
@@ -396,6 +398,29 @@ class _InitializedState extends _AbstractExecutorState
     });
   }
 
+  // @override
+  // void restart() {
+  //   executor.onRestart().then((restarted) {
+  //     if (restarted) executor.start();
+  //   });
+  // }
+
+  // @override
+  // void stop() {
+  //   executor.onStop().then((stopped) {
+  //     if (stopped) executor._setState(_StoppedState(executor));
+  //     debug('$executor - stopped');
+  //   });
+  // }
+}
+
+class _StartedState extends _AbstractExecutorState {
+  _StartedState(Executor<dynamic> executor)
+      : super(executor as AbstractExecutor);
+
+  @override
+  ExecutorState get state => ExecutorState.started;
+
   @override
   void restart() {
     executor.onRestart().then((restarted) {
@@ -412,15 +437,7 @@ class _InitializedState extends _AbstractExecutorState
   }
 }
 
-class _StartedState extends _InitializedState {
-  _StartedState(Executor<dynamic> executor)
-      : super(executor as AbstractExecutor);
-
-  @override
-  ExecutorState get state => ExecutorState.started;
-}
-
-class _StoppedState extends _InitializedState {
+class _StoppedState extends _AbstractExecutorState {
   _StoppedState(Executor<dynamic> executor)
       : super(executor as AbstractExecutor);
 
@@ -428,9 +445,12 @@ class _StoppedState extends _InitializedState {
   ExecutorState get state => ExecutorState.stopped;
 
   @override
-  void stop() => warning(
-      'Trying to stop a ${executor.runtimeType} but it is already stopped. '
-      'Ignoring this.');
+  void start() {
+    executor.onStart().then((started) {
+      if (started) executor._setState(_StartedState(executor));
+      executor._isStarting = false;
+    });
+  }
 }
 
 class _DisposedState extends _AbstractExecutorState
