@@ -9,13 +9,13 @@ class ConnectivitySamplingPackage extends SmartphoneSamplingPackage {
   static const String CONNECTIVITY = "${NameSpace.CARP}.connectivity";
 
   /// Measure type for collection of nearby Bluetooth devices on a regular basis.
-  ///  * Periodic measure.
+  ///  * Periodic measure - default every 10 minutes for 5 seconds.
   ///  * Uses the [Smartphone] master device for data collection.
   ///  * Use a [PeriodicSamplingConfiguration] for configuration.
   static const String BLUETOOTH = "${NameSpace.CARP}.bluetooth";
 
   /// Measure type for collection of wifi information (SSID, BSSID, IP).
-  ///  * Interval-based measure.
+  ///  * Interval-based measure - default every 10 minutes.
   ///  * Uses the [Smartphone] master device for data collection.
   ///  * Use a [IntervalSamplingConfiguration] for configuration.
   static const String WIFI = "${NameSpace.CARP}.wifi";
