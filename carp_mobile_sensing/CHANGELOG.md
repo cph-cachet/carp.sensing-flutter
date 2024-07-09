@@ -1,3 +1,7 @@
+## 1.8.2
+
+- Fix of [#408](https://github.com/cph-cachet/carp.sensing-flutter/issues/408)
+
 ## 1.8.1
 
 - Added support for extension of triggers, [#403](https://github.com/cph-cachet/carp.sensing-flutter/issues/403). See the section on [Adding new Trigger](https://github.com/cph-cachet/carp.sensing-flutter/wiki/5.-Extending-CARP-Mobile-Sensing#adding-new-triggers) on the CAMS wiki.

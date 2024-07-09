@@ -397,6 +397,9 @@ class _InitializedState extends _AbstractExecutorState
       executor._isStarting = false;
     });
   }
+
+  @override
+  void restart() => start(); // allow restart, but treat it as a start
 }
 
 class _StartedState extends _AbstractExecutorState {
@@ -409,7 +412,13 @@ class _StartedState extends _AbstractExecutorState {
   @override
   void restart() {
     executor.onRestart().then((restarted) {
-      if (restarted) executor.start();
+      if (restarted) {
+        // explicitly start the executor - issue #408
+        executor.onStart().then((started) {
+          if (started) executor._setState(_StartedState(executor));
+          executor._isStarting = false;
+        });
+      }
     });
   }
 
@@ -436,6 +445,9 @@ class _StoppedState extends _AbstractExecutorState {
       executor._isStarting = false;
     });
   }
+
+  @override
+  void restart() => start();
 }
 
 class _DisposedState extends _AbstractExecutorState
