@@ -32,9 +32,9 @@ import 'package:carp_serializable/carp_serializable.dart';
 import 'package:carp_core/carp_core.dart';
 import 'package:carp_mobile_sensing/carp_mobile_sensing.dart';
 
-part 'sensor_probes.dart';
-part 'light_probe.dart';
-part 'pedometer_probe.dart';
-part 'sensor_data.dart';
-part 'sensor_package.dart';
+part 'sensors/sensor_probes.dart';
+part 'sensors/light_probe.dart';
+part 'sensors/pedometer_probe.dart';
+part 'sensors/sensor_data.dart';
+part 'sensors/sensor_package.dart';
 part 'sensors.g.dart';

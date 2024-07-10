@@ -5,7 +5,7 @@
  * found in the LICENSE file.
  */
 
-part of 'sensors.dart';
+part of '../sensors.dart';
 
 /// The [LightProbe] listens to the phone's light sensor typically located
 /// near the front camera.

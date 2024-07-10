@@ -5,7 +5,7 @@
  * found in the LICENSE file.
  */
 
-part of 'device.dart';
+part of '../device.dart';
 
 class DeviceSamplingPackage extends SmartphoneSamplingPackage {
   /// Measure type for collection of basic device information like device name,

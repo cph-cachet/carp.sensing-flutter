@@ -5,7 +5,7 @@
  * found in the LICENSE file.
  */
 
-part of 'domain.dart';
+part of '../domain.dart';
 
 /// A [Data] object holding a link to a file.
 @JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)

@@ -28,7 +28,7 @@ import 'package:screen_state/screen_state.dart';
 import 'package:system_info2/system_info2.dart';
 import 'package:flutter_timezone/flutter_timezone.dart';
 
+part 'device/device_data.dart';
+part 'device/device_package.dart';
+part 'device/device_probes.dart';
 part 'device.g.dart';
-part 'device_data.dart';
-part 'device_package.dart';
-part 'device_probes.dart';

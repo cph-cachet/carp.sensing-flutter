@@ -7,7 +7,7 @@
  * found in the LICENSE file.
  */
 
-part of 'runtime.dart';
+part of '../runtime.dart';
 
 /// A [DeviceManager] handles a hardware device or online service on runtime.
 abstract class DeviceManager<TDeviceConfiguration extends DeviceConfiguration>

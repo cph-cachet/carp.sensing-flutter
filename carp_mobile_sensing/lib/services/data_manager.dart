@@ -5,7 +5,7 @@
  * found in the LICENSE file.
  */
 
-part of 'services.dart';
+part of '../services.dart';
 
 /// The [DataManager] interface is used to upload [Measurement] objects to any
 /// data manager that implements this interface.
