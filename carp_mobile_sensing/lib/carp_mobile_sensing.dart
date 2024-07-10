@@ -4,26 +4,32 @@
 /// The CAMS software architecture is a domain-drive design (DDD) model using an
 /// onion-based layout with the following onion layers:
 ///
-///  * domain - contains the core domain model for CAMS which extends the domain
+///  * [domain] - contains the core domain model for CAMS which extends the domain
 ///             model of the [carp_core](https://pub.dev/packages/carp_core) domain model.
-///  * runtime - contains the business logic for executing a sensing study (normally
+///  * [runtime] - contains the business logic for executing a sensing study (normally
 ///              called 'application services' in DDD).
-///  * services - contains all services definitions used for sensing.
-///  * infrastructure - contains specific implementation of the services used.
+///  * [services] - contains all services definitions used for sensing.
+///  * [infrastructure] - contains specific implementation of the services used.
+///
+/// Domain-driven design (DDD) is a software design approach that focuses on modeling
+/// the software to match the domain, or the subject area, that the software is
+/// intended for. DDD helps developers create software that is aligned with the
+/// business needs and terminology of the domain experts, users, and stakeholders.
+/// From [Domain-Driven Design (DDD): A Guide to Building Scalable, High-Performance Systems](https://romanglushach.medium.com/domain-driven-design-ddd-a-guide-to-building-scalable-high-performance-systems-5314a7fe053c) by Roman Glushach.
 ///
 library carp_mobile_sensing;
 
 import 'package:carp_serializable/carp_serializable.dart';
 import 'package:carp_core/carp_core.dart';
 
-import 'domain/domain.dart';
-import 'runtime/runtime.dart';
-import 'infrastructure/infrastructure.dart';
+import 'domain.dart';
+import 'runtime.dart';
+import 'infrastructure.dart';
 
-export 'domain/domain.dart';
-export 'runtime/runtime.dart';
-export 'services/services.dart';
-export 'infrastructure/infrastructure.dart';
+export 'domain.dart';
+export 'runtime.dart';
+export 'services.dart';
+export 'infrastructure.dart';
 
 part 'carp_mobile_sensing.json.dart';
 

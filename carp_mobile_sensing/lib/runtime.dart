@@ -30,20 +30,20 @@ import 'package:battery_plus/battery_plus.dart';
 import 'package:timezone/data/latest_all.dart' as tz;
 import 'package:timezone/timezone.dart' as tz;
 
-part 'executors/deployment_executor.dart';
-part 'executors/executor_factory.dart';
-part 'executors/executors.dart';
-part 'executors/trigger_executors.dart';
-part 'executors/task_executors.dart';
-part 'executors/task_control_executors.dart';
-part 'executors/probes.dart';
-part 'util/cron_parser.dart';
+part 'runtime/executors/deployment_executor.dart';
+part 'runtime/executors/executor_factory.dart';
+part 'runtime/executors/executors.dart';
+part 'runtime/executors/trigger_executors.dart';
+part 'runtime/executors/task_executors.dart';
+part 'runtime/executors/task_control_executors.dart';
+part 'runtime/executors/probes.dart';
+part 'runtime/util/cron_parser.dart';
 
-part 'app_task_controller.dart';
-part 'client_manager.dart';
-part 'deployment_controller.dart';
-part 'device_manager.dart';
-part 'sampling_package.dart';
-part 'user_tasks.dart';
+part 'runtime/app_task_controller.dart';
+part 'runtime/client_manager.dart';
+part 'runtime/deployment_controller.dart';
+part 'runtime/device_manager.dart';
+part 'runtime/sampling_package.dart';
+part 'runtime/user_tasks.dart';
 
 part 'runtime.g.dart';

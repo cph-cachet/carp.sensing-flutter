@@ -5,7 +5,7 @@
  * found in the LICENSE file.
  */
 
-part of 'sensors.dart';
+part of '../sensors.dart';
 
 /// The pedometer probe listens to the hardware step counter sensor.
 ///

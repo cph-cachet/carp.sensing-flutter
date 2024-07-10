@@ -5,7 +5,7 @@
  * found in the LICENSE file.
  */
 
-part of 'runtime.dart';
+part of '../runtime.dart';
 
 /// A [SmartphoneDeploymentController] controls the execution of a [SmartphoneDeployment].
 class SmartphoneDeploymentController extends StudyRuntime<DeviceRegistration> {

@@ -5,7 +5,7 @@
  * found in the LICENSE file.
  */
 
-part of 'domain.dart';
+part of '../domain.dart';
 
 /// Contains CAMS data type definitions similar to CARP Core [CarpDataTypes].
 class CAMSDataType {

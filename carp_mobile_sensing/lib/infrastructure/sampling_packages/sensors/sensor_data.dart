@@ -5,7 +5,7 @@
  * found in the LICENSE file.
  */
 
-part of 'sensors.dart';
+part of '../sensors.dart';
 
 /// Ambient light intensity in Lux.
 /// Typically collected from the light sensor on the front of the phone.

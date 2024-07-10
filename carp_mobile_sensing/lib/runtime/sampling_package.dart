@@ -1,4 +1,4 @@
-part of 'runtime.dart';
+part of '../runtime.dart';
 
 /// A registry of [SamplingPackage] packages.
 ///

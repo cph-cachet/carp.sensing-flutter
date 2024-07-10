@@ -5,7 +5,7 @@
  * found in the LICENSE file.
  */
 
-part of '../runtime.dart';
+part of '../../runtime.dart';
 
 //---------------------------------------------------------------------------------------
 //                                        EXECUTORS
