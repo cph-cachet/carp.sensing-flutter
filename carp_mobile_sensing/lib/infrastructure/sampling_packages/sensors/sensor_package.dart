@@ -56,32 +56,34 @@ class SensorSamplingPackage extends SmartphoneSamplingPackage {
   static const String STEP_COUNT = CarpDataTypes.STEP_COUNT_TYPE_NAME;
 
   @override
-  List<Permission> get permissions => [
-        Permission.activityRecognition,
-      ];
-
-  @override
   DataTypeSamplingSchemeMap get samplingSchemes =>
       DataTypeSamplingSchemeMap.from([
         DataTypeSamplingScheme(
-            CarpDataTypes().types[CarpDataTypes.ACCELERATION_TYPE_NAME]!,
+            CAMSDataTypeMetaData.fromDataTypeMetaData(
+                dataTypeMetaData: CarpDataTypes()
+                    .types[CarpDataTypes.ACCELERATION_TYPE_NAME]!),
             IntervalSamplingConfiguration(
                 interval: const Duration(milliseconds: 200))),
         DataTypeSamplingScheme(
-            CarpDataTypes()
-                .types[CarpDataTypes.NON_GRAVITATIONAL_ACCELERATION_TYPE_NAME]!,
+            CAMSDataTypeMetaData.fromDataTypeMetaData(
+                dataTypeMetaData: CarpDataTypes().types[
+                    CarpDataTypes.NON_GRAVITATIONAL_ACCELERATION_TYPE_NAME]!),
             IntervalSamplingConfiguration(
                 interval: const Duration(milliseconds: 200))),
         DataTypeSamplingScheme(
-            CarpDataTypes().types[CarpDataTypes.ROTATION_TYPE_NAME]!,
+            CAMSDataTypeMetaData.fromDataTypeMetaData(
+                dataTypeMetaData:
+                    CarpDataTypes().types[CarpDataTypes.ROTATION_TYPE_NAME]!),
             IntervalSamplingConfiguration(
                 interval: const Duration(milliseconds: 200))),
         DataTypeSamplingScheme(
-            CarpDataTypes().types[CarpDataTypes.MAGNETIC_FIELD_TYPE_NAME]!,
+            CAMSDataTypeMetaData.fromDataTypeMetaData(
+                dataTypeMetaData: CarpDataTypes()
+                    .types[CarpDataTypes.MAGNETIC_FIELD_TYPE_NAME]!),
             IntervalSamplingConfiguration(
                 interval: const Duration(milliseconds: 200))),
         DataTypeSamplingScheme(
-            DataTypeMetaData(
+            CAMSDataTypeMetaData(
               type: ACCELERATION_FEATURES,
               displayName: "Accelerometer Features",
               timeType: DataTimeType.TIME_SPAN,
@@ -90,10 +92,12 @@ class SensorSamplingPackage extends SmartphoneSamplingPackage {
               interval: const Duration(minutes: 1),
               duration: const Duration(seconds: 3),
             )),
+        DataTypeSamplingScheme(CAMSDataTypeMetaData.fromDataTypeMetaData(
+            dataTypeMetaData:
+                CarpDataTypes().types[CarpDataTypes.STEP_COUNT_TYPE_NAME]!,
+            permissions: [Permission.activityRecognition])),
         DataTypeSamplingScheme(
-            CarpDataTypes().types[CarpDataTypes.STEP_COUNT_TYPE_NAME]!),
-        DataTypeSamplingScheme(
-            DataTypeMetaData(
+            CAMSDataTypeMetaData(
               type: AMBIENT_LIGHT,
               displayName: "Ambient Light",
               timeType: DataTimeType.TIME_SPAN,

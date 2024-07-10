@@ -27,6 +27,7 @@ import 'package:json_annotation/json_annotation.dart';
 import 'package:carp_core/carp_core.dart';
 import 'package:carp_serializable/carp_serializable.dart';
 import 'package:carp_mobile_sensing/carp_mobile_sensing.dart';
+import 'package:permission_handler/permission_handler.dart';
 
 part 'domain/study_protocol.dart';
 part 'domain/study_description.dart';

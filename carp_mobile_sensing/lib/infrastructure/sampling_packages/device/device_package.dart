@@ -17,7 +17,7 @@ class DeviceSamplingPackage extends SmartphoneSamplingPackage {
       '${CarpDataTypes.CARP_NAMESPACE}.deviceinformation';
 
   /// Measure type for collection of free physical and virtual memory.
-  ///  * Interval-based measure.
+  ///  * Event-based measure.
   ///  * Uses the [Smartphone] primary device for data collection.
   ///  * Use [IntervalSamplingConfiguration] for configuration.
   static const String FREE_MEMORY =
@@ -48,13 +48,14 @@ class DeviceSamplingPackage extends SmartphoneSamplingPackage {
   @override
   DataTypeSamplingSchemeMap get samplingSchemes =>
       DataTypeSamplingSchemeMap.from([
-        DataTypeSamplingScheme(DataTypeMetaData(
+        DataTypeSamplingScheme(CAMSDataTypeMetaData(
           type: DEVICE_INFORMATION,
           displayName: "Device Information",
           timeType: DataTimeType.POINT,
+          dataEventType: DataEventType.ONE_TIME,
         )),
         DataTypeSamplingScheme(
-            DataTypeMetaData(
+            CAMSDataTypeMetaData(
               type: FREE_MEMORY,
               displayName: "Free Memory",
               timeType: DataTimeType.POINT,
@@ -62,20 +63,21 @@ class DeviceSamplingPackage extends SmartphoneSamplingPackage {
             IntervalSamplingConfiguration(
               interval: const Duration(minutes: 1),
             )),
-        DataTypeSamplingScheme(DataTypeMetaData(
+        DataTypeSamplingScheme(CAMSDataTypeMetaData(
           type: BATTERY_STATE,
           displayName: "Battery State",
           timeType: DataTimeType.POINT,
         )),
-        DataTypeSamplingScheme(DataTypeMetaData(
+        DataTypeSamplingScheme(CAMSDataTypeMetaData(
           type: SCREEN_EVENT,
           displayName: "Screen Events",
           timeType: DataTimeType.POINT,
         )),
-        DataTypeSamplingScheme(DataTypeMetaData(
+        DataTypeSamplingScheme(CAMSDataTypeMetaData(
           type: TIMEZONE,
           displayName: "Device Timezone",
           timeType: DataTimeType.POINT,
+          dataEventType: DataEventType.ONE_TIME,
         )),
       ]);
 

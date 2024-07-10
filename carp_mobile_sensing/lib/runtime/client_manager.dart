@@ -21,9 +21,12 @@ class SmartPhoneClientManager extends SmartphoneClient
   static final SmartPhoneClientManager _instance = SmartPhoneClientManager._();
   NotificationController? _notificationController;
   bool _heartbeat = true;
+  bool _askForPermissions = true;
   final StreamGroup<Measurement> _group = StreamGroup.broadcast();
   ClientManagerState _state = ClientManagerState.created;
-  Map<Permission, PermissionStatus>? _permissions;
+
+  /// Will this client manager ask for permission when a new study is deployed?
+  bool get askForPermissions => _askForPermissions;
 
   /// The runtime state of this client manager.
   ClientManagerState get state => _state;
@@ -32,9 +35,6 @@ class SmartPhoneClientManager extends SmartphoneClient
   /// This is the aggregation of all measurements collected by the
   /// [studies] running on this client.
   Stream<Measurement> get measurements => _group.stream;
-
-  /// The permissions granted to this client from the OS.
-  Map<Permission, PermissionStatus> get permissions => _permissions ?? {};
 
   SmartPhoneClientManager._() {
     WidgetsFlutterBinding.ensureInitialized();
@@ -129,13 +129,11 @@ class SmartPhoneClientManager extends SmartphoneClient
           notificationController ?? FlutterLocalNotificationController();
     }
     _heartbeat = heartbeat;
+    _askForPermissions = askForPermissions;
 
     // initialize the app task controller singleton
     await AppTaskController()
         .initialize(enableNotifications: enableNotifications);
-
-    // setting up permissions
-    if (askForPermissions) await askForAllPermissions();
 
     super.configure(
       deploymentService: deploymentService,
@@ -220,19 +218,6 @@ class SmartPhoneClientManager extends SmartphoneClient
     if (m != null) _group.remove(m);
 
     await super.removeStudy(study);
-  }
-
-  /// Asking for all permissions needed for the included sampling packages.
-  ///
-  /// Should be called before sensing is started, if not already done as part of
-  /// [configure].
-  Future<void> askForAllPermissions() async {
-    if (SamplingPackageRegistry().permissions.isNotEmpty) {
-      info('Asking for permission for all measure types - status:');
-      _permissions = await SamplingPackageRegistry().permissions.request();
-      permissions.forEach((permission, status) =>
-          info(' - ${permission.toString().split('.').last} : ${status.name}'));
-    }
   }
 
   /// Persistently save information related to this client manger.

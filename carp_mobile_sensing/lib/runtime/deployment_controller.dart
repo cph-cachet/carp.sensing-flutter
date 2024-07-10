@@ -14,6 +14,7 @@ class SmartphoneDeploymentController extends StudyRuntime<DeviceRegistration> {
   DataEndPoint? _dataEndPoint;
   final SmartphoneDeploymentExecutor _executor = SmartphoneDeploymentExecutor();
   late DataTransformer _transformer;
+  Map<Permission, PermissionStatus>? _permissions;
 
   @override
   SmartphoneDeployment? get deployment =>
@@ -22,6 +23,9 @@ class SmartphoneDeploymentController extends StudyRuntime<DeviceRegistration> {
   @override
   DeviceController get deviceRegistry =>
       super.deviceRegistry as DeviceController;
+
+  /// The permissions granted to this client from the OS.
+  Map<Permission, PermissionStatus> get permissions => _permissions ?? {};
 
   /// The executor executing the [deployment].
   SmartphoneDeploymentExecutor get executor => _executor;
@@ -123,6 +127,11 @@ class SmartphoneDeploymentController extends StudyRuntime<DeviceRegistration> {
       measurements,
     );
 
+    // ask for permissions for all measures in this deployment
+    if (SmartPhoneClientManager().askForPermissions) {
+      await askForAllPermissions();
+    }
+
     // initialize the executor, which recursively initializes all executors and probes
     _executor.initialize(deployment!, deployment!);
 
@@ -149,6 +158,31 @@ class SmartphoneDeploymentController extends StudyRuntime<DeviceRegistration> {
     print('  data manager : $_dataManager');
     print('        status : ${status.toString().split('.').last}');
     print('===============================================================');
+  }
+
+  /// Asking for all permissions needed for the included measures in this
+  /// study deployment.
+  ///
+  /// Should be called before sensing is started.
+  Future<void> askForAllPermissions() async {
+    List<Permission> permissions = [];
+
+    for (var measure in deployment!.measures) {
+      var schema = SamplingPackageRegistry().samplingSchemes[measure.type];
+
+      if (schema != null && schema.dataType is CAMSDataTypeMetaData) {
+        permissions
+            .addAll((schema.dataType as CAMSDataTypeMetaData).permissions);
+      }
+    }
+
+    if (permissions.isNotEmpty) {
+      info(
+          'Asking for permission for all measures in this deployment - status:');
+      _permissions = await permissions.request();
+      _permissions?.forEach((permission, status) =>
+          info(' - ${permission.toString().split('.').last} : ${status.name}'));
+    }
   }
 
   /// Initialize all devices in this [deployment].

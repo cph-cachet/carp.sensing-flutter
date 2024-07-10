@@ -21,7 +21,7 @@ class SamplingPackageRegistry {
   /// A list of registered packages.
   List<SamplingPackage> get packages => _packages;
 
-  /// The list of [Permission] needed for the entire list of packages (combined list).
+  /// The list of [Permission]s needed for **all** packages (combined list).
   List<Permission> get permissions => _permissions;
 
   SamplingPackageRegistry._() {
@@ -123,6 +123,8 @@ class SamplingPackageRegistry {
 ///  * creating a [Probe] based on a [Measure] type
 ///  * getting a [DeviceManager] for the [deviceType]
 abstract class SamplingPackage {
+  List<Permission>? _permissions;
+
   /// The list of data type this package supports.
   List<DataTypeMetaData> get dataTypes;
 
@@ -150,19 +152,26 @@ abstract class SamplingPackage {
   /// Get the [DeviceManager] for the device used by this package.
   DeviceManager get deviceManager;
 
-  /// The list of permissions that this package need in order to run.
+  /// The list of permissions that this package needs in order to run.
   ///
-  /// Note that this is the list of permissions used for the probes in this
-  /// sampling package. It **should not** include permission to access the device
-  /// itself, such as Bluetooth permissions.
-  /// Such permissions should be handled on the app level.
-  ///
-  /// See [PermissionGroup](https://pub.dev/documentation/permission_handler/latest/permission_handler/PermissionGroup-class.html)
-  /// for a list of possible permissions.
-  ///
-  /// For Android permission in the Manifest.xml file,
-  /// see [Manifest.permission](https://developer.android.com/reference/android/Manifest.permission.html)
-  List<Permission> get permissions;
+  /// Per default, this list is derived from the permissions specified for **all**
+  /// data type listed in the default [samplingSchemes] schema.
+  /// Note, however, that not all data types (measures) in a schema is necessarily
+  /// used in a study protocol. Therefore, when sensing is configured in the
+  /// [SmartphoneDeploymentController.configure] method, only permissions which
+  /// are used in the deployment of the study is actually requested.
+  List<Permission> get permissions {
+    if (_permissions == null) {
+      _permissions = [];
+
+      for (var type in samplingSchemes.dataTypes) {
+        if (type is CAMSDataTypeMetaData) {
+          _permissions!.addAll(type.permissions);
+        }
+      }
+    }
+    return _permissions!;
+  }
 
   /// Callback method when this package is being registered.
   void onRegister();
@@ -172,7 +181,7 @@ abstract class SamplingPackage {
 ///
 /// Note that the default implementation of [permissions] and [onRegister] are
 /// no-op operations and should hence be overridden in subclasses, if needed.
-abstract class SmartphoneSamplingPackage implements SamplingPackage {
+abstract class SmartphoneSamplingPackage extends SamplingPackage {
   // all smartphone sampling packages uses the same static device manager
   static final _deviceManager = SmartphoneDeviceManager();
 
@@ -185,9 +194,6 @@ abstract class SmartphoneSamplingPackage implements SamplingPackage {
 
   @override
   DeviceManager get deviceManager => _deviceManager;
-
-  @override
-  List<Permission> get permissions => [];
 
   @override
   void onRegister() {}
