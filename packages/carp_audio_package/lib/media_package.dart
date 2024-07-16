@@ -14,7 +14,7 @@ part of 'media.dart';
 /// To use this package, register it in the [carp_mobile_sensing] package using
 ///
 /// ```
-///   SamplingPackageRegistry.register(AudioVideoSamplingPackage());
+///   SamplingPackageRegistry.register(MediaSamplingPackage());
 /// ```
 class MediaSamplingPackage extends SmartphoneSamplingPackage {
   static const String MEDIA = "${NameSpace.CARP}.media";
@@ -28,7 +28,7 @@ class MediaSamplingPackage extends SmartphoneSamplingPackage {
   static const String AUDIO = "${NameSpace.CARP}.audio";
 
   /// Measure type for periodic collection of noise data from the phone's microphone.
-  ///  * Periodic measure.
+  ///  * Event-based (Periodic) measure.
   ///  * Uses the [Smartphone] master device for data collection.
   ///  * Use a [PeriodicSamplingConfiguration] for configuration.
   static const String NOISE = "${NameSpace.CARP}.noise";
@@ -37,31 +37,39 @@ class MediaSamplingPackage extends SmartphoneSamplingPackage {
   DataTypeSamplingSchemeMap get samplingSchemes =>
       DataTypeSamplingSchemeMap.from([
         DataTypeSamplingScheme(
-          DataTypeMetaData(
+          CAMSDataTypeMetaData(
             type: AUDIO,
             displayName: "Audio Recording",
             timeType: DataTimeType.TIME_SPAN,
+            dataEventType: DataEventType.ONE_TIME,
+            permissions: [Permission.microphone],
           ),
         ),
         DataTypeSamplingScheme(
-          DataTypeMetaData(
+          CAMSDataTypeMetaData(
             type: VIDEO,
             displayName: "Video Recording",
             timeType: DataTimeType.TIME_SPAN,
+            dataEventType: DataEventType.ONE_TIME,
+            permissions: [Permission.camera],
           ),
         ),
         DataTypeSamplingScheme(
-          DataTypeMetaData(
+          CAMSDataTypeMetaData(
             type: IMAGE,
             displayName: "Image Capture",
             timeType: DataTimeType.POINT,
+            dataEventType: DataEventType.ONE_TIME,
+            permissions: [Permission.camera],
           ),
         ),
         DataTypeSamplingScheme(
-            DataTypeMetaData(
+            CAMSDataTypeMetaData(
               type: NOISE,
               displayName: "Noise Recording",
               timeType: DataTimeType.TIME_SPAN,
+              dataEventType: DataEventType.EVENT,
+              permissions: [Permission.microphone],
             ),
             PeriodicSamplingConfiguration(
               interval: const Duration(minutes: 5),
@@ -92,8 +100,4 @@ class MediaSamplingPackage extends SmartphoneSamplingPackage {
       Noise(meanDecibel: 0, stdDecibel: 0, minDecibel: 0, maxDecibel: 0),
     ]);
   }
-
-  @override
-  List<Permission> get permissions =>
-      [Permission.microphone, Permission.camera];
 }

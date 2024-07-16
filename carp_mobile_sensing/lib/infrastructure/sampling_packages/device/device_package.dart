@@ -55,7 +55,7 @@ class DeviceSamplingPackage extends SmartphoneSamplingPackage {
           dataEventType: DataEventType.ONE_TIME,
         )),
         DataTypeSamplingScheme(
-            CAMSDataTypeMetaData(
+            DataTypeMetaData(
               type: FREE_MEMORY,
               displayName: "Free Memory",
               timeType: DataTimeType.POINT,
@@ -63,12 +63,12 @@ class DeviceSamplingPackage extends SmartphoneSamplingPackage {
             IntervalSamplingConfiguration(
               interval: const Duration(minutes: 1),
             )),
-        DataTypeSamplingScheme(CAMSDataTypeMetaData(
+        DataTypeSamplingScheme(DataTypeMetaData(
           type: BATTERY_STATE,
           displayName: "Battery State",
           timeType: DataTimeType.POINT,
         )),
-        DataTypeSamplingScheme(CAMSDataTypeMetaData(
+        DataTypeSamplingScheme(DataTypeMetaData(
           type: SCREEN_EVENT,
           displayName: "Screen Events",
           timeType: DataTimeType.POINT,

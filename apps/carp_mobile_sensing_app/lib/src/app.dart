@@ -20,6 +20,9 @@ class LoadingPage extends StatelessWidget {
   ///
   /// Returns true when successfully done.
   Future<bool> init(BuildContext context) async {
+    // Try to get location permissions as the first thing.
+    await Permission.locationWhenInUse.request();
+
     // Initialize and use the CAWS backend if not in local deployment mode
     if (bloc.deploymentMode != DeploymentMode.local) {
       await CarpBackend().initialize();

@@ -47,7 +47,7 @@ class AudioProbe extends MeasurementProbe {
 
   @override
   Future<bool> onStop() async {
-    // when stopping the audio sampling, stop recording and collect the datum
+    // when stopping the audio sampling, stop recording and collect the measurement
     if (_isRecording) {
       try {
         await _stopAudioRecording();
@@ -63,36 +63,39 @@ class AudioProbe extends MeasurementProbe {
   }
 
   Future<void> _startAudioRecording() async {
+    // fast out if recording is already in progress (can only record one at a time)
     if (_isRecording) {
       warning(
           'Trying to start audio recording, but recording is already running. '
           'Make sure to pause this audio probe before resuming it.');
-    } else {
-      // check permission to access the microphone
-      final status = await Permission.microphone.status;
-      if (!status.isGranted) {
-        warning(
-            '$runtimeType - permission not granted to use to microphone: $status - trying to request it');
-        await Permission.microphone.request();
-      }
-      _startRecordingTime = DateTime.now().toUtc();
-      _data = Media(
-        mediaType: MediaType.audio,
-        filename: 'ignored for now',
-        startRecordingTime: _startRecordingTime!,
-      );
-      _soundFileName = await filePath;
-      _data!.path = _soundFileName;
-      _data!.filename = _soundFileName!.split("/").last;
-      _isRecording = true;
-
-      // start the recording
-      recorder.openRecorder();
-      await recorder.startRecorder(
-        toFile: _soundFileName,
-        codec: Codec.aacMP4,
-      );
+      return;
     }
+
+    // check permission to access the microphone
+    final status = await Permission.microphone.status;
+    if (!status.isGranted) {
+      warning(
+          '$runtimeType - permission not granted to use to microphone: $status - trying to request it');
+      await Permission.microphone.request();
+    }
+
+    _startRecordingTime = DateTime.now().toUtc();
+    _data = Media(
+      mediaType: MediaType.audio,
+      filename: 'ignored for now',
+      startRecordingTime: _startRecordingTime!,
+    );
+    _soundFileName = await filePath;
+    _data!.path = _soundFileName;
+    _data!.filename = _soundFileName!.split("/").last;
+    _isRecording = true;
+
+    // start the recording
+    recorder.openRecorder();
+    await recorder.startRecorder(
+      toFile: _soundFileName,
+      codec: Codec.aacMP4,
+    );
   }
 
   Future<void> _stopAudioRecording() async {

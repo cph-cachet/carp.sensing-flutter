@@ -76,6 +76,10 @@ class LocalStudyProtocolManager implements StudyProtocolManager {
     //     ]),
     //     phone);
 
+    //
+    // --------- CONTEXT PACKAGE EXAMPLES -------------
+    //
+
     // // activity measure using the phone
     // protocol.addTaskControl(
     //     ImmediateTrigger(),
@@ -100,14 +104,14 @@ class LocalStudyProtocolManager implements StudyProtocolManager {
         ]),
         locationService);
 
-    // Add a background task that continuously collects location and mobility
-    protocol.addTaskControl(
-        ImmediateTrigger(),
-        BackgroundTask(measures: [
-          Measure(type: ContextSamplingPackage.LOCATION),
-          Measure(type: ContextSamplingPackage.MOBILITY),
-        ]),
-        locationService);
+    // // Add a background task that continuously collects location and mobility
+    // protocol.addTaskControl(
+    //     ImmediateTrigger(),
+    //     BackgroundTask(measures: [
+    //       Measure(type: ContextSamplingPackage.LOCATION),
+    //       Measure(type: ContextSamplingPackage.MOBILITY),
+    //     ]),
+    //     locationService);
 
     // Define the online weather service and add it as a 'device'
     WeatherService weatherService = WeatherService(apiKey: openWeatherApiKey);
@@ -132,19 +136,62 @@ class LocalStudyProtocolManager implements StudyProtocolManager {
     //       ..addMeasure(Measure(type: ContextSamplingPackage.AIR_QUALITY)),
     //     airQualityService);
 
-    // protocol.addTaskControl(
-    //     ImmediateTrigger(),
-    //     BackgroundTask()..addMeasure(Measure(type: MediaSamplingPackage.NOISE)),
-    //     phone);
+    //
+    // --------- MEDIA PACKAGE EXAMPLES -------------
+    //
 
-    // protocol.addTaskControl(
-    //     ImmediateTrigger(),
-    //     BackgroundTask(measures: [
-    //       Measure(type: ConnectivitySamplingPackage.CONNECTIVITY),
-    //       Measure(type: ConnectivitySamplingPackage.WIFI),
-    //       Measure(type: ConnectivitySamplingPackage.BLUETOOTH),
-    //     ]),
-    //     phone);
+    // collect noise, but change the default sampling configuration
+    protocol.addTaskControl(
+        ImmediateTrigger(),
+        BackgroundTask(measures: [
+          Measure(type: MediaSamplingPackage.NOISE)
+            ..overrideSamplingConfiguration = PeriodicSamplingConfiguration(
+              interval: const Duration(seconds: 23),
+              duration: const Duration(seconds: 5),
+            ),
+        ]),
+        phone);
+
+    // // sample an audio recording
+    // var audioTask = BackgroundTask(measures: [
+    //   Measure(type: MediaSamplingPackage.AUDIO),
+    // ]);
+
+    // // start the audio task after 20 secs and record for 20 secs
+    // protocol
+    //   ..addTaskControl(
+    //     DelayedTrigger(delay: const Duration(seconds: 20)),
+    //     audioTask,
+    //     phone,
+    //     Control.Start,
+    //   )
+    //   ..addTaskControl(
+    //     DelayedTrigger(delay: const Duration(seconds: 40)),
+    //     audioTask,
+    //     phone,
+    //     Control.Stop,
+    //   );
+
+    //
+    // --------- CONNECTIVITY PACKAGE EXAMPLES -------------
+    //
+
+    protocol.addTaskControl(
+        ImmediateTrigger(),
+        BackgroundTask(measures: [
+          Measure(type: ConnectivitySamplingPackage.CONNECTIVITY),
+          Measure(type: ConnectivitySamplingPackage.WIFI),
+          Measure(type: ConnectivitySamplingPackage.BLUETOOTH)
+            ..overrideSamplingConfiguration = PeriodicSamplingConfiguration(
+              interval: const Duration(seconds: 33),
+              duration: const Duration(seconds: 5),
+            ),
+        ]),
+        phone);
+
+    //
+    // --------- COMMUNICATION PACKAGE EXAMPLES -------------
+    //
 
     // // Add an automatic task that collects SMS messages in/out
     // protocol.addTaskControl(

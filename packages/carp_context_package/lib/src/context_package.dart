@@ -66,10 +66,11 @@ class ContextSamplingPackage extends SmartphoneSamplingPackage {
   DataTypeSamplingSchemeMap get samplingSchemes =>
       DataTypeSamplingSchemeMap.from([
         DataTypeSamplingScheme(
-          DataTypeMetaData(
+          CAMSDataTypeMetaData(
             type: ACTIVITY,
             displayName: "Activity",
             timeType: DataTimeType.POINT,
+            permissions: [Permission.activityRecognition],
           ),
         )
       ]);
@@ -122,11 +123,6 @@ class ContextSamplingPackage extends SmartphoneSamplingPackage {
       ..register(AirQualitySamplingPackage())
       ..register(WeatherSamplingPackage());
   }
-
-  @override
-  List<Permission> get permissions => [
-        Permission.activityRecognition,
-      ];
 }
 
 /// The location sampling package.
@@ -136,26 +132,31 @@ class LocationSamplingPackage extends SmartphoneSamplingPackage {
   @override
   DataTypeSamplingSchemeMap get samplingSchemes =>
       DataTypeSamplingSchemeMap.from([
-        DataTypeSamplingScheme(DataTypeMetaData(
+        DataTypeSamplingScheme(CAMSDataTypeMetaData(
           type: ContextSamplingPackage.CURRENT_LOCATION,
-          displayName: "Location",
+          displayName: "Current Location",
           timeType: DataTimeType.POINT,
+          dataEventType: DataEventType.ONE_TIME,
+          permissions: [Permission.locationAlways],
         )),
         DataTypeSamplingScheme(DataTypeMetaData(
           type: ContextSamplingPackage.LOCATION,
           displayName: "Location",
           timeType: DataTimeType.POINT,
+          // permissions: [Permission.locationAlways],
         )),
         DataTypeSamplingScheme(DataTypeMetaData(
           type: ContextSamplingPackage.GEOFENCE,
           displayName: "Geofence",
           timeType: DataTimeType.POINT,
+          // permissions: [Permission.locationAlways],
         )),
         DataTypeSamplingScheme(
             DataTypeMetaData(
               type: ContextSamplingPackage.MOBILITY,
               displayName: "Mobility",
               timeType: DataTimeType.POINT,
+              // permissions: [Permission.locationAlways],
             ),
             MobilitySamplingConfiguration(
                 placeRadius: 50,
@@ -179,11 +180,6 @@ class LocationSamplingPackage extends SmartphoneSamplingPackage {
         return null;
     }
   }
-
-  @override
-  List<Permission> get permissions => [
-        Permission.location,
-      ];
 
   @override
   String get deviceType => LocationService.DEVICE_TYPE;

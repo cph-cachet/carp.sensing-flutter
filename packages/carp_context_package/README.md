@@ -40,7 +40,9 @@ dependencies:
 
 ## Location Permissions
 
-> This context package make use of what Apple and Google denote as sensitive information, especially location. Therefore it is important to configure the app to access location information. Please read carefully the [**instrucutions on how to setup the permission_handler plugin**]( https://pub.dev/packages/permission_handler#setup) - both for Android and iOS.
+This context package make use of what Apple and Google denote as sensitive information, especially location. Therefore it is important to configure the app to access location information. Please read carefully the [**instructions on how to setup the permission_handler plugin**]( https://pub.dev/packages/permission_handler#setup) - both for Android and iOS.
+
+> Note that this context package **DOES NOT** asks for accessing location. This should be done by the app since the app can tell the user why location is accessed. The Android Developers documentation contain a good description of how to [request location access at runtime](https://developer.android.com/develop/sensors-and-location/location/permissions#request-location-access-runtime).
 
 ### Android
 

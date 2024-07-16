@@ -59,27 +59,20 @@ class SensorSamplingPackage extends SmartphoneSamplingPackage {
   DataTypeSamplingSchemeMap get samplingSchemes =>
       DataTypeSamplingSchemeMap.from([
         DataTypeSamplingScheme(
-            CAMSDataTypeMetaData.fromDataTypeMetaData(
-                dataTypeMetaData: CarpDataTypes()
-                    .types[CarpDataTypes.ACCELERATION_TYPE_NAME]!),
+            CarpDataTypes().types[CarpDataTypes.ACCELERATION_TYPE_NAME]!,
             IntervalSamplingConfiguration(
                 interval: const Duration(milliseconds: 200))),
         DataTypeSamplingScheme(
-            CAMSDataTypeMetaData.fromDataTypeMetaData(
-                dataTypeMetaData: CarpDataTypes().types[
-                    CarpDataTypes.NON_GRAVITATIONAL_ACCELERATION_TYPE_NAME]!),
+            CarpDataTypes()
+                .types[CarpDataTypes.NON_GRAVITATIONAL_ACCELERATION_TYPE_NAME]!,
             IntervalSamplingConfiguration(
                 interval: const Duration(milliseconds: 200))),
         DataTypeSamplingScheme(
-            CAMSDataTypeMetaData.fromDataTypeMetaData(
-                dataTypeMetaData:
-                    CarpDataTypes().types[CarpDataTypes.ROTATION_TYPE_NAME]!),
+            CarpDataTypes().types[CarpDataTypes.ROTATION_TYPE_NAME]!,
             IntervalSamplingConfiguration(
                 interval: const Duration(milliseconds: 200))),
         DataTypeSamplingScheme(
-            CAMSDataTypeMetaData.fromDataTypeMetaData(
-                dataTypeMetaData: CarpDataTypes()
-                    .types[CarpDataTypes.MAGNETIC_FIELD_TYPE_NAME]!),
+            CarpDataTypes().types[CarpDataTypes.MAGNETIC_FIELD_TYPE_NAME]!,
             IntervalSamplingConfiguration(
                 interval: const Duration(milliseconds: 200))),
         DataTypeSamplingScheme(
@@ -93,9 +86,10 @@ class SensorSamplingPackage extends SmartphoneSamplingPackage {
               duration: const Duration(seconds: 3),
             )),
         DataTypeSamplingScheme(CAMSDataTypeMetaData.fromDataTypeMetaData(
-            dataTypeMetaData:
-                CarpDataTypes().types[CarpDataTypes.STEP_COUNT_TYPE_NAME]!,
-            permissions: [Permission.activityRecognition])),
+          dataTypeMetaData:
+              CarpDataTypes().types[CarpDataTypes.STEP_COUNT_TYPE_NAME]!,
+          permissions: [Permission.activityRecognition],
+        )),
         DataTypeSamplingScheme(
             CAMSDataTypeMetaData(
               type: AMBIENT_LIGHT,

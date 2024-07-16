@@ -13,7 +13,7 @@ dependencies:
  
   carp_serializable: ^1.1.0
   carp_core: ^1.4.0
-  carp_mobile_sensing: ^1.6.0
+  # carp_mobile_sensing: ^1.6.0
  
   json_annotation: ^4.8.0
   permission_handler: ^11.0.0  
@@ -35,8 +35,8 @@ dependencies:
   #   path: ../../carp_serializable/
   # carp_core:
   #   path: ../../carp_core/
-  # carp_mobile_sensing:
-  #   path: ../../carp_mobile_sensing/
+  carp_mobile_sensing:
+    path: ../../carp_mobile_sensing/
   # openmhealth_schemas:
   #   path: ../../../openmhealth_schemas/
   # mobility_features:

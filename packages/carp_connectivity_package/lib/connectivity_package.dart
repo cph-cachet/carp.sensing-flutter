@@ -9,13 +9,13 @@ class ConnectivitySamplingPackage extends SmartphoneSamplingPackage {
   static const String CONNECTIVITY = "${NameSpace.CARP}.connectivity";
 
   /// Measure type for collection of nearby Bluetooth devices on a regular basis.
-  ///  * Periodic measure - default every 10 minutes for 5 seconds.
+  ///  * Event-based (Periodic) measure - default every 10 minutes for 10 seconds.
   ///  * Uses the [Smartphone] master device for data collection.
   ///  * Use a [PeriodicSamplingConfiguration] for configuration.
   static const String BLUETOOTH = "${NameSpace.CARP}.bluetooth";
 
   /// Measure type for collection of wifi information (SSID, BSSID, IP).
-  ///  * Interval-based measure - default every 10 minutes.
+  ///  * Event-based (Interval) measure - default every 10 minutes.
   ///  * Uses the [Smartphone] master device for data collection.
   ///  * Use a [IntervalSamplingConfiguration] for configuration.
   static const String WIFI = "${NameSpace.CARP}.wifi";
@@ -24,24 +24,25 @@ class ConnectivitySamplingPackage extends SmartphoneSamplingPackage {
   DataTypeSamplingSchemeMap get samplingSchemes =>
       DataTypeSamplingSchemeMap.from([
         DataTypeSamplingScheme(
-          DataTypeMetaData(
+          CAMSDataTypeMetaData(
             type: CONNECTIVITY,
             displayName: "Connectivity Status",
             timeType: DataTimeType.POINT,
           ),
         ),
         DataTypeSamplingScheme(
-            DataTypeMetaData(
+            CAMSDataTypeMetaData(
               type: BLUETOOTH,
               displayName: "Bluetooth Scan of Nearby Devices",
               timeType: DataTimeType.TIME_SPAN,
+              permissions: [Permission.bluetoothScan],
             ),
             PeriodicSamplingConfiguration(
               interval: const Duration(minutes: 10),
-              duration: const Duration(seconds: 5),
+              duration: const Duration(seconds: 10),
             )),
         DataTypeSamplingScheme(
-            DataTypeMetaData(
+            CAMSDataTypeMetaData(
               type: WIFI,
               displayName: "Wifi Connectivity Status",
               timeType: DataTimeType.POINT,
@@ -82,9 +83,4 @@ class ConnectivitySamplingPackage extends SmartphoneSamplingPackage {
         .lookup(PrivacySchema.DEFAULT)!
         .add(WIFI, wifiNameAnoymizer);
   }
-
-  @override
-  List<Permission> get permissions => [
-        Permission.bluetoothScan,
-      ];
 }

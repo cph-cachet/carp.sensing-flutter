@@ -79,12 +79,6 @@ class LocationServiceManager extends OnlineServiceManager<LocationService> {
   LocationManager manager = LocationManager();
 
   @override
-  List<Permission> get permissions => [
-        // Permission.location,
-        // Permission.locationAlways,
-      ];
-
-  @override
   String get id => manager.hashCode.toString();
 
   @override

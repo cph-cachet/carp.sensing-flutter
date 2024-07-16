@@ -145,8 +145,13 @@ class LocationManager {
     return permission;
   }
 
-  /// Enable the [LocationManager], incl. sending a notification to the
-  /// Android notification system.
+  /// Enable the [LocationManager] for accessing location also when the app is
+  /// in the background.
+  ///
+  /// This method will try to enable 'background mode' to allow location
+  /// when the app is in the background (i.e., not in use but still running).
+  /// Therefore it will request the "location always" permission which will
+  /// open the OS-specific settings on the phone (both iOS and Android)
   ///
   /// After the location manager is enabled, configuration can be done via the
   /// [configure] method.
@@ -165,23 +170,25 @@ class LocationManager {
         return;
       }
     }
-
-    var permission = await _provider.hasPermission();
-
-    if (permission != location.PermissionStatus.granted) {
-      warning(
-          "$runtimeType - Permission to collect location data 'Always' in the background has not been granted. "
-          "Make sure to grant this BEFORE sensing is resumed. "
-          "The context sampling package does not handle permissions. This should be handled on the application level.");
-    }
-
     _enabled = true;
 
+    // var permission = await _provider.hasPermission();
+    var permission = await Permission.locationWhenInUse.status;
     bool backgroundMode = false;
-    try {
-      backgroundMode = await _provider.enableBackgroundMode();
-    } catch (error) {
-      warning('$runtimeType - Could not enable background mode - $error');
+
+    if (permission != PermissionStatus.granted) {
+      warning(
+          "$runtimeType - Permission to collect location data has not been granted. "
+          "Make sure to grant this BEFORE sensing is resumed. "
+          "The context sampling package does not handle location permissions. This should be handled on the application level.");
+    } else {
+      try {
+        // note that the following will request the "location always" permission
+        // which will open the OS-specific settings on the phone (both iOS and Android)
+        backgroundMode = await _provider.enableBackgroundMode();
+      } catch (error) {
+        warning('$runtimeType - Could not enable background mode - $error');
+      }
     }
 
     info('$runtimeType'
@@ -193,7 +200,7 @@ class LocationManager {
   /// Configures the [LocationManager], incl. sending a notification to the
   /// Android notification system.
   ///
-  /// Configuration is done based on the [LocationService]. If not provided,
+  /// Configuration is done based on the [configuration]. If not provided,
   /// as set of default configurations are used.
   Future<void> configure(LocationService configuration) async {
     // fast out if already configured
@@ -202,32 +209,48 @@ class LocationManager {
     // ensured that this location manager is enable first
     await enable();
 
-    info('Configuring $runtimeType - configuration: $configuration');
-    _configured = false;
+    // Need to check if location permission has been granted before trying to
+    // change settings using the "changeSettings()" methods.
+    // The location plugin will throw a native Android exception trying to change
+    // setting without permissions to access location. And this exception is not
+    // propagated to Flutter and is hence not caught by the try-catch block below.
+    //
+    // See https://github.com/Lyokone/flutterlocation/blob/c14f8173caf33f8c38d01b28c94e0804c63e0db9/packages/location/android/src/main/java/com/lyokone/location/FlutterLocation.java#L201
+    var permission = await Permission.location.status;
+    if (permission != PermissionStatus.granted) {
+      warning(
+          "$runtimeType - Permission to collect location data has not been granted. "
+          "Cannot configure $runtimeType. "
+          "Make sure to grant this BEFORE sensing is resumed. "
+          "The context sampling package does not handle location permissions. This should be handled on the application level.");
+    } else {
+      info('Configuring $runtimeType - configuration: $configuration');
+      _configured = false;
 
-    try {
-      await _provider.changeSettings(
-        accuracy:
-            location.LocationAccuracy.values[configuration.accuracy.index],
-        distanceFilter: configuration.distance,
-        interval: configuration.interval.inMilliseconds,
-      );
+      try {
+        await _provider.changeSettings(
+          accuracy:
+              location.LocationAccuracy.values[configuration.accuracy.index],
+          distanceFilter: configuration.distance,
+          interval: configuration.interval.inMilliseconds,
+        );
 
-      await _provider.changeNotificationOptions(
-          title: configuration.notificationTitle ?? 'CARP Location Service',
-          subtitle: configuration.notificationMessage ??
-              'The location service is running in the background',
-          description: configuration.notificationDescription ??
-              'Background location is on to keep the CARP Mobile Sensing app up-to-date with your location. '
-                  'This is required for main features to work properly when the app is not in use.',
-          onTapBringToFront: configuration.notificationOnTapBringToFront,
-          iconName: configuration.notificationIconName);
+        await _provider.changeNotificationOptions(
+            title: configuration.notificationTitle ?? 'CARP Location Service',
+            subtitle: configuration.notificationMessage ??
+                'The location service is running in the background',
+            description: configuration.notificationDescription ??
+                'Background location is on to keep the CARP Mobile Sensing app up-to-date with your location. '
+                    'This is required for main features to work properly when the app is not in use.',
+            onTapBringToFront: configuration.notificationOnTapBringToFront,
+            iconName: configuration.notificationIconName);
 
-      info('$runtimeType - configured successfully.');
-      _configured = true;
-    } catch (error) {
-      warning('$runtimeType - Configuration failed - $error');
-      return;
+        info('$runtimeType - configured successfully.');
+        _configured = true;
+      } catch (error) {
+        warning('$runtimeType - Configuration failed - $error');
+        return;
+      }
     }
   }
 

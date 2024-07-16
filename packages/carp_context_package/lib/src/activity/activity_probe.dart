@@ -16,38 +16,39 @@ part of '../../carp_context_package.dart';
 ///  * TILTING - when the phone is tilted (only on Android)
 ///  * Activities with a low confidence level (<50%)
 class ActivityProbe extends StreamProbe {
-  static bool requestingPermissions = false;
+  // static bool _requestingPermissions = false;
   Stream<Measurement>? _stream;
 
-  @override
-  Future<bool> onStart() async {
-    // check permission to access the AR on Android
-    final status = await Permission.activityRecognition.status;
-    if (!status.isGranted && !requestingPermissions) {
-      warning(
-          '$runtimeType - permission not granted to use to activity recognition: $status - trying to request it');
-      try {
-        requestingPermissions = true; // only request once
-        await Permission.activityRecognition.request();
-      } catch (error) {
-        warning(
-            '$runtimeType - error trying to request access to activity recognition, error: $error');
-      }
-    }
-
-    return await super.onStart();
-  }
-
   // @override
-  // Stream<Datum> get stream => _stream ??= ActivityRecognition()
-  //     // since this probe runs alongside location, which runs a foreground service
-  //     // this probe does not need to run as a foreground service
-  //     .activityStream(runForegroundService: false)
-  //     .where((event) => event.type != ActivityType.UNKNOWN)
-  //     .where((event) => event.type != ActivityType.TILTING)
-  //     .where((event) => event.confidence > 50)
-  //     .map((activity) => ActivityDatum.fromActivityEvent(activity))
-  //     .asBroadcastStream();
+  // Future<bool> onStart() async {
+  // check permission to access the AR on Android
+
+  // Ask for permission before starting probe.
+  // Only relevant for Android - on iOS permission is automatically requested.
+  // var status = Platform.isAndroid
+  //     ? await Permission.activityRecognition.request()
+  //     : PermissionStatus.granted;
+
+  // return (status == PermissionStatus.granted)
+  //     ? super.onStart()
+  //     : Future.value(false);
+
+  // final status = await Permission.activityRecognition.status;
+  // debug('$runtimeType - status: $status');
+  // if (!status.isGranted && !_requestingPermissions) {
+  //   warning(
+  //       '$runtimeType - permission not granted to use to activity recognition: $status - trying to request it');
+  //   try {
+  //     _requestingPermissions = true; // only request once
+  //     await Permission.activityRecognition.request();
+  //   } catch (error) {
+  //     warning(
+  //         '$runtimeType - error trying to request access to activity recognition, error: $error');
+  //   }
+  // }
+
+  // return await super.onStart();
+  // }
 
   @override
   Stream<Measurement> get stream => _stream ??= ar

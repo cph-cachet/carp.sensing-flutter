@@ -127,11 +127,6 @@ class SmartphoneDeploymentController extends StudyRuntime<DeviceRegistration> {
       measurements,
     );
 
-    // ask for permissions for all measures in this deployment
-    if (SmartPhoneClientManager().askForPermissions) {
-      await askForAllPermissions();
-    }
-
     // initialize the executor, which recursively initializes all executors and probes
     _executor.initialize(deployment!, deployment!);
 
@@ -164,24 +159,47 @@ class SmartphoneDeploymentController extends StudyRuntime<DeviceRegistration> {
   /// study deployment.
   ///
   /// Should be called before sensing is started.
+  ///
+  /// This method is only relevant on Android, and does nothing on iOS.
+  /// iOS automatically asks for permissions when a resource is accessed.
   Future<void> askForAllPermissions() async {
-    List<Permission> permissions = [];
+    if (Platform.isIOS) {
+      warning(
+          '$runtimeType - Requesting all permissions at once is not feasible on iOS. Skipping this.');
+      return;
+    }
+
+    Set<Permission> permissions = {};
 
     for (var measure in deployment!.measures) {
       var schema = SamplingPackageRegistry().samplingSchemes[measure.type];
-
       if (schema != null && schema.dataType is CAMSDataTypeMetaData) {
         permissions
             .addAll((schema.dataType as CAMSDataTypeMetaData).permissions);
       }
     }
 
+    debug(
+        '$runtimeType - Required permissions for this deployment: $permissions');
+
     if (permissions.isNotEmpty) {
-      info(
-          'Asking for permission for all measures in this deployment - status:');
-      _permissions = await permissions.request();
-      _permissions?.forEach((permission, status) =>
-          info(' - ${permission.toString().split('.').last} : ${status.name}'));
+      // Never ask for location permissions.
+      // Will mess it up when requesting multiple permissions at once.
+      permissions
+        ..remove(Permission.location)
+        ..remove(Permission.locationWhenInUse)
+        ..remove(Permission.locationAlways);
+
+      try {
+        info(
+            '$runtimeType - Asking for permissions for all measures in this deployment - status:');
+        _permissions = await permissions.toList().request();
+
+        _permissions?.forEach((permission, status) => info(
+            ' - ${permission.toString().split('.').last} : ${status.name}'));
+      } catch (error) {
+        warning('$runtimeType - Error requesting permissions - error: $error');
+      }
     }
   }
 
@@ -311,22 +329,36 @@ class SmartphoneDeploymentController extends StudyRuntime<DeviceRegistration> {
   ///
   /// [configure] must be called before starting sampling.
   @override
-  void start([bool start = true]) {
+  Future<void> start([bool start = true]) async {
     info(
         '$runtimeType - Starting data sampling for study deployment: ${deployment?.studyDeploymentId}');
 
+    // ask for permissions for all measures in this deployment
+    if (SmartPhoneClientManager().askForPermissions) {
+      await askForAllPermissions();
+    }
+
     // if this study has not yet been deployed, do this first.
     if (status.index < StudyStatus.Deployed.index) {
-      tryDeployment().then((value) {
-        configure().then((value) {
-          super.start();
-          if (start) _executor.start();
-        });
-      });
-    } else {
+      await tryDeployment();
+      await configure();
       super.start();
       if (start) _executor.start();
     }
+    super.start();
+    if (start) _executor.start();
+
+    // OLD STUFF BELOW
+    // tryDeployment().then((value) {
+    //   configure().then((value) {
+    //     super.start();
+    //     if (start) _executor.start();
+    //   });
+    // });
+    // } else {
+    //   super.start();
+    //   if (start) _executor.start();
+    // }
   }
 
   /// Stop this controller and data sampling.

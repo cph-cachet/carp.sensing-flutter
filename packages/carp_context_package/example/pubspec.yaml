@@ -11,11 +11,11 @@ dependencies:
   flutter:
     sdk: flutter
   carp_core: ^1.1.0
-  carp_mobile_sensing: ^1.1.0
+  # carp_mobile_sensing: ^1.1.0
   # carp_core:
   #   path: ../../../carp_core/
-  # carp_mobile_sensing:
-  #   path: ../../../carp_mobile_sensing
+  carp_mobile_sensing:
+    path: ../../../carp_mobile_sensing
   carp_context_package:
     path: ../
 
