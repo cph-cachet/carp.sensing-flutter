@@ -19,30 +19,32 @@ part of 'media.dart';
 /// meta-data for each recording along with the actual recording in an audio file.
 /// How to upload or store this data to a data backend is up to the implementation
 /// of the [DataManager], which is used in the [Study].
-class AudioProbe extends MeasurementProbe {
+class AudioProbe extends Probe {
   /// The name of the folder used for storing audio files.
   static const String AUDIO_FILES_PATH = 'audio';
 
+  final _recorder = FlutterSoundRecorder();
   String? _path;
   bool _isRecording = false;
-  DateTime? _startRecordingTime, _endRecordingTime;
   Media? _data;
-  var recorder = FlutterSoundRecorder();
   String? _soundFileName;
-
   bool get isRecording => _isRecording;
 
   @override
   Future<bool> onStart() async {
-    try {
-      await _startAudioRecording();
-      debug('Audio recording resumed - sound file : $_soundFileName');
-    } catch (error) {
-      warning('An error occurred trying to start audio recording - $error');
-      addError(error);
+    if (await requestPermissions()) {
+      try {
+        await _startAudioRecording();
+        debug('Audio recording started - sound file : $_soundFileName');
+      } catch (error) {
+        warning('An error occurred trying to start audio recording - $error');
+        addError(error);
+        return false;
+      }
+      return true;
+    } else {
       return false;
     }
-    return true;
   }
 
   @override
@@ -51,9 +53,17 @@ class AudioProbe extends MeasurementProbe {
     if (_isRecording) {
       try {
         await _stopAudioRecording();
-        final measurement = await getMeasurement();
+
+        var measurement = _data != null
+            ? Measurement(
+                sensorStartTime:
+                    _data!.startRecordingTime!.microsecondsSinceEpoch,
+                sensorEndTime: _data!.endRecordingTime?.microsecondsSinceEpoch,
+                data: _data!)
+            : null;
+
         if (measurement != null) addMeasurement(measurement);
-        debug('Audio recording paused - sound file : $_soundFileName');
+        debug('Audio recording stopped - sound file : $_soundFileName');
       } catch (error) {
         warning('An error occurred trying to stop audio recording - $error');
         addError(error);
@@ -67,57 +77,40 @@ class AudioProbe extends MeasurementProbe {
     if (_isRecording) {
       warning(
           'Trying to start audio recording, but recording is already running. '
-          'Make sure to pause this audio probe before resuming it.');
+          'Make sure to stop this audio probe before resuming it.');
       return;
     }
 
-    // check permission to access the microphone
-    final status = await Permission.microphone.status;
-    if (!status.isGranted) {
-      warning(
-          '$runtimeType - permission not granted to use to microphone: $status - trying to request it');
-      await Permission.microphone.request();
-    }
-
-    _startRecordingTime = DateTime.now().toUtc();
     _data = Media(
       mediaType: MediaType.audio,
       filename: 'ignored for now',
-      startRecordingTime: _startRecordingTime!,
+      startRecordingTime: DateTime.now().toUtc(),
     );
-    _soundFileName = await filePath;
+    _soundFileName = await _filePath;
     _data!.path = _soundFileName;
     _data!.filename = _soundFileName!.split("/").last;
     _isRecording = true;
 
     // start the recording
-    recorder.openRecorder();
-    await recorder.startRecorder(
+    _recorder.openRecorder();
+    await _recorder.startRecorder(
       toFile: _soundFileName,
       codec: Codec.aacMP4,
     );
   }
 
   Future<void> _stopAudioRecording() async {
-    _endRecordingTime = DateTime.now().toUtc();
+    _data?.endRecordingTime = DateTime.now().toUtc();
     _isRecording = false;
 
-    // stop the recording
-    await recorder.stopRecorder();
-    recorder.closeRecorder();
+    // stop the recording and close the recorder
+    await _recorder.stopRecorder();
+    _recorder.closeRecorder();
   }
 
-  @override
-  Future<Measurement?> getMeasurement() async => Measurement(
-      sensorStartTime: _startRecordingTime!.microsecondsSinceEpoch,
-      sensorEndTime: _endRecordingTime?.microsecondsSinceEpoch,
-      data: _data!..endRecordingTime = _endRecordingTime);
-
-  String get studyDeploymentPath => '/${deployment?.studyDeploymentId}';
-
-  /// Returns the local path on the device where sound files can be stored.
-  /// Creates the directory, if not existing.
-  Future<String> get path async {
+  /// The local path on the device where sound files are stored.
+  /// Creates the sound directory, if not existing.
+  Future<String> get _audioPath async {
     if (_path == null) {
       // create a sub-directory for sound files
       final directory = await Directory(
@@ -129,13 +122,10 @@ class AudioProbe extends MeasurementProbe {
     return _path!;
   }
 
-  /// Returns the  filename of the sound file.
+  /// The filename of the sound file.
   /// The file is named by the unique id (uuid) of the [Media]
-  String get filename => '${_data!.id}.mp4';
+  String get _filename => '${_data!.id}.mp4';
 
-  /// Returns the full file path to the sound file.
-  Future<String> get filePath async {
-    String dir = await path;
-    return "$dir/$filename";
-  }
+  /// The full file path to the sound file.
+  Future<String> get _filePath async => "${await _audioPath}/$_filename";
 }

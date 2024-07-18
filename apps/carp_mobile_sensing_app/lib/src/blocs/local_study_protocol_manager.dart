@@ -152,25 +152,25 @@ class LocalStudyProtocolManager implements StudyProtocolManager {
         ]),
         phone);
 
-    // // sample an audio recording
-    // var audioTask = BackgroundTask(measures: [
-    //   Measure(type: MediaSamplingPackage.AUDIO),
-    // ]);
+    // sample an audio recording
+    var audioTask = BackgroundTask(measures: [
+      Measure(type: MediaSamplingPackage.AUDIO),
+    ]);
 
-    // // start the audio task after 20 secs and record for 20 secs
-    // protocol
-    //   ..addTaskControl(
-    //     DelayedTrigger(delay: const Duration(seconds: 20)),
-    //     audioTask,
-    //     phone,
-    //     Control.Start,
-    //   )
-    //   ..addTaskControl(
-    //     DelayedTrigger(delay: const Duration(seconds: 40)),
-    //     audioTask,
-    //     phone,
-    //     Control.Stop,
-    //   );
+    // start the audio task after 20 secs and record for 20 secs
+    protocol
+      ..addTaskControl(
+        DelayedTrigger(delay: const Duration(seconds: 20)),
+        audioTask,
+        phone,
+        Control.Start,
+      )
+      ..addTaskControl(
+        DelayedTrigger(delay: const Duration(seconds: 40)),
+        audioTask,
+        phone,
+        Control.Stop,
+      );
 
     //
     // --------- CONNECTIVITY PACKAGE EXAMPLES -------------

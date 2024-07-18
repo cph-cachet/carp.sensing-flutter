@@ -7,8 +7,6 @@
 
 part of 'media.dart';
 
-// TODO -- audio recording and noise is conflicting... can't run at the same time...
-
 /// A sampling package for capturing audio (incl. noise) and video (incl. images).
 ///
 /// To use this package, register it in the [carp_mobile_sensing] package using
@@ -78,20 +76,13 @@ class MediaSamplingPackage extends SmartphoneSamplingPackage {
       ]);
 
   @override
-  Probe? create(String type) {
-    switch (type) {
-      case AUDIO:
-        return AudioProbe();
-      case VIDEO:
-        return VideoProbe();
-      case IMAGE:
-        return VideoProbe();
-      case NOISE:
-        return NoiseProbe();
-      default:
-        return null;
-    }
-  }
+  Probe? create(String type) => switch (type) {
+        AUDIO => AudioProbe(),
+        VIDEO => VideoProbe(),
+        IMAGE => VideoProbe(),
+        NOISE => NoiseProbe(),
+        _ => null,
+      };
 
   @override
   void onRegister() {
