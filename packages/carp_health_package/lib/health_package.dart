@@ -14,7 +14,6 @@ library health_package;
 import 'dart:async';
 import 'dart:io';
 import 'package:json_annotation/json_annotation.dart';
-import 'package:permission_handler/permission_handler.dart';
 import 'package:uuid/uuid.dart';
 
 import 'package:carp_serializable/carp_serializable.dart';
@@ -110,9 +109,6 @@ class HealthSamplingPackage extends SmartphoneSamplingPackage {
           DateTime.now(), '', '', '', ''),
     ]);
   }
-
-  @override
-  List<Permission> get permissions => [];
 
   @override
   String get deviceType => HealthService.DEVICE_TYPE;

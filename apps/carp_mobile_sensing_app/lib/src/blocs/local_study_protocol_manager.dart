@@ -152,25 +152,25 @@ class LocalStudyProtocolManager implements StudyProtocolManager {
         ]),
         phone);
 
-    // sample an audio recording
-    var audioTask = BackgroundTask(measures: [
-      Measure(type: MediaSamplingPackage.AUDIO),
-    ]);
+    // // sample an audio recording
+    // var audioTask = BackgroundTask(measures: [
+    //   Measure(type: MediaSamplingPackage.AUDIO),
+    // ]);
 
-    // start the audio task after 20 secs and record for 20 secs
-    protocol
-      ..addTaskControl(
-        DelayedTrigger(delay: const Duration(seconds: 20)),
-        audioTask,
-        phone,
-        Control.Start,
-      )
-      ..addTaskControl(
-        DelayedTrigger(delay: const Duration(seconds: 40)),
-        audioTask,
-        phone,
-        Control.Stop,
-      );
+    // // start the audio task after 20 secs and record for 20 secs
+    // protocol
+    //   ..addTaskControl(
+    //     DelayedTrigger(delay: const Duration(seconds: 20)),
+    //     audioTask,
+    //     phone,
+    //     Control.Start,
+    //   )
+    //   ..addTaskControl(
+    //     DelayedTrigger(delay: const Duration(seconds: 40)),
+    //     audioTask,
+    //     phone,
+    //     Control.Stop,
+    //   );
 
     //
     // --------- CONNECTIVITY PACKAGE EXAMPLES -------------
@@ -305,26 +305,29 @@ class LocalStudyProtocolManager implements StudyProtocolManager {
     //   movisens,
     // );
 
-    // Add measures to collect data from Apple Health / Google Health Connect
+    //
+    // --------- HEALTH PACKAGE EXAMPLES -------------
+    //
 
-    // // Create and add a health service
-    // final healthService = HealthService();
-    // protocol.addConnectedDevice(healthService, phone);
+    // Create and add a health service
+    final healthService = HealthService();
+    protocol.addConnectedDevice(healthService, phone);
 
-    // protocol.addTaskControl(
-    //     // PeriodicTrigger(period: Duration(minutes: 60)),
-    //     PeriodicTrigger(period: Duration(minutes: 1)),
-    //     BackgroundTask(measures: [
-    //       HealthSamplingPackage.getHealthMeasure([
-    //         HealthDataType.STEPS,
-    //         HealthDataType.BASAL_ENERGY_BURNED,
-    //         HealthDataType.WEIGHT,
-    //         HealthDataType.SLEEP_SESSION,
-    //         // EDA is not available on Android - should be removed on runtime
-    //         HealthDataType.ELECTRODERMAL_ACTIVITY,
-    //       ])
-    //     ]),
-    //     healthService);
+    protocol.addTaskControl(
+        // PeriodicTrigger(period: Duration(minutes: 60)),
+        PeriodicTrigger(period: Duration(minutes: 1)),
+        BackgroundTask(measures: [
+          HealthSamplingPackage.getHealthMeasure([
+            HealthDataType.STEPS,
+            HealthDataType.BASAL_ENERGY_BURNED,
+            HealthDataType.WEIGHT,
+            // SLEEP_SESSION is not available on iOS - should be removed on runtime
+            HealthDataType.SLEEP_SESSION,
+            // EDA is not available on Android - should be removed on runtime
+            HealthDataType.ELECTRODERMAL_ACTIVITY,
+          ])
+        ]),
+        healthService);
 
     return protocol;
   }

@@ -28,7 +28,7 @@ class HealthProbe extends StreamProbe {
   /// for the current platform (iOS or Android).
   ///
   /// Removes any health data type(s) which are not supported on this platform.
-  bool validateHealthDataTypes() {
+  void validateHealthDataTypes() {
     List<HealthDataType> toRemove = [];
     for (var type in samplingConfiguration.healthDataTypes) {
       // is this type supported on the current platform?
@@ -47,12 +47,22 @@ class HealthProbe extends StreamProbe {
     // remove all types we don't support on this platform
     samplingConfiguration.healthDataTypes
         .removeWhere((element) => toRemove.contains(element));
-
-    return true;
   }
 
   @override
-  bool onInitialize() => validateHealthDataTypes();
+  bool onInitialize() {
+    validateHealthDataTypes();
+    deviceManager.types = samplingConfiguration.healthDataTypes;
+    return true;
+  }
+
+  /// Request permission to access health data specified in the [samplingConfiguration].
+  @override
+  Future<bool> requestPermissions() async {
+    bool permission = await deviceManager.hasPermissions();
+    if (!permission) await deviceManager.requestPermissions();
+    return (await deviceManager.hasPermissions());
+  }
 
   @override
   Future<bool> onStart() async {

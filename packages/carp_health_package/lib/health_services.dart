@@ -50,9 +50,6 @@ class HealthServiceManager extends OnlineServiceManager<HealthService> {
   @override
   String? get displayName => 'Health Service';
 
-  @override
-  List<Permission> get permissions => [];
-
   /// Which health data types should this service access.
   List<HealthDataType> types = [];
 
@@ -64,7 +61,7 @@ class HealthServiceManager extends OnlineServiceManager<HealthService> {
   // ignore: avoid_renaming_method_parameters
   void onInitialize(HealthService service) {
     // TODO - Populate [types] based on what is actually in the protocol and not just "everything", as done below.
-    types = Platform.isIOS ? dataTypesIOS : dataTypesAndroid;
+    // types = Platform.isIOS ? dataTypesIOS : dataTypesAndroid;
 
     if (Platform.isAndroid) {
       var sdkLevel = int.parse(DeviceInfo().sdk ?? '-1');
@@ -138,5 +135,11 @@ class HealthServiceManager extends OnlineServiceManager<HealthService> {
   Future<DeviceStatus> onConnect() async => DeviceStatus.connected;
 
   @override
-  Future<bool> onDisconnect() async => true;
+  Future<bool> onDisconnect() async {
+    // Clear the permission to access the current list of types.
+    // New types may be included in a new sampling configuration.
+    _hasPermissions = false;
+    types = [];
+    return true;
+  }
 }

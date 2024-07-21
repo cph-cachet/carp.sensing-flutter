@@ -347,18 +347,6 @@ class SmartphoneDeploymentController extends StudyRuntime<DeviceRegistration> {
     }
     super.start();
     if (start) _executor.start();
-
-    // OLD STUFF BELOW
-    // tryDeployment().then((value) {
-    //   configure().then((value) {
-    //     super.start();
-    //     if (start) _executor.start();
-    //   });
-    // });
-    // } else {
-    //   super.start();
-    //   if (start) _executor.start();
-    // }
   }
 
   /// Stop this controller and data sampling.
