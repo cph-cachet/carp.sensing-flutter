@@ -13,10 +13,9 @@ dependencies:
 
   carp_serializable: ^1.1.0
   carp_core: ^1.4.0
-  carp_mobile_sensing: ^1.4.0
+  # carp_mobile_sensing: ^1.4.0
 
   mdsflutter: ^2.0.0 
-  permission_handler: ^11.0.1
   json_annotation: ^4.8.0
   flutter_activity_recognition: ^3.0.0
   device_info_plus: '>=9.0.0 <11.0.0'
@@ -28,8 +27,8 @@ dependencies:
   #  path: ../../carp_serializable/    
   #carp_core:
   #  path: ../../carp_core/
-  #carp_mobile_sensing:
-   # path: ../../carp_mobile_sensing/
+  carp_mobile_sensing:
+    path: ../../carp_mobile_sensing/
 
 
 dev_dependencies:

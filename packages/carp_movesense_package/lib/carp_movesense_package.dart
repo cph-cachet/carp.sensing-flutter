@@ -65,7 +65,6 @@ import 'package:carp_serializable/carp_serializable.dart';
 import 'package:carp_core/carp_core.dart';
 import 'package:carp_mobile_sensing/carp_mobile_sensing.dart';
 import 'package:mdsflutter/Mds.dart';
-import 'package:permission_handler/permission_handler.dart';
 import 'package:json_annotation/json_annotation.dart';
 
 part 'carp_movesense_package.g.dart';
@@ -127,9 +126,6 @@ class MovesenseSamplingPackage implements SamplingPackage {
       MovesenseIMU(0, [], [], []),
     ]);
   }
-
-  @override
-  List<Permission> get permissions => [];
 
   @override
   DataTypeSamplingSchemeMap get samplingSchemes =>

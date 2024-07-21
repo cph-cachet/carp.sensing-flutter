@@ -129,7 +129,7 @@ Collection of Movesense measures can be added to a study protocol like this.
 ````
 
 Before executing a study with an Movesense measure, register this package in the
-[SamplingPackageRegistry](https://pub.dartlang.org/documentation/carp_mobile_sensing/latest/runtime/SamplingPackageRegistry.html).
+[`SamplingPackageRegistry`](https://pub.dartlang.org/documentation/carp_mobile_sensing/latest/runtime/SamplingPackageRegistry.html).
 
 `````dart
 SamplingPackageRegistry().register(MovesenseSamplingPackage());
