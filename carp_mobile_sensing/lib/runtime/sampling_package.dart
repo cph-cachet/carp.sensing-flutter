@@ -123,8 +123,6 @@ class SamplingPackageRegistry {
 ///  * creating a [Probe] based on a [Measure] type
 ///  * getting a [DeviceManager] for the [deviceType]
 abstract class SamplingPackage {
-  List<Permission>? _permissions;
-
   /// The list of data type this package supports.
   List<DataTypeMetaData> get dataTypes;
 
@@ -151,29 +149,6 @@ abstract class SamplingPackage {
 
   /// Get the [DeviceManager] for the device used by this package.
   DeviceManager get deviceManager;
-
-  // /// The list of permissions that this package needs in order to run.
-  // ///
-  // /// Per default, this list is derived from the permissions specified for **all**
-  // /// data type listed in the default [samplingSchemes] schema.
-  // /// Note, however, that not all data types (measures) in a schema is necessarily
-  // /// used in a study protocol. Therefore, when sensing is configured in the
-  // /// [SmartphoneDeploymentController.configure] method, only permissions which
-  // /// are used in the deployment of the study is actually requested.
-  // @nonVirtual
-  // List<Permission> get permissions {
-  //   if (_permissions == null) {
-  //     final Set<Permission> permissions = {};
-
-  //     for (var type in samplingSchemes.dataTypes) {
-  //       if (type is CAMSDataTypeMetaData) {
-  //         permissions.addAll(type.permissions);
-  //       }
-  //     }
-  //     _permissions = permissions.toList();
-  //   }
-  //   return _permissions!;
-  // }
 
   /// Callback method when this package is being registered.
   void onRegister();

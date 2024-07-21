@@ -124,9 +124,6 @@ abstract class Probe extends AbstractExecutor<Measure> {
     return granted;
   }
 
-  // TODO - remove later + usage below
-  // Future<bool> requestPermissions() async => true;
-
   // default no-op implementation of callback methods below
 
   @override

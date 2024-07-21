@@ -42,7 +42,7 @@ dependencies:
 
 This context package make use of what Apple and Google denote as sensitive information, especially location. Therefore it is important to configure the app to access location information. Please read carefully the [**instructions on how to setup the permission_handler plugin**]( https://pub.dev/packages/permission_handler#setup) - both for Android and iOS.
 
-> Note that this context package **DOES NOT** asks for accessing location. This should be done by the app since the app can tell the user why location is accessed. The Android Developers documentation contain a good description of how to [request location access at runtime](https://developer.android.com/develop/sensors-and-location/location/permissions#request-location-access-runtime).
+> Note that this context package **DOES NOT** asks for accessing location. This should be done by the app since the app should (according to the Apple and Google guidelines) tell the user why location is accessed. The Android Developers documentation contain a good description of how to [request location access at runtime](https://developer.android.com/develop/sensors-and-location/location/permissions#request-location-access-runtime).
 
 ### Android
 
@@ -149,7 +149,7 @@ import 'package:carp_mobile_sensing/carp_mobile_sensing.dart';
 import 'package:carp_context_package/context.dart';
 `````
 
-Before creating a study and running it, register this package in the [SamplingPackageRegistry](https://pub.dev/documentation/carp_mobile_sensing/latest/runtime/SamplingPackageRegistry-class.html).
+Before creating a study and running it, register this package in the [`SamplingPackageRegistry`](https://pub.dev/documentation/carp_mobile_sensing/latest/runtime/SamplingPackageRegistry-class.html).
 
 ````dart
 SamplingPackageRegistry().register(ContextSamplingPackage());
