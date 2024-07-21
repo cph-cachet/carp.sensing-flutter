@@ -29,14 +29,11 @@ class SurveySamplingPackage extends SmartphoneSamplingPackage {
     AppTaskController().registerUserTaskFactory(SurveyUserTaskFactory());
   }
 
-  // no data types supported in this package and hence no permissions, probes,
+  // no data types supported in this package and hence no probes
   // or sampling schema are needed.
 
   @override
   DataTypeSamplingSchemeMap get samplingSchemes => DataTypeSamplingSchemeMap();
-
-  @override
-  List<Permission> get permissions => [];
 
   @override
   Probe? create(String type) => null;
