@@ -51,35 +51,43 @@ class CommunicationSamplingPackage extends SmartphoneSamplingPackage {
   DataTypeSamplingSchemeMap get samplingSchemes =>
       DataTypeSamplingSchemeMap.from([
         DataTypeSamplingScheme(
-            DataTypeMetaData(
+            CAMSDataTypeMetaData(
               type: PHONE_LOG,
               displayName: "Phone Log",
               timeType: DataTimeType.TIME_SPAN,
+              dataEventType: DataEventType.ONE_TIME,
+              permissions: [Permission.phone],
             ),
             HistoricSamplingConfiguration(
               past: const Duration(days: 1),
               future: const Duration(days: 1),
             )),
         DataTypeSamplingScheme(
-            DataTypeMetaData(
+            CAMSDataTypeMetaData(
               type: TEXT_MESSAGE_LOG,
               displayName: "Text Message Log",
               timeType: DataTimeType.TIME_SPAN,
+              dataEventType: DataEventType.ONE_TIME,
+              permissions: [Permission.sms],
             ),
             HistoricSamplingConfiguration(
               past: const Duration(days: 1),
               future: const Duration(days: 1),
             )),
-        DataTypeSamplingScheme(DataTypeMetaData(
+        DataTypeSamplingScheme(CAMSDataTypeMetaData(
           type: TEXT_MESSAGE,
           displayName: "Text Messages",
           timeType: DataTimeType.POINT,
+          dataEventType: DataEventType.EVENT,
+          permissions: [Permission.phone],
         )),
         DataTypeSamplingScheme(
-            DataTypeMetaData(
+            CAMSDataTypeMetaData(
               type: CALENDAR,
               displayName: "Calendar Entries",
               timeType: DataTimeType.TIME_SPAN,
+              dataEventType: DataEventType.ONE_TIME,
+              permissions: [Permission.calendarFullAccess],
             ),
             HistoricSamplingConfiguration(
               past: const Duration(days: 1),
@@ -129,8 +137,4 @@ class CommunicationSamplingPackage extends SmartphoneSamplingPackage {
         .lookup(PrivacySchema.DEFAULT)!
         .add(CALENDAR, calendarAnoymizer);
   }
-
-  @override
-  List<Permission> get permissions =>
-      [Permission.phone, Permission.sms, Permission.calendarFullAccess];
 }

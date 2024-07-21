@@ -21,17 +21,18 @@ void main() async {
   Smartphone phone = Smartphone();
   protocol.addPrimaryDevice(phone);
 
-  // Add an automatic task that collects SMS messages in/out
+  // Add an background task that continuously collects SMS messages in/out
   protocol.addTaskControl(
       ImmediateTrigger(),
       BackgroundTask(
           measures: [Measure(type: CommunicationSamplingPackage.TEXT_MESSAGE)]),
       phone);
 
-  // Add an automatic task that every 3 hour collects the logs for:
+  // Add an background task that collects the logs for:
   //  * in/out SMS
   //  * in/out phone calls
   //  * calendar entries
+  // every 3 hour
   protocol.addTaskControl(
       PeriodicTrigger(period: const Duration(hours: 3)),
       BackgroundTask(measures: [

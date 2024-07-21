@@ -12,8 +12,8 @@ dependencies:
     sdk: flutter
   # carp_core:
   #   path: ../../../carp_core
-  # carp_mobile_sensing:
-  #   path: ../../../carp_mobile_sensing
+  carp_mobile_sensing:
+    path: ../../../carp_mobile_sensing
   carp_communication_package:
     path: ../
 
