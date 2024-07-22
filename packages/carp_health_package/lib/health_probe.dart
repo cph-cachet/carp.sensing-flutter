@@ -1,15 +1,20 @@
-part of health_package;
+part of 'health_package.dart';
 
-/// A probe collecting health data from Apple Health or Google Fit / Health Connect.
+/// A probe collecting health data from Apple Health or Google Health Connect.
 ///
 /// Configuration of this probe is based on a [HealthSamplingConfiguration] which
 /// again is a [HistoricSamplingConfiguration].
 /// This means that when started, it will try to collect data back to the last
 /// time data was collected.
-/// Hence, this probe is suited for configuration using some trigger that
+/// Hence, this probe is suited for configuration using a trigger that
 /// collects data on a regular basis. This could be a [PeriodicTrigger] or it
 /// could be configured as an [AppTask] asking the user to collect the data
 /// on a regular basis.
+///
+/// Note that even though this probe is a [StreamProbe], the health measure is a
+/// one-time measure, which needs to be triggered to collect the data. The stream
+/// probe is used since this probe can return a lot of health data, which need to
+/// be streamed back to the mobile sensing framework.
 class HealthProbe extends StreamProbe {
   final StreamController<Measurement> _ctrl = StreamController.broadcast();
 
@@ -28,7 +33,7 @@ class HealthProbe extends StreamProbe {
   /// for the current platform (iOS or Android).
   ///
   /// Removes any health data type(s) which are not supported on this platform.
-  bool validateHealthDataTypes() {
+  void validateHealthDataTypes() {
     List<HealthDataType> toRemove = [];
     for (var type in samplingConfiguration.healthDataTypes) {
       // is this type supported on the current platform?
@@ -47,12 +52,22 @@ class HealthProbe extends StreamProbe {
     // remove all types we don't support on this platform
     samplingConfiguration.healthDataTypes
         .removeWhere((element) => toRemove.contains(element));
-
-    return true;
   }
 
   @override
-  bool onInitialize() => validateHealthDataTypes();
+  bool onInitialize() {
+    validateHealthDataTypes();
+    deviceManager.types = samplingConfiguration.healthDataTypes;
+    return true;
+  }
+
+  /// Request permission to access health data specified in the [samplingConfiguration].
+  @override
+  Future<bool> requestPermissions() async {
+    bool permission = await deviceManager.hasPermissions();
+    if (!permission) await deviceManager.requestPermissions();
+    return (await deviceManager.hasPermissions());
+  }
 
   @override
   Future<bool> onStart() async {
@@ -74,9 +89,9 @@ class HealthProbe extends StreamProbe {
       try {
         List<HealthDataPoint>? data =
             await deviceManager.service?.getHealthDataFromTypes(
-                  start,
-                  end,
-                  healthDataTypes,
+                  startTime: start,
+                  endTime: end,
+                  types: healthDataTypes,
                 ) ??
                 [];
         debug(

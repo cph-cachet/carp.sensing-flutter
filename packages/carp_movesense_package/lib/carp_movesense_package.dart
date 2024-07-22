@@ -65,7 +65,6 @@ import 'package:carp_serializable/carp_serializable.dart';
 import 'package:carp_core/carp_core.dart';
 import 'package:carp_mobile_sensing/carp_mobile_sensing.dart';
 import 'package:mdsflutter/Mds.dart';
-import 'package:permission_handler/permission_handler.dart';
 import 'package:json_annotation/json_annotation.dart';
 
 part 'carp_movesense_package.g.dart';
@@ -96,25 +95,18 @@ class MovesenseSamplingPackage implements SamplingPackage {
   String get deviceType => MovesenseDevice.DEVICE_TYPE;
 
   @override
-  Probe? create(String type) {
-    switch (type) {
-      case STATE:
-        return MovesenseStateChangeProbe();
-      case HR:
-        return MovesenseHRProbe();
-      case ECG:
-        return MovesenseECGProbe();
-      case TEMPERATURE:
+  Probe? create(String type) => switch (type) {
+        STATE => MovesenseStateChangeProbe(),
+        HR => MovesenseHRProbe(),
+        ECG => MovesenseECGProbe(),
         // only the MD device supports temperature
-        return deviceManager.configuration?.deviceType == MovesenseDeviceType.MD
-            ? MovesenseTemperatureProbe()
-            : null;
-      case IMU:
-        return MovesenseIMUProbe();
-      default:
-        return null;
-    }
-  }
+        TEMPERATURE =>
+          deviceManager.configuration?.deviceType == MovesenseDeviceType.MD
+              ? MovesenseTemperatureProbe()
+              : null,
+        IMU => MovesenseIMUProbe(),
+        _ => null,
+      };
 
   @override
   void onRegister() {
@@ -127,9 +119,6 @@ class MovesenseSamplingPackage implements SamplingPackage {
       MovesenseIMU(0, [], [], []),
     ]);
   }
-
-  @override
-  List<Permission> get permissions => [];
 
   @override
   DataTypeSamplingSchemeMap get samplingSchemes =>

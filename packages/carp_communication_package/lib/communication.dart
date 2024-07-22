@@ -1,6 +1,7 @@
 /// A library for collecting communication data, from
 ///  * text messages (sms)
 ///  * phone calls
+///  * calendar entries
 library communication;
 
 import 'dart:async';

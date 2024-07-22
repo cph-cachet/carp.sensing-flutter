@@ -81,7 +81,7 @@ class Connectivity extends Data {
       '${super.toString()}, connectivityStatus: $connectivityStatus';
 }
 
-/// A [Datum] that holds information of nearby Bluetooth devices.
+/// A [Data] holding information of nearby Bluetooth devices.
 @JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
 class Bluetooth extends Data {
   static const dataType = ConnectivitySamplingPackage.BLUETOOTH;
@@ -177,7 +177,7 @@ class BluetoothDevice {
       ', rssi: $rssi';
 }
 
-/// A [Datum] that holds wifi connectivity status in terms of connected SSID
+/// A [Data] holding wifi connectivity status in terms of connected SSID
 /// and BSSID.
 ///
 /// Note that it wifi information cannot be collected on emulators.

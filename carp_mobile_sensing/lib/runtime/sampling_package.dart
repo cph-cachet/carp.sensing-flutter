@@ -1,4 +1,4 @@
-part of 'runtime.dart';
+part of '../runtime.dart';
 
 /// A registry of [SamplingPackage] packages.
 ///
@@ -21,7 +21,7 @@ class SamplingPackageRegistry {
   /// A list of registered packages.
   List<SamplingPackage> get packages => _packages;
 
-  /// The list of [Permission] needed for the entire list of packages (combined list).
+  /// The list of [Permission]s needed for **all** packages (combined list).
   List<Permission> get permissions => _permissions;
 
   SamplingPackageRegistry._() {
@@ -34,9 +34,9 @@ class SamplingPackageRegistry {
   void register(SamplingPackage package) {
     _combinedSchemas = null;
     _packages.add(package);
-    for (var permission in package.permissions) {
-      if (!_permissions.contains(permission)) _permissions.add(permission);
-    }
+    // for (var permission in package.permissions) {
+    //   if (!_permissions.contains(permission)) _permissions.add(permission);
+    // }
     CarpDataTypes().add(package.samplingSchemes.dataTypes);
 
     // register the package's device in the device registry
@@ -150,20 +150,6 @@ abstract class SamplingPackage {
   /// Get the [DeviceManager] for the device used by this package.
   DeviceManager get deviceManager;
 
-  /// The list of permissions that this package need in order to run.
-  ///
-  /// Note that this is the list of permissions used for the probes in this
-  /// sampling package. It **should not** include permission to access the device
-  /// itself, such as Bluetooth permissions.
-  /// Such permissions should be handled on the app level.
-  ///
-  /// See [PermissionGroup](https://pub.dev/documentation/permission_handler/latest/permission_handler/PermissionGroup-class.html)
-  /// for a list of possible permissions.
-  ///
-  /// For Android permission in the Manifest.xml file,
-  /// see [Manifest.permission](https://developer.android.com/reference/android/Manifest.permission.html)
-  List<Permission> get permissions;
-
   /// Callback method when this package is being registered.
   void onRegister();
 }
@@ -172,7 +158,7 @@ abstract class SamplingPackage {
 ///
 /// Note that the default implementation of [permissions] and [onRegister] are
 /// no-op operations and should hence be overridden in subclasses, if needed.
-abstract class SmartphoneSamplingPackage implements SamplingPackage {
+abstract class SmartphoneSamplingPackage extends SamplingPackage {
   // all smartphone sampling packages uses the same static device manager
   static final _deviceManager = SmartphoneDeviceManager();
 
@@ -185,9 +171,6 @@ abstract class SmartphoneSamplingPackage implements SamplingPackage {
 
   @override
   DeviceManager get deviceManager => _deviceManager;
-
-  @override
-  List<Permission> get permissions => [];
 
   @override
   void onRegister() {}

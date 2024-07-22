@@ -5,7 +5,7 @@
  * found in the LICENSE file.
  */
 
-part of esense;
+part of 'esense.dart';
 
 // This is the debug sampling schema used by bardram
 // His eSense devices are
@@ -90,13 +90,6 @@ class ESenseDeviceManager extends BTLEDeviceManager<ESenseDevice> {
 
   /// A handle to the [ESenseManager] plugin.
   ESenseManager? manager;
-
-  @override
-  List<Permission> get permissions => [
-        Permission.microphone,
-        Permission.bluetoothConnect,
-        Permission.bluetoothScan,
-      ];
 
   @override
   String get id => configuration?.deviceName ?? 'eSense-????';

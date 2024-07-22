@@ -5,7 +5,7 @@
  * found in the LICENSE file.
  */
 
-part of health_package;
+part of 'health_package.dart';
 
 /// An [OnlineService] for the [health](https://pub.dev/packages/health) service.
 ///
@@ -32,13 +32,11 @@ class HealthService extends OnlineService {
 
 /// A [DeviceManager] for the [HealthService].
 class HealthServiceManager extends OnlineServiceManager<HealthService> {
-  HealthFactory? _service;
+  // HealthFactory? _service;
 
-  /// A handle to the [HealthFactory] plugin.
-  /// Returns null if the service is not configured.
-  HealthFactory? get service => (configuration != null)
-      ? _service ??= HealthFactory(useHealthConnectIfAvailable: true)
-      : null;
+  /// A handle to the [Health] plugin.
+  /// Returns null if the service is not yet configured.
+  Health? get service => configuration != null ? Health() : null;
 
   @override
   String get id => (configuration != null)
@@ -50,22 +48,18 @@ class HealthServiceManager extends OnlineServiceManager<HealthService> {
   @override
   String? get displayName => 'Health Service';
 
-  @override
-  List<Permission> get permissions => [];
-
   /// Which health data types should this service access.
   List<HealthDataType> types = [];
 
   HealthServiceManager([
     HealthService? configuration,
-  ]) : super(HealthService.DEVICE_TYPE, configuration);
+  ]) : super(HealthService.DEVICE_TYPE, configuration) {
+    Health().configure(useHealthConnectIfAvailable: true);
+  }
 
   @override
   // ignore: avoid_renaming_method_parameters
   void onInitialize(HealthService service) {
-    // TODO - Populate [types] based on what is actually in the protocol and not just "everything", as done below.
-    types = Platform.isIOS ? dataTypesIOS : dataTypesAndroid;
-
     if (Platform.isAndroid) {
       var sdkLevel = int.parse(DeviceInfo().sdk ?? '-1');
       if (sdkLevel < 34) {
@@ -138,5 +132,11 @@ class HealthServiceManager extends OnlineServiceManager<HealthService> {
   Future<DeviceStatus> onConnect() async => DeviceStatus.connected;
 
   @override
-  Future<bool> onDisconnect() async => true;
+  Future<bool> onDisconnect() async {
+    // Clear the permission to access the current list of types.
+    // New types may be included in a new sampling configuration.
+    _hasPermissions = false;
+    types = [];
+    return true;
+  }
 }

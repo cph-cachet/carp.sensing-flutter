@@ -1,7 +1,7 @@
 name: carp_apps_package_example
 description: A simple example of using the CARP Apps Package
 publish_to: 'none' 
-version: 1.1.0
+version: 1.5.0
 
 environment:
   sdk: '>=2.17.0 <3.0.0'

@@ -1,6 +1,6 @@
 name: carp_esense_package
 description: The CARP eSense sampling package. Samples sensor and device events from the eSense ear plug device.
-version: 1.4.0
+version: 1.5.0
 homepage: https://github.com/cph-cachet/carp.sensing-flutter/tree/master/packages/carp_esense_package
 
 environment:
@@ -13,10 +13,9 @@ dependencies:
 
   carp_serializable: ^1.1.0
   carp_core: ^1.4.0
-  carp_mobile_sensing: ^1.4.0
+  carp_mobile_sensing: ^1.9.0
  
   json_annotation: ^4.8.0
-  permission_handler: ^11.0.0  
   esense_flutter: ^1.0.0
 
 # Overriding carp libraries to use the local copy
@@ -26,8 +25,8 @@ dependencies:
 #     path: ../../carp_serializable/
 #   carp_core:
 #     path: ../../carp_core/
-#   carp_mobile_sensing:
-#     path: ../../carp_mobile_sensing/
+  # carp_mobile_sensing:
+  #   path: ../../carp_mobile_sensing/
 #   esense_flutter: 
 #     path: ../../../../flutter-plugins/packages/esense_flutter/
 

@@ -1,6 +1,6 @@
 name: carp_survey_package_example
 description: Examples of how to use the carp_survey_package.
-version: 1.5.0
+version: 1.6.0
 publish_to: none
 
 environment:
@@ -11,9 +11,10 @@ dependencies:
   flutter:
     sdk: flutter
   carp_core: ^1.1.0
-  carp_mobile_sensing: ^1.1.0
+  carp_mobile_sensing: ^1.9.0
   research_package: ^1.4.0
   cognition_package: ^1.5.0
+
   # carp_core:
   #   path: ../../../carp_core
   # carp_mobile_sensing:

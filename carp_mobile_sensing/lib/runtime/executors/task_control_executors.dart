@@ -5,7 +5,7 @@
  * found in the LICENSE file.
  */
 
-part of '../runtime.dart';
+part of '../../runtime.dart';
 
 /// Responsible for handling the execution of a [TaskControl].
 ///

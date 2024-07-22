@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
+import 'package:flutter/material.dart' hide TimeOfDay;
 
 import 'package:carp_serializable/carp_serializable.dart';
 import 'package:carp_core/carp_core.dart';
@@ -16,8 +17,9 @@ void main() {
   Smartphone phone;
 
   setUp(() {
+    WidgetsFlutterBinding.ensureInitialized();
     // Initialization of serialization
-    CarpMobileSensing();
+    CarpMobileSensing.ensureInitialized();
 
     // register the context sampling package
     SamplingPackageRegistry().register(HealthSamplingPackage());
@@ -94,7 +96,7 @@ void main() {
         StudyProtocol.fromJson(json.decode(plainJson) as Map<String, dynamic>);
 
     expect(protocol.ownerId, 'alex@uni.dk');
-    expect(protocol.primaryDevice.roleName, Smartphone.DEFAULT_ROLENAME);
+    expect(protocol.primaryDevice.roleName, Smartphone.DEFAULT_ROLE_NAME);
     print(toJsonString(protocol));
   });
 
@@ -117,7 +119,7 @@ void main() {
       String unit = enumToString(
           dasesDataTypeToUnit[DasesHealthDataType.CALORIES_INTAKE]);
       String type = enumToString(DasesHealthDataType.CALORIES_INTAKE);
-      String platform = enumToString(PlatformType.ANDROID);
+      String platform = enumToString(HealthPlatformType.googleHealthConnect);
       String deviceId = '1234';
       String uuid = "4321";
       String sourceId = "AH";
@@ -125,7 +127,7 @@ void main() {
 
       HealthData hd = HealthData(
         uuid,
-        NumericHealthValue(value),
+        NumericHealthValue(numericValue: value),
         unit,
         type,
         from,
@@ -148,12 +150,12 @@ void main() {
       DateTime from = to.subtract(Duration(milliseconds: 10000));
       HealthData hd = HealthData(
           '4321',
-          NumericHealthValue(6),
+          NumericHealthValue(numericValue: 6),
           enumToString(dasesDataTypeToUnit[DasesHealthDataType.ALCOHOL]),
           enumToString(DasesHealthDataType.ALCOHOL),
           from,
           to,
-          enumToString(PlatformType.IOS),
+          enumToString(HealthPlatformType.appleHealth),
           '1234',
           '4321',
           '4321');
@@ -170,12 +172,12 @@ void main() {
       DateTime from = to.subtract(Duration(hours: 8));
       HealthData hd = HealthData(
           '4321',
-          NumericHealthValue(6),
+          NumericHealthValue(numericValue: 6),
           enumToString(dasesDataTypeToUnit[DasesHealthDataType.SLEEP]),
           enumToString(DasesHealthDataType.SLEEP),
           from,
           to,
-          enumToString(PlatformType.IOS),
+          enumToString(HealthPlatformType.appleHealth),
           '1234',
           '4321',
           '4321');
@@ -193,15 +195,15 @@ void main() {
 
       HealthData smoking = HealthData(
           '4321',
-          NumericHealthValue(12),
+          NumericHealthValue(numericValue: 12),
           enumToString(
               dasesDataTypeToUnit[DasesHealthDataType.SMOKED_CIGARETTES]),
           enumToString(DasesHealthDataType.SMOKED_CIGARETTES),
           from,
           to,
           (Platform.isAndroid)
-              ? enumToString(PlatformType.ANDROID)
-              : enumToString(PlatformType.IOS),
+              ? enumToString(HealthPlatformType.googleHealthConnect)
+              : enumToString(HealthPlatformType.appleHealth),
           '1234',
           '4321',
           '4321');
@@ -219,14 +221,17 @@ void main() {
 
       HealthData audiogram = HealthData(
           '4321',
-          AudiogramHealthValue([12, 32], [1, 2, 3, 4], [1, 4, 7]),
+          AudiogramHealthValue(
+              frequencies: [12, 32],
+              leftEarSensitivities: [1, 2, 3, 4],
+              rightEarSensitivities: [1, 4, 7]),
           enumToString(HealthDataUnit.NO_UNIT),
           enumToString(HealthDataType.AUDIOGRAM),
           from,
           to,
           (Platform.isAndroid)
-              ? enumToString(PlatformType.ANDROID)
-              : enumToString(PlatformType.IOS),
+              ? enumToString(HealthPlatformType.googleHealthConnect)
+              : enumToString(HealthPlatformType.appleHealth),
           '1234',
           '4321',
           '4321');
@@ -244,15 +249,19 @@ void main() {
 
       HealthData workout = HealthData(
           '4321',
-          WorkoutHealthValue(HealthWorkoutActivityType.AEROBICS, 8,
-              HealthDataUnit.KILOCALORIE, 1000, HealthDataUnit.METER),
+          WorkoutHealthValue(
+              workoutActivityType: HealthWorkoutActivityType.AEROBICS,
+              totalEnergyBurned: 8,
+              totalEnergyBurnedUnit: HealthDataUnit.KILOCALORIE,
+              totalDistance: 1000,
+              totalDistanceUnit: HealthDataUnit.METER),
           enumToString(HealthDataUnit.NO_UNIT),
           enumToString(HealthDataType.WORKOUT),
           from,
           to,
           (Platform.isAndroid)
-              ? enumToString(PlatformType.ANDROID)
-              : enumToString(PlatformType.IOS),
+              ? enumToString(HealthPlatformType.googleHealthConnect)
+              : enumToString(HealthPlatformType.appleHealth),
           '1234',
           '4321',
           '4321');

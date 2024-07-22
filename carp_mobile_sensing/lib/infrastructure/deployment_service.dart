@@ -5,7 +5,7 @@
  * found in the LICENSE file.
  */
 
-part of 'infrastructure.dart';
+part of '../infrastructure.dart';
 
 /// A local (in-memory) implementation of a [DeploymentService] useful in
 /// CAMS studies to be deployed locally on this phone.
@@ -144,7 +144,7 @@ class SmartphoneDeploymentService implements DeploymentService {
 
     if (device is! PrimaryDeviceConfiguration) {
       warning(
-          "The specified device with rolename '$primaryDeviceRoleName' is not a primary device.");
+          "The specified device with role name '$primaryDeviceRoleName' is not a primary device.");
       return null;
     }
     deployment.deviceDeployed(device, deviceDeploymentLastUpdatedOn);

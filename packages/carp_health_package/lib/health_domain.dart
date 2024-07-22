@@ -1,4 +1,4 @@
-part of health_package;
+part of 'health_package.dart';
 
 String enumToString(dynamic enumeration) =>
     enumeration.toString().split('.').last;
@@ -60,7 +60,7 @@ class HealthSamplingConfiguration extends HistoricSamplingConfiguration {
 }
 
 /// A no-op function for deserializing a HealthValue - never used.
-HealthValue _healthValueFromJson(json) => NumericHealthValue(-1);
+HealthValue _healthValueFromJson(json) => NumericHealthValue(numericValue: -1);
 
 /// A [Data] object that holds health data from a [HealthDataPoint].
 @JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)
@@ -129,8 +129,8 @@ class HealthData extends Data {
         healthDataPoint.typeString,
         healthDataPoint.dateFrom.toUtc(),
         healthDataPoint.dateTo.toUtc(),
-        enumToString(healthDataPoint.platform),
-        healthDataPoint.deviceId,
+        enumToString(healthDataPoint.sourcePlatform),
+        healthDataPoint.sourceDeviceId,
         healthDataPoint.sourceId,
         healthDataPoint.sourceName);
   }

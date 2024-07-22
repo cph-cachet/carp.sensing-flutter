@@ -1,6 +1,6 @@
 name: carp_communication_package
 description: CARP communication sampling package. Samples phone, sms, and calendar logs and activity.
-version: 1.4.2
+version: 1.5.0
 homepage: https://github.com/cph-cachet/carp.sensing-flutter/tree/master/packages/carp_communication_package
 
 environment:
@@ -13,7 +13,7 @@ dependencies:
 
   carp_serializable: ^1.1.0
   carp_core: ^1.4.0
-  carp_mobile_sensing: ^1.4.0
+  carp_mobile_sensing: ^1.9.0
 
   json_annotation: ^4.8.0
   telephony: ^0.2.0

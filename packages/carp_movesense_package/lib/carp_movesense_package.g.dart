@@ -10,7 +10,7 @@ MovesenseStateChange _$MovesenseStateChangeFromJson(
         Map<String, dynamic> json) =>
     MovesenseStateChange(
       $enumDecode(_$MovesenseDeviceStateEnumMap, json['state']),
-      json['timestamp'] as int?,
+      (json['timestamp'] as num?)?.toInt(),
     )
       ..$type = json['__type'] as String?
       ..sensorSpecificData = json['sensorSpecificData'] == null
@@ -48,7 +48,7 @@ const _$MovesenseDeviceStateEnumMap = {
 
 MovesenseHR _$MovesenseHRFromJson(Map<String, dynamic> json) => MovesenseHR(
       (json['hr'] as num).toDouble(),
-      json['rr'] as int?,
+      (json['rr'] as num?)?.toInt(),
     )
       ..$type = json['__type'] as String?
       ..sensorSpecificData = json['sensorSpecificData'] == null
@@ -72,8 +72,10 @@ Map<String, dynamic> _$MovesenseHRToJson(MovesenseHR instance) {
 }
 
 MovesenseECG _$MovesenseECGFromJson(Map<String, dynamic> json) => MovesenseECG(
-      json['timestamp'] as int,
-      (json['samples'] as List<dynamic>).map((e) => e as int).toList(),
+      (json['timestamp'] as num).toInt(),
+      (json['samples'] as List<dynamic>)
+          .map((e) => (e as num).toInt())
+          .toList(),
     )
       ..$type = json['__type'] as String?
       ..sensorSpecificData = json['sensorSpecificData'] == null
@@ -99,8 +101,8 @@ Map<String, dynamic> _$MovesenseECGToJson(MovesenseECG instance) {
 MovesenseTemperature _$MovesenseTemperatureFromJson(
         Map<String, dynamic> json) =>
     MovesenseTemperature(
-      json['timestamp'] as int,
-      json['measurement'] as int,
+      (json['timestamp'] as num).toInt(),
+      (json['measurement'] as num).toInt(),
     )
       ..$type = json['__type'] as String?
       ..sensorSpecificData = json['sensorSpecificData'] == null
@@ -125,7 +127,7 @@ Map<String, dynamic> _$MovesenseTemperatureToJson(
 }
 
 MovesenseIMU _$MovesenseIMUFromJson(Map<String, dynamic> json) => MovesenseIMU(
-      json['timestamp'] as int,
+      (json['timestamp'] as num).toInt(),
       (json['accelerometer'] as List<dynamic>)
           .map((e) =>
               MovesenseAccelerometerSample.fromJson(e as Map<String, dynamic>))

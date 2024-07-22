@@ -5,7 +5,7 @@
  * found in the LICENSE file.
  */
 
-part of 'services.dart';
+part of '../services.dart';
 
 /// Add an information messages to the system log.
 void info(String message) =>

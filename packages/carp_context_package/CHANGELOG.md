@@ -1,6 +1,11 @@
+## 1.9.0
+
+* upgrading to carp_mobile_sensing v. 1.9.0 (better permission handling)
+* upgrading to location v. 7
+
 ## 1.7.0
 
-* putting the location plugin back in businees (instead of the geolocator plugin)
+* putting the location plugin back in business (instead of the geolocator plugin)
 * revisiting issue [#389](https://github.com/cph-cachet/carp.sensing-flutter/issues/389), making a new implementation of the getCurrentLocation() method
 * improved the README to better explain how to handle location permissions on iOS
 

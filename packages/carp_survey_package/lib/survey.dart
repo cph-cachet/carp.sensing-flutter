@@ -1,5 +1,5 @@
 /*
- * Copyright 2020-2023 Copenhagen Center for Health Technology (CACHET) at the
+ * Copyright 2020 Copenhagen Center for Health Technology (CACHET) at the
  * Technical University of Denmark (DTU).
  * Use of this source code is governed by a MIT-style license that can be
  * found in the LICENSE file.
@@ -10,7 +10,6 @@
 library survey;
 
 import 'package:json_annotation/json_annotation.dart';
-import 'package:permission_handler/permission_handler.dart';
 import 'package:flutter/material.dart';
 
 import 'package:carp_serializable/carp_serializable.dart';

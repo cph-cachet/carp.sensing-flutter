@@ -5,7 +5,7 @@
  * found in the LICENSE file.
  */
 
-part of esense;
+part of 'esense.dart';
 
 abstract class _ESenseProbe extends StreamProbe {
   @override

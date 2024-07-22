@@ -5,7 +5,7 @@
  * found in the LICENSE file.
  */
 
-part of '../runtime.dart';
+part of '../../runtime.dart';
 
 /// A factory which can create a [TriggerExecutor] based on the runtime type
 /// of an [TriggerConfiguration].

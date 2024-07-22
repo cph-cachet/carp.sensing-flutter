@@ -106,7 +106,7 @@ import 'package:carp_health_package/health.dart';
 `````
 
 Before creating a study and running it, register this package in the
-[SamplingPackageRegistry](https://pub.dev/documentation/carp_mobile_sensing/latest/runtime/SamplingPackageRegistry-class.html).
+[`SamplingPackageRegistry`](https://pub.dev/documentation/carp_mobile_sensing/latest/runtime/SamplingPackageRegistry-class.html).
 
 `````dart
 SamplingPackageRegistry().register(HealthSamplingPackage());
@@ -149,7 +149,7 @@ Data sampling can now be configured by a measure in the protocol. This measure i
       healthService);
 ```
 
-This would collect health data every hour as specified in the list. Configuration of what data to collect is done via the [`HealthSamplingConfiguration`](https://pub.dev/documentation/carp_health_package/latest/health_package/HealthSamplingConfiguration-class.html) which is used to override the default configuration (default is to collect nothing). The `getHealthMeasure()` factory method is a convenient way to create a `Measure` with the correct `HealthSamplingConfiguration`.
+The health measures are [one-time measures](https://github.com/cph-cachet/carp.sensing-flutter/wiki/A.-Measure-Types#event-based-vs-one-time-measures), which implies that health data is collected when the measure is triggered. In the example above, this happens periodically - once pr. hour. Configuration of what data to collect is done via the [`HealthSamplingConfiguration`](https://pub.dev/documentation/carp_health_package/latest/health_package/HealthSamplingConfiguration-class.html) which is used to override the default configuration (default is to collect nothing). The `getHealthMeasure()` factory method is a convenient way to create a `Measure` with the correct `HealthSamplingConfiguration`.
 
 The `HealthSamplingConfiguration` can be configured to collect a set of [`HealthDataType`](https://pub.dev/documentation/health/latest/health/HealthDataType-class.html) data, like:
 

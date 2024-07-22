@@ -5,7 +5,7 @@
  * found in the LICENSE file.
  */
 
-part of 'sensors.dart';
+part of '../sensors.dart';
 
 /// An abstract sensor probe used by all sensor probes to get the [samplingPeriod].
 ///

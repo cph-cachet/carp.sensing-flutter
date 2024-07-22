@@ -1,6 +1,6 @@
 name: carp_health_package_example
 description: Examples of how to use the CANS Health Package.
-version: 2.6.0
+version: 2.10.0
 publish_to: none
 
 environment:
@@ -13,7 +13,7 @@ dependencies:
 
   carp_serializable: ^1.1.0
   carp_core: ^1.2.0
-  carp_mobile_sensing: ^1.2.0
+  carp_mobile_sensing: ^1.9.0
 
   carp_health_package:
     path: ../

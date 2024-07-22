@@ -11,6 +11,17 @@ part of connectivity;
 /// collect a [Connectivity] data point every time the connectivity state changes.
 class ConnectivityProbe extends StreamProbe {
   @override
+  Future<bool> onStart() async {
+    // collect the current connectivity status on sampling start
+    var connectivityStatus =
+        await connectivity.Connectivity().checkConnectivity();
+    addMeasurement(Measurement.fromData(
+        Connectivity.fromConnectivityResult(connectivityStatus)));
+
+    return super.onStart();
+  }
+
+  @override
   Stream<Measurement> get stream =>
       connectivity.Connectivity().onConnectivityChanged.map((event) =>
           Measurement.fromData(Connectivity.fromConnectivityResult(event)));

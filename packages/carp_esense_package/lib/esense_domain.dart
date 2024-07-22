@@ -5,7 +5,7 @@
  * found in the LICENSE file.
  */
 
-part of esense;
+part of 'esense.dart';
 
 /// Abstract eSense datum class.
 abstract class ESenseData extends Data {

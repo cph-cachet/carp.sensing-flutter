@@ -22,6 +22,29 @@ class NoiseProbe extends BufferingPeriodicStreamProbe {
   @override
   Stream<NoiseReading> get bufferingStream => _noiseMeter.noise;
 
+  // @override
+  // Future<bool> onStart() async {
+  //   // check permission to access the microphone
+
+  //   // Ask for permission before starting probe.
+  //   // Only relevant for Android - on iOS permission is automatically requested.
+  //   var status = Platform.isAndroid
+  //       ? await Permission.microphone.request()
+  //       : PermissionStatus.granted;
+
+  //   return (status == PermissionStatus.granted)
+  //       ? super.onStart()
+  //       : Future.value(false);
+
+  //   // final status = await Permission.microphone.status;
+  //   // if (!status.isGranted) {
+  //   //   warning(
+  //   //       '$runtimeType - Permission not granted to use to microphone: $status - trying to request it');
+  //   //   await Permission.microphone.request();
+  //   // }
+  //   // return super.onStart();
+  // }
+
   @override
   void onSamplingStart() {
     _startRecordingTime = DateTime.now();

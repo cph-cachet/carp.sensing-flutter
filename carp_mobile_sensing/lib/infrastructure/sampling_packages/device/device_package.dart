@@ -5,7 +5,7 @@
  * found in the LICENSE file.
  */
 
-part of 'device.dart';
+part of '../device.dart';
 
 class DeviceSamplingPackage extends SmartphoneSamplingPackage {
   /// Measure type for collection of basic device information like device name,
@@ -17,7 +17,7 @@ class DeviceSamplingPackage extends SmartphoneSamplingPackage {
       '${CarpDataTypes.CARP_NAMESPACE}.deviceinformation';
 
   /// Measure type for collection of free physical and virtual memory.
-  ///  * Interval-based measure.
+  ///  * Event-based measure.
   ///  * Uses the [Smartphone] primary device for data collection.
   ///  * Use [IntervalSamplingConfiguration] for configuration.
   static const String FREE_MEMORY =
@@ -48,10 +48,11 @@ class DeviceSamplingPackage extends SmartphoneSamplingPackage {
   @override
   DataTypeSamplingSchemeMap get samplingSchemes =>
       DataTypeSamplingSchemeMap.from([
-        DataTypeSamplingScheme(DataTypeMetaData(
+        DataTypeSamplingScheme(CamsDataTypeMetaData(
           type: DEVICE_INFORMATION,
           displayName: "Device Information",
           timeType: DataTimeType.POINT,
+          dataEventType: DataEventType.ONE_TIME,
         )),
         DataTypeSamplingScheme(
             DataTypeMetaData(
@@ -72,10 +73,11 @@ class DeviceSamplingPackage extends SmartphoneSamplingPackage {
           displayName: "Screen Events",
           timeType: DataTimeType.POINT,
         )),
-        DataTypeSamplingScheme(DataTypeMetaData(
+        DataTypeSamplingScheme(CamsDataTypeMetaData(
           type: TIMEZONE,
           displayName: "Device Timezone",
           timeType: DataTimeType.POINT,
+          dataEventType: DataEventType.ONE_TIME,
         )),
       ]);
 

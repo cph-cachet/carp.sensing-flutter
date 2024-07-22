@@ -5,7 +5,7 @@
  * found in the LICENSE file.
  */
 
-part of '../runtime.dart';
+part of '../../runtime.dart';
 
 //---------------------------------------------------------------------------------------
 //                                        EXECUTORS
@@ -164,6 +164,7 @@ abstract class AbstractExecutor<TConfig> implements Executor<TConfig> {
       _measurementsController.addError(error, stacktrace);
 
   @override
+  @nonVirtual
   void initialize(TConfig configuration, [SmartphoneDeployment? deployment]) {
     info('Initializing $this');
     _deployment = deployment;
@@ -172,6 +173,7 @@ abstract class AbstractExecutor<TConfig> implements Executor<TConfig> {
   }
 
   @override
+  @nonVirtual
   void start() {
     _isStarting = true;
     info('Starting $this');
@@ -179,23 +181,24 @@ abstract class AbstractExecutor<TConfig> implements Executor<TConfig> {
   }
 
   @override
+  @nonVirtual
   void restart() {
     info('Restarting $this');
     _stateMachine.restart();
   }
 
   @override
+  @nonVirtual
   void stop() {
     info('Stopping $this');
     _stateMachine.stop();
   }
 
   @override
+  @nonVirtual
   void dispose() {
     info('Disposing $this');
-    // stop();
     _stateMachine.dispose();
-    // _measurementsController.close();
   }
 
   void error() => _stateMachine.error();
@@ -397,9 +400,6 @@ class _InitializedState extends _AbstractExecutorState
       executor._isStarting = false;
     });
   }
-
-  @override
-  void restart() => start(); // allow restart, but treat it as a start
 }
 
 class _StartedState extends _AbstractExecutorState {
@@ -445,9 +445,6 @@ class _StoppedState extends _AbstractExecutorState {
       executor._isStarting = false;
     });
   }
-
-  @override
-  void restart() => start();
 }
 
 class _DisposedState extends _AbstractExecutorState

@@ -5,7 +5,7 @@
  * found in the LICENSE file.
  */
 
-part of 'sensors.dart';
+part of '../sensors.dart';
 
 class SensorSamplingPackage extends SmartphoneSamplingPackage {
   /// Rate of change in velocity, including gravity, along perpendicular x, y,
@@ -56,11 +56,6 @@ class SensorSamplingPackage extends SmartphoneSamplingPackage {
   static const String STEP_COUNT = CarpDataTypes.STEP_COUNT_TYPE_NAME;
 
   @override
-  List<Permission> get permissions => [
-        Permission.activityRecognition,
-      ];
-
-  @override
   DataTypeSamplingSchemeMap get samplingSchemes =>
       DataTypeSamplingSchemeMap.from([
         DataTypeSamplingScheme(
@@ -81,7 +76,7 @@ class SensorSamplingPackage extends SmartphoneSamplingPackage {
             IntervalSamplingConfiguration(
                 interval: const Duration(milliseconds: 200))),
         DataTypeSamplingScheme(
-            DataTypeMetaData(
+            CamsDataTypeMetaData(
               type: ACCELERATION_FEATURES,
               displayName: "Accelerometer Features",
               timeType: DataTimeType.TIME_SPAN,
@@ -90,10 +85,13 @@ class SensorSamplingPackage extends SmartphoneSamplingPackage {
               interval: const Duration(minutes: 1),
               duration: const Duration(seconds: 3),
             )),
+        DataTypeSamplingScheme(CamsDataTypeMetaData.fromDataTypeMetaData(
+          dataTypeMetaData:
+              CarpDataTypes().types[CarpDataTypes.STEP_COUNT_TYPE_NAME]!,
+          permissions: [Permission.activityRecognition],
+        )),
         DataTypeSamplingScheme(
-            CarpDataTypes().types[CarpDataTypes.STEP_COUNT_TYPE_NAME]!),
-        DataTypeSamplingScheme(
-            DataTypeMetaData(
+            CamsDataTypeMetaData(
               type: AMBIENT_LIGHT,
               displayName: "Ambient Light",
               timeType: DataTimeType.TIME_SPAN,

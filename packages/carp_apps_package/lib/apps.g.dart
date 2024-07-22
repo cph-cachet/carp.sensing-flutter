@@ -31,11 +31,11 @@ App _$AppFromJson(Map<String, dynamic> json) => App(
       appName: json['appName'] as String?,
       apkFilePath: json['apkFilePath'] as String?,
       versionName: json['versionName'] as String?,
-      versionCode: json['versionCode'] as int?,
+      versionCode: (json['versionCode'] as num?)?.toInt(),
       dataDir: json['dataDir'] as String?,
       systemApp: json['systemApp'] as bool?,
-      installTimeMillis: json['installTimeMillis'] as int?,
-      updateTimeMillis: json['updateTimeMillis'] as int?,
+      installTimeMillis: (json['installTimeMillis'] as num?)?.toInt(),
+      updateTimeMillis: (json['updateTimeMillis'] as num?)?.toInt(),
       category: json['category'] as String?,
       enabled: json['enabled'] as bool?,
     );
@@ -92,7 +92,7 @@ Map<String, dynamic> _$AppUsageToJson(AppUsage instance) {
 AppUsageInfo _$AppUsageInfoFromJson(Map<String, dynamic> json) => AppUsageInfo(
       json['packageName'] as String,
       json['appName'] as String,
-      Duration(microseconds: json['usage'] as int),
+      Duration(microseconds: (json['usage'] as num).toInt()),
       DateTime.parse(json['startDate'] as String),
       DateTime.parse(json['endDate'] as String),
       DateTime.parse(json['lastForeground'] as String),

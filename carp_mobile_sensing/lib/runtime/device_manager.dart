@@ -7,7 +7,7 @@
  * found in the LICENSE file.
  */
 
-part of 'runtime.dart';
+part of '../runtime.dart';
 
 /// A [DeviceManager] handles a hardware device or online service on runtime.
 abstract class DeviceManager<TDeviceConfiguration extends DeviceConfiguration>
@@ -25,15 +25,6 @@ abstract class DeviceManager<TDeviceConfiguration extends DeviceConfiguration>
 
   /// The set of task control executors that use this device manager.
   final Set<TaskControlExecutor> executors = {};
-
-  /// The list of permissions that this device need in order to run.
-  ///
-  /// See [Permission](https://pub.dev/documentation/permission_handler/latest/permission_handler/Permission/values-constant.html)
-  /// for a list of possible permissions.
-  ///
-  /// For Android permission in the Manifest.xml file, see
-  /// [Manifest.permission]https://developer.android.com/reference/kotlin/android/Manifest.permission)
-  List<Permission> get permissions;
 
   DeviceManager(
     super.type, [
@@ -122,14 +113,7 @@ abstract class DeviceManager<TDeviceConfiguration extends DeviceConfiguration>
           '$runtimeType - Checking permissions for device of type: $typeName and id: $id');
       _hasPermissions = true;
 
-      // first check all the listed permissions
-      for (var permission in permissions) {
-        bool isGranted = await permission.isGranted;
-        debug('$runtimeType - Permission of $permission: $isGranted');
-        _hasPermissions = isGranted && _hasPermissions;
-      }
-
-      // then check any device-specific permission
+      // check any device-specific permission
       _hasPermissions = await onHasPermissions() && _hasPermissions;
 
       debug('$runtimeType - Permission of all permissions: $_hasPermissions');
@@ -147,9 +131,6 @@ abstract class DeviceManager<TDeviceConfiguration extends DeviceConfiguration>
   Future<void> requestPermissions() async {
     info(
         '$runtimeType - Requesting permissions for device of type: $typeName and id: $id');
-    for (var permission in permissions) {
-      await permission.request();
-    }
 
     await onRequestPermissions();
   }
@@ -164,6 +145,9 @@ abstract class DeviceManager<TDeviceConfiguration extends DeviceConfiguration>
   /// Returns the [DeviceStatus] of the device.
   @nonVirtual
   Future<DeviceStatus> connect() async {
+    info(
+        '$runtimeType - Trying to connect to device of type: $typeName and id: $id');
+
     if (!isInitialized) {
       warning('$runtimeType has not been initialized - cannot connect to it.');
       return status;
@@ -174,9 +158,6 @@ abstract class DeviceManager<TDeviceConfiguration extends DeviceConfiguration>
           'Call requestPermissions() before calling connect.');
       return status;
     }
-
-    info(
-        '$runtimeType - Trying to connect to device of type: $typeName and id: $id');
 
     try {
       status = await onConnect();
@@ -293,9 +274,6 @@ class SmartphoneDeviceManager extends HardwareDeviceManager<Smartphone> {
   final Set<String> _supportedDataTypes = {};
 
   @override
-  List<Permission> get permissions => [];
-
-  @override
   Set<String> get supportedDataTypes => _supportedDataTypes;
 
   @override
@@ -357,13 +335,6 @@ abstract class BTLEDeviceManager<
   /// Returns empty string if unknown.
   String get btleName => _btleName;
   set btleName(String btleName) => _btleName = btleName;
-
-  @override
-  List<Permission> get permissions => [
-        // Permission.bluetooth,
-        // Permission.bluetoothConnect,
-        // Permission.bluetoothScan,
-      ];
 
   @override
   @mustCallSuper

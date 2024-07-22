@@ -5,7 +5,7 @@
  * found in the LICENSE file.
  */
 
-part of 'infrastructure.dart';
+part of '../infrastructure.dart';
 
 /// Retrieve and store [StudyProtocol] json definitions on the device's local
 /// file system.

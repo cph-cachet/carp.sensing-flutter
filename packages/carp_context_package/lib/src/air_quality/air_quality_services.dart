@@ -47,12 +47,6 @@ class AirQualityServiceManager extends OnlineServiceManager<AirQualityService> {
           : null;
 
   @override
-  List<Permission> get permissions => [
-        // Permission.location,
-        // Permission.locationWhenInUse,
-      ];
-
-  @override
   String get id => configuration?.apiKey ?? 'N/A';
 
   @override

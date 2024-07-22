@@ -25,7 +25,7 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-part of '../runtime.dart';
+part of '../../runtime.dart';
 
 abstract class HasNext<E> {
   /// Find next suitable date

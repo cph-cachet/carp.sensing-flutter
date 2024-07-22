@@ -5,7 +5,7 @@
  * found in the LICENSE file.
  */
 
-part of 'runtime.dart';
+part of '../runtime.dart';
 
 /// A [SmartphoneDeploymentController] controls the execution of a [SmartphoneDeployment].
 class SmartphoneDeploymentController extends StudyRuntime<DeviceRegistration> {
@@ -14,6 +14,7 @@ class SmartphoneDeploymentController extends StudyRuntime<DeviceRegistration> {
   DataEndPoint? _dataEndPoint;
   final SmartphoneDeploymentExecutor _executor = SmartphoneDeploymentExecutor();
   late DataTransformer _transformer;
+  Map<Permission, PermissionStatus>? _permissions;
 
   @override
   SmartphoneDeployment? get deployment =>
@@ -22,6 +23,9 @@ class SmartphoneDeploymentController extends StudyRuntime<DeviceRegistration> {
   @override
   DeviceController get deviceRegistry =>
       super.deviceRegistry as DeviceController;
+
+  /// The permissions granted to this client from the OS.
+  Map<Permission, PermissionStatus> get permissions => _permissions ?? {};
 
   /// The executor executing the [deployment].
   SmartphoneDeploymentExecutor get executor => _executor;
@@ -151,6 +155,54 @@ class SmartphoneDeploymentController extends StudyRuntime<DeviceRegistration> {
     print('===============================================================');
   }
 
+  /// Asking for all permissions needed for the included measures in this
+  /// study deployment.
+  ///
+  /// Should be called before sensing is started.
+  ///
+  /// This method is only relevant on Android, and does nothing on iOS.
+  /// iOS automatically asks for permissions when a resource is accessed.
+  Future<void> askForAllPermissions() async {
+    if (Platform.isIOS) {
+      warning(
+          '$runtimeType - Requesting all permissions at once is not feasible on iOS. Skipping this.');
+      return;
+    }
+
+    Set<Permission> permissions = {};
+
+    for (var measure in deployment!.measures) {
+      var schema = SamplingPackageRegistry().samplingSchemes[measure.type];
+      if (schema != null && schema.dataType is CamsDataTypeMetaData) {
+        permissions
+            .addAll((schema.dataType as CamsDataTypeMetaData).permissions);
+      }
+    }
+
+    debug(
+        '$runtimeType - Required permissions for this deployment: $permissions');
+
+    if (permissions.isNotEmpty) {
+      // Never ask for location permissions.
+      // Will mess it up when requesting multiple permissions at once.
+      permissions
+        ..remove(Permission.location)
+        ..remove(Permission.locationWhenInUse)
+        ..remove(Permission.locationAlways);
+
+      try {
+        info(
+            '$runtimeType - Asking for permissions for all measures in this deployment - status:');
+        _permissions = await permissions.toList().request();
+
+        _permissions?.forEach((permission, status) => info(
+            ' - ${permission.toString().split('.').last} : ${status.name}'));
+      } catch (error) {
+        warning('$runtimeType - Error requesting permissions - error: $error');
+      }
+    }
+  }
+
   /// Initialize all devices in this [deployment].
   void initializeDevices() {
     assert(deployment != null, 'Deployment is null.');
@@ -277,22 +329,24 @@ class SmartphoneDeploymentController extends StudyRuntime<DeviceRegistration> {
   ///
   /// [configure] must be called before starting sampling.
   @override
-  void start([bool start = true]) {
+  Future<void> start([bool start = true]) async {
     info(
         '$runtimeType - Starting data sampling for study deployment: ${deployment?.studyDeploymentId}');
 
+    // ask for permissions for all measures in this deployment
+    if (SmartPhoneClientManager().askForPermissions) {
+      await askForAllPermissions();
+    }
+
     // if this study has not yet been deployed, do this first.
     if (status.index < StudyStatus.Deployed.index) {
-      tryDeployment().then((value) {
-        configure().then((value) {
-          super.start();
-          if (start) _executor.start();
-        });
-      });
-    } else {
+      await tryDeployment();
+      await configure();
       super.start();
       if (start) _executor.start();
     }
+    super.start();
+    if (start) _executor.start();
   }
 
   /// Stop this controller and data sampling.
