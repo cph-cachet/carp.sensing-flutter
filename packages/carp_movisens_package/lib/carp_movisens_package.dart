@@ -1,5 +1,5 @@
 /*
- * Copyright 2019-2022 Copenhagen Center for Health Technology (CACHET) at the
+ * Copyright 2019 Copenhagen Center for Health Technology (CACHET) at the
  * Technical University of Denmark (DTU).
  * Use of this source code is governed by a MIT-style license that can be
  * found in the LICENSE file.
@@ -26,7 +26,6 @@ import 'package:async/async.dart';
 import 'package:movisens_flutter/movisens_flutter.dart' as movisens;
 import 'package:json_annotation/json_annotation.dart';
 import 'package:openmhealth_schemas/openmhealth_schemas.dart' as omh;
-import 'package:permission_handler/permission_handler.dart';
 import 'package:flutter_blue_plus/flutter_blue_plus.dart';
 
 import 'package:carp_serializable/carp_serializable.dart';
@@ -134,9 +133,6 @@ class MovisensSamplingPackage implements SamplingPackage {
 
   @override
   DeviceManager get deviceManager => _deviceManager;
-
-  @override
-  List<Permission> get permissions => []; // no special permissions needed
 
   /// Create a [MovisensProbe].
   @override

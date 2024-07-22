@@ -5,7 +5,7 @@
  * found in the LICENSE file.
  */
 
-part of carp_movisens_package;
+part of 'carp_movisens_package.dart';
 
 /// A [DeviceConfiguration] for a Movisens device used in a [StudyProtocol].
 ///

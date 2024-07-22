@@ -13,7 +13,7 @@ MovisensStepCount _$MovisensStepCountFromJson(Map<String, dynamic> json) =>
       timestamp: json['timestamp'] == null
           ? null
           : DateTime.parse(json['timestamp'] as String),
-      steps: json['steps'] as int,
+      steps: (json['steps'] as num).toInt(),
     )..$type = json['__type'] as String?;
 
 Map<String, dynamic> _$MovisensStepCountToJson(MovisensStepCount instance) {
@@ -69,9 +69,9 @@ MovisensInclination _$MovisensInclinationFromJson(Map<String, dynamic> json) =>
       timestamp: json['timestamp'] == null
           ? null
           : DateTime.parse(json['timestamp'] as String),
-      x: json['x'] as int,
-      y: json['y'] as int,
-      z: json['z'] as int,
+      x: (json['x'] as num).toInt(),
+      y: (json['y'] as num).toInt(),
+      z: (json['z'] as num).toInt(),
     )..$type = json['__type'] as String?;
 
 Map<String, dynamic> _$MovisensInclinationToJson(MovisensInclination instance) {
@@ -128,7 +128,7 @@ MovisensMET _$MovisensMETFromJson(Map<String, dynamic> json) => MovisensMET(
       timestamp: json['timestamp'] == null
           ? null
           : DateTime.parse(json['timestamp'] as String),
-      met: json['met'] as int,
+      met: (json['met'] as num).toInt(),
     )..$type = json['__type'] as String?;
 
 Map<String, dynamic> _$MovisensMETToJson(MovisensMET instance) {
@@ -155,10 +155,10 @@ MovisensMETLevel _$MovisensMETLevelFromJson(Map<String, dynamic> json) =>
       timestamp: json['timestamp'] == null
           ? null
           : DateTime.parse(json['timestamp'] as String),
-      sedentary: json['sedentary'] as int,
-      light: json['light'] as int,
-      moderate: json['moderate'] as int,
-      vigorous: json['vigorous'] as int,
+      sedentary: (json['sedentary'] as num).toInt(),
+      light: (json['light'] as num).toInt(),
+      moderate: (json['moderate'] as num).toInt(),
+      vigorous: (json['vigorous'] as num).toInt(),
     )..$type = json['__type'] as String?;
 
 Map<String, dynamic> _$MovisensMETLevelToJson(MovisensMETLevel instance) {
@@ -187,7 +187,7 @@ MovisensHR _$MovisensHRFromJson(Map<String, dynamic> json) => MovisensHR(
       timestamp: json['timestamp'] == null
           ? null
           : DateTime.parse(json['timestamp'] as String),
-      hr: json['hr'] as int,
+      hr: (json['hr'] as num).toInt(),
     )..$type = json['__type'] as String?;
 
 Map<String, dynamic> _$MovisensHRToJson(MovisensHR instance) {
@@ -213,7 +213,7 @@ MovisensHRV _$MovisensHRVFromJson(Map<String, dynamic> json) => MovisensHRV(
       timestamp: json['timestamp'] == null
           ? null
           : DateTime.parse(json['timestamp'] as String),
-      hrv: json['hrv'] as int,
+      hrv: (json['hrv'] as num).toInt(),
     )..$type = json['__type'] as String?;
 
 Map<String, dynamic> _$MovisensHRVToJson(MovisensHRV instance) {
@@ -322,7 +322,7 @@ MovisensRespiration _$MovisensRespirationFromJson(Map<String, dynamic> json) =>
       timestamp: json['timestamp'] == null
           ? null
           : DateTime.parse(json['timestamp'] as String),
-      value: json['value'] as int,
+      value: (json['value'] as num).toInt(),
     )..$type = json['__type'] as String?;
 
 Map<String, dynamic> _$MovisensRespirationToJson(MovisensRespiration instance) {
@@ -349,7 +349,7 @@ MovisensTapMarker _$MovisensTapMarkerFromJson(Map<String, dynamic> json) =>
       timestamp: json['timestamp'] == null
           ? null
           : DateTime.parse(json['timestamp'] as String),
-      tapMarker: json['tapMarker'] as int,
+      tapMarker: (json['tapMarker'] as num).toInt(),
     )..$type = json['__type'] as String?;
 
 Map<String, dynamic> _$MovisensTapMarkerToJson(MovisensTapMarker instance) {
@@ -377,9 +377,9 @@ MovisensDevice _$MovisensDeviceFromJson(Map<String, dynamic> json) =>
               _$SensorLocationEnumMap, json['sensorLocation']) ??
           SensorLocation.Chest,
       sex: $enumDecodeNullable(_$SexEnumMap, json['sex']) ?? Sex.Male,
-      height: json['height'] as int? ?? 178,
-      weight: json['weight'] as int? ?? 78,
-      age: json['age'] as int? ?? 25,
+      height: (json['height'] as num?)?.toInt() ?? 178,
+      weight: (json['weight'] as num?)?.toInt() ?? 78,
+      age: (json['age'] as num?)?.toInt() ?? 25,
     )
       ..$type = json['__type'] as String?
       ..isOptional = json['isOptional'] as bool?
