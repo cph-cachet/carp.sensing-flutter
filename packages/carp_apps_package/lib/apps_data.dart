@@ -4,7 +4,7 @@
  * Use of this source code is governed by a MIT-style license that can be
  * found in the LICENSE file.
  */
-part of carp_apps_package;
+part of 'apps.dart';
 
 /// Holds a list of names of apps installed on the device.
 @JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)

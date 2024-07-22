@@ -32,6 +32,8 @@ class LocalStudyProtocolManager implements StudyProtocolManager {
     // set the format of the data to upload - e.g. Open mHealth
     ..dataFormat = bloc.dataFormat;
 
+  /// Create a study protocol for a single participant with examples from
+  /// the different sampling packages.
   SmartphoneStudyProtocol getSingleUserStudyProtocol(String name) {
     SmartphoneStudyProtocol protocol = SmartphoneStudyProtocol(
       // Note that CAWS require a UUID for ownerId.
@@ -220,6 +222,10 @@ class LocalStudyProtocolManager implements StudyProtocolManager {
     //       )),
     //     phone);
 
+    //
+    // --------- APP PACKAGE EXAMPLES -------------
+    //
+
     // // Add an automatic task that collects the list of installed apps
     // // and a log of app usage activity
     // protocol.addTaskControl(
@@ -236,6 +242,10 @@ class LocalStudyProtocolManager implements StudyProtocolManager {
     //       )),
     //     phone);
 
+    //
+    // --------- eSENSE PACKAGE EXAMPLES -------------
+    //
+
     // // Define the sSense device and add its measures
     // ESenseDevice eSense = ESenseDevice(
     //   deviceName: 'eSense-0332',
@@ -251,33 +261,41 @@ class LocalStudyProtocolManager implements StudyProtocolManager {
     //     ]),
     //     eSense);
 
+    //
+    // --------- POLAR PACKAGE EXAMPLES -------------
+    //
+
     // define the Polar device and add its measures
-    // var polar = PolarDevice(
-    //   identifier: 'B5FC172F',
-    //   name: 'Polar H10 HR Monitor',
-    //   polarDeviceType: PolarDeviceType.H10,
-    // );
+    var polar = PolarDevice(
+      identifier: 'B5FC172F',
+      name: 'Polar H10 HR Monitor',
+      deviceType: PolarDeviceType.H10,
+    );
     // var polar = PolarDevice(
     //   identifier: 'B36B5B21',
     //   name: 'Polar HR Sense',
     //   deviceType: PolarDeviceType.SENSE,
     // );
 
-    // protocol.addConnectedDevice(polar, phone);
+    protocol.addConnectedDevice(polar, phone);
 
-    // protocol.addTaskControl(
-    //     ImmediateTrigger(),
-    //     BackgroundTask(measures: [
-    //       Measure(type: PolarSamplingPackage.HR),
-    //       // Measure(type: PolarSamplingPackage.ECG),
-    //       // Measure(type: PolarSamplingPackage.PPG),
-    //       // Measure(type: PolarSamplingPackage.PPI),
-    //     ]),
-    //     polar);
+    protocol.addTaskControl(
+        ImmediateTrigger(),
+        BackgroundTask(measures: [
+          Measure(type: PolarSamplingPackage.HR),
+          // Measure(type: PolarSamplingPackage.ECG),
+          // Measure(type: PolarSamplingPackage.PPG),
+          // Measure(type: PolarSamplingPackage.PPI),
+        ]),
+        polar);
 
-    // // Known Movensense devices:
-    // //  - Movesense MD : 220330000122 : 0C:8C:DC:3F:B2:CD
-    // //  - Movesense    : 233830000687 : 0C:8C:DC:1B:23:3E
+    //
+    // --------- MOVESENSE PACKAGE EXAMPLES -------------
+    //
+    // Known DTU Movensense devices:
+    //  - Movesense MD : 220330000122 : 0C:8C:DC:3F:B2:CD
+    //  - Movesense    : 233830000687 : 0C:8C:DC:1B:23:3E
+
     // var movesense = MovesenseDevice(
     //   address: '0C:8C:DC:3F:B2:CD',
     //   name: 'Movesense MD 2203300 00122',
@@ -293,17 +311,6 @@ class LocalStudyProtocolManager implements StudyProtocolManager {
     //       Measure(type: MovesenseSamplingPackage.ECG),
     //     ]),
     //     movesense);
-
-    // // add a measure for ECG monitoring using the Movisens device
-    // protocol.addTaskControl(
-    //   ImmediateTrigger(),
-    //   BackgroundTask(measures: [
-    //     Measure(type: MovisensSamplingPackage.HR),
-    //     Measure(type: MovisensSamplingPackage.ACTIVITY),
-    //     Measure(type: MovisensSamplingPackage.TAP_MARKER),
-    //   ]),
-    //   movisens,
-    // );
 
     //
     // --------- HEALTH PACKAGE EXAMPLES -------------
@@ -332,6 +339,13 @@ class LocalStudyProtocolManager implements StudyProtocolManager {
     return protocol;
   }
 
+  /// Create a study protocol for a family with several participants:
+  ///
+  ///   * father
+  ///   * mother
+  ///   * child
+  ///
+  /// Each participant is configured to sample different measures.
   SmartphoneStudyProtocol getFamilyStudyProtocol(String name) {
     SmartphoneStudyProtocol protocol = SmartphoneStudyProtocol(
       ownerId: 'abc@dtu.dk',
@@ -342,29 +356,36 @@ class LocalStudyProtocolManager implements StudyProtocolManager {
 
     final father = 'Father';
     final mother = 'Mother';
+    final child = 'Child';
 
     // add participant roles
     protocol.addParticipantRole(ParticipantRole(father));
     protocol.addParticipantRole(ParticipantRole(mother));
+    protocol.addParticipantRole(ParticipantRole(child));
 
     // define and assign the primary device(s)
     Smartphone fatherPhone = Smartphone(roleName: "$father's Phone");
     protocol.addPrimaryDevice(fatherPhone);
     Smartphone motherPhone = Smartphone(roleName: "$mother's Phone");
     protocol.addPrimaryDevice(motherPhone);
+    Smartphone childPhone = Smartphone(roleName: "$child's Phone");
+    protocol.addPrimaryDevice(childPhone);
 
     protocol.changeDeviceAssignment(
         fatherPhone, AssignedTo(roleNames: {father}));
     protocol.changeDeviceAssignment(
         motherPhone, AssignedTo(roleNames: {mother}));
+    protocol.changeDeviceAssignment(childPhone, AssignedTo(roleNames: {child}));
 
-    // add expected participant data
+    // add expected participant data for all participants
     protocol.addExpectedParticipantData(ExpectedParticipantData(
         attribute: ParticipantAttribute(inputDataType: SexInput.type)));
     protocol.addExpectedParticipantData(ExpectedParticipantData(
         attribute: ParticipantAttribute(
       inputDataType: InformedConsentInput.type,
     )));
+
+    // add expected participant data for the mother
     protocol.addExpectedParticipantData(ExpectedParticipantData(
         attribute: ParticipantAttribute(inputDataType: NameInput.type),
         assignedTo: AssignedTo(roleNames: {mother})));
@@ -400,20 +421,13 @@ class LocalStudyProtocolManager implements StudyProtocolManager {
           ..addMeasure(Measure(type: ContextSamplingPackage.ACTIVITY)),
         motherPhone);
 
-    // Define the online location service and add it as a 'device'
+    // define the location service and add it as a 'device' to all three participants
     LocationService locationService = LocationService();
     protocol.addConnectedDevice(locationService, fatherPhone);
     protocol.addConnectedDevice(locationService, motherPhone);
+    protocol.addConnectedDevice(locationService, childPhone);
 
-    // Add a background task that collects location on a regular basis
-    protocol.addTaskControl(
-        PeriodicTrigger(period: Duration(minutes: 5)),
-        BackgroundTask(measures: [
-          Measure(type: ContextSamplingPackage.CURRENT_LOCATION),
-        ]),
-        locationService);
-
-    // Add a background task that continuously collects location and mobility
+    // add a background task that continuously collects location and mobility
     protocol.addTaskControl(
         ImmediateTrigger(),
         BackgroundTask(measures: [
@@ -422,43 +436,47 @@ class LocalStudyProtocolManager implements StudyProtocolManager {
         ]),
         locationService);
 
-    // Define the online weather service and add it as a 'device'
+    // define the online weather service and add it to the father's phone
     WeatherService weatherService = WeatherService(apiKey: openWeatherApiKey);
     protocol.addConnectedDevice(weatherService, fatherPhone);
 
-    // Add a background task that collects weather every 30 minutes.
+    // add a background task that collects weather every 30 minutes.
     protocol.addTaskControl(
         PeriodicTrigger(period: Duration(minutes: 30)),
         BackgroundTask()
           ..addMeasure(Measure(type: ContextSamplingPackage.WEATHER)),
         weatherService);
 
-    // Define the online air quality service and add it as a 'device'
+    // define the online air quality service and add it to the mother's phone
     AirQualityService airQualityService =
         AirQualityService(apiKey: airQualityApiKey);
     protocol.addConnectedDevice(airQualityService, motherPhone);
 
-    // Add a background task that air quality every 30 minutes.
+    // add a background task that air quality every 30 minutes.
     protocol.addTaskControl(
         PeriodicTrigger(period: Duration(minutes: 30)),
-        BackgroundTask()
-          ..addMeasure(Measure(type: ContextSamplingPackage.AIR_QUALITY)),
+        BackgroundTask(measures: [
+          Measure(type: ContextSamplingPackage.AIR_QUALITY),
+        ]),
         airQualityService);
 
+    // collect noise from the child's phone
     protocol.addTaskControl(
         ImmediateTrigger(),
-        BackgroundTask()..addMeasure(Measure(type: MediaSamplingPackage.NOISE)),
-        motherPhone);
+        BackgroundTask(measures: [
+          Measure(type: MediaSamplingPackage.NOISE),
+        ]),
+        childPhone);
 
+    // collect connectivity info from the child's phone
     protocol.addTaskControl(
         ImmediateTrigger(),
-        BackgroundTask()
-          ..addMeasures([
-            Measure(type: ConnectivitySamplingPackage.CONNECTIVITY),
-            Measure(type: ConnectivitySamplingPackage.WIFI),
-            Measure(type: ConnectivitySamplingPackage.BLUETOOTH),
-          ]),
-        motherPhone);
+        BackgroundTask(measures: [
+          Measure(type: ConnectivitySamplingPackage.CONNECTIVITY),
+          Measure(type: ConnectivitySamplingPackage.WIFI),
+          Measure(type: ConnectivitySamplingPackage.BLUETOOTH),
+        ]),
+        childPhone);
 
     // // Add an automatic task that collects SMS messages in/out
     // protocol.addTaskControl(
@@ -503,7 +521,7 @@ class LocalStudyProtocolManager implements StudyProtocolManager {
     //       )),
     //     phone);
 
-    // define the sSense device and add its measures
+    // define the eSense device and add it to the mother's phone
     var eSense = ESenseDevice(
       deviceName: 'eSense-0332',
       samplingRate: 10,
@@ -517,7 +535,8 @@ class LocalStudyProtocolManager implements StudyProtocolManager {
           ..addMeasure(Measure(type: ESenseSamplingPackage.ESENSE_SENSOR)),
         eSense);
 
-    // define the Polar device and add its measures
+    // define the Polar device and add it to the father's phone
+
     // PolarDevice polar = PolarDevice(
     //   identifier: 'B5FC172F',
     //   name: 'Polar H10 HR Monitor',

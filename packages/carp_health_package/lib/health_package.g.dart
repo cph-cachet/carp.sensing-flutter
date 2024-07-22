@@ -11,7 +11,7 @@ HealthSamplingConfiguration _$HealthSamplingConfigurationFromJson(
     HealthSamplingConfiguration(
       past: json['past'] == null
           ? null
-          : Duration(microseconds: json['past'] as int),
+          : Duration(microseconds: (json['past'] as num).toInt()),
       healthDataTypes: (json['healthDataTypes'] as List<dynamic>)
           .map((e) => $enumDecode(_$HealthDataTypeEnumMap, e))
           .toList(),
@@ -20,7 +20,7 @@ HealthSamplingConfiguration _$HealthSamplingConfigurationFromJson(
       ..lastTime = json['lastTime'] == null
           ? null
           : DateTime.parse(json['lastTime'] as String)
-      ..future = Duration(microseconds: json['future'] as int);
+      ..future = Duration(microseconds: (json['future'] as num).toInt());
 
 Map<String, dynamic> _$HealthSamplingConfigurationToJson(
     HealthSamplingConfiguration instance) {

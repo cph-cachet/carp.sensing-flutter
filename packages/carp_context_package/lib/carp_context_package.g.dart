@@ -474,4 +474,5 @@ const _$GeolocationAccuracyEnumMap = {
   GeolocationAccuracy.balanced: 'balanced',
   GeolocationAccuracy.high: 'high',
   GeolocationAccuracy.navigation: 'navigation',
+  GeolocationAccuracy.reduced: 'reduced',
 };

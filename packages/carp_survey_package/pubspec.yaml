@@ -18,7 +18,6 @@ dependencies:
   research_package: ^1.4.0
   cognition_package: ^1.5.0
   json_annotation: ^4.8.0
-  permission_handler: ^11.0.0  
 
 
 # Overriding carp libraries to use the local copy

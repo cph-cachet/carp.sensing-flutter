@@ -10,9 +10,9 @@ PolarAccelerometerSample _$PolarAccelerometerSampleFromJson(
         Map<String, dynamic> json) =>
     PolarAccelerometerSample(
       timeStamp: DateTime.parse(json['timeStamp'] as String),
-      x: json['x'] as int,
-      y: json['y'] as int,
-      z: json['z'] as int,
+      x: (json['x'] as num).toInt(),
+      y: (json['y'] as num).toInt(),
+      z: (json['z'] as num).toInt(),
     );
 
 Map<String, dynamic> _$PolarAccelerometerSampleToJson(
@@ -64,7 +64,7 @@ PolarPPGSample _$PolarPPGSampleFromJson(Map<String, dynamic> json) =>
     PolarPPGSample(
       timeStamp: DateTime.parse(json['timeStamp'] as String),
       channelSamples: (json['channelSamples'] as List<dynamic>)
-          .map((e) => e as int)
+          .map((e) => (e as num).toInt())
           .toList(),
     );
 
@@ -76,9 +76,9 @@ Map<String, dynamic> _$PolarPPGSampleToJson(PolarPPGSample instance) =>
 
 PolarPPISample _$PolarPPISampleFromJson(Map<String, dynamic> json) =>
     PolarPPISample(
-      ppi: json['ppi'] as int,
-      errorEstimate: json['errorEstimate'] as int,
-      hr: json['hr'] as int,
+      ppi: (json['ppi'] as num).toInt(),
+      errorEstimate: (json['errorEstimate'] as num).toInt(),
+      hr: (json['hr'] as num).toInt(),
       blockerBit: json['blockerBit'] as bool,
       skinContactStatus: json['skinContactStatus'] as bool,
       skinContactSupported: json['skinContactSupported'] as bool,
@@ -96,8 +96,10 @@ Map<String, dynamic> _$PolarPPISampleToJson(PolarPPISample instance) =>
 
 PolarHRSample _$PolarHRSampleFromJson(Map<String, dynamic> json) =>
     PolarHRSample(
-      hr: json['hr'] as int,
-      rrsMs: (json['rrsMs'] as List<dynamic>).map((e) => e as int).toList(),
+      hr: (json['hr'] as num).toInt(),
+      rrsMs: (json['rrsMs'] as List<dynamic>)
+          .map((e) => (e as num).toInt())
+          .toList(),
       contactStatus: json['contactStatus'] as bool,
       contactStatusSupported: json['contactStatusSupported'] as bool,
     );
@@ -113,7 +115,7 @@ Map<String, dynamic> _$PolarHRSampleToJson(PolarHRSample instance) =>
 PolarECGSample _$PolarECGSampleFromJson(Map<String, dynamic> json) =>
     PolarECGSample(
       timeStamp: DateTime.parse(json['timeStamp'] as String),
-      voltage: json['voltage'] as int,
+      voltage: (json['voltage'] as num).toInt(),
     );
 
 Map<String, dynamic> _$PolarECGSampleToJson(PolarECGSample instance) =>
@@ -328,7 +330,7 @@ PolarDevice _$PolarDeviceFromJson(Map<String, dynamic> json) => PolarDevice(
           : PolarSensorSetting.fromJson(
               json['settings'] as Map<String, dynamic>)
       ..address = json['address'] as String?
-      ..rssi = json['rssi'] as int?;
+      ..rssi = (json['rssi'] as num?)?.toInt();
 
 Map<String, dynamic> _$PolarDeviceToJson(PolarDevice instance) {
   final val = <String, dynamic>{};

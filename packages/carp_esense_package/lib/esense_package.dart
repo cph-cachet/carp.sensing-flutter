@@ -5,7 +5,7 @@
  * found in the LICENSE file.
  */
 
-part of esense;
+part of 'esense.dart';
 
 /// The eSense sampling package supporting the following measures:
 ///
@@ -40,11 +40,11 @@ part of esense;
 class ESenseSamplingPackage implements SamplingPackage {
   static const String ESENSE_NAMESPACE = "${NameSpace.CARP}.esense";
 
-  /// Measure type for continous collection of eSense button events (pressed/released).
+  /// Measure type for continuous collection of eSense button events (pressed/released).
   static const String ESENSE_BUTTON = "$ESENSE_NAMESPACE.button";
 
-  /// Measure type for continous collection of eSense sensor events
-  /// (accelorometer & gyroscope).
+  /// Measure type for continuous collection of eSense sensor events
+  /// (accelerometer & gyroscope).
   static const String ESENSE_SENSOR = "$ESENSE_NAMESPACE.sensor";
 
   final DeviceManager _deviceManager =
@@ -69,16 +69,11 @@ class ESenseSamplingPackage implements SamplingPackage {
   List<DataTypeMetaData> get dataTypes => samplingSchemes.dataTypes;
 
   @override
-  Probe? create(String type) {
-    switch (type) {
-      case ESENSE_BUTTON:
-        return ESenseButtonProbe();
-      case ESENSE_SENSOR:
-        return ESenseSensorProbe();
-      default:
-        return null;
-    }
-  }
+  Probe? create(String type) => switch (type) {
+        ESENSE_BUTTON => ESenseButtonProbe(),
+        ESENSE_SENSOR => ESenseSensorProbe(),
+        _ => null,
+      };
 
   @override
   void onRegister() {
@@ -90,9 +85,6 @@ class ESenseSamplingPackage implements SamplingPackage {
       ESenseSensor(deviceName: 'deviceName'),
     ]);
   }
-
-  @override
-  List<Permission> get permissions => [];
 
   @override
   String get deviceType => ESenseDevice.DEVICE_TYPE;

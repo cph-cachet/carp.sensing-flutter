@@ -1,4 +1,4 @@
-part of carp_apps_package;
+part of 'apps.dart';
 
 class AppsSamplingPackage extends SmartphoneSamplingPackage {
   /// Measure type for one-time collection of apps installed on this phone.
@@ -17,16 +17,18 @@ class AppsSamplingPackage extends SmartphoneSamplingPackage {
   @override
   DataTypeSamplingSchemeMap get samplingSchemes =>
       DataTypeSamplingSchemeMap.from([
-        DataTypeSamplingScheme(DataTypeMetaData(
+        DataTypeSamplingScheme(CAMSDataTypeMetaData(
           type: APPS,
           displayName: "Installed Apps",
           timeType: DataTimeType.POINT,
+          dataEventType: DataEventType.ONE_TIME,
         )),
         DataTypeSamplingScheme(
-            DataTypeMetaData(
+            CAMSDataTypeMetaData(
               type: APP_USAGE,
               displayName: "App Usage",
               timeType: DataTimeType.TIME_SPAN,
+              dataEventType: DataEventType.ONE_TIME,
             ),
             HistoricSamplingConfiguration(
               future: Duration.zero,
@@ -35,25 +37,15 @@ class AppsSamplingPackage extends SmartphoneSamplingPackage {
       ]);
 
   @override
-  Probe? create(String type) {
-    switch (type) {
-      case APPS:
-        return (Platform.isAndroid) ? AppsProbe() : null;
-      case APP_USAGE:
-        return (Platform.isAndroid) ? AppUsageProbe() : null;
-      default:
-        return null;
-    }
-  }
+  Probe? create(String type) => switch (type) {
+        APPS => (Platform.isAndroid) ? AppsProbe() : null,
+        APP_USAGE => (Platform.isAndroid) ? AppUsageProbe() : null,
+        _ => null,
+      };
 
   @override
-  List<Permission> get permissions => []; // no permission needed
-
-  @override
-  void onRegister() {
-    FromJsonFactory().registerAll([
-      Apps([]),
-      AppUsage(DateTime.now(), DateTime.now()),
-    ]);
-  }
+  void onRegister() => FromJsonFactory().registerAll([
+        Apps([]),
+        AppUsage(DateTime.now(), DateTime.now()),
+      ]);
 }

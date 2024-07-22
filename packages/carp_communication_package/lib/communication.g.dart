@@ -29,10 +29,10 @@ Map<String, dynamic> _$TextMessageLogToJson(TextMessageLog instance) {
 }
 
 TextMessage _$TextMessageFromJson(Map<String, dynamic> json) => TextMessage(
-      id: json['id'] as int?,
+      id: (json['id'] as num?)?.toInt(),
       address: json['address'] as String?,
       body: json['body'] as String?,
-      size: json['size'] as int?,
+      size: (json['size'] as num?)?.toInt(),
       read: json['read'] as bool?,
       date:
           json['date'] == null ? null : DateTime.parse(json['date'] as String),
@@ -112,7 +112,7 @@ PhoneCall _$PhoneCallFromJson(Map<String, dynamic> json) => PhoneCall(
           ? null
           : DateTime.parse(json['timestamp'] as String),
       json['callType'] as String?,
-      json['duration'] as int?,
+      (json['duration'] as num?)?.toInt(),
       json['formattedNumber'] as String?,
       json['number'] as String?,
       json['name'] as String?,

@@ -42,7 +42,6 @@ library carp_polar_package;
 
 import 'dart:async';
 import 'package:json_annotation/json_annotation.dart';
-import 'package:permission_handler/permission_handler.dart';
 import 'package:polar/polar.dart';
 
 import 'package:carp_serializable/carp_serializable.dart';
@@ -190,14 +189,6 @@ class PolarSamplingPackage implements SamplingPackage {
 
   @override
   DeviceManager get deviceManager => _deviceManager;
-
-  @override
-  List<Permission> get permissions => [
-        Permission.location,
-        Permission.bluetooth,
-        Permission.bluetoothConnect,
-        Permission.bluetoothScan,
-      ];
 
   @override
   Probe? create(String type) {

@@ -15,10 +15,10 @@ RPAppTask _$RPAppTaskFromJson(Map<String, dynamic> json) => RPAppTask(
       title: json['title'] as String? ?? '',
       description: json['description'] as String? ?? '',
       instructions: json['instructions'] as String? ?? '',
-      minutesToComplete: json['minutesToComplete'] as int?,
+      minutesToComplete: (json['minutesToComplete'] as num?)?.toInt(),
       expire: json['expire'] == null
           ? null
-          : Duration(microseconds: json['expire'] as int),
+          : Duration(microseconds: (json['expire'] as num).toInt()),
       notification: json['notification'] as bool? ?? false,
       rpTask: RPTask.fromJson(json['rpTask'] as Map<String, dynamic>),
     )..$type = json['__type'] as String?;

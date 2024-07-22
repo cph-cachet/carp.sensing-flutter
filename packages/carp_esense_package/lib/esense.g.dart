@@ -34,9 +34,13 @@ ESenseSensor _$ESenseSensorFromJson(Map<String, dynamic> json) => ESenseSensor(
       timestamp: json['timestamp'] == null
           ? null
           : DateTime.parse(json['timestamp'] as String),
-      packetIndex: json['packet_index'] as int?,
-      accel: (json['accel'] as List<dynamic>?)?.map((e) => e as int).toList(),
-      gyro: (json['gyro'] as List<dynamic>?)?.map((e) => e as int).toList(),
+      packetIndex: (json['packet_index'] as num?)?.toInt(),
+      accel: (json['accel'] as List<dynamic>?)
+          ?.map((e) => (e as num).toInt())
+          .toList(),
+      gyro: (json['gyro'] as List<dynamic>?)
+          ?.map((e) => (e as num).toInt())
+          .toList(),
     )..$type = json['__type'] as String?;
 
 Map<String, dynamic> _$ESenseSensorToJson(ESenseSensor instance) {
@@ -61,7 +65,7 @@ ESenseDevice _$ESenseDeviceFromJson(Map<String, dynamic> json) => ESenseDevice(
       roleName: json['roleName'] as String? ?? ESenseDevice.DEFAULT_ROLENAME,
       isOptional: json['isOptional'] as bool? ?? true,
       deviceName: json['deviceName'] as String?,
-      samplingRate: json['samplingRate'] as int? ?? 10,
+      samplingRate: (json['samplingRate'] as num?)?.toInt() ?? 10,
     )
       ..$type = json['__type'] as String?
       ..defaultSamplingConfiguration =

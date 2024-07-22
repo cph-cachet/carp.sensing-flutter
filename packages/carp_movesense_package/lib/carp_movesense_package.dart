@@ -95,25 +95,18 @@ class MovesenseSamplingPackage implements SamplingPackage {
   String get deviceType => MovesenseDevice.DEVICE_TYPE;
 
   @override
-  Probe? create(String type) {
-    switch (type) {
-      case STATE:
-        return MovesenseStateChangeProbe();
-      case HR:
-        return MovesenseHRProbe();
-      case ECG:
-        return MovesenseECGProbe();
-      case TEMPERATURE:
+  Probe? create(String type) => switch (type) {
+        STATE => MovesenseStateChangeProbe(),
+        HR => MovesenseHRProbe(),
+        ECG => MovesenseECGProbe(),
         // only the MD device supports temperature
-        return deviceManager.configuration?.deviceType == MovesenseDeviceType.MD
-            ? MovesenseTemperatureProbe()
-            : null;
-      case IMU:
-        return MovesenseIMUProbe();
-      default:
-        return null;
-    }
-  }
+        TEMPERATURE =>
+          deviceManager.configuration?.deviceType == MovesenseDeviceType.MD
+              ? MovesenseTemperatureProbe()
+              : null,
+        IMU => MovesenseIMUProbe(),
+        _ => null,
+      };
 
   @override
   void onRegister() {
