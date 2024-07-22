@@ -1,3 +1,7 @@
+## 1.9.0
+
+- Support for handling permission on a Measure level [#407](https://github.com/cph-cachet/carp.sensing-flutter/issues/407).
+
 ## 1.8.2
 
 - Fix of [#408](https://github.com/cph-cachet/carp.sensing-flutter/issues/408)

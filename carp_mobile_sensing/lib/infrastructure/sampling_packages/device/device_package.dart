@@ -48,7 +48,7 @@ class DeviceSamplingPackage extends SmartphoneSamplingPackage {
   @override
   DataTypeSamplingSchemeMap get samplingSchemes =>
       DataTypeSamplingSchemeMap.from([
-        DataTypeSamplingScheme(CAMSDataTypeMetaData(
+        DataTypeSamplingScheme(CamsDataTypeMetaData(
           type: DEVICE_INFORMATION,
           displayName: "Device Information",
           timeType: DataTimeType.POINT,
@@ -73,7 +73,7 @@ class DeviceSamplingPackage extends SmartphoneSamplingPackage {
           displayName: "Screen Events",
           timeType: DataTimeType.POINT,
         )),
-        DataTypeSamplingScheme(CAMSDataTypeMetaData(
+        DataTypeSamplingScheme(CamsDataTypeMetaData(
           type: TIMEZONE,
           displayName: "Device Timezone",
           timeType: DataTimeType.POINT,

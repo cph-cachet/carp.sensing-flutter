@@ -17,7 +17,7 @@ enum DataEventType {
 }
 
 /// Contains meta data about a specific data type to be collected.
-class CAMSDataTypeMetaData extends DataTypeMetaData {
+class CamsDataTypeMetaData extends DataTypeMetaData {
   /// How a data type is collected (one-time or event-based).
   DataEventType dataEventType;
 
@@ -39,7 +39,7 @@ class CAMSDataTypeMetaData extends DataTypeMetaData {
   /// Default [timeType] is [DataTimeType.POINT],
   /// default [dataEventType] is [DataEventType.EVENT], and
   /// default [permissions] is empty (no permissions required).
-  CAMSDataTypeMetaData({
+  CamsDataTypeMetaData({
     required super.type,
     super.displayName,
     super.timeType,
@@ -50,7 +50,7 @@ class CAMSDataTypeMetaData extends DataTypeMetaData {
   /// Create a new description of a data type based on the [dataTypeMetaData].
   /// Default [dataEventType] is [DataEventType.EVENT], and
   /// default [permissions] is empty (no permissions required).
-  CAMSDataTypeMetaData.fromDataTypeMetaData({
+  CamsDataTypeMetaData.fromDataTypeMetaData({
     required DataTypeMetaData dataTypeMetaData,
     this.dataEventType = DataEventType.EVENT,
     this.permissions = const [],

@@ -69,8 +69,8 @@ abstract class Probe extends AbstractExecutor<Measure> {
   List<Permission> get permissions {
     if (_permissions == null) {
       var schema = SamplingPackageRegistry().samplingSchemes[type];
-      _permissions = (schema != null && schema.dataType is CAMSDataTypeMetaData)
-          ? (schema.dataType as CAMSDataTypeMetaData).permissions
+      _permissions = (schema != null && schema.dataType is CamsDataTypeMetaData)
+          ? (schema.dataType as CamsDataTypeMetaData).permissions
           : [];
     }
     return _permissions!;

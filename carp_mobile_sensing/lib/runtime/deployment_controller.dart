@@ -173,9 +173,9 @@ class SmartphoneDeploymentController extends StudyRuntime<DeviceRegistration> {
 
     for (var measure in deployment!.measures) {
       var schema = SamplingPackageRegistry().samplingSchemes[measure.type];
-      if (schema != null && schema.dataType is CAMSDataTypeMetaData) {
+      if (schema != null && schema.dataType is CamsDataTypeMetaData) {
         permissions
-            .addAll((schema.dataType as CAMSDataTypeMetaData).permissions);
+            .addAll((schema.dataType as CamsDataTypeMetaData).permissions);
       }
     }
 

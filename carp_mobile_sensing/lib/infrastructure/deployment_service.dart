@@ -144,7 +144,7 @@ class SmartphoneDeploymentService implements DeploymentService {
 
     if (device is! PrimaryDeviceConfiguration) {
       warning(
-          "The specified device with rolename '$primaryDeviceRoleName' is not a primary device.");
+          "The specified device with role name '$primaryDeviceRoleName' is not a primary device.");
       return null;
     }
     deployment.deviceDeployed(device, deviceDeploymentLastUpdatedOn);

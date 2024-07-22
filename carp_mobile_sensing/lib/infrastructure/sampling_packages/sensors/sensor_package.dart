@@ -76,7 +76,7 @@ class SensorSamplingPackage extends SmartphoneSamplingPackage {
             IntervalSamplingConfiguration(
                 interval: const Duration(milliseconds: 200))),
         DataTypeSamplingScheme(
-            CAMSDataTypeMetaData(
+            CamsDataTypeMetaData(
               type: ACCELERATION_FEATURES,
               displayName: "Accelerometer Features",
               timeType: DataTimeType.TIME_SPAN,
@@ -85,13 +85,13 @@ class SensorSamplingPackage extends SmartphoneSamplingPackage {
               interval: const Duration(minutes: 1),
               duration: const Duration(seconds: 3),
             )),
-        DataTypeSamplingScheme(CAMSDataTypeMetaData.fromDataTypeMetaData(
+        DataTypeSamplingScheme(CamsDataTypeMetaData.fromDataTypeMetaData(
           dataTypeMetaData:
               CarpDataTypes().types[CarpDataTypes.STEP_COUNT_TYPE_NAME]!,
           permissions: [Permission.activityRecognition],
         )),
         DataTypeSamplingScheme(
-            CAMSDataTypeMetaData(
+            CamsDataTypeMetaData(
               type: AMBIENT_LIGHT,
               displayName: "Ambient Light",
               timeType: DataTimeType.TIME_SPAN,

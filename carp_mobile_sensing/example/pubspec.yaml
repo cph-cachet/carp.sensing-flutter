@@ -1,7 +1,7 @@
 name: carp_mobile_sensing_example
 description: Examples of how to use the carp_mobile_sensing framework.
 publish_to: 'none'
-version: 1.6.0
+version: 1.9.0
 
 environment:
   sdk: ">=3.2.0 <4.0.0"
