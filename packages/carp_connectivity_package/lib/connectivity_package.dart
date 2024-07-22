@@ -24,14 +24,14 @@ class ConnectivitySamplingPackage extends SmartphoneSamplingPackage {
   DataTypeSamplingSchemeMap get samplingSchemes =>
       DataTypeSamplingSchemeMap.from([
         DataTypeSamplingScheme(
-          CAMSDataTypeMetaData(
+          CamsDataTypeMetaData(
             type: CONNECTIVITY,
             displayName: "Connectivity Status",
             timeType: DataTimeType.POINT,
           ),
         ),
         DataTypeSamplingScheme(
-            CAMSDataTypeMetaData(
+            CamsDataTypeMetaData(
               type: BLUETOOTH,
               displayName: "Bluetooth Scan of Nearby Devices",
               timeType: DataTimeType.TIME_SPAN,
@@ -42,7 +42,7 @@ class ConnectivitySamplingPackage extends SmartphoneSamplingPackage {
               duration: const Duration(seconds: 10),
             )),
         DataTypeSamplingScheme(
-            CAMSDataTypeMetaData(
+            CamsDataTypeMetaData(
               type: WIFI,
               displayName: "Wifi Connectivity Status",
               timeType: DataTimeType.POINT,

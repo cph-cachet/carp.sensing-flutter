@@ -35,7 +35,7 @@ class MediaSamplingPackage extends SmartphoneSamplingPackage {
   DataTypeSamplingSchemeMap get samplingSchemes =>
       DataTypeSamplingSchemeMap.from([
         DataTypeSamplingScheme(
-          CAMSDataTypeMetaData(
+          CamsDataTypeMetaData(
             type: AUDIO,
             displayName: "Audio Recording",
             timeType: DataTimeType.TIME_SPAN,
@@ -44,7 +44,7 @@ class MediaSamplingPackage extends SmartphoneSamplingPackage {
           ),
         ),
         DataTypeSamplingScheme(
-          CAMSDataTypeMetaData(
+          CamsDataTypeMetaData(
             type: VIDEO,
             displayName: "Video Recording",
             timeType: DataTimeType.TIME_SPAN,
@@ -53,7 +53,7 @@ class MediaSamplingPackage extends SmartphoneSamplingPackage {
           ),
         ),
         DataTypeSamplingScheme(
-          CAMSDataTypeMetaData(
+          CamsDataTypeMetaData(
             type: IMAGE,
             displayName: "Image Capture",
             timeType: DataTimeType.POINT,
@@ -62,7 +62,7 @@ class MediaSamplingPackage extends SmartphoneSamplingPackage {
           ),
         ),
         DataTypeSamplingScheme(
-            CAMSDataTypeMetaData(
+            CamsDataTypeMetaData(
               type: NOISE,
               displayName: "Noise Recording",
               timeType: DataTimeType.TIME_SPAN,

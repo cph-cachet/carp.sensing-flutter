@@ -51,7 +51,7 @@ class CommunicationSamplingPackage extends SmartphoneSamplingPackage {
   DataTypeSamplingSchemeMap get samplingSchemes =>
       DataTypeSamplingSchemeMap.from([
         DataTypeSamplingScheme(
-            CAMSDataTypeMetaData(
+            CamsDataTypeMetaData(
               type: PHONE_LOG,
               displayName: "Phone Log",
               timeType: DataTimeType.TIME_SPAN,
@@ -63,7 +63,7 @@ class CommunicationSamplingPackage extends SmartphoneSamplingPackage {
               future: const Duration(days: 1),
             )),
         DataTypeSamplingScheme(
-            CAMSDataTypeMetaData(
+            CamsDataTypeMetaData(
               type: TEXT_MESSAGE_LOG,
               displayName: "Text Message Log",
               timeType: DataTimeType.TIME_SPAN,
@@ -74,7 +74,7 @@ class CommunicationSamplingPackage extends SmartphoneSamplingPackage {
               past: const Duration(days: 1),
               future: const Duration(days: 1),
             )),
-        DataTypeSamplingScheme(CAMSDataTypeMetaData(
+        DataTypeSamplingScheme(CamsDataTypeMetaData(
           type: TEXT_MESSAGE,
           displayName: "Text Messages",
           timeType: DataTimeType.POINT,
@@ -82,7 +82,7 @@ class CommunicationSamplingPackage extends SmartphoneSamplingPackage {
           permissions: [Permission.phone],
         )),
         DataTypeSamplingScheme(
-            CAMSDataTypeMetaData(
+            CamsDataTypeMetaData(
               type: CALENDAR,
               displayName: "Calendar Entries",
               timeType: DataTimeType.TIME_SPAN,

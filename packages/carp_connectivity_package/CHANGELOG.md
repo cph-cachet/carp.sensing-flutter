@@ -1,3 +1,7 @@
+## 1.6.0
+
+* upgrading to carp_mobile_sensing v. 1.9.0 (better permission handling)
+
 ## 1.5.0
 
 * upgrade to network_info_plus: ^5.0.0
@@ -10,7 +14,7 @@
 
 ## 1.3.2
 
-* fix of [Issue [#339](https://github.com/cph-cachet/carp.sensing-flutter/issues/339).
+* fix of Issue [#339](https://github.com/cph-cachet/carp.sensing-flutter/issues/339).
 * `bluetoothDeviceType` no longer available from underlying BLE API.
 
 ## 1.3.0

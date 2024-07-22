@@ -1,3 +1,8 @@
+## 2.10.0
+
+* upgrading to carp_mobile_sensing v. 1.9.0 (better permission handling)
+* upgrading to health v. 10.x
+
 ## 2.9.4
 
 * update to `health` v. 9.x

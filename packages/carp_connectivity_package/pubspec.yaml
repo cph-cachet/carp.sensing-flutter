@@ -1,6 +1,6 @@
 name: carp_connectivity_package
 description: CARP connectivity sampling package. Samples connectivity status, bluetooth devices, and wifi access points.
-version: 1.5.0
+version: 1.6.0
 homepage: https://github.com/cph-cachet/carp.sensing-flutter/tree/master/packages/carp_connectivity_package
 
 environment:
@@ -13,7 +13,7 @@ dependencies:
 
   carp_serializable: ^1.1.0
   carp_core: ^1.4.0
-  # carp_mobile_sensing: ^1.4.0
+  carp_mobile_sensing: ^1.9.0
  
   json_annotation: ^4.8.0
   connectivity_plus: ^6.0.0    # connectivity events
@@ -29,8 +29,8 @@ dependencies:
 #     path: ../../carp_serializable/
 #   carp_core:
 #     path: ../../carp_core/
-  carp_mobile_sensing:
-    path: ../../carp_mobile_sensing/
+  # carp_mobile_sensing:
+  #   path: ../../carp_mobile_sensing/
 
 dev_dependencies:
   flutter_lints: any

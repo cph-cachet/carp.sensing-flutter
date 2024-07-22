@@ -17,14 +17,14 @@ class AppsSamplingPackage extends SmartphoneSamplingPackage {
   @override
   DataTypeSamplingSchemeMap get samplingSchemes =>
       DataTypeSamplingSchemeMap.from([
-        DataTypeSamplingScheme(CAMSDataTypeMetaData(
+        DataTypeSamplingScheme(CamsDataTypeMetaData(
           type: APPS,
           displayName: "Installed Apps",
           timeType: DataTimeType.POINT,
           dataEventType: DataEventType.ONE_TIME,
         )),
         DataTypeSamplingScheme(
-            CAMSDataTypeMetaData(
+            CamsDataTypeMetaData(
               type: APP_USAGE,
               displayName: "App Usage",
               timeType: DataTimeType.TIME_SPAN,

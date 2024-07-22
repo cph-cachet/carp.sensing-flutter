@@ -66,7 +66,7 @@ class ContextSamplingPackage extends SmartphoneSamplingPackage {
   DataTypeSamplingSchemeMap get samplingSchemes =>
       DataTypeSamplingSchemeMap.from([
         DataTypeSamplingScheme(
-          CAMSDataTypeMetaData(
+          CamsDataTypeMetaData(
             type: ACTIVITY,
             displayName: "Activity",
             timeType: DataTimeType.POINT,
@@ -132,7 +132,7 @@ class LocationSamplingPackage extends SmartphoneSamplingPackage {
   @override
   DataTypeSamplingSchemeMap get samplingSchemes =>
       DataTypeSamplingSchemeMap.from([
-        DataTypeSamplingScheme(CAMSDataTypeMetaData(
+        DataTypeSamplingScheme(CamsDataTypeMetaData(
           type: ContextSamplingPackage.CURRENT_LOCATION,
           displayName: "Current Location",
           timeType: DataTimeType.POINT,

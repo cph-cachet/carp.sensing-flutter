@@ -346,6 +346,9 @@ class LocalStudyProtocolManager implements StudyProtocolManager {
   ///   * child
   ///
   /// Each participant is configured to sample different measures.
+  ///
+  /// Also illustrates how to add [ExpectedParticipantData]
+  /// to a study protocol.
   SmartphoneStudyProtocol getFamilyStudyProtocol(String name) {
     SmartphoneStudyProtocol protocol = SmartphoneStudyProtocol(
       ownerId: 'abc@dtu.dk',

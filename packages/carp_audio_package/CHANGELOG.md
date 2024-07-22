@@ -1,3 +1,7 @@
+## 1.6.0
+
+* upgrading to carp_mobile_sensing v. 1.9.0 (better permission handling)
+
 ## 1.5.0
 
 * update to `carp_mobile_sensing` v. 1.6.0

@@ -1,3 +1,7 @@
+## 1.5.0
+
+* upgrading to carp_mobile_sensing v. 1.9.0 (better permission handling)
+
 ## 1.4.5
 
 * upgrade of plugin versions

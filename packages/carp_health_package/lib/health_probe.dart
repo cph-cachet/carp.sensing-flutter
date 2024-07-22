@@ -1,4 +1,4 @@
-part of health_package;
+part of 'health_package.dart';
 
 /// A probe collecting health data from Apple Health or Google Health Connect.
 ///
@@ -89,9 +89,9 @@ class HealthProbe extends StreamProbe {
       try {
         List<HealthDataPoint>? data =
             await deviceManager.service?.getHealthDataFromTypes(
-                  start,
-                  end,
-                  healthDataTypes,
+                  startTime: start,
+                  endTime: end,
+                  types: healthDataTypes,
                 ) ??
                 [];
         debug(
