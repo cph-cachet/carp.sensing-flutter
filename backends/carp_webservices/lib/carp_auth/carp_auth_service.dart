@@ -15,8 +15,8 @@ class CarpAuthService extends CarpAuthBaseService {
   /// If `true`, the authenticated user is [currentUser].
   bool get authenticated => (_currentUser != null);
 
-  OidcUserManager? _manager;
-  OidcUserManager? get manager => _manager;
+  CarpOidcUserManager? _manager;
+  CarpOidcUserManager? get manager => _manager;
 
   @override
   CarpAuthProperties get authProperties => nonNullAble(_authProperties);
@@ -38,7 +38,7 @@ class CarpAuthService extends CarpAuthBaseService {
 
   @override
   Future<void> configure(CarpAuthProperties authProperties) async {
-    _manager = OidcUserManager.lazy(
+    _manager = CarpOidcUserManager.lazy(
       discoveryDocumentUri: OidcUtils.getOpenIdConfigWellKnownUri(
         Uri.parse(authProperties.discoveryURL.toString()),
       ),
@@ -109,6 +109,10 @@ class CarpAuthService extends CarpAuthBaseService {
       httpStatus: HTTPStatus(401),
       message: 'Authentication failed.',
     );
+  }
+
+  Future<void> authenticateWithSessionState({required String uri}) async {
+    _manager!.handleAuthorizeResponseFromMagicLink(url: uri);
   }
 
   /// Authenticate to this CARP service using a [username] and [password].

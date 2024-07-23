@@ -18,6 +18,7 @@ import 'package:oidc_default_store/oidc_default_store.dart';
 part 'oauth.dart';
 part 'carp_user.dart';
 part 'carp_auth.g.dart';
+part 'carp_auth_manager.dart';
 part 'carp_auth_base_service.dart';
 part 'carp_auth_properties.dart';
 part 'carp_auth_service.dart';
