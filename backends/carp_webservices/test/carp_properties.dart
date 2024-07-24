@@ -17,7 +17,7 @@ class CarpProperties {
   CarpAuthProperties get authProperties => CarpAuthProperties(
         authURL: uri,
         clientId: 'studies-app',
-        redirectURI: Uri.parse('carp-studies-auth://auth'),
+        redirectURI: Uri.parse('dk.cachet.example://auth'),
         // For authentication at CAWS the path is '/auth/realms/Carp'
         discoveryURL: uri.replace(pathSegments: [
           'auth',

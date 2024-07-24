@@ -3,7 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:carp_webservices/carp_services/carp_services.dart';
 import 'package:carp_webservices/carp_auth/carp_auth.dart';
 import 'package:carp_core/carp_core.dart';
+import 'package:flutter/services.dart';
 import 'package:oidc/oidc.dart';
+import 'package:uni_links/uni_links.dart';
 
 void main() {
   CarpMobileSensing.ensureInitialized();
@@ -28,6 +30,35 @@ class _HomePageState extends State<HomePage> {
   void initState() {
     super.initState();
     bloc.init();
+    _initUniLinks();
+  }
+
+  void _initUniLinks() async {
+    // Get initial link
+    try {
+      final initialLink = await getInitialLink();
+      if (initialLink != null) {
+        _handleIncomingLink(initialLink);
+      }
+    } on PlatformException {
+      // Handle exception
+    }
+
+    // Listen for incoming links
+    linkStream.listen((String? link) {
+      if (link != null) {
+        _handleIncomingLink(link);
+      }
+    });
+  }
+
+  Future<void> _handleIncomingLink(String link) async {
+    Uri uri = Uri.parse(link);
+    if (uri.host == 'auth') {
+      // Navigate to the auth callback route with query parameters
+      // feed it into the oidc manager
+      await CarpAuthService().authenticateWithSessionState(uri: link);
+    }
   }
 
   void dispose() {
@@ -110,7 +141,7 @@ class AppBLoC {
   late CarpAuthProperties authProperties = CarpAuthProperties(
     authURL: uri,
     clientId: 'studies-app',
-    redirectURI: Uri.parse('carp-studies-auth://auth'),
+    redirectURI: Uri.parse('dk.cachet.example://auth'),
     // For authentication at CAWS the path is '/auth/realms/Carp'
     discoveryURL: uri.replace(pathSegments: [
       'auth',

@@ -19,7 +19,7 @@
         <action android:name="android.intent.action.VIEW" />
         <category android:name="android.intent.category.DEFAULT" />
         <category android:name="android.intent.category.BROWSABLE" />
-        <data android:scheme="carp-studies-auth" android:pathPrefix="/auth" />
+        <data android:scheme="dk.cachet.example" android:pathPrefix="/auth" />
       </intent-filter>
       <intent-filter>
         <action android:name="android.intent.action.VIEW" />
