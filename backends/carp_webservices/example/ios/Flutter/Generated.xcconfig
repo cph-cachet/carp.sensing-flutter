@@ -2,14 +2,13 @@
 FLUTTER_ROOT=/Users/shady/flutter
 FLUTTER_APPLICATION_PATH=/Users/shady/Git/work/carp.sensing-flutter/backends/carp_webservices/example
 COCOAPODS_PARALLEL_CODE_SIGN=true
-FLUTTER_TARGET=/Users/shady/Git/work/carp.sensing-flutter/backends/carp_webservices/example/lib/main.dart
+FLUTTER_TARGET=lib/main.dart
 FLUTTER_BUILD_DIR=build
 FLUTTER_BUILD_NAME=1.1.0
 FLUTTER_BUILD_NUMBER=1.1.0
 EXCLUDED_ARCHS[sdk=iphonesimulator*]=i386
 EXCLUDED_ARCHS[sdk=iphoneos*]=armv7
-DART_DEFINES=RkxVVFRFUl9XRUJfQ0FOVkFTS0lUX1VSTD1odHRwczovL3d3dy5nc3RhdGljLmNvbS9mbHV0dGVyLWNhbnZhc2tpdC8yMzVkYjkxMWJhMjc5NzIyZjVlNjg1ZjM4YjBlZDMwZmE3ZTg1NzBhLw==
 DART_OBFUSCATION=false
 TRACK_WIDGET_CREATION=true
 TREE_SHAKE_ICONS=false
-PACKAGE_CONFIG=/Users/shady/Git/work/carp.sensing-flutter/backends/carp_webservices/example/.dart_tool/package_config.json
+PACKAGE_CONFIG=.dart_tool/package_config.json
