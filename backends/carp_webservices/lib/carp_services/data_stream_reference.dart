@@ -15,6 +15,9 @@ class DataStreamReference extends RPCCarpReference {
   /// The CARP study deployment ID.
   String studyDeploymentId;
 
+  @override
+  CarpDataStreamService get service => super.service as CarpDataStreamService;
+
   DataStreamReference._(CarpDataStreamService service, this.studyDeploymentId)
       : super._(service);
 
@@ -26,8 +29,16 @@ class DataStreamReference extends RPCCarpReference {
       "${service.app!.uri.toString()}/api/data-stream-service";
 
   /// Append a [batch] of data measures to this data stream.
-  Future<void> append(
-    List<DataStreamBatch> batch,
-  ) async =>
-      await _rpc(AppendToDataStreams(studyDeploymentId, batch));
+  Future<void> append(List<DataStreamBatch> batch, [bool zip = true]) async =>
+      await service.appendToDataStreams(studyDeploymentId, batch, zip);
+
+  /// Get all data points in [dataStream] with sequence numbers between
+  /// [fromSequenceId] and [toSequenceIdInclusive].
+  Future<List<DataStreamBatch>> get(
+    DataStreamId dataStream,
+    int fromSequenceId, [
+    int? toSequenceIdInclusive,
+  ]) async =>
+      await service.getDataStream(
+          dataStream, fromSequenceId, toSequenceIdInclusive);
 }

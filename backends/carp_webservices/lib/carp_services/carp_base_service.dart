@@ -1,5 +1,5 @@
 /*
- * Copyright 2018-2020 Copenhagen Center for Health Technology (CACHET) at the
+ * Copyright 2018 Copenhagen Center for Health Technology (CACHET) at the
  * Technical University of Denmark (DTU).
  * Use of this source code is governed by a MIT-style license that can be
  * found in the LICENSE file.
@@ -65,8 +65,8 @@ abstract class CarpBaseService {
   ///
   /// If [endpointName] is not specified, the default [rpcEndpointName] is used.
   ///
-  /// Returns a json map, mapping a key (String) to a json object (dynamic).
-  /// If the request returns a list (i.e,. a `[...]` json format), this
+  /// Returns a JSON map, mapping a key (String) to a json object (dynamic).
+  /// If the request returns a list (i.e,. a `[...]` JSON format), this
   /// list is mapped to a json key/value map with only one object called `items`.
   /// This would look like:
   ///
@@ -83,8 +83,8 @@ abstract class CarpBaseService {
     ServiceRequest request, [
     String? endpointName,
   ]) async {
-    final String body = toJsonString(request.toJson());
     _endpointName = endpointName ?? rpcEndpointName;
+    final body = toJsonString(request.toJson());
 
     debug('REQUEST: POST $rpcEndpointUri\n$body');
     http.Response response = await httpr.post(
@@ -95,8 +95,6 @@ abstract class CarpBaseService {
     int httpStatusCode = response.statusCode;
     String responseBody = response.body;
     debug('RESPONSE: $httpStatusCode\n$responseBody');
-    // debug(
-    //     'RESPONSE: $httpStatusCode\n${toJsonString(json.decode(responseBody))}');
 
     // Check if this is a json list or an empty string
     // If so turn it into a valid json map
@@ -165,6 +163,23 @@ abstract class CarpBaseService {
       await CarpAuthService().refresh();
       response = await httpr.put(url, headers: headers, body: body);
     }
+
+    return _clean(response);
+  }
+
+  /// Sends an generic HTTP SEND request.
+  Future<http.Response> _send(http.MultipartRequest request) async {
+    debug('REQUEST: SEND $request');
+
+    var status = await httpr.send(request);
+
+    if (status.statusCode == HttpStatus.forbidden) {
+      await CarpAuthService().refresh();
+      status = await httpr.send(request);
+    }
+
+    var response = await http.Response.fromStream(status);
+    debug('RESPONSE: ${response.statusCode}\n${response.body}');
 
     return _clean(response);
   }

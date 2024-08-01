@@ -86,7 +86,7 @@ void main() {
         debugPrint(toJsonString(batch));
 
         await CarpDataStreamService()
-            .appendToDataStreams(testDeploymentId, batch);
+            .appendToDataStreams(testDeploymentId, batch, false);
       },
     );
 
@@ -118,7 +118,7 @@ void main() {
         debugPrint(toJsonString(batch));
 
         await CarpDataStreamService()
-            .appendToDataStreams(testDeploymentId, batch);
+            .appendToDataStreams(testDeploymentId, batch, false);
         debugPrint('Done uploading.');
       },
     );
@@ -189,12 +189,47 @@ void main() {
 
         debugPrint('Uploading another batch of Geolocation measurements...');
         await CarpDataStreamService()
-            .appendToDataStreams(testDeploymentId, geoLocationBatch);
+            .appendToDataStreams(testDeploymentId, geoLocationBatch, false);
 
         var list2 = await getGeoLocationBatches();
         debugPrint('N = ${list2.length}');
 
         expect(list2.length, list.length + 1);
+      },
+    );
+
+    test(
+      '- append - ZIP',
+      () async {
+        debugPrint('Start uploading...');
+
+        var m1 = Measurement(
+          sensorStartTime: 1642505045000000,
+          data: BatteryState(100),
+        );
+        var m2 = Measurement(
+          sensorStartTime: 1642505045000000,
+          data: BatteryState(100),
+        );
+
+        var batch = [
+          DataStreamBatch(
+              dataStream: DataStreamId(
+                  studyDeploymentId: testDeploymentId,
+                  deviceRoleName: phoneRoleName,
+                  dataType: BatteryState.dataType),
+              firstSequenceId: 0,
+              measurements: [m1, m2],
+              triggerIds: {0}),
+        ];
+
+        debugPrint(toJsonString(batch));
+
+        await CarpDataStreamService().appendToDataStreams(
+          testDeploymentId,
+          batch,
+        );
+        debugPrint('Done uploading.');
       },
     );
   });

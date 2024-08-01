@@ -10,6 +10,9 @@ part of 'carp_services.dart';
 /// A [DataStreamService] that talks to the CARP Web Services.
 class CarpDataStreamService extends CarpBaseService
     implements DataStreamService {
+  static const String DATA_STREAM_ENDPOINT_NAME = "data-stream-service";
+  static const String DATA_STREAM_ZIP_ENDPOINT_NAME = "data-stream-service-zip";
+
   static final CarpDataStreamService _instance = CarpDataStreamService._();
 
   CarpDataStreamService._();
@@ -20,7 +23,7 @@ class CarpDataStreamService extends CarpBaseService
   factory CarpDataStreamService() => _instance;
 
   @override
-  String get rpcEndpointName => "data-stream-service";
+  String get rpcEndpointName => DATA_STREAM_ENDPOINT_NAME;
 
   /// Gets a [DataStreamReference] for a [studyDeploymentId].
   /// If the [studyDeploymentId] is not provided, the study deployment id
@@ -37,9 +40,30 @@ class CarpDataStreamService extends CarpBaseService
   @override
   Future<void> appendToDataStreams(
     String studyDeploymentId,
-    List<DataStreamBatch> batch,
-  ) async =>
-      await _rpc(AppendToDataStreams(studyDeploymentId, batch));
+    List<DataStreamBatch> batch, [
+    bool zip = true,
+  ]) async {
+    final payload = AppendToDataStreams(studyDeploymentId, batch);
+
+    if (!zip) {
+      await _rpc(payload);
+    } else {
+      // if uploading zipped, create a multiparty request with
+      // the zipped file and POST it as a byte file
+
+      _endpointName = DATA_STREAM_ZIP_ENDPOINT_NAME;
+      var request = http.MultipartRequest("POST", Uri.parse(rpcEndpointUri));
+      request.headers['Authorization'] = headers['Authorization']!;
+      request.headers['Content-Type'] = 'multipart/form-data';
+      request.headers['cache-control'] = 'no-cache';
+
+      var body = zipJson(payload.toJson());
+      var file = http.MultipartFile.fromBytes('file', body);
+      request.files.add(file);
+
+      await _send(request);
+    }
+  }
 
   @override
   Future<List<DataStreamBatch>> getDataStream(

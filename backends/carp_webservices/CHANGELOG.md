@@ -1,3 +1,7 @@
+## 3.3.0
+
+* support for uploading zipped data files to the CAWS datastream endpoint.
+
 ## 3.2.0
 
 * upgrade of carp_serialization and carp_core

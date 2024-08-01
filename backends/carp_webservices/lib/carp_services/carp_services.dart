@@ -43,6 +43,7 @@ part 'file_reference.dart';
 part 'http_retry.dart';
 part 'push_id_generator.dart';
 part 'invitations_dialog.dart';
+part 'utils.dart';
 
 part 'carp_services.g.dart';
 
