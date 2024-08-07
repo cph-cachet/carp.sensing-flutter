@@ -11,7 +11,7 @@ part of 'carp_services.dart';
 class CarpDataStreamService extends CarpBaseService
     implements DataStreamService {
   static const String DATA_STREAM_ENDPOINT_NAME = "data-stream-service";
-  static const String DATA_STREAM_ZIP_ENDPOINT_NAME = "data/zip";
+  static const String DATA_STREAM_ZIP_ENDPOINT_NAME = "data-stream-service-zip";
 
   static final CarpDataStreamService _instance = CarpDataStreamService._();
 

@@ -176,7 +176,7 @@ void main() {
             dataType: BatteryState.dataType,
           ),
           0,
-          100,
+          10,
         );
         debugPrint('No. Batches = ${list.length}');
         List<Measurement> measurements = [];
