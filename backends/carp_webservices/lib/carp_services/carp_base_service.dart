@@ -86,7 +86,8 @@ abstract class CarpBaseService {
     _endpointName = endpointName ?? rpcEndpointName;
     final body = toJsonString(request.toJson());
 
-    debug('REQUEST: POST $rpcEndpointUri\n$body');
+    debug(
+        'REQUEST: POST $rpcEndpointUri\n$body\nsize=${body.toString().length}');
     http.Response response = await httpr.post(
       Uri.encodeFull(rpcEndpointUri),
       headers: headers,
@@ -137,7 +138,7 @@ abstract class CarpBaseService {
 
   /// Sends an HTTP POST request with [body] to the given [url] for this CAWS service.
   Future<http.Response> _post(String url, {Object? body}) async {
-    debug('REQUEST: POST $url\n$body');
+    debug('REQUEST: POST $url\nBODY SIZE: ${body.toString().length}\n$body');
 
     var response = await httpr.post(url, headers: headers, body: body);
 

@@ -102,20 +102,15 @@ class BatteryState extends Data {
         batteryStatus = _parseBatteryState(state),
         super();
 
-  static String _parseBatteryState(battery.BatteryState state) {
-    switch (state) {
-      case battery.BatteryState.full:
-        return STATE_FULL;
-      case battery.BatteryState.charging:
-        return STATE_CHARGING;
-      case battery.BatteryState.discharging:
-        return STATE_DISCHARGING;
-      case battery.BatteryState.connectedNotCharging:
-        return STATE_CONNECTED_NOT_CHARGING;
-      default:
-        return STATE_UNKNOWN;
-    }
-  }
+  static String _parseBatteryState(battery.BatteryState state) =>
+      switch (state) {
+        battery.BatteryState.full => STATE_FULL,
+        battery.BatteryState.charging => STATE_CHARGING,
+        battery.BatteryState.discharging => STATE_DISCHARGING,
+        battery.BatteryState.connectedNotCharging =>
+          STATE_CONNECTED_NOT_CHARGING,
+        _ => STATE_UNKNOWN,
+      };
 
   /// Returns `true` if the [batteryLevel] is equal.
   @override

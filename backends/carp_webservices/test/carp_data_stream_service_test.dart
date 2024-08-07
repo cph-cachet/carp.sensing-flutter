@@ -43,7 +43,7 @@ void main() {
 
   group("Data Stream Service", () {
     test(
-      '- append - measurements KNOWN to carp-core.kotlin',
+      '- append - KNOWN measurements to carp-core.kotlin',
       () async {
         var m1 = Measurement(
           sensorStartTime: 1642505045000000,
@@ -83,18 +83,20 @@ void main() {
               triggerIds: {0}),
         ];
 
-        debugPrint(toJsonString(batch));
+        // debugPrint(toJsonString(batch));
+
+        int length = 0;
+        batch.forEach((item) => length += item.measurements.length);
 
         await CarpDataStreamService()
             .appendToDataStreams(testDeploymentId, batch, false);
+        debugPrint('Uploaded N=$length measurements.');
       },
     );
 
     test(
-      '- append - measurements UNKNOWN to carp-core.kotlin',
+      '- append - UNKNOWN measurements to carp-core.kotlin',
       () async {
-        debugPrint('Start uploading...');
-
         var m1 = Measurement(
           sensorStartTime: 1642505045000000,
           data: BatteryState(100),
@@ -115,18 +117,58 @@ void main() {
               triggerIds: {0}),
         ];
 
-        debugPrint(toJsonString(batch));
+        int length = 0;
+        batch.forEach((item) => length += item.measurements.length);
 
+        // debugPrint(toJsonString(batch));
         await CarpDataStreamService()
             .appendToDataStreams(testDeploymentId, batch, false);
-        debugPrint('Done uploading.');
+        debugPrint('Uploaded N=$length measurements.');
       },
     );
 
     test(
-      '- get',
+      '- append - ZIP',
       () async {
-        debugPrint('Getting 100 ...');
+        List<Measurement> upload = [];
+
+        // Creating a batch of battery measurements, with "STATE_CONNECTED_NOT_CHARGING"
+        // as the battery state. Easy to find later when downloading the data.
+        for (var i = 0; i < 10; i++) {
+          upload.add(Measurement(
+            sensorStartTime: 1642505045000000 + 1000 * i,
+            data: BatteryState(
+              100 - i,
+              BatteryState.STATE_CONNECTED_NOT_CHARGING,
+            ),
+          ));
+        }
+
+        var batch = [
+          DataStreamBatch(
+              dataStream: DataStreamId(
+                  studyDeploymentId: testDeploymentId,
+                  deviceRoleName: phoneRoleName,
+                  dataType: BatteryState.dataType),
+              firstSequenceId: 0,
+              measurements: upload,
+              triggerIds: {0}),
+        ];
+
+        int length = 0;
+        batch.forEach((item) => length += item.measurements.length);
+
+        await CarpDataStreamService().appendToDataStreams(
+          testDeploymentId,
+          batch,
+        );
+        debugPrint('Uploaded N=$length measurements.');
+      },
+    );
+
+    test(
+      '- get - Battery (up to 100)',
+      () async {
         var list = await CarpDataStreamService().getDataStream(
           DataStreamId(
             studyDeploymentId: testDeploymentId,
@@ -136,8 +178,65 @@ void main() {
           0,
           100,
         );
-        debugPrint(toJsonString(list));
-        debugPrint('N = ${list.length}');
+        debugPrint('No. Batches = ${list.length}');
+        List<Measurement> measurements = [];
+
+        for (var batch in list) {
+          measurements.addAll(batch.measurements);
+        }
+        debugPrint('No. Measurements = ${measurements.length}');
+        // debugPrint(toJsonString(measurements));
+      },
+    );
+
+    test(
+      '- get - BatteryState.STATE_CONNECTED_NOT_CHARGING',
+      () async {
+        var list = await CarpDataStreamService().getDataStream(
+          DataStreamId(
+            studyDeploymentId: testDeploymentId,
+            deviceRoleName: phoneRoleName,
+            dataType: BatteryState.dataType,
+          ),
+          0,
+        );
+        debugPrint('No. Batches = ${list.length}');
+
+        List<Measurement> measurements = [];
+
+        for (var batch in list) {
+          measurements.addAll(batch.measurements);
+        }
+        debugPrint('No. Measurements = ${measurements.length}');
+        // debugPrint(toJsonString(measurements));
+
+        var selected = measurements
+            .where((item) =>
+                (item.data as BatteryState).batteryStatus ==
+                BatteryState.STATE_CONNECTED_NOT_CHARGING)
+            .toList();
+
+        debugPrint(
+            'No. BatteryState.STATE_CONNECTED_NOT_CHARGING = ${selected.length}');
+      },
+    );
+
+    test(
+      '- get - Device Information - should throw',
+      () async {
+        // expect to throw an exception from CAWS from CARP Core, since
+        // device information is not part of this protocol
+        expect(
+            () async => await CarpDataStreamService().getDataStream(
+                  DataStreamId(
+                    studyDeploymentId: testDeploymentId,
+                    deviceRoleName: phoneRoleName,
+                    dataType: DeviceInformation.dataType,
+                  ),
+                  0,
+                  100,
+                ),
+            throwsException);
       },
     );
 
@@ -195,41 +294,6 @@ void main() {
         debugPrint('N = ${list2.length}');
 
         expect(list2.length, list.length + 1);
-      },
-    );
-
-    test(
-      '- append - ZIP',
-      () async {
-        debugPrint('Start uploading...');
-
-        var m1 = Measurement(
-          sensorStartTime: 1642505045000000,
-          data: BatteryState(100),
-        );
-        var m2 = Measurement(
-          sensorStartTime: 1642505045000000,
-          data: BatteryState(100),
-        );
-
-        var batch = [
-          DataStreamBatch(
-              dataStream: DataStreamId(
-                  studyDeploymentId: testDeploymentId,
-                  deviceRoleName: phoneRoleName,
-                  dataType: BatteryState.dataType),
-              firstSequenceId: 0,
-              measurements: [m1, m2],
-              triggerIds: {0}),
-        ];
-
-        debugPrint(toJsonString(batch));
-
-        await CarpDataStreamService().appendToDataStreams(
-          testDeploymentId,
-          batch,
-        );
-        debugPrint('Done uploading.');
       },
     );
   });

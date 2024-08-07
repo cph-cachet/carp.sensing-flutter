@@ -11,7 +11,7 @@ part of 'carp_services.dart';
 class CarpDataStreamService extends CarpBaseService
     implements DataStreamService {
   static const String DATA_STREAM_ENDPOINT_NAME = "data-stream-service";
-  static const String DATA_STREAM_ZIP_ENDPOINT_NAME = "data-stream-service-zip";
+  static const String DATA_STREAM_ZIP_ENDPOINT_NAME = "data/zip";
 
   static final CarpDataStreamService _instance = CarpDataStreamService._();
 
@@ -45,24 +45,35 @@ class CarpDataStreamService extends CarpBaseService
   ]) async {
     final payload = AppendToDataStreams(studyDeploymentId, batch);
 
-    if (!zip) {
-      await _rpc(payload);
-    } else {
-      // if uploading zipped, create a multiparty request with
-      // the zipped file and POST it as a byte file
-
+    if (zip) {
+      // zip the payload and POST the byte stream to the zip endpoint
       _endpointName = DATA_STREAM_ZIP_ENDPOINT_NAME;
-      var request = http.MultipartRequest("POST", Uri.parse(rpcEndpointUri));
-      request.headers['Authorization'] = headers['Authorization']!;
-      request.headers['Content-Type'] = 'multipart/form-data';
-      request.headers['cache-control'] = 'no-cache';
-
-      var body = zipJson(payload.toJson());
-      var file = http.MultipartFile.fromBytes('file', body);
-      request.files.add(file);
-
-      await _send(request);
+      await _post(
+        Uri.encodeFull(rpcEndpointUri),
+        body: zipJson(payload.toJson()),
+      );
+    } else {
+      await _rpc(payload, DATA_STREAM_ENDPOINT_NAME);
     }
+
+    // if (!zip) {
+    //   await _rpc(payload);
+    // } else {
+    //   // if uploading zipped, create a multiparty request with
+    //   // the zipped file and POST it as a byte file
+
+    //   _endpointName = DATA_STREAM_ZIP_ENDPOINT_NAME;
+    //   var request = http.MultipartRequest("POST", Uri.parse(rpcEndpointUri));
+    //   request.headers['Authorization'] = headers['Authorization']!;
+    //   request.headers['Content-Type'] = 'multipart/form-data';
+    //   request.headers['cache-control'] = 'no-cache';
+
+    //   var body = zipJson(payload.toJson());
+    //   var file = http.MultipartFile.fromBytes('file', body);
+    //   request.files.add(file);
+
+    //   await _send(request);
+    // }
   }
 
   @override
