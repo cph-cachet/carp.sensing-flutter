@@ -29,6 +29,7 @@ class DataStreamReference extends RPCCarpReference {
       "${service.app!.uri.toString()}/api/data-stream-service";
 
   /// Append a [batch] of data measures to this data stream.
+  /// If [zip] is true, the data is compressed before upload.
   Future<void> append(List<DataStreamBatch> batch, [bool zip = true]) async =>
       await service.appendToDataStreams(studyDeploymentId, batch, zip);
 
