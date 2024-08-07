@@ -10,6 +10,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '_credentials.dart';
 import '_carp_properties.dart';
 
+/// This test suite tests the [CarpDeploymentService].
 void main() {
   CarpUser? user;
 
@@ -18,8 +19,7 @@ void main() {
   WidgetsFlutterBinding.ensureInitialized();
   CarpMobileSensing.ensureInitialized();
 
-  /// Setup CARP and authenticate.
-  /// Runs once before all tests.
+  /// Configure CARP and authenticate.
   setUpAll(() async {
     await CarpAuthService().configure(CarpProperties().authProperties);
     CarpService().configure(CarpProperties().app);
@@ -28,13 +28,9 @@ void main() {
       username: username,
       password: password,
     );
-    CarpProtocolService().configureFrom(CarpService());
-    CarpParticipationService().configureFrom(CarpService());
     CarpDeploymentService().configureFrom(CarpService());
   });
 
-  /// Close connection to CARP.
-  /// Runs once after all tests.
   tearDownAll(() {});
 
   group("Base services", () {

@@ -10,6 +10,14 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '_credentials.dart';
 import '_carp_properties.dart';
 
+/// This test suite tests the [CarpParticipationService].
+///
+/// The main focus is to test
+///  - getting the participation invitations
+///  - setting & getting expected participation data
+///
+/// A special protocol for a 3-person family is used for testing expected
+/// participation data for each family member.
 void main() {
   CarpUser? user;
   String? ownerId;
@@ -20,8 +28,7 @@ void main() {
   WidgetsFlutterBinding.ensureInitialized();
   CarpMobileSensing.ensureInitialized();
 
-  /// Setup CARP and authenticate.
-  /// Runs once before all tests.
+  /// Configure CARP and authenticate.
   setUpAll(() async {
     await CarpAuthService().configure(CarpProperties().authProperties);
     CarpService().configure(CarpProperties().app);
@@ -30,16 +37,14 @@ void main() {
       username: username,
       password: password,
     );
-    CarpProtocolService().configureFrom(CarpService());
     CarpParticipationService().configureFrom(CarpService());
-    CarpDeploymentService().configureFrom(CarpService());
 
     ownerId = CarpAuthService().currentUser.id;
-    final father = 'Father';
-    final mother = 'Mother';
-    final child = 'Child';
+    const father = 'Father';
+    const mother = 'Mother';
+    const child = 'Child';
 
-    // a study protocol testing misc input data types
+    // a study protocol testing misc input data types for a family
     protocol = StudyProtocol(
         ownerId: ownerId!,
         name: 'Input Data Types',
@@ -51,7 +56,7 @@ void main() {
       ..addParticipantRole(ParticipantRole(mother))
       ..addParticipantRole(ParticipantRole(child));
 
-    // define and assign the primary device(s)
+    // define and assign the primary devices for each family member
     final fatherPhone = Smartphone(roleName: "$father's Phone");
     final motherPhone = Smartphone(roleName: "$mother's Phone");
     final childPhone = Smartphone(roleName: "$child's Phone");
@@ -82,23 +87,31 @@ void main() {
               ParticipantAttribute(inputDataType: InformedConsentInput.type),
           assignedTo: AssignedTo(roleNames: {father, mother})));
 
-    // build-in measure from sensor and device sampling packages
-    protocol.addTaskControl(
-        ImmediateTrigger(),
-        BackgroundTask(measures: [
-          Measure(type: SensorSamplingPackage.STEP_COUNT),
-          Measure(type: SensorSamplingPackage.AMBIENT_LIGHT),
-          Measure(type: DeviceSamplingPackage.SCREEN_EVENT),
-          Measure(type: DeviceSamplingPackage.FREE_MEMORY),
-          Measure(type: DeviceSamplingPackage.BATTERY_STATE),
-        ]),
-        fatherPhone);
-
-    protocol.applicationData = {'uiTheme': 'black'};
+    // add measures (not really used in this test)
+    protocol
+      ..addTaskControl(
+          ImmediateTrigger(),
+          BackgroundTask(measures: [
+            Measure(type: SensorSamplingPackage.STEP_COUNT),
+            Measure(type: SensorSamplingPackage.AMBIENT_LIGHT),
+          ]),
+          fatherPhone)
+      ..addTaskControl(
+          ImmediateTrigger(),
+          BackgroundTask(measures: [
+            Measure(type: DeviceSamplingPackage.SCREEN_EVENT),
+            Measure(type: DeviceSamplingPackage.FREE_MEMORY),
+          ]),
+          motherPhone)
+      ..addTaskControl(
+          ImmediateTrigger(),
+          BackgroundTask(measures: [
+            Measure(type: DeviceSamplingPackage.SCREEN_EVENT),
+            Measure(type: DeviceSamplingPackage.BATTERY_STATE),
+          ]),
+          childPhone);
   });
 
-  /// Close connection to CARP.
-  /// Runs once after all tests.
   tearDownAll(() {});
 
   group("Base services", () {
