@@ -7,8 +7,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:test/test.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import 'credentials.dart';
-import 'carp_properties.dart';
+import '_credentials.dart';
+import '_carp_properties.dart';
 
 void main() {
   CarpUser? user;
@@ -49,54 +49,6 @@ void main() {
       String id = CarpDeploymentService().deployment().registeredDeviceId;
       debugPrint('Registered Device ID : $id');
     }, skip: false);
-  });
-
-  group("Participation", () {
-    test(
-      '- get invitations for this user',
-      () async {
-        List<ActiveParticipationInvitation> invitations =
-            await CarpParticipationService()
-                .getActiveParticipationInvitations();
-
-        expect(invitations, isNotNull);
-        debugPrint(toJsonString(invitations));
-      },
-      skip: false,
-    );
-
-    test(
-      '- get participant data',
-      () async {
-        ParticipationReference participation =
-            CarpParticipationService().participation(testDeploymentId);
-
-        ParticipantData data = await participation.getParticipantData();
-        debugPrint(toJsonString(data));
-      },
-      skip: false,
-    );
-
-    test(
-      '- set participant data',
-      () async {
-        ParticipationReference participation =
-            CarpParticipationService().participation(testDeploymentId);
-
-        ParticipantData data = await participation.setParticipantData(
-          {SexInput.type: SexInput(value: Sex.Male)},
-          'Participant',
-        );
-        debugPrint(toJsonString(data));
-
-        // expect();
-
-        // ParticipantData data = await participation.getParticipantData();
-        // debugPrint(toJsonString(data));
-        // assert(data != null);
-      },
-      skip: false,
-    );
   });
 
   group("Deployment - using DeploymentReference", () {

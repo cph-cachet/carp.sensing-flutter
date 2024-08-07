@@ -1,4 +1,4 @@
-import 'package:carp_serializable/carp_serializable.dart';
+// import 'package:carp_serializable/carp_serializable.dart';
 import 'package:carp_core/carp_core.dart';
 import 'package:carp_mobile_sensing/carp_mobile_sensing.dart';
 import 'package:carp_webservices/carp_auth/carp_auth.dart';
@@ -7,8 +7,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:test/test.dart';
 
-import 'carp_properties.dart';
-import 'credentials.dart';
+import '_carp_properties.dart';
+import '_credentials.dart';
 
 void main() {
   CarpUser? user;

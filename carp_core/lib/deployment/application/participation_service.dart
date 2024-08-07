@@ -6,9 +6,9 @@
  */
 part of '../carp_core_deployment.dart';
 
-/// Application service which allows inviting participants, retrieving participations
-/// for study deployments, and managing data related to participants which is
-/// input by users.
+/// Application service which allows inviting participants, retrieving participation
+/// invitations for study deployments, and managing data related to participants
+/// which is input by users.
 abstract class ParticipationService {
   static const String API_VERSION = "1.0";
 
