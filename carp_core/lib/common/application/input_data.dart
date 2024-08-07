@@ -58,7 +58,7 @@ class SexInput extends Data {
 /// The social security number (SSN) of a participant.
 @JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
 class PhoneNumberInput extends Data {
-  static const type = '${InputType.INPUT_TYPE_NAMESPACE}.phonenumber';
+  static const type = '${InputType.INPUT_TYPE_NAMESPACE}.phone_number';
 
   /// The country code of this phone number.
   ///
@@ -122,23 +122,23 @@ class SocialSecurityNumberInput extends Data {
 
 /// The full name of a participant.
 @JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
-class NameInput extends Data {
-  static const type = '${InputType.INPUT_TYPE_NAMESPACE}.name';
+class FullNameInput extends Data {
+  static const type = '${InputType.INPUT_TYPE_NAMESPACE}.full_name';
 
   String? firstName, middleName, lastName;
 
-  NameInput({
+  FullNameInput({
     this.firstName,
     this.middleName,
     this.lastName,
   }) : super();
 
   @override
-  Function get fromJsonFunction => _$NameInputFromJson;
-  factory NameInput.fromJson(Map<String, dynamic> json) =>
-      FromJsonFactory().fromJson(json) as NameInput;
+  Function get fromJsonFunction => _$FullNameInputFromJson;
+  factory FullNameInput.fromJson(Map<String, dynamic> json) =>
+      FromJsonFactory().fromJson(json) as FullNameInput;
   @override
-  Map<String, dynamic> toJson() => _$NameInputToJson(this);
+  Map<String, dynamic> toJson() => _$FullNameInputToJson(this);
   @override
   String get jsonType => type;
 }
@@ -146,7 +146,7 @@ class NameInput extends Data {
 /// The informed consent from a participant.
 @JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
 class InformedConsentInput extends Data {
-  static const type = '${InputType.INPUT_TYPE_NAMESPACE}.consent';
+  static const type = '${InputType.INPUT_TYPE_NAMESPACE}.informed_consent';
 
   /// The time this informed consent was signed.
   DateTime signedTimestamp;
@@ -192,13 +192,14 @@ class InformedConsentInput extends Data {
 class AddressInput extends Data {
   static const type = '${InputType.INPUT_TYPE_NAMESPACE}.address';
 
-  String? address1, address2, street, country, zip;
+  String? address1, address2, street, city, postalCode, country;
   AddressInput({
     this.address1,
     this.address2,
     this.street,
+    this.city,
+    this.postalCode,
     this.country,
-    this.zip,
   }) : super();
 
   @override

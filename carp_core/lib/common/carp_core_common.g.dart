@@ -1434,13 +1434,14 @@ Map<String, dynamic> _$SocialSecurityNumberInputToJson(
   return val;
 }
 
-NameInput _$NameInputFromJson(Map<String, dynamic> json) => NameInput(
+FullNameInput _$FullNameInputFromJson(Map<String, dynamic> json) =>
+    FullNameInput(
       firstName: json['firstName'] as String?,
       middleName: json['middleName'] as String?,
       lastName: json['lastName'] as String?,
     )..$type = json['__type'] as String?;
 
-Map<String, dynamic> _$NameInputToJson(NameInput instance) {
+Map<String, dynamic> _$FullNameInputToJson(FullNameInput instance) {
   final val = <String, dynamic>{};
 
   void writeNotNull(String key, dynamic value) {
@@ -1491,8 +1492,9 @@ AddressInput _$AddressInputFromJson(Map<String, dynamic> json) => AddressInput(
       address1: json['address1'] as String?,
       address2: json['address2'] as String?,
       street: json['street'] as String?,
+      city: json['city'] as String?,
+      postalCode: json['postalCode'] as String?,
       country: json['country'] as String?,
-      zip: json['zip'] as String?,
     )..$type = json['__type'] as String?;
 
 Map<String, dynamic> _$AddressInputToJson(AddressInput instance) {
@@ -1508,8 +1510,9 @@ Map<String, dynamic> _$AddressInputToJson(AddressInput instance) {
   writeNotNull('address1', instance.address1);
   writeNotNull('address2', instance.address2);
   writeNotNull('street', instance.street);
+  writeNotNull('city', instance.city);
+  writeNotNull('postalCode', instance.postalCode);
   writeNotNull('country', instance.country);
-  writeNotNull('zip', instance.zip);
   return val;
 }
 
