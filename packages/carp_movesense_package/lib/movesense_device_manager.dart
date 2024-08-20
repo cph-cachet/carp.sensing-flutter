@@ -123,7 +123,7 @@ class MovesenseDeviceManager extends BTLEDeviceManager<MovesenseDevice> {
     Mds.connect(
       btleAddress,
       // onConnected
-      (serial) {
+      (String serial) {
         configuration?.serial = serial;
         status = DeviceStatus.connected;
 
@@ -139,8 +139,8 @@ class MovesenseDeviceManager extends BTLEDeviceManager<MovesenseDevice> {
         _batteryLevel = null;
       },
       // onConnectionError
-      () {
-        warning("$runtimeType - Error in connecting to device.");
+      (String error) {
+        warning("$runtimeType - Error in connecting to device: $error");
         status = DeviceStatus.error;
       },
     );
