@@ -1,3 +1,6 @@
+## 1.5.1
+* fix compatibility with Flutter 3.24
+
 ## 1.5.0
 
 * upgrading to carp_mobile_sensing v. 1.9.0 (better permission handling)
