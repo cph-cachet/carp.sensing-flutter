@@ -86,8 +86,7 @@ abstract class CarpBaseService {
     _endpointName = endpointName ?? rpcEndpointName;
     final body = toJsonString(request.toJson());
 
-    debug(
-        'REQUEST: POST $rpcEndpointUri\n$body\nsize=${body.toString().length}');
+    debug('REQUEST: POST $rpcEndpointUri\n$body');
     http.Response response = await httpr.post(
       Uri.encodeFull(rpcEndpointUri),
       headers: headers,

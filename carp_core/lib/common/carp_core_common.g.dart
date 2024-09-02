@@ -1460,12 +1460,14 @@ Map<String, dynamic> _$FullNameInputToJson(FullNameInput instance) {
 InformedConsentInput _$InformedConsentInputFromJson(
         Map<String, dynamic> json) =>
     InformedConsentInput(
-      signedTimestamp: DateTime.parse(json['signedTimestamp'] as String),
+      signedTimestamp: json['signedTimestamp'] == null
+          ? null
+          : DateTime.parse(json['signedTimestamp'] as String),
       signedLocation: json['signedLocation'] as String?,
-      userID: json['userID'] as String?,
+      userId: json['userId'] as String,
       name: json['name'] as String,
-      consent: json['consent'] as String?,
-      signatureImage: json['signatureImage'] as String?,
+      consent: json['consent'] as String,
+      signatureImage: json['signatureImage'] as String,
     )..$type = json['__type'] as String?;
 
 Map<String, dynamic> _$InformedConsentInputToJson(
@@ -1481,10 +1483,10 @@ Map<String, dynamic> _$InformedConsentInputToJson(
   writeNotNull('__type', instance.$type);
   val['signedTimestamp'] = instance.signedTimestamp.toIso8601String();
   writeNotNull('signedLocation', instance.signedLocation);
-  writeNotNull('userID', instance.userID);
+  val['userId'] = instance.userId;
   val['name'] = instance.name;
-  writeNotNull('consent', instance.consent);
-  writeNotNull('signatureImage', instance.signatureImage);
+  val['consent'] = instance.consent;
+  val['signatureImage'] = instance.signatureImage;
   return val;
 }
 

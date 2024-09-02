@@ -122,11 +122,12 @@ class CarpParticipationService extends CarpBaseService
         await _rpc(GetParticipantDataList(studyDeploymentIds));
 
     // we expect a list of 'items'
-    List<Map<String, dynamic>> items =
-        responseJson['items'] as List<Map<String, dynamic>>;
+    List<dynamic> items = responseJson['items'] as List<dynamic>;
+    if (items.isEmpty) return [];
+
     List<ParticipantData> data = [];
     for (var item in items) {
-      data.add(ParticipantData.fromJson(item));
+      data.add(ParticipantData.fromJson(item as Map<String, dynamic>));
     }
 
     return data;
