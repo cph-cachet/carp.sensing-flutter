@@ -45,6 +45,9 @@ class CarpService extends CarpBaseService {
 
   /// Create a new (signed) consent document for this user.
   /// Returns the created [ConsentDocument] if the document is uploaded correctly.
+  @Deprecated('The Informed Consent endpoints are deprecated in CAWS. '
+      'Informed Consent is uploaded as [InformedConsentInput] participant input '
+      'data using a [ParticipationReference].')
   Future<ConsentDocument> createConsentDocument(
       Map<String, dynamic> document) async {
     debug('REQUEST: POST $consentDocumentEndpointUri');
@@ -73,6 +76,9 @@ class CarpService extends CarpBaseService {
   }
 
   /// Get a previously uploaded (signed) [ConsentDocument] based on its [id].
+  @Deprecated('The Informed Consent endpoints are deprecated in CAWS. '
+      'Informed Consent is uploaded as [InformedConsentInput] participant input '
+      'data using a [ParticipationReference].')
   Future<ConsentDocument> getConsentDocument(int id) async {
     String url = "$consentDocumentEndpointUri/$id";
 

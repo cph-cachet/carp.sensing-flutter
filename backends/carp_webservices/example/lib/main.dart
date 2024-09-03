@@ -7,12 +7,15 @@ import 'package:oidc/oidc.dart';
 
 void main() {
   CarpMobileSensing.ensureInitialized();
-  runApp(MyApp());
+  runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {
+  const MyApp({super.key});
+
+  @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    return const MaterialApp(
       title: 'CARP Backend Demo',
       home: HomePage(),
     );
@@ -20,21 +23,26 @@ class MyApp extends StatelessWidget {
 }
 
 class HomePage extends StatefulWidget {
+  const HomePage({super.key});
+
   @override
-  _HomePageState createState() => _HomePageState();
+  HomePageState createState() => HomePageState();
 }
 
-class _HomePageState extends State<HomePage> {
+class HomePageState extends State<HomePage> {
+  @override
   void initState() {
     super.initState();
     bloc.init();
   }
 
+  @override
   void dispose() {
     bloc.dispose();
     super.dispose();
   }
 
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: Center(
@@ -48,8 +56,8 @@ class _HomePageState extends State<HomePage> {
                   return TextButton.icon(
                     onPressed: () async => bloc.currentUser =
                         await CarpAuthService().authenticate(),
-                    icon: Icon(Icons.login),
-                    label: Text(
+                    icon: const Icon(Icons.login),
+                    label: const Text(
                       'LOGIN',
                       style: TextStyle(fontSize: 35),
                     ),
@@ -57,8 +65,8 @@ class _HomePageState extends State<HomePage> {
                 } else {
                   return TextButton.icon(
                     onPressed: () => CarpAuthService().logout(),
-                    icon: Icon(Icons.logout),
-                    label: Text(
+                    icon: const Icon(Icons.logout),
+                    label: const Text(
                       'LOGOUT',
                       style: TextStyle(fontSize: 35),
                     ),
@@ -67,8 +75,8 @@ class _HomePageState extends State<HomePage> {
               }),
           TextButton.icon(
             onPressed: () => bloc.getStudyInvitation(context),
-            icon: Icon(Icons.mail),
-            label: Text(
+            icon: const Icon(Icons.mail),
+            label: const Text(
               'GET STUDY',
               style: TextStyle(fontSize: 35),
             ),
@@ -77,7 +85,7 @@ class _HomePageState extends State<HomePage> {
             stream: CarpAuthService().authStateChanges,
             builder: (BuildContext context, AsyncSnapshot<AuthEvent> event) =>
                 Padding(
-              padding: EdgeInsets.fromLTRB(10, 30, 10, 0),
+              padding: const EdgeInsets.fromLTRB(10, 30, 10, 0),
               child: Text(
                 (CarpAuthService().authenticated)
                     ? 'Authenticated as ${CarpAuthService().currentUser.firstName} ${CarpAuthService().currentUser.lastName}'

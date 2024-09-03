@@ -196,8 +196,8 @@ void main() {
         ParticipantData data = await participation.getParticipantData();
         debugPrint(toJsonString(data));
 
-        data.roles.forEach(
-            (data) => debugPrint('${data.roleName} : ${data.data.keys}'));
+        // data.roles.forEach(
+        //     (data) => debugPrint('${data.roleName} : ${data.data.keys}'));
       },
     );
 
@@ -316,6 +316,45 @@ void main() {
 
         expect(name, isA<FullNameInput>());
         expect((name as FullNameInput).firstName, 'Jakob');
+      },
+    );
+
+    test(
+      '- get Informed Consent',
+      () async {
+        final participation = CarpParticipationService().participation();
+
+        final consent = await participation.getInformedConsent();
+        debugPrint(toJsonString(consent));
+
+        expect(consent[father], isA<InformedConsentInput>());
+        expect(consent[father]?.name, father);
+        expect(consent[mother], isNull);
+        expect(consent[child], isNull);
+      },
+    );
+
+    test(
+      '- set Informed Consent',
+      () async {
+        final participation = CarpParticipationService().participation();
+
+        await participation.setInformedConsent(
+            father,
+            InformedConsentInput(
+              userId: 'ec44c84d-3acd-45d5-83ef-1511e0c39e48',
+              name: father,
+              consent: 'I agree!',
+              signatureImage: 'blob',
+            ));
+
+        final consent = await participation.getInformedConsent();
+        debugPrint(toJsonString(consent));
+
+        expect(consent[father], isA<InformedConsentInput>());
+        expect(consent[father]?.name, father);
+        expect(consent[mother], isNull);
+        expect(consent[child], isNull);
       },
     );
   });

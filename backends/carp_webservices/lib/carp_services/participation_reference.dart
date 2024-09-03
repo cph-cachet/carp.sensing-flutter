@@ -35,11 +35,9 @@ class ParticipationReference extends RPCCarpReference {
   /// Get currently set data for all expected participant data in this study
   /// deployment with [studyDeploymentId].
   /// Data which is not set equals null.
-  Future<ParticipantData> getParticipantData() async {
-    ParticipantData data = ParticipantData.fromJson(
-        await _rpc(GetParticipantData(studyDeploymentId!)));
-    return data;
-  }
+  Future<ParticipantData> getParticipantData() async =>
+      ParticipantData.fromJson(
+          await _rpc(GetParticipantData(studyDeploymentId!)));
 
   /// Set participant [data] for the given [inputByParticipantRole] in this
   /// study deployment.
@@ -49,9 +47,44 @@ class ParticipationReference extends RPCCarpReference {
   Future<ParticipantData> setParticipantData(
     Map<String, Data> data, [
     String? inputByParticipantRole,
-  ]) async {
-    ParticipantData newData = ParticipantData.fromJson(await _rpc(
-        SetParticipantData(studyDeploymentId!, data, inputByParticipantRole)));
-    return newData;
+  ]) async =>
+      ParticipantData.fromJson(await _rpc(SetParticipantData(
+          studyDeploymentId!, data, inputByParticipantRole)));
+
+  /// Get informed consent data for all participants (by role name) in this study
+  /// deployment with [studyDeploymentId].
+  /// Informed consent which is not set equals null.
+  Future<Map<String, InformedConsentInput?>> getInformedConsent() async {
+    Map<String, InformedConsentInput?> map = {};
+
+    ParticipantData data = ParticipantData.fromJson(
+        await _rpc(GetParticipantData(studyDeploymentId!)));
+    // debugPrint(toJsonString(data));
+
+    for (var roleData in data.roles) {
+      if (roleData.data.containsKey(InformedConsentInput.type)) {
+        map[roleData.roleName] = roleData.data[InformedConsentInput.type] !=
+                null
+            ? roleData.data[InformedConsentInput.type] as InformedConsentInput
+            : null;
+      } else {
+        map[roleData.roleName] = null;
+      }
+    }
+
+    return map;
+  }
+
+  /// Set informed [consent] for the given [inputByParticipantRole] in this
+  /// study deployment.
+  Future<void> setInformedConsent(
+    String inputByParticipantRole,
+    InformedConsentInput consent,
+  ) async {
+    ParticipantData.fromJson(await _rpc(SetParticipantData(
+      studyDeploymentId!,
+      {InformedConsentInput.type: consent},
+      inputByParticipantRole,
+    )));
   }
 }

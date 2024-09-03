@@ -1,6 +1,8 @@
 ## 3.3.0
 
-* support for uploading zipped data files to the CAWS datastream endpoint.
+* support for uploading compressed data files to the CAWS data stream endpoint
+* support for uploading participant input data (like full name, informed consent, etc.)
+* **BREAKING** - informed consent is now uploaded as an input data type to CAWS (the old Informed Consent endpoint is deprecated)
 
 ## 3.2.0
 
