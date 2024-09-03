@@ -37,6 +37,7 @@ You also need to add an activity to the `AndroidManifest.xml` to allow for redir
   <!-- Used by authentication redirect to/from web view -->
   <activity
     android:name="net.openid.appauth.RedirectUriReceiverActivity"
+    android:theme="@style/Theme.AppCompat.NoActionBar"
     android:exported="true"
     tools:node="replace">
     <intent-filter>

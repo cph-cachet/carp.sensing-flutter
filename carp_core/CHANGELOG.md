@@ -1,3 +1,7 @@
+## 1.7.0
+
+* support for new [input data types](https://github.com/cph-cachet/carp-webservices-spring/blob/master/docs/input-data-types.md) at CAWS
+
 ## 1.6.0
 
 * fix of linter issues
