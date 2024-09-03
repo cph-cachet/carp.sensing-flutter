@@ -89,7 +89,7 @@ void main() {
         batch.forEach((item) => length += item.measurements.length);
 
         await CarpDataStreamService()
-            .appendToDataStreams(testDeploymentId, batch, false);
+            .appendToDataStreams(testDeploymentId, batch, compress: false);
         debugPrint('Uploaded N=$length measurements.');
       },
     );
@@ -121,14 +121,17 @@ void main() {
         batch.forEach((item) => length += item.measurements.length);
 
         // debugPrint(toJsonString(batch));
-        await CarpDataStreamService()
-            .appendToDataStreams(testDeploymentId, batch, false);
+        await CarpDataStreamService().appendToDataStreams(
+          testDeploymentId,
+          batch,
+          compress: false,
+        );
         debugPrint('Uploaded N=$length measurements.');
       },
     );
 
     test(
-      '- append - ZIP',
+      '- append - compressed (default)',
       () async {
         List<Measurement> upload = [];
 
@@ -161,6 +164,7 @@ void main() {
         await CarpDataStreamService().appendToDataStreams(
           testDeploymentId,
           batch,
+          compress: true, // default, so really not needed
         );
         debugPrint('Uploaded N=$length measurements.');
       },
@@ -287,8 +291,10 @@ void main() {
         debugPrint('N = ${list.length}');
 
         debugPrint('Uploading another batch of Geolocation measurements...');
-        await CarpDataStreamService()
-            .appendToDataStreams(testDeploymentId, geoLocationBatch, false);
+        await CarpDataStreamService().appendToDataStreams(
+          testDeploymentId,
+          geoLocationBatch,
+        );
 
         var list2 = await getGeoLocationBatches();
         debugPrint('N = ${list2.length}');

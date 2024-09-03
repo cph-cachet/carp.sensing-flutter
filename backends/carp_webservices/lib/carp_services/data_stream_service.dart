@@ -40,13 +40,13 @@ class CarpDataStreamService extends CarpBaseService
   @override
   Future<void> appendToDataStreams(
     String studyDeploymentId,
-    List<DataStreamBatch> batch, [
-    bool zip = true,
-  ]) async {
+    List<DataStreamBatch> batch, {
+    bool compress = true,
+  }) async {
     final payload = AppendToDataStreams(studyDeploymentId, batch);
 
-    if (zip) {
-      // zip the payload and POST the byte stream to the zip endpoint
+    if (compress) {
+      // compress the payload and POST the byte stream to the zip endpoint
       _endpointName = DATA_STREAM_ZIP_ENDPOINT_NAME;
       await _post(
         Uri.encodeFull(rpcEndpointUri),
