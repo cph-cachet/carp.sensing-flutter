@@ -26,7 +26,7 @@ class DataStreamReference extends RPCCarpReference {
   /// {{PROTOCOL}}://{{SERVER_HOST}}:{{SERVER_PORT}}/api/data-stream-service
   @override
   String get rpcEndpointUri =>
-      "${service.app!.uri.toString()}/api/data-stream-service";
+      "${service.app.uri.toString()}/api/data-stream-service";
 
   /// Append a [batch] of data measures to this data stream.
   /// If [compress] is true, the data is compressed before upload.

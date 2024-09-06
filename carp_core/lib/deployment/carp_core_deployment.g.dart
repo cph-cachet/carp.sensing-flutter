@@ -602,7 +602,8 @@ SetParticipantData _$SetParticipantDataFromJson(Map<String, dynamic> json) =>
     SetParticipantData(
       json['studyDeploymentId'] as String?,
       (json['data'] as Map<String, dynamic>?)?.map(
-        (k, e) => MapEntry(k, Data.fromJson(e as Map<String, dynamic>)),
+        (k, e) => MapEntry(
+            k, e == null ? null : Data.fromJson(e as Map<String, dynamic>)),
       ),
       json['inputByParticipantRole'] as String?,
     )

@@ -5,7 +5,7 @@
  * found in the LICENSE file.
  */
 
-part of 'carp_services.dart';
+part of '../carp_services/carp_services.dart';
 
 /// Zip the [json] JSON to a list of bytes.
 List<int> zipJson(Map<String, dynamic> json) => zipString(toJsonString(json));

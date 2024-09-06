@@ -35,6 +35,7 @@ void main() {
 
     await CarpAuthService().configure(CarpProperties().authProperties);
     CarpService().configure(CarpProperties().app);
+    CarpParticipationService().configureFrom(CarpService());
 
     await CarpAuthService().authenticateWithUsernamePassword(
       username: username,

@@ -77,20 +77,22 @@ Add the following `CFBundleURLTypes` entry in your `Info.plist` file:
 
 Replace `com.my.app` with your application id.
 
-## Usage
+## Services
 
-Import the needed CARP libraries.
+CARP Web Services (CAWS) consists of a set of sub-services, which are accessible for the client:
 
-```dart
-import 'package:carp_core/carp_core.dart';
-import 'package:carp_mobile_sensing/carp_mobile_sensing.dart';
-import 'package:carp_webservices/carp_auth/carp_auth.dart';
-import 'package:carp_webservices/carp_services/carp_services.dart';
-```
+* [`CarpAuthService`](https://pub.dev/documentation/carp_webservices/latest/carp_auth/CarpAuthService-class.html) - authentication service for CAWS
+* [`CarpParticipationService`](https://pub.dartlang.org/documentation/carp_webservices/latest/carp_services/CarpParticipationService-class.html) - CAWS-specific implementation of the [ParticipationService](https://github.com/cph-cachet/carp.core-kotlin/blob/develop/docs/carp-deployments.md#participationservice)
+* [`CarpDeploymentService`](https://pub.dartlang.org/documentation/carp_webservices/latest/carp_services/CarpDeploymentService-class.html) - CAWS-specific implementation of the [DeploymentService](https://github.com/cph-cachet/carp.core-kotlin/blob/develop/docs/carp-deployments.md#deploymentservice)
+* [`CarpDataStreamService`](https://pub.dartlang.org/documentation/carp_webservices/latest/carp_services/CarpDataStreamService-class.html)  - CAWS-specific implementation of the [DataStreamService](<https://github.com/cph-cachet/carp.core-kotlin/blob/develop/docs/carp-data.md#datastreamservice>)
+* [`CarpService`](https://pub.dartlang.org/documentation/carp_webservices/latest/carp_services/CarpService-class.html) - resource management (folders, documents, and files) and alternative data management service
 
-### Configuration
+The `CarpParticipationService`, `CarpDeploymentService`, and `CarpDataStreamService` follows the [CARP Core architecture](https://github.com/cph-cachet/carp.core-kotlin?tab=readme-ov-file#architecture), and are CAWS-specific implementations of the ParticipationService, `DeploymentService, and DataStreamService, respectively.
+The`CarpAuthService` and `CarpService` are only part of the CAWS architecture ("non-core" endpoints).
 
-The [`CarpService`](https://pub.dartlang.org/documentation/carp_webservices/latest/carp_services/CarpService-class.html) is a singleton and needs to be configured once via the `CarpApp` configuration.
+## Configuration
+
+All CAWS services needs to be configured before used, using the `configure` method taking a  [`CarpApp`](https://pub.dev/documentation/carp_webservices/latest/carp_services/CarpApp-class.html) configuration.
 
 ````dart
 // The URI of the CAWS server to connect to.
@@ -99,7 +101,7 @@ final Uri uri = Uri(
   host: 'dev.carp.dk',
 );
 
-final CarpApp _app = CarpApp(
+final CarpApp app = CarpApp(
   name: "CAWS @ DTU [DEV]",
   uri: uri,
 );
@@ -108,11 +110,19 @@ final CarpApp _app = CarpApp(
 CarpService().configure(app);
 ````
 
+The singleton can now be accessed via `CarpService()`.
+
+Any service can be configured based on another service, like this:
+
+```dart
+    CarpParticipationService().configureFrom(CarpService());
+```
+
 The `CarpApp` can also hold information about the `studyId` and `studyDeploymentId` for a specific study and deployment hosted at a CAWS server. This information is used in the methods below for handling e.g., informed consent, data points, documents and folders, etc.
 
-The singleton can now be accessed via `CarpService()`. However, in order to access the CARP Web Service endpoint, authentication is needed first.
+Below are how the different services are used, starting with authentication.
 
-### Authentication
+## Authentication Service
 
 Authentication is done using the `CarpAuthService` singleton, which is configured using the `CarpAuthProperties` properties:
 
@@ -139,8 +149,8 @@ Basic authentication is using the CAWS Keycloak login page, which the system ope
 CarpUser user = await CarpAuthService().authenticate();
 ```
 
-This `CarpUser` object contains the OAuth token in the `.token` (of type `OAuthToken`) parameter.
-Since the [CarpUser](https://pub.dev/documentation/carp_webservices/latest/carp_auth/CarpUser-class.html) can be serialized to JSON, the OAuth token can be stored on the phone.
+This [`CarpUser`](https://pub.dev/documentation/carp_webservices/latest/carp_auth/CarpUser-class.html) object contains the OAuth token in the `token` (of type [`OAuthToken`](https://pub.dev/documentation/carp_webservices/latest/carp_auth/OAuthToken-class.html)) parameter.
+Since the `CarpUser` object can be serialized to JSON, the user and the (valid) OAuth token can be stored on the phone.
 
 To refresh the OAuth token the client (Flutter) simply calls
 
@@ -148,7 +158,7 @@ To refresh the OAuth token the client (Flutter) simply calls
 await CarpAuthService().refresh()
 ```
 
-This method returns a `CarpUser`, with the new access token.
+This method returns a `CarpUser`, with a new access token.
 
 To authenticate using username and password without opening the web view, use the `authenticateWithUsernamePassword` method:
 
@@ -162,62 +172,226 @@ To log out, just call the `logout` or `logoutNoContext` methods:
 await CarpAuthService().logout()
 ```
 
-### Informed Consent Document
+## Deployments
 
-A [`ConsentDocument`](https://pub.dev/documentation/carp_webservices/latest/carp_services/ConsentDocument-class.html) can be uploaded and downloaded to and from CAWS.
+A core notion of CARP is the [Deployment](https://github.com/cph-cachet/carp.core-kotlin/blob/develop/docs/carp-deployments.md) subsystem, which has two services:
+
+* **Participation Service**  - allows retrieving participation information for study deployments, and managing data related to participants which is input by users.
+* **Deployment Service** - allows for retrieving primary device deployments for participating primary devices as defined in the study protocol.
+
+### Participation Service
+
+Enables the client to get invitations for a specific `accountId`, i.e. a user. Default is the user who is authenticated to the CARP Service.
 
 ```dart
-try {
-  ConsentDocument uploaded = await CarpService().createConsentDocument({
-    'text': 'The original terms text.',
-    'signature': 'Image Blob',
-  });
+// We assume that we are authenticated to CAWS and that the CarpService() 
+// instance has been configured.
 
-  ConsentDocument downloaded =
-      await CarpService().getConsentDocument(uploaded.id);
-} catch (error) {
-  ...;
-}
+// configure from another CAWS service
+CarpParticipationService().configureFrom(CarpService());
+
+// get invitations for this account (user)
+List<ActiveParticipationInvitation> invitations =
+    await CarpParticipationService().getActiveParticipationInvitations();
 ```
 
-### Data Points
+There is also support for showing a modal UI dialog for the user to select amongst several invitations. This is done using the `getStudyInvitation` method, like this:
 
-A [`DataPointReference`](https://pub.dartlang.org/documentation/carp_webservices/latest/carp_services/DataPointReference-class.html) is used to manage [`DataPoint`](https://pub.dartlang.org/documentation/carp_webservices/latest/carp_services/DataPoint-class.html) objects on a CARP Web Service, and have CRUD methods for:
+```dart
+var invitation =
+    await CarpParticipationService().getStudyInvitation(context);
+```
 
-* post a data point
-* batch upload multiple data points
-* get a data point
-* delete data points
+The invitation holds information on the study deployment. So, once you (or the user) has selected an invitation, you can let the CAWS services know about the deployment by using the `setInvitation` method:
 
-````dart
-// Create a piece of data
-final lightData = AmbientLight(
-  maxLux: 12,
-  meanLux: 23,
-  minLux: 0.3,
-  stdLux: 0.4,
+```dart
+CarpParticipationService().setInvitation(invitation);
+```
+
+The participant service also handles the collection of "participant data", which are specified in the [`StudyProtocol`](https://pub.dev/documentation/carp_core/latest/carp_core_protocols/StudyProtocol-class.html) (as [`expectedParticipantData`](https://pub.dev/documentation/carp_core/latest/carp_core_protocols/StudyProtocol/expectedParticipantData.html)).
+
+You can get and set participation data like this:
+
+```dart
+// Get participant data for a deployment with id [deploymentId].
+final data = await CarpParticipationService().getParticipantData(deploymentId);
+
+// Set participant data for a deployment with id [deploymentId].
+// When role name is not specified, this data is set for the entire deployment.
+await CarpParticipationService().setParticipantData(
+  testDeploymentId,
+  {
+    AddressInput.type: AddressInput(
+      address1: 'DTU HealthTech',
+      address2: 'Technical University of Denmark',
+      street: 'Ørsteds Plads',
+      city: 'Kgs. Lyngby',
+      postalCode: 'DK-2800',
+      country: 'Denmark',
+    )
+  },
+);
+```
+
+However, a more convenient way to handle participant data is to use a [`ParticipationReference`](https://pub.dev/documentation/carp_webservices/latest/carp_services/ParticipationReference-class.html), which can be obtained from the `CarpParticipationService` singleton.
+
+```dart
+ParticipationReference participation = CarpParticipationService().participation();
+```
+
+A `ParticipationReference` can now be used to set and get participant data, including the more specialized "Informed Consent" data type:
+
+```dart
+// The following example is from a family deployment with a father, mother, and child.
+
+// Get all participant data for this deployment
+ParticipantData data = await participation.getParticipantData();
+
+// Set the address of the deployment (i.e., the family)
+data = await participation.setParticipantData(
+  {
+    AddressInput.type: AddressInput(
+      address1: 'Peder Bangs Vej 3',
+      city: 'Kgs. Lyngby',
+      postalCode: 'DK-2800',
+      country: 'Denmark',
+    )
+  },
 );
 
-// create a CARP data point
-final data = DataPoint.fromData(lightData);
+// Set role-specific data (sex of the father)
+final data = await participation.setParticipantData(
+  {SexInput.type: SexInput(value: Sex.Male)},
+  father,
+);
 
-// post it to the CARP server, which returns the ID of the data point
-int dataPointId =
-    await CarpService().getDataPointReference().postDataPoint(data);
+// Set the informed consent for a user (father)
+await participation.setInformedConsent(
+  InformedConsentInput(
+    userId: 'ec44c84d-3acd-45d5-83ef-1511e0c39e48',
+    name: father,
+    consent: 'I agree!',
+    signatureImage: 'blob',
+  ),
+  father,
+);
 
-// get the data point back from the server
-CARPDataPoint dataPoint =
-    await CarpService().getDataPointReference().getDataPoint(dataPointId);
+// Get the informed consent for all role names in this deployment
+Map<String, InformedConsentInput?> consent = await participation.getInformedConsent();
 
-// batch upload a list of raw json data points in a file
-final File file = File('test/batch.json');
-await CarpService().getDataPointReference().batchPostDataPoint(file);
+// Remove the informed consent for a user (father)
+await participation.removeInformedConsent(father);
+```
 
-// delete the data point
-await CarpService().getDataPointReference().deleteDataPoint(dataPointId);
+### Deployment Service
+
+The Deployment Service handles "deployment" configurations, i.e. configurations that describe how data sampling in a study should take place.
+
+The [`CarpDeploymentService`](https://pub.dev/documentation/carp_webservices/latest/carp_services/CarpDeploymentService-class.html) has methods for getting deployments and for updating deployment and device status. Here are a list of examples:
+
+```dart
+// We assume that we are authenticated to CAWS and that the CarpService() 
+// instance has been configured.
+
+CarpDeploymentService().configureFrom(CarpService());
+
+// Get the deployment status.
+StudyDeploymentStatus status = await CarpDeploymentService()
+    .getStudyDeploymentStatus(deploymentId);
+
+// Register the primary device for the deployment.
+await CarpDeploymentService().registerDevice(
+    deploymentId,
+    status.primaryDeviceStatus!.device.roleName,
+    DefaultDeviceRegistration(deviceDisplayName: 'Samsung A10'));
+
+// Get the deployment describing what data to collect.
+PrimaryDeviceDeployment deployment = await CarpDeploymentService().getDeviceDeploymentFor(
+  deploymentId,
+  status.primaryDeviceStatus!.device.roleName,
+);
+
+// Mark the deployment as successfully deployed on this device.
+await CarpDeploymentService().deviceDeployed(
+  deploymentId,
+  status.primaryDeviceStatus!.device.roleName,
+  deployment.lastUpdatedOn,
+);
+```
+
+However, instead of keeping track of deployment IDs, a more convenient way to access deployments are to use a [`DeploymentReference`](https://pub.dev/documentation/carp_webservices/latest/carp_services/DeploymentReference-class.html):
+
+````dart
+// We assume that we are authenticated to CAWS, that the CarpService() 
+// instance has been configured, and that the deployment information has 
+// be saved by setting the invitation (using the 'setInvitation' method).
+
+CarpDeploymentService().configureFrom(CarpService());
+
+// get a deployment reference to the invited deployment
+final deploymentReference = CarpDeploymentService().deployment();
+
+// get the status of this deployment
+var status = await deploymentReference.getStatus();
+
+// register a device
+status = await deploymentReference.registerDevice(
+    status.primaryDeviceStatus!.device.roleName,
+    DefaultDeviceRegistration(deviceDisplayName: 'Samsung A10'));
+
+// get the primary device deployment
+var deployment = await deploymentReference.get();
+
+// mark the deployment as a successfully deployed
+status = await deploymentReference.deployed();
 ````
 
-### Application-specific Collections and Documents
+## Data Stream Service
+
+Collected data is streamed back to a CARP Web Service using the [`Data`](https://github.com/cph-cachet/carp.core-kotlin/blob/develop/docs/carp-data.md) subsystem.
+This is done using the [`CarpDataStreamService`](https://pub.dev/documentation/carp_webservices/latest/carp_services/CarpDataStreamService-class.html) like this:
+
+```dart
+// Configure a [CarpDataStreamService] from an existing CAWS service.
+CarpDataStreamService().configureFrom(CarpService());
+
+// Create a (very simple) data batch with one measurement to upload
+var measurement = Measurement(
+  sensorStartTime: 1642505144000000,
+  data: Geolocation(
+      latitude: 55.680802203873114, longitude: 12.581802212861367));
+
+var batch = [
+  DataStreamBatch(
+    dataStream: DataStreamId(
+        studyDeploymentId:
+            CarpDataStreamService().app.studyDeploymentId ?? '',
+        deviceRoleName: 'smartphone',
+        dataType: Geolocation.dataType),
+    firstSequenceId: 0,
+    measurements: [measurement],
+    triggerIds: {0}),
+];
+
+// Get a data stream and append the batch
+CarpDataStreamService().stream().append(batch);
+```
+
+However, you would rarely need to use these endpoints in your app, since the [carp_backend](https://pub.dev/packages/carp_backend) would handle this when you use a [`CarpDataEndPoint`](https://pub.dev/documentation/carp_backend/latest/carp_backend/CarpDataEndPoint-class.html) as the data endpoint in the study protocol.
+
+## CARP Web Service
+
+The [`CarpService`](https://pub.dev/documentation/carp_webservices/latest/carp_services/CarpService-class.html) provides access to a set of "non-core" endpoints in CAWS.
+These "non-core" endpoints are:
+
+* JSON Documents organized in Collections
+* File Management
+* Informed Consent Documents
+* Data Points
+
+All of these endpoints can be considered as additional "resources" which are available for up- or download from clients.
+
+### Collections of JSON Documents
 
 CARP Web Service supports storing JSON documents in nested collections.
 
@@ -306,86 +480,64 @@ final List<CarpFileResponse> results =
 responseCode = await CarpService().getFileStorageReference(id).delete();
 ````
 
-### Deployments
+### Informed Consent Document
 
-A core notion of CARP is the [Deployment](https://github.com/cph-cachet/carp.core-kotlin/blob/develop/docs/carp-deployments.md) subsystem.
-This subsystem is used for accessing `deployment` configurations, i.e. configurations that describe how data sampling in a study should take place.
-The CARP Web Service have methods for:
+A [`ConsentDocument`](https://pub.dev/documentation/carp_webservices/latest/carp_services/ConsentDocument-class.html) can be uploaded and downloaded to and from CAWS.
 
-* getting invitations for a specific `accountId`, i.e. a user. Default is the user who is authenticated to the CARP Service.
-* getting a deployment reference, which then can be used to query status, register devices, and get the deployment specification.
+> **Note** This is an old endpoint which is deprecated. Informed consent should be uploaded as a "participant data" as outlined above. However, at the moment, CAWS supports both types of informed consent (for backward compatibility reasons).
 
-Deployments are accessed via a [`DeploymentReference`](https://pub.dev/documentation/carp_webservices/latest/carp_services/DeploymentReference-class.html).
+```dart
+try {
+  ConsentDocument uploaded = await CarpService().createConsentDocument({
+    'text': 'The original terms text.',
+    'signature': 'Image Blob',
+  });
+
+  ConsentDocument downloaded =
+      await CarpService().getConsentDocument(uploaded.id);
+} catch (error) {
+  ...;
+}
+```
+
+### Data Points
+
+> **Note** This is an old endpoint which is deprecated. Data should be uploaded using "data streams" as outlined above. However, at the moment, CAWS supports both types of data upload (for backward compatibility reasons).
+
+A [`DataPointReference`](https://pub.dartlang.org/documentation/carp_webservices/latest/carp_services/DataPointReference-class.html) is used to manage [`DataPoint`](https://pub.dartlang.org/documentation/carp_webservices/latest/carp_services/DataPoint-class.html) objects on a CARP Web Service, and have CRUD methods for:
+
+* post a data point
+* batch upload multiple data points
+* get a data point
+* delete data points
 
 ````dart
-// This example uses the
-//  * CarpDeploymentService
-//  * CarpParticipationService
-//
-// To use these, we first must configure them and authenticate.
-// However, the [configureFrom] method is a convenient way to do this
-// based on an existing service, which has been configured.
+// Create a piece of data
+final lightData = AmbientLight(
+  maxLux: 12,
+  meanLux: 23,
+  minLux: 0.3,
+  stdLux: 0.4,
+);
 
-CarpParticipationService().configureFrom(CarpService());
-CarpDeploymentService().configureFrom(CarpService());
+// create a CARP data point
+final data = DataPoint.fromData(lightData);
 
-// get invitations for this account (user)
-List<ActiveParticipationInvitation> invitations =
-    await CarpParticipationService().getActiveParticipationInvitations();
+// post it to the CARP server, which returns the ID of the data point
+int dataPointId =
+    await CarpService().getDataPointReference().postDataPoint(data);
 
-// get a deployment reference for this master device
-DeploymentReference deploymentReference =
-    CarpDeploymentService().deployment('the_study_deployment_id');
+// get the data point back from the server
+CARPDataPoint dataPoint =
+    await CarpService().getDataPointReference().getDataPoint(dataPointId);
 
-// get the status of this deployment
-StudyDeploymentStatus status = await deploymentReference.getStatus();
+// batch upload a list of raw json data points in a file
+final File file = File('test/batch.json');
+await CarpService().getDataPointReference().batchPostDataPoint(file);
 
-// register a device
-status = await deploymentReference.registerDevice(deviceRoleName: 'phone');
-
-// get the master device deployment
-MasterDeviceDeployment deployment = await deploymentReference.get();
-
-// mark the deployment as a success
-status = await deploymentReference.success();
+// delete the data point
+await CarpService().getDataPointReference().deleteDataPoint(dataPointId);
 ````
-
-There is also support for showing a modal dialog for the user to select amongst several invitations. This is done using the `getStudyInvitation` method, like this:
-
-```dart
-var invitation =
-    await CarpParticipationService().getStudyInvitation(context);
-print('Selected CARP Study Invitation: $invitation');
-```
-
-### Streaming Data
-
-Collected data can be streamed back to a CARP Web Service using the [`Data`](https://github.com/cph-cachet/carp.core-kotlin/blob/develop/docs/carp-data.md) subsystem. Note that this is a separate subsystem from the `DataPoint` endpoint described above. CAWS supports **both** types of data upload (for legacy reasons).
-
-```dart
-// Configure a [CarpDataStreamService] from an existing CAWS service.
-CarpDataStreamService().configureFrom(CarpService());
-
-// Create a (very simple) data batch to upload
-var measurement = Measurement(
-  sensorStartTime: 1642505144000000,
-  data: Geolocation(
-      latitude: 55.680802203873114, longitude: 12.581802212861367));
-var batch = [
-DataStreamBatch(
-    dataStream: DataStreamId(
-        studyDeploymentId:
-            CarpDataStreamService().app?.studyDeploymentId ?? '',
-        deviceRoleName: 'smartphone',
-        dataType: Geolocation.dataType),
-    firstSequenceId: 0,
-    measurements: [measurement],
-    triggerIds: {0}),
-];
-
-// Get a data stream and append the batch
-CarpDataStreamService().stream().append(batch);
-```
 
 ## Features and bugs
 
@@ -395,5 +547,5 @@ Please file feature requests and bug reports at the [issue tracker][tracker].
 
 ## License
 
-This software is copyright (c) [Copenhagen Center for Health Technology (CACHET)](https://www.cachet.dk/) at the [Technical University of Denmark (DTU)](https://www.dtu.dk).
+This software is copyright (c) the [Technical University of Denmark (DTU)](https://www.dtu.dk).
 This software is made available 'as-is' in a MIT [license](/LICENSE).

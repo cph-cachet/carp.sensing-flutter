@@ -1,8 +1,9 @@
 ## 3.3.0
 
 * support for uploading compressed data files to the CAWS data stream endpoint
-* support for uploading participant input data (like full name, informed consent, etc.)
-* **BREAKING** - informed consent is now uploaded as an input data type to CAWS (the old Informed Consent endpoint is deprecated)
+* support for uploading participant data (like full name, informed consent, etc.)
+* Informed consent is now uploaded as an participant data type to CAWS (the old Informed Consent endpoint is deprecated)
+* The old DataPoint data upload endpoint is marked as deprecated.
 
 ## 3.2.0
 
@@ -70,7 +71,7 @@ Completely revamped authentication service to use an Identity Server, using the 
 ## 0.32.1
 
 * small update to `HTTPStatus`
-* improvment to unit tests
+* improvement to unit tests
 
 ## 0.32.0
 
@@ -120,7 +121,7 @@ Completely revamped authentication service to use an Identity Server, using the 
 ## 0.20.1
 
 * support for more file endpoints
-  * `getAllFiles()` - gettting all files in a study
+  * `getAllFiles()` - getting all files in a study
   * `queryFiles()` - query for specific files in a study
 * fixed a bug in token refresh
 
@@ -138,7 +139,7 @@ Completely revamped authentication service to use an Identity Server, using the 
 ## 0.13.1
 
 * error message to authentication dialog
-* `AuthEvent` events exended with a `failed` event on authentication failure
+* `AuthEvent` events extended with a `failed` event on authentication failure
 
 ## 0.13.0
 
@@ -179,7 +180,7 @@ Completely revamped authentication service to use an Identity Server, using the 
 
 * feature: support for `changePassword()`
 * fix: password is no longer stored as part of `carp_webservices` neither in memory or serialized to json.
-* refactor: removal of old deprecated methods for inviting particpants and researchers.
+* refactor: removal of old deprecated methods for inviting participants and researchers.
 
 ## 0.5.1
 

@@ -5,7 +5,7 @@
  * found in the LICENSE file.
  */
 
-part of 'carp_services.dart';
+part of '../carp_services/carp_services.dart';
 
 /// The HTTP Retry method.
 final HTTPRetry httpr = HTTPRetry();

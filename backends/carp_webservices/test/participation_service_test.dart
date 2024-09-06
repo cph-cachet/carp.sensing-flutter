@@ -23,27 +23,25 @@ void main() {
   WidgetsFlutterBinding.ensureInitialized();
   CarpMobileSensing.ensureInitialized();
 
-  /// Configure CARP and authenticate.
+  /// Configure the [CarpAuthService] and authenticate,
+  /// and configure the [CarpParticipationService].
   setUpAll(() async {
     await CarpAuthService().configure(CarpProperties().authProperties);
-    CarpService().configure(CarpProperties().app);
+    CarpParticipationService().configure(CarpProperties().app);
 
     user = await CarpAuthService().authenticateWithUsernamePassword(
       username: username,
       password: password,
     );
-
-    CarpParticipationService().configureFrom(CarpService());
   });
 
   tearDownAll(() {});
 
   group("Base services", () {
     test('- authentication', () async {
-      debugPrint('CarpService : ${CarpService().app}');
+      debugPrint(
+          'CarpParticipationService : ${CarpParticipationService().app}');
       debugPrint(" - signed in as: $user");
-
-      // debugPrint('${CarpAuthService().manager?.discoveryDocument}');
     }, skip: false);
   });
 
@@ -54,8 +52,17 @@ void main() {
         final invitations = await CarpParticipationService()
             .getActiveParticipationInvitations();
 
+        // debugPrint(toJsonString(invitations));
         expect(invitations, isNotNull);
-        debugPrint(toJsonString(invitations));
+
+        var invitation = invitations.firstWhere(
+            (invitation) => invitation.studyDeploymentId == testDeploymentId);
+        expect(invitation, isNotNull);
+
+        debugPrint(toJsonString(invitation));
+        CarpParticipationService().setInvitation(invitation);
+        expect(
+            CarpParticipationService().app.studyDeploymentId, testDeploymentId);
       },
       skip: false,
     );

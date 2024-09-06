@@ -19,18 +19,19 @@ class ParticipationReference extends RPCCarpReference {
 
   /// The CARP study deployment ID.
   String? get studyDeploymentId =>
-      _studyDeploymentId ?? service.app!.studyDeploymentId;
+      _studyDeploymentId ?? service.app.studyDeploymentId;
 
   ParticipationReference._(
-      CarpParticipationService service, this._studyDeploymentId)
-      : super._(service);
+    CarpParticipationService service,
+    this._studyDeploymentId,
+  ) : super._(service);
 
   /// The URL for the participation endpoint.
   ///
   /// {{PROTOCOL}}://{{SERVER_HOST}}:{{SERVER_PORT}}/api/participation-service
   @override
   String get rpcEndpointUri =>
-      "${service.app!.uri.toString()}/api/participation-service";
+      "${service.app.uri.toString()}/api/participation-service";
 
   /// Get currently set data for all expected participant data in this study
   /// deployment with [studyDeploymentId].
@@ -59,7 +60,6 @@ class ParticipationReference extends RPCCarpReference {
 
     ParticipantData data = ParticipantData.fromJson(
         await _rpc(GetParticipantData(studyDeploymentId!)));
-    // debugPrint(toJsonString(data));
 
     for (var roleData in data.roles) {
       if (roleData.data.containsKey(InformedConsentInput.type)) {
@@ -78,12 +78,22 @@ class ParticipationReference extends RPCCarpReference {
   /// Set informed [consent] for the given [inputByParticipantRole] in this
   /// study deployment.
   Future<void> setInformedConsent(
-    String inputByParticipantRole,
     InformedConsentInput consent,
+    String inputByParticipantRole,
   ) async {
     ParticipantData.fromJson(await _rpc(SetParticipantData(
       studyDeploymentId!,
       {InformedConsentInput.type: consent},
+      inputByParticipantRole,
+    )));
+  }
+
+  /// Remove the informed for the given [inputByParticipantRole] in this
+  /// study deployment.
+  Future<void> removeInformedConsent(String inputByParticipantRole) async {
+    ParticipantData.fromJson(await _rpc(SetParticipantData(
+      studyDeploymentId!,
+      {InformedConsentInput.type: null},
       inputByParticipantRole,
     )));
   }

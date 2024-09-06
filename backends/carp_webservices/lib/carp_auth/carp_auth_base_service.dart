@@ -1,15 +1,12 @@
 part of 'carp_auth.dart';
 
-/// An abstract base service class for all CARP Services:
-///  * [CarpService]
-///  * [DeploymentService]
-///  * [ProtocolService]
-///  * [ParticipationService]
+/// An abstract base class for authentication services.
+/// Used by the [CarpAuthService].
 abstract class CarpAuthBaseService {
   CarpAuthProperties? _authProperties;
   CarpUser? _currentUser;
 
-  /// The CARP app associated with the CARP Web Service.
+  /// The CARP authentication properties associated with the CARP Web Service.
   /// Returns `null` if this service has not yet been configured via the
   /// [configure] method.
   CarpAuthProperties? get authProperties => _authProperties;

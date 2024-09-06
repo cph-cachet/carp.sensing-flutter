@@ -95,7 +95,8 @@ class SetParticipantData extends ParticipationServiceRequest {
   /// The participant role who filled out [data]; null if all roles can set it.
   String? inputByParticipantRole;
 
-  Map<String, Data>? data;
+  /// The data to be set.
+  Map<String, Data?>? data;
 
   // /// The data to be set.
   // @JsonKey(includeFromJson: false, includeToJson: false)

@@ -19,7 +19,7 @@ class DataPointReference extends CarpReference {
 
   /// The URL for the data end point for this [DataPointReference].
   String get dataEndpointUri =>
-      "${service.app!.uri.toString()}/api/deployments/${service.app!.studyDeploymentId}/data-points";
+      "${service.app.uri.toString()}/api/deployments/${service.app.studyDeploymentId}/data-points";
 
   /// Uploads [data].
   ///
@@ -54,7 +54,7 @@ class DataPointReference extends CarpReference {
       var path = 'cache';
 
       if (Settings().initialized) {
-        final deploymentId = service.app?.studyDeploymentId ?? 'tmp';
+        final deploymentId = service.app.studyDeploymentId ?? 'tmp';
         path = await Settings().getCacheBasePath(deploymentId);
       }
       final directory = await Directory('$path/upload').create(recursive: true);

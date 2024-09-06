@@ -1,4 +1,4 @@
-## 1.7.0
+## 1.7.1
 
 * support for new [input data types](https://github.com/cph-cachet/carp-webservices-spring/blob/master/docs/input-data-types.md) at CAWS
 

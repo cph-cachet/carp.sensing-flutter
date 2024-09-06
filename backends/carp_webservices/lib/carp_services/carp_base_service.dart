@@ -1,25 +1,46 @@
-/*
- * Copyright 2018 Copenhagen Center for Health Technology (CACHET) at the
- * Technical University of Denmark (DTU).
- * Use of this source code is governed by a MIT-style license that can be
- * found in the LICENSE file.
- */
-
 part of 'carp_services.dart';
 
 /// An abstract base service class for all CARP Services:
-///  * [CarpService]
+///  * [ParticipationService]
 ///  * [DeploymentService]
 ///  * [ProtocolService]
-///  * [ParticipationService]
+///  * [CarpService]
+///
+/// The (current) assumption is that each Flutter app (using this library) will
+/// only connect to one CARP web services backend.
+/// Therefore a all all CARP services are singletons and can be used like:
+///
+/// ```dart
+/// await CarpAuthService().configure(authProperties);
+///
+/// user = await CarpAuthService().authenticateWithUsernamePassword(
+///   username: username,
+///   password: password,
+/// );
+///
+/// CarpParticipationService().configure(app);
+/// ```
+///
+/// where `authProperties`, `username`, and `password` are parameters for setting up
+/// authentication, and `app` is configuring the participation service to use the
+/// right CAWS instance.
 abstract class CarpBaseService {
   CarpApp? _app;
   String? _endpointName;
 
   /// The CARP app associated with the CARP Web Service.
-  /// Returns `null` if this service has not yet been configured via the
+  ///
+  /// Throws a [CarpServiceException] if this service has not yet been configured via the
   /// [configure] method.
-  CarpApp? get app => _app;
+  CarpApp get app {
+    if (_app == null) {
+      throw CarpServiceException(
+          message:
+              "CARP Service not configured. Call 'CarpService().configure()' first.");
+    } else {
+      return _app!;
+    }
+  }
 
   /// Has this service been configured?
   bool get isConfigured => (_app != null);
@@ -29,8 +50,7 @@ abstract class CarpBaseService {
     _app = app;
   }
 
-  /// Configure from another [service] which has already been configured
-  /// and potentially authenticated.
+  /// Configure from another [service] which has already been configured.
   void configureFrom(CarpBaseService service) {
     _app = service._app;
   }
@@ -42,7 +62,7 @@ abstract class CarpBaseService {
   ///
   /// Typically on the form:
   /// `{{PROTOCOL}}://{{SERVER_HOST}}:{{SERVER_PORT}}/api/...`
-  String get rpcEndpointUri => "${app!.uri}/api/$_endpointName";
+  String get rpcEndpointUri => "${app.uri}/api/$_endpointName";
 
   /// The headers for any authenticated HTTP REST call to a [CarpBaseService].
   Map<String, String> get headers {

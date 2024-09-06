@@ -1,10 +1,3 @@
-/*
- * Copyright 2018 Copenhagen Center for Health Technology (CACHET) at the
- * Technical University of Denmark (DTU).
- * Use of this source code is governed by a MIT-style license that can be
- * found in the LICENSE file.
- */
-
 part of 'carp_services.dart';
 
 /// Provide a file endpoint reference to a CARP web service. Used to:
@@ -24,7 +17,7 @@ class FileStorageReference extends CarpReference {
 
   /// The URL for the file end point for this [FileStorageReference].
   String get fileEndpointUri =>
-      "${service.app!.uri.toString()}/api/studies/${service.app!.studyId}/files";
+      "${service.app.uri.toString()}/api/studies/${service.app.studyId}/files";
 
   /// Asynchronously uploads a file to the currently specified
   /// [FileStorageReference], with optional [metadata].

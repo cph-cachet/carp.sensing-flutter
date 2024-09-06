@@ -50,14 +50,14 @@ class CollectionReference extends CarpReference {
 
   /// The full CARP Web Service (CAWS) path to this collection.
   String get cawsPath =>
-      '/api/studies/${service.app!.studyId}/collections/$path';
+      '/api/studies/${service.app.studyId}/collections/$path';
 
   /// The full URI for the collection endpoint for this [CollectionReference].
-  String get collectionUri => "${service.app!.uri.toString()}$cawsPath";
+  String get collectionUri => "${service.app.uri.toString()}$cawsPath";
 
   /// The full URI for the collection endpoint for this [CollectionReference] by its unique [id].
   String get collectionUriByID =>
-      '${service.app!.uri.toString()}/api/studies/${service.app!.studyId}/collections/id/$id';
+      '${service.app.uri.toString()}/api/studies/${service.app.studyId}/collections/id/$id';
 
   /// Reads the collection referenced by this [CollectionReference] from the server.
   ///

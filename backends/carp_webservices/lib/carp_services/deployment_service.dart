@@ -23,9 +23,9 @@ class CarpDeploymentService extends CarpBaseService
 
   /// Gets a [DeploymentReference] for a [studyDeploymentId].
   /// If the [studyDeploymentId] is not provided, the study deployment id
-  /// specified in the [CarpApp] is used.
+  /// specified in the [app] is used.
   DeploymentReference deployment([String? studyDeploymentId]) =>
-      DeploymentReference._(this, studyDeploymentId ?? app!.studyDeploymentId!);
+      DeploymentReference._(this, studyDeploymentId ?? app.studyDeploymentId!);
 
   @override
   Future<StudyDeploymentStatus> createStudyDeployment(

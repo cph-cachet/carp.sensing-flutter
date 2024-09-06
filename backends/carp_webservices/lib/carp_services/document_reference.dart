@@ -39,11 +39,11 @@ class DocumentReference extends CarpReference {
   /// If the id of this document is known, use the `documents` CARP endpoint,
   /// otherwise use the `collections` endpoint.
   String get cawsPath => (_id != null)
-      ? "/api/studies/${service.app!.studyId}/documents/$id"
-      : "/api/studies/${service.app!.studyId}/collections/$path";
+      ? "/api/studies/${service.app.studyId}/documents/$id"
+      : "/api/studies/${service.app.studyId}/collections/$path";
 
   /// The full URI for the document endpoint for this document.
-  String get documentUri => "${service.app!.uri.toString()}$cawsPath";
+  String get documentUri => "${service.app.uri.toString()}$cawsPath";
 
   /// Writes to the document referred to by this [DocumentReference].
   ///

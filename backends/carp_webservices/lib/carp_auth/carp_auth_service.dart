@@ -1,7 +1,40 @@
 part of 'carp_auth.dart';
 
+/// The authentication service for CAWS.
+///
+/// Used as a singleton.
+/// Must be configured using the [configure] method before use, like this:
+///
+/// ```dart
+/// // The authentication configuration
+/// late CarpAuthProperties authProperties = CarpAuthProperties(
+///   authURL: uri,
+///   clientId: 'studies-app',
+///   redirectURI: Uri.parse('carp-studies-auth://auth'),
+///   // For authentication at CAWS the path is '/auth/realms/Carp'
+///   discoveryURL: uri.replace(pathSegments: [
+///     'auth',
+///     'realms',
+///     'Carp',
+///   ]),
+/// );
+///
+/// await CarpAuthService().configure(authProperties);
+/// ```
+///
+/// Basic authentication is using the CAWS login web page, which is opened
+/// when calling the [authenticate] method:
+///
+/// ```dart
+/// CarpUser user = await CarpAuthService().authenticate();
+/// ```
+///
 class CarpAuthService extends CarpAuthBaseService {
   static final CarpAuthService _instance = CarpAuthService._();
+  OidcUserManager? _manager;
+  final StreamController<AuthEvent> _authEventController =
+      StreamController.broadcast();
+
   CarpAuthService._();
 
   /// Returns the singleton default instance of the [CarpAuthService].
@@ -11,12 +44,12 @@ class CarpAuthService extends CarpAuthBaseService {
 
   CarpAuthService.instance() : this._();
 
+  /// The [OidcUserManager] handling authentication.
+  OidcUserManager? get manager => _manager;
+
   /// Is a user authenticated?
   /// If `true`, the authenticated user is [currentUser].
   bool get authenticated => (_currentUser != null);
-
-  OidcUserManager? _manager;
-  OidcUserManager? get manager => _manager;
 
   @override
   CarpAuthProperties get authProperties => nonNullAble(_authProperties);
@@ -24,9 +57,6 @@ class CarpAuthService extends CarpAuthBaseService {
   @override
   CarpUser get currentUser => nonNullAble(_currentUser);
   set currentUser(CarpUser? user) => _currentUser = user;
-
-  final StreamController<AuthEvent> _authEventController =
-      StreamController.broadcast();
 
   /// Notifies about changes to the user's authentication state (such as sign-in
   /// or sign-out) as defined in [AuthEvent].
@@ -64,6 +94,8 @@ class CarpAuthService extends CarpAuthBaseService {
     await initManager();
   }
 
+  /// Initialize the [manager]. This service must be configured before calling this
+  /// method.
   Future<void> initManager() async {
     assert(_manager != null, 'Manager not configured. Call configure() first.');
 
@@ -77,10 +109,10 @@ class CarpAuthService extends CarpAuthBaseService {
     });
   }
 
-  /// Authenticate to this CARP service, that opens the authentication page
+  /// Authenticate to this CARP service. This method will opens the authentication page
   /// of the Identity Server using a secure web view from the OS.
   ///
-  /// The discovery URL in the [app] is used to find the Identity Server.
+  /// The discovery URL in the [authProperties] is used to find the Identity Server.
   ///
   /// Returns the signed in user (with an [OAuthToken] access token), if successful.
   /// Throws a [CarpServiceException] if not successful.
@@ -113,7 +145,7 @@ class CarpAuthService extends CarpAuthBaseService {
 
   /// Authenticate to this CARP service using a [username] and [password].
   ///
-  /// The discovery URL in the [app] is used to find the Identity Server.
+  /// The discovery URL in the [authProperties] is used to find the Identity Server.
   ///
   /// Returns the signed in user (with an [OAuthToken] access token), if successful.
   /// Throws a [CarpServiceException] if not successful.
@@ -192,7 +224,7 @@ class CarpAuthService extends CarpAuthBaseService {
   ///
   /// Opens a web view to clear cookies and end the session on the Identity Server.
   ///
-  /// Use this if you used [authenticate] to authenticate.
+  /// Only use this method if you used [authenticate] to authenticate.
   Future<void> logout() async {
     assert(_manager != null, 'Manager not configured. Call configure() first.');
 
@@ -256,7 +288,4 @@ enum AuthEvent {
 
   /// The user's token has successfully been refreshed.
   refreshed,
-
-  /// A password reset email has been send to the user.
-  reset,
 }

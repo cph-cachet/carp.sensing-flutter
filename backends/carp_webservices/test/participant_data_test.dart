@@ -324,7 +324,8 @@ void main() {
       () async {
         final participation = CarpParticipationService().participation();
 
-        final consent = await participation.getInformedConsent();
+        Map<String, InformedConsentInput?> consent =
+            await participation.getInformedConsent();
         debugPrint(toJsonString(consent));
 
         expect(consent[father], isA<InformedConsentInput>());
@@ -340,19 +341,36 @@ void main() {
         final participation = CarpParticipationService().participation();
 
         await participation.setInformedConsent(
-            father,
-            InformedConsentInput(
-              userId: 'ec44c84d-3acd-45d5-83ef-1511e0c39e48',
-              name: father,
-              consent: 'I agree!',
-              signatureImage: 'blob',
-            ));
+          InformedConsentInput(
+            userId: 'ec44c84d-3acd-45d5-83ef-1511e0c39e48',
+            name: father,
+            consent: 'I agree!',
+            signatureImage: 'blob',
+          ),
+          father,
+        );
 
         final consent = await participation.getInformedConsent();
         debugPrint(toJsonString(consent));
 
         expect(consent[father], isA<InformedConsentInput>());
         expect(consent[father]?.name, father);
+        expect(consent[mother], isNull);
+        expect(consent[child], isNull);
+      },
+    );
+
+    test(
+      '- remove Informed Consent',
+      () async {
+        final participation = CarpParticipationService().participation();
+
+        await participation.removeInformedConsent(father);
+
+        final consent = await participation.getInformedConsent();
+        debugPrint(toJsonString(consent));
+
+        expect(consent[father], isNull);
         expect(consent[mother], isNull);
         expect(consent[child], isNull);
       },

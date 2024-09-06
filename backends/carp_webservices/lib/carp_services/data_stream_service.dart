@@ -1,10 +1,3 @@
-/*
- * Copyright 2022 Copenhagen Center for Health Technology (CACHET) at the
- * Technical University of Denmark (DTU).
- * Use of this source code is governed by a MIT-style license that can be
- * found in the LICENSE file.
- */
-
 part of 'carp_services.dart';
 
 /// A [DataStreamService] that talks to the CARP Web Services.
@@ -29,7 +22,7 @@ class CarpDataStreamService extends CarpBaseService
   /// If the [studyDeploymentId] is not provided, the study deployment id
   /// specified in the [CarpApp] is used.
   DataStreamReference stream([String? studyDeploymentId]) =>
-      DataStreamReference._(this, studyDeploymentId ?? app!.studyDeploymentId!);
+      DataStreamReference._(this, studyDeploymentId ?? app.studyDeploymentId!);
 
   @override
   Future<void> openDataStreams(DataStreamsConfiguration configuration) async =>
