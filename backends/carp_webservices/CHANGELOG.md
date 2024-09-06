@@ -1,4 +1,4 @@
-## 3.3.0
+## 3.3.1
 
 * support for uploading compressed data files to the CAWS data stream endpoint
 * support for uploading participant data (like full name, informed consent, etc.)

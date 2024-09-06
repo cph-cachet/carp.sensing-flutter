@@ -1,3 +1,5 @@
+// ignore_for_file: unused_element
+
 part of 'carp_services.dart';
 
 /// An abstract base service class for all CARP Services:

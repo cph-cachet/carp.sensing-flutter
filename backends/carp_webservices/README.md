@@ -87,7 +87,7 @@ CARP Web Services (CAWS) consists of a set of sub-services, which are accessible
 * [`CarpDataStreamService`](https://pub.dartlang.org/documentation/carp_webservices/latest/carp_services/CarpDataStreamService-class.html)  - CAWS-specific implementation of the [DataStreamService](<https://github.com/cph-cachet/carp.core-kotlin/blob/develop/docs/carp-data.md#datastreamservice>)
 * [`CarpService`](https://pub.dartlang.org/documentation/carp_webservices/latest/carp_services/CarpService-class.html) - resource management (folders, documents, and files) and alternative data management service
 
-The `CarpParticipationService`, `CarpDeploymentService`, and `CarpDataStreamService` follows the [CARP Core architecture](https://github.com/cph-cachet/carp.core-kotlin?tab=readme-ov-file#architecture), and are CAWS-specific implementations of the ParticipationService, `DeploymentService, and DataStreamService, respectively.
+The `CarpParticipationService`, `CarpDeploymentService`, and `CarpDataStreamService` follows the [CARP Core architecture](https://github.com/cph-cachet/carp.core-kotlin?tab=readme-ov-file#architecture), and are CAWS-specific implementations of the ParticipationService, DeploymentService, and DataStreamService, respectively.
 The`CarpAuthService` and `CarpService` are only part of the CAWS architecture ("non-core" endpoints).
 
 ## Configuration
@@ -115,12 +115,8 @@ The singleton can now be accessed via `CarpService()`.
 Any service can be configured based on another service, like this:
 
 ```dart
-    CarpParticipationService().configureFrom(CarpService());
+CarpParticipationService().configureFrom(CarpService());
 ```
-
-The `CarpApp` can also hold information about the `studyId` and `studyDeploymentId` for a specific study and deployment hosted at a CAWS server. This information is used in the methods below for handling e.g., informed consent, data points, documents and folders, etc.
-
-Below are how the different services are used, starting with authentication.
 
 ## Authentication Service
 
@@ -152,7 +148,7 @@ CarpUser user = await CarpAuthService().authenticate();
 This [`CarpUser`](https://pub.dev/documentation/carp_webservices/latest/carp_auth/CarpUser-class.html) object contains the OAuth token in the `token` (of type [`OAuthToken`](https://pub.dev/documentation/carp_webservices/latest/carp_auth/OAuthToken-class.html)) parameter.
 Since the `CarpUser` object can be serialized to JSON, the user and the (valid) OAuth token can be stored on the phone.
 
-To refresh the OAuth token the client (Flutter) simply calls
+To refresh the OAuth token the client (Flutter) simply call:
 
 ```dart
 await CarpAuthService().refresh()
@@ -482,9 +478,9 @@ responseCode = await CarpService().getFileStorageReference(id).delete();
 
 ### Informed Consent Document
 
-A [`ConsentDocument`](https://pub.dev/documentation/carp_webservices/latest/carp_services/ConsentDocument-class.html) can be uploaded and downloaded to and from CAWS.
+> **Note:** This is an old endpoint which is deprecated. Informed consent should be uploaded as a "participant data" as outlined above. However, at the moment, CAWS supports both types of informed consent (for backward compatibility reasons).
 
-> **Note** This is an old endpoint which is deprecated. Informed consent should be uploaded as a "participant data" as outlined above. However, at the moment, CAWS supports both types of informed consent (for backward compatibility reasons).
+A [`ConsentDocument`](https://pub.dev/documentation/carp_webservices/latest/carp_services/ConsentDocument-class.html) can be uploaded and downloaded to and from CAWS.
 
 ```dart
 try {
@@ -502,7 +498,7 @@ try {
 
 ### Data Points
 
-> **Note** This is an old endpoint which is deprecated. Data should be uploaded using "data streams" as outlined above. However, at the moment, CAWS supports both types of data upload (for backward compatibility reasons).
+> **Note:** This is an old endpoint which is deprecated. Data should be uploaded using "data streams" as outlined above. However, at the moment, CAWS supports both types of data upload (for backward compatibility reasons).
 
 A [`DataPointReference`](https://pub.dartlang.org/documentation/carp_webservices/latest/carp_services/DataPointReference-class.html) is used to manage [`DataPoint`](https://pub.dartlang.org/documentation/carp_webservices/latest/carp_services/DataPoint-class.html) objects on a CARP Web Service, and have CRUD methods for:
 
