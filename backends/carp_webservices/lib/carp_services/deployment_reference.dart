@@ -40,7 +40,7 @@ class DeploymentReference extends RPCCarpReference {
   /// {{PROTOCOL}}://{{SERVER_HOST}}:{{SERVER_PORT}}/api/deployment-service
   @override
   String get rpcEndpointUri =>
-      "${service.app!.uri.toString()}/api/deployment-service";
+      "${service.app.uri.toString()}/api/deployment-service";
 
   String? _registeredDeviceId;
 

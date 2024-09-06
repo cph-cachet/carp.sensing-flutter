@@ -9,8 +9,8 @@ part of 'carp_services.dart';
 DataPoint _$DataPointFromJson(Map<String, dynamic> json) => DataPoint(
       DataPointHeader.fromJson(json['carp_header'] as Map<String, dynamic>),
     )
-      ..id = json['id'] as int?
-      ..createdByUserId = json['created_by_user_id'] as int?
+      ..id = (json['id'] as num?)?.toInt()
+      ..createdByUserId = (json['created_by_user_id'] as num?)?.toInt()
       ..studyId = json['study_id'] as String?
       ..carpBody = json['carp_body'] as Map<String, dynamic>?;
 

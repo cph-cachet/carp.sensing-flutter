@@ -1,25 +1,48 @@
-/*
- * Copyright 2018-2020 Copenhagen Center for Health Technology (CACHET) at the
- * Technical University of Denmark (DTU).
- * Use of this source code is governed by a MIT-style license that can be
- * found in the LICENSE file.
- */
+// ignore_for_file: unused_element
 
 part of 'carp_services.dart';
 
 /// An abstract base service class for all CARP Services:
-///  * [CarpService]
+///  * [ParticipationService]
 ///  * [DeploymentService]
 ///  * [ProtocolService]
-///  * [ParticipationService]
+///  * [CarpService]
+///
+/// The (current) assumption is that each Flutter app (using this library) will
+/// only connect to one CARP web services backend.
+/// Therefore a all all CARP services are singletons and can be used like:
+///
+/// ```dart
+/// await CarpAuthService().configure(authProperties);
+///
+/// user = await CarpAuthService().authenticateWithUsernamePassword(
+///   username: username,
+///   password: password,
+/// );
+///
+/// CarpParticipationService().configure(app);
+/// ```
+///
+/// where `authProperties`, `username`, and `password` are parameters for setting up
+/// authentication, and `app` is configuring the participation service to use the
+/// right CAWS instance.
 abstract class CarpBaseService {
   CarpApp? _app;
   String? _endpointName;
 
   /// The CARP app associated with the CARP Web Service.
-  /// Returns `null` if this service has not yet been configured via the
+  ///
+  /// Throws a [CarpServiceException] if this service has not yet been configured via the
   /// [configure] method.
-  CarpApp? get app => _app;
+  CarpApp get app {
+    if (_app == null) {
+      throw CarpServiceException(
+          message:
+              "CARP Service not configured. Call 'CarpService().configure()' first.");
+    } else {
+      return _app!;
+    }
+  }
 
   /// Has this service been configured?
   bool get isConfigured => (_app != null);
@@ -29,8 +52,7 @@ abstract class CarpBaseService {
     _app = app;
   }
 
-  /// Configure from another [service] which has already been configured
-  /// and potentially authenticated.
+  /// Configure from another [service] which has already been configured.
   void configureFrom(CarpBaseService service) {
     _app = service._app;
   }
@@ -42,7 +64,7 @@ abstract class CarpBaseService {
   ///
   /// Typically on the form:
   /// `{{PROTOCOL}}://{{SERVER_HOST}}:{{SERVER_PORT}}/api/...`
-  String get rpcEndpointUri => "${app!.uri}/api/$_endpointName";
+  String get rpcEndpointUri => "${app.uri}/api/$_endpointName";
 
   /// The headers for any authenticated HTTP REST call to a [CarpBaseService].
   Map<String, String> get headers {
@@ -65,8 +87,8 @@ abstract class CarpBaseService {
   ///
   /// If [endpointName] is not specified, the default [rpcEndpointName] is used.
   ///
-  /// Returns a json map, mapping a key (String) to a json object (dynamic).
-  /// If the request returns a list (i.e,. a `[...]` json format), this
+  /// Returns a JSON map, mapping a key (String) to a json object (dynamic).
+  /// If the request returns a list (i.e,. a `[...]` JSON format), this
   /// list is mapped to a json key/value map with only one object called `items`.
   /// This would look like:
   ///
@@ -83,8 +105,8 @@ abstract class CarpBaseService {
     ServiceRequest request, [
     String? endpointName,
   ]) async {
-    final String body = toJsonString(request.toJson());
     _endpointName = endpointName ?? rpcEndpointName;
+    final body = toJsonString(request.toJson());
 
     debug('REQUEST: POST $rpcEndpointUri\n$body');
     http.Response response = await httpr.post(
@@ -95,8 +117,6 @@ abstract class CarpBaseService {
     int httpStatusCode = response.statusCode;
     String responseBody = response.body;
     debug('RESPONSE: $httpStatusCode\n$responseBody');
-    // debug(
-    //     'RESPONSE: $httpStatusCode\n${toJsonString(json.decode(responseBody))}');
 
     // Check if this is a json list or an empty string
     // If so turn it into a valid json map
@@ -139,7 +159,7 @@ abstract class CarpBaseService {
 
   /// Sends an HTTP POST request with [body] to the given [url] for this CAWS service.
   Future<http.Response> _post(String url, {Object? body}) async {
-    debug('REQUEST: POST $url\n$body');
+    debug('REQUEST: POST $url\nBODY SIZE: ${body.toString().length}\n$body');
 
     var response = await httpr.post(url, headers: headers, body: body);
 
@@ -165,6 +185,23 @@ abstract class CarpBaseService {
       await CarpAuthService().refresh();
       response = await httpr.put(url, headers: headers, body: body);
     }
+
+    return _clean(response);
+  }
+
+  /// Sends an generic HTTP SEND request.
+  Future<http.Response> _send(http.MultipartRequest request) async {
+    debug('REQUEST: SEND $request');
+
+    var status = await httpr.send(request);
+
+    if (status.statusCode == HttpStatus.forbidden) {
+      await CarpAuthService().refresh();
+      status = await httpr.send(request);
+    }
+
+    var response = await http.Response.fromStream(status);
+    debug('RESPONSE: ${response.statusCode}\n${response.body}');
 
     return _clean(response);
   }

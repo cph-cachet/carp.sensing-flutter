@@ -76,14 +76,7 @@ class ContextSamplingPackage extends SmartphoneSamplingPackage {
       ]);
 
   @override
-  Probe? create(String type) {
-    switch (type) {
-      case ACTIVITY:
-        return ActivityProbe();
-      default:
-        return null;
-    }
-  }
+  Probe? create(String type) => type == ACTIVITY ? ActivityProbe() : null;
 
   @override
   void onRegister() {
@@ -166,20 +159,13 @@ class LocationSamplingPackage extends SmartphoneSamplingPackage {
       ]);
 
   @override
-  Probe? create(String type) {
-    switch (type) {
-      case ContextSamplingPackage.CURRENT_LOCATION:
-        return CurrentLocationProbe();
-      case ContextSamplingPackage.LOCATION:
-        return LocationProbe();
-      case ContextSamplingPackage.GEOFENCE:
-        return GeofenceProbe();
-      case ContextSamplingPackage.MOBILITY:
-        return MobilityProbe();
-      default:
-        return null;
-    }
-  }
+  Probe? create(String type) => switch (type) {
+        ContextSamplingPackage.CURRENT_LOCATION => CurrentLocationProbe(),
+        ContextSamplingPackage.LOCATION => LocationProbe(),
+        ContextSamplingPackage.GEOFENCE => GeofenceProbe(),
+        ContextSamplingPackage.MOBILITY => MobilityProbe(),
+        _ => null,
+      };
 
   @override
   String get deviceType => LocationService.DEVICE_TYPE;
@@ -205,14 +191,8 @@ class AirQualitySamplingPackage extends SmartphoneSamplingPackage {
       ]);
 
   @override
-  Probe? create(String type) {
-    switch (type) {
-      case ContextSamplingPackage.AIR_QUALITY:
-        return AirQualityProbe();
-      default:
-        return null;
-    }
-  }
+  Probe? create(String type) =>
+      type == ContextSamplingPackage.AIR_QUALITY ? AirQualityProbe() : null;
 
   @override
   String get deviceType => AirQualityService.DEVICE_TYPE;
@@ -238,14 +218,8 @@ class WeatherSamplingPackage extends SmartphoneSamplingPackage {
       ]);
 
   @override
-  Probe? create(String type) {
-    switch (type) {
-      case ContextSamplingPackage.WEATHER:
-        return WeatherProbe();
-      default:
-        return null;
-    }
-  }
+  Probe? create(String type) =>
+      type == ContextSamplingPackage.WEATHER ? WeatherProbe() : null;
 
   @override
   String get deviceType => WeatherService.DEVICE_TYPE;

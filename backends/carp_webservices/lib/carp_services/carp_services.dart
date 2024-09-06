@@ -1,10 +1,37 @@
 /*
- * Copyright 2018-2020 Copenhagen Center for Health Technology (CACHET) at the
+ * Copyright 2022 Copenhagen Center for Health Technology (CACHET) at the
  * Technical University of Denmark (DTU).
  * Use of this source code is governed by a MIT-style license that can be
  * found in the LICENSE file.
  */
 
+/// A library for all CARP Web Services (CAWS):
+///
+///  * [CarpAuthService]
+///  * [CarpProtocolService]
+///  * [CarpParticipationService]
+///  * [CarpDeploymentService]
+///  * [CarpDataStreamService]
+///  * [CarpService]
+///
+/// The (current) assumption is that each Flutter app (using this library) will
+/// only connect to one CAWS backend.
+/// All CAWS services are therefore singletons and can be used like:
+///
+/// ```dart
+/// await CarpAuthService().configure(authProperties);
+///
+/// user = await CarpAuthService().authenticateWithUsernamePassword(
+///   username: username,
+///   password: password,
+/// );
+///
+/// CarpParticipationService().configure(app);
+/// ```
+///
+/// where `authProperties`, `username`, and `password` are parameters for setting up
+/// authentication, and `app` is configuring the participation service to use the
+/// right CAWS instance.
 library carp_services;
 
 import 'dart:async';
@@ -40,16 +67,14 @@ part 'participation_reference.dart';
 part 'collection_reference.dart';
 part 'document_reference.dart';
 part 'file_reference.dart';
-part 'http_retry.dart';
-part 'push_id_generator.dart';
-part 'invitations_dialog.dart';
+part '../util/http_retry.dart';
+part '../util/push_id_generator.dart';
+part '../ui/invitations_dialog.dart';
+part '../util/utils.dart';
 
 part 'carp_services.g.dart';
 
-// String _encode(Object object) =>
-//     const JsonEncoder.withIndent(' ').convert(object);
-
-/// Exception for CARP REST/HTTP service communication.
+/// Exception for CAWS REST/HTTP service communication.
 class CarpServiceException implements Exception {
   HTTPStatus? httpStatus;
   String? message;

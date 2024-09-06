@@ -1,6 +1,6 @@
 import 'package:carp_webservices/carp_auth/carp_auth.dart';
 import 'package:carp_webservices/carp_services/carp_services.dart';
-import 'credentials.dart';
+import '_credentials.dart';
 
 class CarpProperties {
   static final CarpProperties _instance = CarpProperties._();

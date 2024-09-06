@@ -5,7 +5,7 @@
  * found in the LICENSE file.
  */
 
-part of 'carp_services.dart';
+part of '../carp_services/carp_services.dart';
 
 /// A modal dialog shown a list of [ActiveParticipationInvitation] for the
 /// user to select one from.

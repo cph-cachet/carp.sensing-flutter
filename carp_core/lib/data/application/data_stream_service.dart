@@ -46,6 +46,9 @@ abstract class DataStreamService {
   ///
   /// Throws IllegalArgumentException if:
   ///  - [dataStream] has never been opened
+  ///  - the [dataStream] does not exist (i.e, that the combination of [dataStream.deviceRoleName]
+  ///    and [dataStream.dataType] is correct for the protocol used in the
+  ///    [dataStream.studyDeploymentId] deployment.)
   ///  - [fromSequenceId] is negative or [toSequenceIdInclusive] is smaller
   ///    than [fromSequenceId]
   Future<List<DataStreamBatch>> getDataStream(

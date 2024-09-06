@@ -16,7 +16,12 @@ enum DataEventType {
   EVENT,
 }
 
-/// Contains meta data about a specific data type to be collected.
+/// Contains CAMS-specific meta data about a specific data type to be collected.
+///
+/// In addition to core [DataTypeMetaData], which stores the [type], [displayName],
+/// and [timeType] of the data, this [CamsDataTypeMetaData] also stores
+/// information on [dataEventType] and what [permissions] are needed on
+/// runtime to collect this data type.
 class CamsDataTypeMetaData extends DataTypeMetaData {
   /// How a data type is collected (one-time or event-based).
   DataEventType dataEventType;

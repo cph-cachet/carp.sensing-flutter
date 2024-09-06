@@ -101,11 +101,15 @@ class CarpParticipationService extends CarpBaseService
       }
     }
 
-    // make sure that the correct study and deployment ids are saved in the app
-    CarpService().app.studyId = invitation?.studyId;
-    CarpService().app.studyDeploymentId = invitation?.studyDeploymentId;
-
+    if (invitation != null) setInvitation(invitation);
     return invitation;
+  }
+
+  /// Set the [invitation] currently used.
+  /// This saves the study deployment information in the [app] for later use.
+  void setInvitation(ActiveParticipationInvitation invitation) {
+    app.studyId = invitation.studyId;
+    app.studyDeploymentId = invitation.studyDeploymentId;
   }
 
   @override
@@ -122,11 +126,12 @@ class CarpParticipationService extends CarpBaseService
         await _rpc(GetParticipantDataList(studyDeploymentIds));
 
     // we expect a list of 'items'
-    List<Map<String, dynamic>> items =
-        responseJson['items'] as List<Map<String, dynamic>>;
+    List<dynamic> items = responseJson['items'] as List<dynamic>;
+    if (items.isEmpty) return [];
+
     List<ParticipantData> data = [];
     for (var item in items) {
-      data.add(ParticipantData.fromJson(item));
+      data.add(ParticipantData.fromJson(item as Map<String, dynamic>));
     }
 
     return data;

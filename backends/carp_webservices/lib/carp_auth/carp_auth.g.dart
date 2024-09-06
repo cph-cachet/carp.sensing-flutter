@@ -13,7 +13,7 @@ OAuthToken _$OAuthTokenFromJson(Map<String, dynamic> json) => OAuthToken(
       DateTime.parse(json['expires_at'] as String),
       (json['scope'] as List<dynamic>).map((e) => e as String).toList(),
       json['id_token'] as String,
-    )..expiresIn = json['expires_in'] as int?;
+    )..expiresIn = (json['expires_in'] as num?)?.toInt();
 
 Map<String, dynamic> _$OAuthTokenToJson(OAuthToken instance) {
   final val = <String, dynamic>{

@@ -1,0 +1,12 @@
+[
+  {
+    "studyDeploymentId": "04f7c048-c322-4939-a660-be95b0dd3681",
+    "common": {
+      "dk.cachet.carp.input.sex": {
+        "__type": "dk.cachet.carp.input.sex",
+        "value": "Male"
+      }
+    },
+    "roles": []
+  }
+]

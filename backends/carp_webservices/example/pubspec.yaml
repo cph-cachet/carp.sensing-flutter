@@ -1,6 +1,6 @@
 name: carp_webservices_example
 description: An small example of how to usee the CARP web service package.
-version: 1.1.0
+version: 3.3.0
 homepage: https://github.com/cph-cachet/carp.sensing-flutter/tree/master/carp_core
 publish_to: none
 
@@ -20,7 +20,7 @@ dependencies:
   carp_webservices:
     path: ../
 
-  oidc: ^0.5.2
+  oidc: ^0.7.0
 
 dev_dependencies:
 

@@ -1,23 +1,6 @@
-/*
- * Copyright 2018-2020 Copenhagen Center for Health Technology (CACHET) at the
- * Technical University of Denmark (DTU).
- * Use of this source code is governed by a MIT-style license that can be
- * found in the LICENSE file.
- */
-
 part of 'carp_services.dart';
 
 /// Provide access to a CARP Web Services (CAWS) endpoints.
-///
-/// The (current) assumption is that each Flutter app (using this library) will
-/// only connect to one CARP web services backend.
-/// Therefore a [CarpService] is a singleton and can be used like:
-///
-/// ```dart
-///   CarpService().configure(myApp);
-///   CarpUser user = await CarpService()
-///     .authenticate(username: "user@dtu.dk", password: "password");
-/// ```
 class CarpService extends CarpBaseService {
   static final CarpService _instance = CarpService._();
   CarpService._();
@@ -32,9 +15,6 @@ class CarpService extends CarpBaseService {
   @override
   String get rpcEndpointName => throw UnimplementedError();
 
-  @override
-  CarpApp get app => nonNullAble(_app);
-
   // --------------------------------------------------------------------------
   // CONSENT DOCUMENT
   // --------------------------------------------------------------------------
@@ -45,6 +25,9 @@ class CarpService extends CarpBaseService {
 
   /// Create a new (signed) consent document for this user.
   /// Returns the created [ConsentDocument] if the document is uploaded correctly.
+  @Deprecated('The Informed Consent endpoints are deprecated in CAWS. '
+      'Informed Consent is uploaded as [InformedConsentInput] participant input '
+      'data using a [ParticipationReference].')
   Future<ConsentDocument> createConsentDocument(
       Map<String, dynamic> document) async {
     debug('REQUEST: POST $consentDocumentEndpointUri');
@@ -73,6 +56,9 @@ class CarpService extends CarpBaseService {
   }
 
   /// Get a previously uploaded (signed) [ConsentDocument] based on its [id].
+  @Deprecated('The Informed Consent endpoints are deprecated in CAWS. '
+      'Informed Consent is uploaded as [InformedConsentInput] participant input '
+      'data using a [ParticipationReference].')
   Future<ConsentDocument> getConsentDocument(int id) async {
     String url = "$consentDocumentEndpointUri/$id";
 
@@ -101,6 +87,8 @@ class CarpService extends CarpBaseService {
 
   /// Creates a new [DataPointReference] initialized at the current
   /// CarpService storage location.
+  @Deprecated('The DataPoint endpoints is deprecated in CAWS. '
+      'Data should be uploaded using the CARP-Core Data Stream endpoint.')
   DataPointReference getDataPointReference() => DataPointReference._(this);
 
   // --------------------------------------------------------------------------
@@ -254,21 +242,4 @@ class CarpService extends CarpBaseService {
   /// Gets a [CollectionReference] for the specified [path].
   CollectionReference collection(String path) =>
       CollectionReference._(this, path);
-
-  /// Makes sure that the [CarpApp] or [CarpUser] is configured, by throwing a
-  /// [CarpServiceException] if they are null.
-  /// Otherwise, returns the non-null value.
-  T nonNullAble<T>(T? argument) {
-    if (argument == null && argument is CarpApp) {
-      throw CarpServiceException(
-          message:
-              "CARP Service not initialized. Call 'CarpService().configure()' first.");
-    } else if (argument == null && argument is CarpUser) {
-      throw CarpServiceException(
-          message:
-              "CARP User not authenticated. Call 'CarpService().authenticate()' first.");
-    } else {
-      return argument!;
-    }
-  }
 }

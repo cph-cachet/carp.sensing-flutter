@@ -7,8 +7,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:test/test.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import 'carp_properties.dart';
-import 'credentials.dart';
+import '_carp_properties.dart';
+import '_credentials.dart';
 
 void main() {
   CarpUser? user;

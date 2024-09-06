@@ -1,15 +1,11 @@
-/*
- * Copyright 2022 Copenhagen Center for Health Technology (CACHET) at the
- * Technical University of Denmark (DTU).
- * Use of this source code is governed by a MIT-style license that can be
- * found in the LICENSE file.
- */
-
 part of 'carp_services.dart';
 
 /// A [DataStreamService] that talks to the CARP Web Services.
 class CarpDataStreamService extends CarpBaseService
     implements DataStreamService {
+  static const String DATA_STREAM_ENDPOINT_NAME = "data-stream-service";
+  static const String DATA_STREAM_ZIP_ENDPOINT_NAME = "data-stream-service-zip";
+
   static final CarpDataStreamService _instance = CarpDataStreamService._();
 
   CarpDataStreamService._();
@@ -20,13 +16,13 @@ class CarpDataStreamService extends CarpBaseService
   factory CarpDataStreamService() => _instance;
 
   @override
-  String get rpcEndpointName => "data-stream-service";
+  String get rpcEndpointName => DATA_STREAM_ENDPOINT_NAME;
 
   /// Gets a [DataStreamReference] for a [studyDeploymentId].
   /// If the [studyDeploymentId] is not provided, the study deployment id
   /// specified in the [CarpApp] is used.
   DataStreamReference stream([String? studyDeploymentId]) =>
-      DataStreamReference._(this, studyDeploymentId ?? app!.studyDeploymentId!);
+      DataStreamReference._(this, studyDeploymentId ?? app.studyDeploymentId!);
 
   @override
   Future<void> openDataStreams(DataStreamsConfiguration configuration) async =>
@@ -37,9 +33,22 @@ class CarpDataStreamService extends CarpBaseService
   @override
   Future<void> appendToDataStreams(
     String studyDeploymentId,
-    List<DataStreamBatch> batch,
-  ) async =>
-      await _rpc(AppendToDataStreams(studyDeploymentId, batch));
+    List<DataStreamBatch> batch, {
+    bool compress = true,
+  }) async {
+    final payload = AppendToDataStreams(studyDeploymentId, batch);
+
+    if (compress) {
+      // compress the payload and POST the byte stream to the zip endpoint
+      _endpointName = DATA_STREAM_ZIP_ENDPOINT_NAME;
+      await _post(
+        Uri.encodeFull(rpcEndpointUri),
+        body: zipJson(payload.toJson()),
+      );
+    } else {
+      await _rpc(payload, DATA_STREAM_ENDPOINT_NAME);
+    }
+  }
 
   @override
   Future<List<DataStreamBatch>> getDataStream(

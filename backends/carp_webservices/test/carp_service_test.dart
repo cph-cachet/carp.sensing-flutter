@@ -8,8 +8,8 @@ import 'package:flutter/foundation.dart';
 import 'package:test/test.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import 'carp_properties.dart';
-import 'credentials.dart';
+import '_carp_properties.dart';
+import '_credentials.dart';
 
 String _encode(Object? object) =>
     const JsonEncoder.withIndent(' ').convert(object);
@@ -35,6 +35,7 @@ void main() {
 
     await CarpAuthService().configure(CarpProperties().authProperties);
     CarpService().configure(CarpProperties().app);
+    CarpParticipationService().configureFrom(CarpService());
 
     await CarpAuthService().authenticateWithUsernamePassword(
       username: username,
@@ -720,7 +721,7 @@ void main() {
 
       group("Files", () {
         test('- upload', () async {
-          final File myFile = File("test/img.jpg");
+          final File myFile = File("test/files/img.jpg");
 
           final uploadTask = CarpService().getFileStorageReference().upload(
             myFile,
@@ -740,7 +741,7 @@ void main() {
         });
 
         test('- get', () async {
-          final File myFile = File("test/img.jpg");
+          final File myFile = File("test/files/img.jpg");
 
           final FileUploadTask uploadTask = CarpService()
               .getFileStorageReference()
@@ -762,7 +763,7 @@ void main() {
         });
 
         test('- download', () async {
-          final File upFile = File("test/img.jpg");
+          final File upFile = File("test/files/img.jpg");
 
           final FileUploadTask uploadTask = CarpService()
               .getFileStorageReference()
@@ -776,7 +777,7 @@ void main() {
           expect(upResponse.id, greaterThan(0));
           var id = upResponse.id;
 
-          File downFile = File("test/img-$id.jpg");
+          File downFile = File("test/files/img-$id.jpg");
 
           final FileDownloadTask downloadTask =
               CarpService().getFileStorageReference(id).download(downFile);

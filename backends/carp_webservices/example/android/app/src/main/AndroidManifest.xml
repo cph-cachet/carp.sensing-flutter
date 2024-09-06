@@ -13,6 +13,7 @@
     <!-- Used by authentication redirect to/from web view -->
     <activity
       android:name="net.openid.appauth.RedirectUriReceiverActivity"
+      android:theme="@style/Theme.AppCompat.NoActionBar"
       android:exported="true"
       tools:node="replace">
       <intent-filter>

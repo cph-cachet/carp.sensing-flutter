@@ -10,6 +10,7 @@ part of '../carp_core_common.dart';
 /// Custom input data as requested by a researcher.
 abstract class InputType {
   static const INPUT_TYPE_NAMESPACE = '${NameSpace.CARP}.input';
+  static const CAWS_INPUT_TYPE_NAMESPACE = 'dk.carp.webservices.input';
 }
 
 /// Custom input data as requested by a researcher.
@@ -55,10 +56,10 @@ class SexInput extends Data {
   String get jsonType => type;
 }
 
-/// The social security number (SSN) of a participant.
+/// The phone number of a participant.
 @JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
 class PhoneNumberInput extends Data {
-  static const type = '${InputType.INPUT_TYPE_NAMESPACE}.phonenumber';
+  static const type = '${InputType.CAWS_INPUT_TYPE_NAMESPACE}.phone_number';
 
   /// The country code of this phone number.
   ///
@@ -97,7 +98,7 @@ class PhoneNumberInput extends Data {
 /// The social security number (SSN) of a participant.
 @JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
 class SocialSecurityNumberInput extends Data {
-  static const type = '${InputType.INPUT_TYPE_NAMESPACE}.ssn';
+  static const type = '${InputType.CAWS_INPUT_TYPE_NAMESPACE}.ssn';
 
   /// The social security number (SSN)
   String socialSecurityNumber;
@@ -122,23 +123,23 @@ class SocialSecurityNumberInput extends Data {
 
 /// The full name of a participant.
 @JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
-class NameInput extends Data {
-  static const type = '${InputType.INPUT_TYPE_NAMESPACE}.name';
+class FullNameInput extends Data {
+  static const type = '${InputType.CAWS_INPUT_TYPE_NAMESPACE}.full_name';
 
   String? firstName, middleName, lastName;
 
-  NameInput({
+  FullNameInput({
     this.firstName,
     this.middleName,
     this.lastName,
   }) : super();
 
   @override
-  Function get fromJsonFunction => _$NameInputFromJson;
-  factory NameInput.fromJson(Map<String, dynamic> json) =>
-      FromJsonFactory().fromJson(json) as NameInput;
+  Function get fromJsonFunction => _$FullNameInputFromJson;
+  factory FullNameInput.fromJson(Map<String, dynamic> json) =>
+      FromJsonFactory().fromJson(json) as FullNameInput;
   @override
-  Map<String, dynamic> toJson() => _$NameInputToJson(this);
+  Map<String, dynamic> toJson() => _$FullNameInputToJson(this);
   @override
   String get jsonType => type;
 }
@@ -146,16 +147,16 @@ class NameInput extends Data {
 /// The informed consent from a participant.
 @JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
 class InformedConsentInput extends Data {
-  static const type = '${InputType.INPUT_TYPE_NAMESPACE}.consent';
+  static const type = '${InputType.CAWS_INPUT_TYPE_NAMESPACE}.informed_consent';
 
   /// The time this informed consent was signed.
-  DateTime signedTimestamp;
+  late DateTime signedTimestamp;
 
   /// The location where this informed consent was signed.
   String? signedLocation;
 
   /// The ID of the participant who signed this consent.
-  String? userID;
+  String userId;
 
   /// The full name of the participant who signed this consent.
   String name;
@@ -163,19 +164,21 @@ class InformedConsentInput extends Data {
   /// The content of the signed consent.
   ///
   /// This may be plain text or JSON.
-  String? consent;
+  String consent;
 
   /// The image of the provided signature in png format as bytes.
-  String? signatureImage;
+  String signatureImage;
 
   InformedConsentInput({
-    required this.signedTimestamp,
+    DateTime? signedTimestamp,
     this.signedLocation,
-    this.userID,
+    required this.userId,
     required this.name,
-    this.consent,
-    this.signatureImage,
-  }) : super();
+    required this.consent,
+    required this.signatureImage,
+  }) : super() {
+    this.signedTimestamp = (signedTimestamp ?? DateTime.now()).toUtc();
+  }
 
   @override
   Function get fromJsonFunction => _$InformedConsentInputFromJson;
@@ -190,15 +193,16 @@ class InformedConsentInput extends Data {
 /// The full address of a participant.
 @JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
 class AddressInput extends Data {
-  static const type = '${InputType.INPUT_TYPE_NAMESPACE}.address';
+  static const type = '${InputType.CAWS_INPUT_TYPE_NAMESPACE}.address';
 
-  String? address1, address2, street, country, zip;
+  String? address1, address2, street, city, postalCode, country;
   AddressInput({
     this.address1,
     this.address2,
     this.street,
+    this.city,
+    this.postalCode,
     this.country,
-    this.zip,
   }) : super();
 
   @override
@@ -217,7 +221,7 @@ class AddressInput extends Data {
 /// classification.
 @JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
 class DiagnosisInput extends Data {
-  static const type = '${InputType.INPUT_TYPE_NAMESPACE}.diagnosis';
+  static const type = '${InputType.CAWS_INPUT_TYPE_NAMESPACE}.diagnosis';
 
   /// The date this diagnosis was effective.
   DateTime? effectiveDate;

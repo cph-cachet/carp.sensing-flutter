@@ -151,10 +151,10 @@ void _registerFromJsonFunctions() {
   FromJsonFactory().registerAll([
     CustomInput(value: ''),
     SexInput(value: Sex.Female),
-    NameInput(),
+    FullNameInput(),
     AddressInput(),
     SocialSecurityNumberInput(socialSecurityNumber: '', country: ''),
-    InformedConsentInput(name: '', signedTimestamp: DateTime.now()),
+    InformedConsentInput(name: '', userId: '', consent: '', signatureImage: ''),
     DiagnosisInput(icd11Code: ''),
   ]);
 

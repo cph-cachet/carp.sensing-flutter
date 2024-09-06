@@ -55,7 +55,7 @@ class DeviceSamplingPackage extends SmartphoneSamplingPackage {
           dataEventType: DataEventType.ONE_TIME,
         )),
         DataTypeSamplingScheme(
-            DataTypeMetaData(
+            CamsDataTypeMetaData(
               type: FREE_MEMORY,
               displayName: "Free Memory",
               timeType: DataTimeType.POINT,
@@ -63,12 +63,12 @@ class DeviceSamplingPackage extends SmartphoneSamplingPackage {
             IntervalSamplingConfiguration(
               interval: const Duration(minutes: 1),
             )),
-        DataTypeSamplingScheme(DataTypeMetaData(
+        DataTypeSamplingScheme(CamsDataTypeMetaData(
           type: BATTERY_STATE,
           displayName: "Battery State",
           timeType: DataTimeType.POINT,
         )),
-        DataTypeSamplingScheme(DataTypeMetaData(
+        DataTypeSamplingScheme(CamsDataTypeMetaData(
           type: SCREEN_EVENT,
           displayName: "Screen Events",
           timeType: DataTimeType.POINT,
@@ -82,20 +82,23 @@ class DeviceSamplingPackage extends SmartphoneSamplingPackage {
       ]);
 
   @override
-  Probe? create(String type) {
-    switch (type) {
-      case DEVICE_INFORMATION:
-        return DeviceProbe();
-      case FREE_MEMORY:
-        return MemoryProbe();
-      case BATTERY_STATE:
-        return BatteryProbe();
-      case TIMEZONE:
-        return TimezoneProbe();
-      case SCREEN_EVENT:
-        return (Platform.isAndroid) ? ScreenProbe() : null;
-      default:
-        return null;
-    }
+  Probe? create(String type) => switch (type) {
+        DEVICE_INFORMATION => DeviceProbe(),
+        FREE_MEMORY => MemoryProbe(),
+        BATTERY_STATE => BatteryProbe(),
+        TIMEZONE => TimezoneProbe(),
+        SCREEN_EVENT => (Platform.isAndroid) ? ScreenProbe() : null,
+        _ => null,
+      };
+
+  @override
+  void onRegister() {
+    FromJsonFactory().registerAll([
+      DeviceInformation(),
+      BatteryState(),
+      FreeMemory(),
+      ScreenEvent(),
+      Timezone(''),
+    ]);
   }
 }

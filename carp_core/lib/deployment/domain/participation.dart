@@ -35,7 +35,7 @@ class ParticipantData {
 class RoleData {
   String roleName;
 
-  /// Data that is related to everyone in the study deployment.
+  /// Data that is related to this role in the study deployment.
   Map<String, Data?> data;
 
   RoleData({

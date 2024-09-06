@@ -1,0 +1,1843 @@
+    {
+      "__type": "dk.cachet.carp.data.infrastructure.DataStreamServiceRequest.AppendToDataStreams",
+      "apiVersion": "1.1",
+      "studyDeploymentId": "04f7c048-c322-4939-a660-be95b0dd3681",
+      "batch": [
+        {
+          "dataStream": {
+            "studyDeploymentId": "04f7c048-c322-4939-a660-be95b0dd3681",
+            "deviceRoleName": "Participant's phone",
+            "dataType": "dk.cachet.carp.batterystate"
+          },
+          "firstSequenceId": 0,
+          "measurements": [
+            {
+              "sensorStartTime": 1642505045000000,
+              "data": {
+                "__type": "dk.cachet.carp.batterystate",
+                "batteryLevel": 100
+              }
+            },
+            {
+              "sensorStartTime": 1642505045000000,
+              "data": {
+                "__type": "dk.cachet.carp.batterystate",
+                "batteryLevel": 100
+              }
+            }
+          ],
+          "triggerIds": [
+            0
+          ]
+        },
+        {
+          "dataStream": {
+            "studyDeploymentId": "04f7c048-c322-4939-a660-be95b0dd3681",
+            "deviceRoleName": "Participant's phone",
+            "dataType": "dk.cachet.carp.batterystate"
+          },
+          "firstSequenceId": 0,
+          "measurements": [
+            {
+              "sensorStartTime": 1642505045000000,
+              "data": {
+                "__type": "dk.cachet.carp.batterystate",
+                "batteryLevel": 100
+              }
+            },
+            {
+              "sensorStartTime": 1642505045000000,
+              "data": {
+                "__type": "dk.cachet.carp.batterystate",
+                "batteryLevel": 100
+              }
+            }
+          ],
+          "triggerIds": [
+            0
+          ]
+        },
+        {
+          "dataStream": {
+            "studyDeploymentId": "04f7c048-c322-4939-a660-be95b0dd3681",
+            "deviceRoleName": "Participant's phone",
+            "dataType": "dk.cachet.carp.batterystate"
+          },
+          "firstSequenceId": 0,
+          "measurements": [
+            {
+              "sensorStartTime": 1642505045000000,
+              "data": {
+                "__type": "dk.cachet.carp.batterystate",
+                "batteryLevel": 100
+              }
+            },
+            {
+              "sensorStartTime": 1642505045000000,
+              "data": {
+                "__type": "dk.cachet.carp.batterystate",
+                "batteryLevel": 100
+              }
+            }
+          ],
+          "triggerIds": [
+            0
+          ]
+        },
+        {
+          "dataStream": {
+            "studyDeploymentId": "04f7c048-c322-4939-a660-be95b0dd3681",
+            "deviceRoleName": "Participant's phone",
+            "dataType": "dk.cachet.carp.batterystate"
+          },
+          "firstSequenceId": 0,
+          "measurements": [
+            {
+              "sensorStartTime": 1642505045000000,
+              "data": {
+                "__type": "dk.cachet.carp.batterystate",
+                "batteryLevel": 100
+              }
+            },
+            {
+              "sensorStartTime": 1642505045000000,
+              "data": {
+                "__type": "dk.cachet.carp.batterystate",
+                "batteryLevel": 100
+              }
+            }
+          ],
+          "triggerIds": [
+            0
+          ]
+        },
+        {
+          "dataStream": {
+            "studyDeploymentId": "04f7c048-c322-4939-a660-be95b0dd3681",
+            "deviceRoleName": "Participant's phone",
+            "dataType": "dk.cachet.carp.batterystate"
+          },
+          "firstSequenceId": 0,
+          "measurements": [
+            {
+              "sensorStartTime": 1642505045000000,
+              "data": {
+                "__type": "dk.cachet.carp.batterystate",
+                "batteryLevel": 100
+              }
+            },
+            {
+              "sensorStartTime": 1642505045000000,
+              "data": {
+                "__type": "dk.cachet.carp.batterystate",
+                "batteryLevel": 100
+              }
+            }
+          ],
+          "triggerIds": [
+            0
+          ]
+        },
+        {
+          "dataStream": {
+            "studyDeploymentId": "04f7c048-c322-4939-a660-be95b0dd3681",
+            "deviceRoleName": "Participant's phone",
+            "dataType": "dk.cachet.carp.batterystate"
+          },
+          "firstSequenceId": 0,
+          "measurements": [
+            {
+              "sensorStartTime": 1642505045000000,
+              "data": {
+                "__type": "dk.cachet.carp.batterystate",
+                "batteryLevel": 100
+              }
+            },
+            {
+              "sensorStartTime": 1642505045000000,
+              "data": {
+                "__type": "dk.cachet.carp.batterystate",
+                "batteryLevel": 100
+              }
+            }
+          ],
+          "triggerIds": [
+            0
+          ]
+        },
+        {
+          "dataStream": {
+            "studyDeploymentId": "04f7c048-c322-4939-a660-be95b0dd3681",
+            "deviceRoleName": "Participant's phone",
+            "dataType": "dk.cachet.carp.batterystate"
+          },
+          "firstSequenceId": 0,
+          "measurements": [
+            {
+              "sensorStartTime": 1642505045000000,
+              "data": {
+                "__type": "dk.cachet.carp.batterystate",
+                "batteryLevel": 100
+              }
+            },
+            {
+              "sensorStartTime": 1642505045000000,
+              "data": {
+                "__type": "dk.cachet.carp.batterystate",
+                "batteryLevel": 100
+              }
+            }
+          ],
+          "triggerIds": [
+            0
+          ]
+        },
+        {
+          "dataStream": {
+            "studyDeploymentId": "04f7c048-c322-4939-a660-be95b0dd3681",
+            "deviceRoleName": "Participant's phone",
+            "dataType": "dk.cachet.carp.batterystate"
+          },
+          "firstSequenceId": 0,
+          "measurements": [
+            {
+              "sensorStartTime": 1642505045000000,
+              "data": {
+                "__type": "dk.cachet.carp.batterystate",
+                "batteryLevel": 100
+              }
+            },
+            {
+              "sensorStartTime": 1642505045000000,
+              "data": {
+                "__type": "dk.cachet.carp.batterystate",
+                "batteryLevel": 100
+              }
+            }
+          ],
+          "triggerIds": [
+            0
+          ]
+        },
+        {
+          "dataStream": {
+            "studyDeploymentId": "04f7c048-c322-4939-a660-be95b0dd3681",
+            "deviceRoleName": "Participant's phone",
+            "dataType": "dk.cachet.carp.batterystate"
+          },
+          "firstSequenceId": 0,
+          "measurements": [
+            {
+              "sensorStartTime": 1642505045000000,
+              "data": {
+                "__type": "dk.cachet.carp.batterystate",
+                "batteryLevel": 100
+              }
+            },
+            {
+              "sensorStartTime": 1642505045000000,
+              "data": {
+                "__type": "dk.cachet.carp.batterystate",
+                "batteryLevel": 100
+              }
+            }
+          ],
+          "triggerIds": [
+            0
+          ]
+        },
+        {
+          "dataStream": {
+            "studyDeploymentId": "04f7c048-c322-4939-a660-be95b0dd3681",
+            "deviceRoleName": "Participant's phone",
+            "dataType": "dk.cachet.carp.batterystate"
+          },
+          "firstSequenceId": 0,
+          "measurements": [
+            {
+              "sensorStartTime": 1642505045000000,
+              "data": {
+                "__type": "dk.cachet.carp.batterystate",
+                "batteryLevel": 100
+              }
+            },
+            {
+              "sensorStartTime": 1642505045000000,
+              "data": {
+                "__type": "dk.cachet.carp.batterystate",
+                "batteryLevel": 100
+              }
+            }
+          ],
+          "triggerIds": [
+            0
+          ]
+        },
+        {
+          "dataStream": {
+            "studyDeploymentId": "04f7c048-c322-4939-a660-be95b0dd3681",
+            "deviceRoleName": "Participant's phone",
+            "dataType": "dk.cachet.carp.batterystate"
+          },
+          "firstSequenceId": 0,
+          "measurements": [
+            {
+              "sensorStartTime": 1642505045000000,
+              "data": {
+                "__type": "dk.cachet.carp.batterystate",
+                "batteryLevel": 100
+              }
+            },
+            {
+              "sensorStartTime": 1642505045000000,
+              "data": {
+                "__type": "dk.cachet.carp.batterystate",
+                "batteryLevel": 100
+              }
+            }
+          ],
+          "triggerIds": [
+            0
+          ]
+        },
+        {
+          "dataStream": {
+            "studyDeploymentId": "04f7c048-c322-4939-a660-be95b0dd3681",
+            "deviceRoleName": "Participant's phone",
+            "dataType": "dk.cachet.carp.batterystate"
+          },
+          "firstSequenceId": 0,
+          "measurements": [
+            {
+              "sensorStartTime": 1642505045000000,
+              "data": {
+                "__type": "dk.cachet.carp.batterystate",
+                "batteryLevel": 100
+              }
+            },
+            {
+              "sensorStartTime": 1642505045000000,
+              "data": {
+                "__type": "dk.cachet.carp.batterystate",
+                "batteryLevel": 100
+              }
+            }
+          ],
+          "triggerIds": [
+            0
+          ]
+        },
+        {
+          "dataStream": {
+            "studyDeploymentId": "04f7c048-c322-4939-a660-be95b0dd3681",
+            "deviceRoleName": "Participant's phone",
+            "dataType": "dk.cachet.carp.batterystate"
+          },
+          "firstSequenceId": 0,
+          "measurements": [
+            {
+              "sensorStartTime": 1642505045000000,
+              "data": {
+                "__type": "dk.cachet.carp.batterystate",
+                "batteryLevel": 100
+              }
+            },
+            {
+              "sensorStartTime": 1642505045000000,
+              "data": {
+                "__type": "dk.cachet.carp.batterystate",
+                "batteryLevel": 100
+              }
+            }
+          ],
+          "triggerIds": [
+            0
+          ]
+        },
+        {
+          "dataStream": {
+            "studyDeploymentId": "04f7c048-c322-4939-a660-be95b0dd3681",
+            "deviceRoleName": "Participant's phone",
+            "dataType": "dk.cachet.carp.batterystate"
+          },
+          "firstSequenceId": 0,
+          "measurements": [
+            {
+              "sensorStartTime": 1642505045000000,
+              "data": {
+                "__type": "dk.cachet.carp.batterystate",
+                "batteryLevel": 100
+              }
+            },
+            {
+              "sensorStartTime": 1642505045000000,
+              "data": {
+                "__type": "dk.cachet.carp.batterystate",
+                "batteryLevel": 100
+              }
+            }
+          ],
+          "triggerIds": [
+            0
+          ]
+        },
+        {
+          "dataStream": {
+            "studyDeploymentId": "04f7c048-c322-4939-a660-be95b0dd3681",
+            "deviceRoleName": "Participant's phone",
+            "dataType": "dk.cachet.carp.batterystate"
+          },
+          "firstSequenceId": 0,
+          "measurements": [
+            {
+              "sensorStartTime": 1642505045000000,
+              "data": {
+                "__type": "dk.cachet.carp.batterystate",
+                "batteryLevel": 100
+              }
+            },
+            {
+              "sensorStartTime": 1642505045000000,
+              "data": {
+                "__type": "dk.cachet.carp.batterystate",
+                "batteryLevel": 100
+              }
+            }
+          ],
+          "triggerIds": [
+            0
+          ]
+        },
+        {
+          "dataStream": {
+            "studyDeploymentId": "04f7c048-c322-4939-a660-be95b0dd3681",
+            "deviceRoleName": "Participant's phone",
+            "dataType": "dk.cachet.carp.batterystate"
+          },
+          "firstSequenceId": 0,
+          "measurements": [
+            {
+              "sensorStartTime": 1642505045000000,
+              "data": {
+                "__type": "dk.cachet.carp.batterystate",
+                "batteryLevel": 100
+              }
+            },
+            {
+              "sensorStartTime": 1642505045000000,
+              "data": {
+                "__type": "dk.cachet.carp.batterystate",
+                "batteryLevel": 100
+              }
+            }
+          ],
+          "triggerIds": [
+            0
+          ]
+        },
+        {
+          "dataStream": {
+            "studyDeploymentId": "04f7c048-c322-4939-a660-be95b0dd3681",
+            "deviceRoleName": "Participant's phone",
+            "dataType": "dk.cachet.carp.batterystate"
+          },
+          "firstSequenceId": 0,
+          "measurements": [
+            {
+              "sensorStartTime": 1642505045000000,
+              "data": {
+                "__type": "dk.cachet.carp.batterystate",
+                "batteryLevel": 100
+              }
+            },
+            {
+              "sensorStartTime": 1642505045000000,
+              "data": {
+                "__type": "dk.cachet.carp.batterystate",
+                "batteryLevel": 100
+              }
+            }
+          ],
+          "triggerIds": [
+            0
+          ]
+        },
+        {
+          "dataStream": {
+            "studyDeploymentId": "04f7c048-c322-4939-a660-be95b0dd3681",
+            "deviceRoleName": "Participant's phone",
+            "dataType": "dk.cachet.carp.batterystate"
+          },
+          "firstSequenceId": 0,
+          "measurements": [
+            {
+              "sensorStartTime": 1642505045000000,
+              "data": {
+                "__type": "dk.cachet.carp.batterystate",
+                "batteryLevel": 100
+              }
+            },
+            {
+              "sensorStartTime": 1642505045000000,
+              "data": {
+                "__type": "dk.cachet.carp.batterystate",
+                "batteryLevel": 100
+              }
+            }
+          ],
+          "triggerIds": [
+            0
+          ]
+        },
+        {
+          "dataStream": {
+            "studyDeploymentId": "04f7c048-c322-4939-a660-be95b0dd3681",
+            "deviceRoleName": "Participant's phone",
+            "dataType": "dk.cachet.carp.batterystate"
+          },
+          "firstSequenceId": 0,
+          "measurements": [
+            {
+              "sensorStartTime": 1642505045000000,
+              "data": {
+                "__type": "dk.cachet.carp.batterystate",
+                "batteryLevel": 100
+              }
+            },
+            {
+              "sensorStartTime": 1642505045000000,
+              "data": {
+                "__type": "dk.cachet.carp.batterystate",
+                "batteryLevel": 100
+              }
+            }
+          ],
+          "triggerIds": [
+            0
+          ]
+        },
+        {
+          "dataStream": {
+            "studyDeploymentId": "04f7c048-c322-4939-a660-be95b0dd3681",
+            "deviceRoleName": "Participant's phone",
+            "dataType": "dk.cachet.carp.batterystate"
+          },
+          "firstSequenceId": 0,
+          "measurements": [
+            {
+              "sensorStartTime": 1642505045000000,
+              "data": {
+                "__type": "dk.cachet.carp.batterystate",
+                "batteryLevel": 100
+              }
+            },
+            {
+              "sensorStartTime": 1642505045000000,
+              "data": {
+                "__type": "dk.cachet.carp.batterystate",
+                "batteryLevel": 100
+              }
+            }
+          ],
+          "triggerIds": [
+            0
+          ]
+        },
+        {
+          "dataStream": {
+            "studyDeploymentId": "04f7c048-c322-4939-a660-be95b0dd3681",
+            "deviceRoleName": "Participant's phone",
+            "dataType": "dk.cachet.carp.batterystate"
+          },
+          "firstSequenceId": 0,
+          "measurements": [
+            {
+              "sensorStartTime": 1642505045000000,
+              "data": {
+                "__type": "dk.cachet.carp.batterystate",
+                "batteryLevel": 100
+              }
+            },
+            {
+              "sensorStartTime": 1642505045000000,
+              "data": {
+                "__type": "dk.cachet.carp.batterystate",
+                "batteryLevel": 100
+              }
+            }
+          ],
+          "triggerIds": [
+            0
+          ]
+        },
+        {
+          "dataStream": {
+            "studyDeploymentId": "04f7c048-c322-4939-a660-be95b0dd3681",
+            "deviceRoleName": "Participant's phone",
+            "dataType": "dk.cachet.carp.batterystate"
+          },
+          "firstSequenceId": 0,
+          "measurements": [
+            {
+              "sensorStartTime": 1642505045000000,
+              "data": {
+                "__type": "dk.cachet.carp.batterystate",
+                "batteryLevel": 100
+              }
+            },
+            {
+              "sensorStartTime": 1642505045000000,
+              "data": {
+                "__type": "dk.cachet.carp.batterystate",
+                "batteryLevel": 100
+              }
+            }
+          ],
+          "triggerIds": [
+            0
+          ]
+        },
+        {
+          "dataStream": {
+            "studyDeploymentId": "04f7c048-c322-4939-a660-be95b0dd3681",
+            "deviceRoleName": "Participant's phone",
+            "dataType": "dk.cachet.carp.batterystate"
+          },
+          "firstSequenceId": 0,
+          "measurements": [
+            {
+              "sensorStartTime": 1642505045000000,
+              "data": {
+                "__type": "dk.cachet.carp.batterystate",
+                "batteryLevel": 100
+              }
+            },
+            {
+              "sensorStartTime": 1642505045000000,
+              "data": {
+                "__type": "dk.cachet.carp.batterystate",
+                "batteryLevel": 100
+              }
+            }
+          ],
+          "triggerIds": [
+            0
+          ]
+        },
+        {
+          "dataStream": {
+            "studyDeploymentId": "04f7c048-c322-4939-a660-be95b0dd3681",
+            "deviceRoleName": "Participant's phone",
+            "dataType": "dk.cachet.carp.batterystate"
+          },
+          "firstSequenceId": 0,
+          "measurements": [
+            {
+              "sensorStartTime": 1642505045000000,
+              "data": {
+                "__type": "dk.cachet.carp.batterystate",
+                "batteryLevel": 100
+              }
+            },
+            {
+              "sensorStartTime": 1642505045000000,
+              "data": {
+                "__type": "dk.cachet.carp.batterystate",
+                "batteryLevel": 100
+              }
+            }
+          ],
+          "triggerIds": [
+            0
+          ]
+        },
+        {
+          "dataStream": {
+            "studyDeploymentId": "04f7c048-c322-4939-a660-be95b0dd3681",
+            "deviceRoleName": "Participant's phone",
+            "dataType": "dk.cachet.carp.batterystate"
+          },
+          "firstSequenceId": 0,
+          "measurements": [
+            {
+              "sensorStartTime": 1642505045000000,
+              "data": {
+                "__type": "dk.cachet.carp.batterystate",
+                "batteryLevel": 100
+              }
+            },
+            {
+              "sensorStartTime": 1642505045000000,
+              "data": {
+                "__type": "dk.cachet.carp.batterystate",
+                "batteryLevel": 100
+              }
+            }
+          ],
+          "triggerIds": [
+            0
+          ]
+        },
+        {
+          "dataStream": {
+            "studyDeploymentId": "04f7c048-c322-4939-a660-be95b0dd3681",
+            "deviceRoleName": "Participant's phone",
+            "dataType": "dk.cachet.carp.batterystate"
+          },
+          "firstSequenceId": 0,
+          "measurements": [
+            {
+              "sensorStartTime": 1642505045000000,
+              "data": {
+                "__type": "dk.cachet.carp.batterystate",
+                "batteryLevel": 100
+              }
+            },
+            {
+              "sensorStartTime": 1642505045000000,
+              "data": {
+                "__type": "dk.cachet.carp.batterystate",
+                "batteryLevel": 100
+              }
+            }
+          ],
+          "triggerIds": [
+            0
+          ]
+        },
+        {
+          "dataStream": {
+            "studyDeploymentId": "04f7c048-c322-4939-a660-be95b0dd3681",
+            "deviceRoleName": "Participant's phone",
+            "dataType": "dk.cachet.carp.batterystate"
+          },
+          "firstSequenceId": 0,
+          "measurements": [
+            {
+              "sensorStartTime": 1642505045000000,
+              "data": {
+                "__type": "dk.cachet.carp.batterystate",
+                "batteryLevel": 100
+              }
+            },
+            {
+              "sensorStartTime": 1642505045000000,
+              "data": {
+                "__type": "dk.cachet.carp.batterystate",
+                "batteryLevel": 100
+              }
+            }
+          ],
+          "triggerIds": [
+            0
+          ]
+        },
+        {
+          "dataStream": {
+            "studyDeploymentId": "04f7c048-c322-4939-a660-be95b0dd3681",
+            "deviceRoleName": "Participant's phone",
+            "dataType": "dk.cachet.carp.batterystate"
+          },
+          "firstSequenceId": 0,
+          "measurements": [
+            {
+              "sensorStartTime": 1642505045000000,
+              "data": {
+                "__type": "dk.cachet.carp.batterystate",
+                "batteryLevel": 100
+              }
+            },
+            {
+              "sensorStartTime": 1642505045000000,
+              "data": {
+                "__type": "dk.cachet.carp.batterystate",
+                "batteryLevel": 100
+              }
+            }
+          ],
+          "triggerIds": [
+            0
+          ]
+        },
+        {
+          "dataStream": {
+            "studyDeploymentId": "04f7c048-c322-4939-a660-be95b0dd3681",
+            "deviceRoleName": "Participant's phone",
+            "dataType": "dk.cachet.carp.batterystate"
+          },
+          "firstSequenceId": 0,
+          "measurements": [
+            {
+              "sensorStartTime": 1642505045000000,
+              "data": {
+                "__type": "dk.cachet.carp.batterystate",
+                "batteryLevel": 100
+              }
+            },
+            {
+              "sensorStartTime": 1642505045000000,
+              "data": {
+                "__type": "dk.cachet.carp.batterystate",
+                "batteryLevel": 100
+              }
+            }
+          ],
+          "triggerIds": [
+            0
+          ]
+        },
+        {
+          "dataStream": {
+            "studyDeploymentId": "04f7c048-c322-4939-a660-be95b0dd3681",
+            "deviceRoleName": "Participant's phone",
+            "dataType": "dk.cachet.carp.batterystate"
+          },
+          "firstSequenceId": 0,
+          "measurements": [
+            {
+              "sensorStartTime": 1642505045000000,
+              "data": {
+                "__type": "dk.cachet.carp.batterystate",
+                "batteryLevel": 100
+              }
+            },
+            {
+              "sensorStartTime": 1642505045000000,
+              "data": {
+                "__type": "dk.cachet.carp.batterystate",
+                "batteryLevel": 100
+              }
+            }
+          ],
+          "triggerIds": [
+            0
+          ]
+        },
+        {
+          "dataStream": {
+            "studyDeploymentId": "04f7c048-c322-4939-a660-be95b0dd3681",
+            "deviceRoleName": "Participant's phone",
+            "dataType": "dk.cachet.carp.batterystate"
+          },
+          "firstSequenceId": 0,
+          "measurements": [
+            {
+              "sensorStartTime": 1642505045000000,
+              "data": {
+                "__type": "dk.cachet.carp.batterystate",
+                "batteryLevel": 100
+              }
+            },
+            {
+              "sensorStartTime": 1642505045000000,
+              "data": {
+                "__type": "dk.cachet.carp.batterystate",
+                "batteryLevel": 100
+              }
+            }
+          ],
+          "triggerIds": [
+            0
+          ]
+        },
+        {
+          "dataStream": {
+            "studyDeploymentId": "04f7c048-c322-4939-a660-be95b0dd3681",
+            "deviceRoleName": "Participant's phone",
+            "dataType": "dk.cachet.carp.batterystate"
+          },
+          "firstSequenceId": 0,
+          "measurements": [
+            {
+              "sensorStartTime": 1642505045000000,
+              "data": {
+                "__type": "dk.cachet.carp.batterystate",
+                "batteryLevel": 100
+              }
+            },
+            {
+              "sensorStartTime": 1642505045000000,
+              "data": {
+                "__type": "dk.cachet.carp.batterystate",
+                "batteryLevel": 100
+              }
+            }
+          ],
+          "triggerIds": [
+            0
+          ]
+        },
+        {
+          "dataStream": {
+            "studyDeploymentId": "04f7c048-c322-4939-a660-be95b0dd3681",
+            "deviceRoleName": "Participant's phone",
+            "dataType": "dk.cachet.carp.batterystate"
+          },
+          "firstSequenceId": 0,
+          "measurements": [
+            {
+              "sensorStartTime": 1642505045000000,
+              "data": {
+                "__type": "dk.cachet.carp.batterystate",
+                "batteryLevel": 100
+              }
+            },
+            {
+              "sensorStartTime": 1642505045000000,
+              "data": {
+                "__type": "dk.cachet.carp.batterystate",
+                "batteryLevel": 100
+              }
+            }
+          ],
+          "triggerIds": [
+            0
+          ]
+        },
+        {
+          "dataStream": {
+            "studyDeploymentId": "04f7c048-c322-4939-a660-be95b0dd3681",
+            "deviceRoleName": "Participant's phone",
+            "dataType": "dk.cachet.carp.batterystate"
+          },
+          "firstSequenceId": 0,
+          "measurements": [
+            {
+              "sensorStartTime": 1642505045000000,
+              "data": {
+                "__type": "dk.cachet.carp.batterystate",
+                "batteryLevel": 100
+              }
+            },
+            {
+              "sensorStartTime": 1642505045000000,
+              "data": {
+                "__type": "dk.cachet.carp.batterystate",
+                "batteryLevel": 100
+              }
+            }
+          ],
+          "triggerIds": [
+            0
+          ]
+        },
+        {
+          "dataStream": {
+            "studyDeploymentId": "04f7c048-c322-4939-a660-be95b0dd3681",
+            "deviceRoleName": "Participant's phone",
+            "dataType": "dk.cachet.carp.batterystate"
+          },
+          "firstSequenceId": 0,
+          "measurements": [
+            {
+              "sensorStartTime": 1642505045000000,
+              "data": {
+                "__type": "dk.cachet.carp.batterystate",
+                "batteryLevel": 100
+              }
+            },
+            {
+              "sensorStartTime": 1642505045000000,
+              "data": {
+                "__type": "dk.cachet.carp.batterystate",
+                "batteryLevel": 100
+              }
+            }
+          ],
+          "triggerIds": [
+            0
+          ]
+        },
+        {
+          "dataStream": {
+            "studyDeploymentId": "04f7c048-c322-4939-a660-be95b0dd3681",
+            "deviceRoleName": "Participant's phone",
+            "dataType": "dk.cachet.carp.batterystate"
+          },
+          "firstSequenceId": 0,
+          "measurements": [
+            {
+              "sensorStartTime": 1642505045000000,
+              "data": {
+                "__type": "dk.cachet.carp.batterystate",
+                "batteryLevel": 100
+              }
+            },
+            {
+              "sensorStartTime": 1642505045000000,
+              "data": {
+                "__type": "dk.cachet.carp.batterystate",
+                "batteryLevel": 100
+              }
+            }
+          ],
+          "triggerIds": [
+            0
+          ]
+        },
+        {
+          "dataStream": {
+            "studyDeploymentId": "04f7c048-c322-4939-a660-be95b0dd3681",
+            "deviceRoleName": "Participant's phone",
+            "dataType": "dk.cachet.carp.batterystate"
+          },
+          "firstSequenceId": 0,
+          "measurements": [
+            {
+              "sensorStartTime": 1642505045000000,
+              "data": {
+                "__type": "dk.cachet.carp.batterystate",
+                "batteryLevel": 100
+              }
+            },
+            {
+              "sensorStartTime": 1642505045000000,
+              "data": {
+                "__type": "dk.cachet.carp.batterystate",
+                "batteryLevel": 100
+              }
+            }
+          ],
+          "triggerIds": [
+            0
+          ]
+        },
+        {
+          "dataStream": {
+            "studyDeploymentId": "04f7c048-c322-4939-a660-be95b0dd3681",
+            "deviceRoleName": "Participant's phone",
+            "dataType": "dk.cachet.carp.batterystate"
+          },
+          "firstSequenceId": 0,
+          "measurements": [
+            {
+              "sensorStartTime": 1642505045000000,
+              "data": {
+                "__type": "dk.cachet.carp.batterystate",
+                "batteryLevel": 100
+              }
+            },
+            {
+              "sensorStartTime": 1642505045000000,
+              "data": {
+                "__type": "dk.cachet.carp.batterystate",
+                "batteryLevel": 100
+              }
+            }
+          ],
+          "triggerIds": [
+            0
+          ]
+        },
+        {
+          "dataStream": {
+            "studyDeploymentId": "04f7c048-c322-4939-a660-be95b0dd3681",
+            "deviceRoleName": "Participant's phone",
+            "dataType": "dk.cachet.carp.batterystate"
+          },
+          "firstSequenceId": 0,
+          "measurements": [
+            {
+              "sensorStartTime": 1642505045000000,
+              "data": {
+                "__type": "dk.cachet.carp.batterystate",
+                "batteryLevel": 100
+              }
+            },
+            {
+              "sensorStartTime": 1642505045000000,
+              "data": {
+                "__type": "dk.cachet.carp.batterystate",
+                "batteryLevel": 100
+              }
+            }
+          ],
+          "triggerIds": [
+            0
+          ]
+        },
+        {
+          "dataStream": {
+            "studyDeploymentId": "04f7c048-c322-4939-a660-be95b0dd3681",
+            "deviceRoleName": "Participant's phone",
+            "dataType": "dk.cachet.carp.batterystate"
+          },
+          "firstSequenceId": 0,
+          "measurements": [
+            {
+              "sensorStartTime": 1642505045000000,
+              "data": {
+                "__type": "dk.cachet.carp.batterystate",
+                "batteryLevel": 100
+              }
+            },
+            {
+              "sensorStartTime": 1642505045000000,
+              "data": {
+                "__type": "dk.cachet.carp.batterystate",
+                "batteryLevel": 100
+              }
+            }
+          ],
+          "triggerIds": [
+            0
+          ]
+        },
+        {
+          "dataStream": {
+            "studyDeploymentId": "04f7c048-c322-4939-a660-be95b0dd3681",
+            "deviceRoleName": "Participant's phone",
+            "dataType": "dk.cachet.carp.batterystate"
+          },
+          "firstSequenceId": 0,
+          "measurements": [
+            {
+              "sensorStartTime": 1642505045000000,
+              "data": {
+                "__type": "dk.cachet.carp.batterystate",
+                "batteryLevel": 100
+              }
+            },
+            {
+              "sensorStartTime": 1642505045000000,
+              "data": {
+                "__type": "dk.cachet.carp.batterystate",
+                "batteryLevel": 100
+              }
+            }
+          ],
+          "triggerIds": [
+            0
+          ]
+        },
+        {
+          "dataStream": {
+            "studyDeploymentId": "04f7c048-c322-4939-a660-be95b0dd3681",
+            "deviceRoleName": "Participant's phone",
+            "dataType": "dk.cachet.carp.batterystate"
+          },
+          "firstSequenceId": 0,
+          "measurements": [
+            {
+              "sensorStartTime": 1642505045000000,
+              "data": {
+                "__type": "dk.cachet.carp.batterystate",
+                "batteryLevel": 100
+              }
+            },
+            {
+              "sensorStartTime": 1642505045000000,
+              "data": {
+                "__type": "dk.cachet.carp.batterystate",
+                "batteryLevel": 100
+              }
+            }
+          ],
+          "triggerIds": [
+            0
+          ]
+        },
+        {
+          "dataStream": {
+            "studyDeploymentId": "04f7c048-c322-4939-a660-be95b0dd3681",
+            "deviceRoleName": "Participant's phone",
+            "dataType": "dk.cachet.carp.batterystate"
+          },
+          "firstSequenceId": 0,
+          "measurements": [
+            {
+              "sensorStartTime": 1642505045000000,
+              "data": {
+                "__type": "dk.cachet.carp.batterystate",
+                "batteryLevel": 100
+              }
+            },
+            {
+              "sensorStartTime": 1642505045000000,
+              "data": {
+                "__type": "dk.cachet.carp.batterystate",
+                "batteryLevel": 100
+              }
+            }
+          ],
+          "triggerIds": [
+            0
+          ]
+        },
+        {
+          "dataStream": {
+            "studyDeploymentId": "04f7c048-c322-4939-a660-be95b0dd3681",
+            "deviceRoleName": "Participant's phone",
+            "dataType": "dk.cachet.carp.batterystate"
+          },
+          "firstSequenceId": 0,
+          "measurements": [
+            {
+              "sensorStartTime": 1642505045000000,
+              "data": {
+                "__type": "dk.cachet.carp.batterystate",
+                "batteryLevel": 100
+              }
+            },
+            {
+              "sensorStartTime": 1642505045000000,
+              "data": {
+                "__type": "dk.cachet.carp.batterystate",
+                "batteryLevel": 100
+              }
+            }
+          ],
+          "triggerIds": [
+            0
+          ]
+        },
+        {
+          "dataStream": {
+            "studyDeploymentId": "04f7c048-c322-4939-a660-be95b0dd3681",
+            "deviceRoleName": "Participant's phone",
+            "dataType": "dk.cachet.carp.batterystate"
+          },
+          "firstSequenceId": 0,
+          "measurements": [
+            {
+              "sensorStartTime": 1642505045000000,
+              "data": {
+                "__type": "dk.cachet.carp.batterystate",
+                "batteryLevel": 100
+              }
+            },
+            {
+              "sensorStartTime": 1642505045000000,
+              "data": {
+                "__type": "dk.cachet.carp.batterystate",
+                "batteryLevel": 100
+              }
+            }
+          ],
+          "triggerIds": [
+            0
+          ]
+        },
+        {
+          "dataStream": {
+            "studyDeploymentId": "04f7c048-c322-4939-a660-be95b0dd3681",
+            "deviceRoleName": "Participant's phone",
+            "dataType": "dk.cachet.carp.batterystate"
+          },
+          "firstSequenceId": 0,
+          "measurements": [
+            {
+              "sensorStartTime": 1642505045000000,
+              "data": {
+                "__type": "dk.cachet.carp.batterystate",
+                "batteryLevel": 100
+              }
+            },
+            {
+              "sensorStartTime": 1642505045000000,
+              "data": {
+                "__type": "dk.cachet.carp.batterystate",
+                "batteryLevel": 100
+              }
+            }
+          ],
+          "triggerIds": [
+            0
+          ]
+        },
+        {
+          "dataStream": {
+            "studyDeploymentId": "04f7c048-c322-4939-a660-be95b0dd3681",
+            "deviceRoleName": "Participant's phone",
+            "dataType": "dk.cachet.carp.batterystate"
+          },
+          "firstSequenceId": 0,
+          "measurements": [
+            {
+              "sensorStartTime": 1642505045000000,
+              "data": {
+                "__type": "dk.cachet.carp.batterystate",
+                "batteryLevel": 100
+              }
+            },
+            {
+              "sensorStartTime": 1642505045000000,
+              "data": {
+                "__type": "dk.cachet.carp.batterystate",
+                "batteryLevel": 100
+              }
+            }
+          ],
+          "triggerIds": [
+            0
+          ]
+        },
+        {
+          "dataStream": {
+            "studyDeploymentId": "04f7c048-c322-4939-a660-be95b0dd3681",
+            "deviceRoleName": "Participant's phone",
+            "dataType": "dk.cachet.carp.batterystate"
+          },
+          "firstSequenceId": 0,
+          "measurements": [
+            {
+              "sensorStartTime": 1642505045000000,
+              "data": {
+                "__type": "dk.cachet.carp.batterystate",
+                "batteryLevel": 100
+              }
+            },
+            {
+              "sensorStartTime": 1642505045000000,
+              "data": {
+                "__type": "dk.cachet.carp.batterystate",
+                "batteryLevel": 100
+              }
+            }
+          ],
+          "triggerIds": [
+            0
+          ]
+        },
+        {
+          "dataStream": {
+            "studyDeploymentId": "04f7c048-c322-4939-a660-be95b0dd3681",
+            "deviceRoleName": "Participant's phone",
+            "dataType": "dk.cachet.carp.batterystate"
+          },
+          "firstSequenceId": 0,
+          "measurements": [
+            {
+              "sensorStartTime": 1642505045000000,
+              "data": {
+                "__type": "dk.cachet.carp.batterystate",
+                "batteryLevel": 100
+              }
+            },
+            {
+              "sensorStartTime": 1642505045000000,
+              "data": {
+                "__type": "dk.cachet.carp.batterystate",
+                "batteryLevel": 100
+              }
+            }
+          ],
+          "triggerIds": [
+            0
+          ]
+        },
+        {
+          "dataStream": {
+            "studyDeploymentId": "04f7c048-c322-4939-a660-be95b0dd3681",
+            "deviceRoleName": "Participant's phone",
+            "dataType": "dk.cachet.carp.batterystate"
+          },
+          "firstSequenceId": 0,
+          "measurements": [
+            {
+              "sensorStartTime": 1642505045000000,
+              "data": {
+                "__type": "dk.cachet.carp.batterystate",
+                "batteryLevel": 100
+              }
+            },
+            {
+              "sensorStartTime": 1642505045000000,
+              "data": {
+                "__type": "dk.cachet.carp.batterystate",
+                "batteryLevel": 100
+              }
+            }
+          ],
+          "triggerIds": [
+            0
+          ]
+        },
+        {
+          "dataStream": {
+            "studyDeploymentId": "04f7c048-c322-4939-a660-be95b0dd3681",
+            "deviceRoleName": "Participant's phone",
+            "dataType": "dk.cachet.carp.batterystate"
+          },
+          "firstSequenceId": 0,
+          "measurements": [
+            {
+              "sensorStartTime": 1642505045000000,
+              "data": {
+                "__type": "dk.cachet.carp.batterystate",
+                "batteryLevel": 100
+              }
+            },
+            {
+              "sensorStartTime": 1642505045000000,
+              "data": {
+                "__type": "dk.cachet.carp.batterystate",
+                "batteryLevel": 100
+              }
+            }
+          ],
+          "triggerIds": [
+            0
+          ]
+        },
+        {
+          "dataStream": {
+            "studyDeploymentId": "04f7c048-c322-4939-a660-be95b0dd3681",
+            "deviceRoleName": "Participant's phone",
+            "dataType": "dk.cachet.carp.batterystate"
+          },
+          "firstSequenceId": 0,
+          "measurements": [
+            {
+              "sensorStartTime": 1642505045000000,
+              "data": {
+                "__type": "dk.cachet.carp.batterystate",
+                "batteryLevel": 100
+              }
+            },
+            {
+              "sensorStartTime": 1642505045000000,
+              "data": {
+                "__type": "dk.cachet.carp.batterystate",
+                "batteryLevel": 100
+              }
+            }
+          ],
+          "triggerIds": [
+            0
+          ]
+        },
+        {
+          "dataStream": {
+            "studyDeploymentId": "04f7c048-c322-4939-a660-be95b0dd3681",
+            "deviceRoleName": "Participant's phone",
+            "dataType": "dk.cachet.carp.batterystate"
+          },
+          "firstSequenceId": 0,
+          "measurements": [
+            {
+              "sensorStartTime": 1642505045000000,
+              "data": {
+                "__type": "dk.cachet.carp.batterystate",
+                "batteryLevel": 100
+              }
+            },
+            {
+              "sensorStartTime": 1642505045000000,
+              "data": {
+                "__type": "dk.cachet.carp.batterystate",
+                "batteryLevel": 100
+              }
+            }
+          ],
+          "triggerIds": [
+            0
+          ]
+        },
+        {
+          "dataStream": {
+            "studyDeploymentId": "04f7c048-c322-4939-a660-be95b0dd3681",
+            "deviceRoleName": "Participant's phone",
+            "dataType": "dk.cachet.carp.batterystate"
+          },
+          "firstSequenceId": 0,
+          "measurements": [
+            {
+              "sensorStartTime": 1642505045000000,
+              "data": {
+                "__type": "dk.cachet.carp.batterystate",
+                "batteryLevel": 100
+              }
+            },
+            {
+              "sensorStartTime": 1642505045000000,
+              "data": {
+                "__type": "dk.cachet.carp.batterystate",
+                "batteryLevel": 100
+              }
+            }
+          ],
+          "triggerIds": [
+            0
+          ]
+        },
+        {
+          "dataStream": {
+            "studyDeploymentId": "04f7c048-c322-4939-a660-be95b0dd3681",
+            "deviceRoleName": "Participant's phone",
+            "dataType": "dk.cachet.carp.batterystate"
+          },
+          "firstSequenceId": 0,
+          "measurements": [
+            {
+              "sensorStartTime": 1642505045000000,
+              "data": {
+                "__type": "dk.cachet.carp.batterystate",
+                "batteryLevel": 100
+              }
+            },
+            {
+              "sensorStartTime": 1642505045000000,
+              "data": {
+                "__type": "dk.cachet.carp.batterystate",
+                "batteryLevel": 100
+              }
+            }
+          ],
+          "triggerIds": [
+            0
+          ]
+        },
+        {
+          "dataStream": {
+            "studyDeploymentId": "04f7c048-c322-4939-a660-be95b0dd3681",
+            "deviceRoleName": "Participant's phone",
+            "dataType": "dk.cachet.carp.batterystate"
+          },
+          "firstSequenceId": 0,
+          "measurements": [
+            {
+              "sensorStartTime": 1642505045000000,
+              "data": {
+                "__type": "dk.cachet.carp.batterystate",
+                "batteryLevel": 100
+              }
+            },
+            {
+              "sensorStartTime": 1642505045000000,
+              "data": {
+                "__type": "dk.cachet.carp.batterystate",
+                "batteryLevel": 100
+              }
+            }
+          ],
+          "triggerIds": [
+            0
+          ]
+        },
+        {
+          "dataStream": {
+            "studyDeploymentId": "04f7c048-c322-4939-a660-be95b0dd3681",
+            "deviceRoleName": "Participant's phone",
+            "dataType": "dk.cachet.carp.batterystate"
+          },
+          "firstSequenceId": 0,
+          "measurements": [
+            {
+              "sensorStartTime": 1642505045000000,
+              "data": {
+                "__type": "dk.cachet.carp.batterystate",
+                "batteryLevel": 100
+              }
+            },
+            {
+              "sensorStartTime": 1642505045000000,
+              "data": {
+                "__type": "dk.cachet.carp.batterystate",
+                "batteryLevel": 100
+              }
+            }
+          ],
+          "triggerIds": [
+            0
+          ]
+        },
+        {
+          "dataStream": {
+            "studyDeploymentId": "04f7c048-c322-4939-a660-be95b0dd3681",
+            "deviceRoleName": "Participant's phone",
+            "dataType": "dk.cachet.carp.batterystate"
+          },
+          "firstSequenceId": 0,
+          "measurements": [
+            {
+              "sensorStartTime": 1642505045000000,
+              "data": {
+                "__type": "dk.cachet.carp.batterystate",
+                "batteryLevel": 100
+              }
+            },
+            {
+              "sensorStartTime": 1642505045000000,
+              "data": {
+                "__type": "dk.cachet.carp.batterystate",
+                "batteryLevel": 100
+              }
+            }
+          ],
+          "triggerIds": [
+            0
+          ]
+        },
+        {
+          "dataStream": {
+            "studyDeploymentId": "04f7c048-c322-4939-a660-be95b0dd3681",
+            "deviceRoleName": "Participant's phone",
+            "dataType": "dk.cachet.carp.batterystate"
+          },
+          "firstSequenceId": 0,
+          "measurements": [
+            {
+              "sensorStartTime": 1642505045000000,
+              "data": {
+                "__type": "dk.cachet.carp.batterystate",
+                "batteryLevel": 100
+              }
+            },
+            {
+              "sensorStartTime": 1642505045000000,
+              "data": {
+                "__type": "dk.cachet.carp.batterystate",
+                "batteryLevel": 100
+              }
+            }
+          ],
+          "triggerIds": [
+            0
+          ]
+        },
+        {
+          "dataStream": {
+            "studyDeploymentId": "04f7c048-c322-4939-a660-be95b0dd3681",
+            "deviceRoleName": "Participant's phone",
+            "dataType": "dk.cachet.carp.batterystate"
+          },
+          "firstSequenceId": 0,
+          "measurements": [
+            {
+              "sensorStartTime": 1642505045000000,
+              "data": {
+                "__type": "dk.cachet.carp.batterystate",
+                "batteryLevel": 100
+              }
+            },
+            {
+              "sensorStartTime": 1642505045000000,
+              "data": {
+                "__type": "dk.cachet.carp.batterystate",
+                "batteryLevel": 100
+              }
+            }
+          ],
+          "triggerIds": [
+            0
+          ]
+        },
+        {
+          "dataStream": {
+            "studyDeploymentId": "04f7c048-c322-4939-a660-be95b0dd3681",
+            "deviceRoleName": "Participant's phone",
+            "dataType": "dk.cachet.carp.batterystate"
+          },
+          "firstSequenceId": 0,
+          "measurements": [
+            {
+              "sensorStartTime": 1642505045000000,
+              "data": {
+                "__type": "dk.cachet.carp.batterystate",
+                "batteryLevel": 100
+              }
+            },
+            {
+              "sensorStartTime": 1642505045000000,
+              "data": {
+                "__type": "dk.cachet.carp.batterystate",
+                "batteryLevel": 100
+              }
+            }
+          ],
+          "triggerIds": [
+            0
+          ]
+        },
+        {
+          "dataStream": {
+            "studyDeploymentId": "04f7c048-c322-4939-a660-be95b0dd3681",
+            "deviceRoleName": "Participant's phone",
+            "dataType": "dk.cachet.carp.batterystate"
+          },
+          "firstSequenceId": 0,
+          "measurements": [
+            {
+              "sensorStartTime": 1642505045000000,
+              "data": {
+                "__type": "dk.cachet.carp.batterystate",
+                "batteryLevel": 100
+              }
+            },
+            {
+              "sensorStartTime": 1642505045000000,
+              "data": {
+                "__type": "dk.cachet.carp.batterystate",
+                "batteryLevel": 100
+              }
+            }
+          ],
+          "triggerIds": [
+            0
+          ]
+        },
+        {
+          "dataStream": {
+            "studyDeploymentId": "04f7c048-c322-4939-a660-be95b0dd3681",
+            "deviceRoleName": "Participant's phone",
+            "dataType": "dk.cachet.carp.batterystate"
+          },
+          "firstSequenceId": 0,
+          "measurements": [
+            {
+              "sensorStartTime": 1642505045000000,
+              "data": {
+                "__type": "dk.cachet.carp.batterystate",
+                "batteryLevel": 100
+              }
+            },
+            {
+              "sensorStartTime": 1642505045000000,
+              "data": {
+                "__type": "dk.cachet.carp.batterystate",
+                "batteryLevel": 100
+              }
+            }
+          ],
+          "triggerIds": [
+            0
+          ]
+        },
+        {
+          "dataStream": {
+            "studyDeploymentId": "04f7c048-c322-4939-a660-be95b0dd3681",
+            "deviceRoleName": "Participant's phone",
+            "dataType": "dk.cachet.carp.batterystate"
+          },
+          "firstSequenceId": 0,
+          "measurements": [
+            {
+              "sensorStartTime": 1642505045000000,
+              "data": {
+                "__type": "dk.cachet.carp.batterystate",
+                "batteryLevel": 100
+              }
+            },
+            {
+              "sensorStartTime": 1642505045000000,
+              "data": {
+                "__type": "dk.cachet.carp.batterystate",
+                "batteryLevel": 100
+              }
+            }
+          ],
+          "triggerIds": [
+            0
+          ]
+        },
+        {
+          "dataStream": {
+            "studyDeploymentId": "04f7c048-c322-4939-a660-be95b0dd3681",
+            "deviceRoleName": "Participant's phone",
+            "dataType": "dk.cachet.carp.batterystate"
+          },
+          "firstSequenceId": 0,
+          "measurements": [
+            {
+              "sensorStartTime": 1642505045000000,
+              "data": {
+                "__type": "dk.cachet.carp.batterystate",
+                "batteryLevel": 100
+              }
+            },
+            {
+              "sensorStartTime": 1642505045000000,
+              "data": {
+                "__type": "dk.cachet.carp.batterystate",
+                "batteryLevel": 100
+              }
+            }
+          ],
+          "triggerIds": [
+            0
+          ]
+        },
+        {
+          "dataStream": {
+            "studyDeploymentId": "04f7c048-c322-4939-a660-be95b0dd3681",
+            "deviceRoleName": "Participant's phone",
+            "dataType": "dk.cachet.carp.batterystate"
+          },
+          "firstSequenceId": 0,
+          "measurements": [
+            {
+              "sensorStartTime": 1642505045000000,
+              "data": {
+                "__type": "dk.cachet.carp.batterystate",
+                "batteryLevel": 100
+              }
+            },
+            {
+              "sensorStartTime": 1642505045000000,
+              "data": {
+                "__type": "dk.cachet.carp.batterystate",
+                "batteryLevel": 100
+              }
+            }
+          ],
+          "triggerIds": [
+            0
+          ]
+        },
+        {
+          "dataStream": {
+            "studyDeploymentId": "04f7c048-c322-4939-a660-be95b0dd3681",
+            "deviceRoleName": "Participant's phone",
+            "dataType": "dk.cachet.carp.batterystate"
+          },
+          "firstSequenceId": 0,
+          "measurements": [
+            {
+              "sensorStartTime": 1642505045000000,
+              "data": {
+                "__type": "dk.cachet.carp.batterystate",
+                "batteryLevel": 100
+              }
+            },
+            {
+              "sensorStartTime": 1642505045000000,
+              "data": {
+                "__type": "dk.cachet.carp.batterystate",
+                "batteryLevel": 100
+              }
+            }
+          ],
+          "triggerIds": [
+            0
+          ]
+        },
+        {
+          "dataStream": {
+            "studyDeploymentId": "04f7c048-c322-4939-a660-be95b0dd3681",
+            "deviceRoleName": "Participant's phone",
+            "dataType": "dk.cachet.carp.batterystate"
+          },
+          "firstSequenceId": 0,
+          "measurements": [
+            {
+              "sensorStartTime": 1642505045000000,
+              "data": {
+                "__type": "dk.cachet.carp.batterystate",
+                "batteryLevel": 100
+              }
+            },
+            {
+              "sensorStartTime": 1642505045000000,
+              "data": {
+                "__type": "dk.cachet.carp.batterystate",
+                "batteryLevel": 100
+              }
+            }
+          ],
+          "triggerIds": [
+            0
+          ]
+        }
+      ]
+    }
