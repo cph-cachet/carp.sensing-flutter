@@ -52,14 +52,14 @@ void main() {
         final invitations = await CarpParticipationService()
             .getActiveParticipationInvitations();
 
-        // debugPrint(toJsonString(invitations));
+        print(toJsonString(invitations));
         expect(invitations, isNotNull);
 
         var invitation = invitations.firstWhere(
             (invitation) => invitation.studyDeploymentId == testDeploymentId);
         expect(invitation, isNotNull);
 
-        debugPrint(toJsonString(invitation));
+        // debugPrint(toJsonString(invitation));
         CarpParticipationService().setInvitation(invitation);
         expect(
             CarpParticipationService().app.studyDeploymentId, testDeploymentId);

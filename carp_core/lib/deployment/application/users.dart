@@ -7,7 +7,8 @@
 
 part of '../carp_core_deployment.dart';
 
-/// The information which needs to be provided when inviting a participant to a deployment.
+/// The information which needs to be provided when inviting a participant to
+/// a deployment.
 @JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
 class ParticipantInvitation {
   // An ID for the participant, uniquely assigned by the calling service.
@@ -102,11 +103,29 @@ class ActiveParticipationInvitation {
   StudyInvitation invitation;
   List<AssignedPrimaryDevice>? assignedDevices;
 
-  /// The CARP study ID.
+  // The following are user-friendly getters for the most used info in an invitation.
+
+  /// The ID of the study.
   String? get studyId => invitation.applicationData;
 
-  /// The CARP study deployment ID.
+  /// The study deployment ID.
   String? get studyDeploymentId => participation.studyDeploymentId;
+
+  /// The study name.
+  String? get studyName => invitation.name;
+
+  /// The study description.
+  String? get studyDescription => invitation.description;
+
+  /// The role name of the assigned device.
+  String? get deviceRoleName => assignedDevices?.first.device.roleName;
+
+  /// The ID of the participant.
+  String get participantId => participation.participantId;
+
+  /// The role name of the participant.
+  String? get participantRoleName =>
+      participation.assignedRoles.roleNames?.first;
 
   ActiveParticipationInvitation(this.participation, this.invitation) : super();
 
@@ -119,7 +138,7 @@ class ActiveParticipationInvitation {
       '$runtimeType - participation: $participation, invitation: $invitation, devices size: ${assignedDevices!.length}';
 }
 
-/// Provides information on the status of a participant in a study deployment.
+/// The status of a participant in a study deployment.
 @JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
 class ParticipantStatus {
   String participantId;

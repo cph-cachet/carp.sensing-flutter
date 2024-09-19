@@ -27,7 +27,7 @@ class DeploymentReference extends RPCCarpReference {
   PrimaryDeviceDeployment? _deployment;
   StudyDeploymentStatus? _status;
 
-  /// The latest deployment status for this master device fetched from CAWS.
+  /// The latest known deployment status for this master device fetched from CAWS.
   /// Returns `null` if status is not yet known.
   StudyDeploymentStatus? get status => _status;
 
@@ -51,14 +51,13 @@ class DeploymentReference extends RPCCarpReference {
   String get registeredDeviceId =>
       _registeredDeviceId ??= DeviceInfo().deviceID ?? UUID.v1;
 
-  /// Get the deployment status for this [DeploymentReference].
+  /// Refresh the deployment status for this [DeploymentReference] from CAWS.
   Future<StudyDeploymentStatus> getStatus() async =>
       _status = StudyDeploymentStatus.fromJson(
           await _rpc(GetStudyDeploymentStatus(studyDeploymentId)));
 
-  /// Register a device for this deployment at the CARP server.
-  ///  * [deviceRoleName] - the role name of the device, e.g. `phone`.
-  ///  * [registration] - a unique id for the device.
+  /// Register a device with [deviceRoleName] with [registration] for this
+  /// deployment at the CARP server.
   ///
   /// Returns the updated study deployment status if the registration is successful.
   /// Throws a [CarpServiceException] if not.

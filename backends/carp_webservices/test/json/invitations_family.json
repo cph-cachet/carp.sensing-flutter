@@ -1,0 +1,298 @@
+[
+  {
+    "participation": {
+      "studyDeploymentId": "bf19ced6-7ede-47a9-ad87-c83a6ac8c600",
+      "participantId": "e128a946-2177-4c4d-8c6c-c223a0daef2a",
+      "assignedRoles": {
+        "__type": "dk.cachet.carp.common.application.users.AssignedTo.Roles",
+        "roleNames": [
+          "Participant"
+        ]
+      }
+    },
+    "invitation": {
+      "name": "CARP Demo",
+      "description": "CARP Demo Protocol",
+      "applicationData": "25a7225a-6c6f-4990-a7c0-8b1da3edb5b4"
+    },
+    "assignedDevices": [
+      {
+        "device": {
+          "__type": "dk.cachet.carp.common.application.devices.Smartphone",
+          "roleName": "Primary Phone",
+          "isPrimaryDevice": true
+        },
+        "registration": {
+          "__type": "dk.cachet.carp.common.application.devices.DefaultDeviceRegistration",
+          "deviceId": "SP1A.210812.016",
+          "deviceDisplayName": "SP1A.210812.016 - SM-G970F SAMSUNG [SDK 31]",
+          "registrationCreatedOn": "2024-05-06T08:25:29.465155Z"
+        }
+      }
+    ]
+  },
+  {
+    "participation": {
+      "studyDeploymentId": "444ef345-2db4-46dd-93e5-0d23dc6a547d",
+      "participantId": "213fa4f0-1697-4a7c-979e-c0749275d908",
+      "assignedRoles": {
+        "__type": "dk.cachet.carp.common.application.users.AssignedTo.Roles",
+        "roleNames": [
+          "Participant"
+        ]
+      }
+    },
+    "invitation": {
+      "name": "Simple Study",
+      "description": "Simple Study Protocol",
+      "applicationData": "5cf04b2f-034b-429f-b3b8-05e11e3c27ba"
+    },
+    "assignedDevices": [
+      {
+        "device": {
+          "__type": "dk.cachet.carp.common.application.devices.Smartphone",
+          "roleName": "Primary Phone",
+          "isPrimaryDevice": true
+        },
+        "registration": {
+          "__type": "dk.cachet.carp.common.application.devices.DefaultDeviceRegistration",
+          "deviceId": "SP1A.210812.016",
+          "deviceDisplayName": "SP1A.210812.016 - SM-G970F SAMSUNG [SDK 31]",
+          "registrationCreatedOn": "2024-05-06T09:00:00.556713Z"
+        }
+      }
+    ]
+  },
+  {
+    "participation": {
+      "studyDeploymentId": "78c497f4-58eb-45d7-a830-311ab5030d01",
+      "participantId": "b3ea4d5f-a4f0-48a4-bbc1-2e307a953ef2",
+      "assignedRoles": {
+        "__type": "dk.cachet.carp.common.application.users.AssignedTo.Roles",
+        "roleNames": [
+          "Participant"
+        ]
+      }
+    },
+    "invitation": {
+      "name": "The Real CARP Demo",
+      "description": "The Real CARP Demo Protocol",
+      "applicationData": "82b66f59-a35b-467c-b39e-4ebe04c9b03c"
+    },
+    "assignedDevices": [
+      {
+        "device": {
+          "__type": "dk.cachet.carp.common.application.devices.Smartphone",
+          "roleName": "Primary Phone",
+          "isPrimaryDevice": true
+        },
+        "registration": {
+          "__type": "dk.cachet.carp.common.application.devices.DefaultDeviceRegistration",
+          "deviceId": "SP1A.210812.016",
+          "deviceDisplayName": "SP1A.210812.016 - SM-G970F SAMSUNG [SDK 31]",
+          "registrationCreatedOn": "2024-05-06T09:09:39.684920Z"
+        }
+      }
+    ]
+  },
+  {
+    "participation": {
+      "studyDeploymentId": "df88808d-154f-4b93-b0db-2732badc6b20",
+      "participantId": "7155dc2d-e6b4-40e8-9779-937ea581c65a",
+      "assignedRoles": {
+        "__type": "dk.cachet.carp.common.application.users.AssignedTo.Roles",
+        "roleNames": [
+          "Participant"
+        ]
+      }
+    },
+    "invitation": {
+      "name": "SLEEPINESS Test (leaving study)",
+      "applicationData": "d4a7824d-304f-4870-8bb3-16871151b6f7"
+    },
+    "assignedDevices": [
+      {
+        "device": {
+          "__type": "dk.cachet.carp.common.application.devices.Smartphone",
+          "roleName": "Primary Phone",
+          "isPrimaryDevice": true
+        },
+        "registration": {
+          "__type": "dk.cachet.carp.common.application.devices.DefaultDeviceRegistration",
+          "deviceId": "SP1A.210812.016",
+          "deviceDisplayName": "SP1A.210812.016 - SM-G970F SAMSUNG [SDK 31]",
+          "registrationCreatedOn": "2024-05-28T10:52:35.395144Z"
+        }
+      }
+    ]
+  },
+  {
+    "participation": {
+      "studyDeploymentId": "58ce18ff-40e3-4cd0-9fba-fc893d784891",
+      "participantId": "264bf3dc-b6c8-4252-b44e-2c5e00262ce9",
+      "assignedRoles": {
+        "__type": "dk.cachet.carp.common.application.users.AssignedTo.Roles",
+        "roleNames": [
+          "Mother"
+        ]
+      }
+    },
+    "invitation": {
+      "name": "Family Study w. Participant Data",
+      "applicationData": "d6d047d5-4cfd-479b-87ac-99f4b5fee172"
+    },
+    "assignedDevices": [
+      {
+        "device": {
+          "__type": "dk.cachet.carp.common.application.devices.Smartphone",
+          "roleName": "Mother's Phone",
+          "isPrimaryDevice": true
+        }
+      }
+    ]
+  },
+  {
+    "participation": {
+      "studyDeploymentId": "58ce18ff-40e3-4cd0-9fba-fc893d784891",
+      "participantId": "5b486d25-b75e-4116-9a4f-eea8105ceea0",
+      "assignedRoles": {
+        "__type": "dk.cachet.carp.common.application.users.AssignedTo.Roles",
+        "roleNames": [
+          "Father"
+        ]
+      }
+    },
+    "invitation": {
+      "name": "Family Study w. Participant Data",
+      "applicationData": "d6d047d5-4cfd-479b-87ac-99f4b5fee172"
+    },
+    "assignedDevices": [
+      {
+        "device": {
+          "__type": "dk.cachet.carp.common.application.devices.Smartphone",
+          "roleName": "Father's Phone",
+          "isPrimaryDevice": true
+        }
+      }
+    ]
+  },
+  {
+    "participation": {
+      "studyDeploymentId": "04f7c048-c322-4939-a660-be95b0dd3681",
+      "participantId": "76a07207-1cf7-4e54-8d0e-38fd00822cf9",
+      "assignedRoles": {
+        "__type": "dk.cachet.carp.common.application.users.AssignedTo.Roles",
+        "roleNames": [
+          "Participant"
+        ]
+      }
+    },
+    "invitation": {
+      "name": "carp_webservices unit test",
+      "applicationData": "b7a4d433-c267-4d2c-b182-67bbbc37279b"
+    },
+    "assignedDevices": [
+      {
+        "device": {
+          "__type": "dk.cachet.carp.common.application.devices.Smartphone",
+          "roleName": "Participant's phone",
+          "defaultSamplingConfiguration": {
+            "dk.cachet.carp.geolocation": {
+              "__type": "dk.cachet.carp.common.application.sampling.BatteryAwareSamplingConfiguration",
+              "normal": {
+                "__type": "dk.cachet.carp.common.application.sampling.GranularitySamplingConfiguration",
+                "granularity": "Detailed"
+              },
+              "low": {
+                "__type": "dk.cachet.carp.common.application.sampling.GranularitySamplingConfiguration",
+                "granularity": "Coarse"
+              }
+            }
+          },
+          "isPrimaryDevice": true
+        },
+        "registration": {
+          "__type": "dk.cachet.carp.common.application.devices.DefaultDeviceRegistration",
+          "deviceId": "493a8168-248c-4a4d-8b62-f576f7d54882",
+          "deviceDisplayName": "null - null null [SDK null]",
+          "registrationCreatedOn": "2024-09-06T14:25:41.290639Z"
+        }
+      }
+    ]
+  },
+  {
+    "participation": {
+      "studyDeploymentId": "57196d17-e3b5-4b4f-b136-44c63b7a4882",
+      "participantId": "264bf3dc-b6c8-4252-b44e-2c5e00262ce9",
+      "assignedRoles": {
+        "__type": "dk.cachet.carp.common.application.users.AssignedTo.Roles",
+        "roleNames": [
+          "Father"
+        ]
+      }
+    },
+    "invitation": {
+      "name": "Family Study w. Participant Data",
+      "applicationData": "d6d047d5-4cfd-479b-87ac-99f4b5fee172"
+    },
+    "assignedDevices": [
+      {
+        "device": {
+          "__type": "dk.cachet.carp.common.application.devices.Smartphone",
+          "roleName": "Father's Phone",
+          "isPrimaryDevice": true
+        }
+      }
+    ]
+  },
+  {
+    "participation": {
+      "studyDeploymentId": "57196d17-e3b5-4b4f-b136-44c63b7a4882",
+      "participantId": "a23cb956-14a8-4654-b54e-cddcda4e79d4",
+      "assignedRoles": {
+        "__type": "dk.cachet.carp.common.application.users.AssignedTo.Roles",
+        "roleNames": [
+          "Father"
+        ]
+      }
+    },
+    "invitation": {
+      "name": "Family Study w. Participant Data",
+      "applicationData": "d6d047d5-4cfd-479b-87ac-99f4b5fee172"
+    },
+    "assignedDevices": [
+      {
+        "device": {
+          "__type": "dk.cachet.carp.common.application.devices.Smartphone",
+          "roleName": "Father's Phone",
+          "isPrimaryDevice": true
+        }
+      }
+    ]
+  },
+  {
+    "participation": {
+      "studyDeploymentId": "57196d17-e3b5-4b4f-b136-44c63b7a4882",
+      "participantId": "f07a67ad-3f7b-49f3-a1c7-d9a3d677f270",
+      "assignedRoles": {
+        "__type": "dk.cachet.carp.common.application.users.AssignedTo.Roles",
+        "roleNames": [
+          "Mother"
+        ]
+      }
+    },
+    "invitation": {
+      "name": "Family Study w. Participant Data",
+      "applicationData": "d6d047d5-4cfd-479b-87ac-99f4b5fee172"
+    },
+    "assignedDevices": [
+      {
+        "device": {
+          "__type": "dk.cachet.carp.common.application.devices.Smartphone",
+          "roleName": "Mother's Phone",
+          "isPrimaryDevice": true
+        }
+      }
+    ]
+  }
+]

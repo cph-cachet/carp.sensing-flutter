@@ -8,14 +8,14 @@ part of 'carp_backend.dart';
 
 CarpDataEndPoint _$CarpDataEndPointFromJson(Map<String, dynamic> json) =>
     CarpDataEndPoint(
+      dataFormat: json['dataFormat'] as String? ?? NameSpace.CARP,
+      name: json['name'] as String? ?? 'CARP Web Services',
       uploadMethod: $enumDecodeNullable(
               _$CarpUploadMethodEnumMap, json['uploadMethod']) ??
           CarpUploadMethod.stream,
       onlyUploadOnWiFi: json['onlyUploadOnWiFi'] as bool? ?? false,
-      uploadInterval: json['uploadInterval'] as int? ?? 10,
+      uploadInterval: (json['uploadInterval'] as num?)?.toInt() ?? 10,
       deleteWhenUploaded: json['deleteWhenUploaded'] as bool? ?? true,
-      name: json['name'] as String? ?? 'CARP Web Services',
-      dataFormat: json['dataFormat'] as String? ?? NameSpace.CARP,
     )
       ..$type = json['__type'] as String?
       ..type = json['type'] as String;
