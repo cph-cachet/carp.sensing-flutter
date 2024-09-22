@@ -2,6 +2,7 @@ library carp_serializable;
 
 import 'dart:math' as math;
 import 'dart:convert';
+import 'package:flutter/material.dart';
 import 'package:json_annotation/json_annotation.dart';
 
 /*
@@ -35,7 +36,7 @@ import 'package:json_annotation/json_annotation.dart';
 /// ```dart
 /// @JsonSerializable()
 /// class A extends Serializable {
-///   int index;
+///   int? index;
 ///
 ///   A() : super();
 ///
@@ -47,7 +48,7 @@ import 'package:json_annotation/json_annotation.dart';
 ///
 /// @JsonSerializable()
 /// class B extends A {
-///   String str;
+///   String? str;
 ///
 ///   B() : super();
 ///
@@ -69,7 +70,7 @@ import 'package:json_annotation/json_annotation.dart';
 ///  FromJsonFactory().register(A());
 /// ````
 ///
-/// For this purpose it is helpful to have an empty constructor, but any constructur
+/// For this purpose it is helpful to have an empty constructor, but any constructor
 /// will work, since only the `fromJsonFunction` function is used.
 ///
 /// Polymorphic serialization is handled by setting the `__type` property in the
@@ -152,14 +153,14 @@ class FromJsonFactory {
 
   FromJsonFactory._();
 
-  /// Register a [Serializable] class which can be deserialized from JSON.
+  /// Register [serializable] as a class which can be deserialized from JSON.
   ///
   /// If [type] is specified, then this is used as the type identifier as
   /// specified in [CLASS_IDENTIFIER].
   /// Otherwise the [Serializable] class [jsonType] is used.
   ///
   /// A type needs to be registered **before** a class can be deserialized from
-  /// JSON to a Flutter class.
+  /// JSON to a Dart class.
   void register(Serializable serializable, {String? type}) =>
       _registry[type ?? serializable.jsonType] = serializable.fromJsonFunction;
 
@@ -172,23 +173,45 @@ class FromJsonFactory {
     }
   }
 
-  /// Deserialize [json] based on its type.
-  Serializable? fromJson(Map<String, dynamic> json) {
+  /// Deserialize [json] based on its type [T].
+  ///
+  /// Returns the deserialized object if the type [T] has been registered in
+  /// this factory.
+  /// If the type is not available (registered), [notAvailable] is returned if specified.
+  /// Otherwise, a [SerializationException] is thrown.
+  T fromJson<T extends Serializable>(
+    Map<String, dynamic> json, {
+    T? notAvailable,
+  }) {
+    var message = '';
     final type = json[Serializable.CLASS_IDENTIFIER];
     if (!_registry.containsKey(type)) {
-      throw SerializationException(
+      message =
           "A 'fromJson' function was not found in the FromJsonFactory for the type '$type'. "
           "Register a Serializable class using the 'FromJsonFactory().register()' method."
           "\nIf you are using CARP Mobile Sensing, you can ensure json initialization by calling"
-          "'CarpMobileSensing.ensureInitialized()' as part of your main method.");
+          "'CarpMobileSensing.ensureInitialized()' as part of your main method.";
+
+      if (notAvailable != null) {
+        debugPrint('$runtimeType - $message');
+        return notAvailable;
+      } else {
+        throw SerializationException(message);
+      }
     }
+
     var fromJson = Function.apply(_registry[type!]!, [json]);
-    if (fromJson is Serializable) {
-      return fromJson;
+    if (fromJson is T) return fromJson;
+
+    message =
+        "The 'fromJson' function registered for the type '$type' does not return an object of the correct type ('$T'). "
+        "Make sure that the fromJson function returns a class of type '$T'.";
+
+    if (notAvailable != null) {
+      debugPrint('$runtimeType - $message');
+      return notAvailable;
     } else {
-      throw SerializationException(
-          "The 'fromJson' function registered for the type '$type' does not return a Serializable class. "
-          "Make sure that the fromJson function returns a class that inherits from the Serializable class.");
+      throw SerializationException(message);
     }
   }
 }
@@ -202,22 +225,26 @@ class SerializationException implements Exception {
   String toString() => '$runtimeType - $message';
 }
 
-/// A connivent function to convert a Dart object into a formatted JSON string.
+/// Converts [object] to a formatted JSON [String].
 String toJsonString(Object? object) =>
     const JsonEncoder.withIndent(' ').convert(object);
 
 /// A Universal Unique ID (UUID) generator.
 ///
-/// Defaults generator function is `UUID.v1`.
+/// Defaults generator function is `Uuid().v1`.
 ///
 /// Example:
 ///
 /// ```dart
 /// // Generate a v1 (random) id
-/// var uuid = UUID.v1;
+/// var uuid = Uuid().v1;
 /// ```
-class UUID {
-  static String get v1 {
+class Uuid {
+  const Uuid();
+
+  /// Generates a time-based version 1 UUID.
+  /// By default it will generate a string based off current time.
+  String get v1 {
     math.Random random = math.Random(DateTime.now().microsecond);
 
     const hexDigits = "0123456789abcdef";

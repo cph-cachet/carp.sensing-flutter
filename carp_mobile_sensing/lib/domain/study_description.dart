@@ -13,11 +13,11 @@ class StudyDescription extends Serializable {
   String title;
 
   /// The description of this study.
-  String description;
+  String? description;
 
   /// The purpose of the study. To be used to inform the user about
   /// this study and its purpose.
-  String purpose;
+  String? purpose;
 
   /// The URL pointing to a web page description of this study.
   String? studyDescriptionUrl;
@@ -30,8 +30,8 @@ class StudyDescription extends Serializable {
 
   StudyDescription({
     required this.title,
-    required this.description,
-    required this.purpose,
+    this.description,
+    this.purpose,
     this.studyDescriptionUrl,
     this.privacyPolicyUrl,
     this.responsible,
@@ -55,18 +55,18 @@ class StudyDescription extends Serializable {
 class StudyResponsible extends Serializable {
   String id;
   String name;
-  String title;
-  String email;
-  String address;
-  String affiliation;
+  String? title;
+  String? email;
+  String? address;
+  String? affiliation;
 
   StudyResponsible({
     required this.id,
     required this.name,
-    required this.title,
-    required this.email,
-    required this.affiliation,
-    required this.address,
+    this.title,
+    this.email,
+    this.affiliation,
+    this.address,
   });
 
   @override

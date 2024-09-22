@@ -117,8 +117,8 @@ Map<String, dynamic> _$SmartphoneStudyProtocolToJson(
 StudyDescription _$StudyDescriptionFromJson(Map<String, dynamic> json) =>
     StudyDescription(
       title: json['title'] as String,
-      description: json['description'] as String,
-      purpose: json['purpose'] as String,
+      description: json['description'] as String?,
+      purpose: json['purpose'] as String?,
       studyDescriptionUrl: json['studyDescriptionUrl'] as String?,
       privacyPolicyUrl: json['privacyPolicyUrl'] as String?,
       responsible: json['responsible'] == null
@@ -138,8 +138,8 @@ Map<String, dynamic> _$StudyDescriptionToJson(StudyDescription instance) {
 
   writeNotNull('__type', instance.$type);
   val['title'] = instance.title;
-  val['description'] = instance.description;
-  val['purpose'] = instance.purpose;
+  writeNotNull('description', instance.description);
+  writeNotNull('purpose', instance.purpose);
   writeNotNull('studyDescriptionUrl', instance.studyDescriptionUrl);
   writeNotNull('privacyPolicyUrl', instance.privacyPolicyUrl);
   writeNotNull('responsible', instance.responsible);
@@ -150,10 +150,10 @@ StudyResponsible _$StudyResponsibleFromJson(Map<String, dynamic> json) =>
     StudyResponsible(
       id: json['id'] as String,
       name: json['name'] as String,
-      title: json['title'] as String,
-      email: json['email'] as String,
-      affiliation: json['affiliation'] as String,
-      address: json['address'] as String,
+      title: json['title'] as String?,
+      email: json['email'] as String?,
+      affiliation: json['affiliation'] as String?,
+      address: json['address'] as String?,
     )..$type = json['__type'] as String?;
 
 Map<String, dynamic> _$StudyResponsibleToJson(StudyResponsible instance) {
@@ -168,10 +168,10 @@ Map<String, dynamic> _$StudyResponsibleToJson(StudyResponsible instance) {
   writeNotNull('__type', instance.$type);
   val['id'] = instance.id;
   val['name'] = instance.name;
-  val['title'] = instance.title;
-  val['email'] = instance.email;
-  val['address'] = instance.address;
-  val['affiliation'] = instance.affiliation;
+  writeNotNull('title', instance.title);
+  writeNotNull('email', instance.email);
+  writeNotNull('address', instance.address);
+  writeNotNull('affiliation', instance.affiliation);
   return val;
 }
 
