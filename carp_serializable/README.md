@@ -13,14 +13,10 @@ To use this package, add [`carp_serializable`](https://pub.dev/packages/carp_ser
 
 ```yaml
 dependencies:
-  flutter:
-    sdk: flutter
   json_annotation: ^latest
   carp_serializable: ^latest
 
 dev_dependencies:
-  flutter_test:
-    sdk: flutter
   build_runner: any   # For building json serialization
   json_serializable: any
 ```
@@ -45,21 +41,29 @@ Below is a simple example of two classes `A` and `B` where B extends A.
 class A extends Serializable {
   int index;
 
-  A() : super();
+  A([this.index = 0]) : super();
 
+  @override
   Function get fromJsonFunction => _$AFromJson;
-  factory A.fromJson(Map<String, dynamic> json) => FromJsonFactory().fromJson(json) as A;
+
+  factory A.fromJson(Map<String, dynamic> json) => FromJsonFactory().fromJson<A>(json);
+
+  @override
   Map<String, dynamic> toJson() => _$AToJson(this);
 }
 
-@JsonSerializable()
+@JsonSerializable(includeIfNull: false)
 class B extends A {
-  String str;
+  String? str;
 
-  B() : super();
+  B([super.index, this.str]) : super();
 
+  @override
   Function get fromJsonFunction => _$BFromJson;
-  factory B.fromJson(Map<String, dynamic> json) => FromJsonFactory().fromJson(json) as B;
+
+  factory B.fromJson(Map<String, dynamic> json) => FromJsonFactory().fromJson<B>(json);
+  
+  @override
   Map<String, dynamic> toJson() => _$BToJson(this);
 }
 ```
@@ -69,14 +73,12 @@ Note that the naming of the `fromJson()` and `toJson()` functions follows the [j
 The `fromJsonFunction` must be registered on app startup (before use of de-serialization) in the `FromJsonFactory` singleton, like this:
 
 ```dart
- FromJsonFactory().register(A());
+FromJsonFactory().register(A());
 ```
 
-For this purpose it is helpful to have an empty constructor, but any constructor will work, since only the `fromJsonFunction` function is used.
+For this purpose it is helpful to have an empty constructor, but any constructor will work, since only getting the `fromJsonFunction` function is used during registration.
 
-Polymorphic serialization is handled by setting the `__type` property in the `Serializable` class. Per default, an object's `runtimeType` is used as the
- `__type` for an object. Hence, the json of object of type `A` and `B` would
- look like this:
+Polymorphic serialization is handled by setting the `__type` property in the `Serializable` class. Per default, an object's `runtimeType` is used as the `__type` for an object. Hence, the JSON of objects of type `A` and `B` would look like this:
 
  ```json
   {
@@ -100,27 +102,96 @@ For example, if the class `B` above should use a different `__type` annotation, 
 
    <<as above>>
 
-   String get jsonType => 'dk.cachet.$runtimeType';
+   String get jsonType => 'dk.carp.$runtimeType';
  }
  ````
 
- In which case the json would look like:
+ In which case the JSON would look like:
 
  ```json
   {
-   "__type": "dk.cachet.B",
+   "__type": "dk.carp.B",
    "index": 2
    "str": "abc"
   }
 ```
 
-Once the serialization code is used as above, run the
+You can also create nested classes, like this class `C`:
+
+```dart
+@JsonSerializable(explicitToJson: true)
+class C extends A {
+  B b;
+
+  C(super.index, this.b) : super();
+
+  @override
+  Function get fromJsonFunction => _$CFromJson;
+  factory C.fromJson(Map<String, dynamic> json) => FromJsonFactory().fromJson<C>(json);
+  @override
+  Map<String, dynamic> toJson() => _$CToJson(this);
+}
+````
+
+The following statement;
+
+```dart
+B b = B(2, 'abc');
+C c = C(3, b);
+```
+
+will generate json like this:
+
+```json
+{
+ "__type": "C",
+ "index": 3,
+ "b": {
+  "__type": "dk.carp.B",
+  "index": 2,
+  "str": "abc"
+ }
+}
+```
+
+> Note that in order to support "deep" or nested toJson serialization, you need to annotate the class with `@JsonSerializable(explicitToJson: true)`.
+
+Once the serialization code is written as above, run the
 
 ```shell
 flutter pub run build_runner build --delete-conflicting-outputs
 ```
 
 command as usual to generate the `toJson()` and `fromJson()` methods.
+
+## Exception Handling
+
+When trying to deserialize an object from JSON, this package looks up the `fromJson` function in the `FromJsonFactory`. In case the type is not found - either because it is unknown or has not been registered - an `SerializationException` will be thrown.
+
+In order to avoid an exception, you can specify a default object to use in this exception case by specifying a `notAvailable` parameter to the `fromJson` method, like this:
+
+```dart
+class B extends A {
+
+   <<as above>>
+
+  factory B.fromJson(Map<String, dynamic> json) =>
+      FromJsonFactory().fromJson<B>(json, notAvailable: B(-1));
+}
+```
+
+In case a deserialization method for B is not found, then the object `B(-1)` is returned. This will not be the "correct" object, but at least the serialization is not stopped. This is useful in deserialization of large, nested JSON.
+
+## Universal Unique IDs
+
+Often in serialization, there is a need to generate or use unique IDs. Hence, the package also support the generation of a simple time-based Universal Unique ID (UUID):
+
+```dart
+// Generate a v1 (time-based) id
+var uuid = Uuid().v1;
+```
+
+Note, however, that this UUID is very simple. If you need more sophisticated UUIDs, use the [uuid](https://pub.dev/packages/uuid) package.
 
 ## Features and bugs
 
@@ -130,5 +201,5 @@ Please read about existing issues and file new feature requests and bug reports 
 
 ## License
 
-This software is copyright (c) [Copenhagen Center for Health Technology (CACHET)](https://www.cachet.dk/) at the [Technical University of Denmark (DTU)](https://www.dtu.dk).
-This software is available 'as-is' under a [MIT license](https://github.com/cph-cachet/carp.sensing-flutter/blob/master/LICENSE).
+This software is copyright (c) the [Technical University of Denmark (DTU)](https://www.dtu.dk) and is part of the [Copenhagen Research Platform](https://carp.cachet.dk/).
+This software is available 'as-is' under a [MIT license](LICENSE).

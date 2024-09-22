@@ -8,22 +8,11 @@ void _registerFromJsonFunctions() {
 
   // Protocol classes
   FromJsonFactory().registerAll([
-    StudyResponsible(
-      id: '',
-      title: '',
-      address: '',
-      affiliation: '',
-      email: '',
-      name: '',
-    ),
+    StudyResponsible(id: '', name: ''),
     DataEndPoint(type: ''),
     FileDataEndPoint(),
     SQLiteDataEndPoint(),
-    StudyDescription(
-      title: '',
-      description: '',
-      purpose: '',
-    )
+    StudyDescription(title: '')
   ]);
 
   // Task classes
