@@ -155,10 +155,11 @@ class SmartphoneDeploymentController extends StudyRuntime<DeviceRegistration> {
     print('===============================================================');
   }
 
-  /// Asking for all permissions needed for the included measures in this
-  /// study deployment.
+  /// Asking for permissions for all the measures included in this
+  /// study [deployment].
   ///
-  /// Should be called before sensing is started.
+  /// Should be called after deployment has taken place (using the [tryDeployment] method)
+  /// but before this controller is started (via the [start] method).
   ///
   /// This method is only relevant on Android, and does nothing on iOS.
   /// iOS automatically asks for permissions when a resource is accessed.
@@ -166,6 +167,12 @@ class SmartphoneDeploymentController extends StudyRuntime<DeviceRegistration> {
     if (Platform.isIOS) {
       warning(
           '$runtimeType - Requesting all permissions at once is not feasible on iOS. Skipping this.');
+      return;
+    }
+
+    if (deployment == null) {
+      warning(
+          '$runtimeType - No deployment available. Skipping requesting permissions.');
       return;
     }
 
@@ -333,28 +340,27 @@ class SmartphoneDeploymentController extends StudyRuntime<DeviceRegistration> {
     info(
         '$runtimeType - Starting data sampling for study deployment: ${deployment?.studyDeploymentId}');
 
+    // if this study has not yet been deployed, do this first.
+    if (status.index < StudyStatus.Deployed.index) {
+      await tryDeployment();
+      await configure();
+    }
+
     // ask for permissions for all measures in this deployment
     if (SmartPhoneClientManager().askForPermissions) {
       await askForAllPermissions();
     }
 
-    // if this study has not yet been deployed, do this first.
-    if (status.index < StudyStatus.Deployed.index) {
-      await tryDeployment();
-      await configure();
-      super.start();
-      if (start) _executor.start();
-    }
     super.start();
-    if (start) _executor.start();
+    if (start) executor.start();
   }
 
   /// Stop this controller and data sampling.
   @override
   Future<void> stop() async {
     info('$runtimeType - Stopping data sampling...');
-    _executor.stop();
-    super.stop();
+    executor.stop();
+    await super.stop();
   }
 
   /// Remove a study from this [SmartphoneDeploymentController].

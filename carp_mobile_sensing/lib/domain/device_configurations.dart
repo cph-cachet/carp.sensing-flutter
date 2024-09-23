@@ -19,7 +19,7 @@ class OnlineService<TRegistration extends DeviceRegistration>
   Function get fromJsonFunction => _$OnlineServiceFromJson;
 
   factory OnlineService.fromJson(Map<String, dynamic> json) =>
-      FromJsonFactory().fromJson(json) as OnlineService<TRegistration>;
+      FromJsonFactory().fromJson<OnlineService<TRegistration>>(json);
 
   @override
   Map<String, dynamic> toJson() => _$OnlineServiceToJson(this);

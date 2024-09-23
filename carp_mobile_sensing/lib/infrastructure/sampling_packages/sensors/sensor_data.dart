@@ -34,7 +34,7 @@ class AmbientLight extends SensorData {
   @override
   Function get fromJsonFunction => _$AmbientLightFromJson;
   factory AmbientLight.fromJson(Map<String, dynamic> json) =>
-      FromJsonFactory().fromJson(json) as AmbientLight;
+      FromJsonFactory().fromJson<AmbientLight>(json);
   @override
   Map<String, dynamic> toJson() => _$AmbientLightToJson(this);
 }
@@ -237,7 +237,7 @@ class AccelerationFeatures extends SensorData {
   @override
   Function get fromJsonFunction => _$AccelerationFeaturesFromJson;
   factory AccelerationFeatures.fromJson(Map<String, dynamic> json) =>
-      FromJsonFactory().fromJson(json) as AccelerationFeatures;
+      FromJsonFactory().fromJson<AccelerationFeatures>(json);
   @override
   Map<String, dynamic> toJson() => _$AccelerationFeaturesToJson(this);
 }

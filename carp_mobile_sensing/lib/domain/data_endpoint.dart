@@ -30,7 +30,7 @@ class DataEndPoint extends Serializable {
 
   @override
   factory DataEndPoint.fromJson(Map<String, dynamic> json) =>
-      FromJsonFactory().fromJson(json) as DataEndPoint;
+      FromJsonFactory().fromJson<DataEndPoint>(json);
 
   @override
   Map<String, dynamic> toJson() => _$DataEndPointToJson(this);
@@ -104,7 +104,7 @@ class FileDataEndPoint extends DataEndPoint {
 
   @override
   factory FileDataEndPoint.fromJson(Map<String, dynamic> json) =>
-      FromJsonFactory().fromJson(json) as FileDataEndPoint;
+      FromJsonFactory().fromJson<FileDataEndPoint>(json);
 
   @override
   Map<String, dynamic> toJson() => _$FileDataEndPointToJson(this);
@@ -132,7 +132,7 @@ class SQLiteDataEndPoint extends DataEndPoint {
 
   @override
   factory SQLiteDataEndPoint.fromJson(Map<String, dynamic> json) =>
-      FromJsonFactory().fromJson(json) as SQLiteDataEndPoint;
+      FromJsonFactory().fromJson<SQLiteDataEndPoint>(json);
 
   @override
   Map<String, dynamic> toJson() => _$SQLiteDataEndPointToJson(this);

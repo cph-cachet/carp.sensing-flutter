@@ -21,7 +21,7 @@ class PersistentSamplingConfiguration extends SamplingConfiguration {
   @override
   Function get fromJsonFunction => _$PersistentSamplingConfigurationFromJson;
   factory PersistentSamplingConfiguration.fromJson(Map<String, dynamic> json) =>
-      FromJsonFactory().fromJson(json) as PersistentSamplingConfiguration;
+      FromJsonFactory().fromJson<PersistentSamplingConfiguration>(json);
 }
 
 /// A sampling configuration which allows configuring the time back in the [past]
@@ -46,7 +46,7 @@ class HistoricSamplingConfiguration extends PersistentSamplingConfiguration {
   @override
   Map<String, dynamic> toJson() => _$HistoricSamplingConfigurationToJson(this);
   factory HistoricSamplingConfiguration.fromJson(Map<String, dynamic> json) =>
-      FromJsonFactory().fromJson(json) as HistoricSamplingConfiguration;
+      FromJsonFactory().fromJson<HistoricSamplingConfiguration>(json);
 }
 
 /// A sampling configuration that allows configuring the time [interval] in
@@ -63,7 +63,7 @@ class IntervalSamplingConfiguration extends PersistentSamplingConfiguration {
   @override
   Map<String, dynamic> toJson() => _$IntervalSamplingConfigurationToJson(this);
   factory IntervalSamplingConfiguration.fromJson(Map<String, dynamic> json) =>
-      FromJsonFactory().fromJson(json) as IntervalSamplingConfiguration;
+      FromJsonFactory().fromJson<IntervalSamplingConfiguration>(json);
 }
 
 /// A sampling configuration specifying how to collect data on a regular basis
@@ -87,5 +87,5 @@ class PeriodicSamplingConfiguration extends IntervalSamplingConfiguration {
   @override
   Function get fromJsonFunction => _$PeriodicSamplingConfigurationFromJson;
   factory PeriodicSamplingConfiguration.fromJson(Map<String, dynamic> json) =>
-      FromJsonFactory().fromJson(json) as PeriodicSamplingConfiguration;
+      FromJsonFactory().fromJson<PeriodicSamplingConfiguration>(json);
 }

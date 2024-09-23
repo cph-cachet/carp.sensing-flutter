@@ -409,7 +409,7 @@ class UserTaskSnapshot extends Serializable {
   Function get fromJsonFunction => _$UserTaskSnapshotFromJson;
 
   factory UserTaskSnapshot.fromJson(Map<String, dynamic> json) =>
-      FromJsonFactory().fromJson(json) as UserTaskSnapshot;
+      FromJsonFactory().fromJson<UserTaskSnapshot>(json);
 
   @override
   Map<String, dynamic> toJson() => _$UserTaskSnapshotToJson(this);

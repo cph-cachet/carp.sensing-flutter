@@ -16,7 +16,7 @@ class NoOpTrigger extends TriggerConfiguration {
   @override
   Function get fromJsonFunction => _$NoOpTriggerFromJson;
   factory NoOpTrigger.fromJson(Map<String, dynamic> json) =>
-      FromJsonFactory().fromJson(json) as NoOpTrigger;
+      FromJsonFactory().fromJson<NoOpTrigger>(json);
   @override
   Map<String, dynamic> toJson() => _$NoOpTriggerToJson(this);
 }
@@ -30,7 +30,7 @@ class ImmediateTrigger extends TriggerConfiguration {
   @override
   Function get fromJsonFunction => _$ImmediateTriggerFromJson;
   factory ImmediateTrigger.fromJson(Map<String, dynamic> json) =>
-      FromJsonFactory().fromJson(json) as ImmediateTrigger;
+      FromJsonFactory().fromJson<ImmediateTrigger>(json);
   @override
   Map<String, dynamic> toJson() => _$ImmediateTriggerToJson(this);
 }
@@ -55,7 +55,7 @@ class OneTimeTrigger extends TriggerConfiguration {
   @override
   Function get fromJsonFunction => _$OneTimeTriggerFromJson;
   factory OneTimeTrigger.fromJson(Map<String, dynamic> json) =>
-      FromJsonFactory().fromJson(json) as OneTimeTrigger;
+      FromJsonFactory().fromJson<OneTimeTrigger>(json);
   @override
   Map<String, dynamic> toJson() => _$OneTimeTriggerToJson(this);
 }
@@ -75,7 +75,7 @@ class PassiveTrigger extends TriggerConfiguration {
   @override
   Function get fromJsonFunction => _$PassiveTriggerFromJson;
   factory PassiveTrigger.fromJson(Map<String, dynamic> json) =>
-      FromJsonFactory().fromJson(json) as PassiveTrigger;
+      FromJsonFactory().fromJson<PassiveTrigger>(json);
   @override
   Map<String, dynamic> toJson() => _$PassiveTriggerToJson(this);
 }
@@ -95,7 +95,7 @@ class DelayedTrigger extends TriggerConfiguration {
   @override
   Function get fromJsonFunction => _$DelayedTriggerFromJson;
   factory DelayedTrigger.fromJson(Map<String, dynamic> json) =>
-      FromJsonFactory().fromJson(json) as DelayedTrigger;
+      FromJsonFactory().fromJson<DelayedTrigger>(json);
   @override
   Map<String, dynamic> toJson() => _$DelayedTriggerToJson(this);
 }
@@ -115,7 +115,7 @@ class PeriodicTrigger extends TriggerConfiguration implements Schedulable {
   @override
   Function get fromJsonFunction => _$PeriodicTriggerFromJson;
   factory PeriodicTrigger.fromJson(Map<String, dynamic> json) =>
-      FromJsonFactory().fromJson(json) as PeriodicTrigger;
+      FromJsonFactory().fromJson<PeriodicTrigger>(json);
   @override
   Map<String, dynamic> toJson() => _$PeriodicTriggerToJson(this);
 }
@@ -132,7 +132,7 @@ class DateTimeTrigger extends TriggerConfiguration implements Schedulable {
   @override
   Function get fromJsonFunction => _$DateTimeTriggerFromJson;
   factory DateTimeTrigger.fromJson(Map<String, dynamic> json) =>
-      FromJsonFactory().fromJson(json) as DateTimeTrigger;
+      FromJsonFactory().fromJson<DateTimeTrigger>(json);
   @override
   Map<String, dynamic> toJson() => _$DateTimeTriggerToJson(this);
 }
@@ -319,7 +319,7 @@ class RecurrentScheduledTrigger extends PeriodicTrigger {
   @override
   Function get fromJsonFunction => _$RecurrentScheduledTriggerFromJson;
   factory RecurrentScheduledTrigger.fromJson(Map<String, dynamic> json) =>
-      FromJsonFactory().fromJson(json) as RecurrentScheduledTrigger;
+      FromJsonFactory().fromJson<RecurrentScheduledTrigger>(json);
   @override
   Map<String, dynamic> toJson() => _$RecurrentScheduledTriggerToJson(this);
 
@@ -401,7 +401,7 @@ class CronScheduledTrigger extends TriggerConfiguration implements Schedulable {
   @override
   Function get fromJsonFunction => _$CronScheduledTriggerFromJson;
   factory CronScheduledTrigger.fromJson(Map<String, dynamic> json) =>
-      FromJsonFactory().fromJson(json) as CronScheduledTrigger;
+      FromJsonFactory().fromJson<CronScheduledTrigger>(json);
   @override
   Map<String, dynamic> toJson() => _$CronScheduledTriggerToJson(this);
 
@@ -443,7 +443,7 @@ class SamplingEventTrigger extends TriggerConfiguration {
   @override
   Function get fromJsonFunction => _$SamplingEventTriggerFromJson;
   factory SamplingEventTrigger.fromJson(Map<String, dynamic> json) =>
-      FromJsonFactory().fromJson(json) as SamplingEventTrigger;
+      FromJsonFactory().fromJson<SamplingEventTrigger>(json);
   @override
   Map<String, dynamic> toJson() => _$SamplingEventTriggerToJson(this);
 }
@@ -487,7 +487,7 @@ class ConditionalSamplingEventTrigger extends TriggerConfiguration {
   @override
   Function get fromJsonFunction => _$ConditionalSamplingEventTriggerFromJson;
   factory ConditionalSamplingEventTrigger.fromJson(Map<String, dynamic> json) =>
-      FromJsonFactory().fromJson(json) as ConditionalSamplingEventTrigger;
+      FromJsonFactory().fromJson<ConditionalSamplingEventTrigger>(json);
   @override
   Map<String, dynamic> toJson() =>
       _$ConditionalSamplingEventTriggerToJson(this);
@@ -527,7 +527,7 @@ class ConditionalPeriodicTrigger extends TriggerConfiguration {
   @override
   Function get fromJsonFunction => _$ConditionalPeriodicTriggerFromJson;
   factory ConditionalPeriodicTrigger.fromJson(Map<String, dynamic> json) =>
-      FromJsonFactory().fromJson(json) as ConditionalPeriodicTrigger;
+      FromJsonFactory().fromJson<ConditionalPeriodicTrigger>(json);
   @override
   Map<String, dynamic> toJson() => _$ConditionalPeriodicTriggerToJson(this);
 }
@@ -575,7 +575,7 @@ class RandomRecurrentTrigger extends TriggerConfiguration
   @override
   Function get fromJsonFunction => _$RandomRecurrentTriggerFromJson;
   factory RandomRecurrentTrigger.fromJson(Map<String, dynamic> json) =>
-      FromJsonFactory().fromJson(json) as RandomRecurrentTrigger;
+      FromJsonFactory().fromJson<RandomRecurrentTrigger>(json);
   @override
   Map<String, dynamic> toJson() => _$RandomRecurrentTriggerToJson(this);
 }
@@ -598,7 +598,7 @@ class UserTaskTrigger extends TriggerConfiguration {
   @override
   Function get fromJsonFunction => _$UserTaskTriggerFromJson;
   factory UserTaskTrigger.fromJson(Map<String, dynamic> json) =>
-      FromJsonFactory().fromJson(json) as UserTaskTrigger;
+      FromJsonFactory().fromJson<UserTaskTrigger>(json);
   @override
   Map<String, dynamic> toJson() => _$UserTaskTriggerToJson(this);
 }

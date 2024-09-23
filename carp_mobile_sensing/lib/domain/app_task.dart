@@ -64,7 +64,7 @@ class AppTask extends TaskConfiguration {
   Function get fromJsonFunction => _$AppTaskFromJson;
 
   factory AppTask.fromJson(Map<String, dynamic> json) =>
-      FromJsonFactory().fromJson(json) as AppTask;
+      FromJsonFactory().fromJson<AppTask>(json);
 
   @override
   Map<String, dynamic> toJson() => _$AppTaskToJson(this);

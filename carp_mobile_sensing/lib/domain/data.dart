@@ -35,7 +35,7 @@ class FileData extends Data {
   @override
   Function get fromJsonFunction => _$FileDataFromJson;
   factory FileData.fromJson(Map<String, dynamic> json) =>
-      FromJsonFactory().fromJson(json) as FileData;
+      FromJsonFactory().fromJson<FileData>(json);
   @override
   Map<String, dynamic> toJson() => _$FileDataToJson(this);
 }
@@ -64,7 +64,7 @@ class Heartbeat extends Data {
   @override
   Function get fromJsonFunction => _$HeartbeatFromJson;
   factory Heartbeat.fromJson(Map<String, dynamic> json) =>
-      FromJsonFactory().fromJson(json) as Heartbeat;
+      FromJsonFactory().fromJson<Heartbeat>(json);
   @override
   Map<String, dynamic> toJson() => _$HeartbeatToJson(this);
 }

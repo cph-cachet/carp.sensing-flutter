@@ -68,7 +68,7 @@ class DeviceInformation extends Data {
   @override
   Function get fromJsonFunction => _$DeviceInformationFromJson;
   factory DeviceInformation.fromJson(Map<String, dynamic> json) =>
-      FromJsonFactory().fromJson(json) as DeviceInformation;
+      FromJsonFactory().fromJson<DeviceInformation>(json);
   @override
   Map<String, dynamic> toJson() => _$DeviceInformationToJson(this);
 }
@@ -120,7 +120,7 @@ class BatteryState extends Data {
   @override
   Function get fromJsonFunction => _$BatteryStateFromJson;
   factory BatteryState.fromJson(Map<String, dynamic> json) =>
-      FromJsonFactory().fromJson(json) as BatteryState;
+      FromJsonFactory().fromJson<BatteryState>(json);
   @override
   Map<String, dynamic> toJson() => _$BatteryStateToJson(this);
 }
@@ -141,7 +141,7 @@ class FreeMemory extends Data {
   @override
   Function get fromJsonFunction => _$FreeMemoryFromJson;
   factory FreeMemory.fromJson(Map<String, dynamic> json) =>
-      FromJsonFactory().fromJson(json) as FreeMemory;
+      FromJsonFactory().fromJson<FreeMemory>(json);
   @override
   Map<String, dynamic> toJson() => _$FreeMemoryToJson(this);
 }
@@ -184,7 +184,7 @@ class ScreenEvent extends Data {
   @override
   Function get fromJsonFunction => _$ScreenEventFromJson;
   factory ScreenEvent.fromJson(Map<String, dynamic> json) =>
-      FromJsonFactory().fromJson(json) as ScreenEvent;
+      FromJsonFactory().fromJson<ScreenEvent>(json);
   @override
   Map<String, dynamic> toJson() => _$ScreenEventToJson(this);
 }

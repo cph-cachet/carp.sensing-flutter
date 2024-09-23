@@ -26,7 +26,7 @@ class RemoteTrigger extends TriggerConfiguration {
   @override
   Function get fromJsonFunction => _$RemoteTriggerFromJson;
   factory RemoteTrigger.fromJson(Map<String, dynamic> json) =>
-      FromJsonFactory().fromJson(json) as RemoteTrigger;
+      FromJsonFactory().fromJson<RemoteTrigger>(json);
   @override
   Map<String, dynamic> toJson() => _$RemoteTriggerToJson(this);
 }

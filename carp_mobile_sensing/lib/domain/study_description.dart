@@ -40,7 +40,7 @@ class StudyDescription extends Serializable {
   @override
   Function get fromJsonFunction => _$StudyDescriptionFromJson;
   factory StudyDescription.fromJson(Map<String, dynamic> json) =>
-      FromJsonFactory().fromJson(json) as StudyDescription;
+      FromJsonFactory().fromJson<StudyDescription>(json);
   @override
   Map<String, dynamic> toJson() => _$StudyDescriptionToJson(this);
 
@@ -72,7 +72,7 @@ class StudyResponsible extends Serializable {
   @override
   Function get fromJsonFunction => _$StudyResponsibleFromJson;
   factory StudyResponsible.fromJson(Map<String, dynamic> json) =>
-      FromJsonFactory().fromJson(json) as StudyResponsible;
+      FromJsonFactory().fromJson<StudyResponsible>(json);
   @override
   Map<String, dynamic> toJson() => _$StudyResponsibleToJson(this);
 
