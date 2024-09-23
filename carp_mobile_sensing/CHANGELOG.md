@@ -1,7 +1,8 @@
 ## 1.10.0
 
-* upgrade to carp_core v. 1.8
-* upgrade to carp_serialization v. 2.0
+* Upgrade to carp_core v. 1.8 & carp_serialization v. 2.0
+* Type safe `fromJson()` methods & nested json serialization
+* Upgrade of example app to use new Flutter Android Gradle build setup
 
 ## 1.9.0
 
@@ -34,18 +35,18 @@
 
 ## 1.6.1
 
-* improvement to removing studies (linked to issue [#283](https://github.com/cph-cachet/carp_studies_app/issues/283) in the CARP Studies App)
+* Improvement to removing studies (linked to issue [#283](https://github.com/cph-cachet/carp_studies_app/issues/283) in the CARP Studies App)
   * adding a new "disposed" sensing state
   * removing study deployment runtime
   * better handling of restarting sampling on device reconnection
-* upgrade of carp_serialization and carp_core
-* getting rid of uuid package dependency
-* fix of [#394](https://github.com/cph-cachet/carp.sensing-flutter/issues/394)
+* Upgrade of carp_serialization and carp_core
+* Getting rid of uuid package dependency
+* Fix of [#394](https://github.com/cph-cachet/carp.sensing-flutter/issues/394)
 
 ## 1.5.1
 
-* automatically stopping a background task if all of its underlying probes have stopped (fix of [384](https://github.com/cph-cachet/carp.sensing-flutter/issues/384))
-* upgrade to carp_core v. 1.5.0 (getting rid of `IsoDuration`)
+* Automatically stopping a background task if all of its underlying probes have stopped (fix of [384](https://github.com/cph-cachet/carp.sensing-flutter/issues/384))
+* Upgrade to carp_core v. 1.5.0 (getting rid of `IsoDuration`)
 
 ## 1.5.0
 
@@ -53,48 +54,48 @@
   * support app-specific methods to create, schedule, and cancel app-specific notifications
   * asks for permission on Android (Issue [#375](https://github.com/cph-cachet/carp.sensing-flutter/issues/375))
   * tapping a notification takes the user to the right task in the app (Issue [#376](https://github.com/cph-cachet/carp.sensing-flutter/issues/376))
-* fix of [#379](https://github.com/cph-cachet/carp.sensing-flutter/issues/379)
+* Fix of [#379](https://github.com/cph-cachet/carp.sensing-flutter/issues/379)
 
 ## 1.4.7
 
-* improvements to handling connected BLE devices
-* improvement to triggers and probes using BLE devices
-* improvements to restarting sampling on device reconnect
-* upgrade of packages
+* Improvements to handling connected BLE devices
+* Improvement to triggers and probes using BLE devices
+* Improvements to restarting sampling on device reconnect
+* Upgrade of packages
 
 ## 1.4.4
 
-* upgrade of plugins (battery_plus, sensor_plus, cron)
-* support for specifying ("overriding") sampling frequency in sensor measures (accelerometer, gyroscope, magnetometer) by using a `IntervalSamplingConfiguration`
-* improvement to executor state machine
-* improvement to restarting sampling on device (re)connection, including now also online service like the location service
-* improvements to device manager
+* Upgrade of plugins (battery_plus, sensor_plus, cron)
+* Support for specifying ("overriding") sampling frequency in sensor measures (accelerometer, gyroscope, magnetometer) by using a `IntervalSamplingConfiguration`
+* Improvement to executor state machine
+* Improvement to restarting sampling on device (re)connection, including now also online service like the location service
+* Improvements to device manager
 
 ## 1.4.0+1
 
-* upgrade to Dart 3.2
-* update to README
+* Upgrade to Dart 3.2
+* Update to README
 
 ## 1.3.5
 
-* upgrade of uuid and permission_handler plugins
-* addition of a ACCELERATION_FEATURES that samples accelerometer readings over a sampling period and calculates a set of statistical features (Issue [336](https://github.com/cph-cachet/carp.sensing-flutter/issues/336) & [347](https://github.com/cph-cachet/carp.sensing-flutter/issues/347))
-* removal of support for awesome_notifications which does not compile on iOS
-* improvements to API docs
-* removal of `toString()` methods on data points - if you want to print data, print the json generated from the `toJson()` method.
-* rename of `TransformerSchemaRegistry` to `DataTransformerSchemaRegistry`
+* Upgrade of uuid and permission_handler plugins
+* Addition of a ACCELERATION_FEATURES that samples accelerometer readings over a sampling period and calculates a set of statistical features (Issue [336](https://github.com/cph-cachet/carp.sensing-flutter/issues/336) & [347](https://github.com/cph-cachet/carp.sensing-flutter/issues/347))
+* Removal of support for awesome_notifications which does not compile on iOS
+* Improvements to API docs
+* Removal of `toString()` methods on data points - if you want to print data, print the json generated from the `toJson()` method.
+* Rename of `TransformerSchemaRegistry` to `DataTransformerSchemaRegistry`
 
 ## 1.2.0
 
-* battery stream on device controller and device managers
-* support for creating, scheduling, and cancelling generic text-based notifications in the notification controller
-* a device manager can now specify and handle its required permissions
+* Battery stream on device controller and device managers
+* Support for creating, scheduling, and cancelling generic text-based notifications in the notification controller
+* A device manager can now specify and handle its required permissions
 
 ## 1.1.3
 
-* added support for restoring a `SmartPhoneClientManager` on app restart
-* `privacySchemaName` is moved to be part of the `SmartphoneStudyProtocol` configuration.
-* simplification of API so that a simple local study can be configured, initialized, and started in one statement (without the need for understanding the whole deployment architecture).
+* Added support for restoring a `SmartPhoneClientManager` on app restart
+* A `privacySchemaName` is moved to be part of the `SmartphoneStudyProtocol` configuration.
+* Simplification of API so that a simple local study can be configured, initialized, and started in one statement (without the need for understanding the whole deployment architecture).
 
 ## 1.1.2
 
