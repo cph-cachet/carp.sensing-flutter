@@ -9,7 +9,7 @@ part of '../../carp_core_common.dart';
 
 /// A Bluetooth Low Energy (BLE) device which implements a GATT Heart
 /// Rate service (https://www.bluetooth.com/specifications/gatt/services/).
-@JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
+@JsonSerializable(includeIfNull: false, explicitToJson: true)
 class BLEHeartRateDevice
     extends DeviceConfiguration<MACAddressDeviceRegistration> {
   BLEHeartRateDevice({
@@ -45,7 +45,7 @@ class BLEHeartRateDevice
   @override
   Function get fromJsonFunction => _$BLEHeartRateDeviceFromJson;
   factory BLEHeartRateDevice.fromJson(Map<String, dynamic> json) =>
-      FromJsonFactory().fromJson(json) as BLEHeartRateDevice;
+      FromJsonFactory().fromJson<BLEHeartRateDevice>(json);
   @override
   Map<String, dynamic> toJson() => _$BLEHeartRateDeviceToJson(this);
 }

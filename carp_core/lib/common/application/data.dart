@@ -12,7 +12,7 @@ part of '../carp_core_common.dart';
 
 /// Holds data for a [DataType].
 /// This is an abstract class and contains no data as such.
-@JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
+@JsonSerializable(includeIfNull: false, explicitToJson: true)
 class Data extends Serializable {
   /// The format of this data as a [DataType].
   @JsonKey(includeFromJson: false, includeToJson: false)
@@ -29,7 +29,7 @@ class Data extends Serializable {
   @override
   Function get fromJsonFunction => _$DataFromJson;
   factory Data.fromJson(Map<String, dynamic> json) =>
-      FromJsonFactory().fromJson(json) as Data;
+      FromJsonFactory().fromJson<Data>(json);
   @override
   Map<String, dynamic> toJson() => _$DataToJson(this);
 
@@ -49,7 +49,7 @@ abstract class SensorData extends Data {
 /// Change in velocity, including gravity, along perpendicular
 /// [x], [y], and [z] axes in meters per second squared (m/s^2).
 /// Typically captured by an accelerometer.
-@JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
+@JsonSerializable(includeIfNull: false, explicitToJson: true)
 class Acceleration extends SensorData {
   static const dataType = CarpDataTypes.ACCELERATION_TYPE_NAME;
   double x, y, z;
@@ -58,14 +58,14 @@ class Acceleration extends SensorData {
   @override
   Function get fromJsonFunction => _$AccelerationFromJson;
   factory Acceleration.fromJson(Map<String, dynamic> json) =>
-      FromJsonFactory().fromJson(json) as Acceleration;
+      FromJsonFactory().fromJson<Acceleration>(json);
   @override
   Map<String, dynamic> toJson() => _$AccelerationToJson(this);
 }
 
 /// Rate of rotation of the device in 3D space.
 /// Typically captured by a gyroscope.
-@JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
+@JsonSerializable(includeIfNull: false, explicitToJson: true)
 class Rotation extends SensorData {
   static const dataType = CarpDataTypes.ROTATION_TYPE_NAME;
   double x, y, z;
@@ -74,7 +74,7 @@ class Rotation extends SensorData {
   @override
   Function get fromJsonFunction => _$RotationFromJson;
   factory Rotation.fromJson(Map<String, dynamic> json) =>
-      FromJsonFactory().fromJson(json) as Rotation;
+      FromJsonFactory().fromJson<Rotation>(json);
   @override
   Map<String, dynamic> toJson() => _$RotationToJson(this);
 }
@@ -82,7 +82,7 @@ class Rotation extends SensorData {
 /// Magnetic field of the device in 3D space, measured in microteslas μT
 /// for each three-dimensional axis.
 /// Typically captured by a magnetometer sensor.
-@JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
+@JsonSerializable(includeIfNull: false, explicitToJson: true)
 class MagneticField extends SensorData {
   static const dataType = CarpDataTypes.MAGNETIC_FIELD_TYPE_NAME;
   double x, y, z;
@@ -91,14 +91,14 @@ class MagneticField extends SensorData {
   @override
   Function get fromJsonFunction => _$MagneticFieldFromJson;
   factory MagneticField.fromJson(Map<String, dynamic> json) =>
-      FromJsonFactory().fromJson(json) as MagneticField;
+      FromJsonFactory().fromJson<MagneticField>(json);
   @override
   Map<String, dynamic> toJson() => _$MagneticFieldToJson(this);
 }
 
 /// Geolocation data as latitude and longitude in decimal degrees within
 /// the World Geodetic System 1984.
-@JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
+@JsonSerializable(includeIfNull: false, explicitToJson: true)
 class Geolocation extends SensorData {
   static const dataType = CarpDataTypes.GEOLOCATION_TYPE_NAME;
 
@@ -113,7 +113,7 @@ class Geolocation extends SensorData {
   @override
   Function get fromJsonFunction => _$GeolocationFromJson;
   factory Geolocation.fromJson(Map<String, dynamic> json) =>
-      FromJsonFactory().fromJson(json) as Geolocation;
+      FromJsonFactory().fromJson<Geolocation>(json);
   @override
   Map<String, dynamic> toJson() => _$GeolocationToJson(this);
 }
@@ -122,7 +122,7 @@ class Geolocation extends SensorData {
 /// The unit of the received signal strength indicator ([rssi]) is arbitrary
 /// and determined by the chip manufacturer, but the greater the value,
 /// the stronger the signal.
-@JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
+@JsonSerializable(includeIfNull: false, explicitToJson: true)
 class SignalStrength extends SensorData {
   static const dataType = CarpDataTypes.SIGNAL_STRENGTH_TYPE_NAME;
 
@@ -132,13 +132,13 @@ class SignalStrength extends SensorData {
   @override
   Function get fromJsonFunction => _$SignalStrengthFromJson;
   factory SignalStrength.fromJson(Map<String, dynamic> json) =>
-      FromJsonFactory().fromJson(json) as SignalStrength;
+      FromJsonFactory().fromJson<SignalStrength>(json);
   @override
   Map<String, dynamic> toJson() => _$SignalStrengthToJson(this);
 }
 
 /// Step count data as number of steps taken in a corresponding time interval.
-@JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
+@JsonSerializable(includeIfNull: false, explicitToJson: true)
 class StepCount extends SensorData {
   static const dataType = CarpDataTypes.STEP_COUNT_TYPE_NAME;
 
@@ -148,13 +148,13 @@ class StepCount extends SensorData {
   @override
   Function get fromJsonFunction => _$StepCountFromJson;
   factory StepCount.fromJson(Map<String, dynamic> json) =>
-      FromJsonFactory().fromJson(json) as StepCount;
+      FromJsonFactory().fromJson<StepCount>(json);
   @override
   Map<String, dynamic> toJson() => _$StepCountToJson(this);
 }
 
 /// Heart rate data in beats per minute ([bpm]).
-@JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
+@JsonSerializable(includeIfNull: false, explicitToJson: true)
 class HeartRate extends SensorData {
   static const dataType = CarpDataTypes.HEART_RATE_TYPE_NAME;
 
@@ -164,13 +164,13 @@ class HeartRate extends SensorData {
   @override
   Function get fromJsonFunction => _$HeartRateFromJson;
   factory HeartRate.fromJson(Map<String, dynamic> json) =>
-      FromJsonFactory().fromJson(json) as HeartRate;
+      FromJsonFactory().fromJson<HeartRate>(json);
   @override
   Map<String, dynamic> toJson() => _$HeartRateToJson(this);
 }
 
 /// Electrocardiogram data of a single lead.
-@JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
+@JsonSerializable(includeIfNull: false, explicitToJson: true)
 class ECG extends SensorData {
   static const dataType = CarpDataTypes.ECG_TYPE_NAME;
 
@@ -180,14 +180,14 @@ class ECG extends SensorData {
   @override
   Function get fromJsonFunction => _$ECGFromJson;
   factory ECG.fromJson(Map<String, dynamic> json) =>
-      FromJsonFactory().fromJson(json) as ECG;
+      FromJsonFactory().fromJson<ECG>(json);
   @override
   Map<String, dynamic> toJson() => _$ECGToJson(this);
 }
 
 /// Single-channel electrodermal activity (EDA) data, represented as skin conductance.
 /// Among others, also known as galvanic skin response (GSR) or skin conductance response/level.
-@JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
+@JsonSerializable(includeIfNull: false, explicitToJson: true)
 class EDA extends SensorData {
   static const dataType = CarpDataTypes.EDA_TYPE_NAME;
 
@@ -197,7 +197,7 @@ class EDA extends SensorData {
   @override
   Function get fromJsonFunction => _$EDAFromJson;
   factory EDA.fromJson(Map<String, dynamic> json) =>
-      FromJsonFactory().fromJson(json) as EDA;
+      FromJsonFactory().fromJson<EDA>(json);
   @override
   Map<String, dynamic> toJson() => _$EDAToJson(this);
 }
@@ -205,7 +205,7 @@ class EDA extends SensorData {
 /// Indicates the interactive task with [taskName] was completed.
 /// [taskData] holds the result of a completed interactive task, or null if
 /// no result is collected.
-@JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
+@JsonSerializable(includeIfNull: false, explicitToJson: true)
 class CompletedTask extends Data {
   static const dataType = CarpDataTypes.COMPLETED_TASK_TYPE_NAME;
 
@@ -220,7 +220,7 @@ class CompletedTask extends Data {
   @override
   Function get fromJsonFunction => _$CompletedTaskFromJson;
   factory CompletedTask.fromJson(Map<String, dynamic> json) =>
-      FromJsonFactory().fromJson(json) as CompletedTask;
+      FromJsonFactory().fromJson<CompletedTask>(json);
   @override
   Map<String, dynamic> toJson() => _$CompletedTaskToJson(this);
 }
@@ -230,7 +230,7 @@ class CompletedTask extends Data {
 /// referring to identifiers in the study protocol.
 /// [triggerData] may contain additional information related to the circumstances
 /// which caused the trigger to fire.
-@JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
+@JsonSerializable(includeIfNull: false, explicitToJson: true)
 class TriggeredTask extends Data {
   static const dataType = CarpDataTypes.TRIGGERED_TASK_TYPE_NAME;
 
@@ -251,14 +251,14 @@ class TriggeredTask extends Data {
   @override
   Function get fromJsonFunction => _$TriggeredTaskFromJson;
   factory TriggeredTask.fromJson(Map<String, dynamic> json) =>
-      FromJsonFactory().fromJson(json) as TriggeredTask;
+      FromJsonFactory().fromJson<TriggeredTask>(json);
   @override
   Map<String, dynamic> toJson() => _$TriggeredTaskToJson(this);
 }
 
 /// Indicates that some error occurred during data collection. [message]
 /// holds any message about the error which might have been captured.
-@JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
+@JsonSerializable(includeIfNull: false, explicitToJson: true)
 class Error extends Data {
   static const dataType = CarpDataTypes.ERROR_TYPE_NAME;
 
@@ -270,7 +270,7 @@ class Error extends Data {
   @override
   Function get fromJsonFunction => _$ErrorFromJson;
   factory Error.fromJson(Map<String, dynamic> json) =>
-      FromJsonFactory().fromJson(json) as Error;
+      FromJsonFactory().fromJson<Error>(json);
   @override
   Map<String, dynamic> toJson() => _$ErrorToJson(this);
 }

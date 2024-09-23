@@ -11,7 +11,7 @@ part of '../../carp_core_common.dart';
 /// desktop computer, or smartphone that collects data which can be incorporated
 /// into the platform after it has been processed by a primary device (potentially itself).
 /// Optionally, a device can present output and receive user input.
-@JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
+@JsonSerializable(includeIfNull: false, explicitToJson: true)
 class DeviceConfiguration<TRegistration extends DeviceRegistration>
     extends Serializable {
   static const DEVICE_NAMESPACE = 'dk.cachet.carp.common.application.devices';
@@ -65,7 +65,7 @@ class DeviceConfiguration<TRegistration extends DeviceRegistration>
   @override
   Function get fromJsonFunction => _$DeviceConfigurationFromJson;
   factory DeviceConfiguration.fromJson(Map<String, dynamic> json) =>
-      FromJsonFactory().fromJson(json) as DeviceConfiguration<TRegistration>;
+      FromJsonFactory().fromJson<DeviceConfiguration<TRegistration>>(json);
 
   @override
   Map<String, dynamic> toJson() => _$DeviceConfigurationToJson(this);
@@ -74,7 +74,7 @@ class DeviceConfiguration<TRegistration extends DeviceRegistration>
 }
 
 /// A default device configuration just implementing the basics.
-@JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
+@JsonSerializable(includeIfNull: false, explicitToJson: true)
 class DefaultDeviceConfiguration
     extends DeviceConfiguration<DefaultDeviceRegistration> {
   DefaultDeviceConfiguration({
@@ -93,14 +93,14 @@ class DefaultDeviceConfiguration
   @override
   Function get fromJsonFunction => _$DefaultDeviceConfigurationFromJson;
   factory DefaultDeviceConfiguration.fromJson(Map<String, dynamic> json) =>
-      FromJsonFactory().fromJson(json) as DefaultDeviceConfiguration;
+      FromJsonFactory().fromJson<DefaultDeviceConfiguration>(json);
   @override
   Map<String, dynamic> toJson() => _$DefaultDeviceConfigurationToJson(this);
 }
 
 /// A device which aggregates, synchronizes, and optionally uploads incoming
 /// data received from one or more connected devices (potentially just itself).
-@JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
+@JsonSerializable(includeIfNull: false, explicitToJson: true)
 class PrimaryDeviceConfiguration<TRegistration extends DeviceRegistration>
     extends DeviceConfiguration<TRegistration> {
   PrimaryDeviceConfiguration({
@@ -121,15 +121,15 @@ class PrimaryDeviceConfiguration<TRegistration extends DeviceRegistration>
   @override
   Function get fromJsonFunction => _$PrimaryDeviceConfigurationFromJson;
   factory PrimaryDeviceConfiguration.fromJson(Map<String, dynamic> json) =>
-      FromJsonFactory().fromJson(json)
-          as PrimaryDeviceConfiguration<TRegistration>;
+      FromJsonFactory()
+          .fromJson<PrimaryDeviceConfiguration<TRegistration>>(json);
   @override
   Map<String, dynamic> toJson() => _$PrimaryDeviceConfigurationToJson(this);
 }
 
 /// A general-purpose primary device for custom protocols.
 /// Only used when downloading custom protocols from the CARP web service.
-@JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
+@JsonSerializable(includeIfNull: false, explicitToJson: true)
 class CustomProtocolDevice extends PrimaryDeviceConfiguration {
   /// The default role name for a custom protocol device.
   static const String DEFAULT_ROLE_NAME = 'Custom device';
@@ -143,7 +143,7 @@ class CustomProtocolDevice extends PrimaryDeviceConfiguration {
   @override
   Function get fromJsonFunction => _$CustomProtocolDeviceFromJson;
   factory CustomProtocolDevice.fromJson(Map<String, dynamic> json) =>
-      FromJsonFactory().fromJson(json) as CustomProtocolDevice;
+      FromJsonFactory().fromJson<CustomProtocolDevice>(json);
   @override
   Map<String, dynamic> toJson() => _$CustomProtocolDeviceToJson(this);
 }

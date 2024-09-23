@@ -8,7 +8,7 @@
 part of '../carp_core_data.dart';
 
 /// Configures the set of [ExpectedDataStream] for a study deployment.
-@JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
+@JsonSerializable(includeIfNull: false, explicitToJson: true)
 class DataStreamsConfiguration {
   String studyDeploymentId;
   Set<ExpectedDataStream> expectedDataStreams;
@@ -23,7 +23,7 @@ class DataStreamsConfiguration {
 }
 
 /// The expected data type for a device with a specific role name.
-@JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
+@JsonSerializable(includeIfNull: false, explicitToJson: true)
 class ExpectedDataStream {
   String deviceRoleName;
   String dataType;
@@ -48,7 +48,7 @@ class ExpectedDataStream {
 
 /// Identifies a data stream of collected [dataType] data on the device with
 /// [deviceRoleName] in a deployed study protocol with [studyDeploymentId].
-@JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
+@JsonSerializable(includeIfNull: false, explicitToJson: true)
 class DataStreamId {
   String studyDeploymentId;
   String deviceRoleName;
@@ -65,7 +65,7 @@ class DataStreamId {
 }
 
 /// A collection of non-overlapping, ordered, data [measurements].
-@JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
+@JsonSerializable(includeIfNull: false, explicitToJson: true)
 class DataStreamBatch {
   DataStreamId dataStream;
   int firstSequenceId;
@@ -94,7 +94,7 @@ class DataStreamBatch {
 /// For example, the timestamps could be a simple clock increment since the device
 /// powered up.
 /// Note that in CARP we prefer microseconds over milliseconds for higher precision.
-@JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
+@JsonSerializable(includeIfNull: false, explicitToJson: true)
 class Measurement {
   /// Start time as set by the sensor.
   ///

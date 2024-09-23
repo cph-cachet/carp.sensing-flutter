@@ -54,14 +54,17 @@ PrimaryDeviceDeployment _$PrimaryDeviceDeploymentFromJson(
 Map<String, dynamic> _$PrimaryDeviceDeploymentToJson(
     PrimaryDeviceDeployment instance) {
   final val = <String, dynamic>{
-    'deviceConfiguration': instance.deviceConfiguration,
-    'registration': instance.registration,
-    'connectedDevices': instance.connectedDevices.toList(),
-    'connectedDeviceRegistrations': instance.connectedDeviceRegistrations,
-    'tasks': instance.tasks.toList(),
-    'triggers': instance.triggers,
-    'taskControls': instance.taskControls.toList(),
-    'expectedParticipantData': instance.expectedParticipantData.toList(),
+    'deviceConfiguration': instance.deviceConfiguration.toJson(),
+    'registration': instance.registration.toJson(),
+    'connectedDevices':
+        instance.connectedDevices.map((e) => e.toJson()).toList(),
+    'connectedDeviceRegistrations': instance.connectedDeviceRegistrations
+        .map((k, e) => MapEntry(k, e?.toJson())),
+    'tasks': instance.tasks.map((e) => e.toJson()).toList(),
+    'triggers': instance.triggers.map((k, e) => MapEntry(k, e.toJson())),
+    'taskControls': instance.taskControls.map((e) => e.toJson()).toList(),
+    'expectedParticipantData':
+        instance.expectedParticipantData.map((e) => e.toJson()).toList(),
   };
 
   void writeNotNull(String key, dynamic value) {
@@ -103,7 +106,7 @@ Map<String, dynamic> _$DeviceDeploymentStatusToJson(
   }
 
   writeNotNull('__type', instance.$type);
-  val['device'] = instance.device;
+  val['device'] = instance.device.toJson();
   writeNotNull('canBeDeployed', instance.canBeDeployed);
   writeNotNull('remainingDevicesToRegisterToObtainDeployment',
       instance.remainingDevicesToRegisterToObtainDeployment);
@@ -126,7 +129,7 @@ AssignedPrimaryDevice _$AssignedPrimaryDeviceFromJson(
 Map<String, dynamic> _$AssignedPrimaryDeviceToJson(
     AssignedPrimaryDevice instance) {
   final val = <String, dynamic>{
-    'device': instance.device,
+    'device': instance.device.toJson(),
   };
 
   void writeNotNull(String key, dynamic value) {
@@ -135,7 +138,7 @@ Map<String, dynamic> _$AssignedPrimaryDeviceToJson(
     }
   }
 
-  writeNotNull('registration', instance.registration);
+  writeNotNull('registration', instance.registration?.toJson());
   return val;
 }
 
@@ -171,8 +174,10 @@ Map<String, dynamic> _$StudyDeploymentStatusToJson(
   writeNotNull('__type', instance.$type);
   val['createdOn'] = instance.createdOn.toIso8601String();
   val['studyDeploymentId'] = instance.studyDeploymentId;
-  val['deviceStatusList'] = instance.deviceStatusList;
-  val['participantStatusList'] = instance.participantStatusList;
+  val['deviceStatusList'] =
+      instance.deviceStatusList.map((e) => e.toJson()).toList();
+  val['participantStatusList'] =
+      instance.participantStatusList.map((e) => e.toJson()).toList();
   writeNotNull('startedOn', instance.startedOn?.toIso8601String());
   return val;
 }
@@ -194,8 +199,8 @@ ParticipantData _$ParticipantDataFromJson(Map<String, dynamic> json) =>
 Map<String, dynamic> _$ParticipantDataToJson(ParticipantData instance) =>
     <String, dynamic>{
       'studyDeploymentId': instance.studyDeploymentId,
-      'common': instance.common,
-      'roles': instance.roles,
+      'common': instance.common.map((k, e) => MapEntry(k, e?.toJson())),
+      'roles': instance.roles.map((e) => e.toJson()).toList(),
     };
 
 RoleData _$RoleDataFromJson(Map<String, dynamic> json) => RoleData(
@@ -209,7 +214,7 @@ RoleData _$RoleDataFromJson(Map<String, dynamic> json) => RoleData(
 
 Map<String, dynamic> _$RoleDataToJson(RoleData instance) => <String, dynamic>{
       'roleName': instance.roleName,
-      'data': instance.data,
+      'data': instance.data.map((k, e) => MapEntry(k, e?.toJson())),
     };
 
 ParticipantInvitation _$ParticipantInvitationFromJson(
@@ -228,9 +233,9 @@ Map<String, dynamic> _$ParticipantInvitationToJson(
         ParticipantInvitation instance) =>
     <String, dynamic>{
       'participantId': instance.participantId,
-      'assignedRoles': instance.assignedRoles,
-      'identity': instance.identity,
-      'invitation': instance.invitation,
+      'assignedRoles': instance.assignedRoles.toJson(),
+      'identity': instance.identity.toJson(),
+      'invitation': instance.invitation.toJson(),
     };
 
 Participation _$ParticipationFromJson(Map<String, dynamic> json) =>
@@ -244,7 +249,7 @@ Map<String, dynamic> _$ParticipationToJson(Participation instance) =>
     <String, dynamic>{
       'studyDeploymentId': instance.studyDeploymentId,
       'participantId': instance.participantId,
-      'assignedRoles': instance.assignedRoles,
+      'assignedRoles': instance.assignedRoles.toJson(),
     };
 
 StudyInvitation _$StudyInvitationFromJson(Map<String, dynamic> json) =>
@@ -282,8 +287,8 @@ ActiveParticipationInvitation _$ActiveParticipationInvitationFromJson(
 Map<String, dynamic> _$ActiveParticipationInvitationToJson(
     ActiveParticipationInvitation instance) {
   final val = <String, dynamic>{
-    'participation': instance.participation,
-    'invitation': instance.invitation,
+    'participation': instance.participation.toJson(),
+    'invitation': instance.invitation.toJson(),
   };
 
   void writeNotNull(String key, dynamic value) {
@@ -292,7 +297,8 @@ Map<String, dynamic> _$ActiveParticipationInvitationToJson(
     }
   }
 
-  writeNotNull('assignedDevices', instance.assignedDevices);
+  writeNotNull('assignedDevices',
+      instance.assignedDevices?.map((e) => e.toJson()).toList());
   return val;
 }
 
@@ -309,7 +315,7 @@ ParticipantStatus _$ParticipantStatusFromJson(Map<String, dynamic> json) =>
 Map<String, dynamic> _$ParticipantStatusToJson(ParticipantStatus instance) =>
     <String, dynamic>{
       'participantId': instance.participantId,
-      'assignedParticipantRoles': instance.assignedParticipantRoles,
+      'assignedParticipantRoles': instance.assignedParticipantRoles.toJson(),
       'assignedPrimaryDeviceRoleNames':
           instance.assignedPrimaryDeviceRoleNames.toList(),
     };
@@ -341,10 +347,12 @@ Map<String, dynamic> _$CreateStudyDeploymentToJson(
 
   writeNotNull('__type', instance.$type);
   val['apiVersion'] = instance.apiVersion;
-  val['protocol'] = instance.protocol;
-  val['invitations'] = instance.invitations;
-  writeNotNull('connectedDevicePreregistrations',
-      instance.connectedDevicePreregistrations);
+  val['protocol'] = instance.protocol.toJson();
+  val['invitations'] = instance.invitations.map((e) => e.toJson()).toList();
+  writeNotNull(
+      'connectedDevicePreregistrations',
+      instance.connectedDevicePreregistrations
+          ?.map((k, e) => MapEntry(k, e.toJson())));
   return val;
 }
 
@@ -422,7 +430,7 @@ Map<String, dynamic> _$RegisterDeviceToJson(RegisterDevice instance) {
   val['apiVersion'] = instance.apiVersion;
   writeNotNull('studyDeploymentId', instance.studyDeploymentId);
   val['deviceRoleName'] = instance.deviceRoleName;
-  val['registration'] = instance.registration;
+  val['registration'] = instance.registration.toJson();
   return val;
 }
 
@@ -623,6 +631,6 @@ Map<String, dynamic> _$SetParticipantDataToJson(SetParticipantData instance) {
   writeNotNull('studyDeploymentId', instance.studyDeploymentId);
   val['apiVersion'] = instance.apiVersion;
   writeNotNull('inputByParticipantRole', instance.inputByParticipantRole);
-  writeNotNull('data', instance.data);
+  writeNotNull('data', instance.data?.map((k, e) => MapEntry(k, e?.toJson())));
   return val;
 }

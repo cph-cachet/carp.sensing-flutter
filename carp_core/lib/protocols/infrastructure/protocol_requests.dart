@@ -20,7 +20,7 @@ abstract class ProtocolServiceRequest extends ServiceRequest {
       '$_infrastructurePackageNamespace.ProtocolServiceRequest.$runtimeType';
 }
 
-@JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
+@JsonSerializable(includeIfNull: false, explicitToJson: true)
 class Add extends ProtocolServiceRequest {
   final StudyProtocol protocol;
   String? versionTag;
@@ -34,24 +34,24 @@ class Add extends ProtocolServiceRequest {
   @override
   Function get fromJsonFunction => _$AddFromJson;
   factory Add.fromJson(Map<String, dynamic> json) =>
-      FromJsonFactory().fromJson(json) as Add;
+      FromJsonFactory().fromJson<Add>(json);
   @override
   Map<String, dynamic> toJson() => _$AddToJson(this);
 }
 
-@JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
+@JsonSerializable(includeIfNull: false, explicitToJson: true)
 class AddVersion extends Add {
   AddVersion(super.protocol, super.versionTag);
 
   @override
   Function get fromJsonFunction => _$AddVersionFromJson;
   factory AddVersion.fromJson(Map<String, dynamic> json) =>
-      FromJsonFactory().fromJson(json) as AddVersion;
+      FromJsonFactory().fromJson<AddVersion>(json);
   @override
   Map<String, dynamic> toJson() => _$AddVersionToJson(this);
 }
 
-@JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
+@JsonSerializable(includeIfNull: false, explicitToJson: true)
 class UpdateParticipantDataConfiguration extends ProtocolServiceRequest {
   final String protocolId;
   final String? versionTag;
@@ -67,13 +67,13 @@ class UpdateParticipantDataConfiguration extends ProtocolServiceRequest {
   Function get fromJsonFunction => _$UpdateParticipantDataConfigurationFromJson;
   factory UpdateParticipantDataConfiguration.fromJson(
           Map<String, dynamic> json) =>
-      FromJsonFactory().fromJson(json) as UpdateParticipantDataConfiguration;
+      FromJsonFactory().fromJson<UpdateParticipantDataConfiguration>(json);
   @override
   Map<String, dynamic> toJson() =>
       _$UpdateParticipantDataConfigurationToJson(this);
 }
 
-@JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
+@JsonSerializable(includeIfNull: false, explicitToJson: true)
 class GetBy extends ProtocolServiceRequest {
   final String protocolId;
 
@@ -85,12 +85,12 @@ class GetBy extends ProtocolServiceRequest {
   @override
   Function get fromJsonFunction => _$GetByFromJson;
   factory GetBy.fromJson(Map<String, dynamic> json) =>
-      FromJsonFactory().fromJson(json) as GetBy;
+      FromJsonFactory().fromJson<GetBy>(json);
   @override
   Map<String, dynamic> toJson() => _$GetByToJson(this);
 }
 
-@JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
+@JsonSerializable(includeIfNull: false, explicitToJson: true)
 class GetAllForOwner extends ProtocolServiceRequest {
   final String ownerId;
 
@@ -99,12 +99,12 @@ class GetAllForOwner extends ProtocolServiceRequest {
   @override
   Function get fromJsonFunction => _$GetAllForOwnerFromJson;
   factory GetAllForOwner.fromJson(Map<String, dynamic> json) =>
-      FromJsonFactory().fromJson(json) as GetAllForOwner;
+      FromJsonFactory().fromJson<GetAllForOwner>(json);
   @override
   Map<String, dynamic> toJson() => _$GetAllForOwnerToJson(this);
 }
 
-@JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
+@JsonSerializable(includeIfNull: false, explicitToJson: true)
 class GetVersionHistoryFor extends ProtocolServiceRequest {
   final String protocolId;
 
@@ -113,12 +113,12 @@ class GetVersionHistoryFor extends ProtocolServiceRequest {
   @override
   Function get fromJsonFunction => _$GetVersionHistoryForFromJson;
   factory GetVersionHistoryFor.fromJson(Map<String, dynamic> json) =>
-      FromJsonFactory().fromJson(json) as GetVersionHistoryFor;
+      FromJsonFactory().fromJson<GetVersionHistoryFor>(json);
   @override
   Map<String, dynamic> toJson() => _$GetVersionHistoryForToJson(this);
 }
 
-@JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
+@JsonSerializable(includeIfNull: false, explicitToJson: true)
 class CreateCustomProtocol extends ProtocolServiceRequest {
   final String ownerId;
   final String name;
@@ -139,7 +139,7 @@ class CreateCustomProtocol extends ProtocolServiceRequest {
   @override
   Function get fromJsonFunction => _$CreateCustomProtocolFromJson;
   factory CreateCustomProtocol.fromJson(Map<String, dynamic> json) =>
-      FromJsonFactory().fromJson(json) as CreateCustomProtocol;
+      FromJsonFactory().fromJson<CreateCustomProtocol>(json);
   @override
   Map<String, dynamic> toJson() => _$CreateCustomProtocolToJson(this);
 }

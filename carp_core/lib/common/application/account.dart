@@ -7,7 +7,7 @@
 part of '../carp_core_common.dart';
 
 /// Uniquely identifies an account and its associated identity.
-@JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
+@JsonSerializable(includeIfNull: false, explicitToJson: true)
 class Account {
   /// Identity associated with this account.
   AccountIdentity identity;
@@ -35,21 +35,22 @@ class Account {
 }
 
 /// Identifies an [Account].
-@JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
+@JsonSerializable(includeIfNull: false, explicitToJson: true)
 class AccountIdentity extends Serializable {
   AccountIdentity() : super();
+
   @override
   String get jsonType => 'dk.cachet.carp.common.application.users.$runtimeType';
   @override
   Function get fromJsonFunction => _$AccountIdentityFromJson;
   factory AccountIdentity.fromJson(Map<String, dynamic> json) =>
-      FromJsonFactory().fromJson(json) as AccountIdentity;
+      FromJsonFactory().fromJson<AccountIdentity>(json);
   @override
   Map<String, dynamic> toJson() => _$AccountIdentityToJson(this);
 }
 
 /// Identifies an  account by a unique [emailAddress].
-@JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
+@JsonSerializable(includeIfNull: false, explicitToJson: true)
 class EmailAccountIdentity extends AccountIdentity {
   String emailAddress;
   EmailAccountIdentity(this.emailAddress);
@@ -57,7 +58,7 @@ class EmailAccountIdentity extends AccountIdentity {
   @override
   Function get fromJsonFunction => _$EmailAccountIdentityFromJson;
   factory EmailAccountIdentity.fromJson(Map<String, dynamic> json) =>
-      FromJsonFactory().fromJson(json) as EmailAccountIdentity;
+      FromJsonFactory().fromJson<EmailAccountIdentity>(json);
   @override
   Map<String, dynamic> toJson() => _$EmailAccountIdentityToJson(this);
 
@@ -66,7 +67,7 @@ class EmailAccountIdentity extends AccountIdentity {
 }
 
 /// Identifies an account by a unique [username].
-@JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
+@JsonSerializable(includeIfNull: false, explicitToJson: true)
 class UsernameAccountIdentity extends AccountIdentity {
   String username;
   UsernameAccountIdentity(this.username);
@@ -74,7 +75,7 @@ class UsernameAccountIdentity extends AccountIdentity {
   @override
   Function get fromJsonFunction => _$UsernameAccountIdentityFromJson;
   factory UsernameAccountIdentity.fromJson(Map<String, dynamic> json) =>
-      FromJsonFactory().fromJson(json) as UsernameAccountIdentity;
+      FromJsonFactory().fromJson<UsernameAccountIdentity>(json);
   @override
   Map<String, dynamic> toJson() => _$UsernameAccountIdentityToJson(this);
 

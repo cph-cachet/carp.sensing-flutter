@@ -1,6 +1,8 @@
-## 1.8.0
+## 1.8.1
 
 * upgrade to carp_serialization v. 2.0
+* type safe fromJson methods
+* nested json serialization
 
 ## 1.7.1
 

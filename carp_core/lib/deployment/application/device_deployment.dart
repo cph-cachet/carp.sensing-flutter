@@ -9,7 +9,7 @@ part of '../carp_core_deployment.dart';
 
 /// Contains the entire description and configuration for how a single primary
 /// device participates in running a study.
-@JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
+@JsonSerializable(includeIfNull: false, explicitToJson: true)
 class PrimaryDeviceDeployment {
   /// The configuration for the primary device this deployment is intended for.
   PrimaryDeviceConfiguration deviceConfiguration;
@@ -106,7 +106,7 @@ class PrimaryDeviceDeployment {
 /// A [DeviceDeploymentStatus] represents the status of a device in a deployment.
 ///
 /// See [DeviceDeploymentStatus.kt](https://github.com/cph-cachet/carp.core-kotlin/blob/develop/carp.deployment.core/src/commonMain/kotlin/dk/cachet/carp/deployment/domain/DeviceDeploymentStatus.kt).
-@JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
+@JsonSerializable(includeIfNull: false, explicitToJson: true)
 class DeviceDeploymentStatus extends Serializable {
   DeviceDeploymentStatusTypes? _status;
 
@@ -173,7 +173,7 @@ class DeviceDeploymentStatus extends Serializable {
   @override
   Function get fromJsonFunction => _$DeviceDeploymentStatusFromJson;
   factory DeviceDeploymentStatus.fromJson(Map<String, dynamic> json) =>
-      FromJsonFactory().fromJson(json) as DeviceDeploymentStatus;
+      FromJsonFactory().fromJson<DeviceDeploymentStatus>(json);
   @override
   Map<String, dynamic> toJson() => _$DeviceDeploymentStatusToJson(this);
   @override
@@ -210,7 +210,7 @@ enum DeviceDeploymentStatusTypes {
 
 /// Primary [device] and its current [registration] assigned to participants as
 /// part of a participant group.
-@JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
+@JsonSerializable(includeIfNull: false, explicitToJson: true)
 class AssignedPrimaryDevice {
   PrimaryDeviceConfiguration device;
   DeviceRegistration? registration;

@@ -10,7 +10,7 @@ part of '../carp_core_common.dart';
 /// [TaskConfiguration]s at certain points in time when the condition applies.
 /// The condition can either be time-bound, based on data streams,
 /// initiated by a user of the platform, or a combination of these.
-@JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
+@JsonSerializable(includeIfNull: false, explicitToJson: true)
 class TriggerConfiguration extends Serializable {
   final String _triggerNamespace = 'dk.cachet.carp.common.application.triggers';
 
@@ -33,7 +33,7 @@ class TriggerConfiguration extends Serializable {
   @override
   Function get fromJsonFunction => _$TriggerConfigurationFromJson;
   factory TriggerConfiguration.fromJson(Map<String, dynamic> json) =>
-      FromJsonFactory().fromJson(json) as TriggerConfiguration;
+      FromJsonFactory().fromJson<TriggerConfiguration>(json);
   @override
   Map<String, dynamic> toJson() => _$TriggerConfigurationToJson(this);
   @override
@@ -54,7 +54,7 @@ abstract class Schedulable {}
 /// the first time.
 ///
 /// Never stops sampling once started.
-@JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
+@JsonSerializable(includeIfNull: false, explicitToJson: true)
 class ElapsedTimeTrigger extends TriggerConfiguration implements Schedulable {
   /// Elapsed time since start of the study deployment.
   /// If null, sampling starts immediately.
@@ -72,13 +72,13 @@ class ElapsedTimeTrigger extends TriggerConfiguration implements Schedulable {
   @override
   Function get fromJsonFunction => _$ElapsedTimeTriggerFromJson;
   factory ElapsedTimeTrigger.fromJson(Map<String, dynamic> json) =>
-      FromJsonFactory().fromJson(json) as ElapsedTimeTrigger;
+      FromJsonFactory().fromJson<ElapsedTimeTrigger>(json);
   @override
   Map<String, dynamic> toJson() => _$ElapsedTimeTriggerToJson(this);
 }
 
 /// A trigger initiated by a user, i.e., the user decides when to start a task.
-@JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
+@JsonSerializable(includeIfNull: false, explicitToJson: true)
 class ManualTrigger extends TriggerConfiguration {
   /// A short label to describe the action performed once the user chooses
   /// to initiate this trigger.
@@ -98,7 +98,7 @@ class ManualTrigger extends TriggerConfiguration {
   @override
   Function get fromJsonFunction => _$ManualTriggerFromJson;
   factory ManualTrigger.fromJson(Map<String, dynamic> json) =>
-      FromJsonFactory().fromJson(json) as ManualTrigger;
+      FromJsonFactory().fromJson<ManualTrigger>(json);
   @override
   Map<String, dynamic> toJson() => _$ManualTriggerToJson(this);
 }
@@ -111,7 +111,7 @@ class ManualTrigger extends TriggerConfiguration {
 ///
 /// This trigger needs to be evaluated on a primary device since it is time bound
 /// and therefore requires a task scheduler.
-@JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
+@JsonSerializable(includeIfNull: false, explicitToJson: true)
 class ScheduledTrigger extends TriggerConfiguration implements Schedulable {
   /// The time of the day to trigger.
   TimeOfDay time;
@@ -135,7 +135,7 @@ class ScheduledTrigger extends TriggerConfiguration implements Schedulable {
   @override
   Function get fromJsonFunction => _$ScheduledTriggerFromJson;
   factory ScheduledTrigger.fromJson(Map<String, dynamic> json) =>
-      FromJsonFactory().fromJson(json) as ScheduledTrigger;
+      FromJsonFactory().fromJson<ScheduledTrigger>(json);
   @override
   Map<String, dynamic> toJson() => _$ScheduledTriggerToJson(this);
 }
@@ -144,7 +144,7 @@ class ScheduledTrigger extends TriggerConfiguration implements Schedulable {
 ///
 /// Follows the conventions in the [DateTime] class, but only uses the Time
 /// part in a 24 hour time format.
-@JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
+@JsonSerializable(includeIfNull: false, explicitToJson: true)
 class TimeOfDay {
   /// The hour in 24 hour format.
   final int hour;
@@ -216,7 +216,7 @@ class TimeOfDay {
 /// However, since date times are relative to the start time of a study,
 /// they are replaced with time spans representing elapsed time since the
 /// start of the study.
-@JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
+@JsonSerializable(includeIfNull: false, explicitToJson: true)
 class RecurrenceRule {
   /// Specifies the type of interval at which to repeat events, or multiples thereof.
   final Frequency frequency;
@@ -296,7 +296,7 @@ enum Frequency { SECONDLY, MINUTELY, HOURLY, DAILY, WEEKLY, MONTHLY, YEARLY }
 enum EndType { UNTIL, COUNT, NEVER }
 
 /// Specify how a [RecurrenceRule] ends.
-@JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
+@JsonSerializable(includeIfNull: false, explicitToJson: true)
 class End {
   final EndType type;
   final Duration? elapsedTime;

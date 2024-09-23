@@ -19,7 +19,8 @@ Map<String, dynamic> _$DataStreamsConfigurationToJson(
         DataStreamsConfiguration instance) =>
     <String, dynamic>{
       'studyDeploymentId': instance.studyDeploymentId,
-      'expectedDataStreams': instance.expectedDataStreams.toList(),
+      'expectedDataStreams':
+          instance.expectedDataStreams.map((e) => e.toJson()).toList(),
     };
 
 ExpectedDataStream _$ExpectedDataStreamFromJson(Map<String, dynamic> json) =>
@@ -62,9 +63,9 @@ DataStreamBatch _$DataStreamBatchFromJson(Map<String, dynamic> json) =>
 
 Map<String, dynamic> _$DataStreamBatchToJson(DataStreamBatch instance) =>
     <String, dynamic>{
-      'dataStream': instance.dataStream,
+      'dataStream': instance.dataStream.toJson(),
       'firstSequenceId': instance.firstSequenceId,
-      'measurements': instance.measurements,
+      'measurements': instance.measurements.map((e) => e.toJson()).toList(),
       'triggerIds': instance.triggerIds.toList(),
     };
 
@@ -86,7 +87,7 @@ Map<String, dynamic> _$MeasurementToJson(Measurement instance) {
   }
 
   writeNotNull('sensorEndTime', instance.sensorEndTime);
-  val['data'] = instance.data;
+  val['data'] = instance.data.toJson();
   return val;
 }
 
@@ -109,7 +110,7 @@ Map<String, dynamic> _$OpenDataStreamsToJson(OpenDataStreams instance) {
 
   writeNotNull('__type', instance.$type);
   val['apiVersion'] = instance.apiVersion;
-  val['configuration'] = instance.configuration;
+  val['configuration'] = instance.configuration.toJson();
   return val;
 }
 
@@ -135,7 +136,7 @@ Map<String, dynamic> _$AppendToDataStreamsToJson(AppendToDataStreams instance) {
   writeNotNull('__type', instance.$type);
   val['apiVersion'] = instance.apiVersion;
   val['studyDeploymentId'] = instance.studyDeploymentId;
-  val['batch'] = instance.batch;
+  val['batch'] = instance.batch.map((e) => e.toJson()).toList();
   return val;
 }
 
@@ -159,7 +160,7 @@ Map<String, dynamic> _$GetDataStreamToJson(GetDataStream instance) {
 
   writeNotNull('__type', instance.$type);
   val['apiVersion'] = instance.apiVersion;
-  val['dataStream'] = instance.dataStream;
+  val['dataStream'] = instance.dataStream.toJson();
   val['fromSequenceId'] = instance.fromSequenceId;
   writeNotNull('toSequenceIdInclusive', instance.toSequenceIdInclusive);
   return val;

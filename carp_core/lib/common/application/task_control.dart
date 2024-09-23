@@ -9,7 +9,7 @@ part of '../carp_core_common.dart';
 /// Specifies that once a condition of the trigger with [triggerId] applies,
 /// the task with [taskName] on [destinationDeviceRoleName] should be started
 /// or stopped (as specified by the [control] parameter).
-@JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
+@JsonSerializable(includeIfNull: false, explicitToJson: true)
 class TaskControl {
   /// The id of the [TriggerConfiguration].
   int triggerId;

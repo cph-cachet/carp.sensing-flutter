@@ -13,7 +13,7 @@ part of '../carp_core_common.dart';
 /// This is used by the infrastructure to determine whether the requested data
 /// can be collected on a device, how to upload it, how to process it in a
 /// secondary data stream, or how triggers can act on it.
-@JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
+@JsonSerializable(includeIfNull: false, explicitToJson: true)
 class DataType {
   /// The data type namespace. See [NameSpace].
   ///

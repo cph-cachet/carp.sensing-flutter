@@ -13,7 +13,7 @@ Account _$AccountFromJson(Map<String, dynamic> json) => Account(
     );
 
 Map<String, dynamic> _$AccountToJson(Account instance) => <String, dynamic>{
-      'identity': instance.identity,
+      'identity': instance.identity.toJson(),
       'id': instance.id,
     };
 
@@ -109,8 +109,8 @@ Map<String, dynamic> _$ExpectedParticipantDataToJson(
     }
   }
 
-  writeNotNull('attribute', instance.attribute);
-  val['assignedTo'] = instance.assignedTo;
+  writeNotNull('attribute', instance.attribute?.toJson());
+  val['assignedTo'] = instance.assignedTo.toJson();
   return val;
 }
 
@@ -176,8 +176,8 @@ Map<String, dynamic> _$MeasureToJson(Measure instance) {
 
   writeNotNull('__type', instance.$type);
   val['type'] = instance.type;
-  writeNotNull(
-      'overrideSamplingConfiguration', instance.overrideSamplingConfiguration);
+  writeNotNull('overrideSamplingConfiguration',
+      instance.overrideSamplingConfiguration?.toJson());
   return val;
 }
 
@@ -201,7 +201,7 @@ Map<String, dynamic> _$TaskConfigurationToJson(TaskConfiguration instance) {
 
   writeNotNull('__type', instance.$type);
   val['name'] = instance.name;
-  writeNotNull('measures', instance.measures);
+  writeNotNull('measures', instance.measures?.map((e) => e.toJson()).toList());
   writeNotNull('description', instance.description);
   return val;
 }
@@ -227,7 +227,7 @@ Map<String, dynamic> _$BackgroundTaskToJson(BackgroundTask instance) {
 
   writeNotNull('__type', instance.$type);
   val['name'] = instance.name;
-  writeNotNull('measures', instance.measures);
+  writeNotNull('measures', instance.measures?.map((e) => e.toJson()).toList());
   writeNotNull('description', instance.description);
   writeNotNull('duration', _$IsoDurationToJson(instance.duration));
   return val;
@@ -255,7 +255,7 @@ Map<String, dynamic> _$CustomProtocolTaskToJson(CustomProtocolTask instance) {
 
   writeNotNull('__type', instance.$type);
   val['name'] = instance.name;
-  writeNotNull('measures', instance.measures);
+  writeNotNull('measures', instance.measures?.map((e) => e.toJson()).toList());
   writeNotNull('description', instance.description);
   val['studyProtocol'] = instance.studyProtocol;
   return val;
@@ -281,7 +281,7 @@ Map<String, dynamic> _$WebTaskToJson(WebTask instance) {
 
   writeNotNull('__type', instance.$type);
   val['name'] = instance.name;
-  writeNotNull('measures', instance.measures);
+  writeNotNull('measures', instance.measures?.map((e) => e.toJson()).toList());
   writeNotNull('description', instance.description);
   val['url'] = instance.url;
   return val;
@@ -350,7 +350,9 @@ Map<String, dynamic>
   val['roleName'] = instance.roleName;
   writeNotNull('isOptional', instance.isOptional);
   writeNotNull(
-      'defaultSamplingConfiguration', instance.defaultSamplingConfiguration);
+      'defaultSamplingConfiguration',
+      instance.defaultSamplingConfiguration
+          ?.map((k, e) => MapEntry(k, e.toJson())));
   return val;
 }
 
@@ -381,7 +383,9 @@ Map<String, dynamic> _$DefaultDeviceConfigurationToJson(
   val['roleName'] = instance.roleName;
   writeNotNull('isOptional', instance.isOptional);
   writeNotNull(
-      'defaultSamplingConfiguration', instance.defaultSamplingConfiguration);
+      'defaultSamplingConfiguration',
+      instance.defaultSamplingConfiguration
+          ?.map((k, e) => MapEntry(k, e.toJson())));
   return val;
 }
 
@@ -414,7 +418,9 @@ Map<String, dynamic> _$PrimaryDeviceConfigurationToJson<
   val['roleName'] = instance.roleName;
   writeNotNull('isOptional', instance.isOptional);
   writeNotNull(
-      'defaultSamplingConfiguration', instance.defaultSamplingConfiguration);
+      'defaultSamplingConfiguration',
+      instance.defaultSamplingConfiguration
+          ?.map((k, e) => MapEntry(k, e.toJson())));
   val['isPrimaryDevice'] = instance.isPrimaryDevice;
   return val;
 }
@@ -448,7 +454,9 @@ Map<String, dynamic> _$CustomProtocolDeviceToJson(
   val['roleName'] = instance.roleName;
   writeNotNull('isOptional', instance.isOptional);
   writeNotNull(
-      'defaultSamplingConfiguration', instance.defaultSamplingConfiguration);
+      'defaultSamplingConfiguration',
+      instance.defaultSamplingConfiguration
+          ?.map((k, e) => MapEntry(k, e.toJson())));
   val['isPrimaryDevice'] = instance.isPrimaryDevice;
   return val;
 }
@@ -535,7 +543,9 @@ Map<String, dynamic> _$SmartphoneToJson(Smartphone instance) {
   val['roleName'] = instance.roleName;
   writeNotNull('isOptional', instance.isOptional);
   writeNotNull(
-      'defaultSamplingConfiguration', instance.defaultSamplingConfiguration);
+      'defaultSamplingConfiguration',
+      instance.defaultSamplingConfiguration
+          ?.map((k, e) => MapEntry(k, e.toJson())));
   val['isPrimaryDevice'] = instance.isPrimaryDevice;
   return val;
 }
@@ -602,7 +612,9 @@ Map<String, dynamic> _$PersonalComputerToJson(PersonalComputer instance) {
   val['roleName'] = instance.roleName;
   writeNotNull('isOptional', instance.isOptional);
   writeNotNull(
-      'defaultSamplingConfiguration', instance.defaultSamplingConfiguration);
+      'defaultSamplingConfiguration',
+      instance.defaultSamplingConfiguration
+          ?.map((k, e) => MapEntry(k, e.toJson())));
   val['isPrimaryDevice'] = instance.isPrimaryDevice;
   return val;
 }
@@ -663,7 +675,9 @@ Map<String, dynamic> _$WebBrowserToJson(WebBrowser instance) {
   val['roleName'] = instance.roleName;
   writeNotNull('isOptional', instance.isOptional);
   writeNotNull(
-      'defaultSamplingConfiguration', instance.defaultSamplingConfiguration);
+      'defaultSamplingConfiguration',
+      instance.defaultSamplingConfiguration
+          ?.map((k, e) => MapEntry(k, e.toJson())));
   val['isPrimaryDevice'] = instance.isPrimaryDevice;
   return val;
 }
@@ -723,7 +737,9 @@ Map<String, dynamic> _$AltBeaconToJson(AltBeacon instance) {
   val['roleName'] = instance.roleName;
   writeNotNull('isOptional', instance.isOptional);
   writeNotNull(
-      'defaultSamplingConfiguration', instance.defaultSamplingConfiguration);
+      'defaultSamplingConfiguration',
+      instance.defaultSamplingConfiguration
+          ?.map((k, e) => MapEntry(k, e.toJson())));
   return val;
 }
 
@@ -781,7 +797,9 @@ Map<String, dynamic> _$BLEHeartRateDeviceToJson(BLEHeartRateDevice instance) {
   val['roleName'] = instance.roleName;
   writeNotNull('isOptional', instance.isOptional);
   writeNotNull(
-      'defaultSamplingConfiguration', instance.defaultSamplingConfiguration);
+      'defaultSamplingConfiguration',
+      instance.defaultSamplingConfiguration
+          ?.map((k, e) => MapEntry(k, e.toJson())));
   return val;
 }
 
@@ -869,8 +887,8 @@ Map<String, dynamic> _$ScheduledTriggerToJson(ScheduledTrigger instance) {
 
   writeNotNull('__type', instance.$type);
   writeNotNull('sourceDeviceRoleName', instance.sourceDeviceRoleName);
-  val['time'] = instance.time;
-  val['recurrenceRule'] = instance.recurrenceRule;
+  val['time'] = instance.time.toJson();
+  val['recurrenceRule'] = instance.recurrenceRule.toJson();
   return val;
 }
 
@@ -899,7 +917,7 @@ Map<String, dynamic> _$RecurrenceRuleToJson(RecurrenceRule instance) =>
     <String, dynamic>{
       'frequency': _$FrequencyEnumMap[instance.frequency]!,
       'interval': instance.interval,
-      'end': instance.end,
+      'end': instance.end.toJson(),
     };
 
 const _$FrequencyEnumMap = {
@@ -1001,9 +1019,9 @@ Map<String, dynamic> _$BatteryAwareSamplingConfigurationToJson(
   }
 
   writeNotNull('__type', instance.$type);
-  val['normal'] = instance.normal;
-  val['low'] = instance.low;
-  writeNotNull('critical', instance.critical);
+  val['normal'] = instance.normal.toJson();
+  val['low'] = instance.low.toJson();
+  writeNotNull('critical', instance.critical?.toJson());
   return val;
 }
 
@@ -1072,7 +1090,7 @@ Map<String, dynamic> _$AccelerationToJson(Acceleration instance) {
   }
 
   writeNotNull('__type', instance.$type);
-  writeNotNull('sensorSpecificData', instance.sensorSpecificData);
+  writeNotNull('sensorSpecificData', instance.sensorSpecificData?.toJson());
   val['x'] = instance.x;
   val['y'] = instance.y;
   val['z'] = instance.z;
@@ -1099,7 +1117,7 @@ Map<String, dynamic> _$RotationToJson(Rotation instance) {
   }
 
   writeNotNull('__type', instance.$type);
-  writeNotNull('sensorSpecificData', instance.sensorSpecificData);
+  writeNotNull('sensorSpecificData', instance.sensorSpecificData?.toJson());
   val['x'] = instance.x;
   val['y'] = instance.y;
   val['z'] = instance.z;
@@ -1127,7 +1145,7 @@ Map<String, dynamic> _$MagneticFieldToJson(MagneticField instance) {
   }
 
   writeNotNull('__type', instance.$type);
-  writeNotNull('sensorSpecificData', instance.sensorSpecificData);
+  writeNotNull('sensorSpecificData', instance.sensorSpecificData?.toJson());
   val['x'] = instance.x;
   val['y'] = instance.y;
   val['z'] = instance.z;
@@ -1153,7 +1171,7 @@ Map<String, dynamic> _$GeolocationToJson(Geolocation instance) {
   }
 
   writeNotNull('__type', instance.$type);
-  writeNotNull('sensorSpecificData', instance.sensorSpecificData);
+  writeNotNull('sensorSpecificData', instance.sensorSpecificData?.toJson());
   val['latitude'] = instance.latitude;
   val['longitude'] = instance.longitude;
   return val;
@@ -1178,7 +1196,7 @@ Map<String, dynamic> _$SignalStrengthToJson(SignalStrength instance) {
   }
 
   writeNotNull('__type', instance.$type);
-  writeNotNull('sensorSpecificData', instance.sensorSpecificData);
+  writeNotNull('sensorSpecificData', instance.sensorSpecificData?.toJson());
   val['rssi'] = instance.rssi;
   return val;
 }
@@ -1201,7 +1219,7 @@ Map<String, dynamic> _$StepCountToJson(StepCount instance) {
   }
 
   writeNotNull('__type', instance.$type);
-  writeNotNull('sensorSpecificData', instance.sensorSpecificData);
+  writeNotNull('sensorSpecificData', instance.sensorSpecificData?.toJson());
   val['steps'] = instance.steps;
   return val;
 }
@@ -1224,7 +1242,7 @@ Map<String, dynamic> _$HeartRateToJson(HeartRate instance) {
   }
 
   writeNotNull('__type', instance.$type);
-  writeNotNull('sensorSpecificData', instance.sensorSpecificData);
+  writeNotNull('sensorSpecificData', instance.sensorSpecificData?.toJson());
   val['bpm'] = instance.bpm;
   return val;
 }
@@ -1247,7 +1265,7 @@ Map<String, dynamic> _$ECGToJson(ECG instance) {
   }
 
   writeNotNull('__type', instance.$type);
-  writeNotNull('sensorSpecificData', instance.sensorSpecificData);
+  writeNotNull('sensorSpecificData', instance.sensorSpecificData?.toJson());
   val['milliVolt'] = instance.milliVolt;
   return val;
 }
@@ -1270,7 +1288,7 @@ Map<String, dynamic> _$EDAToJson(EDA instance) {
   }
 
   writeNotNull('__type', instance.$type);
-  writeNotNull('sensorSpecificData', instance.sensorSpecificData);
+  writeNotNull('sensorSpecificData', instance.sensorSpecificData?.toJson());
   val['microSiemens'] = instance.microSiemens;
   return val;
 }
@@ -1294,7 +1312,7 @@ Map<String, dynamic> _$CompletedTaskToJson(CompletedTask instance) {
 
   writeNotNull('__type', instance.$type);
   val['taskName'] = instance.taskName;
-  writeNotNull('taskData', instance.taskData);
+  writeNotNull('taskData', instance.taskData?.toJson());
   return val;
 }
 
@@ -1323,7 +1341,7 @@ Map<String, dynamic> _$TriggeredTaskToJson(TriggeredTask instance) {
   val['taskName'] = instance.taskName;
   val['destinationDeviceRoleName'] = instance.destinationDeviceRoleName;
   val['control'] = _$ControlEnumMap[instance.control]!;
-  writeNotNull('triggerData', instance.triggerData);
+  writeNotNull('triggerData', instance.triggerData?.toJson());
   return val;
 }
 

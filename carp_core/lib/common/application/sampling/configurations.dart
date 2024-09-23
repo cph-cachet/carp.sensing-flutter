@@ -7,14 +7,14 @@
 part of '../../carp_core_common.dart';
 
 /// Contains configuration on how to sample a data stream of a given type.
-@JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
+@JsonSerializable(includeIfNull: false, explicitToJson: true)
 class SamplingConfiguration extends Serializable {
   SamplingConfiguration() : super();
 
   @override
   Function get fromJsonFunction => _$SamplingConfigurationFromJson;
   factory SamplingConfiguration.fromJson(Map<String, dynamic> json) =>
-      FromJsonFactory().fromJson(json) as SamplingConfiguration;
+      FromJsonFactory().fromJson<SamplingConfiguration>(json);
   @override
   Map<String, dynamic> toJson() => _$SamplingConfigurationToJson(this);
 
@@ -24,20 +24,20 @@ class SamplingConfiguration extends Serializable {
 }
 
 /// A sampling configuration which does not provide any configuration options.
-@JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
+@JsonSerializable(includeIfNull: false, explicitToJson: true)
 class NoOptionsSamplingConfiguration extends SamplingConfiguration {
   NoOptionsSamplingConfiguration() : super();
 
   @override
   Function get fromJsonFunction => _$NoOptionsSamplingConfigurationFromJson;
   factory NoOptionsSamplingConfiguration.fromJson(Map<String, dynamic> json) =>
-      FromJsonFactory().fromJson(json) as NoOptionsSamplingConfiguration;
+      FromJsonFactory().fromJson<NoOptionsSamplingConfiguration>(json);
   @override
   Map<String, dynamic> toJson() => _$NoOptionsSamplingConfigurationToJson(this);
 }
 
 /// A sampling configuration which changes based on how much battery the device has left.
-@JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
+@JsonSerializable(includeIfNull: false, explicitToJson: true)
 class BatteryAwareSamplingConfiguration extends SamplingConfiguration {
   /// The sampling configuration to use when there is plenty of battery left.
   SamplingConfiguration normal;
@@ -62,7 +62,7 @@ class BatteryAwareSamplingConfiguration extends SamplingConfiguration {
       _$BatteryAwareSamplingConfigurationToJson(this);
   factory BatteryAwareSamplingConfiguration.fromJson(
           Map<String, dynamic> json) =>
-      FromJsonFactory().fromJson(json) as BatteryAwareSamplingConfiguration;
+      FromJsonFactory().fromJson<BatteryAwareSamplingConfiguration>(json);
 }
 
 /// The level of detail a data stream should be sampled at, corresponding to
@@ -93,7 +93,7 @@ class GranularitySamplingConfiguration extends SamplingConfiguration {
 
   factory GranularitySamplingConfiguration.fromJson(
           Map<String, dynamic> json) =>
-      FromJsonFactory().fromJson(json) as GranularitySamplingConfiguration;
+      FromJsonFactory().fromJson<GranularitySamplingConfiguration>(json);
 
   @override
   Map<String, dynamic> toJson() =>

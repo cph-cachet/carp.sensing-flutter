@@ -8,7 +8,7 @@
 part of '../../carp_core_common.dart';
 
 /// Configuration of an internet-connected smartphone with built-in [sensors].
-@JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
+@JsonSerializable(includeIfNull: false, explicitToJson: true)
 class Smartphone
     extends PrimaryDeviceConfiguration<SmartphoneDeviceRegistration> {
   /// The type of a smartphone device.
@@ -69,7 +69,7 @@ class Smartphone
   @override
   Function get fromJsonFunction => _$SmartphoneFromJson;
   factory Smartphone.fromJson(Map<String, dynamic> json) =>
-      FromJsonFactory().fromJson(json) as Smartphone;
+      FromJsonFactory().fromJson<Smartphone>(json);
   @override
   Map<String, dynamic> toJson() => _$SmartphoneToJson(this);
 }
@@ -108,7 +108,7 @@ class SmartphoneDeviceRegistration extends DeviceRegistration {
   @override
   Function get fromJsonFunction => _$SmartphoneDeviceRegistrationFromJson;
   factory SmartphoneDeviceRegistration.fromJson(Map<String, dynamic> json) =>
-      FromJsonFactory().fromJson(json) as SmartphoneDeviceRegistration;
+      FromJsonFactory().fromJson<SmartphoneDeviceRegistration>(json);
   @override
   Map<String, dynamic> toJson() => _$SmartphoneDeviceRegistrationToJson(this);
 }
