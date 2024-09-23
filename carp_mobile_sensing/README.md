@@ -18,8 +18,6 @@ To use this plugin, add [`carp_mobile_sensing`](https://pub.dev/packages/carp_mo
 
 `````yaml
 dependencies:
-  flutter:
-    sdk: flutter
   carp_core: ^latest
   carp_mobile_sensing: ^latest
 `````
@@ -34,27 +32,6 @@ First, CAMS rely on the [flutter_local_notifications](https://pub.dev/packages/f
 
 Set the minimum android SDK to 26 and Java SDK Version to 34 by setting the `minSdkVersion`, the `compileSdkVersion`, and `targetSdkVersion` in the `build.gradle` file, located in the `android/app/` folder:
 
-```gradle
-android {
-    compileSdkVersion 34
-
-    compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_8
-        targetCompatibility JavaVersion.VERSION_1_8
-    }
-
-    defaultConfig {
-        ...
-        minSdkVersion 26
-        targetSdkVersion flutter.targetSdkVersion
-        ...
-    }
-    ...
-}
-```
-
-The pedometer (step count) probe needs permission to `ACTIVITY_RECOGNITION`.
-Scheduled notifications (if using `AppTask`) needs a set of permissions, such as `SCHEDULE_EXACT_ALARM` and `VIBRATE`.
 If collecting step counts or using notifications in your app, add the following to your app's `manifest.xml` file located in `android/app/src/main`:
 
 ````xml
@@ -66,6 +43,7 @@ If collecting step counts or using notifications in your app, add the following 
 <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
 <uses-permission android:name="android.permission.VIBRATE" />
 <uses-permission android:name="android.permission.POST_NOTIFICATIONS"/>
+<uses-permission android:name="android.permission.USE_EXACT_ALARM" />
 <uses-permission android:name="android.permission.SCHEDULE_EXACT_ALARM"
         android:maxSdkVersion="32" />
 ````
@@ -213,7 +191,7 @@ This will start the sampling, as specified in the protocol, and data is stored i
 
 ### Using the generated data
 
-The generated data can be accessed and used in the app. Access to data is done by listening on the [`measurements`](https://pub.dev/documentation/carp_mobile_sensing/latest/runtime/SmartPhoneClientManager/measurements.html) stream from the client manager, like this:
+The generated data can be accessed and used in the app. Access to data is done by listening on the [`measurements`](https://pub.dev/documentation/carp_mobile_sensing/latest/runtime/SmartPhoneClientManager/measurements.html) stream from the client manager:
 
 ```dart
 // Listening on the data stream and print them as json.
