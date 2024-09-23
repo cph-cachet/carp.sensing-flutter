@@ -12,7 +12,7 @@ part of '../device.dart';
 /// More information on the data from Android and iOS are available at:
 ///   * [AndroidDeviceInfo](https://pub.dev/documentation/device_info/latest/device_info/AndroidDeviceInfo-class.html)
 ///   * [IosDeviceInfo](https://pub.dev/documentation/device_info/latest/device_info/IosDeviceInfo-class.html)
-@JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
+@JsonSerializable(includeIfNull: false, explicitToJson: true)
 class DeviceInformation extends Data {
   static const dataType = DeviceSamplingPackage.DEVICE_INFORMATION;
 
@@ -68,13 +68,13 @@ class DeviceInformation extends Data {
   @override
   Function get fromJsonFunction => _$DeviceInformationFromJson;
   factory DeviceInformation.fromJson(Map<String, dynamic> json) =>
-      FromJsonFactory().fromJson(json) as DeviceInformation;
+      FromJsonFactory().fromJson<DeviceInformation>(json);
   @override
   Map<String, dynamic> toJson() => _$DeviceInformationToJson(this);
 }
 
 /// Holds battery level and charging status collected from the phone.
-@JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
+@JsonSerializable(includeIfNull: false, explicitToJson: true)
 class BatteryState extends Data {
   static const dataType = DeviceSamplingPackage.BATTERY_STATE;
 
@@ -120,13 +120,13 @@ class BatteryState extends Data {
   @override
   Function get fromJsonFunction => _$BatteryStateFromJson;
   factory BatteryState.fromJson(Map<String, dynamic> json) =>
-      FromJsonFactory().fromJson(json) as BatteryState;
+      FromJsonFactory().fromJson<BatteryState>(json);
   @override
   Map<String, dynamic> toJson() => _$BatteryStateToJson(this);
 }
 
 /// Holds information about free memory on the phone.
-@JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
+@JsonSerializable(includeIfNull: false, explicitToJson: true)
 class FreeMemory extends Data {
   static const dataType = DeviceSamplingPackage.FREE_MEMORY;
 
@@ -141,13 +141,13 @@ class FreeMemory extends Data {
   @override
   Function get fromJsonFunction => _$FreeMemoryFromJson;
   factory FreeMemory.fromJson(Map<String, dynamic> json) =>
-      FromJsonFactory().fromJson(json) as FreeMemory;
+      FromJsonFactory().fromJson<FreeMemory>(json);
   @override
   Map<String, dynamic> toJson() => _$FreeMemoryToJson(this);
 }
 
 /// Holds a screen event collected from the phone.
-@JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
+@JsonSerializable(includeIfNull: false, explicitToJson: true)
 class ScreenEvent extends Data {
   static const dataType = DeviceSamplingPackage.SCREEN_EVENT;
 
@@ -184,7 +184,7 @@ class ScreenEvent extends Data {
   @override
   Function get fromJsonFunction => _$ScreenEventFromJson;
   factory ScreenEvent.fromJson(Map<String, dynamic> json) =>
-      FromJsonFactory().fromJson(json) as ScreenEvent;
+      FromJsonFactory().fromJson<ScreenEvent>(json);
   @override
   Map<String, dynamic> toJson() => _$ScreenEventToJson(this);
 }

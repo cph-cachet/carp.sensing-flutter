@@ -8,7 +8,7 @@
 part of '../domain.dart';
 
 /// An online service which works as a "software device" in a protocol.
-@JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
+@JsonSerializable(includeIfNull: false, explicitToJson: true)
 class OnlineService<TRegistration extends DeviceRegistration>
     extends DeviceConfiguration<TRegistration> {
   OnlineService({
@@ -19,7 +19,7 @@ class OnlineService<TRegistration extends DeviceRegistration>
   Function get fromJsonFunction => _$OnlineServiceFromJson;
 
   factory OnlineService.fromJson(Map<String, dynamic> json) =>
-      FromJsonFactory().fromJson(json) as OnlineService<TRegistration>;
+      FromJsonFactory().fromJson<OnlineService<TRegistration>>(json);
 
   @override
   Map<String, dynamic> toJson() => _$OnlineServiceToJson(this);

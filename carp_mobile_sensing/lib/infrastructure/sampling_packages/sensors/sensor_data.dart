@@ -9,7 +9,7 @@ part of '../sensors.dart';
 
 /// Ambient light intensity in Lux.
 /// Typically collected from the light sensor on the front of the phone.
-@JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
+@JsonSerializable(includeIfNull: false, explicitToJson: true)
 class AmbientLight extends SensorData {
   static const dataType = SensorSamplingPackage.AMBIENT_LIGHT;
 
@@ -34,7 +34,7 @@ class AmbientLight extends SensorData {
   @override
   Function get fromJsonFunction => _$AmbientLightFromJson;
   factory AmbientLight.fromJson(Map<String, dynamic> json) =>
-      FromJsonFactory().fromJson(json) as AmbientLight;
+      FromJsonFactory().fromJson<AmbientLight>(json);
   @override
   Map<String, dynamic> toJson() => _$AmbientLightToJson(this);
 }
@@ -71,7 +71,7 @@ class AmbientLight extends SensorData {
 ///  * Signal magnitude area is defined as the sum of absolute values of the
 ///    three axis averaged over a window.
 ///
-@JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
+@JsonSerializable(includeIfNull: false, explicitToJson: true)
 class AccelerationFeatures extends SensorData {
   static const dataType = SensorSamplingPackage.ACCELERATION_FEATURES;
 
@@ -237,7 +237,7 @@ class AccelerationFeatures extends SensorData {
   @override
   Function get fromJsonFunction => _$AccelerationFeaturesFromJson;
   factory AccelerationFeatures.fromJson(Map<String, dynamic> json) =>
-      FromJsonFactory().fromJson(json) as AccelerationFeatures;
+      FromJsonFactory().fromJson<AccelerationFeatures>(json);
   @override
   Map<String, dynamic> toJson() => _$AccelerationFeaturesToJson(this);
 }

@@ -8,7 +8,7 @@
 part of '../domain.dart';
 
 /// A sampling configuration that saves the last time it was sampled.
-@JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
+@JsonSerializable(includeIfNull: false, explicitToJson: true)
 class PersistentSamplingConfiguration extends SamplingConfiguration {
   /// The date and time of the last time this measure was collected.
   DateTime? lastTime;
@@ -21,12 +21,12 @@ class PersistentSamplingConfiguration extends SamplingConfiguration {
   @override
   Function get fromJsonFunction => _$PersistentSamplingConfigurationFromJson;
   factory PersistentSamplingConfiguration.fromJson(Map<String, dynamic> json) =>
-      FromJsonFactory().fromJson(json) as PersistentSamplingConfiguration;
+      FromJsonFactory().fromJson<PersistentSamplingConfiguration>(json);
 }
 
 /// A sampling configuration which allows configuring the time back in the [past]
 /// and into the [future] to collect data.
-@JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
+@JsonSerializable(includeIfNull: false, explicitToJson: true)
 class HistoricSamplingConfiguration extends PersistentSamplingConfiguration {
   static const int DEFAULT_NUMBER_OF_DAYS = 1;
 
@@ -46,12 +46,12 @@ class HistoricSamplingConfiguration extends PersistentSamplingConfiguration {
   @override
   Map<String, dynamic> toJson() => _$HistoricSamplingConfigurationToJson(this);
   factory HistoricSamplingConfiguration.fromJson(Map<String, dynamic> json) =>
-      FromJsonFactory().fromJson(json) as HistoricSamplingConfiguration;
+      FromJsonFactory().fromJson<HistoricSamplingConfiguration>(json);
 }
 
 /// A sampling configuration that allows configuring the time [interval] in
 /// between subsequent measurements.
-@JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
+@JsonSerializable(includeIfNull: false, explicitToJson: true)
 class IntervalSamplingConfiguration extends PersistentSamplingConfiguration {
   /// Sampling interval (i.e., delay between sampling).
   Duration interval;
@@ -63,7 +63,7 @@ class IntervalSamplingConfiguration extends PersistentSamplingConfiguration {
   @override
   Map<String, dynamic> toJson() => _$IntervalSamplingConfigurationToJson(this);
   factory IntervalSamplingConfiguration.fromJson(Map<String, dynamic> json) =>
-      FromJsonFactory().fromJson(json) as IntervalSamplingConfiguration;
+      FromJsonFactory().fromJson<IntervalSamplingConfiguration>(json);
 }
 
 /// A sampling configuration specifying how to collect data on a regular basis
@@ -72,7 +72,7 @@ class IntervalSamplingConfiguration extends PersistentSamplingConfiguration {
 /// Data collection will be started as specified by the [interval] for a time
 /// period specified as the [duration]. Useful for listening in on a
 /// sensor (e.g. the accelerometer) on a regular, but limited time window.
-@JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
+@JsonSerializable(includeIfNull: false, explicitToJson: true)
 class PeriodicSamplingConfiguration extends IntervalSamplingConfiguration {
   /// The sampling duration.
   late Duration duration;
@@ -87,5 +87,5 @@ class PeriodicSamplingConfiguration extends IntervalSamplingConfiguration {
   @override
   Function get fromJsonFunction => _$PeriodicSamplingConfigurationFromJson;
   factory PeriodicSamplingConfiguration.fromJson(Map<String, dynamic> json) =>
-      FromJsonFactory().fromJson(json) as PeriodicSamplingConfiguration;
+      FromJsonFactory().fromJson<PeriodicSamplingConfiguration>(json);
 }

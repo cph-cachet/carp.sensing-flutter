@@ -9,7 +9,7 @@ import 'package:json_annotation/json_annotation.dart';
 part 'trigger_example.g.dart';
 
 /// A trigger that triggers based on event from a remote server.
-@JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
+@JsonSerializable(includeIfNull: false, explicitToJson: true)
 class RemoteTrigger extends TriggerConfiguration {
   RemoteTrigger({
     required this.uri,
@@ -26,7 +26,7 @@ class RemoteTrigger extends TriggerConfiguration {
   @override
   Function get fromJsonFunction => _$RemoteTriggerFromJson;
   factory RemoteTrigger.fromJson(Map<String, dynamic> json) =>
-      FromJsonFactory().fromJson(json) as RemoteTrigger;
+      FromJsonFactory().fromJson<RemoteTrigger>(json);
   @override
   Map<String, dynamic> toJson() => _$RemoteTriggerToJson(this);
 }

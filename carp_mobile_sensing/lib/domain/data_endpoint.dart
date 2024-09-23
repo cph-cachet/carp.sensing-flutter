@@ -8,7 +8,7 @@
 part of '../domain.dart';
 
 /// Specify an endpoint where a [DataManager] can upload data.
-@JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
+@JsonSerializable(includeIfNull: false, explicitToJson: true)
 class DataEndPoint extends Serializable {
   /// The type of endpoint as enumerated in [DataEndPointTypes].
   String type;
@@ -30,7 +30,7 @@ class DataEndPoint extends Serializable {
 
   @override
   factory DataEndPoint.fromJson(Map<String, dynamic> json) =>
-      FromJsonFactory().fromJson(json) as DataEndPoint;
+      FromJsonFactory().fromJson<DataEndPoint>(json);
 
   @override
   Map<String, dynamic> toJson() => _$DataEndPointToJson(this);
@@ -57,7 +57,7 @@ class DataEndPointTypes {
 
 /// Specify an endpoint where a file-based data manager can store JSON
 /// data as files on the local device.
-@JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
+@JsonSerializable(includeIfNull: false, explicitToJson: true)
 class FileDataEndPoint extends DataEndPoint {
   /// The buffer size of the raw JSON file in bytes.
   ///
@@ -104,7 +104,7 @@ class FileDataEndPoint extends DataEndPoint {
 
   @override
   factory FileDataEndPoint.fromJson(Map<String, dynamic> json) =>
-      FromJsonFactory().fromJson(json) as FileDataEndPoint;
+      FromJsonFactory().fromJson<FileDataEndPoint>(json);
 
   @override
   Map<String, dynamic> toJson() => _$FileDataEndPointToJson(this);
@@ -116,7 +116,7 @@ class FileDataEndPoint extends DataEndPoint {
 
 /// Specify an endpoint for using the [SQLiteDataManager] to store JSON
 /// data in a SQLite database locally on the phone.
-@JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
+@JsonSerializable(includeIfNull: false, explicitToJson: true)
 class SQLiteDataEndPoint extends DataEndPoint {
   /// Creates a [SQLiteDataEndPoint].
   ///
@@ -132,7 +132,7 @@ class SQLiteDataEndPoint extends DataEndPoint {
 
   @override
   factory SQLiteDataEndPoint.fromJson(Map<String, dynamic> json) =>
-      FromJsonFactory().fromJson(json) as SQLiteDataEndPoint;
+      FromJsonFactory().fromJson<SQLiteDataEndPoint>(json);
 
   @override
   Map<String, dynamic> toJson() => _$SQLiteDataEndPointToJson(this);

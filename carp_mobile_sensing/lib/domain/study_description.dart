@@ -7,7 +7,7 @@
 
 part of '../domain.dart';
 
-@JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
+@JsonSerializable(includeIfNull: false, explicitToJson: true)
 class StudyDescription extends Serializable {
   /// A longer printer-friendly title for this study.
   String title;
@@ -40,7 +40,7 @@ class StudyDescription extends Serializable {
   @override
   Function get fromJsonFunction => _$StudyDescriptionFromJson;
   factory StudyDescription.fromJson(Map<String, dynamic> json) =>
-      FromJsonFactory().fromJson(json) as StudyDescription;
+      FromJsonFactory().fromJson<StudyDescription>(json);
   @override
   Map<String, dynamic> toJson() => _$StudyDescriptionToJson(this);
 
@@ -51,7 +51,7 @@ class StudyDescription extends Serializable {
 
 /// A person who is responsible for a [StudyProtocol].
 /// Typically the Principal Investigator (PI) who is responsible for the study.
-@JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
+@JsonSerializable(includeIfNull: false, explicitToJson: true)
 class StudyResponsible extends Serializable {
   String id;
   String name;
@@ -72,7 +72,7 @@ class StudyResponsible extends Serializable {
   @override
   Function get fromJsonFunction => _$StudyResponsibleFromJson;
   factory StudyResponsible.fromJson(Map<String, dynamic> json) =>
-      FromJsonFactory().fromJson(json) as StudyResponsible;
+      FromJsonFactory().fromJson<StudyResponsible>(json);
   @override
   Map<String, dynamic> toJson() => _$StudyResponsibleToJson(this);
 

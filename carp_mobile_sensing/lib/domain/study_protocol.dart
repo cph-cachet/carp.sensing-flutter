@@ -58,7 +58,7 @@ mixin SmartphoneProtocolExtension {
 }
 
 /// Holds application-specific data for a [SmartphoneStudyProtocol].
-@JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
+@JsonSerializable(includeIfNull: false, explicitToJson: true)
 class SmartphoneApplicationData {
   /// The description of this study protocol containing the title, description,
   /// purpose, and the responsible researcher for this study.
@@ -127,7 +127,7 @@ class SmartphoneApplicationData {
 ///   phone,
 /// );
 /// ```
-@JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
+@JsonSerializable(includeIfNull: false, explicitToJson: true)
 class SmartphoneStudyProtocol extends StudyProtocol
     with SmartphoneProtocolExtension {
   /// Create a new [SmartphoneStudyProtocol].

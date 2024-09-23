@@ -10,7 +10,7 @@ part of '../domain.dart';
 /// A task that notifies the app when it is triggered.
 ///
 /// See [AppTaskExecutor] on how this work on runtime.
-@JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
+@JsonSerializable(includeIfNull: false, explicitToJson: true)
 class AppTask extends TaskConfiguration {
   /// Type of task. For example a `survey`.
   String type;
@@ -64,7 +64,7 @@ class AppTask extends TaskConfiguration {
   Function get fromJsonFunction => _$AppTaskFromJson;
 
   factory AppTask.fromJson(Map<String, dynamic> json) =>
-      FromJsonFactory().fromJson(json) as AppTask;
+      FromJsonFactory().fromJson<AppTask>(json);
 
   @override
   Map<String, dynamic> toJson() => _$AppTaskToJson(this);

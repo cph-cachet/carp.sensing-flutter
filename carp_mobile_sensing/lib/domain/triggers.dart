@@ -8,7 +8,7 @@
 part of '../domain.dart';
 
 /// A trigger that does nothing.
-@JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
+@JsonSerializable(includeIfNull: false, explicitToJson: true)
 class NoOpTrigger extends TriggerConfiguration {
   /// Create a trigger that starts sampling immediately and never stops.
   NoOpTrigger() : super();
@@ -16,13 +16,13 @@ class NoOpTrigger extends TriggerConfiguration {
   @override
   Function get fromJsonFunction => _$NoOpTriggerFromJson;
   factory NoOpTrigger.fromJson(Map<String, dynamic> json) =>
-      FromJsonFactory().fromJson(json) as NoOpTrigger;
+      FromJsonFactory().fromJson<NoOpTrigger>(json);
   @override
   Map<String, dynamic> toJson() => _$NoOpTriggerToJson(this);
 }
 
 /// A trigger that starts sampling immediately and never stops.
-@JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
+@JsonSerializable(includeIfNull: false, explicitToJson: true)
 class ImmediateTrigger extends TriggerConfiguration {
   /// Create a trigger that starts sampling immediately and never stops.
   ImmediateTrigger() : super();
@@ -30,7 +30,7 @@ class ImmediateTrigger extends TriggerConfiguration {
   @override
   Function get fromJsonFunction => _$ImmediateTriggerFromJson;
   factory ImmediateTrigger.fromJson(Map<String, dynamic> json) =>
-      FromJsonFactory().fromJson(json) as ImmediateTrigger;
+      FromJsonFactory().fromJson<ImmediateTrigger>(json);
   @override
   Map<String, dynamic> toJson() => _$ImmediateTriggerToJson(this);
 }
@@ -41,7 +41,7 @@ class ImmediateTrigger extends TriggerConfiguration {
 /// this [OneTimeTrigger] only triggers *once* during the life-time of a deployment.
 /// Useful for triggering e.g., a demographic survey or collecting device
 /// information.
-@JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
+@JsonSerializable(includeIfNull: false, explicitToJson: true)
 class OneTimeTrigger extends TriggerConfiguration {
   /// The timestamp of when this trigger was triggered.
   DateTime? triggerTimestamp;
@@ -55,13 +55,13 @@ class OneTimeTrigger extends TriggerConfiguration {
   @override
   Function get fromJsonFunction => _$OneTimeTriggerFromJson;
   factory OneTimeTrigger.fromJson(Map<String, dynamic> json) =>
-      FromJsonFactory().fromJson(json) as OneTimeTrigger;
+      FromJsonFactory().fromJson<OneTimeTrigger>(json);
   @override
   Map<String, dynamic> toJson() => _$OneTimeTriggerToJson(this);
 }
 
 /// A trigger that trigger when the [trigger] method is called from Dart code.
-@JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
+@JsonSerializable(includeIfNull: false, explicitToJson: true)
 class PassiveTrigger extends TriggerConfiguration {
   /// Create a trigger that triggers when the [trigger] method is called.
   PassiveTrigger() : super();
@@ -75,7 +75,7 @@ class PassiveTrigger extends TriggerConfiguration {
   @override
   Function get fromJsonFunction => _$PassiveTriggerFromJson;
   factory PassiveTrigger.fromJson(Map<String, dynamic> json) =>
-      FromJsonFactory().fromJson(json) as PassiveTrigger;
+      FromJsonFactory().fromJson<PassiveTrigger>(json);
   @override
   Map<String, dynamic> toJson() => _$PassiveTriggerToJson(this);
 }
@@ -84,7 +84,7 @@ class PassiveTrigger extends TriggerConfiguration {
 ///
 /// The delay is measured from the **start of sensing**, i.e. typically when
 /// the `start()` method is called on a [SmartphoneDeploymentController].
-@JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
+@JsonSerializable(includeIfNull: false, explicitToJson: true)
 class DelayedTrigger extends TriggerConfiguration {
   /// Delay before this trigger is executed.
   Duration delay;
@@ -95,7 +95,7 @@ class DelayedTrigger extends TriggerConfiguration {
   @override
   Function get fromJsonFunction => _$DelayedTriggerFromJson;
   factory DelayedTrigger.fromJson(Map<String, dynamic> json) =>
-      FromJsonFactory().fromJson(json) as DelayedTrigger;
+      FromJsonFactory().fromJson<DelayedTrigger>(json);
   @override
   Map<String, dynamic> toJson() => _$DelayedTriggerToJson(this);
 }
@@ -104,7 +104,7 @@ class DelayedTrigger extends TriggerConfiguration {
 ///
 /// Daily, weekly and monthly recurrent triggers can be specified using the
 /// [RecurrentScheduledTrigger].
-@JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
+@JsonSerializable(includeIfNull: false, explicitToJson: true)
 class PeriodicTrigger extends TriggerConfiguration implements Schedulable {
   /// The period (reciprocal of frequency) of sampling.
   Duration period;
@@ -115,13 +115,13 @@ class PeriodicTrigger extends TriggerConfiguration implements Schedulable {
   @override
   Function get fromJsonFunction => _$PeriodicTriggerFromJson;
   factory PeriodicTrigger.fromJson(Map<String, dynamic> json) =>
-      FromJsonFactory().fromJson(json) as PeriodicTrigger;
+      FromJsonFactory().fromJson<PeriodicTrigger>(json);
   @override
   Map<String, dynamic> toJson() => _$PeriodicTriggerToJson(this);
 }
 
 /// A trigger that triggers on a specific date and time.
-@JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
+@JsonSerializable(includeIfNull: false, explicitToJson: true)
 class DateTimeTrigger extends TriggerConfiguration implements Schedulable {
   /// The scheduled date and time for resuming sampling.
   DateTime schedule;
@@ -132,7 +132,7 @@ class DateTimeTrigger extends TriggerConfiguration implements Schedulable {
   @override
   Function get fromJsonFunction => _$DateTimeTriggerFromJson;
   factory DateTimeTrigger.fromJson(Map<String, dynamic> json) =>
-      FromJsonFactory().fromJson(json) as DateTimeTrigger;
+      FromJsonFactory().fromJson<DateTimeTrigger>(json);
   @override
   Map<String, dynamic> toJson() => _$DateTimeTriggerToJson(this);
 }
@@ -167,7 +167,7 @@ class DateTimeTrigger extends TriggerConfiguration implements Schedulable {
 /// Thanks to Shantanu Kher for inspiration in his blog post on
 /// [Again and Again! Managing Recurring Events In a Data Model](https://www.vertabelo.com/blog/technical-articles/again-and-again-managing-recurring-events-in-a-data-model).
 /// We are, however, not using yearly recurrence.
-@JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
+@JsonSerializable(includeIfNull: false, explicitToJson: true)
 class RecurrentScheduledTrigger extends PeriodicTrigger {
   static const int daysPerWeek = 7;
   static const int daysPerMonth = 30;
@@ -319,7 +319,7 @@ class RecurrentScheduledTrigger extends PeriodicTrigger {
   @override
   Function get fromJsonFunction => _$RecurrentScheduledTriggerFromJson;
   factory RecurrentScheduledTrigger.fromJson(Map<String, dynamic> json) =>
-      FromJsonFactory().fromJson(json) as RecurrentScheduledTrigger;
+      FromJsonFactory().fromJson<RecurrentScheduledTrigger>(json);
   @override
   Map<String, dynamic> toJson() => _$RecurrentScheduledTriggerToJson(this);
 
@@ -340,7 +340,7 @@ enum RecurrentType {
 ///
 /// Bases on the [`cron`](https://pub.dev/packages/cron) package.
 /// See [crontab guru](https://crontab.guru) for a useful tool for specifying cron jobs.
-@JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
+@JsonSerializable(includeIfNull: false, explicitToJson: true)
 class CronScheduledTrigger extends TriggerConfiguration implements Schedulable {
   /// The cron job expression.
   String cronExpression;
@@ -401,7 +401,7 @@ class CronScheduledTrigger extends TriggerConfiguration implements Schedulable {
   @override
   Function get fromJsonFunction => _$CronScheduledTriggerFromJson;
   factory CronScheduledTrigger.fromJson(Map<String, dynamic> json) =>
-      FromJsonFactory().fromJson(json) as CronScheduledTrigger;
+      FromJsonFactory().fromJson<CronScheduledTrigger>(json);
   @override
   Map<String, dynamic> toJson() => _$CronScheduledTriggerToJson(this);
 
@@ -413,7 +413,7 @@ class CronScheduledTrigger extends TriggerConfiguration implements Schedulable {
 ///
 /// For example, if [measureType] is `dk.cachet.carp.completedtask` the [triggerCondition]
 /// can be a [CompletedTask] with a specific [taskName].
-@JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
+@JsonSerializable(includeIfNull: false, explicitToJson: true)
 class SamplingEventTrigger extends TriggerConfiguration {
   /// The data type of the event to look for.
   ///
@@ -443,7 +443,7 @@ class SamplingEventTrigger extends TriggerConfiguration {
   @override
   Function get fromJsonFunction => _$SamplingEventTriggerFromJson;
   factory SamplingEventTrigger.fromJson(Map<String, dynamic> json) =>
-      FromJsonFactory().fromJson(json) as SamplingEventTrigger;
+      FromJsonFactory().fromJson<SamplingEventTrigger>(json);
   @override
   Map<String, dynamic> toJson() => _$SamplingEventTriggerToJson(this);
 }
@@ -466,7 +466,7 @@ typedef ConditionalEventEvaluator = bool Function(Measurement measurement);
 ///
 /// If you need to de/serialize an event trigger, use the [SamplingEventTrigger]
 /// instead.
-@JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
+@JsonSerializable(includeIfNull: false, explicitToJson: true)
 class ConditionalSamplingEventTrigger extends TriggerConfiguration {
   /// The data type of the event to look for.
   String measureType;
@@ -487,7 +487,7 @@ class ConditionalSamplingEventTrigger extends TriggerConfiguration {
   @override
   Function get fromJsonFunction => _$ConditionalSamplingEventTriggerFromJson;
   factory ConditionalSamplingEventTrigger.fromJson(Map<String, dynamic> json) =>
-      FromJsonFactory().fromJson(json) as ConditionalSamplingEventTrigger;
+      FromJsonFactory().fromJson<ConditionalSamplingEventTrigger>(json);
   @override
   Map<String, dynamic> toJson() =>
       _$ConditionalSamplingEventTriggerToJson(this);
@@ -508,7 +508,7 @@ typedef ConditionalEvaluator = bool Function();
 /// from a [DeploymentService] since it relies on specifying a Dart-specific function as
 /// the [ConditionalEvaluator] methods. Hence, this trigger is mostly
 /// useful when creating a [StudyProtocol] directly in the app using Dart code.
-@JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
+@JsonSerializable(includeIfNull: false, explicitToJson: true)
 class ConditionalPeriodicTrigger extends TriggerConfiguration {
   /// The period of when to check the [triggerCondition].
   Duration period;
@@ -527,7 +527,7 @@ class ConditionalPeriodicTrigger extends TriggerConfiguration {
   @override
   Function get fromJsonFunction => _$ConditionalPeriodicTriggerFromJson;
   factory ConditionalPeriodicTrigger.fromJson(Map<String, dynamic> json) =>
-      FromJsonFactory().fromJson(json) as ConditionalPeriodicTrigger;
+      FromJsonFactory().fromJson<ConditionalPeriodicTrigger>(json);
   @override
   Map<String, dynamic> toJson() => _$ConditionalPeriodicTriggerToJson(this);
 }
@@ -538,7 +538,7 @@ class ConditionalPeriodicTrigger extends TriggerConfiguration {
 /// The random value is between the [minNumberOfTriggers] and [maxNumberOfTriggers]
 /// numbers specified.
 /// The time period is defined by a [startTime] and an [endTime].
-@JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
+@JsonSerializable(includeIfNull: false, explicitToJson: true)
 class RandomRecurrentTrigger extends TriggerConfiguration
     implements Schedulable {
   /// Start time of the day where the trigger can happen.
@@ -575,13 +575,13 @@ class RandomRecurrentTrigger extends TriggerConfiguration
   @override
   Function get fromJsonFunction => _$RandomRecurrentTriggerFromJson;
   factory RandomRecurrentTrigger.fromJson(Map<String, dynamic> json) =>
-      FromJsonFactory().fromJson(json) as RandomRecurrentTrigger;
+      FromJsonFactory().fromJson<RandomRecurrentTrigger>(json);
   @override
   Map<String, dynamic> toJson() => _$RandomRecurrentTriggerToJson(this);
 }
 
 /// A trigger that triggers based on the state of a [UserTask].
-@JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
+@JsonSerializable(includeIfNull: false, explicitToJson: true)
 class UserTaskTrigger extends TriggerConfiguration {
   /// The name of the task to look for, matching [TaskConfiguration.name].
   String taskName;
@@ -598,7 +598,7 @@ class UserTaskTrigger extends TriggerConfiguration {
   @override
   Function get fromJsonFunction => _$UserTaskTriggerFromJson;
   factory UserTaskTrigger.fromJson(Map<String, dynamic> json) =>
-      FromJsonFactory().fromJson(json) as UserTaskTrigger;
+      FromJsonFactory().fromJson<UserTaskTrigger>(json);
   @override
   Map<String, dynamic> toJson() => _$UserTaskTriggerToJson(this);
 }

@@ -55,10 +55,8 @@ class ScreenProbe extends StreamProbe {
   Screen screen = Screen();
 
   @override
-  Stream<Measurement>? get stream => (screen.screenStateStream != null)
-      ? screen.screenStateStream!.map((event) =>
-          Measurement.fromData(ScreenEvent.fromScreenStateEvent(event)))
-      : null;
+  Stream<Measurement> get stream => screen.screenStateStream.map(
+      (event) => Measurement.fromData(ScreenEvent.fromScreenStateEvent(event)));
 }
 
 /// A probe that collects free virtual memory on a regular basis

@@ -29,7 +29,7 @@ Map<String, dynamic> _$UserTaskSnapshotToJson(UserTaskSnapshot instance) {
 
   writeNotNull('__type', instance.$type);
   val['id'] = instance.id;
-  val['task'] = instance.task;
+  val['task'] = instance.task.toJson();
   val['state'] = _$UserTaskStateEnumMap[instance.state]!;
   val['enqueued'] = instance.enqueued.toIso8601String();
   val['triggerTime'] = instance.triggerTime.toIso8601String();
