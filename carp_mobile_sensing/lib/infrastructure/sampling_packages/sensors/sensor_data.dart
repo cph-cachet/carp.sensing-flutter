@@ -9,7 +9,7 @@ part of '../sensors.dart';
 
 /// Ambient light intensity in Lux.
 /// Typically collected from the light sensor on the front of the phone.
-@JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
+@JsonSerializable(includeIfNull: false, explicitToJson: true)
 class AmbientLight extends SensorData {
   static const dataType = SensorSamplingPackage.AMBIENT_LIGHT;
 
@@ -71,7 +71,7 @@ class AmbientLight extends SensorData {
 ///  * Signal magnitude area is defined as the sum of absolute values of the
 ///    three axis averaged over a window.
 ///
-@JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
+@JsonSerializable(includeIfNull: false, explicitToJson: true)
 class AccelerationFeatures extends SensorData {
   static const dataType = SensorSamplingPackage.ACCELERATION_FEATURES;
 

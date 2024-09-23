@@ -9,7 +9,7 @@ part of '../domain.dart';
 
 /// Contains the entire description and configuration for how a smartphone
 /// device participates in the deployment of a study on a smartphone.
-@JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
+@JsonSerializable(includeIfNull: false, explicitToJson: true)
 class SmartphoneDeployment extends PrimaryDeviceDeployment
     with SmartphoneProtocolExtension {
   late String _studyDeploymentId;

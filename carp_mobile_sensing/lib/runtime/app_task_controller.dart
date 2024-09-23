@@ -371,7 +371,7 @@ class UserTaskBufferItem {
 
 /// A snapshot of a [UserTask] at any given time. Used for saving user tasks
 /// persistently across app restart.
-@JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
+@JsonSerializable(includeIfNull: false, explicitToJson: true)
 class UserTaskSnapshot extends Serializable {
   late String id;
   late AppTask task;

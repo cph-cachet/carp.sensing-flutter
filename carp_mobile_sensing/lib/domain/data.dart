@@ -8,7 +8,7 @@
 part of '../domain.dart';
 
 /// A [Data] object holding a link to a file.
-@JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
+@JsonSerializable(includeIfNull: false, explicitToJson: true)
 class FileData extends Data {
   static const dataType = CAMSDataType.FILE_TYPE_NAME;
 
@@ -42,7 +42,7 @@ class FileData extends Data {
 
 /// Reflects a heart beat data send every [period] minute.
 /// Useful for calculating sampling coverage over time.
-@JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
+@JsonSerializable(includeIfNull: false, explicitToJson: true)
 class Heartbeat extends Data {
   static const dataType = '${CarpDataTypes.CARP_NAMESPACE}.heartbeat';
 

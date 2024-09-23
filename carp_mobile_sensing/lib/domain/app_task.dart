@@ -10,7 +10,7 @@ part of '../domain.dart';
 /// A task that notifies the app when it is triggered.
 ///
 /// See [AppTaskExecutor] on how this work on runtime.
-@JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
+@JsonSerializable(includeIfNull: false, explicitToJson: true)
 class AppTask extends TaskConfiguration {
   /// Type of task. For example a `survey`.
   String type;

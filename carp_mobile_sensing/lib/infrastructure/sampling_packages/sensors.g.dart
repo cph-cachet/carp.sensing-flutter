@@ -27,7 +27,7 @@ Map<String, dynamic> _$AmbientLightToJson(AmbientLight instance) {
   }
 
   writeNotNull('__type', instance.$type);
-  writeNotNull('sensorSpecificData', instance.sensorSpecificData);
+  writeNotNull('sensorSpecificData', instance.sensorSpecificData?.toJson());
   val['meanLux'] = instance.meanLux;
   val['stdLux'] = instance.stdLux;
   val['minLux'] = instance.minLux;
@@ -96,7 +96,7 @@ Map<String, dynamic> _$AccelerationFeaturesToJson(
   }
 
   writeNotNull('__type', instance.$type);
-  writeNotNull('sensorSpecificData', instance.sensorSpecificData);
+  writeNotNull('sensorSpecificData', instance.sensorSpecificData?.toJson());
   val['count'] = instance.count;
   writeNotNull('xMean', instance.xMean);
   writeNotNull('yMean', instance.yMean);

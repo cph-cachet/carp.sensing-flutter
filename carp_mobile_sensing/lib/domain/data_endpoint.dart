@@ -8,7 +8,7 @@
 part of '../domain.dart';
 
 /// Specify an endpoint where a [DataManager] can upload data.
-@JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
+@JsonSerializable(includeIfNull: false, explicitToJson: true)
 class DataEndPoint extends Serializable {
   /// The type of endpoint as enumerated in [DataEndPointTypes].
   String type;
@@ -57,7 +57,7 @@ class DataEndPointTypes {
 
 /// Specify an endpoint where a file-based data manager can store JSON
 /// data as files on the local device.
-@JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
+@JsonSerializable(includeIfNull: false, explicitToJson: true)
 class FileDataEndPoint extends DataEndPoint {
   /// The buffer size of the raw JSON file in bytes.
   ///
@@ -116,7 +116,7 @@ class FileDataEndPoint extends DataEndPoint {
 
 /// Specify an endpoint for using the [SQLiteDataManager] to store JSON
 /// data in a SQLite database locally on the phone.
-@JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
+@JsonSerializable(includeIfNull: false, explicitToJson: true)
 class SQLiteDataEndPoint extends DataEndPoint {
   /// Creates a [SQLiteDataEndPoint].
   ///

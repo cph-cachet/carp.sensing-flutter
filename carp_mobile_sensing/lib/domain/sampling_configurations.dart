@@ -8,7 +8,7 @@
 part of '../domain.dart';
 
 /// A sampling configuration that saves the last time it was sampled.
-@JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
+@JsonSerializable(includeIfNull: false, explicitToJson: true)
 class PersistentSamplingConfiguration extends SamplingConfiguration {
   /// The date and time of the last time this measure was collected.
   DateTime? lastTime;
@@ -26,7 +26,7 @@ class PersistentSamplingConfiguration extends SamplingConfiguration {
 
 /// A sampling configuration which allows configuring the time back in the [past]
 /// and into the [future] to collect data.
-@JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
+@JsonSerializable(includeIfNull: false, explicitToJson: true)
 class HistoricSamplingConfiguration extends PersistentSamplingConfiguration {
   static const int DEFAULT_NUMBER_OF_DAYS = 1;
 
@@ -51,7 +51,7 @@ class HistoricSamplingConfiguration extends PersistentSamplingConfiguration {
 
 /// A sampling configuration that allows configuring the time [interval] in
 /// between subsequent measurements.
-@JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
+@JsonSerializable(includeIfNull: false, explicitToJson: true)
 class IntervalSamplingConfiguration extends PersistentSamplingConfiguration {
   /// Sampling interval (i.e., delay between sampling).
   Duration interval;
@@ -72,7 +72,7 @@ class IntervalSamplingConfiguration extends PersistentSamplingConfiguration {
 /// Data collection will be started as specified by the [interval] for a time
 /// period specified as the [duration]. Useful for listening in on a
 /// sensor (e.g. the accelerometer) on a regular, but limited time window.
-@JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
+@JsonSerializable(includeIfNull: false, explicitToJson: true)
 class PeriodicSamplingConfiguration extends IntervalSamplingConfiguration {
   /// The sampling duration.
   late Duration duration;

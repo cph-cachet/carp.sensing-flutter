@@ -30,8 +30,8 @@ Map<String, dynamic> _$SmartphoneApplicationDataToJson(
     }
   }
 
-  writeNotNull('studyDescription', instance.studyDescription);
-  writeNotNull('dataEndPoint', instance.dataEndPoint);
+  writeNotNull('studyDescription', instance.studyDescription?.toJson());
+  writeNotNull('dataEndPoint', instance.dataEndPoint?.toJson());
   writeNotNull('privacySchemaName', instance.privacySchemaName);
   writeNotNull('applicationData', instance.applicationData);
   return val;
@@ -100,17 +100,21 @@ Map<String, dynamic> _$SmartphoneStudyProtocolToJson(
   val['description'] = instance.description;
   val['ownerId'] = instance.ownerId;
   val['name'] = instance.name;
-  writeNotNull('participantRoles', instance.participantRoles?.toList());
-  val['primaryDevices'] = instance.primaryDevices.toList();
-  writeNotNull('connectedDevices', instance.connectedDevices?.toList());
-  writeNotNull('connections', instance.connections);
+  writeNotNull('participantRoles',
+      instance.participantRoles?.map((e) => e.toJson()).toList());
+  val['primaryDevices'] =
+      instance.primaryDevices.map((e) => e.toJson()).toList();
+  writeNotNull('connectedDevices',
+      instance.connectedDevices?.map((e) => e.toJson()).toList());
+  writeNotNull(
+      'connections', instance.connections?.map((e) => e.toJson()).toList());
   writeNotNull('assignedDevices',
       instance.assignedDevices?.map((k, e) => MapEntry(k, e.toList())));
-  val['tasks'] = instance.tasks.toList();
-  val['triggers'] = instance.triggers;
-  val['taskControls'] = instance.taskControls.toList();
-  writeNotNull(
-      'expectedParticipantData', instance.expectedParticipantData?.toList());
+  val['tasks'] = instance.tasks.map((e) => e.toJson()).toList();
+  val['triggers'] = instance.triggers.map((k, e) => MapEntry(k, e.toJson()));
+  val['taskControls'] = instance.taskControls.map((e) => e.toJson()).toList();
+  writeNotNull('expectedParticipantData',
+      instance.expectedParticipantData?.map((e) => e.toJson()).toList());
   return val;
 }
 
@@ -142,7 +146,7 @@ Map<String, dynamic> _$StudyDescriptionToJson(StudyDescription instance) {
   writeNotNull('purpose', instance.purpose);
   writeNotNull('studyDescriptionUrl', instance.studyDescriptionUrl);
   writeNotNull('privacyPolicyUrl', instance.privacyPolicyUrl);
-  writeNotNull('responsible', instance.responsible);
+  writeNotNull('responsible', instance.responsible?.toJson());
   return val;
 }
 
@@ -382,7 +386,9 @@ Map<String, dynamic>
   val['roleName'] = instance.roleName;
   writeNotNull('isOptional', instance.isOptional);
   writeNotNull(
-      'defaultSamplingConfiguration', instance.defaultSamplingConfiguration);
+      'defaultSamplingConfiguration',
+      instance.defaultSamplingConfiguration
+          ?.map((k, e) => MapEntry(k, e.toJson())));
   return val;
 }
 
@@ -450,14 +456,17 @@ Map<String, dynamic> _$SmartphoneDeploymentToJson(
   }
 
   writeNotNull('applicationData', instance.applicationData);
-  val['deviceConfiguration'] = instance.deviceConfiguration;
-  val['registration'] = instance.registration;
-  val['connectedDevices'] = instance.connectedDevices.toList();
-  val['connectedDeviceRegistrations'] = instance.connectedDeviceRegistrations;
-  val['tasks'] = instance.tasks.toList();
-  val['triggers'] = instance.triggers;
-  val['taskControls'] = instance.taskControls.toList();
-  val['expectedParticipantData'] = instance.expectedParticipantData.toList();
+  val['deviceConfiguration'] = instance.deviceConfiguration.toJson();
+  val['registration'] = instance.registration.toJson();
+  val['connectedDevices'] =
+      instance.connectedDevices.map((e) => e.toJson()).toList();
+  val['connectedDeviceRegistrations'] = instance.connectedDeviceRegistrations
+      .map((k, e) => MapEntry(k, e?.toJson()));
+  val['tasks'] = instance.tasks.map((e) => e.toJson()).toList();
+  val['triggers'] = instance.triggers.map((k, e) => MapEntry(k, e.toJson()));
+  val['taskControls'] = instance.taskControls.map((e) => e.toJson()).toList();
+  val['expectedParticipantData'] =
+      instance.expectedParticipantData.map((e) => e.toJson()).toList();
   writeNotNull('studyId', instance.studyId);
   val['studyDeploymentId'] = instance.studyDeploymentId;
   writeNotNull('deployed', instance.deployed?.toIso8601String());
@@ -508,7 +517,7 @@ Map<String, dynamic> _$AppTaskToJson(AppTask instance) {
 
   writeNotNull('__type', instance.$type);
   val['name'] = instance.name;
-  writeNotNull('measures', instance.measures);
+  writeNotNull('measures', instance.measures?.map((e) => e.toJson()).toList());
   val['type'] = instance.type;
   val['title'] = instance.title;
   val['description'] = instance.description;
@@ -539,7 +548,7 @@ Map<String, dynamic> _$FunctionTaskToJson(FunctionTask instance) {
 
   writeNotNull('__type', instance.$type);
   val['name'] = instance.name;
-  writeNotNull('measures', instance.measures);
+  writeNotNull('measures', instance.measures?.map((e) => e.toJson()).toList());
   writeNotNull('description', instance.description);
   return val;
 }
@@ -719,7 +728,7 @@ Map<String, dynamic> _$RecurrentScheduledTriggerToJson(
   writeNotNull('__type', instance.$type);
   writeNotNull('sourceDeviceRoleName', instance.sourceDeviceRoleName);
   val['type'] = _$RecurrentTypeEnumMap[instance.type]!;
-  val['time'] = instance.time;
+  val['time'] = instance.time.toJson();
   writeNotNull('end', instance.end?.toIso8601String());
   val['separationCount'] = instance.separationCount;
   writeNotNull('maxNumberOfSampling', instance.maxNumberOfSampling);
@@ -783,7 +792,7 @@ Map<String, dynamic> _$SamplingEventTriggerToJson(
   writeNotNull('__type', instance.$type);
   writeNotNull('sourceDeviceRoleName', instance.sourceDeviceRoleName);
   val['measureType'] = instance.measureType;
-  writeNotNull('triggerCondition', instance.triggerCondition);
+  writeNotNull('triggerCondition', instance.triggerCondition?.toJson());
   return val;
 }
 
@@ -861,8 +870,8 @@ Map<String, dynamic> _$RandomRecurrentTriggerToJson(
 
   writeNotNull('__type', instance.$type);
   writeNotNull('sourceDeviceRoleName', instance.sourceDeviceRoleName);
-  val['startTime'] = instance.startTime;
-  val['endTime'] = instance.endTime;
+  val['startTime'] = instance.startTime.toJson();
+  val['endTime'] = instance.endTime.toJson();
   val['minNumberOfTriggers'] = instance.minNumberOfTriggers;
   val['maxNumberOfTriggers'] = instance.maxNumberOfTriggers;
   writeNotNull(
