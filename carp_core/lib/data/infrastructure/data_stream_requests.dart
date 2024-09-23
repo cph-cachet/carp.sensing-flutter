@@ -21,7 +21,7 @@ abstract class DataStreamServiceRequest extends ServiceRequest {
       '$_infrastructurePackageNamespace.DataStreamServiceRequest.$runtimeType';
 }
 
-@JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
+@JsonSerializable(includeIfNull: false, explicitToJson: true)
 class OpenDataStreams extends DataStreamServiceRequest {
   DataStreamsConfiguration configuration;
   OpenDataStreams(this.configuration) : super();
@@ -29,12 +29,12 @@ class OpenDataStreams extends DataStreamServiceRequest {
   @override
   Function get fromJsonFunction => _$OpenDataStreamsFromJson;
   factory OpenDataStreams.fromJson(Map<String, dynamic> json) =>
-      FromJsonFactory().fromJson(json) as OpenDataStreams;
+      FromJsonFactory().fromJson<OpenDataStreams>(json);
   @override
   Map<String, dynamic> toJson() => _$OpenDataStreamsToJson(this);
 }
 
-@JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
+@JsonSerializable(includeIfNull: false, explicitToJson: true)
 class AppendToDataStreams extends DataStreamServiceRequest {
   String studyDeploymentId;
   List<DataStreamBatch> batch = [];
@@ -44,12 +44,12 @@ class AppendToDataStreams extends DataStreamServiceRequest {
   @override
   Function get fromJsonFunction => _$AppendToDataStreamsFromJson;
   factory AppendToDataStreams.fromJson(Map<String, dynamic> json) =>
-      FromJsonFactory().fromJson(json) as AppendToDataStreams;
+      FromJsonFactory().fromJson<AppendToDataStreams>(json);
   @override
   Map<String, dynamic> toJson() => _$AppendToDataStreamsToJson(this);
 }
 
-@JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
+@JsonSerializable(includeIfNull: false, explicitToJson: true)
 class GetDataStream extends DataStreamServiceRequest {
   DataStreamId dataStream;
   int fromSequenceId;
@@ -64,12 +64,12 @@ class GetDataStream extends DataStreamServiceRequest {
   @override
   Function get fromJsonFunction => _$GetDataStreamFromJson;
   factory GetDataStream.fromJson(Map<String, dynamic> json) =>
-      FromJsonFactory().fromJson(json) as GetDataStream;
+      FromJsonFactory().fromJson<GetDataStream>(json);
   @override
   Map<String, dynamic> toJson() => _$GetDataStreamToJson(this);
 }
 
-@JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
+@JsonSerializable(includeIfNull: false, explicitToJson: true)
 class CloseDataStreams extends DataStreamServiceRequest {
   List<String> studyDeploymentIds;
   CloseDataStreams(this.studyDeploymentIds) : super();
@@ -77,12 +77,12 @@ class CloseDataStreams extends DataStreamServiceRequest {
   @override
   Function get fromJsonFunction => _$CloseDataStreamsFromJson;
   factory CloseDataStreams.fromJson(Map<String, dynamic> json) =>
-      FromJsonFactory().fromJson(json) as CloseDataStreams;
+      FromJsonFactory().fromJson<CloseDataStreams>(json);
   @override
   Map<String, dynamic> toJson() => _$CloseDataStreamsToJson(this);
 }
 
-@JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
+@JsonSerializable(includeIfNull: false, explicitToJson: true)
 class RemoveDataStreams extends DataStreamServiceRequest {
   List<String> studyDeploymentIds;
   RemoveDataStreams(this.studyDeploymentIds) : super();
@@ -90,7 +90,7 @@ class RemoveDataStreams extends DataStreamServiceRequest {
   @override
   Function get fromJsonFunction => _$RemoveDataStreamsFromJson;
   factory RemoveDataStreams.fromJson(Map<String, dynamic> json) =>
-      FromJsonFactory().fromJson(json) as RemoveDataStreams;
+      FromJsonFactory().fromJson<RemoveDataStreams>(json);
   @override
   Map<String, dynamic> toJson() => _$RemoveDataStreamsToJson(this);
 }

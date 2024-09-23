@@ -34,7 +34,7 @@ void sensing() async {
   );
 
   var invitation = ParticipantInvitation(
-      participantId: UUID.v1,
+      participantId: const Uuid().v1,
       assignedRoles: AssignedTo.all(),
       identity: EmailAccountIdentity("test@test.com"),
       invitation: StudyInvitation(

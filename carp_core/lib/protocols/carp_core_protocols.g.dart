@@ -67,17 +67,21 @@ Map<String, dynamic> _$StudyProtocolToJson(StudyProtocol instance) {
   }
 
   writeNotNull('description', instance.description);
-  writeNotNull('participantRoles', instance.participantRoles?.toList());
-  val['primaryDevices'] = instance.primaryDevices.toList();
-  writeNotNull('connectedDevices', instance.connectedDevices?.toList());
-  writeNotNull('connections', instance.connections);
+  writeNotNull('participantRoles',
+      instance.participantRoles?.map((e) => e.toJson()).toList());
+  val['primaryDevices'] =
+      instance.primaryDevices.map((e) => e.toJson()).toList();
+  writeNotNull('connectedDevices',
+      instance.connectedDevices?.map((e) => e.toJson()).toList());
+  writeNotNull(
+      'connections', instance.connections?.map((e) => e.toJson()).toList());
   writeNotNull('assignedDevices',
       instance.assignedDevices?.map((k, e) => MapEntry(k, e.toList())));
-  val['tasks'] = instance.tasks.toList();
-  val['triggers'] = instance.triggers;
-  val['taskControls'] = instance.taskControls.toList();
-  writeNotNull(
-      'expectedParticipantData', instance.expectedParticipantData?.toList());
+  val['tasks'] = instance.tasks.map((e) => e.toJson()).toList();
+  val['triggers'] = instance.triggers.map((k, e) => MapEntry(k, e.toJson()));
+  val['taskControls'] = instance.taskControls.map((e) => e.toJson()).toList();
+  writeNotNull('expectedParticipantData',
+      instance.expectedParticipantData?.map((e) => e.toJson()).toList());
   writeNotNull('applicationData', instance.applicationData);
   return val;
 }
@@ -131,7 +135,7 @@ Map<String, dynamic> _$AddToJson(Add instance) {
 
   writeNotNull('__type', instance.$type);
   val['apiVersion'] = instance.apiVersion;
-  val['protocol'] = instance.protocol;
+  val['protocol'] = instance.protocol.toJson();
   writeNotNull('versionTag', instance.versionTag);
   return val;
 }
@@ -154,7 +158,7 @@ Map<String, dynamic> _$AddVersionToJson(AddVersion instance) {
 
   writeNotNull('__type', instance.$type);
   val['apiVersion'] = instance.apiVersion;
-  val['protocol'] = instance.protocol;
+  val['protocol'] = instance.protocol.toJson();
   writeNotNull('versionTag', instance.versionTag);
   return val;
 }
@@ -186,7 +190,8 @@ Map<String, dynamic> _$UpdateParticipantDataConfigurationToJson(
   val['apiVersion'] = instance.apiVersion;
   val['protocolId'] = instance.protocolId;
   writeNotNull('versionTag', instance.versionTag);
-  writeNotNull('expectedParticipantData', instance.expectedParticipantData);
+  writeNotNull('expectedParticipantData',
+      instance.expectedParticipantData?.map((e) => e.toJson()).toList());
   return val;
 }
 

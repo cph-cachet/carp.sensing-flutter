@@ -9,10 +9,11 @@ part of '../carp_core_common.dart';
 
 /// Describes a participant playing a [role] in a study, and whether this
 /// role [isOptional].
-@JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
+@JsonSerializable(includeIfNull: false, explicitToJson: true)
 class ParticipantRole {
   String role;
   bool isOptional;
+
   ParticipantRole(this.role, [this.isOptional = false]);
 
   factory ParticipantRole.fromJson(Map<String, dynamic> json) =>
@@ -22,7 +23,7 @@ class ParticipantRole {
 
 /// Describes a participant [attribute] that pertains to all or specified
 /// participants in a study.
-@JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
+@JsonSerializable(includeIfNull: false, explicitToJson: true)
 class ExpectedParticipantData {
   ParticipantAttribute? attribute;
 
@@ -42,7 +43,7 @@ class ExpectedParticipantData {
 
 /// Describes expected data to be input by users related to one or multiple
 /// participants in a study.
-@JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
+@JsonSerializable(includeIfNull: false, explicitToJson: true)
 class ParticipantAttribute extends Serializable {
   /// Uniquely identifies the type of data represented by this participant attribute.
   String inputDataType;
@@ -52,7 +53,7 @@ class ParticipantAttribute extends Serializable {
   @override
   Function get fromJsonFunction => _$ParticipantAttributeFromJson;
   factory ParticipantAttribute.fromJson(Map<String, dynamic> json) =>
-      FromJsonFactory().fromJson(json) as ParticipantAttribute;
+      FromJsonFactory().fromJson<ParticipantAttribute>(json);
   @override
   Map<String, dynamic> toJson() => _$ParticipantAttributeToJson(this);
   @override
@@ -61,7 +62,7 @@ class ParticipantAttribute extends Serializable {
 }
 
 /// Determines which participant roles to assign to something.
-@JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
+@JsonSerializable(includeIfNull: false, explicitToJson: true)
 class AssignedTo extends Serializable {
   /// Assign this to the specified [roleNames] in the study protocol.
   /// If null, assign this to all participants in the study protocol.
@@ -79,7 +80,10 @@ class AssignedTo extends Serializable {
   @override
   Function get fromJsonFunction => _$AssignedToFromJson;
   factory AssignedTo.fromJson(Map<String, dynamic> json) =>
-      FromJsonFactory().fromJson(json) as AssignedTo;
+      FromJsonFactory().fromJson<AssignedTo>(
+        json,
+        notAvailable: AssignedTo.all(),
+      );
   @override
   Map<String, dynamic> toJson() => _$AssignedToToJson(this);
 

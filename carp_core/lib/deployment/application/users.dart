@@ -9,7 +9,7 @@ part of '../carp_core_deployment.dart';
 
 /// The information which needs to be provided when inviting a participant to
 /// a deployment.
-@JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
+@JsonSerializable(includeIfNull: false, explicitToJson: true)
 class ParticipantInvitation {
   // An ID for the participant, uniquely assigned by the calling service.
   late String participantId;
@@ -29,7 +29,7 @@ class ParticipantInvitation {
     required this.identity,
     required this.invitation,
   }) : super() {
-    this.participantId = participantId ?? Uuid().v1;
+    this.participantId = participantId ?? const Uuid().v1;
   }
 
   factory ParticipantInvitation.fromJson(Map<String, dynamic> json) =>
@@ -38,7 +38,7 @@ class ParticipantInvitation {
 }
 
 /// Uniquely identifies the participation of an account in a study deployment.
-@JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
+@JsonSerializable(includeIfNull: false, explicitToJson: true)
 class Participation {
   /// The CARP study deployment ID.
   String studyDeploymentId;
@@ -61,7 +61,7 @@ class Participation {
 }
 
 /// A description of a study, shared with participants once they are invited to a study.
-@JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
+@JsonSerializable(includeIfNull: false, explicitToJson: true)
 class StudyInvitation {
   /// A descriptive name for the study to be shown to participants.
   String name;
@@ -97,7 +97,7 @@ class StudyInvitation {
 /// Some of the devices which the participant is invited to might already be
 /// registered. If the participant wants to use a different device, they will
 /// need to unregister the existing device first.
-@JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
+@JsonSerializable(includeIfNull: false, explicitToJson: true)
 class ActiveParticipationInvitation {
   Participation participation;
   StudyInvitation invitation;
@@ -139,7 +139,7 @@ class ActiveParticipationInvitation {
 }
 
 /// The status of a participant in a study deployment.
-@JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
+@JsonSerializable(includeIfNull: false, explicitToJson: true)
 class ParticipantStatus {
   String participantId;
   AssignedTo assignedParticipantRoles;

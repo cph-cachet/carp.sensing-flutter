@@ -37,7 +37,7 @@ abstract class DeploymentServiceRequest extends ServiceRequest {
 }
 
 /// A request for creating a deployment based on the [protocol].
-@JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
+@JsonSerializable(includeIfNull: false, explicitToJson: true)
 class CreateStudyDeployment extends DeploymentServiceRequest {
   StudyProtocol protocol;
   List<ParticipantInvitation> invitations;
@@ -57,7 +57,7 @@ class CreateStudyDeployment extends DeploymentServiceRequest {
   @override
   Function get fromJsonFunction => _$CreateStudyDeploymentFromJson;
   factory CreateStudyDeployment.fromJson(Map<String, dynamic> json) =>
-      FromJsonFactory().fromJson(json) as CreateStudyDeployment;
+      FromJsonFactory().fromJson<CreateStudyDeployment>(json);
   @override
   Map<String, dynamic> toJson() => _$CreateStudyDeploymentToJson(this);
 
@@ -66,20 +66,20 @@ class CreateStudyDeployment extends DeploymentServiceRequest {
 }
 
 /// A request for getting the status of a study deployment.
-@JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
+@JsonSerializable(includeIfNull: false, explicitToJson: true)
 class GetStudyDeploymentStatus extends DeploymentServiceRequest {
   GetStudyDeploymentStatus(super.studyDeploymentId);
 
   @override
   Function get fromJsonFunction => _$GetStudyDeploymentStatusFromJson;
   factory GetStudyDeploymentStatus.fromJson(Map<String, dynamic> json) =>
-      FromJsonFactory().fromJson(json) as GetStudyDeploymentStatus;
+      FromJsonFactory().fromJson<GetStudyDeploymentStatus>(json);
   @override
   Map<String, dynamic> toJson() => _$GetStudyDeploymentStatusToJson(this);
 }
 
 /// A request for getting the status of a list of study deployment.
-@JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
+@JsonSerializable(includeIfNull: false, explicitToJson: true)
 class GetStudyDeploymentStatusList extends DeploymentServiceRequest {
   List<String> studyDeploymentIds;
 
@@ -88,13 +88,13 @@ class GetStudyDeploymentStatusList extends DeploymentServiceRequest {
   @override
   Function get fromJsonFunction => _$GetStudyDeploymentStatusListFromJson;
   factory GetStudyDeploymentStatusList.fromJson(Map<String, dynamic> json) =>
-      FromJsonFactory().fromJson(json) as GetStudyDeploymentStatusList;
+      FromJsonFactory().fromJson<GetStudyDeploymentStatusList>(json);
   @override
   Map<String, dynamic> toJson() => _$GetStudyDeploymentStatusListToJson(this);
 }
 
 /// A request for registering this device.
-@JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
+@JsonSerializable(includeIfNull: false, explicitToJson: true)
 class RegisterDevice extends DeploymentServiceRequest {
   RegisterDevice(
       super.studyDeploymentId, this.deviceRoleName, this.registration);
@@ -108,7 +108,7 @@ class RegisterDevice extends DeploymentServiceRequest {
   @override
   Function get fromJsonFunction => _$RegisterDeviceFromJson;
   factory RegisterDevice.fromJson(Map<String, dynamic> json) =>
-      FromJsonFactory().fromJson(json) as RegisterDevice;
+      FromJsonFactory().fromJson<RegisterDevice>(json);
   @override
   Map<String, dynamic> toJson() => _$RegisterDeviceToJson(this);
 
@@ -117,7 +117,7 @@ class RegisterDevice extends DeploymentServiceRequest {
 }
 
 /// A request for unregistering this device.
-@JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
+@JsonSerializable(includeIfNull: false, explicitToJson: true)
 class UnregisterDevice extends DeploymentServiceRequest {
   UnregisterDevice(super.studyDeploymentId, this.deviceRoleName);
 
@@ -127,7 +127,7 @@ class UnregisterDevice extends DeploymentServiceRequest {
   @override
   Function get fromJsonFunction => _$UnregisterDeviceFromJson;
   factory UnregisterDevice.fromJson(Map<String, dynamic> json) =>
-      FromJsonFactory().fromJson(json) as UnregisterDevice;
+      FromJsonFactory().fromJson<UnregisterDevice>(json);
   @override
   Map<String, dynamic> toJson() => _$UnregisterDeviceToJson(this);
 
@@ -136,7 +136,7 @@ class UnregisterDevice extends DeploymentServiceRequest {
 }
 
 /// A request for getting the deployment for this primary device.
-@JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
+@JsonSerializable(includeIfNull: false, explicitToJson: true)
 class GetDeviceDeploymentFor extends DeploymentServiceRequest {
   GetDeviceDeploymentFor(super.studyDeploymentId, this.primaryDeviceRoleName);
 
@@ -146,7 +146,7 @@ class GetDeviceDeploymentFor extends DeploymentServiceRequest {
   @override
   Function get fromJsonFunction => _$GetDeviceDeploymentForFromJson;
   factory GetDeviceDeploymentFor.fromJson(Map<String, dynamic> json) =>
-      FromJsonFactory().fromJson(json) as GetDeviceDeploymentFor;
+      FromJsonFactory().fromJson<GetDeviceDeploymentFor>(json);
   @override
   Map<String, dynamic> toJson() => _$GetDeviceDeploymentForToJson(this);
 
@@ -156,7 +156,7 @@ class GetDeviceDeploymentFor extends DeploymentServiceRequest {
 }
 
 /// A request for reporting this deployment as successful.
-@JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
+@JsonSerializable(includeIfNull: false, explicitToJson: true)
 class DeviceDeployed extends GetDeviceDeploymentFor {
   /// Timestamp when this was last updated in UTC
   DateTime deviceDeploymentLastUpdatedOn;
@@ -170,7 +170,7 @@ class DeviceDeployed extends GetDeviceDeploymentFor {
   @override
   Function get fromJsonFunction => _$DeviceDeployedFromJson;
   factory DeviceDeployed.fromJson(Map<String, dynamic> json) =>
-      FromJsonFactory().fromJson(json) as DeviceDeployed;
+      FromJsonFactory().fromJson<DeviceDeployed>(json);
   @override
   Map<String, dynamic> toJson() => _$DeviceDeployedToJson(this);
 
@@ -180,14 +180,14 @@ class DeviceDeployed extends GetDeviceDeploymentFor {
 }
 
 /// A request for permanently stopping a study deployment.
-@JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
+@JsonSerializable(includeIfNull: false, explicitToJson: true)
 class Stop extends DeploymentServiceRequest {
   Stop(super.studyDeploymentId);
 
   @override
   Function get fromJsonFunction => _$StopFromJson;
   factory Stop.fromJson(Map<String, dynamic> json) =>
-      FromJsonFactory().fromJson(json) as Stop;
+      FromJsonFactory().fromJson<Stop>(json);
   @override
   Map<String, dynamic> toJson() => _$StopToJson(this);
 }

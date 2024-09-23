@@ -7,7 +7,7 @@
 part of '../carp_core_protocols.dart';
 
 // /// Uniquely identifies a study protocol by the [ownerId] and it's [name].
-// @JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
+// @JsonSerializable(includeIfNull: false, explicitToJson: true)
 // class StudyProtocolId {
 //   String ownerId;
 //   String name;
@@ -35,7 +35,7 @@ part of '../carp_core_protocols.dart';
 /// Specifies a specific version for a [StudyProtocol], identified by a [tag].
 ///
 /// [date] is the date when this version of the protocol was created.
-@JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
+@JsonSerializable(includeIfNull: false, explicitToJson: true)
 class ProtocolVersion {
   String tag;
   late DateTime date;

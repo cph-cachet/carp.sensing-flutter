@@ -8,7 +8,7 @@ part of '../carp_core_common.dart';
 
 /// Defines data that needs to be measured/collected passively as part of a
 /// task defined by [TaskConfiguration].
-@JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
+@JsonSerializable(includeIfNull: false, explicitToJson: true)
 class Measure extends Serializable {
   /// The type of measure to do.
   String type;
@@ -29,7 +29,7 @@ class Measure extends Serializable {
   @override
   Function get fromJsonFunction => _$MeasureFromJson;
   factory Measure.fromJson(Map<String, dynamic> json) =>
-      FromJsonFactory().fromJson(json) as Measure;
+      FromJsonFactory().fromJson<Measure>(json);
   @override
   Map<String, dynamic> toJson() => _$MeasureToJson(this);
   @override

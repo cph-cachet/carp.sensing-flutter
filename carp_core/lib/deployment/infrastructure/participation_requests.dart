@@ -30,7 +30,7 @@ abstract class ParticipationServiceRequest extends DeploymentServiceRequest {
 }
 
 /// A request for getting the deployment invitations for an account id.
-@JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
+@JsonSerializable(includeIfNull: false, explicitToJson: true)
 class GetActiveParticipationInvitations extends ParticipationServiceRequest {
   GetActiveParticipationInvitations(this.accountId) : super();
 
@@ -46,7 +46,7 @@ class GetActiveParticipationInvitations extends ParticipationServiceRequest {
   Function get fromJsonFunction => _$GetActiveParticipationInvitationsFromJson;
   factory GetActiveParticipationInvitations.fromJson(
           Map<String, dynamic> json) =>
-      FromJsonFactory().fromJson(json) as GetActiveParticipationInvitations;
+      FromJsonFactory().fromJson<GetActiveParticipationInvitations>(json);
   @override
   Map<String, dynamic> toJson() =>
       _$GetActiveParticipationInvitationsToJson(this);
@@ -56,21 +56,21 @@ class GetActiveParticipationInvitations extends ParticipationServiceRequest {
 }
 
 /// A request for getting the status of a study deployment.
-@JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
+@JsonSerializable(includeIfNull: false, explicitToJson: true)
 class GetParticipantData extends ParticipationServiceRequest {
   GetParticipantData(super.studyDeploymentId);
 
   @override
   Function get fromJsonFunction => _$GetParticipantDataFromJson;
   factory GetParticipantData.fromJson(Map<String, dynamic> json) =>
-      FromJsonFactory().fromJson(json) as GetParticipantData;
+      FromJsonFactory().fromJson<GetParticipantData>(json);
   @override
   Map<String, dynamic> toJson() => _$GetParticipantDataToJson(this);
 }
 
 /// A request for getting the list of participant data for this a list
 /// of [studyDeploymentIds].
-@JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
+@JsonSerializable(includeIfNull: false, explicitToJson: true)
 class GetParticipantDataList extends ParticipationServiceRequest {
   List<String> studyDeploymentIds;
   GetParticipantDataList(this.studyDeploymentIds) : super();
@@ -78,13 +78,13 @@ class GetParticipantDataList extends ParticipationServiceRequest {
   @override
   Function get fromJsonFunction => _$GetParticipantDataListFromJson;
   factory GetParticipantDataList.fromJson(Map<String, dynamic> json) =>
-      FromJsonFactory().fromJson(json) as GetParticipantDataList;
+      FromJsonFactory().fromJson<GetParticipantDataList>(json);
   @override
   Map<String, dynamic> toJson() => _$GetParticipantDataListToJson(this);
 }
 
 /// A request for adding data for a participant.
-@JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
+@JsonSerializable(includeIfNull: false, explicitToJson: true)
 class SetParticipantData extends ParticipationServiceRequest {
   SetParticipantData(
     super.studyDeploymentId, [
@@ -122,7 +122,7 @@ class SetParticipantData extends ParticipationServiceRequest {
   @override
   Function get fromJsonFunction => _$SetParticipantDataFromJson;
   factory SetParticipantData.fromJson(Map<String, dynamic> json) =>
-      FromJsonFactory().fromJson(json) as SetParticipantData;
+      FromJsonFactory().fromJson<SetParticipantData>(json);
   @override
   Map<String, dynamic> toJson() => _$SetParticipantDataToJson(this);
 

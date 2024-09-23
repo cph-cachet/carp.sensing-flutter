@@ -248,7 +248,7 @@ enum StudyDeploymentStatusTypes {
 /// from the CARP web service.
 ///
 /// See [StudyDeploymentStatus.kt](https://github.com/cph-cachet/carp.core-kotlin/blob/develop/carp.deployment.core/src/commonMain/kotlin/dk/cachet/carp/deployment/domain/StudyDeploymentStatus.kt).
-@JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
+@JsonSerializable(includeIfNull: false, explicitToJson: true)
 class StudyDeploymentStatus extends Serializable {
   /// The status of this device deployment:
   /// * Invited
@@ -301,7 +301,8 @@ class StudyDeploymentStatus extends Serializable {
 
   factory StudyDeploymentStatus.fromJson(Map<String, dynamic> json) {
     StudyDeploymentStatus status =
-        FromJsonFactory().fromJson(json) as StudyDeploymentStatus;
+        FromJsonFactory().fromJson<StudyDeploymentStatus>(json);
+
     // when this object was create from json deserialization,
     // the last part of the $type reflects the status
     switch (status.$type?.split('.').last) {

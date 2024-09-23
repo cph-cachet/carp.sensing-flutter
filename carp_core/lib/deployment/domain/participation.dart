@@ -9,7 +9,7 @@ part of '../carp_core_deployment.dart';
 
 /// Expected participant [data] for all participants in a study deployment
 /// with [studyDeploymentId].
-@JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
+@JsonSerializable(includeIfNull: false, explicitToJson: true)
 class ParticipantData {
   String studyDeploymentId;
 
@@ -31,7 +31,7 @@ class ParticipantData {
 }
 
 /// Expected participant [data] for all participants with a specific [roleName].
-@JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
+@JsonSerializable(includeIfNull: false, explicitToJson: true)
 class RoleData {
   String roleName;
 

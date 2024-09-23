@@ -12,7 +12,7 @@ part of '../carp_core_protocols.dart';
 /// aggregating data, the optional devices ([DeviceConfiguration]) connected
 /// to them, and the [TaskControl]'s which lead to data collection on
 /// said devices.
-@JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
+@JsonSerializable(includeIfNull: false, explicitToJson: true)
 class StudyProtocol extends Snapshot {
   static const String PROTOCOL_NAMESPACE = 'dk.cachet.carp.protocols.domain';
 
@@ -412,7 +412,7 @@ class StudyProtocol extends Snapshot {
   String toString() => '$runtimeType - name: $name, ownerId: $ownerId';
 }
 
-@JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
+@JsonSerializable(includeIfNull: false, explicitToJson: true)
 class DeviceConnection {
   String? roleName;
   String? connectedToRoleName;

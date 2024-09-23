@@ -14,11 +14,11 @@ abstract class InputType {
 }
 
 /// Custom input data as requested by a researcher.
-@JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
+@JsonSerializable(includeIfNull: false, explicitToJson: true)
 class CustomInput extends Data {
   static const type = '${InputType.INPUT_TYPE_NAMESPACE}.custom';
 
-  /// Any value
+  /// Any serializable value.
   dynamic value;
 
   CustomInput({this.value}) : super();
@@ -26,7 +26,7 @@ class CustomInput extends Data {
   @override
   Function get fromJsonFunction => _$CustomInputFromJson;
   factory CustomInput.fromJson(Map<String, dynamic> json) =>
-      FromJsonFactory().fromJson(json) as CustomInput;
+      FromJsonFactory().fromJson<CustomInput>(json);
   @override
   Map<String, dynamic> toJson() => _$CustomInputToJson(this);
   @override
@@ -37,7 +37,7 @@ class CustomInput extends Data {
 enum Sex { Male, Female, Intersex }
 
 /// The biological sex assigned at birth of a participant.
-@JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
+@JsonSerializable(includeIfNull: false, explicitToJson: true)
 class SexInput extends Data {
   static const type = '${InputType.INPUT_TYPE_NAMESPACE}.sex';
 
@@ -49,7 +49,7 @@ class SexInput extends Data {
   @override
   Function get fromJsonFunction => _$SexInputFromJson;
   factory SexInput.fromJson(Map<String, dynamic> json) =>
-      FromJsonFactory().fromJson(json) as SexInput;
+      FromJsonFactory().fromJson<SexInput>(json);
   @override
   Map<String, dynamic> toJson() => _$SexInputToJson(this);
   @override
@@ -57,7 +57,7 @@ class SexInput extends Data {
 }
 
 /// The phone number of a participant.
-@JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
+@JsonSerializable(includeIfNull: false, explicitToJson: true)
 class PhoneNumberInput extends Data {
   static const type = '${InputType.CAWS_INPUT_TYPE_NAMESPACE}.phone_number';
 
@@ -88,7 +88,7 @@ class PhoneNumberInput extends Data {
   @override
   Function get fromJsonFunction => _$PhoneNumberInputFromJson;
   factory PhoneNumberInput.fromJson(Map<String, dynamic> json) =>
-      FromJsonFactory().fromJson(json) as PhoneNumberInput;
+      FromJsonFactory().fromJson<PhoneNumberInput>(json);
   @override
   Map<String, dynamic> toJson() => _$PhoneNumberInputToJson(this);
   @override
@@ -96,7 +96,7 @@ class PhoneNumberInput extends Data {
 }
 
 /// The social security number (SSN) of a participant.
-@JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
+@JsonSerializable(includeIfNull: false, explicitToJson: true)
 class SocialSecurityNumberInput extends Data {
   static const type = '${InputType.CAWS_INPUT_TYPE_NAMESPACE}.ssn';
 
@@ -114,7 +114,7 @@ class SocialSecurityNumberInput extends Data {
   @override
   Function get fromJsonFunction => _$SocialSecurityNumberInputFromJson;
   factory SocialSecurityNumberInput.fromJson(Map<String, dynamic> json) =>
-      FromJsonFactory().fromJson(json) as SocialSecurityNumberInput;
+      FromJsonFactory().fromJson<SocialSecurityNumberInput>(json);
   @override
   Map<String, dynamic> toJson() => _$SocialSecurityNumberInputToJson(this);
   @override
@@ -122,7 +122,7 @@ class SocialSecurityNumberInput extends Data {
 }
 
 /// The full name of a participant.
-@JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
+@JsonSerializable(includeIfNull: false, explicitToJson: true)
 class FullNameInput extends Data {
   static const type = '${InputType.CAWS_INPUT_TYPE_NAMESPACE}.full_name';
 
@@ -137,7 +137,7 @@ class FullNameInput extends Data {
   @override
   Function get fromJsonFunction => _$FullNameInputFromJson;
   factory FullNameInput.fromJson(Map<String, dynamic> json) =>
-      FromJsonFactory().fromJson(json) as FullNameInput;
+      FromJsonFactory().fromJson<FullNameInput>(json);
   @override
   Map<String, dynamic> toJson() => _$FullNameInputToJson(this);
   @override
@@ -145,7 +145,7 @@ class FullNameInput extends Data {
 }
 
 /// The informed consent from a participant.
-@JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
+@JsonSerializable(includeIfNull: false, explicitToJson: true)
 class InformedConsentInput extends Data {
   static const type = '${InputType.CAWS_INPUT_TYPE_NAMESPACE}.informed_consent';
 
@@ -183,7 +183,7 @@ class InformedConsentInput extends Data {
   @override
   Function get fromJsonFunction => _$InformedConsentInputFromJson;
   factory InformedConsentInput.fromJson(Map<String, dynamic> json) =>
-      FromJsonFactory().fromJson(json) as InformedConsentInput;
+      FromJsonFactory().fromJson<InformedConsentInput>(json);
   @override
   Map<String, dynamic> toJson() => _$InformedConsentInputToJson(this);
   @override
@@ -191,7 +191,7 @@ class InformedConsentInput extends Data {
 }
 
 /// The full address of a participant.
-@JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
+@JsonSerializable(includeIfNull: false, explicitToJson: true)
 class AddressInput extends Data {
   static const type = '${InputType.CAWS_INPUT_TYPE_NAMESPACE}.address';
 
@@ -208,7 +208,7 @@ class AddressInput extends Data {
   @override
   Function get fromJsonFunction => _$AddressInputFromJson;
   factory AddressInput.fromJson(Map<String, dynamic> json) =>
-      FromJsonFactory().fromJson(json) as AddressInput;
+      FromJsonFactory().fromJson<AddressInput>(json);
   @override
   Map<String, dynamic> toJson() => _$AddressInputToJson(this);
   @override
@@ -219,7 +219,7 @@ class AddressInput extends Data {
 ///
 /// We are using the WHO [ICD-11](https://www.who.int/standards/classifications/classification-of-diseases)
 /// classification.
-@JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
+@JsonSerializable(includeIfNull: false, explicitToJson: true)
 class DiagnosisInput extends Data {
   static const type = '${InputType.CAWS_INPUT_TYPE_NAMESPACE}.diagnosis';
 
@@ -246,7 +246,7 @@ class DiagnosisInput extends Data {
   @override
   Function get fromJsonFunction => _$DiagnosisInputFromJson;
   factory DiagnosisInput.fromJson(Map<String, dynamic> json) =>
-      FromJsonFactory().fromJson(json) as DiagnosisInput;
+      FromJsonFactory().fromJson<DiagnosisInput>(json);
   @override
   Map<String, dynamic> toJson() => _$DiagnosisInputToJson(this);
   @override

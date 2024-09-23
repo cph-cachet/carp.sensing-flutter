@@ -41,7 +41,7 @@ class DeviceRegistration extends Serializable {
   @override
   Function get fromJsonFunction => _$DeviceRegistrationFromJson;
   factory DeviceRegistration.fromJson(Map<String, dynamic> json) =>
-      FromJsonFactory().fromJson(json) as DeviceRegistration;
+      FromJsonFactory().fromJson<DeviceRegistration>(json);
   @override
   Map<String, dynamic> toJson() => _$DeviceRegistrationToJson(this);
   @override
@@ -73,7 +73,7 @@ class DefaultDeviceRegistration extends DeviceRegistration {
   @override
   Function get fromJsonFunction => _$DefaultDeviceRegistrationFromJson;
   factory DefaultDeviceRegistration.fromJson(Map<String, dynamic> json) =>
-      FromJsonFactory().fromJson(json) as DefaultDeviceRegistration;
+      FromJsonFactory().fromJson<DefaultDeviceRegistration>(json);
   @override
   Map<String, dynamic> toJson() => _$DefaultDeviceRegistrationToJson(this);
 }
@@ -102,7 +102,7 @@ class MACAddressDeviceRegistration extends DeviceRegistration {
   @override
   Function get fromJsonFunction => _$MACAddressDeviceRegistrationFromJson;
   factory MACAddressDeviceRegistration.fromJson(Map<String, dynamic> json) =>
-      FromJsonFactory().fromJson(json) as MACAddressDeviceRegistration;
+      FromJsonFactory().fromJson<MACAddressDeviceRegistration>(json);
   @override
   Map<String, dynamic> toJson() => _$MACAddressDeviceRegistrationToJson(this);
 }

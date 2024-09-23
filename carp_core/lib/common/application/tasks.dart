@@ -13,7 +13,7 @@ part of '../carp_core_common.dart';
 /// a [TriggerConfiguration] as part of a [StudyProtocol].
 /// Each task holds a list of [Measure]s to be done as part of this task.
 /// A [TaskConfiguration] is hence an aggregation of [Measure]s.
-@JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
+@JsonSerializable(includeIfNull: false, explicitToJson: true)
 class TaskConfiguration extends Serializable {
   static int _counter = 0;
 
@@ -54,7 +54,7 @@ class TaskConfiguration extends Serializable {
   @override
   Function get fromJsonFunction => _$TaskConfigurationFromJson;
   factory TaskConfiguration.fromJson(Map<String, dynamic> json) =>
-      FromJsonFactory().fromJson(json) as TaskConfiguration;
+      FromJsonFactory().fromJson<TaskConfiguration>(json);
   @override
   Map<String, dynamic> toJson() => _$TaskConfigurationToJson(this);
   @override
@@ -69,7 +69,7 @@ class TaskConfiguration extends Serializable {
 /// outputs should immediately start running in the background once triggered.
 /// The task runs for the specified [duration], or until stopped, or until
 /// all measures and/or outputs have completed.
-@JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
+@JsonSerializable(includeIfNull: false, explicitToJson: true)
 class BackgroundTask extends TaskConfiguration {
   /// The optional duration over the course of which the [measures] need to
   /// be sampled.
@@ -88,14 +88,14 @@ class BackgroundTask extends TaskConfiguration {
   @override
   Function get fromJsonFunction => _$BackgroundTaskFromJson;
   factory BackgroundTask.fromJson(Map<String, dynamic> json) =>
-      FromJsonFactory().fromJson(json) as BackgroundTask;
+      FromJsonFactory().fromJson<BackgroundTask>(json);
   @override
   Map<String, dynamic> toJson() => _$BackgroundTaskToJson(this);
 }
 
 /// A task which contains a definition of a custom protocol which differs from
 /// the CARP domain model.
-@JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
+@JsonSerializable(includeIfNull: false, explicitToJson: true)
 class CustomProtocolTask extends TaskConfiguration {
   /// A definition on how to run a study on a primary device, serialized as a string.
   String studyProtocol;
@@ -113,7 +113,7 @@ class CustomProtocolTask extends TaskConfiguration {
   @override
   Function get fromJsonFunction => _$CustomProtocolTaskFromJson;
   factory CustomProtocolTask.fromJson(Map<String, dynamic> json) =>
-      FromJsonFactory().fromJson(json) as CustomProtocolTask;
+      FromJsonFactory().fromJson<CustomProtocolTask>(json);
   @override
   Map<String, dynamic> toJson() => _$CustomProtocolTaskToJson(this);
 
@@ -124,7 +124,7 @@ class CustomProtocolTask extends TaskConfiguration {
 /// Redirects to a web page which contains the task which needs to be performed.
 /// The passive [measures] are started when the website is opened and stopped
 /// when it is closed.
-@JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
+@JsonSerializable(includeIfNull: false, explicitToJson: true)
 class WebTask extends TaskConfiguration {
   /// The URL of the web page which contains the task to be performed.
   ///
@@ -159,7 +159,7 @@ class WebTask extends TaskConfiguration {
   @override
   Function get fromJsonFunction => _$WebTaskFromJson;
   factory WebTask.fromJson(Map<String, dynamic> json) =>
-      FromJsonFactory().fromJson(json) as WebTask;
+      FromJsonFactory().fromJson<WebTask>(json);
   @override
   Map<String, dynamic> toJson() => _$WebTaskToJson(this);
 

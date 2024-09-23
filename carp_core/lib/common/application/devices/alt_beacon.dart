@@ -8,7 +8,7 @@
 part of '../../carp_core_common.dart';
 
 /// A beacon meeting the open AltBeacon standard.
-@JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
+@JsonSerializable(includeIfNull: false, explicitToJson: true)
 class AltBeacon extends DeviceConfiguration<AltBeaconDeviceRegistration> {
   AltBeacon({
     super.roleName = 'Beacon',
@@ -44,7 +44,7 @@ class AltBeacon extends DeviceConfiguration<AltBeaconDeviceRegistration> {
   @override
   Function get fromJsonFunction => _$AltBeaconFromJson;
   factory AltBeacon.fromJson(Map<String, dynamic> json) =>
-      FromJsonFactory().fromJson(json) as AltBeacon;
+      FromJsonFactory().fromJson<AltBeacon>(json);
   @override
   Map<String, dynamic> toJson() => _$AltBeaconToJson(this);
 }
@@ -89,7 +89,7 @@ class AltBeaconDeviceRegistration extends DeviceRegistration {
   @override
   Function get fromJsonFunction => _$AltBeaconDeviceRegistrationFromJson;
   factory AltBeaconDeviceRegistration.fromJson(Map<String, dynamic> json) =>
-      FromJsonFactory().fromJson(json) as AltBeaconDeviceRegistration;
+      FromJsonFactory().fromJson<AltBeaconDeviceRegistration>(json);
   @override
   Map<String, dynamic> toJson() => _$AltBeaconDeviceRegistrationToJson(this);
 }

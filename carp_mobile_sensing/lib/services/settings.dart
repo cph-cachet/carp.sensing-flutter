@@ -184,7 +184,7 @@ class Settings {
     if (_userId == null) {
       _userId = preferences!.get(USER_ID_KEY) as String?;
       if (_userId == null) {
-        _userId = UUID.v1;
+        _userId = const Uuid().v1;
         await preferences!.setString(USER_ID_KEY, _userId!);
       }
     }

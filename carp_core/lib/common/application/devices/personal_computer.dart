@@ -8,7 +8,7 @@
 part of '../../carp_core_common.dart';
 
 /// Configuration of an internet-connected personal computer with no built-in [sensors].
-@JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
+@JsonSerializable(includeIfNull: false, explicitToJson: true)
 class PersonalComputer
     extends PrimaryDeviceConfiguration<PersonalComputerRegistration> {
   /// The type of a personal computer device.
@@ -49,7 +49,7 @@ class PersonalComputer
   @override
   Function get fromJsonFunction => _$PersonalComputerFromJson;
   factory PersonalComputer.fromJson(Map<String, dynamic> json) =>
-      FromJsonFactory().fromJson(json) as PersonalComputer;
+      FromJsonFactory().fromJson<PersonalComputer>(json);
   @override
   Map<String, dynamic> toJson() => _$PersonalComputerToJson(this);
 }
@@ -84,7 +84,7 @@ class PersonalComputerRegistration extends DeviceRegistration {
   @override
   Function get fromJsonFunction => _$PersonalComputerRegistrationFromJson;
   factory PersonalComputerRegistration.fromJson(Map<String, dynamic> json) =>
-      FromJsonFactory().fromJson(json) as PersonalComputerRegistration;
+      FromJsonFactory().fromJson<PersonalComputerRegistration>(json);
   @override
   Map<String, dynamic> toJson() => _$PersonalComputerRegistrationToJson(this);
 }

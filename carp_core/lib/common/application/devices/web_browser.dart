@@ -8,7 +8,7 @@
 part of '../../carp_core_common.dart';
 
 /// Configuration of an internet-connected web browser device with no built-in [sensors].
-@JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
+@JsonSerializable(includeIfNull: false, explicitToJson: true)
 class WebBrowser extends PrimaryDeviceConfiguration<WebBrowserRegistration> {
   /// The type of a web browser device device.
   static const String DEVICE_TYPE =
@@ -48,7 +48,7 @@ class WebBrowser extends PrimaryDeviceConfiguration<WebBrowserRegistration> {
   @override
   Function get fromJsonFunction => _$WebBrowserFromJson;
   factory WebBrowser.fromJson(Map<String, dynamic> json) =>
-      FromJsonFactory().fromJson(json) as WebBrowser;
+      FromJsonFactory().fromJson<WebBrowser>(json);
   @override
   Map<String, dynamic> toJson() => _$WebBrowserToJson(this);
 }
@@ -82,7 +82,7 @@ class WebBrowserRegistration extends DeviceRegistration {
   @override
   Function get fromJsonFunction => _$WebBrowserRegistrationFromJson;
   factory WebBrowserRegistration.fromJson(Map<String, dynamic> json) =>
-      FromJsonFactory().fromJson(json) as WebBrowserRegistration;
+      FromJsonFactory().fromJson<WebBrowserRegistration>(json);
   @override
   Map<String, dynamic> toJson() => _$WebBrowserRegistrationToJson(this);
 }
