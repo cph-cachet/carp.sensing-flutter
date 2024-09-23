@@ -43,7 +43,7 @@ abstract class Snapshot {
 
   Snapshot([String? id]) {
     version = 0;
-    this.id = id ?? UUID.v1;
+    this.id = id ?? const Uuid().v1;
     createdOn = DateTime.now().toUtc();
   }
 }
