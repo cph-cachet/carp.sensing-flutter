@@ -1,7 +1,8 @@
 part of 'carp_auth.dart';
 
 /// Represents a CARP Web Service (CAWS) account and user.
-@JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)
+@JsonSerializable(
+    fieldRename: FieldRename.snake, includeIfNull: false, explicitToJson: true)
 class CarpUser {
   /// Unique CARP username
   String username;

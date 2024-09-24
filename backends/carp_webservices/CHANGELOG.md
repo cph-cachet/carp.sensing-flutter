@@ -1,9 +1,13 @@
+## 3.4.0
+
+* upgrade to carp_core v. 1.8 & carp_serialization v. 2.0
+
 ## 3.3.1
 
-* support for uploading compressed data files to the CAWS data stream endpoint
+* support for uploading compressed data to the CAWS data stream endpoint
 * support for uploading participant data (like full name, informed consent, etc.)
-* Informed consent is now uploaded as an participant data type to CAWS (the old Informed Consent endpoint is deprecated)
-* The old DataPoint data upload endpoint is marked as deprecated.
+* informed consent is now uploaded as an participant data type to CAWS (the old Informed Consent endpoint is deprecated)
+* the old DataPoint data upload endpoint is marked as deprecated.
 
 ## 3.2.0
 
@@ -12,12 +16,12 @@
 
 ## 3.0.1
 
-* Refactor of authentication API based on the [`oidc`](https://pub.dev/packages/oidc) package. See [PR #374](https://github.com/cph-cachet/carp.sensing-flutter/pull/374) for details.
+* refactor of authentication API based on the [`oidc`](https://pub.dev/packages/oidc) package. See [PR #374](https://github.com/cph-cachet/carp.sensing-flutter/pull/374) for details.
 * added linter
 
 ## 2.0.1
 
-* Support for client secret for a CARP app for authentication.
+* support for client secret for a CARP app for authentication.
 
 ## 2.0.0
 

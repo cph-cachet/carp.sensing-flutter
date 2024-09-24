@@ -1,7 +1,8 @@
 part of 'carp_auth.dart';
 
 /// Holds information of a token issued by an OAuth authorization endpoint.
-@JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)
+@JsonSerializable(
+    fieldRename: FieldRename.snake, includeIfNull: false, explicitToJson: true)
 class OAuthToken {
   /// The OAuth access token.
   final String accessToken;
