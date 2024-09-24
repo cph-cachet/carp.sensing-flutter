@@ -1,6 +1,8 @@
 ## 2.11.0
 
 * upgrading to health v. 11.x
+* upgrade to carp_core v. 1.8 & carp_serialization v. 2.0
+* type safe `fromJson()` methods & nested json serialization
 
 ## 2.10.0
 

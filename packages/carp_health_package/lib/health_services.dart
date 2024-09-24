@@ -1,16 +1,14 @@
 /*
- * Copyright 2024 Copenhagen Center for Health Technology (CACHET) at the
- * Technical University of Denmark (DTU).
+ * Copyright 2024 the Technical University of Denmark (DTU).
  * Use of this source code is governed by a MIT-style license that can be
  * found in the LICENSE file.
  */
-
 part of 'health_package.dart';
 
 /// An [OnlineService] for the [health](https://pub.dev/packages/health) service.
 ///
 /// On Android, this health package always uses Google [Health Connect](https://developer.android.com/health-and-fitness/guides/health-connect).
-@JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
+@JsonSerializable(includeIfNull: false, explicitToJson: true)
 class HealthService extends OnlineService {
   /// The type of the health service.
   static const String DEVICE_TYPE =
@@ -25,7 +23,7 @@ class HealthService extends OnlineService {
   @override
   Function get fromJsonFunction => _$HealthServiceFromJson;
   factory HealthService.fromJson(Map<String, dynamic> json) =>
-      FromJsonFactory().fromJson(json) as HealthService;
+      FromJsonFactory().fromJson<HealthService>(json);
   @override
   Map<String, dynamic> toJson() => _$HealthServiceToJson(this);
 }
@@ -54,7 +52,7 @@ class HealthServiceManager extends OnlineServiceManager<HealthService> {
   HealthServiceManager([
     HealthService? configuration,
   ]) : super(HealthService.DEVICE_TYPE, configuration) {
-    Health().configure(useHealthConnectIfAvailable: true);
+    Health().configure();
   }
 
   @override
