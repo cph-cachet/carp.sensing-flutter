@@ -26,8 +26,6 @@ this package only works together with `carp_mobile_sensing`.
 
 `````dart
 dependencies:
-  flutter:
-    sdk: flutter
   carp_core: ^latest
   carp_mobile_sensing: ^latest
   carp_health_package: ^latest
@@ -102,7 +100,8 @@ To use this package, import it into your app together with the
 `````dart
 import 'package:carp_core/carp_core.dart';
 import 'package:carp_mobile_sensing/carp_mobile_sensing.dart';
-import 'package:carp_health_package/health.dart';
+import 'package:carp_health_package/health_package.dart';
+import 'package:health/health.dart';
 `````
 
 Before creating a study and running it, register this package in the
@@ -163,7 +162,7 @@ The `HealthSamplingConfiguration` can be configured to collect a set of [`Health
 
 See the [`HealthDataType`](https://pub.dev/documentation/health/latest/health/HealthDataType.html) documentation for a complete list.
 
-A `HealthSamplingConfiguration` is a [`HistoricSamplingConfiguration`](https://pub.dev/documentation/carp_mobile_sensing/latest/domain/HistoricSamplingConfiguration-class.html). This means that when triggered, the task and measure will try to collect data back to the last time data was collected. Hence, this probe is suited for configuration using some trigger that collects data on a regular basis, like the `PeriodicTrigger` used above.
+A `HealthSamplingConfiguration` is a [`HistoricSamplingConfiguration`](https://pub.dev/documentation/carp_mobile_sensing/latest/domain/HistoricSamplingConfiguration-class.html). This means that when triggered, the task and measure will try to collect data back to the last time data was collected. Hence, this measure is suited for configuration using some trigger that collects data on a regular basis, like the `PeriodicTrigger` used above.
 However, it can also be configured using as an [`AppTask`](https://pub.dev/documentation/carp_mobile_sensing/latest/domain/AppTask-class.html) that asks the user to collect the data.
 
 ```dart
@@ -212,7 +211,7 @@ The data collected is contained in a [`HealthData`](https://pub.dev/documentatio
   "date_from": "2023-11-19T09:43:19.841907Z",
   "date_to": "2023-11-19T17:43:19.841907Z",
   "data_type": "WORKOUT",
-  "platform": "IOS",
+  "platform": "APPLE_HEALTH",
   "device_id": "1234",
   "source_id": "4321",
   "source_name": "4321"
@@ -220,7 +219,7 @@ The data collected is contained in a [`HealthData`](https://pub.dev/documentatio
 }
 ```
 
-Step count collected from Android / Health Connect would look like this.
+Similarly, step counts collected from Google Health Connect would look like this.
 
 ```json
 {
@@ -236,7 +235,7 @@ Step count collected from Android / Health Connect would look like this.
    "date_from": "2024-01-06T23:00:00.000Z",
    "date_to": "2024-01-07T22:59:59.999Z",
    "data_type": "STEPS",
-   "platform": "ANDROID",
+   "platform": "GOOGLE_HEALTH_CONNECT",
    "device_id": "SP1A.210812.016",
    "source_id": "",
    "source_name": "com.sec.android.app.shealth"
@@ -244,4 +243,4 @@ Step count collected from Android / Health Connect would look like this.
 }
 ```
 
-The type of the collected health data is `dk.cachet.carp.health.workout` or `dk.cachet.carp.health.steps`. In general, the collected health data has the type of `dk.cachet.carp.health.<health_type>`, where `health_type` is the lower-case version of [`HealthDataType`](https://pub.dev/documentation/health/latest/health/HealthDataType.html).
+The type of the collected health data is `dk.cachet.carp.health.workout` or `dk.cachet.carp.health.steps`. In general, the collected health data has the type of `dk.cachet.carp.health.<health_type>`, where `health_type` is the lower-case version of the [`HealthDataType`](https://pub.dev/documentation/health/latest/health/HealthDataType.html).

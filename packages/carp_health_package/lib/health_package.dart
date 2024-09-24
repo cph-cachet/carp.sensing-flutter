@@ -1,12 +1,11 @@
 /*
- * Copyright 2020 Copenhagen Center for Health Technology (CACHET) at the
- * Technical University of Denmark (DTU).
+ * Copyright 2020 the Technical University of Denmark (DTU).
  * Use of this source code is governed by a MIT-style license that can be
  * found in the LICENSE file.
  */
 
 /// A CAMS sampling package for collecting health information from Apple Health
-/// or Google Fit.
+/// or Google Health Connect.
 /// Is using the [health](https://pub.dev/packages/health) plugin.
 /// Can be configured to collect the different [HealthDataType](https://pub.dev/documentation/health/latest/health/HealthDataType-class.html).
 library health_package;
@@ -14,7 +13,6 @@ library health_package;
 import 'dart:async';
 import 'dart:io';
 import 'package:json_annotation/json_annotation.dart';
-import 'package:uuid/uuid.dart';
 
 import 'package:carp_serializable/carp_serializable.dart';
 import 'package:carp_core/carp_core.dart';
@@ -72,6 +70,7 @@ class HealthSamplingPackage extends SmartphoneSamplingPackage {
   static const String HEALTH = HEALTH_NAMESPACE;
 
   /// Returns a health measure for the specified list of health data [types].
+  ///
   /// Data will be collected [days] days back in time. If not specified,
   /// data will be collected for the last 30 days, which is the maximum
   /// that Google Health Connect allow.
@@ -105,8 +104,17 @@ class HealthSamplingPackage extends SmartphoneSamplingPackage {
     FromJsonFactory().registerAll([
       HealthService(),
       HealthSamplingConfiguration(healthDataTypes: []),
-      HealthData('', NumericHealthValue(numericValue: 6), '', '',
-          DateTime.now(), DateTime.now(), '', '', '', ''),
+      HealthData(
+          '',
+          NumericHealthValue(numericValue: 6),
+          '',
+          '',
+          DateTime.now(),
+          DateTime.now(),
+          HealthPlatform.APPLE_HEALTH,
+          '',
+          '',
+          ''),
     ]);
   }
 
@@ -117,7 +125,7 @@ class HealthSamplingPackage extends SmartphoneSamplingPackage {
   DeviceManager get deviceManager => _deviceManager;
 }
 
-/// Data types available on iOS.
+/// Data types available on iOS via Apple Health.
 const List<HealthDataType> dataTypesIOS = [
   HealthDataType.ACTIVE_ENERGY_BURNED,
   HealthDataType.AUDIOGRAM,
@@ -172,9 +180,7 @@ const List<HealthDataType> dataTypesIOS = [
   HealthDataType.NUTRITION,
 ];
 
-/// Data types available on Android.
-///
-/// Note that these are only the ones supported in Android's Health Connect API.
+/// Data types available on Android via the Google Health Connect API.
 const List<HealthDataType> dataTypesAndroid = [
   HealthDataType.ACTIVE_ENERGY_BURNED,
   HealthDataType.BASAL_ENERGY_BURNED,

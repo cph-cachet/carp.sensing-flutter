@@ -149,7 +149,7 @@ HealthData _$HealthDataFromJson(Map<String, dynamic> json) => HealthData(
       json['data_type'] as String,
       DateTime.parse(json['date_from'] as String),
       DateTime.parse(json['date_to'] as String),
-      json['platform'] as String,
+      $enumDecode(_$HealthPlatformEnumMap, json['platform']),
       json['device_id'] as String,
       json['source_id'] as String,
       json['source_name'] as String,
@@ -171,12 +171,17 @@ Map<String, dynamic> _$HealthDataToJson(HealthData instance) {
   val['date_from'] = instance.dateFrom.toIso8601String();
   val['date_to'] = instance.dateTo.toIso8601String();
   val['data_type'] = instance.dataType;
-  val['platform'] = instance.platform;
+  val['platform'] = _$HealthPlatformEnumMap[instance.platform]!;
   val['device_id'] = instance.deviceId;
   val['source_id'] = instance.sourceId;
   val['source_name'] = instance.sourceName;
   return val;
 }
+
+const _$HealthPlatformEnumMap = {
+  HealthPlatform.APPLE_HEALTH: 'APPLE_HEALTH',
+  HealthPlatform.GOOGLE_HEALTH_CONNECT: 'GOOGLE_HEALTH_CONNECT',
+};
 
 HealthService _$HealthServiceFromJson(Map<String, dynamic> json) =>
     HealthService(
@@ -203,6 +208,8 @@ Map<String, dynamic> _$HealthServiceToJson(HealthService instance) {
   val['roleName'] = instance.roleName;
   writeNotNull('isOptional', instance.isOptional);
   writeNotNull(
-      'defaultSamplingConfiguration', instance.defaultSamplingConfiguration);
+      'defaultSamplingConfiguration',
+      instance.defaultSamplingConfiguration
+          ?.map((k, e) => MapEntry(k, e.toJson())));
   return val;
 }

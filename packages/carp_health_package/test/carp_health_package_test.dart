@@ -116,10 +116,10 @@ void main() {
       DateTime to = DateTime.now();
       DateTime from = to.subtract(Duration(milliseconds: 10000));
       double value = 500;
-      String unit = enumToString(
-          dasesDataTypeToUnit[DasesHealthDataType.CALORIES_INTAKE]);
-      String type = enumToString(DasesHealthDataType.CALORIES_INTAKE);
-      String platform = enumToString(HealthPlatformType.googleHealthConnect);
+      String unit =
+          dasesDataTypeToUnit[DasesHealthDataType.CALORIES_INTAKE]?.name ?? '';
+      String type = DasesHealthDataType.CALORIES_INTAKE.name;
+      HealthPlatform platform = HealthPlatform.APPLE_HEALTH;
       String deviceId = '1234';
       String uuid = "4321";
       String sourceId = "AH";
@@ -151,11 +151,11 @@ void main() {
       HealthData hd = HealthData(
           '4321',
           NumericHealthValue(numericValue: 6),
-          enumToString(dasesDataTypeToUnit[DasesHealthDataType.ALCOHOL]),
-          enumToString(DasesHealthDataType.ALCOHOL),
+          dasesDataTypeToUnit[DasesHealthDataType.ALCOHOL]?.name ?? '',
+          DasesHealthDataType.ALCOHOL.name,
           from,
           to,
-          enumToString(HealthPlatformType.appleHealth),
+          HealthPlatform.APPLE_HEALTH,
           '1234',
           '4321',
           '4321');
@@ -173,11 +173,11 @@ void main() {
       HealthData hd = HealthData(
           '4321',
           NumericHealthValue(numericValue: 6),
-          enumToString(dasesDataTypeToUnit[DasesHealthDataType.SLEEP]),
-          enumToString(DasesHealthDataType.SLEEP),
+          dasesDataTypeToUnit[DasesHealthDataType.SLEEP]?.name ?? '',
+          DasesHealthDataType.SLEEP.name,
           from,
           to,
-          enumToString(HealthPlatformType.appleHealth),
+          HealthPlatform.APPLE_HEALTH,
           '1234',
           '4321',
           '4321');
@@ -196,14 +196,14 @@ void main() {
       HealthData smoking = HealthData(
           '4321',
           NumericHealthValue(numericValue: 12),
-          enumToString(
-              dasesDataTypeToUnit[DasesHealthDataType.SMOKED_CIGARETTES]),
-          enumToString(DasesHealthDataType.SMOKED_CIGARETTES),
+          dasesDataTypeToUnit[DasesHealthDataType.SMOKED_CIGARETTES]?.name ??
+              '',
+          DasesHealthDataType.SMOKED_CIGARETTES.name,
           from,
           to,
           (Platform.isAndroid)
-              ? enumToString(HealthPlatformType.googleHealthConnect)
-              : enumToString(HealthPlatformType.appleHealth),
+              ? HealthPlatform.GOOGLE_HEALTH_CONNECT
+              : HealthPlatform.APPLE_HEALTH,
           '1234',
           '4321',
           '4321');
@@ -225,13 +225,13 @@ void main() {
               frequencies: [12, 32],
               leftEarSensitivities: [1, 2, 3, 4],
               rightEarSensitivities: [1, 4, 7]),
-          enumToString(HealthDataUnit.NO_UNIT),
-          enumToString(HealthDataType.AUDIOGRAM),
+          HealthDataUnit.NO_UNIT.name,
+          HealthDataType.AUDIOGRAM.name,
           from,
           to,
           (Platform.isAndroid)
-              ? enumToString(HealthPlatformType.googleHealthConnect)
-              : enumToString(HealthPlatformType.appleHealth),
+              ? HealthPlatform.GOOGLE_HEALTH_CONNECT
+              : HealthPlatform.APPLE_HEALTH,
           '1234',
           '4321',
           '4321');
@@ -250,18 +250,18 @@ void main() {
       HealthData workout = HealthData(
           '4321',
           WorkoutHealthValue(
-              workoutActivityType: HealthWorkoutActivityType.AEROBICS,
+              workoutActivityType: HealthWorkoutActivityType.MARTIAL_ARTS,
               totalEnergyBurned: 8,
               totalEnergyBurnedUnit: HealthDataUnit.KILOCALORIE,
               totalDistance: 1000,
               totalDistanceUnit: HealthDataUnit.METER),
-          enumToString(HealthDataUnit.NO_UNIT),
-          enumToString(HealthDataType.WORKOUT),
+          HealthDataUnit.NO_UNIT.name,
+          HealthDataType.WORKOUT.name,
           from,
           to,
           (Platform.isAndroid)
-              ? enumToString(HealthPlatformType.googleHealthConnect)
-              : enumToString(HealthPlatformType.appleHealth),
+              ? HealthPlatform.GOOGLE_HEALTH_CONNECT
+              : HealthPlatform.APPLE_HEALTH,
           '1234',
           '4321',
           '4321');
