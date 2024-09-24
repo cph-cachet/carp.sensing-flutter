@@ -1,8 +1,5 @@
 part of 'health_package.dart';
 
-String enumToString(dynamic enumeration) =>
-    enumeration.toString().split('.').last;
-
 /// Diet, Alcohol, Smoking, Exercise, Sleep (DASES) data types.
 enum DasesHealthDataType {
   /// Number of calories consumed.
@@ -27,6 +24,12 @@ enum DasesHealthDataType {
   SLEEP,
 }
 
+/// Types of health platforms.
+enum HealthPlatform {
+  APPLE_HEALTH,
+  GOOGLE_HEALTH_CONNECT,
+}
+
 /// Map a [DasesHealthDataType] to a [HealthDataUnit].
 const Map<DasesHealthDataType, HealthDataUnit> dasesDataTypeToUnit = {
   DasesHealthDataType.CALORIES_INTAKE: HealthDataUnit.KILOCALORIE,
@@ -42,7 +45,7 @@ const Map<DasesHealthDataType, HealthDataUnit> dasesDataTypeToUnit = {
 ///
 /// The [healthDataTypes] parameter specifies which [HealthDataType]
 /// to collect.
-@JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
+@JsonSerializable(includeIfNull: false, explicitToJson: true)
 class HealthSamplingConfiguration extends HistoricSamplingConfiguration {
   /// The list of [HealthDataType] to collect.
   List<HealthDataType> healthDataTypes;
@@ -56,7 +59,7 @@ class HealthSamplingConfiguration extends HistoricSamplingConfiguration {
   Map<String, dynamic> toJson() => _$HealthSamplingConfigurationToJson(this);
 
   factory HealthSamplingConfiguration.fromJson(Map<String, dynamic> json) =>
-      FromJsonFactory().fromJson(json) as HealthSamplingConfiguration;
+      FromJsonFactory().fromJson<HealthSamplingConfiguration>(json);
 }
 
 /// A no-op function for deserializing a HealthValue - never used.
@@ -89,8 +92,8 @@ class HealthData extends Data {
   /// Note that the uppercase version is used, e.g. `STEPS`.
   String dataType;
 
-  /// The platform from which this health data point came from (ANDROID, IOS).
-  String platform;
+  /// The platform from which this health data point came from
+  HealthPlatform platform;
 
   /// The device id of the phone.
   String deviceId;
@@ -119,24 +122,24 @@ class HealthData extends Data {
   }
 
   /// Create a [HealthData] from a [HealthDataPoint] health data object.
-  factory HealthData.fromHealthDataPoint(HealthDataPoint healthDataPoint) {
-    String uuid =
-        Uuid().v5(Uuid.NAMESPACE_URL, healthDataPoint.toJson().toString());
-    return HealthData(
-        uuid,
-        healthDataPoint.value,
-        healthDataPoint.unitString,
-        healthDataPoint.typeString,
-        healthDataPoint.dateFrom.toUtc(),
-        healthDataPoint.dateTo.toUtc(),
-        enumToString(healthDataPoint.sourcePlatform),
-        healthDataPoint.sourceDeviceId,
-        healthDataPoint.sourceId,
-        healthDataPoint.sourceName);
-  }
+  factory HealthData.fromHealthDataPoint(HealthDataPoint healthDataPoint) =>
+      HealthData(
+          const Uuid().v1,
+          healthDataPoint.value,
+          healthDataPoint.unitString,
+          healthDataPoint.typeString,
+          healthDataPoint.dateFrom.toUtc(),
+          healthDataPoint.dateTo.toUtc(),
+          HealthPlatform.values[healthDataPoint.sourcePlatform.index],
+          healthDataPoint.sourceDeviceId,
+          healthDataPoint.sourceId,
+          healthDataPoint.sourceName);
+
+  @override
+  Function get fromJsonFunction => _$HealthDataFromJson;
 
   factory HealthData.fromJson(Map<String, dynamic> json) =>
-      _$HealthDataFromJson(json);
+      FromJsonFactory().fromJson<HealthData>(json);
 
   @override
   Map<String, dynamic> toJson() => _$HealthDataToJson(this);
