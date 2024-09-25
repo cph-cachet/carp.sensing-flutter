@@ -1,3 +1,7 @@
+## 1.8.0
+
+* upgrade to carp_core v. 1.8 & carp_serialization v. 2.0
+
 ## 1.7.1
 
 * upgrade of packages - carp_serialization, carp_core, carp_mobile_sensing, carp_webservices

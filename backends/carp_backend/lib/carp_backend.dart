@@ -33,7 +33,11 @@ part 'carp_backend.g.dart';
 part 'message_manager.dart';
 
 /// Specify a CARP Web Service (CAWS) endpoint for uploading data.
-@JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
+@JsonSerializable(
+  fieldRename: FieldRename.snake,
+  includeIfNull: false,
+  explicitToJson: true,
+)
 class CarpDataEndPoint extends DataEndPoint {
   /// The method used to upload to CARP. See [CarpUploadMethod] for options.
   CarpUploadMethod uploadMethod;
@@ -67,7 +71,7 @@ class CarpDataEndPoint extends DataEndPoint {
   Function get fromJsonFunction => _$CarpDataEndPointFromJson;
 
   factory CarpDataEndPoint.fromJson(Map<String, dynamic> json) =>
-      FromJsonFactory().fromJson(json) as CarpDataEndPoint;
+      FromJsonFactory().fromJson<CarpDataEndPoint>(json);
   @override
   Map<String, dynamic> toJson() => _$CarpDataEndPointToJson(this);
 

@@ -8,7 +8,8 @@
 part of 'carp_backend.dart';
 
 /// A message to be shown in the message list
-@JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
+@JsonSerializable(
+    fieldRename: FieldRename.snake, includeIfNull: false, explicitToJson: true)
 class Message {
   /// ID of the message.
   late String id;
@@ -55,7 +56,7 @@ class Message {
     this.image,
     DateTime? timestamp,
   }) {
-    this.id = id ?? UUID.v1;
+    this.id = id ?? const Uuid().v1;
     this.timestamp = timestamp ?? DateTime.now();
   }
 
