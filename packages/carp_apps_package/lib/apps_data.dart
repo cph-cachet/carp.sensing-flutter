@@ -7,7 +7,7 @@
 part of 'apps.dart';
 
 /// Holds a list of names of apps installed on the device.
-@JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
+@JsonSerializable(includeIfNull: false, explicitToJson: true)
 class Apps extends Data {
   static const dataType = AppsSamplingPackage.APPS;
 
@@ -19,7 +19,7 @@ class Apps extends Data {
   @override
   Function get fromJsonFunction => _$AppsFromJson;
   factory Apps.fromJson(Map<String, dynamic> json) =>
-      FromJsonFactory().fromJson(json) as Apps;
+      FromJsonFactory().fromJson<Apps>(json);
   @override
   Map<String, dynamic> toJson() => _$AppsToJson(this);
 
@@ -29,7 +29,7 @@ class Apps extends Data {
 
 /// An application installed on the device.
 /// Depending on the Android version, some attributes may not be available.
-@JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
+@JsonSerializable(includeIfNull: false, explicitToJson: true)
 class App {
   /// Name of the package.
   String? packageName;
@@ -120,7 +120,7 @@ class App {
 }
 
 /// Holds a map of names of apps and their usage, as defined in [AppUsageInfo].
-@JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
+@JsonSerializable(includeIfNull: false, explicitToJson: true)
 class AppUsage extends Data {
   static const dataType = AppsSamplingPackage.APP_USAGE;
 
@@ -134,7 +134,7 @@ class AppUsage extends Data {
   @override
   Function get fromJsonFunction => _$AppUsageFromJson;
   factory AppUsage.fromJson(Map<String, dynamic> json) =>
-      FromJsonFactory().fromJson(json) as AppUsage;
+      FromJsonFactory().fromJson<AppUsage>(json);
   @override
   Map<String, dynamic> toJson() => _$AppUsageToJson(this);
 
@@ -144,7 +144,7 @@ class AppUsage extends Data {
 }
 
 /// Holds information about usage for a specific app.
-@JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
+@JsonSerializable(includeIfNull: false, explicitToJson: true)
 class AppUsageInfo {
   /// The full name of the application package
   String packageName;

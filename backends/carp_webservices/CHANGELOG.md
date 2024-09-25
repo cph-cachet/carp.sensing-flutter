@@ -1,6 +1,6 @@
 ## 3.4.0
 
-* upgrade to carp_core v. 1.8 & carp_serialization v. 2.0
+* upgrade to carp_serialization v. 2.0 & carp_mobile_sensing: 1.10.0
 
 ## 3.3.1
 

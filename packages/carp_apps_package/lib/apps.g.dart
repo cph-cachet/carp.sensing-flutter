@@ -22,7 +22,7 @@ Map<String, dynamic> _$AppsToJson(Apps instance) {
   }
 
   writeNotNull('__type', instance.$type);
-  val['installedApps'] = instance.installedApps;
+  val['installedApps'] = instance.installedApps.map((e) => e.toJson()).toList();
   return val;
 }
 
@@ -85,7 +85,7 @@ Map<String, dynamic> _$AppUsageToJson(AppUsage instance) {
   writeNotNull('__type', instance.$type);
   val['start'] = instance.start.toIso8601String();
   val['end'] = instance.end.toIso8601String();
-  val['usage'] = instance.usage;
+  val['usage'] = instance.usage.map((k, e) => MapEntry(k, e.toJson()));
   return val;
 }
 
