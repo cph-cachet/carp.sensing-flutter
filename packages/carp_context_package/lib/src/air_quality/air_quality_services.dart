@@ -8,7 +8,7 @@
 part of '../../carp_context_package.dart';
 
 /// An [OnlineService] for the air quality service.
-@JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
+@JsonSerializable(includeIfNull: false, explicitToJson: true)
 class AirQualityService extends OnlineService {
   /// The type of a air quality service.
   static const String DEVICE_TYPE =
@@ -30,7 +30,7 @@ class AirQualityService extends OnlineService {
   @override
   Function get fromJsonFunction => _$AirQualityServiceFromJson;
   factory AirQualityService.fromJson(Map<String, dynamic> json) =>
-      FromJsonFactory().fromJson(json) as AirQualityService;
+      FromJsonFactory().fromJson<AirQualityService>(json);
   @override
   Map<String, dynamic> toJson() => _$AirQualityServiceToJson(this);
 }

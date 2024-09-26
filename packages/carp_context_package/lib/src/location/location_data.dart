@@ -8,7 +8,7 @@
 part of '../../carp_context_package.dart';
 
 /// Holds location information using the GPS format from the phone.
-@JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
+@JsonSerializable(includeIfNull: false, explicitToJson: true)
 class Location extends Geolocation {
   static const dataType = ContextSamplingPackage.LOCATION;
 
@@ -136,7 +136,7 @@ class Location extends Geolocation {
   @override
   Function get fromJsonFunction => _$LocationFromJson;
   factory Location.fromJson(Map<String, dynamic> json) =>
-      FromJsonFactory().fromJson(json) as Location;
+      FromJsonFactory().fromJson<Location>(json);
   @override
   Map<String, dynamic> toJson() => _$LocationToJson(this);
 }

@@ -9,7 +9,7 @@ part of '../../carp_context_package.dart';
 
 /// A [Data] that holds air quality information collected via the
 /// [World's Air Quality Index (WAQI)](https://waqi.info) API.
-@JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
+@JsonSerializable(includeIfNull: false, explicitToJson: true)
 class AirQuality extends Data {
   static const dataType = ContextSamplingPackage.AIR_QUALITY;
 
@@ -40,7 +40,7 @@ class AirQuality extends Data {
   @override
   Function get fromJsonFunction => _$AirQualityFromJson;
   factory AirQuality.fromJson(Map<String, dynamic> json) =>
-      FromJsonFactory().fromJson(json) as AirQuality;
+      FromJsonFactory().fromJson<AirQuality>(json);
   @override
   Map<String, dynamic> toJson() => _$AirQualityToJson(this);
 }

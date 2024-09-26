@@ -31,8 +31,6 @@ To use this package, add the following to you `pubspc.yaml` file. Note that this
 
 `````dart
 dependencies:
-  flutter:
-    sdk: flutter
   carp_mobile_sensing: ^latest
   carp_context_package: ^latest
   ...

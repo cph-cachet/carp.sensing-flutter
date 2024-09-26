@@ -8,7 +8,7 @@
 part of '../../carp_context_package.dart';
 
 /// Holds information about a geofence event of entering, exiting, or dwelling.
-@JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
+@JsonSerializable(includeIfNull: false, explicitToJson: true)
 class Geofence extends Data {
   static const dataType = ContextSamplingPackage.GEOFENCE;
 
@@ -17,7 +17,7 @@ class Geofence extends Data {
   @override
   Function get fromJsonFunction => _$GeofenceFromJson;
   factory Geofence.fromJson(Map<String, dynamic> json) =>
-      FromJsonFactory().fromJson(json) as Geofence;
+      FromJsonFactory().fromJson<Geofence>(json);
   @override
   Map<String, dynamic> toJson() => _$GeofenceToJson(this);
 

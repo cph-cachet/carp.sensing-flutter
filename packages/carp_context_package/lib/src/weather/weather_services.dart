@@ -8,7 +8,7 @@
 part of '../../carp_context_package.dart';
 
 /// An [OnlineService] for the [Open Weather](https://openweathermap.org/) service.
-@JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
+@JsonSerializable(includeIfNull: false, explicitToJson: true)
 class WeatherService extends OnlineService {
   /// The type of a air quality service.
   static const String DEVICE_TYPE =
@@ -30,7 +30,7 @@ class WeatherService extends OnlineService {
   @override
   Function get fromJsonFunction => _$WeatherServiceFromJson;
   factory WeatherService.fromJson(Map<String, dynamic> json) =>
-      FromJsonFactory().fromJson(json) as WeatherService;
+      FromJsonFactory().fromJson<WeatherService>(json);
   @override
   Map<String, dynamic> toJson() => _$WeatherServiceToJson(this);
 }

@@ -1,3 +1,8 @@
+## 1.10.0
+
+* upgrade to carp_serialization v. 2.0 & carp_mobile_sensing: 1.10.0
+* upgrade to mobility_features v. 6.0
+
 ## 1.9.0
 
 * upgrading to carp_mobile_sensing v. 1.9.0 (better permission handling)
