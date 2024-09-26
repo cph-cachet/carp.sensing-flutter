@@ -34,7 +34,7 @@ Map<String, dynamic> _$RPAppTaskToJson(RPAppTask instance) {
 
   writeNotNull('__type', instance.$type);
   val['name'] = instance.name;
-  writeNotNull('measures', instance.measures);
+  writeNotNull('measures', instance.measures?.map((e) => e.toJson()).toList());
   val['type'] = instance.type;
   val['title'] = instance.title;
   val['description'] = instance.description;
@@ -42,16 +42,15 @@ Map<String, dynamic> _$RPAppTaskToJson(RPAppTask instance) {
   writeNotNull('minutesToComplete', instance.minutesToComplete);
   writeNotNull('expire', instance.expire?.inMicroseconds);
   val['notification'] = instance.notification;
-  val['rpTask'] = instance.rpTask;
+  val['rpTask'] = instance.rpTask.toJson();
   return val;
 }
 
 RPTaskResultData _$RPTaskResultDataFromJson(Map<String, dynamic> json) =>
     RPTaskResultData(
-      json['survey_result'] == null
+      json['surveyResult'] == null
           ? null
-          : RPTaskResult.fromJson(
-              json['survey_result'] as Map<String, dynamic>),
+          : RPTaskResult.fromJson(json['surveyResult'] as Map<String, dynamic>),
     )..$type = json['__type'] as String?;
 
 Map<String, dynamic> _$RPTaskResultDataToJson(RPTaskResultData instance) {
@@ -64,6 +63,6 @@ Map<String, dynamic> _$RPTaskResultDataToJson(RPTaskResultData instance) {
   }
 
   writeNotNull('__type', instance.$type);
-  writeNotNull('survey_result', instance.surveyResult);
+  writeNotNull('surveyResult', instance.surveyResult?.toJson());
   return val;
 }
