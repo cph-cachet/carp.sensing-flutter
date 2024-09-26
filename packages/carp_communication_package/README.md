@@ -34,8 +34,6 @@ this package only works together with `carp_mobile_sensing`.
 
 `````dart
 dependencies:
-  flutter:
-    sdk: flutter
   carp_mobile_sensing: ^latest
   carp_communication_package: ^latest
   ...

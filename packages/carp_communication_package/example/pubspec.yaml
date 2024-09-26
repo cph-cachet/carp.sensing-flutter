@@ -1,6 +1,5 @@
 name: carp_communication_package_example
 description: Examples of how to use the CAMS Communication Package.
-version: 1.5.0
 publish_to: none
 
 environment:

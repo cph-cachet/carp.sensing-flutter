@@ -16,7 +16,7 @@ TextMessageLog _$TextMessageLogFromJson(Map<String, dynamic> json) =>
 
 Map<String, dynamic> _$TextMessageLogToJson(TextMessageLog instance) =>
     <String, dynamic>{
-      'textMessageLog': instance.textMessageLog,
+      'textMessageLog': instance.textMessageLog.map((e) => e.toJson()).toList(),
     };
 
 TextMessage _$TextMessageFromJson(Map<String, dynamic> json) => TextMessage(
@@ -84,7 +84,7 @@ PhoneLog _$PhoneLogFromJson(Map<String, dynamic> json) => PhoneLog(
 Map<String, dynamic> _$PhoneLogToJson(PhoneLog instance) => <String, dynamic>{
       'start': instance.start.toIso8601String(),
       'end': instance.end.toIso8601String(),
-      'phoneLog': instance.phoneLog,
+      'phoneLog': instance.phoneLog.map((e) => e.toJson()).toList(),
     };
 
 PhoneCall _$PhoneCallFromJson(Map<String, dynamic> json) => PhoneCall(
@@ -126,7 +126,7 @@ Calendar _$CalendarFromJson(Map<String, dynamic> json) => Calendar(
     );
 
 Map<String, dynamic> _$CalendarToJson(Calendar instance) => <String, dynamic>{
-      'calendarEvents': instance.calendarEvents,
+      'calendarEvents': instance.calendarEvents.map((e) => e.toJson()).toList(),
       'start': instance.start.toIso8601String(),
       'end': instance.end.toIso8601String(),
     };
