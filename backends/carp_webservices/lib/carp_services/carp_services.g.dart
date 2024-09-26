@@ -26,7 +26,7 @@ Map<String, dynamic> _$DataPointToJson(DataPoint instance) {
   writeNotNull('id', instance.id);
   writeNotNull('created_by_user_id', instance.createdByUserId);
   writeNotNull('study_id', instance.studyId);
-  val['carp_header'] = instance.carpHeader;
+  val['carp_header'] = instance.carpHeader.toJson();
   writeNotNull('carp_body', instance.carpBody);
   return val;
 }
@@ -66,6 +66,6 @@ Map<String, dynamic> _$DataPointHeaderToJson(DataPointHeader instance) {
   writeNotNull('upload_time', instance.uploadTime?.toIso8601String());
   writeNotNull('start_time', instance.startTime?.toIso8601String());
   writeNotNull('end_time', instance.endTime?.toIso8601String());
-  writeNotNull('data_format', instance.dataFormat);
+  writeNotNull('data_format', instance.dataFormat?.toJson());
   return val;
 }

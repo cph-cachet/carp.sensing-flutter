@@ -1,7 +1,7 @@
 part of '../../carp_context_package.dart';
 
 /// Specify the configuration on how to measure mobility features.
-@JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
+@JsonSerializable(includeIfNull: false, explicitToJson: true)
 class MobilitySamplingConfiguration extends PersistentSamplingConfiguration {
   /// Should prior computed context be used?
   bool usePriorContexts;
@@ -31,5 +31,5 @@ class MobilitySamplingConfiguration extends PersistentSamplingConfiguration {
   Map<String, dynamic> toJson() => _$MobilitySamplingConfigurationToJson(this);
 
   factory MobilitySamplingConfiguration.fromJson(Map<String, dynamic> json) =>
-      FromJsonFactory().fromJson(json) as MobilitySamplingConfiguration;
+      FromJsonFactory().fromJson<MobilitySamplingConfiguration>(json);
 }

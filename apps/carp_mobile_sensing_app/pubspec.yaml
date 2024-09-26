@@ -14,7 +14,7 @@ dependencies:
   flutter_launcher_icons: ^0.13.0
   permission_handler: ^11.0.0  
   
-  carp_serializable: ^1.1.0
+  # carp_serializable: ^1.1.0
   #carp_core: ^0.30.0
   #carp_mobile_sensing: ^0.30.6
   #carp_connectivity_package: ^0.30.0
@@ -35,8 +35,8 @@ dependencies:
 
 # Overriding carp libraries to use the local copy
 dependency_overrides:
-  # carp_serializable:
-  #   path: ../../carp_serializable/
+  carp_serializable:
+    path: ../../carp_serializable/
   carp_core:
     path: ../../carp_core/
   carp_mobile_sensing:

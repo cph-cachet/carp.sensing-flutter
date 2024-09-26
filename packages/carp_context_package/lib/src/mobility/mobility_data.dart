@@ -1,7 +1,7 @@
 part of '../../carp_context_package.dart';
 
 /// Holds mobility features information.
-@JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
+@JsonSerializable(includeIfNull: false, explicitToJson: true)
 class Mobility extends Data {
   static const dataType = ContextSamplingPackage.MOBILITY;
 
@@ -11,7 +11,13 @@ class Mobility extends Data {
   /// The day of this mobility features.
   DateTime? date;
 
-  /// Number of places visited on [date].
+  /// Number of stops made on [date].
+  int? numberOfStops;
+
+  /// Number of moves made on [date].
+  int? numberOfMoves;
+
+  /// Number of significant places visited on [date].
   int? numberOfPlaces;
 
   /// Location Variance on [date].
@@ -34,6 +40,8 @@ class Mobility extends Data {
   Mobility({
     this.timestamp,
     this.date,
+    this.numberOfStops,
+    this.numberOfMoves,
     this.numberOfPlaces,
     this.locationVariance,
     this.entropy,
@@ -47,17 +55,19 @@ class Mobility extends Data {
   factory Mobility.fromMobilityContext(MobilityContext context) => Mobility()
     ..timestamp = context.timestamp
     ..date = context.date
+    ..numberOfStops = context.numberOfStops
+    ..numberOfMoves = context.numberOfMoves
     ..numberOfPlaces = context.numberOfSignificantPlaces
     ..locationVariance = context.locationVariance
     ..entropy = context.entropy
     ..normalizedEntropy = context.normalizedEntropy
     ..homeStay = context.homeStay
-    ..distanceTraveled = context.distanceTravelled;
+    ..distanceTraveled = context.distanceTraveled;
 
   @override
   Function get fromJsonFunction => _$MobilityFromJson;
   factory Mobility.fromJson(Map<String, dynamic> json) =>
-      FromJsonFactory().fromJson(json) as Mobility;
+      FromJsonFactory().fromJson<Mobility>(json);
   @override
   Map<String, dynamic> toJson() => _$MobilityToJson(this);
 }

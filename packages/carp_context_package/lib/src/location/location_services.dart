@@ -1,7 +1,7 @@
 part of '../../carp_context_package.dart';
 
 /// An [OnlineService] for the location manager.
-@JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
+@JsonSerializable(includeIfNull: false, explicitToJson: true)
 class LocationService extends OnlineService {
   /// The type of a location service.
   static const String DEVICE_TYPE =
@@ -68,7 +68,7 @@ class LocationService extends OnlineService {
   @override
   Function get fromJsonFunction => _$LocationServiceFromJson;
   factory LocationService.fromJson(Map<String, dynamic> json) =>
-      FromJsonFactory().fromJson(json) as LocationService;
+      FromJsonFactory().fromJson<LocationService>(json);
   @override
   Map<String, dynamic> toJson() => _$LocationServiceToJson(this);
 }

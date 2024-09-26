@@ -8,7 +8,7 @@
 part of '../../carp_context_package.dart';
 
 /// Holds weather information collected through OpenWeather API.
-@JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
+@JsonSerializable(includeIfNull: false, explicitToJson: true)
 class Weather extends Data {
   static const dataType = ContextSamplingPackage.WEATHER;
 
@@ -58,7 +58,7 @@ class Weather extends Data {
   @override
   Function get fromJsonFunction => _$WeatherFromJson;
   factory Weather.fromJson(Map<String, dynamic> json) =>
-      FromJsonFactory().fromJson(json) as Weather;
+      FromJsonFactory().fromJson<Weather>(json);
   @override
   Map<String, dynamic> toJson() => _$WeatherToJson(this);
 }

@@ -75,6 +75,13 @@ class ParticipationReference extends RPCCarpReference {
     return map;
   }
 
+  /// Get the informed consent uploaded by a participant with [roleName] in
+  /// this study deployment with [studyDeploymentId].
+  /// Returns null if not available.
+  Future<InformedConsentInput?> getInformedConsentByRole(
+          String roleName) async =>
+      (await getInformedConsent())[roleName];
+
   /// Set informed [consent] for the given [inputByParticipantRole] in this
   /// study deployment.
   Future<void> setInformedConsent(

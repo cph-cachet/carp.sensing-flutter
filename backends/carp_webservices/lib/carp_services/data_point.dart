@@ -39,7 +39,8 @@ part of 'carp_services.dart';
 ///  }
 /// }
 /// ```
-@JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)
+@JsonSerializable(
+    fieldRename: FieldRename.snake, includeIfNull: false, explicitToJson: true)
 class DataPoint {
   /// A unique, server-side generated ID for this data point.
   /// `null` if this data point is not yet stored.
@@ -106,7 +107,8 @@ class DataPoint {
 }
 
 /// The header (meta-data) attached to all [DataPoint]s.
-@JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)
+@JsonSerializable(
+    fieldRename: FieldRename.snake, includeIfNull: false, explicitToJson: true)
 class DataPointHeader {
   /// An ID of this study.
   ///
@@ -160,46 +162,3 @@ class DataPointHeader {
   /// Return a JSON encoding of this object.
   Map<String, dynamic> toJson() => _$DataPointHeaderToJson(this);
 }
-
-// /// Specifies the format of the [data] in a [DataPoint].
-// ///
-// /// Note that the only reason why we have both a [DataType] and a [DataFormat]
-// /// class definition is because the JSON serialization is different in data
-// /// upload versus download from CANS.... :-?
-// /// Upload is `FieldRename.snake` while download is `FieldRename.none`.
-// @JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)
-// class DataFormat {
-//   static const DataFormat UNKNOWN = DataFormat(NameSpace.CARP, 'unknown');
-
-//   /// The data type namespace. See [NameSpace].
-//   ///
-//   /// Uniquely identifies the organization/person who determines how to
-//   /// interpret [name].
-//   /// To prevent conflicts, a reverse domain namespace is suggested:
-//   /// e.g., "org.openmhealth" or "dk.cachet.carp".
-//   final String namespace;
-
-//   /// The name of this data format. See [String].
-//   ///
-//   /// Uniquely identifies something within the [namespace].
-//   /// The name may not contain any periods. Periods are reserved for namespaces.
-//   final String name;
-
-//   /// Create a [DataFormat].
-//   const DataFormat(this.namespace, this.name) : super();
-
-//   factory DataFormat.fromString(String type) {
-//     assert(type.contains('.'),
-//         "A data type must contain both a namespace and a name separated with a '.'");
-//     final String name = type.split('.').last;
-//     final String namespace = type.substring(0, type.indexOf(name) - 1);
-//     return DataFormat(namespace, name);
-//   }
-
-//   @override
-//   String toString() => '$namespace.$name';
-
-//   factory DataFormat.fromJson(Map<String, dynamic> json) =>
-//       _$DataFormatFromJson(json);
-//   Map<String, dynamic> toJson() => _$DataFormatToJson(this);
-// }

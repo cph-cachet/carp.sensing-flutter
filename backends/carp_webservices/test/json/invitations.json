@@ -147,31 +147,12 @@
                     "__type": "dk.cachet.carp.common.application.devices.Smartphone",
                     "roleName": "Mother's Phone",
                     "isPrimaryDevice": true
-                }
-            }
-        ]
-    },
-    {
-        "participation": {
-            "studyDeploymentId": "58ce18ff-40e3-4cd0-9fba-fc893d784891",
-            "participantId": "5b486d25-b75e-4116-9a4f-eea8105ceea0",
-            "assignedRoles": {
-                "__type": "dk.cachet.carp.common.application.users.AssignedTo.Roles",
-                "roleNames": [
-                    "Father"
-                ]
-            }
-        },
-        "invitation": {
-            "name": "Family Study w. Participant Data",
-            "applicationData": "d6d047d5-4cfd-479b-87ac-99f4b5fee172"
-        },
-        "assignedDevices": [
-            {
-                "device": {
-                    "__type": "dk.cachet.carp.common.application.devices.Smartphone",
-                    "roleName": "Father's Phone",
-                    "isPrimaryDevice": true
+                },
+                "registration": {
+                    "__type": "dk.cachet.carp.common.application.devices.DefaultDeviceRegistration",
+                    "deviceId": "SP1A.210812.016",
+                    "deviceDisplayName": "SP1A.210812.016 - SM-G970F SAMSUNG [SDK 31]",
+                    "registrationCreatedOn": "2024-09-19T09:32:40.669431Z"
                 }
             }
         ]
@@ -216,6 +197,31 @@
                     "deviceId": "493a8168-248c-4a4d-8b62-f576f7d54882",
                     "deviceDisplayName": "null - null null [SDK null]",
                     "registrationCreatedOn": "2024-09-06T14:25:41.290639Z"
+                }
+            }
+        ]
+    },
+    {
+        "participation": {
+            "studyDeploymentId": "57196d17-e3b5-4b4f-b136-44c63b7a4882",
+            "participantId": "264bf3dc-b6c8-4252-b44e-2c5e00262ce9",
+            "assignedRoles": {
+                "__type": "dk.cachet.carp.common.application.users.AssignedTo.Roles",
+                "roleNames": [
+                    "Father"
+                ]
+            }
+        },
+        "invitation": {
+            "name": "Family Study w. Participant Data",
+            "applicationData": "d6d047d5-4cfd-479b-87ac-99f4b5fee172"
+        },
+        "assignedDevices": [
+            {
+                "device": {
+                    "__type": "dk.cachet.carp.common.application.devices.Smartphone",
+                    "roleName": "Father's Phone",
+                    "isPrimaryDevice": true
                 }
             }
         ]

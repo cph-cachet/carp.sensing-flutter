@@ -31,6 +31,11 @@ abstract class InformedConsentManager {
   Future<RPOrderedTask?> getInformedConsent();
 
   /// Set the informed consent to be used for this study.
+  ///
+  /// Note that this method sets the **overall** informed consent to be shown to
+  /// all participants. Uploading of a specific **signed** informed consent for
+  /// a participant is done using the [setInformedConsent] method in a
+  /// [ParticipationReference].
   Future<bool> setInformedConsent(RPOrderedTask informedConsent);
 
   /// Delete the informed consent for this study.

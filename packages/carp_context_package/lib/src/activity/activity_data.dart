@@ -8,7 +8,7 @@
 part of '../../carp_context_package.dart';
 
 /// Holds an activity event as recognized by the phone Activity Recognition (AR) API.
-@JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
+@JsonSerializable(includeIfNull: false, explicitToJson: true)
 class Activity extends Data {
   static final Map<ar.ActivityConfidence, int> _confidenceLevelMap = {
     ar.ActivityConfidence.HIGH: 100,
@@ -28,7 +28,7 @@ class Activity extends Data {
   @override
   Function get fromJsonFunction => _$ActivityFromJson;
   factory Activity.fromJson(Map<String, dynamic> json) =>
-      FromJsonFactory().fromJson(json) as Activity;
+      FromJsonFactory().fromJson<Activity>(json);
   @override
   Map<String, dynamic> toJson() => _$ActivityToJson(this);
 

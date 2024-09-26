@@ -2,7 +2,7 @@ part of '../carp_context_package.dart';
 
 /// A [Data] which can hold an OMH [DataPoint](https://www.openmhealth.org/documentation/#/schema-docs/schema-library/schemas/omh_data-point)
 /// and provide its correct OMH [format] and [provenance].
-@JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
+@JsonSerializable(includeIfNull: false, explicitToJson: true)
 class OMHContextDataPoint extends Data {
   static const dataType = "${NameSpace.OMH}.${SchemaSupport.DATA_POINT}";
 
@@ -22,7 +22,7 @@ class OMHContextDataPoint extends Data {
   @override
   Function get fromJsonFunction => _$OMHContextDataPointFromJson;
   factory OMHContextDataPoint.fromJson(Map<String, dynamic> json) =>
-      FromJsonFactory().fromJson(json) as OMHContextDataPoint;
+      FromJsonFactory().fromJson<OMHContextDataPoint>(json);
   @override
   Map<String, dynamic> toJson() => _$OMHContextDataPointToJson(this);
 

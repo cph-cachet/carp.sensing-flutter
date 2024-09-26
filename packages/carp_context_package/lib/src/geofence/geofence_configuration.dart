@@ -8,7 +8,7 @@
 part of '../../carp_context_package.dart';
 
 /// Position coordinated in Degrees (i.e. GPS-style).
-@JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
+@JsonSerializable(includeIfNull: false, explicitToJson: true)
 class GeoPosition extends Serializable {
   /// Earth radius in km.
   static const double earthRadius = 6371000.0;
@@ -55,7 +55,7 @@ class GeoPosition extends Serializable {
   @override
   Function get fromJsonFunction => _$GeoPositionFromJson;
   factory GeoPosition.fromJson(Map<String, dynamic> json) =>
-      FromJsonFactory().fromJson(json) as GeoPosition;
+      FromJsonFactory().fromJson<GeoPosition>(json);
   @override
   Map<String, dynamic> toJson() => _$GeoPositionToJson(this);
 
@@ -77,7 +77,7 @@ class GeoPosition extends Serializable {
 ///  - radius
 ///  - name
 /// of the geofence.
-@JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
+@JsonSerializable(includeIfNull: false, explicitToJson: true)
 class GeofenceSamplingConfiguration extends PersistentSamplingConfiguration {
   /// The center of the geofence as a GPS location.
   GeoPosition center;
@@ -103,5 +103,5 @@ class GeofenceSamplingConfiguration extends PersistentSamplingConfiguration {
   @override
   Map<String, dynamic> toJson() => _$GeofenceSamplingConfigurationToJson(this);
   factory GeofenceSamplingConfiguration.fromJson(Map<String, dynamic> json) =>
-      FromJsonFactory().fromJson(json) as GeofenceSamplingConfiguration;
+      FromJsonFactory().fromJson<GeofenceSamplingConfiguration>(json);
 }

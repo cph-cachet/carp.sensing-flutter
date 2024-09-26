@@ -63,6 +63,6 @@ Map<String, dynamic> _$CarpUserToJson(CarpUser instance) {
     }
   }
 
-  writeNotNull('token', instance.token);
+  writeNotNull('token', instance.token?.toJson());
   return val;
 }
