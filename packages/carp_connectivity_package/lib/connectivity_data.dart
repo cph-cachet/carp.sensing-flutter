@@ -32,7 +32,7 @@ enum ConnectivityStatus {
 }
 
 /// Holds connectivity status of the phone.
-@JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
+@JsonSerializable(includeIfNull: false, explicitToJson: true)
 class Connectivity extends Data {
   static const dataType = ConnectivitySamplingPackage.CONNECTIVITY;
 
@@ -52,7 +52,7 @@ class Connectivity extends Data {
   @override
   Function get fromJsonFunction => _$ConnectivityFromJson;
   factory Connectivity.fromJson(Map<String, dynamic> json) =>
-      FromJsonFactory().fromJson(json) as Connectivity;
+      FromJsonFactory().fromJson<Connectivity>(json);
   @override
   Map<String, dynamic> toJson() => _$ConnectivityToJson(this);
 
@@ -82,7 +82,7 @@ class Connectivity extends Data {
 }
 
 /// A [Data] holding information of nearby Bluetooth devices.
-@JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
+@JsonSerializable(includeIfNull: false, explicitToJson: true)
 class Bluetooth extends Data {
   static const dataType = ConnectivitySamplingPackage.BLUETOOTH;
 
@@ -117,7 +117,7 @@ class Bluetooth extends Data {
   @override
   Function get fromJsonFunction => _$BluetoothFromJson;
   factory Bluetooth.fromJson(Map<String, dynamic> json) =>
-      FromJsonFactory().fromJson(json) as Bluetooth;
+      FromJsonFactory().fromJson<Bluetooth>(json);
   @override
   Map<String, dynamic> toJson() => _$BluetoothToJson(this);
 
@@ -126,7 +126,7 @@ class Bluetooth extends Data {
 }
 
 /// Bluetooth device data.
-@JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
+@JsonSerializable(includeIfNull: false, explicitToJson: true)
 class BluetoothDevice {
   /// The bluetooth advertising name of the device.
   String advertisementName;
@@ -181,7 +181,7 @@ class BluetoothDevice {
 /// and BSSID.
 ///
 /// Note that it wifi information cannot be collected on emulators.
-@JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
+@JsonSerializable(includeIfNull: false, explicitToJson: true)
 class Wifi extends Data {
   static const dataType = ConnectivitySamplingPackage.WIFI;
 
@@ -203,7 +203,7 @@ class Wifi extends Data {
   @override
   Function get fromJsonFunction => _$WifiFromJson;
   factory Wifi.fromJson(Map<String, dynamic> json) =>
-      FromJsonFactory().fromJson(json) as Wifi;
+      FromJsonFactory().fromJson<Wifi>(json);
   @override
   Map<String, dynamic> toJson() => _$WifiToJson(this);
 

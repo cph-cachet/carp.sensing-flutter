@@ -51,7 +51,7 @@ Map<String, dynamic> _$BluetoothToJson(Bluetooth instance) {
   }
 
   writeNotNull('endScan', instance.endScan?.toIso8601String());
-  val['scanResult'] = instance.scanResult;
+  val['scanResult'] = instance.scanResult.map((e) => e.toJson()).toList();
   return val;
 }
 
