@@ -31,8 +31,6 @@ this package only works together with `carp_mobile_sensing`.
 
 `````dart
 dependencies:
-  flutter:
-    sdk: flutter
   carp_core: ^latest
   carp_mobile_sensing: ^latest
   carp_audio_package: ^latest

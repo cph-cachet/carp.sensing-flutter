@@ -1,10 +1,3 @@
-/*
- * Copyright 2020 Copenhagen Center for Health Technology (CACHET) at the
- * Technical University of Denmark (DTU).
- * Use of this source code is governed by a MIT-style license that can be
- * found in the LICENSE file.
- */
-
 part of 'media.dart';
 
 /// Type of media.
@@ -12,7 +5,7 @@ enum MediaType { audio, video, image }
 
 /// A datum that holds the path to media file on the local device,
 /// as well as the timestamps of when the recording was started and stopped
-@JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
+@JsonSerializable(includeIfNull: false, explicitToJson: true)
 class Media extends FileData {
   static const dataType = MediaSamplingPackage.MEDIA;
 
@@ -34,13 +27,13 @@ class Media extends FileData {
     this.startRecordingTime,
     this.endRecordingTime,
   }) {
-    id = const Uuid().v1();
+    id = const Uuid().v1;
   }
 
   @override
   Function get fromJsonFunction => _$MediaFromJson;
   factory Media.fromJson(Map<String, dynamic> json) =>
-      FromJsonFactory().fromJson(json) as Media;
+      FromJsonFactory().fromJson<Media>(json);
   @override
   Map<String, dynamic> toJson() => _$MediaToJson(this);
 
@@ -50,7 +43,7 @@ class Media extends FileData {
 }
 
 /// Holds the noise level in decibel of a noise sampling.
-@JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
+@JsonSerializable(includeIfNull: false, explicitToJson: true)
 class Noise extends Data {
   static const dataType = MediaSamplingPackage.NOISE;
 
@@ -78,7 +71,7 @@ class Noise extends Data {
   @override
   Function get fromJsonFunction => _$NoiseFromJson;
   factory Noise.fromJson(Map<String, dynamic> json) =>
-      FromJsonFactory().fromJson(json) as Noise;
+      FromJsonFactory().fromJson<Noise>(json);
   @override
   Map<String, dynamic> toJson() => _$NoiseToJson(this);
 
