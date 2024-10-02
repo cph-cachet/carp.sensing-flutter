@@ -1,6 +1,3 @@
-/// A library for collecting context information from the [eSense](http://www.esense.io) device.
-library esense;
-
 import 'dart:async';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:esense_flutter/esense.dart';
