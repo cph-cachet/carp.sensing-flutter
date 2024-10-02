@@ -1,6 +1,5 @@
 /*
- * Copyright 2022 Copenhagen Center for Health Technology (CACHET) at the
- * Technical University of Denmark (DTU).
+ * Copyright 2022-2024 the Technical University of Denmark (DTU).
  * Use of this source code is governed by a MIT-style license that can be
  * found in the LICENSE file.
  */
@@ -38,7 +37,7 @@
 /// which again builds upon the [official Polar SDK](https://github.com/polarofficial/polar-ble-sdk).
 /// Please consult the Polar [technical documentation](https://github.com/polarofficial/polar-ble-sdk/tree/master/technical_documentation)
 /// on the details on how to interpret the collected data.
-library carp_polar_package;
+library;
 
 import 'dart:async';
 import 'package:json_annotation/json_annotation.dart';
