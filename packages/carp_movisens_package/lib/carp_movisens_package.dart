@@ -17,6 +17,7 @@
 /// which again builds upon the [official Movisens BLE Protocol](https://docs.movisens.com/BluetoothLowEnergy/#introduction).
 /// Please consult the Movisens [technical documentation](https://docs.movisens.com/BluetoothLowEnergy/#communication-with-the-sensor)
 /// on the details on how to interpret the collected data.
+library;
 
 import 'dart:convert';
 import 'dart:async';
