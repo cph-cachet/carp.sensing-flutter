@@ -1,6 +1,5 @@
 /*
- * Copyright 2019 Copenhagen Center for Health Technology (CACHET) at the
- * Technical University of Denmark (DTU).
+ * Copyright 2019-2024 the Technical University of Denmark (DTU).
  * Use of this source code is governed by a MIT-style license that can be
  * found in the LICENSE file.
  */
@@ -18,7 +17,6 @@
 /// which again builds upon the [official Movisens BLE Protocol](https://docs.movisens.com/BluetoothLowEnergy/#introduction).
 /// Please consult the Movisens [technical documentation](https://docs.movisens.com/BluetoothLowEnergy/#communication-with-the-sensor)
 /// on the details on how to interpret the collected data.
-library carp_movisens_package;
 
 import 'dart:convert';
 import 'dart:async';
