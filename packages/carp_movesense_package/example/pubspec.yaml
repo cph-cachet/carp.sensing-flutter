@@ -1,7 +1,6 @@
 name: carp_movesense_package_example
 description: Example project for the CAMS Movesense Sampling Package.
 publish_to: 'none'
-version: 1.5.0
 
 environment:
   sdk: '>=2.17.0 <3.0.0'

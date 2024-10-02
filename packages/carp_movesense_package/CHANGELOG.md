@@ -1,4 +1,9 @@
+## 1.6.0
+
+* upgrade to carp_serialization v. 2.0 & carp_mobile_sensing: 1.10.0
+
 ## 1.5.1
+
 * fix compatibility with Flutter 3.24
 
 ## 1.5.0

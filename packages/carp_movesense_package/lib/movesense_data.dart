@@ -1,4 +1,10 @@
-part of carp_movesense_package;
+/*
+ * Copyright 2024 the Technical University of Denmark (DTU).
+ * Use of this source code is governed by a MIT-style license that can be
+ * found in the LICENSE file.
+ */
+
+part of 'carp_movesense_package.dart';
 
 /// Different states of the Movensense device.
 ///
