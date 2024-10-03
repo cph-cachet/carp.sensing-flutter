@@ -109,7 +109,7 @@ class ActiveParticipationInvitation {
   String? get studyId => invitation.applicationData;
 
   /// The study deployment ID.
-  String? get studyDeploymentId => participation.studyDeploymentId;
+  String get studyDeploymentId => participation.studyDeploymentId;
 
   /// The study name.
   String? get studyName => invitation.name;

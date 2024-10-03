@@ -1,21 +1,26 @@
 /*
- * Copyright 2021-2022 Copenhagen Center for Health Technology (CACHET) at the
- * Technical University of Denmark (DTU).
+ * Copyright 2021-2024 the Technical University of Denmark (DTU).
  * Use of this source code is governed by a MIT-style license that can be
  * found in the LICENSE file.
  */
 
 part of 'carp_core_client.dart';
 
-/// Allows managing [StudyRuntime]s on a client device.
+/// Allows managing studies on a client device.
+///
+/// It holds a list of [studies] added to this client and holds a [repository]
+/// of corresponding [StudyRuntime] for executing a study.
 abstract class ClientManager<
     TPrimaryDevice extends PrimaryDeviceConfiguration<TRegistration>,
     TRegistration extends DeviceRegistration> {
   DeploymentService? _deploymentService;
   DeviceDataCollectorFactory? _deviceController;
 
-  /// Repository of [StudyRuntime] mapped to a [Study].
-  Map<Study, StudyRuntime> repository = {};
+  /// All studies added to this client mapped to the study deployment ID.
+  Map<String, Study> studies = {};
+
+  /// Repository of [StudyRuntime] mapped to the study deployment ID.
+  Map<String, StudyRuntime> repository = {};
 
   /// The registration of this client.
   TRegistration? registration;
@@ -28,6 +33,10 @@ abstract class ClientManager<
   /// this primary device. Also works as a factory which is used to create
   /// [DeviceDataCollector] instances for connected devices.
   DeviceDataCollectorFactory? get deviceController => _deviceController;
+
+  /// Get the [StudyRuntime] for a [studyDeploymentId].
+  StudyRuntime? getStudyRuntime(String studyDeploymentId) =>
+      repository[studyDeploymentId];
 
   /// Determines whether a [DeviceRegistration] has been configured for this client,
   /// which is necessary to start adding [StudyRuntime]s.
@@ -58,6 +67,8 @@ abstract class ClientManager<
   /// Add a study which needs to be executed on this client.
   /// This involves registering this device for the specified study deployment.
   ///
+  /// A [Study] specifies:
+  ///
   ///  * [studyDeploymentId] - The ID of a study which has been deployed already
   ///    and for which to collect data.
   ///  * [deviceRoleName] - The role which the client device this runtime is
@@ -65,24 +76,23 @@ abstract class ClientManager<
   ///
   /// Returns the added study.
   @mustCallSuper
-  Future<Study> addStudy(
-    String studyDeploymentId,
-    String deviceRoleName,
-  ) async {
+  Future<Study> addStudy(Study study) async {
     assert(isConfigured,
         'The client manager has not been configured yet. Call configure() first.');
-    Study study = Study(studyDeploymentId, deviceRoleName);
-    assert(!repository.containsKey(study),
+    assert(!repository.containsKey(study.studyDeploymentId),
         'A study with the same study deployment ID and device role name has already been added.');
+    studies[study.studyDeploymentId] = study;
+
     return study;
   }
 
   /// Verifies whether the device is ready for deployment of the study runtime
   /// identified by [study], and in case it is, deploys.
-  /// In case already deployed, nothing happens.
+  /// In case already deployed, nothing happens and the status of the deployment
+  /// is returned.
   @mustCallSuper
-  Future<StudyStatus> tryDeployment(Study study) async {
-    StudyRuntime? runtime = repository[study];
+  Future<StudyStatus> tryDeployment(String studyDeploymentId) async {
+    StudyRuntime? runtime = repository[studyDeploymentId];
     assert(runtime != null && runtime.study != null,
         'No runtime for this study found. Has this study been added using the addStudy method?');
 
@@ -94,17 +104,7 @@ abstract class ClientManager<
     return await runtime.tryDeployment();
   }
 
-  /// Get the [StudyRuntime] for a [study].
-  StudyRuntime? getStudyRuntime(Study study) => repository[study];
-
-  /// Lookup the [StudyRuntime] based on the [studyDeploymentId] and [deviceRoleName].
-  StudyRuntime? lookupStudyRuntime(
-    String studyDeploymentId,
-    String deviceRoleName,
-  ) =>
-      repository[Study(studyDeploymentId, deviceRoleName)];
-
-  /// Remove [study] from this client manager.
+  /// Remove the study with [studyDeploymentId] from this client manager.
   ///
   /// Note that by removing a study, the deployment is not marked as stopped
   /// permanently in the deployment service.
@@ -113,9 +113,9 @@ abstract class ClientManager<
   ///
   /// If a study deployment is to be permanently stopped, use the [stopStudy] method.
   @mustCallSuper
-  Future<void> removeStudy(Study study) async {
-    var runtime = repository[study];
-    repository.remove(study);
+  Future<void> removeStudy(String studyDeploymentId) async {
+    var runtime = repository[studyDeploymentId];
+    repository.remove(studyDeploymentId);
     if (runtime != null) await runtime.remove();
   }
 
@@ -127,15 +127,15 @@ abstract class ClientManager<
   /// If you only want to remove the study from this client and be able to
   /// redeploy it later, use the [removeStudy] method instead.
   @mustCallSuper
-  Future<void> stopStudy(Study study) async {
-    var runtime = repository[study];
+  Future<void> stopStudy(String studyDeploymentId) async {
+    var runtime = repository[studyDeploymentId];
 
     if (runtime != null) {
       await runtime.stop();
-      await removeStudy(study);
+      await removeStudy(studyDeploymentId);
 
       // Permanently stop this study deployment on the deployment service.
-      await deploymentService?.stop(study.studyDeploymentId);
+      await deploymentService?.stop(studyDeploymentId);
     }
   }
 }

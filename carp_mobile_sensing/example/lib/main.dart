@@ -1,9 +1,9 @@
 /*
- * Copyright 2018 Copenhagen Center for Health Technology (CACHET) at the
- * Technical University of Denmark (DTU).
+ * Copyright 2018-2024 the Technical University of Denmark (DTU).
  * Use of this source code is governed by a MIT-style license that can be
  * found in the LICENSE file.
  */
+
 import 'package:carp_serializable/carp_serializable.dart';
 import 'package:carp_core/carp_core.dart';
 import 'package:carp_mobile_sensing/carp_mobile_sensing.dart';
@@ -85,6 +85,7 @@ class Console extends State<ConsolePage> {
 
   /// Restart (start/stop) sampling.
   void restart() {
+    debug('>> status: ${Sensing().isRunning}');
     Sensing().isRunning ? Sensing().stop() : Sensing().start();
     setState(() {}); // to update the play/stop icon
   }
@@ -116,7 +117,7 @@ class Sensing {
 
     // Create and configure a client manager for this phone and add the protocol.
     SmartPhoneClientManager().configure().then((_) => SmartPhoneClientManager()
-        .addStudyProtocol(protocol)
+        .addStudyFromProtocol(protocol)
         .then((value) => study = value));
 
     // Listening on the data stream and print them as json.
@@ -164,6 +165,9 @@ class LocalStudyProtocolManager implements StudyProtocolManager {
     // services (e.g., a weather service).
     var phone = Smartphone();
     protocol.addPrimaryDevice(phone);
+
+    // Add a participant role
+    protocol.addParticipantRole(ParticipantRole('Participant'));
 
     // Issue #403
     protocol.addTaskControl(

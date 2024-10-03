@@ -187,7 +187,7 @@ void carpCoreClientExample() async {
         deviceDisplayName: "Pixel 6 Pro (Android 12)",
       ));
 
-  Study study = await client.addStudy(studyDeploymentId!, deviceToUse!);
+  final study = await client.addStudy(Study(studyDeploymentId!, deviceToUse!));
 
   // Register connected devices in case needed.
   var connectedDevice = study.deviceRoleName;
@@ -199,7 +199,7 @@ void carpCoreClientExample() async {
   );
 
   // Try deployment now that devices have been registered.
-  StudyStatus status = await client.tryDeployment(study);
+  StudyStatus status = await client.tryDeployment(study.studyDeploymentId);
   var isDeployed = status == StudyStatus.Deployed;
   assert(isDeployed, true);
 }

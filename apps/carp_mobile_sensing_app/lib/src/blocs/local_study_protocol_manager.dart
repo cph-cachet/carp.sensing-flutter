@@ -390,7 +390,7 @@ class LocalStudyProtocolManager implements StudyProtocolManager {
 
     // add expected participant data for the mother
     protocol.addExpectedParticipantData(ExpectedParticipantData(
-        attribute: ParticipantAttribute(inputDataType: NameInput.type),
+        attribute: ParticipantAttribute(inputDataType: FullNameInput.type),
         assignedTo: AssignedTo(roleNames: {mother})));
 
     // build-in measure from sensor and device sampling packages

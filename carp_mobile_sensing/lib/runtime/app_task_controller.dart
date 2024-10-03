@@ -320,10 +320,7 @@ class AppTaskController {
         if (snapshot.studyDeploymentId != null &&
             snapshot.deviceRoleName != null) {
           deployment = SmartPhoneClientManager()
-              .lookupStudyRuntime(
-                snapshot.studyDeploymentId!,
-                snapshot.deviceRoleName!,
-              )
+              .getStudyRuntime(snapshot.studyDeploymentId!)
               ?.deployment;
         }
         if (deployment == null) {
