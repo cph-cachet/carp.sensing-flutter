@@ -1,6 +1,8 @@
-## 3.4.0
+## 3.5.0
 
 * upgrade to carp_serialization v. 2.0 & carp_mobile_sensing: 1.10.0
+* replacing study ID information from the `CarpApp` to instead allow any service to have info on which `SmartphoneStudy` it is handling.
+* misc. updates to tests and docs
 
 ## 3.3.1
 

@@ -25,6 +25,17 @@ class SmartphoneStudy extends Study {
     this.participantRoleName,
   }) : super(studyDeploymentId, deviceRoleName);
 
+  /// Create a new study based on an [invitation].
+  SmartphoneStudy.fromInvitation(ActiveParticipationInvitation invitation)
+      : this(
+          studyId: invitation.studyId,
+          studyDeploymentId: invitation.studyDeploymentId,
+          deviceRoleName:
+              invitation.deviceRoleName ?? Smartphone.DEFAULT_ROLE_NAME,
+          participantId: invitation.participantId,
+          participantRoleName: invitation.participantRoleName,
+        );
+
   @override
   String toString() => '$runtimeType - '
       'studyId: $studyId, '

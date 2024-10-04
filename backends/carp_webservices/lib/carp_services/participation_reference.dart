@@ -13,13 +13,15 @@ part of 'carp_services.dart';
 /// [deployment sub-system](https://github.com/cph-cachet/carp.core-kotlin/blob/develop/docs/carp-deployment.md) is:
 ///
 ///   - [getParticipantData()] - get participation data from this deployment.
-///   - [setParticipantData()] - set participation data in this deployment
+///   - [setParticipantData()] - set participation data in this deployment.
+///
+/// Also contains convenient methods for setting, getting, and deleting an
+/// informed consent document as participant data.
 class ParticipationReference extends RPCCarpReference {
-  final String? _studyDeploymentId;
+  final String _studyDeploymentId;
 
   /// The CARP study deployment ID.
-  String? get studyDeploymentId =>
-      _studyDeploymentId ?? service.app.studyDeploymentId;
+  String get studyDeploymentId => _studyDeploymentId;
 
   ParticipationReference._(
     CarpParticipationService service,
@@ -33,12 +35,29 @@ class ParticipationReference extends RPCCarpReference {
   String get rpcEndpointUri =>
       "${service.app.uri.toString()}/api/participation-service";
 
+  /// Resolve role name of a participant.
+  ///
+  /// Returns [roleName] if not null. Otherwise returns the role name
+  /// specified in the [service]'s [deployment], if available.
+  /// Throws an error if the role name cannot be resolved.
+  String getParticipantRoleName(String? roleName) {
+    if (roleName != null) {
+      return roleName;
+    } else if (service.study != null &&
+        service.study?.participantRoleName != null) {
+      return service.study!.participantRoleName!;
+    } else {
+      throw CarpServiceException(
+          message: 'No participant role name specified for CAWS endpoint.');
+    }
+  }
+
   /// Get currently set data for all expected participant data in this study
   /// deployment with [studyDeploymentId].
   /// Data which is not set equals null.
   Future<ParticipantData> getParticipantData() async =>
       ParticipantData.fromJson(
-          await _rpc(GetParticipantData(studyDeploymentId!)));
+          await _rpc(GetParticipantData(studyDeploymentId)));
 
   /// Set participant [data] for the given [inputByParticipantRole] in this
   /// study deployment.
@@ -49,8 +68,8 @@ class ParticipationReference extends RPCCarpReference {
     Map<String, Data> data, [
     String? inputByParticipantRole,
   ]) async =>
-      ParticipantData.fromJson(await _rpc(SetParticipantData(
-          studyDeploymentId!, data, inputByParticipantRole)));
+      ParticipantData.fromJson(await _rpc(
+          SetParticipantData(studyDeploymentId, data, inputByParticipantRole)));
 
   /// Get informed consent data for all participants (by role name) in this study
   /// deployment with [studyDeploymentId].
@@ -59,7 +78,7 @@ class ParticipationReference extends RPCCarpReference {
     Map<String, InformedConsentInput?> map = {};
 
     ParticipantData data = ParticipantData.fromJson(
-        await _rpc(GetParticipantData(studyDeploymentId!)));
+        await _rpc(GetParticipantData(studyDeploymentId)));
 
     for (var roleData in data.roles) {
       if (roleData.data.containsKey(InformedConsentInput.type)) {
@@ -77,31 +96,39 @@ class ParticipationReference extends RPCCarpReference {
 
   /// Get the informed consent uploaded by a participant with [roleName] in
   /// this study deployment with [studyDeploymentId].
+  ///
+  /// If [roleName] is not specified, the role of the participant
+  /// in the current [deployment] is used.
+  ///
   /// Returns null if not available.
   Future<InformedConsentInput?> getInformedConsentByRole(
-          String roleName) async =>
-      (await getInformedConsent())[roleName];
+          [String? roleName]) async =>
+      (await getInformedConsent())[getParticipantRoleName(roleName)];
 
   /// Set informed [consent] for the given [inputByParticipantRole] in this
   /// study deployment.
+  /// If [inputByParticipantRole] is not specified, the role of the participant
+  /// in the current [deployment] is used.
   Future<void> setInformedConsent(
-    InformedConsentInput consent,
-    String inputByParticipantRole,
-  ) async {
+    InformedConsentInput consent, [
+    String? inputByParticipantRole,
+  ]) async {
     ParticipantData.fromJson(await _rpc(SetParticipantData(
-      studyDeploymentId!,
+      studyDeploymentId,
       {InformedConsentInput.type: consent},
-      inputByParticipantRole,
+      getParticipantRoleName(inputByParticipantRole),
     )));
   }
 
   /// Remove the informed for the given [inputByParticipantRole] in this
   /// study deployment.
-  Future<void> removeInformedConsent(String inputByParticipantRole) async {
+  /// If [inputByParticipantRole] is not specified, the role of the participant
+  /// in the current [deployment] is used.
+  Future<void> removeInformedConsent([String? inputByParticipantRole]) async {
     ParticipantData.fromJson(await _rpc(SetParticipantData(
-      studyDeploymentId!,
+      studyDeploymentId,
       {InformedConsentInput.type: null},
-      inputByParticipantRole,
+      getParticipantRoleName(inputByParticipantRole),
     )));
   }
 }

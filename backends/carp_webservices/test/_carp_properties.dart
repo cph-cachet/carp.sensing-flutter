@@ -1,5 +1,6 @@
 import 'package:carp_webservices/carp_auth/carp_auth.dart';
 import 'package:carp_webservices/carp_services/carp_services.dart';
+import 'package:carp_mobile_sensing/carp_mobile_sensing.dart';
 import '_credentials.dart';
 
 class CarpProperties {
@@ -29,7 +30,13 @@ class CarpProperties {
   CarpApp get app => CarpApp(
         name: "CAWS @ $cawsUri",
         uri: uri,
-        studyDeploymentId: testDeploymentId,
+      );
+
+  SmartphoneStudy get study => SmartphoneStudy(
         studyId: testStudyId,
+        studyDeploymentId: testDeploymentId,
+        deviceRoleName: testPhoneRoleName,
+        participantId: testParticipantId,
+        participantRoleName: testParticipantRoleName,
       );
 }

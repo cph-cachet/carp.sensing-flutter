@@ -22,7 +22,7 @@ void main() {
     CarpMobileSensing.ensureInitialized();
 
     await CarpAuthService().configure(CarpProperties().authProperties);
-    CarpService().configure(CarpProperties().app);
+    CarpService().configure(CarpProperties().app, CarpProperties().study);
 
     user = await CarpAuthService().authenticateWithUsernamePassword(
       username: username,
@@ -31,14 +31,14 @@ void main() {
     CarpProtocolService().configureFrom(CarpService());
     ownerId = CarpAuthService().currentUser.id;
 
-    var phone = Smartphone(roleName: phoneRoleName);
+    var phone = Smartphone(roleName: testPhoneRoleName);
     phone.defaultSamplingConfiguration?.addAll({
       Geolocation.dataType: BatteryAwareSamplingConfiguration(
           normal: GranularitySamplingConfiguration(Granularity.Detailed),
           low: GranularitySamplingConfiguration(Granularity.Coarse)),
     });
 
-    final bike = AltBeacon(roleName: bikeRoleName);
+    final bike = AltBeacon(roleName: testBikeRoleName);
 
     // a study protocol mimicking the protocol from core
     protocol = StudyProtocol(

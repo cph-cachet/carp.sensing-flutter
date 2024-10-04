@@ -15,10 +15,17 @@ part of 'carp_services.dart';
 /// ```dart
 /// await CarpAuthService().configure(authProperties);
 ///
-/// user = await CarpAuthService().authenticateWithUsernamePassword(
+/// var user = await CarpAuthService().authenticateWithUsernamePassword(
 ///   username: username,
 ///   password: password,
 /// );
+///
+///  final app = CarpApp(
+///     name: 'CAWS DEV',
+///     uri: Uri(
+///       scheme: 'https',
+///       host: 'dev.carp.dk',
+///     ));
 ///
 /// CarpParticipationService().configure(app);
 /// ```
@@ -30,6 +37,10 @@ abstract class CarpBaseService {
   CarpApp? _app;
   String? _endpointName;
 
+  /// The study associated with this service, if available.
+  /// Can be set directly or as part of the [configure] methods.
+  SmartphoneStudy? study;
+
   /// The CARP app associated with the CARP Web Service.
   ///
   /// Throws a [CarpServiceException] if this service has not yet been configured via the
@@ -37,8 +48,7 @@ abstract class CarpBaseService {
   CarpApp get app {
     if (_app == null) {
       throw CarpServiceException(
-          message:
-              "CARP Service not configured. Call 'CarpService().configure()' first.");
+          message: "CARP Service not configured. Call 'configure()' first.");
     } else {
       return _app!;
     }
@@ -48,13 +58,49 @@ abstract class CarpBaseService {
   bool get isConfigured => (_app != null);
 
   /// Configure the this instance of a Carp Service.
-  void configure(CarpApp app) {
+  ///
+  /// The [app] specifies the CAWS instance used.
+  /// If [study] is specified, this service is 'tied' to this study deployment.
+  /// This is convenient if the application using this service is only handling
+  /// one study deployment (which is often the case).
+  void configure(CarpApp app, [SmartphoneStudy? study]) {
     _app = app;
+    this.study = study;
   }
 
   /// Configure from another [service] which has already been configured.
   void configureFrom(CarpBaseService service) {
-    _app = service._app;
+    _app = service.app;
+    study = service.study;
+  }
+
+  /// Resolve study ID.
+  ///
+  /// Returns [studyId] if not null. Otherwise returns the studyId specified in
+  /// the [study], if available.
+  /// Throws an error if study id cannot be resolved.
+  String getStudyId(String? studyId) {
+    if (studyId != null) {
+      return studyId;
+    } else if (study != null && study?.studyId != null) {
+      return study!.studyId!;
+    } else {
+      throw CarpServiceException(
+          message: 'No study ID specified for CAWS endpoint.');
+    }
+  }
+
+  /// Resolve study deployment ID.
+  ///
+  /// Returns [studyDeploymentId] if not null. Otherwise returns the study
+  /// deployment ID specified in the [study], if available.
+  /// Throws an error if study deployment id cannot be resolved.
+  String getStudyDeploymentId(String? studyDeploymentId) {
+    if (studyDeploymentId != null) return studyDeploymentId;
+    if (study != null) return study!.studyDeploymentId;
+
+    throw CarpServiceException(
+        message: 'No study deployment ID specified for CAWS end point.');
   }
 
   /// The endpoint name for this service at CARP.

@@ -22,6 +22,7 @@ void main() {
   const father = 'Father';
   const mother = 'Mother';
   const child = 'Child';
+  const fatherDeviceRoleName = "$father's Phone";
 
   CarpUser? user;
   String? ownerId;
@@ -35,24 +36,25 @@ void main() {
   setUpAll(() async {
     await CarpAuthService().configure(CarpProperties().authProperties);
 
-    CarpApp app = CarpApp(
-      name: "CAWS @ $cawsUri",
-      uri: Uri(
-        scheme: 'https',
-        host: cawsUri,
-      ),
-      studyDeploymentId: familyDeploymentId,
+    // configure the service with both an app and the family study, using the same
+    // study for all tests
+
+    SmartphoneStudy familyStudy = SmartphoneStudy(
       studyId: familyStudyId,
+      studyDeploymentId: familyDeploymentId,
+      deviceRoleName: fatherDeviceRoleName,
+      participantId: '',
+      participantRoleName: father,
     );
 
-    CarpService().configure(app);
+    CarpService().configure(CarpProperties().app, familyStudy);
+    CarpParticipationService().configureFrom(CarpService());
+    CarpDeploymentService().configureFrom(CarpService());
 
     user = await CarpAuthService().authenticateWithUsernamePassword(
       username: fatherUsername,
       password: fatherPassword,
     );
-    CarpDeploymentService().configureFrom(CarpService());
-    CarpParticipationService().configureFrom(CarpService());
   });
 
   tearDownAll(() {});
@@ -180,9 +182,23 @@ void main() {
       expect(status.primaryDeviceStatus!.device, isNotNull);
       debugPrint('${status.primaryDeviceStatus!.device}');
 
-      PrimaryDeviceDeployment deployment = await reference.get();
-      debugPrint(toJsonString(deployment));
-      expect(deployment.registration.deviceId, isNotNull);
+      // getting the deployment for the father we expect to throw an exception
+      // since the rest of the family hasn't registered their devices yet...
+      expect(() async => await reference.get(),
+          throwsA(TypeMatcher<CarpServiceException>()));
+    });
+
+    test('- unregister device', () async {
+      final reference = CarpDeploymentService().deployment();
+      var status = await reference.getStatus();
+      debugPrint('$status');
+
+      expect(status.primaryDeviceStatus!.device, isNotNull);
+      debugPrint('${status.primaryDeviceStatus!.device}');
+      var newStatus = await reference.unRegisterDevice(
+          deviceRoleName: fatherDeviceRoleName);
+      debugPrint('$newStatus');
+      expect(newStatus.studyDeploymentId, familyDeploymentId);
     });
   });
 
@@ -332,6 +348,22 @@ void main() {
         expect(consent[father]?.name, father);
         expect(consent[mother], isNull);
         expect(consent[child], isNull);
+      },
+    );
+
+    test(
+      '- get Informed Consent by Role',
+      () async {
+        final participation = CarpParticipationService().participation();
+
+        InformedConsentInput? consent =
+            await participation.getInformedConsentByRole();
+        debugPrint(toJsonString(consent));
+
+        expect(consent, isA<InformedConsentInput>());
+        // expect(consent[father]?.name, father);
+        // expect(consent[mother], isNull);
+        // expect(consent[child], isNull);
       },
     );
 

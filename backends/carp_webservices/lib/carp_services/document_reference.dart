@@ -17,12 +17,18 @@ part of 'carp_services.dart';
 /// A [DocumentReference] can also be used to create a [CollectionReference]
 /// to a sub-collection.
 class DocumentReference extends CarpReference {
+  final String _studyId;
   int? _id;
   String _path = '';
 
-  DocumentReference._id(CarpService service, this._id) : super._(service);
+  DocumentReference._id(CarpService service, this._studyId, this._id)
+      : super._(service);
 
-  DocumentReference._path(CarpService service, this._path) : super._(service);
+  DocumentReference._path(CarpService service, this._studyId, this._path)
+      : super._(service);
+
+  /// The id of the study for this document.
+  String get studyId => _studyId;
 
   /// The unique id of this document.
   /// Returns `null` if the id is unknown.
@@ -39,8 +45,8 @@ class DocumentReference extends CarpReference {
   /// If the id of this document is known, use the `documents` CARP endpoint,
   /// otherwise use the `collections` endpoint.
   String get cawsPath => (_id != null)
-      ? "/api/studies/${service.app.studyId}/documents/$id"
-      : "/api/studies/${service.app.studyId}/collections/$path";
+      ? "/api/studies/$studyId/documents/$id"
+      : "/api/studies/$studyId/collections/$path";
 
   /// The full URI for the document endpoint for this document.
   String get documentUri => "${service.app.uri.toString()}$cawsPath";
@@ -188,8 +194,8 @@ class DocumentReference extends CarpReference {
   }
 
   /// Returns the reference of a collection contained inside of this document.
-  CollectionReference collection(String name) =>
-      (service as CarpService).collection("$path/$name");
+  CollectionReference collection(String name) => (service as CarpService)
+      .collection(studyId: studyId, path: "$path/$name");
 
   // TODO - this is deprecated and not working for now.
 //  /// Fetch the list of collections (names) in this collection.

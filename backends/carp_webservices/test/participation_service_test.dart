@@ -27,7 +27,8 @@ void main() {
   /// and configure the [CarpParticipationService].
   setUpAll(() async {
     await CarpAuthService().configure(CarpProperties().authProperties);
-    CarpParticipationService().configure(CarpProperties().app);
+    CarpParticipationService()
+        .configure(CarpProperties().app, CarpProperties().study);
 
     user = await CarpAuthService().authenticateWithUsernamePassword(
       username: username,
@@ -59,10 +60,7 @@ void main() {
             (invitation) => invitation.studyDeploymentId == testDeploymentId);
         expect(invitation, isNotNull);
 
-        // debugPrint(toJsonString(invitation));
-        CarpParticipationService().setInvitation(invitation);
-        expect(
-            CarpParticipationService().app.studyDeploymentId, testDeploymentId);
+        debugPrint(toJsonString(invitation));
       },
       skip: false,
     );
@@ -109,8 +107,7 @@ void main() {
     test(
       '- get participant data',
       () async {
-        final participation =
-            CarpParticipationService().participation(testDeploymentId);
+        final participation = CarpParticipationService().participation();
 
         ParticipantData data = await participation.getParticipantData();
         debugPrint(toJsonString(data));
@@ -121,8 +118,7 @@ void main() {
     test(
       '- set participant data',
       () async {
-        final participation =
-            CarpParticipationService().participation(testDeploymentId);
+        final participation = CarpParticipationService().participation();
 
         ParticipantData data = await participation.setParticipantData(
           {SexInput.type: SexInput(value: Sex.Male)},

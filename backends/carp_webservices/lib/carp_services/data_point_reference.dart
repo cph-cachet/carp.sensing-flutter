@@ -15,11 +15,17 @@ part of 'carp_services.dart';
 /// - query for [DataPoint]s
 /// - delete a [DataPoint]
 class DataPointReference extends CarpReference {
-  DataPointReference._(CarpService service) : super._(service);
+  final String _studyDeploymentId;
+
+  /// The study deployment id this data point reference.
+  String get studyDeploymentId => _studyDeploymentId;
+
+  DataPointReference._(CarpService service, this._studyDeploymentId)
+      : super._(service);
 
   /// The URL for the data end point for this [DataPointReference].
   String get dataEndpointUri =>
-      "${service.app.uri.toString()}/api/deployments/${service.app.studyDeploymentId}/data-points";
+      "${service.app.uri.toString()}/api/deployments/$studyDeploymentId/data-points";
 
   /// Uploads [data].
   ///
@@ -54,7 +60,7 @@ class DataPointReference extends CarpReference {
       var path = 'cache';
 
       if (Settings().initialized) {
-        final deploymentId = service.app.studyDeploymentId ?? 'tmp';
+        final deploymentId = studyDeploymentId;
         path = await Settings().getCacheBasePath(deploymentId);
       }
       final directory = await Directory('$path/upload').create(recursive: true);

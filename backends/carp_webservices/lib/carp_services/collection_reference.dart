@@ -23,6 +23,7 @@ part of 'carp_services.dart';
 /// is a reference to the geoposition document `pos_1` in the collection `geopositions` in the document `running`
 /// in the collection `activities`.
 class CollectionReference extends CarpReference {
+  final String _studyId;
   int? _id;
   String _path;
 
@@ -31,10 +32,13 @@ class CollectionReference extends CarpReference {
   ///
   /// Note that [path] should be relative and NOT start with `/`.
   /// For example; `activities/running/geopositions`
-  CollectionReference._(CarpBaseService service, this._path)
+  CollectionReference._(CarpBaseService service, this._studyId, this._path)
       : super._(service) {
     assert(!(_path.startsWith('/')) || _path.isEmpty);
   }
+
+  /// The id of the study for this document.
+  String get studyId => _studyId;
 
   /// ID of the referenced collection.
   ///
@@ -49,15 +53,14 @@ class CollectionReference extends CarpReference {
   String get path => _path;
 
   /// The full CARP Web Service (CAWS) path to this collection.
-  String get cawsPath =>
-      '/api/studies/${service.app.studyId}/collections/$path';
+  String get cawsPath => '/api/studies/$studyId/collections/$path';
 
   /// The full URI for the collection endpoint for this [CollectionReference].
   String get collectionUri => "${service.app.uri.toString()}$cawsPath";
 
   /// The full URI for the collection endpoint for this [CollectionReference] by its unique [id].
   String get collectionUriByID =>
-      '${service.app.uri.toString()}/api/studies/${service.app.studyId}/collections/id/$id';
+      '${service.app.uri.toString()}/api/studies/$studyId/collections/id/$id';
 
   /// Reads the collection referenced by this [CollectionReference] from the server.
   ///
@@ -120,7 +123,8 @@ class CollectionReference extends CarpReference {
       documentPath = '$path/$name';
     }
 
-    return DocumentReference._path(service as CarpService, documentPath);
+    return DocumentReference._path(
+        service as CarpService, studyId, documentPath);
   }
 
   /// Add a data document to this collection and returns a [DocumentReference] to this document.
