@@ -1,7 +1,8 @@
-## 1.10.0
+## 1.10.1
 
 * upgrade to carp_serialization v. 2.0 & carp_mobile_sensing: 1.10.0
 * upgrade to mobility_features v. 6.0
+* fix of error in Location.toJson() method
 
 ## 1.9.0
 
