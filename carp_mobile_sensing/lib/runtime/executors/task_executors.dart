@@ -129,9 +129,6 @@ class FunctionTaskExecutor extends TaskExecutor<FunctionTask> {
 
 /// Executes an [AppTask].
 ///
-/// An [AppTaskExecutor] wraps a [BackgroundTaskExecutor], which is started
-/// by the app (user) and starts collecting the measures defined in this task.
-///
 /// This executor works closely with the singleton [AppTaskController].
 /// Whenever an [AppTaskExecutor] is started (e.g. in a [PeriodicTrigger]),
 /// this executor is wrapped in a [UserTask] and put on a queue in
@@ -145,35 +142,22 @@ class FunctionTaskExecutor extends TaskExecutor<FunctionTask> {
 /// and such factories can be registered in the [AppTaskController]
 /// using the `registerUserTaskFactory` method.
 class AppTaskExecutor<TConfig extends AppTask> extends TaskExecutor<TConfig> {
-  /// The task executor which can be used to execute this user task once
-  /// activated.
-  TaskExecutor backgroundTaskExecutor = BackgroundTaskExecutor();
-
-  /// The user task enqueued when this app task executor is started.
-  /// Null if not started, or stopped again.
-  UserTask? userTask;
-
-  AppTaskExecutor() : super() {
-    // add the events from the embedded executor to the overall stream of events
-    addExecutor(backgroundTaskExecutor);
-  }
-
   @override
   bool onInitialize() => true;
 
   @override
   Future<bool> onStart() async {
-    // when an app task is started, create a UserTask and put it on the queue
-    userTask = await AppTaskController().enqueue(this);
+    // when an app task is started, create a new UserTask by adding it to the queue
+    UserTask? userTask = await AppTaskController().enqueue(this);
+
+    // automatically stop this executor again to be reused later
+    // issue => https://github.com/cph-cachet/carp.sensing-flutter/issues/429
+    Future.delayed(const Duration(seconds: 5), () => stop());
+
     return userTask != null;
   }
 
+  // does nothing when stopping an app task
   @override
-  Future<bool> onStop() async {
-    backgroundTaskExecutor.stop();
-    // if an app task is stopped, remove the user task from the queue again
-    if (userTask != null) AppTaskController().dequeue(userTask!.id);
-    userTask = null;
-    return true;
-  }
+  Future<bool> onStop() async => true;
 }
