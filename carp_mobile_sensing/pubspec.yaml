@@ -12,7 +12,7 @@ dependencies:
     sdk: flutter
 
   carp_serializable: ^2.0.0 # polymorphic json serialization
-  carp_core: ^1.8.0         # the core CARP domain model
+  carp_core: ^1.8.2         # the core CARP domain model
 
   json_annotation: ^4.8.0
   system_info2: ^4.0.0
@@ -31,7 +31,7 @@ dependencies:
   flutter_timezone: ^3.0.0             # For getting local time zone for scheduling notifications
 
   # probe-dependent plugins
-  device_info_plus: '>=9.0.0 <11.0.0'
+  device_info_plus: '>=9.0.0 <12.0.0'
   sensors_plus: ^6.0.0
   battery_plus: ^6.0.0
 
