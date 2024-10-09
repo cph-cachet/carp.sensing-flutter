@@ -1,14 +1,18 @@
+## 1.8.0
+
+* upgrading to carp_mobile_sensing v. 1.11
+
 ## 1.7.0
 
 * upgrade to carp_serialization v. 2.0 & carp_mobile_sensing: 1.10.0
 
 ## 1.6.0
 
-* upgrading to carp_mobile_sensing v. 1.9.0 (better permission handling)
+* upgrading to carp_mobile_sensing v. 1.9 (better permission handling)
 
 ## 1.5.0
 
-* update to `carp_mobile_sensing` v. 1.6.0
+* update to `carp_mobile_sensing` v. 1.6
 
 ## 1.4.4
 
@@ -19,7 +23,7 @@
 ## 1.4.0
 
 * upgrade to Dart 3.2
-* update to `carp_mobile_sensing` v. 1.4.0
+* update to `carp_mobile_sensing` v. 1.4
 
 ## 1.3.0
 
@@ -29,15 +33,15 @@
 
 ## 0.40.1
 
-* upgrade to `research_package` v. 1.2.0
+* upgrade to `research_package` v. 1.2
 
 ## 0.40.0
 
-* update to `carp_mobile_sensing` v. 0.40.0
+* update to `carp_mobile_sensing` v. 0.40
 
 ## 0.33.0
 
-* update to `carp_mobile_sensing` v. 0.33.0
+* update to `carp_mobile_sensing` v. 0.33
 
 ## 0.32.1
 
@@ -46,11 +50,11 @@
 
 ## 0.32.0
 
-* update to `carp_mobile_sensing` v. 0.32.0
+* update to `carp_mobile_sensing` v. 0.32
 
 ## 0.31.0
 
-* update to `carp_mobile_sensing` v. 0.31.0
+* update to `carp_mobile_sensing` v. 0.31
 
 ## 0.30.0
 
@@ -58,13 +62,13 @@
 
 ## 0.21.0
 
-* update to `carp_mobile_sensing` v. 0.21.x
+* update to `carp_mobile_sensing` v. 0.21
 * update to `research.package` v. 0.5.x with support for json serialization
 * support for de/serialization of the `RPTask` survey in the `RPTaskMeasure`
 
 ## 0.20.4
 
-* update to `carp_mobile_sensing` v. 0.20.4
+* update to `carp_mobile_sensing` v. 0.20
 
 ## 0.20.3
 
@@ -72,11 +76,11 @@
 
 ## 0.20.0
 
-* **BREAKING:** upgrade to `carp_mobile_sensing` v. 0.20.x
+* **BREAKING:** upgrade to `carp_mobile_sensing` v. 0.20
 
 ## 0.12.2
 
-* upgrade to `research_package` v. 0.4.x
+* upgrade to `research_package` v. 0.4
 
 ## 0.12.1
 
@@ -84,15 +88,15 @@
 
 ## 0.12.0
 
-* upgrade to `carp_mobile_sensing` v. 0.12.x
+* upgrade to `carp_mobile_sensing` v. 0.12
 
 ## 0.11.0
 
-* upgrade to `carp_mobile_sensing` v. 0.11.x
+* upgrade to `carp_mobile_sensing` v. 0.11
 
 ## 0.10.0
 
-* upgrade to `carp_mobile_sensing` v. 0.10.x
+* upgrade to `carp_mobile_sensing` v. 0.10
 
 ## 0.9.5
 
