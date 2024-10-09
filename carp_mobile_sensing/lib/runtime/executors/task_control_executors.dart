@@ -144,7 +144,7 @@ class AppTaskControlExecutor extends TaskControlExecutor {
   @override
   bool onInitialize() {
     AppTaskController().userTaskEvents.listen((userTask) {
-      if (userTask.state == UserTaskState.done) {
+      if (userTask.name == task.name && userTask.state == UserTaskState.done) {
         // add the completed task measurement to the measurements stream
         _controller.add(Measurement.fromData(
             CompletedTask(taskName: userTask.name, taskData: userTask.result)));
