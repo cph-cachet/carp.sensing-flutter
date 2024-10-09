@@ -828,7 +828,7 @@ void appTaskControllerExample() async {
   AppTaskController ctrl = AppTaskController();
 
   ctrl.userTaskEvents.listen((userTask) {
-    AppTask task = (userTask.executor.task as AppTask);
+    AppTask task = userTask.task;
     print('Task: ${task.title}');
     switch (userTask.state) {
       case UserTaskState.initialized:
@@ -841,13 +841,13 @@ void appTaskControllerExample() async {
         //
         break;
       case UserTaskState.started:
-        userTask.executor.start();
+        userTask.backgroundTaskExecutor.start();
         break;
       case UserTaskState.canceled:
         //
         break;
       case UserTaskState.done:
-        userTask.executor.stop();
+        userTask.backgroundTaskExecutor.stop();
         break;
       case UserTaskState.notified:
         print('Task id: ${userTask.id} was clicked in the OS.');
