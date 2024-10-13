@@ -1,4 +1,4 @@
-## 1.11.1
+## 1.11.2
 
 * Extended the `SmartphoneStudy` and `SmartphoneDeployment` to hold info on participant ID and participant role for a study running on the phone. This helps upload participant data (like informed consent) without the need to specify this every time.
 * Fix of [#429](https://github.com/cph-cachet/carp.sensing-flutter/issues/429)

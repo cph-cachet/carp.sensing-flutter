@@ -65,13 +65,14 @@ class TaskControlExecutor extends AbstractExecutor<TaskControl> {
 
   /// Callback when the [triggerExecutor] triggers.
   void onTrigger() {
-    // add the trigger task measurement to the measurements stream
+    // first, add the trigger task measurement to the measurements stream
     _controller.add(Measurement.fromData(TriggeredTask(
         triggerId: taskControl.triggerId,
         taskName: taskControl.taskName,
         destinationDeviceRoleName: taskControl.destinationDeviceRoleName!,
         control: taskControl.control)));
 
+    // then "control" the task by either starting or stopping it
     if (taskControl.control == Control.Start) {
       taskExecutor?.start();
     } else if (taskControl.control == Control.Stop) {
