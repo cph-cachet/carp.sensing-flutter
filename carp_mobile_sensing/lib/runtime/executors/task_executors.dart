@@ -143,7 +143,22 @@ class FunctionTaskExecutor extends TaskExecutor<FunctionTask> {
 /// using the `registerUserTaskFactory` method.
 class AppTaskExecutor<TConfig extends AppTask> extends TaskExecutor<TConfig> {
   @override
-  bool onInitialize() => true;
+  @mustCallSuper
+  bool onInitialize() {
+    AppTaskController()
+        .userTaskEvents
+        .where((userTask) => userTask.name == task.name)
+        .listen((userTask) {
+      if (userTask.state == UserTaskState.done) {
+        // add the completed task measurement to the measurements stream
+        addMeasurement(Measurement.fromData(CompletedTask(
+          taskName: userTask.name,
+          taskData: userTask.result,
+        )));
+      }
+    });
+    return true;
+  }
 
   @override
   Future<bool> onStart() async {

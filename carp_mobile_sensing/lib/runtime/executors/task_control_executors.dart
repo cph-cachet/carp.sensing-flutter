@@ -125,7 +125,8 @@ class TaskControlExecutor extends AbstractExecutor<TaskControl> {
 ///
 /// In contrast to the [TaskControlExecutor] (which runs in the background),
 /// this [AppTaskControlExecutor] will try to schedule the [AppTask] using
-/// the [AppTaskController]. This means that triggers also has to be [Schedulable].
+/// the [AppTaskController]. This means that the [trigger] for has to be
+/// [Schedulable].
 class AppTaskControlExecutor extends TaskControlExecutor {
   AppTaskControlExecutor(
     super.deploymentExecutor,
@@ -140,19 +141,6 @@ class AppTaskControlExecutor extends TaskControlExecutor {
   @override
   SchedulableTriggerExecutor get triggerExecutor =>
       super.triggerExecutor as SchedulableTriggerExecutor;
-
-  @override
-  bool onInitialize() {
-    AppTaskController().userTaskEvents.listen((userTask) {
-      if (userTask.name == task.name && userTask.state == UserTaskState.done) {
-        // add the completed task measurement to the measurements stream
-        _controller.add(Measurement.fromData(
-            CompletedTask(taskName: userTask.name, taskData: userTask.result)));
-      }
-    });
-
-    return super.onInitialize();
-  }
 
   @override
   Future<bool> onStart() async {
