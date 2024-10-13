@@ -81,6 +81,7 @@ class AppTaskController {
       }
     });
 
+    // initialize notification controller if needed
     notificationsEnabled = enableNotifications;
     if (notificationsEnabled) {
       await SmartPhoneClientManager().notificationController?.initialize();

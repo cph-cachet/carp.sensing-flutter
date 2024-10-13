@@ -54,6 +54,18 @@ class SmartphoneDeploymentExecutor
           ?.executors
           .add(executor);
     }
+
+    // listen for "done" tasks and add them as a [CompletedTask] measurement
+    AppTaskController()
+        .userTaskEvents
+        .where((userTask) => userTask.state == UserTaskState.done)
+        .listen((userTask) {
+      addMeasurement(Measurement.fromData(CompletedTask(
+        taskName: userTask.name,
+        taskData: userTask.result,
+      )));
+    });
+
     return true;
   }
 
