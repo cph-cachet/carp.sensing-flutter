@@ -3,15 +3,8 @@ part of '../../main.dart';
 /// This is the main Business Logic Component (BLoC) of this sensing app.
 class SensingBLoC {
   static const String STUDY_KEY = 'study';
-  // static const String STUDY_ID_KEY = 'study_id';
-  // static const String STUDY_DEPLOYMENT_ID_KEY = 'study_deployment_id';
-  // static const String DEVICE_ROLE_NAME_KEY = 'device_role_name';
 
   SmartphoneStudy? _study;
-
-  // String? _studyId;
-  // String? _studyDeploymentId;
-  // String? _deviceRoleName;
   bool _useCached = true;
   bool _resumeSensingOnStartup = false;
 
@@ -69,56 +62,6 @@ class SensingBLoC {
         participantId: json['participantId'] as String?,
         participantRoleName: json['participantRoleName'] as String?,
       );
-
-  // /// The study id for the currently running deployment.
-  // /// Returns the study id cached locally on the phone (if available).
-  // /// Returns `null` if no study is deployed (yet).
-  // String? get studyId =>
-  //     (_studyId ??= Settings().preferences?.getString(STUDY_ID_KEY));
-
-  // /// Set the study deployment id for the currently running deployment.
-  // /// This study deployment id will be cached locally on the phone.
-  // set studyId(String? id) {
-  //   assert(
-  //       id != null,
-  //       'Cannot set the study id to null in Settings. '
-  //       "Use the 'eraseStudyDeployment()' method to erase study deployment information.");
-  //   _studyId = id;
-  //   Settings().preferences?.setString(STUDY_ID_KEY, id!);
-  // }
-
-  // /// The study deployment id for the currently running deployment.
-  // /// Returns the deployment id cached locally on the phone (if available).
-  // /// Returns `null` if no study is deployed (yet).
-  // String? get studyDeploymentId => (_studyDeploymentId ??=
-  //     Settings().preferences?.getString(STUDY_DEPLOYMENT_ID_KEY));
-
-  // /// Set the study deployment id for the currently running deployment.
-  // /// This study deployment id will be cached locally on the phone.
-  // set studyDeploymentId(String? id) {
-  //   assert(
-  //       id != null,
-  //       'Cannot set the study deployment id to null in Settings. '
-  //       "Use the 'eraseStudyDeployment()' method to erase study deployment information.");
-  //   _studyDeploymentId = id;
-  //   Settings().preferences?.setString(STUDY_DEPLOYMENT_ID_KEY, id!);
-  // }
-
-  // /// The device role name for the currently running deployment.
-  // ///
-  // /// The role name is cached locally on the phone.
-  // /// Returns `null` if no study is deployed (yet).
-  // String? get deviceRoleName => (_deviceRoleName ??=
-  //     Settings().preferences?.getString(DEVICE_ROLE_NAME_KEY));
-
-  // set deviceRoleName(String? roleName) {
-  //   assert(
-  //       roleName != null,
-  //       'Cannot set device role name to null in Settings. '
-  //       "Use the 'eraseStudyDeployment()' method to erase study deployment information.");
-  //   _deviceRoleName = roleName;
-  //   Settings().preferences?.setString(DEVICE_ROLE_NAME_KEY, roleName!);
-  // }
 
   /// Use the cached study deployment?
   bool get useCachedStudyDeployment => _useCached;
