@@ -39,7 +39,6 @@
     <!-- The following permissions are used in the Connectivity Package -->
     <uses-permission android:name="android.permission.CHANGE_WIFI_STATE"/>
 
-
     <!-- Legacy Bluetooth permissions, which is needed on devices with API 30 (Android Q) or older. -->
     <uses-permission
         android:name="android.permission.BLUETOOTH"
@@ -176,6 +175,18 @@
                 <action android:name="androidx.health.ACTION_SHOW_PERMISSIONS_RATIONALE" />
             </intent-filter>
         </activity>
+
+        <!-- Activity to show Permissions screen for Health Connect -->
+        <activity-alias
+            android:name="ViewPermissionUsageActivity"
+            android:exported="true"
+            android:targetActivity=".MainActivity"
+            android:permission="android.permission.START_VIEW_PERMISSION_USAGE">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW_PERMISSION_USAGE" />
+                <category android:name="android.intent.category.HEALTH_PERMISSIONS" />
+            </intent-filter>
+        </activity-alias>
 
         <!-- Don't delete the meta-data below.
              This is used by the Flutter tool to generate GeneratedPluginRegistrant.java -->

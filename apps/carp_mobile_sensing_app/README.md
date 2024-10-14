@@ -243,3 +243,14 @@ StreamBuilder<Measurement>(
         _StudyControllerLine('${viewModel.samplingSize}',
             heading: 'Sample Size')),
 `````
+
+## Technical Notes
+
+The CARP Mobile Sensing Demo app makes use of many of the CAMS Sampling Packages. Each of these have their own requirements to work, which entails modification on how to configure and build the app on iOS and Android. You should pay special attention to the requirements described in the README of each sampling package. This often entails editing and modifying:
+
+* the `info.plist` on iOS
+* the `AndroidManifest.xml` file on Android
+* the `MainActivity.kt` or `MainActivity.java` on Android
+* the different `build.gradle` and `settings.gradle` files on Android
+
+This example app also illustrates how these files should be configured.
