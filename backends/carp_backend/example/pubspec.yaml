@@ -13,8 +13,8 @@ dependencies:
 
   carp_serializable: ^2.0.0
   carp_core: ^1.8.0
-  carp_mobile_sensing: ^1.10.0
-  carp_webservices: ^3.4.0
+  carp_mobile_sensing: ^1.11.0
+  carp_webservices: ^3.5.0
 
   research_package: ^1.7.0
 
@@ -30,6 +30,5 @@ dependencies:
     path: ../
 
 dependency_overrides:
-  uuid: "^4.3.3"
 
 dev_dependencies:

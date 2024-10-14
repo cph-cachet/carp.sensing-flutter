@@ -20,8 +20,6 @@ void main() async {
   late CarpApp app = CarpApp(
     name: "CAWS @ DTU",
     uri: uri,
-    studyId: '<the_study_id_if_known>',
-    studyDeploymentId: '<the_study_deployment_id_if_known>',
   );
 
   // The authentication configuration
