@@ -82,12 +82,12 @@ class LocalStudyProtocolManager implements StudyProtocolManager {
     // --------- CONTEXT PACKAGE EXAMPLES -------------
     //
 
-    // // activity measure using the phone
-    // protocol.addTaskControl(
-    //     ImmediateTrigger(),
-    //     BackgroundTask(
-    //         measures: [Measure(type: ContextSamplingPackage.ACTIVITY)]),
-    //     phone);
+    // activity measure using the phone
+    protocol.addTaskControl(
+        ImmediateTrigger(),
+        BackgroundTask(
+            measures: [Measure(type: ContextSamplingPackage.ACTIVITY)]),
+        phone);
 
     // Define the online location service and add it as a 'device'
     // final locationService = LocationService();

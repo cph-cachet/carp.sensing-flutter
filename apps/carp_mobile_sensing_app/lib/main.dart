@@ -52,7 +52,7 @@ void main() async {
 
   // Initialize the bloc, setting the deployment mode.
   await bloc.initialize(
-    deploymentMode: DeploymentMode.dev,
+    deploymentMode: DeploymentMode.local,
     useCachedStudyDeployment: false,
     resumeSensingOnStartup: false,
   );

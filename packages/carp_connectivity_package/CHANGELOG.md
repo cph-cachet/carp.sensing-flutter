@@ -1,4 +1,4 @@
-## 1.7.0
+## 1.7.1
 
 * Upgrade to carp_core v. 1.8 & carp_serialization v. 2.0
 * Type safe `fromJson()` methods & nested json serialization

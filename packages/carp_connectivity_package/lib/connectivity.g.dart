@@ -7,16 +7,26 @@ part of 'connectivity.dart';
 // **************************************************************************
 
 Connectivity _$ConnectivityFromJson(Map<String, dynamic> json) => Connectivity()
+  ..$type = json['__type'] as String?
   ..connectivityStatus = (json['connectivityStatus'] as List<dynamic>)
       .map((e) => $enumDecode(_$ConnectivityStatusEnumMap, e))
       .toList();
 
-Map<String, dynamic> _$ConnectivityToJson(Connectivity instance) =>
-    <String, dynamic>{
-      'connectivityStatus': instance.connectivityStatus
-          .map((e) => _$ConnectivityStatusEnumMap[e]!)
-          .toList(),
-    };
+Map<String, dynamic> _$ConnectivityToJson(Connectivity instance) {
+  final val = <String, dynamic>{};
+
+  void writeNotNull(String key, dynamic value) {
+    if (value != null) {
+      val[key] = value;
+    }
+  }
+
+  writeNotNull('__type', instance.$type);
+  val['connectivityStatus'] = instance.connectivityStatus
+      .map((e) => _$ConnectivityStatusEnumMap[e]!)
+      .toList();
+  return val;
+}
 
 const _$ConnectivityStatusEnumMap = {
   ConnectivityStatus.bluetooth: 'bluetooth',
@@ -35,14 +45,14 @@ Bluetooth _$BluetoothFromJson(Map<String, dynamic> json) => Bluetooth(
       endScan: json['endScan'] == null
           ? null
           : DateTime.parse(json['endScan'] as String),
-    )..scanResult = (json['scanResult'] as List<dynamic>)
-        .map((e) => BluetoothDevice.fromJson(e as Map<String, dynamic>))
-        .toList();
+    )
+      ..$type = json['__type'] as String?
+      ..scanResult = (json['scanResult'] as List<dynamic>)
+          .map((e) => BluetoothDevice.fromJson(e as Map<String, dynamic>))
+          .toList();
 
 Map<String, dynamic> _$BluetoothToJson(Bluetooth instance) {
-  final val = <String, dynamic>{
-    'startScan': instance.startScan.toIso8601String(),
-  };
+  final val = <String, dynamic>{};
 
   void writeNotNull(String key, dynamic value) {
     if (value != null) {
@@ -50,6 +60,8 @@ Map<String, dynamic> _$BluetoothToJson(Bluetooth instance) {
     }
   }
 
+  writeNotNull('__type', instance.$type);
+  val['startScan'] = instance.startScan.toIso8601String();
   writeNotNull('endScan', instance.endScan?.toIso8601String());
   val['scanResult'] = instance.scanResult.map((e) => e.toJson()).toList();
   return val;
@@ -88,7 +100,7 @@ Wifi _$WifiFromJson(Map<String, dynamic> json) => Wifi(
       ssid: json['ssid'] as String?,
       bssid: json['bssid'] as String?,
       ip: json['ip'] as String?,
-    );
+    )..$type = json['__type'] as String?;
 
 Map<String, dynamic> _$WifiToJson(Wifi instance) {
   final val = <String, dynamic>{};
@@ -99,6 +111,7 @@ Map<String, dynamic> _$WifiToJson(Wifi instance) {
     }
   }
 
+  writeNotNull('__type', instance.$type);
   writeNotNull('ssid', instance.ssid);
   writeNotNull('bssid', instance.bssid);
   writeNotNull('ip', instance.ip);
