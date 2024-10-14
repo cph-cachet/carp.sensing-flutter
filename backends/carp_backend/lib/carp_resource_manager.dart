@@ -236,7 +236,7 @@ class CarpResourceManager
       _assertCarpService();
 
       info('Getting language locale from server. '
-          'study_id: ${CarpService().app.studyId}, '
+          'study_id: ${CarpService().study?.studyId}, '
           'path: ${_getLocalizationsPath(locale)}');
       DocumentSnapshot? document =
           await CarpService().document(_getLocalizationsPath(locale)).get();

@@ -147,9 +147,12 @@ class AppBLoC {
     _invitation = await CarpParticipationService().getStudyInvitation(context);
     debugPrint('CARP Study Invitation: $_invitation');
 
-    // check that the app has been updated to reflect the study id and deployment id
-    debugPrint(
-        'Study ID: ${app.studyId}, Deployment ID: ${app.studyDeploymentId}');
+    if (_invitation != null) {
+      var study = SmartphoneStudy.fromInvitation(_invitation!);
+      CarpParticipationService().study = study;
+      debugPrint('Study : $study');
+    }
+
     return _invitation;
   }
 }

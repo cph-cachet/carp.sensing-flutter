@@ -1,6 +1,5 @@
 /*
- * Copyright 2022 Copenhagen Center for Health Technology (CACHET) at the
- * Technical University of Denmark (DTU).
+ * Copyright 2018-2024 the Technical University of Denmark (DTU).
  * Use of this source code is governed by a MIT-style license that can be
  * found in the LICENSE file.
  */
@@ -8,11 +7,11 @@
 /// A library for all CARP Web Services (CAWS):
 ///
 ///  * [CarpAuthService]
+///  * [CarpService]
 ///  * [CarpProtocolService]
 ///  * [CarpParticipationService]
 ///  * [CarpDeploymentService]
 ///  * [CarpDataStreamService]
-///  * [CarpService]
 ///
 /// The (current) assumption is that each Flutter app (using this library) will
 /// only connect to one CAWS backend.

@@ -8,7 +8,7 @@
 part of communication;
 
 /// Holds a list of text (SMS) messages from the device.
-@JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
+@JsonSerializable(includeIfNull: false, explicitToJson: true)
 class TextMessageLog extends Data {
   static const dataType = CommunicationSamplingPackage.TEXT_MESSAGE_LOG;
 
@@ -16,9 +16,10 @@ class TextMessageLog extends Data {
 
   TextMessageLog([this.textMessageLog = const []]) : super();
 
+  @override
+  Function get fromJsonFunction => _$TextMessageLogFromJson;
   factory TextMessageLog.fromJson(Map<String, dynamic> json) =>
-      _$TextMessageLogFromJson(json);
-
+      FromJsonFactory().fromJson<TextMessageLog>(json);
   @override
   Map<String, dynamic> toJson() => _$TextMessageLogToJson(this);
 
@@ -27,7 +28,7 @@ class TextMessageLog extends Data {
 }
 
 /// Holds a text messages (SMS).
-@JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
+@JsonSerializable(includeIfNull: false, explicitToJson: true)
 class TextMessage extends Data {
   static const dataType = CommunicationSamplingPackage.TEXT_MESSAGE;
 
@@ -82,8 +83,10 @@ class TextMessage extends Data {
         status: sms.status,
       );
 
+  @override
+  Function get fromJsonFunction => _$TextMessageFromJson;
   factory TextMessage.fromJson(Map<String, dynamic> json) =>
-      _$TextMessageFromJson(json);
+      FromJsonFactory().fromJson<TextMessage>(json);
 
   @override
   Map<String, dynamic> toJson() => _$TextMessageToJson(this);
@@ -93,7 +96,7 @@ class TextMessage extends Data {
 }
 
 /// Holds a phone log, i.e. a list of phone calls made on the device.
-@JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
+@JsonSerializable(includeIfNull: false, explicitToJson: true)
 class PhoneLog extends Data {
   static const dataType = CommunicationSamplingPackage.PHONE_LOG;
 
@@ -102,8 +105,11 @@ class PhoneLog extends Data {
 
   PhoneLog(this.start, this.end, [this.phoneLog = const []]) : super();
 
+  @override
+  Function get fromJsonFunction => _$PhoneLogFromJson;
   factory PhoneLog.fromJson(Map<String, dynamic> json) =>
-      _$PhoneLogFromJson(json);
+      FromJsonFactory().fromJson<PhoneLog>(json);
+
   @override
   Map<String, dynamic> toJson() => _$PhoneLogToJson(this);
 
@@ -112,7 +118,7 @@ class PhoneLog extends Data {
 }
 
 /// Phone call data.
-@JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
+@JsonSerializable(includeIfNull: false, explicitToJson: true)
 class PhoneCall {
   /// Date & Time of the call.
   DateTime? timestamp;
@@ -188,7 +194,7 @@ class PhoneCall {
 }
 
 /// Holds a list of calendar events from the device.
-@JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
+@JsonSerializable(includeIfNull: false, explicitToJson: true)
 class Calendar extends Data {
   static const dataType = CommunicationSamplingPackage.CALENDAR;
 
@@ -199,14 +205,17 @@ class Calendar extends Data {
 
   Calendar(this.start, this.end, [this.calendarEvents = const []]) : super();
 
+  @override
+  Function get fromJsonFunction => _$CalendarFromJson;
   factory Calendar.fromJson(Map<String, dynamic> json) =>
-      _$CalendarFromJson(json);
+      FromJsonFactory().fromJson<Calendar>(json);
+
   @override
   Map<String, dynamic> toJson() => _$CalendarToJson(this);
 }
 
 /// A calendar event.
-@JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
+@JsonSerializable(includeIfNull: false, explicitToJson: true)
 class CalendarEvent {
   /// The unique identifier for this event
   String? eventId;

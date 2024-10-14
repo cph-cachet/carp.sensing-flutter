@@ -28,15 +28,15 @@ class LoadingPage extends StatelessWidget {
       await CarpBackend().initialize();
       await CarpBackend().authenticate();
 
-      // Check if there is a local deployment id.
-      // If not, get a deployment id based on an invitation.
-      if (bloc.studyDeploymentId == null) {
+      // Check if there is a local study.
+      // If not, get a study deployment based on an invitation.
+      if (bloc.study == null) {
         await CarpBackend().getStudyInvitation(context);
       }
 
-      // Make sure that CarpService knows the study and deployment ids
-      CarpService().app.studyId = bloc.studyId;
-      CarpService().app.studyDeploymentId = bloc.studyDeploymentId;
+      // Make sure that CarpService knows the study deployment.
+      // This is useful when an app (like this one only handles one study at a time
+      CarpService().study = bloc.study;
     }
 
     await bloc.sensing.initialize();

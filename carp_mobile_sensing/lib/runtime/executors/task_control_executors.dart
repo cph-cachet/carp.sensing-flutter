@@ -65,13 +65,14 @@ class TaskControlExecutor extends AbstractExecutor<TaskControl> {
 
   /// Callback when the [triggerExecutor] triggers.
   void onTrigger() {
-    // add the trigger task measurement to the measurements stream
+    // first, add the trigger task measurement to the measurements stream
     _controller.add(Measurement.fromData(TriggeredTask(
         triggerId: taskControl.triggerId,
         taskName: taskControl.taskName,
         destinationDeviceRoleName: taskControl.destinationDeviceRoleName!,
         control: taskControl.control)));
 
+    // then "control" the task by either starting or stopping it
     if (taskControl.control == Control.Start) {
       taskExecutor?.start();
     } else if (taskControl.control == Control.Stop) {
@@ -125,7 +126,8 @@ class TaskControlExecutor extends AbstractExecutor<TaskControl> {
 ///
 /// In contrast to the [TaskControlExecutor] (which runs in the background),
 /// this [AppTaskControlExecutor] will try to schedule the [AppTask] using
-/// the [AppTaskController]. This means that triggers also has to be [Schedulable].
+/// the [AppTaskController]. This means that the [trigger] for has to be
+/// [Schedulable].
 class AppTaskControlExecutor extends TaskControlExecutor {
   AppTaskControlExecutor(
     super.deploymentExecutor,
@@ -140,19 +142,6 @@ class AppTaskControlExecutor extends TaskControlExecutor {
   @override
   SchedulableTriggerExecutor get triggerExecutor =>
       super.triggerExecutor as SchedulableTriggerExecutor;
-
-  @override
-  bool onInitialize() {
-    AppTaskController().userTaskEvents.listen((userTask) {
-      if (userTask.state == UserTaskState.done) {
-        // add the completed task measurement to the measurements stream
-        _controller.add(Measurement.fromData(
-            CompletedTask(taskName: userTask.name, taskData: userTask.result)));
-      }
-    });
-
-    return super.onInitialize();
-  }
 
   @override
   Future<bool> onStart() async {

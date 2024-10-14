@@ -29,9 +29,13 @@ part of 'carp_auth.dart';
 /// CarpUser user = await CarpAuthService().authenticate();
 /// ```
 ///
-class CarpAuthService extends CarpAuthBaseService {
+class CarpAuthService {
   static final CarpAuthService _instance = CarpAuthService._();
   OidcUserManager? _manager;
+
+  CarpAuthProperties? _authProperties;
+  CarpUser? _currentUser;
+
   final StreamController<AuthEvent> _authEventController =
       StreamController.broadcast();
 
@@ -44,6 +48,9 @@ class CarpAuthService extends CarpAuthBaseService {
 
   CarpAuthService.instance() : this._();
 
+  /// Has this service been configured?
+  bool get isConfigured => (_authProperties != null);
+
   /// The [OidcUserManager] handling authentication.
   OidcUserManager? get manager => _manager;
 
@@ -51,10 +58,13 @@ class CarpAuthService extends CarpAuthBaseService {
   /// If `true`, the authenticated user is [currentUser].
   bool get authenticated => (_currentUser != null);
 
-  @override
+  /// The CARP authentication properties associated with the CARP Web Service.
+  /// Returns `null` if this service has not yet been configured via the
+  /// [configure] method.
   CarpAuthProperties get authProperties => nonNullAble(_authProperties);
 
-  @override
+  /// Gets the current user.
+  /// Returns `null` if no user is authenticated.
   CarpUser get currentUser => nonNullAble(_currentUser);
   set currentUser(CarpUser? user) => _currentUser = user;
 
@@ -66,8 +76,11 @@ class CarpAuthService extends CarpAuthBaseService {
   /// The URI for the authenticated endpoint for this [CarpService].
   Uri get authEndpointUri => authProperties.authURL;
 
-  @override
+  /// Configure the this instance of a Carp Service.
+
   Future<void> configure(CarpAuthProperties authProperties) async {
+    _authProperties = authProperties;
+
     _manager = OidcUserManager.lazy(
       discoveryDocumentUri: OidcUtils.getOpenIdConfigWellKnownUri(
         Uri.parse(authProperties.discoveryURL.toString()),
@@ -188,7 +201,7 @@ class CarpAuthService extends CarpAuthBaseService {
   ///
   /// This method is typically used when the access token has expired, and a new
   /// access token is needed to access the CARP web service. The refresh token
-  /// expiration date is [OAuthToken.expiresAt] which has type [DateTime].
+  /// expiration date is [OAuthToken.expiresAt].
   ///
   /// Returns the signed in user (with a new [OAuthToken] access token), if successful.
   /// Throws a [CarpServiceException] if not successful.
@@ -201,6 +214,8 @@ class CarpAuthService extends CarpAuthBaseService {
 
     final OidcUser? response = await manager?.refreshToken();
 
+    print('reposnse : $response');
+
     if (response != null) {
       currentUser = getCurrentUserProfile(response);
       currentUser.authenticated(OAuthToken.fromTokenResponse(response.token));
@@ -210,13 +225,12 @@ class CarpAuthService extends CarpAuthBaseService {
 
     // All other cases are treated as a failed attempt and throws an error
     _authEventController.add(AuthEvent.failed);
-    _currentUser = null;
 
     // auth error response from CARP is on the form
     //      {error: invalid_grant, error_description: Bad credentials}
     throw CarpServiceException(
       httpStatus: HTTPStatus(401),
-      message: 'Authentication failed.',
+      message: 'Token refresh failed.',
     );
   }
 

@@ -17,6 +17,9 @@ class SmartphoneDeploymentController extends StudyRuntime<DeviceRegistration> {
   Map<Permission, PermissionStatus>? _permissions;
 
   @override
+  SmartphoneStudy? get study => super.study as SmartphoneStudy;
+
+  @override
   SmartphoneDeployment? get deployment =>
       super.deployment as SmartphoneDeployment?;
 
@@ -146,7 +149,7 @@ class SmartphoneDeploymentController extends StudyRuntime<DeviceRegistration> {
     print(' deployment id : ${deployment!.studyDeploymentId}');
     print(' deployed time : ${deployment!.deployed}');
     print('     role name : ${deployment!.deviceConfiguration.roleName}');
-    print('       user id : ${deployment!.userId}');
+    // print('       user id : ${deployment!.userId}');
     print('      platform : ${DeviceInfo().platform.toString()}');
     print('     device ID : ${DeviceInfo().deviceID.toString()}');
     print(' data endpoint : $_dataEndPoint');
@@ -285,15 +288,17 @@ class SmartphoneDeploymentController extends StudyRuntime<DeviceRegistration> {
     // if no cache, get the deployment from the deployment service
     // and save a local cache
     status = await super.tryDeployment();
-    debug('$runtimeType - Got deployment: $deployment');
     if (status == StudyStatus.Deployed && deployment != null) {
-      deployment!.deployed = DateTime.now().toUtc();
-      Settings().getCacheBasePath(deployment!.studyDeploymentId);
-
-      // if no user is specified for this study, look up the local user id
-      deployment!.userId ??= await Settings().userId;
+      deployment!.studyId = study?.studyId;
+      deployment!.participantId = study?.participantId;
+      deployment!.participantRoleName = study?.participantRoleName;
       deployment?.status = status;
-      await saveDeployment();
+      deployment!.deployed = DateTime.now().toUtc();
+      debug('$runtimeType - Deployed deployment: $deployment');
+
+      // create local folder structure and store local deployment
+      Settings().getCacheBasePath(deployment!.studyDeploymentId);
+      saveDeployment();
     }
 
     return status;

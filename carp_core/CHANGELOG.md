@@ -1,8 +1,9 @@
-## 1.8.1
+## 1.8.2
 
 * upgrade to carp_serialization v. 2.0
 * type safe fromJson methods
 * nested json serialization
+* `addStudy` in client manager modified to take a `Study`
 
 ## 1.7.1
 

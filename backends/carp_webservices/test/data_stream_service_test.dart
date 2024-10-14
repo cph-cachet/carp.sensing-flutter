@@ -21,7 +21,7 @@ void main() {
     CarpMobileSensing.ensureInitialized();
 
     await CarpAuthService().configure(CarpProperties().authProperties);
-    CarpService().configure(CarpProperties().app);
+    CarpService().configure(CarpProperties().app, CarpProperties().study);
 
     user = await CarpAuthService().authenticateWithUsernamePassword(
       username: username,
@@ -68,7 +68,7 @@ void main() {
           DataStreamBatch(
               dataStream: DataStreamId(
                   studyDeploymentId: testDeploymentId,
-                  deviceRoleName: phoneRoleName,
+                  deviceRoleName: testPhoneRoleName,
                   dataType: Geolocation.dataType),
               firstSequenceId: 0,
               measurements: [m1, m2],
@@ -76,7 +76,7 @@ void main() {
           DataStreamBatch(
               dataStream: DataStreamId(
                   studyDeploymentId: testDeploymentId,
-                  deviceRoleName: phoneRoleName,
+                  deviceRoleName: testPhoneRoleName,
                   dataType: StepCount.dataType),
               firstSequenceId: 0,
               measurements: [m3, m4],
@@ -110,7 +110,7 @@ void main() {
           DataStreamBatch(
               dataStream: DataStreamId(
                   studyDeploymentId: testDeploymentId,
-                  deviceRoleName: phoneRoleName,
+                  deviceRoleName: testPhoneRoleName,
                   dataType: BatteryState.dataType),
               firstSequenceId: 0,
               measurements: [m1, m2],
@@ -151,7 +151,7 @@ void main() {
           DataStreamBatch(
               dataStream: DataStreamId(
                   studyDeploymentId: testDeploymentId,
-                  deviceRoleName: phoneRoleName,
+                  deviceRoleName: testPhoneRoleName,
                   dataType: BatteryState.dataType),
               firstSequenceId: 0,
               measurements: upload,
@@ -176,7 +176,7 @@ void main() {
         var list = await CarpDataStreamService().getDataStream(
           DataStreamId(
             studyDeploymentId: testDeploymentId,
-            deviceRoleName: phoneRoleName,
+            deviceRoleName: testPhoneRoleName,
             dataType: BatteryState.dataType,
           ),
           0,
@@ -199,7 +199,7 @@ void main() {
         var list = await CarpDataStreamService().getDataStream(
           DataStreamId(
             studyDeploymentId: testDeploymentId,
-            deviceRoleName: phoneRoleName,
+            deviceRoleName: testPhoneRoleName,
             dataType: BatteryState.dataType,
           ),
           0,
@@ -234,7 +234,7 @@ void main() {
             () async => await CarpDataStreamService().getDataStream(
                   DataStreamId(
                     studyDeploymentId: testDeploymentId,
-                    deviceRoleName: phoneRoleName,
+                    deviceRoleName: testPhoneRoleName,
                     dataType: DeviceInformation.dataType,
                   ),
                   0,
@@ -249,7 +249,7 @@ void main() {
       DataStreamBatch(
           dataStream: DataStreamId(
               studyDeploymentId: testDeploymentId,
-              deviceRoleName: phoneRoleName,
+              deviceRoleName: testPhoneRoleName,
               dataType: Geolocation.dataType),
           firstSequenceId: 0,
           measurements: [
@@ -274,7 +274,7 @@ void main() {
         await CarpDataStreamService().getDataStream(
           DataStreamId(
             studyDeploymentId: testDeploymentId,
-            deviceRoleName: phoneRoleName,
+            deviceRoleName: testPhoneRoleName,
             dataType: Geolocation.dataType,
           ),
           0,

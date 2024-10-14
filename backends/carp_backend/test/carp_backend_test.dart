@@ -55,8 +55,6 @@ void main() {
     late CarpApp app = CarpApp(
       name: "CAWS @ DTU",
       uri: uri.replace(pathSegments: []),
-      studyId: testStudyId,
-      studyDeploymentId: testDeploymentId,
     );
 
     // The authentication configuration
@@ -72,9 +70,16 @@ void main() {
       ]),
     );
 
+    // Configure the service with the same study we will use for all testing
+    var study = SmartphoneStudy(
+      studyId: testStudyId,
+      studyDeploymentId: testDeploymentId,
+      deviceRoleName: testDeviceRoleName,
+    );
+
     // Configure the CAWS services
     await CarpAuthService().configure(authProperties);
-    CarpService().configure(app);
+    CarpService().configure(app, study);
 
     // create a carp data manager in order to initialize json serialization
     CarpDataManager();

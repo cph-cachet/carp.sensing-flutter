@@ -1,4 +1,4 @@
-part of survey;
+part of 'survey.dart';
 
 /// A full-screen widget that shows a survey (i.e., a [RPTask]).
 class SurveyPage extends StatelessWidget {

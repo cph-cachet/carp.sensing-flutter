@@ -1,4 +1,4 @@
-part of survey;
+part of 'survey.dart';
 
 /// A task representing the [WHO-5 well-being index](https://www.psykiatri-regionh.dk/who-5/Pages/default.aspx).
 /// Included as an example.

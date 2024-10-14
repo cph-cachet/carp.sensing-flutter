@@ -19,10 +19,8 @@ class CarpDataStreamService extends CarpBaseService
   String get rpcEndpointName => DATA_STREAM_ENDPOINT_NAME;
 
   /// Gets a [DataStreamReference] for a [studyDeploymentId].
-  /// If the [studyDeploymentId] is not provided, the study deployment id
-  /// specified in the [CarpApp] is used.
-  DataStreamReference stream([String? studyDeploymentId]) =>
-      DataStreamReference._(this, studyDeploymentId ?? app.studyDeploymentId!);
+  DataStreamReference stream(String studyDeploymentId) =>
+      DataStreamReference._(this, studyDeploymentId);
 
   @override
   Future<void> openDataStreams(DataStreamsConfiguration configuration) async =>

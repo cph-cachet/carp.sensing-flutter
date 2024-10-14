@@ -53,8 +53,6 @@ void main() {
     final app = CarpApp(
       name: "CAWS @ DTU",
       uri: uri,
-      studyId: testStudyId,
-      studyDeploymentId: testDeploymentId,
     );
 
     /// The authentication configuration
@@ -141,38 +139,23 @@ void main() {
     });
 
     test('- set participant data - SEX', () async {
-      var data = await CarpParticipationService().setParticipantData(
-        testDeploymentId,
+      var participation = CarpParticipationService().participation();
+
+      var data = await participation.setParticipantData(
         {SexInput.type: SexInput(value: Sex.Male)},
       );
 
       print(toJsonString(data));
     });
 
-    test('- set participant data - CONSENT', () async {
-      // This will fail since CARP Core does not know about the Informed Consent input type...
-      var data = await CarpParticipationService().setParticipantData(
-        testDeploymentId,
-        {
-          InformedConsentInput.type: InformedConsentInput(
-            signedTimestamp: DateTime.now(),
-            name: 'JEB',
-          )
-        },
-      );
-
-      print(toJsonString(data));
-    });
-
     test('- set participant data - NAME', () async {
-      // This will fail since CARP Core does not know about the Name input type...
       var data = await CarpParticipationService().setParticipantData(
         testDeploymentId,
         {
-          NameInput.type: NameInput(
+          FullNameInput.type: FullNameInput(
             firstName: 'Eva',
             middleName: 'G.',
-            lastName: 'Bardram',
+            lastName: 'Olsen',
           )
         },
         "Mother",
@@ -180,9 +163,22 @@ void main() {
       print(toJsonString(data));
     });
 
-    test('- get participant data', () async {
-      var data =
-          await CarpParticipationService().getParticipantData(testDeploymentId);
+    test('- set informed consent', () async {
+      var participation = CarpParticipationService().participation();
+
+      await participation.setInformedConsent(
+          InformedConsentInput(
+            userId: 'jakba@dtu.dk',
+            name: 'JEB',
+            consent: 'I agree',
+            signatureImage: 'blob',
+          ),
+          '');
+    });
+
+    test('- get ALL participant data', () async {
+      var participation = CarpParticipationService().participation();
+      var data = await participation.getParticipantData();
 
       print(toJsonString(data));
     });

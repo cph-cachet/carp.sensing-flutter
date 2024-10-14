@@ -1,18 +1,18 @@
 /*
- * Copyright 2018 Copenhagen Center for Health Technology (CACHET) at the
- * Technical University of Denmark (DTU).
+ * Copyright 2021-2022 the Technical University of Denmark (DTU).
  * Use of this source code is governed by a MIT-style license that can be
  * found in the LICENSE file.
  */
 
 part of 'esense.dart';
 
-/// The eSense sampling package supporting the following measures:
+/// A sampling package for collecting context information from the
+/// [eSense](http://www.esense.io) device supporting the following measures:
 ///
 ///  * dk.cachet.carp.esense.button
 ///  * dk.cachet.carp.esense.sensor
 ///
-/// Both measure types are continous collection of eSense data from an eSense
+/// Both measure types are continuous collection of eSense data from an eSense
 /// device, which are:
 ///
 ///  * Event-based measure.

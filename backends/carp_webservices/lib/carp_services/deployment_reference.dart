@@ -18,14 +18,15 @@ part of 'carp_services.dart';
 ///   - [deployed()] - report the deployment as deployed
 ///   - [unRegisterDevice()] - unregister this - or other - device if no longer used
 class DeploymentReference extends RPCCarpReference {
-  /// The CARP study deployment ID.
-  String studyDeploymentId;
-
-  DeploymentReference._(CarpDeploymentService service, this.studyDeploymentId)
-      : super._(service);
-
+  final String _studyDeploymentId;
   PrimaryDeviceDeployment? _deployment;
   StudyDeploymentStatus? _status;
+
+  DeploymentReference._(CarpDeploymentService service, this._studyDeploymentId)
+      : super._(service);
+
+  /// The CARP study deployment ID.
+  String get studyDeploymentId => _studyDeploymentId;
 
   /// The latest known deployment status for this master device fetched from CAWS.
   /// Returns `null` if status is not yet known.
@@ -117,7 +118,6 @@ class DeploymentReference extends RPCCarpReference {
 
     // converting it to a SmartphoneDeployment and saving it
     return _deployment = SmartphoneDeployment.fromPrimaryDeviceDeployment(
-      studyId: CarpService().app.studyId,
       studyDeploymentId: studyDeploymentId,
       deployment: downloaded,
     );

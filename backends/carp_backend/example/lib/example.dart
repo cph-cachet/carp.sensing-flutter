@@ -20,8 +20,6 @@ void main() async {
   late CarpApp app = CarpApp(
     name: "CAWS @ DTU",
     uri: uri,
-    studyId: '<the_study_id_if_known>',
-    studyDeploymentId: '<the_study_deployment_id_if_known>',
   );
 
   // The authentication configuration
@@ -75,10 +73,8 @@ void main() async {
   await client.configure();
 
   // Define the study based on the invitation and add it to the client.
-  final study = await client.addStudy(
-    invitation.studyDeploymentId!,
-    invitation.assignedDevices!.first.device.roleName,
-  );
+  final study = SmartphoneStudy.fromInvitation(invitation);
+  await client.addStudy(study);
 
   // Get the study controller and try to deploy the study.
   //
@@ -86,7 +82,7 @@ void main() async {
   // phone, the local cache will be used (default behavior).
   // If not deployed before (i.e., cached) the study deployment will be
   // fetched from the deployment service.
-  final controller = client.getStudyRuntime(study);
+  final controller = client.getStudyRuntime(study.studyDeploymentId);
   await controller?.tryDeployment(useCached: false);
 
   // Configure the controller

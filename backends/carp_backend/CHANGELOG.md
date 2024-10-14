@@ -1,3 +1,7 @@
+## 1.9.0
+
+* upgrade to web_service version ^3.5
+
 ## 1.8.0
 
 * upgrade to carp_core v. 1.8 & carp_serialization v. 2.0
@@ -9,8 +13,8 @@
 
 ## 1.6.0
 
-* upgrade to web_service version ^3.0.0
-* upgrade to connectivity_plus: ^6.0.0
+* upgrade to web_service version ^3.0
+* upgrade to connectivity_plus: ^6.0
 
 ## 1.4.1
 
@@ -22,30 +26,30 @@
 
 ## 1.3.2
 
-* upgrade of `carp_webservices` package to 2.0.0
+* upgrade of `carp_webservices` package to 2.0
 * fix of example
 
 ## 1.3.0
 
 * upgrade of uuid plugins
 * removal of uri and authentication information from CarpDataEndPoint (too unsecure to specify password in clear text)
-* update to `carp_mobile_sensing` v. 1.3.0
+* update to `carp_mobile_sensing` v. 1.3
 
 ## 1.1.0
 
-* update to `carp_mobile_sensing` v. 1.1.0.
+* update to `carp_mobile_sensing` v. 1.1
 * support for the new v. 1.1.0 streaming data model using `Measurement` objects and the streaming endpoint in CAWS.
 * still supports the "old" non-core `DataPoint` endpoint.
 * measurements are now buffered on the phone before upload - default buffer time is 10 minutes, but can be configured in the redesigned `CarpDataEndPoint` configuration.
 
 ## 0.40.0
 
-* update to `carp_mobile_sensing` v. 0.40.0
-* deployment are no longer caches locally in the `CustomProtocolDeploymentService`. This is now handled directly by CAMS v. 0.40.0
+* update to `carp_mobile_sensing` v. 0.40
+* deployment are no longer caches locally in the `CustomProtocolDeploymentService`. This is now handled directly by CAMS v. 0.40
 
 ## 0.33.0
 
-* upgrade to `carp_mobile_sensing` v. 0.33.0
+* upgrade to `carp_mobile_sensing` v. 0.33
 
 ## 0.32.3
 
@@ -57,7 +61,7 @@
 
 ## 0.32.0+1
 
-* update to `carp_mobile_sensing` v. 0.32.0
+* update to `carp_mobile_sensing` v. 0.32
 * update to README file
 
 ## 0.31.2
@@ -70,7 +74,7 @@
 
 ## 0.31.0
 
-* upgrade to `carp_mobile_sensing` v. 0.31.0
+* upgrade to `carp_mobile_sensing` v. 0.31
 * remove support for handling study description in `ResourceManager` since this is now part of a `SmartphoneStudyProtocol` and handled there.
 
 ## 0.30.5

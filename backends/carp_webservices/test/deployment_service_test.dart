@@ -22,7 +22,7 @@ void main() {
   /// Configure CARP and authenticate.
   setUpAll(() async {
     await CarpAuthService().configure(CarpProperties().authProperties);
-    CarpService().configure(CarpProperties().app);
+    CarpService().configure(CarpProperties().app, CarpProperties().study);
 
     user = await CarpAuthService().authenticateWithUsernamePassword(
       username: username,
@@ -55,7 +55,7 @@ void main() {
     });
 
     test('- register device', () async {
-      final reference = CarpDeploymentService().deployment(testDeploymentId);
+      final reference = CarpDeploymentService().deployment();
       var status = await reference.getStatus();
       debugPrint('$status');
 
@@ -67,7 +67,7 @@ void main() {
     }, skip: false);
 
     test('- get primary device deployment', () async {
-      final reference = CarpDeploymentService().deployment(testDeploymentId);
+      final reference = CarpDeploymentService().deployment();
       final status = await reference.getStatus();
       debugPrint('$status');
       expect(status.primaryDeviceStatus!.device, isNotNull);
@@ -79,7 +79,7 @@ void main() {
     }, skip: false);
 
     test('- deployment success', () async {
-      final reference = CarpDeploymentService().deployment(testDeploymentId);
+      final reference = CarpDeploymentService().deployment();
       final status_1 = await reference.getStatus();
       debugPrint(toJsonString(status_1));
 
@@ -92,7 +92,7 @@ void main() {
     }, skip: false);
 
     test('- unregister device', () async {
-      final reference = CarpDeploymentService().deployment(testDeploymentId);
+      final reference = CarpDeploymentService().deployment();
       var status = await reference.getStatus();
       debugPrint('$status');
       expect(status.primaryDeviceStatus!.device, isNotNull);
@@ -173,14 +173,13 @@ void main() {
     });
 
     test('- unregister device', () async {
-      DeploymentReference reference =
-          CarpDeploymentService().deployment(testDeploymentId);
-      StudyDeploymentStatus status = await reference.getStatus();
+      StudyDeploymentStatus status = await CarpDeploymentService()
+          .getStudyDeploymentStatus(testDeploymentId);
       debugPrint('$status');
       expect(status.primaryDeviceStatus!.device, isNotNull);
-      debugPrint('${status.primaryDeviceStatus!.device}');
-      status = await reference.unRegisterDevice(
-          deviceRoleName: status.primaryDeviceStatus!.device.roleName);
+      debugPrint('{$status.primaryDeviceStatus?.device}');
+      status = await CarpDeploymentService().unregisterDevice(
+          testDeploymentId, status.primaryDeviceStatus!.device.roleName);
       debugPrint('$status');
       expect(status.studyDeploymentId, testDeploymentId);
     }, skip: false);

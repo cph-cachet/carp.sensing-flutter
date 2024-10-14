@@ -55,7 +55,7 @@ class Sensing {
 
   /// The study runtime controller for this deployment
   SmartphoneDeploymentController? get controller => (study != null)
-      ? SmartPhoneClientManager().getStudyRuntime(study!)
+      ? SmartPhoneClientManager().getStudyRuntime(study!.studyDeploymentId)
       : null;
 
   /// The stream of all sampled measurements.
@@ -103,13 +103,13 @@ class Sensing {
         // Reuse the study deployment id, if this is stored on the phone.
         _status = await SmartphoneDeploymentService().createStudyDeployment(
           protocol,
-          [],
-          bloc.studyDeploymentId,
         );
 
-        // Save the correct deployment id on the phone for later use.
-        bloc.studyDeploymentId = _status?.studyDeploymentId;
-        bloc.deviceRoleName = _status?.primaryDeviceStatus?.device.roleName;
+        // Save the study on the phone for later use.
+        bloc.study = SmartphoneStudy(
+          studyDeploymentId: _status!.studyDeploymentId,
+          deviceRoleName: _status!.primaryDeviceStatus!.device.roleName,
+        );
 
         break;
       case DeploymentMode.production:
@@ -128,10 +128,8 @@ class Sensing {
       deploymentService: deploymentService,
       askForPermissions: true,
     );
-    study = await SmartPhoneClientManager().addStudy(
-      bloc.studyDeploymentId!,
-      bloc.deviceRoleName!,
-    );
+
+    study = await SmartPhoneClientManager().addStudy(bloc.study!);
     await controller?.tryDeployment(useCached: bloc.useCachedStudyDeployment);
     await controller?.configure();
 

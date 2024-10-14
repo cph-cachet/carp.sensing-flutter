@@ -16,7 +16,7 @@ enum ClientManagerState {
   disposed,
 }
 
-class SmartPhoneClientManager extends SmartphoneClient
+class SmartPhoneClientManager extends ClientManager
     with WidgetsBindingObserver {
   static final SmartPhoneClientManager _instance = SmartPhoneClientManager._();
   NotificationController? _notificationController;
@@ -52,10 +52,10 @@ class SmartPhoneClientManager extends SmartphoneClient
   bool get heartbeat => _heartbeat;
 
   /// The number of studies running on this client.
-  int get studyCount => repository.length;
+  int get studyCount => studies.length;
 
-  /// The list of studies deployed on this client manager.
-  List<Study> get studies => repository.keys.toList();
+  // /// The list of studies deployed on this client manager.
+  // List<Study> get studies => repository.keys.toList();
 
   @override
   DeviceController get deviceController =>
@@ -65,11 +65,8 @@ class SmartPhoneClientManager extends SmartphoneClient
   NotificationController? get notificationController => _notificationController;
 
   @override
-  SmartphoneDeploymentController? lookupStudyRuntime(
-    String studyDeploymentId,
-    String deviceRoleName,
-  ) =>
-      super.lookupStudyRuntime(studyDeploymentId, deviceRoleName)
+  SmartphoneDeploymentController? getStudyRuntime(String studyDeploymentId) =>
+      super.getStudyRuntime(studyDeploymentId)
           as SmartphoneDeploymentController;
 
   /// Configure this [SmartPhoneClientManager].
@@ -159,19 +156,18 @@ class SmartPhoneClientManager extends SmartphoneClient
   }
 
   @override
-  Future<Study> addStudy(
-    String studyDeploymentId,
-    String deviceRoleName,
-  ) async {
-    Study study = await super.addStudy(
-      studyDeploymentId,
-      deviceRoleName,
+  Future<SmartphoneStudy> addStudy(Study study) async {
+    assert(
+      study is SmartphoneStudy,
+      'Trying to add a study which is not a SmartphoneStudy to a SmartphoneStudyClientManager.',
     );
+
+    await super.addStudy(study);
 
     // Always create a new controller
     final controller =
         SmartphoneDeploymentController(deploymentService!, deviceController);
-    repository[study] = controller;
+    repository[study.studyDeploymentId] = controller;
     _group.add(controller.measurements);
 
     await controller.addStudy(
@@ -180,51 +176,84 @@ class SmartPhoneClientManager extends SmartphoneClient
     );
     info('$runtimeType - Added study: $study');
 
-    return study;
+    return study as SmartphoneStudy;
+  }
+
+  /// Add a study based on an [invitation] which needs to be executed on
+  /// this client.
+  ///
+  /// This is similar to the [addStudy] method, but the study is created from the
+  /// [invitation].
+  ///
+  /// Returns the newly added study.
+  Future<SmartphoneStudy> addStudyFromInvitation(
+      ActiveParticipationInvitation invitation) async {
+    assert(deploymentService != null,
+        'Deployment Service has not been configured. Call configure() first.');
+
+    final study = SmartphoneStudy(
+      studyId: invitation.studyId,
+      studyDeploymentId: invitation.studyDeploymentId,
+      deviceRoleName: invitation.deviceRoleName ?? Smartphone.DEFAULT_ROLE_NAME,
+      participantId: invitation.participantId,
+      participantRoleName: invitation.participantRoleName,
+    );
+
+    return await addStudy(study);
   }
 
   /// Create and add a study based on the [protocol] which needs to be executed on
   /// this client.
   ///
-  /// This is similar to the [addStudy] method, but the [protocol] is deployed
-  /// immediately.
+  /// This is similar to the [addStudy] method, but the study is created from the
+  /// [protocol].
   ///
   /// Returns the newly added study.
-  Future<Study> addStudyProtocol(StudyProtocol protocol) async {
+  Future<SmartphoneStudy> addStudyFromProtocol(StudyProtocol protocol) async {
     assert(deploymentService != null,
         'Deployment Service has not been configured. Call configure() first.');
 
+    // no participant is specified in a protocol so look up the local user id
+    var userId = await Settings().userId;
+
     final status = await deploymentService!.createStudyDeployment(protocol);
-    return await addStudy(
-      status.studyDeploymentId,
-      status.primaryDeviceStatus!.device.roleName,
+    final study = SmartphoneStudy(
+      studyDeploymentId: status.studyDeploymentId,
+      deviceRoleName: status.primaryDeviceStatus!.device.roleName,
+      // we expect that this is a "local" protocol where we use the user id as
+      // participant id and with just one participant
+      participantId: userId,
+      participantRoleName: protocol.participantRoles == null ||
+              protocol.participantRoles!.isEmpty
+          ? 'Participant'
+          : protocol.participantRoles?.first.role,
     );
+    return await addStudy(study);
   }
 
   @override
-  SmartphoneDeploymentController? getStudyRuntime(Study study) =>
-      repository[study] as SmartphoneDeploymentController;
+  Future<void> removeStudy(String studyDeploymentId) async {
+    // fast out if not a valid deployment id
+    if (!studies.containsKey(studyDeploymentId)) return;
 
-  @override
-  Future<void> removeStudy(Study study) async {
-    info('Removing study from $runtimeType - $study');
+    info('Removing study from $runtimeType - $studyDeploymentId');
 
     // Disconnecting from all devices will stop sensing on each of them.
     await deviceController.disconnectAllConnectedDevices();
 
-    AppTaskController().removeStudyDeployment(study.studyDeploymentId);
+    AppTaskController().removeStudyDeployment(studyDeploymentId);
 
-    var m = getStudyRuntime(study)?.measurements;
+    var m = getStudyRuntime(studyDeploymentId)?.measurements;
     if (m != null) _group.remove(m);
 
-    await super.removeStudy(study);
+    await super.removeStudy(studyDeploymentId);
   }
 
   /// Persistently save information related to this client manger.
   /// Typically used for later resuming when app is restarted. See [resume].
   Future<void> save() async {
-    for (var study in studies) {
-      await getStudyRuntime(study)?.saveDeployment();
+    for (var studyDeploymentId in repository.keys) {
+      await getStudyRuntime(studyDeploymentId)?.saveDeployment();
     }
   }
 
@@ -247,16 +276,16 @@ class SmartPhoneClientManager extends SmartphoneClient
 
   /// Start all studies in this client manager.
   void start() {
-    for (var study in studies) {
-      getStudyRuntime(study)?.start();
+    for (var studyDeploymentId in repository.keys) {
+      getStudyRuntime(studyDeploymentId)?.start();
     }
     _state = ClientManagerState.started;
   }
 
   /// Stop all studies in this client manager.
   Future<void> stop() async {
-    for (var study in studies) {
-      await getStudyRuntime(study)?.stop();
+    for (var studyDeploymentId in repository.keys) {
+      await getStudyRuntime(studyDeploymentId)?.stop();
     }
     _state = ClientManagerState.stopped;
   }
@@ -270,8 +299,8 @@ class SmartPhoneClientManager extends SmartphoneClient
   /// (i.e., having [StudyStatus.Running]) when the app was closed.
   ///
   /// Returns the number of restored studies, if any (may be zero).
-  /// To access a list of resumed studies, use [studies] after this
-  /// resume method has ended.
+  /// To access a list of resumed studies, check the list of [studies]
+  /// **after** this resume method has ended.
   Future<int> resume() async {
     info('$runtimeType - restoring all study deployments');
     var persistentStudies = await Persistence().getAllStudyDeployments();
@@ -285,12 +314,11 @@ class SmartPhoneClientManager extends SmartphoneClient
       if (study.status == StudyStatus.Deployed ||
           study.status == StudyStatus.Running ||
           study.status == StudyStatus.Stopped) {
-        var newStudy =
-            await addStudy(study.studyDeploymentId, study.deviceRoleName);
-        newStudy.status = study.status;
-        final controller = getStudyRuntime(study);
+        // add the restored study
+        await addStudy(study);
 
         // deploy the study using the cached deployment
+        final controller = getStudyRuntime(study.studyDeploymentId);
         await controller?.tryDeployment(useCached: true);
         await controller?.configure();
 
@@ -318,8 +346,8 @@ class SmartPhoneClientManager extends SmartphoneClient
   @mustCallSuper
   void dispose() {
     deactivate();
-    for (var study in studies) {
-      getStudyRuntime(study)?.dispose();
+    for (var studyDeploymentId in repository.keys) {
+      getStudyRuntime(studyDeploymentId)?.dispose();
     }
     _group.close();
     Persistence().close();

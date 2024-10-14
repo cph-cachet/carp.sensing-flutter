@@ -1,10 +1,10 @@
 /*
- * Copyright 2024 Copenhagen Center for Health Technology (CACHET) at the
- * Technical University of Denmark (DTU).
+ * Copyright 2024 the Technical University of Denmark (DTU).
  * Use of this source code is governed by a MIT-style license that can be
  * found in the LICENSE file.
  */
-part of carp_movesense_package;
+
+part of 'carp_movesense_package.dart';
 
 abstract class _MovesenseProbe extends StreamProbe {
   int? _subscriptionId;

@@ -1,6 +1,6 @@
 name: carp_mobile_sensing_app
 description: The CARP Mobile Sensing App
-version: 1.9.0
+version: 1.11.0
 homepage: https://github.com/cph-cachet/carp.sensing-flutter/tree/master/apps/carp_mobile_sensing_app
 publish_to: 'none' 
 
@@ -11,10 +11,10 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  flutter_launcher_icons: ^0.13.0
+  flutter_launcher_icons: ^0.14.0
   permission_handler: ^11.0.0  
   
-  # carp_serializable: ^1.1.0
+  #carp_serializable: ^1.1.0
   #carp_core: ^0.30.0
   #carp_mobile_sensing: ^0.30.6
   #carp_connectivity_package: ^0.30.0
@@ -30,7 +30,7 @@ dependencies:
   # carp_esense_package: ^0.30.2
   # carp_movisens_package: ^0.32.0
 
-  research_package: ^1.2.0
+  research_package: ^1.7.0
   # health: ^8.1.0
 
 # Overriding carp libraries to use the local copy

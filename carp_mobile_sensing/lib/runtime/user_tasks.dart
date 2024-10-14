@@ -36,7 +36,11 @@ class SensingUserTaskFactory implements UserTaskFactory {
 
 /// A task that the user of the app needs to attend to.
 ///
-/// A [UserTask] is enqueued in the [AppTaskController]'s queue.
+/// An [UserTask] is enqueued in the [AppTaskController]'s queue.
+///
+/// An [UserTask] wraps a [backgroundTaskExecutor], which collects the
+/// measures defined in this task. This is done in the background and started
+/// when this user task is started by calling the [onStart] method.
 abstract class UserTask {
   late AppTaskExecutor _executor;
   UserTaskState _state = UserTaskState.initialized;
@@ -91,12 +95,12 @@ abstract class UserTask {
   /// changes to a [UserTask].
   Stream<UserTaskState> get stateEvents => _stateController.stream;
 
-  /// The [TaskExecutor] that is to be executed once the user
-  /// want to start this task.
-  TaskExecutor get executor => _executor.backgroundTaskExecutor;
-
-  /// The [AppTaskExecutor] of this user task.
+  /// The [AppTaskExecutor] that created this user task.
   AppTaskExecutor get appTaskExecutor => _executor;
+
+  /// The task executor which is used to collect the sensor measures of this user
+  /// task in the background once started.
+  TaskExecutor backgroundTaskExecutor = BackgroundTaskExecutor();
 
   /// The result of this task, once done.
   Data? result;
@@ -119,7 +123,14 @@ abstract class UserTask {
   @mustCallSuper
   void onStart() {
     // initialize the background task which holds any measures added to the app task
-    executor.initialize(task.backgroundTask, _executor.deployment);
+    backgroundTaskExecutor.initialize(
+      task.backgroundTask,
+      _executor.deployment,
+    );
+
+    // add the events from the background executor to the overall stream of events
+    _executor.addExecutor(backgroundTaskExecutor);
+
     state = UserTaskState.started;
   }
 
@@ -131,6 +142,7 @@ abstract class UserTask {
   void onCancel({bool dequeue = false}) {
     state = UserTaskState.canceled;
     if (dequeue) AppTaskController().dequeue(id);
+    _executor.removeExecutor(backgroundTaskExecutor);
   }
 
   /// Callback from the app if this task expires.
@@ -140,6 +152,7 @@ abstract class UserTask {
   void onExpired() {
     state = UserTaskState.expired;
     AppTaskController().dequeue(id);
+    _executor.removeExecutor(backgroundTaskExecutor);
   }
 
   /// Callback from the app when this task is done.
@@ -152,6 +165,7 @@ abstract class UserTask {
     state = UserTaskState.done;
     AppTaskController().done(id, result);
     if (dequeue) AppTaskController().dequeue(id);
+    _executor.removeExecutor(backgroundTaskExecutor);
   }
 
   /// Callback from the OS when this task is clicked by the user in the
@@ -216,13 +230,13 @@ class BackgroundSensingUserTask extends UserTask {
   @override
   void onStart() {
     super.onStart();
-    executor.start();
+    backgroundTaskExecutor.start();
   }
 
   @override
   void onDone({dequeue = false, Data? result}) {
     super.onDone(dequeue: dequeue, result: result);
-    executor.stop();
+    backgroundTaskExecutor.stop();
   }
 }
 

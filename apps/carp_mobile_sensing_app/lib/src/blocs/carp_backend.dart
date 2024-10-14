@@ -44,12 +44,7 @@ class CarpBackend {
       );
 
   /// The CAWS app configuration.
-  late final CarpApp _app = CarpApp(
-    name: "CAWS @ DTU",
-    uri: uri,
-    studyId: bloc.studyId,
-    studyDeploymentId: bloc.studyDeploymentId,
-  );
+  late final CarpApp _app = CarpApp(name: "CAWS @ DTU", uri: uri);
 
   CarpApp get app => _app;
 
@@ -92,12 +87,13 @@ class CarpBackend {
         await CarpParticipationService().getStudyInvitation(context);
     debug('CAWS Study Invitation: $invitation');
 
-    bloc.studyId = invitation?.studyId;
-    bloc.studyDeploymentId = invitation?.studyDeploymentId;
-    bloc.deviceRoleName = invitation?.assignedDevices?.first.device.roleName;
-    info('Invitation received - '
-        'study id: ${bloc.studyId}, '
-        'deployment id: ${bloc.studyDeploymentId}, '
-        'role name: ${bloc.deviceRoleName}');
+    if (invitation != null) {
+      bloc.study = SmartphoneStudy.fromInvitation(invitation);
+
+      info('Invitation received - '
+          'study id: ${invitation.studyId}, '
+          'deployment id: ${invitation.studyDeploymentId}, '
+          'role name: ${invitation.deviceRoleName}');
+    }
   }
 }

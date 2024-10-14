@@ -1,3 +1,8 @@
+## 1.7.0
+
+* Upgrade to carp_core v. 1.8 & carp_serialization v. 2.0
+* Type safe `fromJson()` methods & nested json serialization
+
 ## 1.6.0
 
 * upgrading to carp_mobile_sensing v. 1.9.0 (better permission handling)

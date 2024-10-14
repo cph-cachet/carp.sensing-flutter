@@ -15,17 +15,18 @@ class CarpDeploymentService extends CarpBaseService
   CarpDeploymentService._();
 
   /// Returns the singleton default instance of the [CarpDeploymentService].
-  /// Before this instance can be used, it must be configured using the [configure] method.
+  /// Before this instance can be used, it must be configured using the
+  /// [configure] method.
   factory CarpDeploymentService() => _instance;
 
   @override
   String get rpcEndpointName => "deployment-service";
 
   /// Gets a [DeploymentReference] for a [studyDeploymentId].
-  /// If the [studyDeploymentId] is not provided, the study deployment id
-  /// specified in the [app] is used.
+  /// [studyDeploymentId] can be omitted if specified as part of this
+  /// service's [study].
   DeploymentReference deployment([String? studyDeploymentId]) =>
-      DeploymentReference._(this, studyDeploymentId ?? app.studyDeploymentId!);
+      DeploymentReference._(this, getStudyDeploymentId(studyDeploymentId));
 
   @override
   Future<StudyDeploymentStatus> createStudyDeployment(
@@ -55,8 +56,8 @@ class CarpDeploymentService extends CarpBaseService
   @override
   Future<List<StudyDeploymentStatus>> getStudyDeploymentStatusList(
       List<String> studyDeploymentIds) async {
-    assert(studyDeploymentIds.isNotEmpty,
-        'List of studyDeploymentIds cannot be empty.');
+    // fast out if not ids specified
+    if (studyDeploymentIds.isEmpty) return [];
 
     Map<String, dynamic> responseJson =
         await _rpc(GetStudyDeploymentStatusList(studyDeploymentIds));
@@ -102,7 +103,6 @@ class CarpDeploymentService extends CarpBaseService
 
     // converting it to a SmartphoneDeployment
     return SmartphoneDeployment.fromPrimaryDeviceDeployment(
-      studyId: CarpService().app.studyId,
       studyDeploymentId: studyDeploymentId,
       deployment: deployment,
     );

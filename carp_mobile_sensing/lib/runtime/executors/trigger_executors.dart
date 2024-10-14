@@ -298,10 +298,7 @@ class SamplingEventTriggerExecutor
   @override
   Future<bool> onStart() async {
     _subscription ??= SmartPhoneClientManager()
-        .lookupStudyRuntime(
-          deployment!.studyDeploymentId,
-          deployment!.deviceConfiguration.roleName,
-        )
+        .getStudyRuntime(deployment!.studyDeploymentId)
         ?.measurementsByType(configuration!.measureType)
         .distinct()
         .listen((measurement) {
@@ -332,8 +329,7 @@ class ConditionalSamplingEventTriggerExecutor
   @override
   Future<bool> onStart() async {
     _subscription ??= SmartPhoneClientManager()
-        .lookupStudyRuntime(deployment!.studyDeploymentId,
-            deployment!.deviceConfiguration.roleName)
+        .getStudyRuntime(deployment!.studyDeploymentId)
         ?.measurementsByType(configuration!.measureType)
         .listen((measurement) {
       if (configuration!.triggerCondition != null &&

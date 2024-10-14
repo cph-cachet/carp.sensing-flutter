@@ -14,13 +14,16 @@ class Persistence {
   static const String DEPLOYMENT_TABLE_NAME = 'deployment';
   static const String TASK_QUEUE_TABLE_NAME = 'task_queue';
 
-  static const String DEPLOYMENT_ID_COLUMN = 'deployment_id';
-  static const String ROLE_NAME_COLUMN = 'device_role_name';
+  static const String STUDY_ID_COLUMN = 'study_id';
+  static const String STUDY_DEPLOYMENT_ID_COLUMN = 'study_deployment_id';
+  static const String DEVICE_ROLE_NAME_COLUMN = 'device_role_name';
+  static const String PARTICIPANT_ID_COLUMN = 'participant_id';
+  static const String PARTICIPANT_ROLE_NAME_COLUMN = 'participant_role_name';
   static const String DEPLOYMENT_STATUS_COLUMN = 'deployment_status';
   static const String UPDATED_AT_COLUMN = 'updated_at';
   static const String DEPLOYED_AT_COLUMN = 'deployed_at';
-  static const String USER_ID_COLUMN = 'user_id';
   static const String DEPLOYMENT_COLUMN = 'deployment';
+  // static const String USER_ID_COLUMN = 'user_id';
 
   static const String ID_COLUMN = 'id';
   static const String TASK_ID_COLUMN = 'task_id';
@@ -51,10 +54,22 @@ class Persistence {
       singleInstance: true,
       onCreate: (Database db, int version) async {
         // when creating the database, create the tables
-        await db.execute(
-            'CREATE TABLE $DEPLOYMENT_TABLE_NAME ($DEPLOYMENT_ID_COLUMN TEXT PRIMARY KEY, $ROLE_NAME_COLUMN TEXT, $DEPLOYMENT_STATUS_COLUMN INTEGER, $UPDATED_AT_COLUMN TEXT, $DEPLOYED_AT_COLUMN TEXT, $USER_ID_COLUMN TEXT, $DEPLOYMENT_COLUMN TEXT)');
-        await db.execute(
-            'CREATE TABLE $TASK_QUEUE_TABLE_NAME ($ID_COLUMN INTEGER PRIMARY KEY, $DEPLOYMENT_ID_COLUMN TEXT, $TASK_ID_COLUMN TEXT, $TASK_COLUMN TEXT)');
+        await db.execute('CREATE TABLE $DEPLOYMENT_TABLE_NAME ('
+            '$STUDY_ID_COLUMN TEXT, '
+            '$STUDY_DEPLOYMENT_ID_COLUMN TEXT PRIMARY KEY, '
+            '$DEVICE_ROLE_NAME_COLUMN TEXT, '
+            '$PARTICIPANT_ID_COLUMN TEXT, '
+            '$PARTICIPANT_ROLE_NAME_COLUMN TEXT, '
+            '$DEPLOYMENT_STATUS_COLUMN INTEGER, '
+            '$UPDATED_AT_COLUMN TEXT, '
+            '$DEPLOYED_AT_COLUMN TEXT, '
+            '$DEPLOYMENT_COLUMN TEXT)');
+
+        await db.execute('CREATE TABLE $TASK_QUEUE_TABLE_NAME ('
+            '$ID_COLUMN INTEGER PRIMARY KEY, '
+            '$STUDY_DEPLOYMENT_ID_COLUMN TEXT, '
+            '$TASK_ID_COLUMN TEXT, '
+            '$TASK_COLUMN TEXT)');
 
         debug('$runtimeType - $databaseName DB created');
       },
@@ -76,24 +91,30 @@ class Persistence {
   /// Get the list of all study deployments previously stored on this phone.
   ///
   /// Returns an empty list, if not study deployments are stored.
-  Future<List<Study>> getAllStudyDeployments() async {
+  Future<List<SmartphoneStudy>> getAllStudyDeployments() async {
     info("$runtimeType - Getting all study deployments stored on this device.");
-    List<Study> list = [];
+    List<SmartphoneStudy> list = [];
     try {
       final List<Map<String, Object?>> maps = await database?.query(
             DEPLOYMENT_TABLE_NAME,
             columns: [
-              DEPLOYMENT_ID_COLUMN,
-              ROLE_NAME_COLUMN,
+              STUDY_ID_COLUMN,
+              STUDY_DEPLOYMENT_ID_COLUMN,
+              DEVICE_ROLE_NAME_COLUMN,
+              PARTICIPANT_ID_COLUMN,
+              PARTICIPANT_ROLE_NAME_COLUMN,
               DEPLOYMENT_STATUS_COLUMN,
             ],
           ) ??
           [];
       if (maps.isNotEmpty) {
         for (var map in maps) {
-          final study = Study(
-            map[DEPLOYMENT_ID_COLUMN] as String,
-            map[ROLE_NAME_COLUMN] as String,
+          final study = SmartphoneStudy(
+            studyId: map[STUDY_ID_COLUMN] as String,
+            studyDeploymentId: map[STUDY_DEPLOYMENT_ID_COLUMN] as String,
+            deviceRoleName: map[DEVICE_ROLE_NAME_COLUMN] as String,
+            participantId: map[PARTICIPANT_ID_COLUMN] as String,
+            participantRoleName: map[PARTICIPANT_ROLE_NAME_COLUMN] as String,
           );
           final status = map[DEPLOYMENT_STATUS_COLUMN] as int;
           study.status = StudyStatus.values[status];
@@ -114,12 +135,14 @@ class Persistence {
     bool success = true;
     try {
       final Map<String, dynamic> map = {
-        DEPLOYMENT_ID_COLUMN: deployment.studyDeploymentId,
-        ROLE_NAME_COLUMN: deployment.deviceConfiguration.roleName,
+        STUDY_ID_COLUMN: deployment.studyId,
+        STUDY_DEPLOYMENT_ID_COLUMN: deployment.studyDeploymentId,
+        DEVICE_ROLE_NAME_COLUMN: deployment.deviceRoleName,
+        PARTICIPANT_ID_COLUMN: deployment.participantId,
+        PARTICIPANT_ROLE_NAME_COLUMN: deployment.participantRoleName,
         DEPLOYMENT_STATUS_COLUMN: deployment.status.index,
         UPDATED_AT_COLUMN: DateTime.now().toUtc().toIso8601String(),
         DEPLOYED_AT_COLUMN: deployment.deployed?.toUtc().toIso8601String(),
-        USER_ID_COLUMN: deployment.userId,
         DEPLOYMENT_COLUMN: jsonEncode(deployment),
       };
       await database?.insert(
@@ -143,7 +166,7 @@ class Persistence {
       final List<Map<String, Object?>> maps = await database?.query(
             DEPLOYMENT_TABLE_NAME,
             columns: [DEPLOYMENT_COLUMN],
-            where: '$DEPLOYMENT_ID_COLUMN = ?',
+            where: '$STUDY_DEPLOYMENT_ID_COLUMN = ?',
             whereArgs: [deploymentId],
           ) ??
           [];
@@ -165,7 +188,7 @@ class Persistence {
     try {
       await database?.delete(
         DEPLOYMENT_TABLE_NAME,
-        where: '$DEPLOYMENT_ID_COLUMN = ?',
+        where: '$STUDY_DEPLOYMENT_ID_COLUMN = ?',
         whereArgs: [deploymentId],
       );
     } catch (exception) {
@@ -188,7 +211,7 @@ class Persistence {
         // all these cases we need to create or update the record
         var snapshot = UserTaskSnapshot.fromUserTask(task);
         final Map<String, dynamic> map = {
-          DEPLOYMENT_ID_COLUMN: task.studyDeploymentId,
+          STUDY_DEPLOYMENT_ID_COLUMN: task.studyDeploymentId,
           TASK_ID_COLUMN: task.id,
           TASK_COLUMN: jsonEncode(snapshot),
         };

@@ -9,12 +9,22 @@ part of 'carp_context_package.dart';
 Activity _$ActivityFromJson(Map<String, dynamic> json) => Activity(
       type: $enumDecode(_$ActivityTypeEnumMap, json['type']),
       confidence: (json['confidence'] as num).toInt(),
-    );
+    )..$type = json['__type'] as String?;
 
-Map<String, dynamic> _$ActivityToJson(Activity instance) => <String, dynamic>{
-      'confidence': instance.confidence,
-      'type': _$ActivityTypeEnumMap[instance.type]!,
-    };
+Map<String, dynamic> _$ActivityToJson(Activity instance) {
+  final val = <String, dynamic>{};
+
+  void writeNotNull(String key, dynamic value) {
+    if (value != null) {
+      val[key] = value;
+    }
+  }
+
+  writeNotNull('__type', instance.$type);
+  val['confidence'] = instance.confidence;
+  val['type'] = _$ActivityTypeEnumMap[instance.type]!;
+  return val;
+}
 
 const _$ActivityTypeEnumMap = {
   ActivityType.IN_VEHICLE: 'IN_VEHICLE',
@@ -26,6 +36,8 @@ const _$ActivityTypeEnumMap = {
 };
 
 Location _$LocationFromJson(Map<String, dynamic> json) => Location(
+      latitude: (json['latitude'] as num?)?.toDouble() ?? 0,
+      longitude: (json['longitude'] as num?)?.toDouble() ?? 0,
       altitude: (json['altitude'] as num?)?.toDouble(),
       accuracy: (json['accuracy'] as num?)?.toDouble(),
       verticalAccuracy: (json['verticalAccuracy'] as num?)?.toDouble(),
@@ -41,7 +53,11 @@ Location _$LocationFromJson(Map<String, dynamic> json) => Location(
           (json['elapsedRealtimeUncertaintyNanos'] as num?)?.toDouble(),
       satellites: (json['satellites'] as num?)?.toInt(),
       provider: json['provider'] as String?,
-    );
+    )
+      ..$type = json['__type'] as String?
+      ..sensorSpecificData = json['sensorSpecificData'] == null
+          ? null
+          : Data.fromJson(json['sensorSpecificData'] as Map<String, dynamic>);
 
 Map<String, dynamic> _$LocationToJson(Location instance) {
   final val = <String, dynamic>{};
@@ -52,6 +68,10 @@ Map<String, dynamic> _$LocationToJson(Location instance) {
     }
   }
 
+  writeNotNull('__type', instance.$type);
+  writeNotNull('sensorSpecificData', instance.sensorSpecificData?.toJson());
+  val['latitude'] = instance.latitude;
+  val['longitude'] = instance.longitude;
   writeNotNull('altitude', instance.altitude);
   writeNotNull('accuracy', instance.accuracy);
   writeNotNull('verticalAccuracy', instance.verticalAccuracy);
@@ -70,6 +90,7 @@ Map<String, dynamic> _$LocationToJson(Location instance) {
 }
 
 Weather _$WeatherFromJson(Map<String, dynamic> json) => Weather()
+  ..$type = json['__type'] as String?
   ..country = json['country'] as String?
   ..areaName = json['areaName'] as String?
   ..weatherMain = json['weatherMain'] as String?
@@ -103,6 +124,7 @@ Map<String, dynamic> _$WeatherToJson(Weather instance) {
     }
   }
 
+  writeNotNull('__type', instance.$type);
   writeNotNull('country', instance.country);
   writeNotNull('areaName', instance.areaName);
   writeNotNull('weatherMain', instance.weatherMain);
@@ -129,24 +151,55 @@ Map<String, dynamic> _$WeatherToJson(Weather instance) {
 
 WeatherService _$WeatherServiceFromJson(Map<String, dynamic> json) =>
     WeatherService(
+      roleName: json['roleName'] as String?,
       apiKey: json['apiKey'] as String,
-    );
+    )
+      ..$type = json['__type'] as String?
+      ..isOptional = json['isOptional'] as bool?
+      ..defaultSamplingConfiguration =
+          (json['defaultSamplingConfiguration'] as Map<String, dynamic>?)?.map(
+        (k, e) => MapEntry(
+            k, SamplingConfiguration.fromJson(e as Map<String, dynamic>)),
+      );
 
-Map<String, dynamic> _$WeatherServiceToJson(WeatherService instance) =>
-    <String, dynamic>{
-      'apiKey': instance.apiKey,
-    };
+Map<String, dynamic> _$WeatherServiceToJson(WeatherService instance) {
+  final val = <String, dynamic>{};
+
+  void writeNotNull(String key, dynamic value) {
+    if (value != null) {
+      val[key] = value;
+    }
+  }
+
+  writeNotNull('__type', instance.$type);
+  val['roleName'] = instance.roleName;
+  writeNotNull('isOptional', instance.isOptional);
+  writeNotNull(
+      'defaultSamplingConfiguration',
+      instance.defaultSamplingConfiguration
+          ?.map((k, e) => MapEntry(k, e.toJson())));
+  val['apiKey'] = instance.apiKey;
+  return val;
+}
 
 OMHContextDataPoint _$OMHContextDataPointFromJson(Map<String, dynamic> json) =>
     OMHContextDataPoint(
       DataPoint.fromJson(json['datapoint'] as Map<String, dynamic>),
-    );
+    )..$type = json['__type'] as String?;
 
-Map<String, dynamic> _$OMHContextDataPointToJson(
-        OMHContextDataPoint instance) =>
-    <String, dynamic>{
-      'datapoint': instance.datapoint.toJson(),
-    };
+Map<String, dynamic> _$OMHContextDataPointToJson(OMHContextDataPoint instance) {
+  final val = <String, dynamic>{};
+
+  void writeNotNull(String key, dynamic value) {
+    if (value != null) {
+      val[key] = value;
+    }
+  }
+
+  writeNotNull('__type', instance.$type);
+  val['datapoint'] = instance.datapoint.toJson();
+  return val;
+}
 
 GeoPosition _$GeoPositionFromJson(Map<String, dynamic> json) => GeoPosition(
       (json['latitude'] as num).toDouble(),
@@ -203,12 +256,22 @@ Map<String, dynamic> _$GeofenceSamplingConfigurationToJson(
 Geofence _$GeofenceFromJson(Map<String, dynamic> json) => Geofence(
       type: $enumDecode(_$GeofenceTypeEnumMap, json['type']),
       name: json['name'] as String,
-    );
+    )..$type = json['__type'] as String?;
 
-Map<String, dynamic> _$GeofenceToJson(Geofence instance) => <String, dynamic>{
-      'name': instance.name,
-      'type': _$GeofenceTypeEnumMap[instance.type]!,
-    };
+Map<String, dynamic> _$GeofenceToJson(Geofence instance) {
+  final val = <String, dynamic>{};
+
+  void writeNotNull(String key, dynamic value) {
+    if (value != null) {
+      val[key] = value;
+    }
+  }
+
+  writeNotNull('__type', instance.$type);
+  val['name'] = instance.name;
+  val['type'] = _$GeofenceTypeEnumMap[instance.type]!;
+  return val;
+}
 
 const _$GeofenceTypeEnumMap = {
   GeofenceType.ENTER: 'ENTER',
@@ -224,12 +287,10 @@ AirQuality _$AirQualityFromJson(Map<String, dynamic> json) => AirQuality(
       longitude: (json['longitude'] as num).toDouble(),
       airQualityLevel: $enumDecodeNullable(
           _$AirQualityLevelEnumMap, json['airQualityLevel']),
-    );
+    )..$type = json['__type'] as String?;
 
 Map<String, dynamic> _$AirQualityToJson(AirQuality instance) {
-  final val = <String, dynamic>{
-    'airQualityIndex': instance.airQualityIndex,
-  };
+  final val = <String, dynamic>{};
 
   void writeNotNull(String key, dynamic value) {
     if (value != null) {
@@ -237,6 +298,8 @@ Map<String, dynamic> _$AirQualityToJson(AirQuality instance) {
     }
   }
 
+  writeNotNull('__type', instance.$type);
+  val['airQualityIndex'] = instance.airQualityIndex;
   writeNotNull('source', instance.source);
   writeNotNull('place', instance.place);
   val['latitude'] = instance.latitude;
@@ -259,13 +322,36 @@ const _$AirQualityLevelEnumMap = {
 
 AirQualityService _$AirQualityServiceFromJson(Map<String, dynamic> json) =>
     AirQualityService(
+      roleName: json['roleName'] as String?,
       apiKey: json['apiKey'] as String,
-    );
+    )
+      ..$type = json['__type'] as String?
+      ..isOptional = json['isOptional'] as bool?
+      ..defaultSamplingConfiguration =
+          (json['defaultSamplingConfiguration'] as Map<String, dynamic>?)?.map(
+        (k, e) => MapEntry(
+            k, SamplingConfiguration.fromJson(e as Map<String, dynamic>)),
+      );
 
-Map<String, dynamic> _$AirQualityServiceToJson(AirQualityService instance) =>
-    <String, dynamic>{
-      'apiKey': instance.apiKey,
-    };
+Map<String, dynamic> _$AirQualityServiceToJson(AirQualityService instance) {
+  final val = <String, dynamic>{};
+
+  void writeNotNull(String key, dynamic value) {
+    if (value != null) {
+      val[key] = value;
+    }
+  }
+
+  writeNotNull('__type', instance.$type);
+  val['roleName'] = instance.roleName;
+  writeNotNull('isOptional', instance.isOptional);
+  writeNotNull(
+      'defaultSamplingConfiguration',
+      instance.defaultSamplingConfiguration
+          ?.map((k, e) => MapEntry(k, e.toJson())));
+  val['apiKey'] = instance.apiKey;
+  return val;
+}
 
 Mobility _$MobilityFromJson(Map<String, dynamic> json) => Mobility(
       timestamp: json['timestamp'] == null
@@ -281,7 +367,7 @@ Mobility _$MobilityFromJson(Map<String, dynamic> json) => Mobility(
       normalizedEntropy: (json['normalizedEntropy'] as num?)?.toDouble(),
       homeStay: (json['homeStay'] as num?)?.toDouble(),
       distanceTraveled: (json['distanceTraveled'] as num?)?.toDouble(),
-    );
+    )..$type = json['__type'] as String?;
 
 Map<String, dynamic> _$MobilityToJson(Mobility instance) {
   final val = <String, dynamic>{};
@@ -292,6 +378,7 @@ Map<String, dynamic> _$MobilityToJson(Mobility instance) {
     }
   }
 
+  writeNotNull('__type', instance.$type);
   writeNotNull('timestamp', instance.timestamp?.toIso8601String());
   writeNotNull('date', instance.date?.toIso8601String());
   writeNotNull('numberOfStops', instance.numberOfStops);
@@ -341,6 +428,7 @@ Map<String, dynamic> _$MobilitySamplingConfigurationToJson(
 
 LocationService _$LocationServiceFromJson(Map<String, dynamic> json) =>
     LocationService(
+      roleName: json['roleName'] as String?,
       accuracy:
           $enumDecodeNullable(_$GeolocationAccuracyEnumMap, json['accuracy']) ??
               GeolocationAccuracy.balanced,
@@ -354,14 +442,17 @@ LocationService _$LocationServiceFromJson(Map<String, dynamic> json) =>
       notificationIconName: json['notificationIconName'] as String?,
       notificationOnTapBringToFront:
           json['notificationOnTapBringToFront'] as bool? ?? false,
-    );
+    )
+      ..$type = json['__type'] as String?
+      ..isOptional = json['isOptional'] as bool?
+      ..defaultSamplingConfiguration =
+          (json['defaultSamplingConfiguration'] as Map<String, dynamic>?)?.map(
+        (k, e) => MapEntry(
+            k, SamplingConfiguration.fromJson(e as Map<String, dynamic>)),
+      );
 
 Map<String, dynamic> _$LocationServiceToJson(LocationService instance) {
-  final val = <String, dynamic>{
-    'accuracy': _$GeolocationAccuracyEnumMap[instance.accuracy]!,
-    'distance': instance.distance,
-    'interval': instance.interval.inMicroseconds,
-  };
+  final val = <String, dynamic>{};
 
   void writeNotNull(String key, dynamic value) {
     if (value != null) {
@@ -369,6 +460,16 @@ Map<String, dynamic> _$LocationServiceToJson(LocationService instance) {
     }
   }
 
+  writeNotNull('__type', instance.$type);
+  val['roleName'] = instance.roleName;
+  writeNotNull('isOptional', instance.isOptional);
+  writeNotNull(
+      'defaultSamplingConfiguration',
+      instance.defaultSamplingConfiguration
+          ?.map((k, e) => MapEntry(k, e.toJson())));
+  val['accuracy'] = _$GeolocationAccuracyEnumMap[instance.accuracy]!;
+  val['distance'] = instance.distance;
+  val['interval'] = instance.interval.inMicroseconds;
   writeNotNull('notificationTitle', instance.notificationTitle);
   writeNotNull('notificationMessage', instance.notificationMessage);
   writeNotNull('notificationDescription', instance.notificationDescription);

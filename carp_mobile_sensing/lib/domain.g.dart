@@ -395,6 +395,7 @@ Map<String, dynamic>
 SmartphoneDeployment _$SmartphoneDeploymentFromJson(
         Map<String, dynamic> json) =>
     SmartphoneDeployment(
+      studyId: json['studyId'] as String?,
       studyDeploymentId: json['studyDeploymentId'] as String?,
       deviceConfiguration:
           PrimaryDeviceConfiguration<DeviceRegistration>.fromJson(
@@ -436,10 +437,10 @@ SmartphoneDeployment _$SmartphoneDeploymentFromJson(
                   ExpectedParticipantData.fromJson(e as Map<String, dynamic>))
               .toSet() ??
           const {},
-      userId: json['userId'] as String?,
+      participantId: json['participantId'] as String?,
+      participantRoleName: json['participantRoleName'] as String?,
     )
       ..applicationData = json['applicationData'] as Map<String, dynamic>?
-      ..studyId = json['studyId'] as String?
       ..deployed = json['deployed'] == null
           ? null
           : DateTime.parse(json['deployed'] as String)
@@ -469,8 +470,9 @@ Map<String, dynamic> _$SmartphoneDeploymentToJson(
       instance.expectedParticipantData.map((e) => e.toJson()).toList();
   writeNotNull('studyId', instance.studyId);
   val['studyDeploymentId'] = instance.studyDeploymentId;
+  writeNotNull('participantId', instance.participantId);
+  writeNotNull('participantRoleName', instance.participantRoleName);
   writeNotNull('deployed', instance.deployed?.toIso8601String());
-  writeNotNull('userId', instance.userId);
   val['status'] = _$StudyStatusEnumMap[instance.status]!;
   return val;
 }

@@ -1,11 +1,4 @@
-/*
- * Copyright 2020 Copenhagen Center for Health Technology (CACHET) at the
- * Technical University of Denmark (DTU).
- * Use of this source code is governed by a MIT-style license that can be
- * found in the LICENSE file.
- */
-
-part of survey;
+part of 'survey.dart';
 
 /// A [UserTask] that contains a survey.
 ///
@@ -43,22 +36,25 @@ class SurveyUserTask extends UserTask {
   @override
   void onStart() {
     super.onStart();
-    executor.start();
+
+    // start collecting sensor data in the background
+    backgroundTaskExecutor.start();
   }
 
   void _onSurveySubmit(RPTaskResult result) {
     // when we have the survey result, add it to the measurement stream
     var data = RPTaskResultData(result);
-    executor.addMeasurement(Measurement.fromData(data));
+    appTaskExecutor.addMeasurement(Measurement.fromData(data));
     // and then stop the background executor
-    executor.stop();
+    backgroundTaskExecutor.stop();
     super.onDone(result: data);
   }
 
   void _onSurveyCancel([RPTaskResult? result]) {
     // also saved result even though it was canceled by the user
-    executor.addMeasurement(Measurement.fromData(RPTaskResultData(result)));
-    executor.stop();
+    appTaskExecutor
+        .addMeasurement(Measurement.fromData(RPTaskResultData(result)));
+    backgroundTaskExecutor.stop();
     super.onCancel();
   }
 }

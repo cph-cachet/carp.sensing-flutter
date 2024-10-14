@@ -7,17 +7,22 @@ part of 'carp_services.dart';
 /// - get all file object as a list of [CarpFileResponse]s from the CARP sever
 /// - delete a file at CARP
 class FileStorageReference extends CarpReference {
+  final String _studyId;
+
   /// The CARP server-side ID of this file.
   ///
   /// -1 if unknown or referencing a file not uploaded yet.
   int id = -1;
 
-  FileStorageReference._(CarpService service, [this.id = -1])
+  /// The id of the study for this document.
+  String get studyId => _studyId;
+
+  FileStorageReference._(CarpService service, this._studyId, [this.id = -1])
       : super._(service);
 
   /// The URL for the file end point for this [FileStorageReference].
   String get fileEndpointUri =>
-      "${service.app.uri.toString()}/api/studies/${service.app.studyId}/files";
+      "${service.app.uri.toString()}/api/studies/$studyId/files";
 
   /// Asynchronously uploads a file to the currently specified
   /// [FileStorageReference], with optional [metadata].

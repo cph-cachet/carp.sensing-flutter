@@ -1,6 +1,5 @@
 /*
- * Copyright 2024 Copenhagen Center for Health Technology (CACHET) at the
- * Technical University of Denmark (DTU).
+ * Copyright 2024 the Technical University of Denmark (DTU).
  * Use of this source code is governed by a MIT-style license that can be
  * found in the LICENSE file.
  */
@@ -55,7 +54,7 @@
 ///
 /// This package uses the Flutter [mdsflutter](https://pub.dev/packages/mdsflutter) plugin,
 /// which again is based on the official [Movesense Mobile API](https://www.movesense.com/docs/mobile/mobile_sw_overview/).
-library carp_movesense_package;
+library;
 
 import 'dart:async';
 import 'dart:convert';

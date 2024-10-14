@@ -23,10 +23,8 @@ class CarpParticipationService extends CarpBaseService
   String get rpcEndpointName => "participation-service";
 
   /// Gets a [ParticipationReference] for a [studyDeploymentId].
-  /// If the [studyDeploymentId] is not provided, the study deployment id
-  /// specified in the [CarpApp] is used.
   ParticipationReference participation([String? studyDeploymentId]) =>
-      ParticipationReference._(this, studyDeploymentId);
+      ParticipationReference._(this, getStudyDeploymentId(studyDeploymentId));
 
   /// Get the list of active participation invitations for an [accountId].
   /// This will return all deployments that this account (user) is invited to.
@@ -61,7 +59,8 @@ class CarpParticipationService extends CarpBaseService
   /// a user-interface dialog for selecting amongst the invitations is shown.
   /// If not, the study id of the first invitation is returned.
   ///
-  /// [allowClose] specifies whether the user can close the window.
+  /// [allowClose] specifies whether the user can close the window without
+  /// selecting an invitation.
   ///
   /// Throws a [CarpServiceException] if not successful.
   Future<ActiveParticipationInvitation?> getStudyInvitation(
@@ -101,15 +100,7 @@ class CarpParticipationService extends CarpBaseService
       }
     }
 
-    if (invitation != null) setInvitation(invitation);
     return invitation;
-  }
-
-  /// Set the [invitation] currently used.
-  /// This saves the study deployment information in the [app] for later use.
-  void setInvitation(ActiveParticipationInvitation invitation) {
-    app.studyId = invitation.studyId;
-    app.studyDeploymentId = invitation.studyDeploymentId;
   }
 
   @override

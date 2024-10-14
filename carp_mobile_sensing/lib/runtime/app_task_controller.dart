@@ -81,6 +81,7 @@ class AppTaskController {
       }
     });
 
+    // initialize notification controller if needed
     notificationsEnabled = enableNotifications;
     if (notificationsEnabled) {
       await SmartPhoneClientManager().notificationController?.initialize();
@@ -109,14 +110,14 @@ class AppTaskController {
   /// Returns `null` if no task is found.
   UserTask? getUserTask(String id) => _userTaskMap[id];
 
-  /// Put [executor] on the [userTasks] for access by the app.
+  /// Create and add a user task to the [userTasks] queue.
+  /// The user task is created from the [AppTask] that the [executor] is executing.
   ///
   /// [triggerTime] specifies when the task should trigger, i.e., be available.
   /// Notify the user if [sendNotification] and [notificationsEnabled] is true.
   /// If [triggerTime] is null, a notification is send immediately.
   ///
-  /// Returns the [UserTask] added to the [userTasks].
-  ///
+  /// Returns the [UserTask] added to [userTasks].
   /// Returns `null` if not successful.
   Future<UserTask?> enqueue(
     AppTaskExecutor executor, {
@@ -320,10 +321,7 @@ class AppTaskController {
         if (snapshot.studyDeploymentId != null &&
             snapshot.deviceRoleName != null) {
           deployment = SmartPhoneClientManager()
-              .lookupStudyRuntime(
-                snapshot.studyDeploymentId!,
-                snapshot.deviceRoleName!,
-              )
+              .getStudyRuntime(snapshot.studyDeploymentId!)
               ?.deployment;
         }
         if (deployment == null) {

@@ -1,6 +1,6 @@
 name: carp_backend
 description: CARP data backend for CARP Mobile Sensing. Supports downloading study deployments and uploading data from/to a CARP Web Service (CAWS) server.
-version: 1.8.0
+version: 1.9.0
 homepage: https://github.com/cph-cachet/carp.sensing-flutter/
 
 environment:
@@ -17,8 +17,8 @@ dependencies:
 
   carp_serializable: ^2.0.0
   carp_core: ^1.8.0
-  carp_mobile_sensing: ^1.10.0
-  carp_webservices: ^3.4.0
+  carp_mobile_sensing: ^1.11.0
+  carp_webservices: ^3.5.0
 
   research_package: ^1.7.0
 

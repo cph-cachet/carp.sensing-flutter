@@ -177,7 +177,7 @@ class CarpDataManager extends AbstractDataManager {
 
   DataPointReference? _dataPointReference;
   DataPointReference get dataPointReference {
-    _dataPointReference ??= CarpService().getDataPointReference();
+    _dataPointReference ??= CarpService().dataPointReference();
     return _dataPointReference!;
   }
 
@@ -192,7 +192,7 @@ class CarpDataManager extends AbstractDataManager {
         var dataPoint = DataPoint(
           DataPointHeader(
             studyId: deployment.studyDeploymentId,
-            userId: deployment.userId,
+            userId: deployment.participantId,
             dataFormat: measurement.dataType,
             deviceRoleName: measurement.taskControl?.targetDevice?.roleName ??
                 deployment.deviceConfiguration.roleName,

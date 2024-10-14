@@ -28,13 +28,16 @@ void main() {
     deviceId: '12345jE',
   );
 
-  /// Setup CARP and authenticate.
+  /// Setup CAWS and authenticate.
   /// Runs once before all tests.
   setUpAll(() async {
     Settings().debugLevel = DebugLevel.debug;
 
     await CarpAuthService().configure(CarpProperties().authProperties);
-    CarpService().configure(CarpProperties().app);
+
+    // configure the service with both an app and a study, using the same
+    // test study for all tests
+    CarpService().configure(CarpProperties().app, CarpProperties().study);
     CarpParticipationService().configureFrom(CarpService());
 
     await CarpAuthService().authenticateWithUsernamePassword(
@@ -156,7 +159,7 @@ void main() {
             debugPrint(_encode(data.toJson()));
 
             int dataPointId =
-                await CarpService().getDataPointReference().post(data);
+                await CarpService().dataPointReference().post(data);
 
             assert(dataPointId > 0);
             debugPrint("data_point_id : $dataPointId");
@@ -177,14 +180,14 @@ void main() {
             debugPrint(_encode(data.toJson()));
 
             int dataPointId =
-                await CarpService().getDataPointReference().post(data);
+                await CarpService().dataPointReference().post(data);
 
             assert(dataPointId > 0);
             debugPrint("data_point_id : $dataPointId");
           });
 
           test('- batch', () async {
-            final before = await CarpService().getDataPointReference().getAll();
+            final before = await CarpService().dataPointReference().getAll();
             debugPrint('N_before = ${before.length}');
 
             List<DataPoint> batch = [];
@@ -196,16 +199,20 @@ void main() {
               DataPoint.fromData(deviceData),
             ]);
 
-            var reference = CarpService().getDataPointReference();
+            // debugPrint('N_batch = ${batch.length}');
+
+            var reference = CarpService().dataPointReference();
 
             // test two consecutive batch uploads
             await reference.batch(batch);
             await reference.batch(batch);
 
+            debugPrint('N_batch = ${2 * batch.length}');
+
             // wait for the batch requests to finish
             await Future.delayed(const Duration(seconds: 5), () {});
 
-            final after = await CarpService().getDataPointReference().getAll();
+            final after = await CarpService().dataPointReference().getAll();
             debugPrint('N_after = ${after.length}');
             // data.forEach((datapoint) => debugPrint(_encode((datapoint.toJson()))));
 
@@ -214,7 +221,7 @@ void main() {
 
           test('- upload', () async {
             final File file = File("test/json/batch-correct-test.json");
-            await CarpService().getDataPointReference().upload(file);
+            await CarpService().dataPointReference().upload(file);
 
             // wait for the batch requests to finish
             await Future.delayed(const Duration(seconds: 2), () {});
@@ -223,7 +230,7 @@ void main() {
             debugPrint("query : $query");
 
             List<DataPoint> data =
-                await CarpService().getDataPointReference().query(query);
+                await CarpService().dataPointReference().query(query);
 
             debugPrint('N=${data.length}');
             // data.forEach((datapoint) => debugPrint(_encode((datapoint.toJson()))));
@@ -232,13 +239,14 @@ void main() {
           });
 
           test('- query for test data points', () async {
-            String query = 'carp_header.data_format.namespace==test';
+            String query = 'carp_header.data_format.namespace==dk.cachet.carp';
+            // String query = 'carp_header.data_format.namespace==test';
             // String query =
             //     'carp_header.data_format.name==${lightData.format.name}';
 
             debugPrint("query : $query");
             List<DataPoint> data =
-                await CarpService().getDataPointReference().query(query);
+                await CarpService().dataPointReference().query(query);
 
             debugPrint('N=${data.length}');
             // data.forEach((datapoint) => debugPrint(_encode((datapoint.toJson()))));
@@ -249,8 +257,7 @@ void main() {
           test('- count data points based on query', () async {
             String query = 'carp_header.data_format.namespace==test';
             debugPrint("query : $query");
-            int count =
-                await CarpService().getDataPointReference().count(query);
+            int count = await CarpService().dataPointReference().count(query);
 
             debugPrint('N=$count');
             expect(count, greaterThanOrEqualTo(0));
@@ -260,13 +267,13 @@ void main() {
             String query = 'carp_header.data_format.namespace==test';
             debugPrint("query : $query");
             List<DataPoint> data =
-                await CarpService().getDataPointReference().query(query);
+                await CarpService().dataPointReference().query(query);
 
             debugPrint('N=${data.length}');
             debugPrint('deleting...');
             for (var datapoint in data) {
               debugPrint(' ${datapoint.id}');
-              await CarpService().getDataPointReference().delete(datapoint.id!);
+              await CarpService().dataPointReference().delete(datapoint.id!);
             }
           });
 
@@ -279,12 +286,12 @@ void main() {
             debugPrint(_encode(dataPost.toJson()));
 
             int dataPointId =
-                await CarpService().getDataPointReference().post(dataPost);
+                await CarpService().dataPointReference().post(dataPost);
 
             assert(dataPointId > 0);
 
             DataPoint dataGet =
-                await CarpService().getDataPointReference().get(dataPointId);
+                await CarpService().dataPointReference().get(dataPointId);
 
             debugPrint(_encode(dataGet.toJson()));
             assert(dataGet.id == dataPointId);
@@ -294,7 +301,7 @@ void main() {
             '- get all',
             () async {
               List<DataPoint> data =
-                  await CarpService().getDataPointReference().getAll();
+                  await CarpService().dataPointReference().getAll();
 
               data.forEach(
                   (datapoint) => debugPrint(_encode((datapoint.toJson()))));
@@ -306,12 +313,12 @@ void main() {
 
           test('- query', () async {
             await CarpService()
-                .getDataPointReference()
+                .dataPointReference()
                 .post(DataPoint.fromData(lightData)
                   ..carpHeader.studyId = studyId
                   ..carpHeader.userId = userId);
             await CarpService()
-                .getDataPointReference()
+                .dataPointReference()
                 .post(DataPoint.fromData(deviceData)
                   ..carpHeader.studyId = studyId
                   ..carpHeader.userId = userId);
@@ -326,7 +333,7 @@ void main() {
             //String query = 'carp_header.data_format.namespace=in=(carp,omh)';
             debugPrint("query : $query");
             List<DataPoint> data =
-                await CarpService().getDataPointReference().query(query);
+                await CarpService().dataPointReference().query(query);
 
             expect(data, isNotNull);
             debugPrint('N=${data.length}');
@@ -341,34 +348,35 @@ void main() {
 
           test('- delete', () async {
             int dataPointId = await CarpService()
-                .getDataPointReference()
+                .dataPointReference()
                 .post(DataPoint.fromData(lightData)
                   ..carpHeader.studyId = studyId
                   ..carpHeader.userId = userId);
+
+            await CarpAuthService().refresh();
+
             debugPrint("DELETE data_point_id : $dataPointId");
-            await CarpService().getDataPointReference().delete(dataPointId);
+            await CarpService().dataPointReference().delete(dataPointId);
           });
 
           test(
             '- delete all',
             () async {
               List<DataPoint> data =
-                  await CarpService().getDataPointReference().getAll();
+                  await CarpService().dataPointReference().getAll();
 
               debugPrint('N=${data.length}');
               debugPrint('deleting...');
               for (var datapoint in data) {
                 debugPrint(' ${datapoint.id}');
-                await CarpService()
-                    .getDataPointReference()
-                    .delete(datapoint.id!);
+                await CarpService().dataPointReference().delete(datapoint.id!);
               }
 
               // wait for the delete requests to finish
               await Future.delayed(const Duration(seconds: 2), () {});
 
               List<DataPoint> empty =
-                  await CarpService().getDataPointReference().getAll();
+                  await CarpService().dataPointReference().getAll();
 
               debugPrint('N=${empty.length}');
               assert(empty.isEmpty);
@@ -652,6 +660,13 @@ void main() {
               .document(document.name)
               .delete();
         });
+
+        test(' - delete specific document', () async {
+          await CarpService()
+              .collection(collectionName)
+              .document(userId)
+              .delete();
+        });
       }, skip: false);
 
       /// In order to run the test in this group you need to be authenticated
@@ -762,8 +777,8 @@ void main() {
           debugPrint('result : $result');
         });
 
-        test('- download', () async {
-          final File upFile = File("test/files/img.jpg");
+        test('- upload & download', () async {
+          final File upFile = File("test/files/img-25.jpg");
 
           final FileUploadTask uploadTask = CarpService()
               .getFileStorageReference()
@@ -776,6 +791,32 @@ void main() {
           CarpFileResponse upResponse = await uploadTask.onComplete;
           expect(upResponse.id, greaterThan(0));
           var id = upResponse.id;
+
+          debugPrint(' $id');
+
+          // need to refresh the token to have access to the newly uploaded file
+          // see https://github.com/cph-cachet/carp-webservices-spring/issues/111
+
+          // TODO - it seems like a refresh isn't enough....?
+          await CarpAuthService().refresh();
+
+          // await CarpAuthService().authenticateWithUsernamePassword(
+          //   username: username,
+          //   password: password,
+          // );
+
+          File downFile = File("test/files/img-$id.jpg");
+
+          final FileDownloadTask downloadTask =
+              CarpService().getFileStorageReference(id).download(downFile);
+
+          int downResponse = await downloadTask.onComplete;
+          expect(downResponse, 200);
+          debugPrint('status code : $downResponse');
+        });
+
+        test('- download', () async {
+          var id = 46;
 
           File downFile = File("test/files/img-$id.jpg");
 
@@ -804,7 +845,7 @@ void main() {
         });
         test('- get all', () async {
           final List<CarpFileResponse> results =
-              await CarpService().getAllFiles();
+              await CarpService().getAllFiles(testStudyId);
           debugPrint('result : $results');
         });
 

@@ -2,13 +2,9 @@ part of '../../main.dart';
 
 /// This is the main Business Logic Component (BLoC) of this sensing app.
 class SensingBLoC {
-  static const String STUDY_ID_KEY = 'study_id';
-  static const String STUDY_DEPLOYMENT_ID_KEY = 'study_deployment_id';
-  static const String DEVICE_ROLE_NAME_KEY = 'device_role_name';
+  static const String STUDY_KEY = 'study';
 
-  String? _studyId;
-  String? _studyDeploymentId;
-  String? _deviceRoleName;
+  SmartphoneStudy? _study;
   bool _useCached = true;
   bool _resumeSensingOnStartup = false;
 
@@ -18,55 +14,54 @@ class SensingBLoC {
   /// What kind of deployment are we running? Default is local.
   DeploymentMode deploymentMode = DeploymentMode.local;
 
-  /// The study id for the currently running deployment.
-  /// Returns the study id cached locally on the phone (if available).
+  /// The study for the currently running study deployment.
+  /// The study is cached locally on the phone.
   /// Returns `null` if no study is deployed (yet).
-  String? get studyId =>
-      (_studyId ??= Settings().preferences?.getString(STUDY_ID_KEY));
-
-  /// Set the study deployment id for the currently running deployment.
-  /// This study deployment id will be cached locally on the phone.
-  set studyId(String? id) {
-    assert(
-        id != null,
-        'Cannot set the study id to null in Settings. '
-        "Use the 'eraseStudyDeployment()' method to erase study deployment information.");
-    _studyId = id;
-    Settings().preferences?.setString(STUDY_ID_KEY, id!);
+  SmartphoneStudy? get study {
+    if (_study != null) return _study;
+    var jsonString = Settings().preferences?.getString(STUDY_KEY);
+    return _study = (jsonString == null)
+        ? null
+        : _$SmartphoneStudyFromJson(
+            json.decode(jsonString) as Map<String, dynamic>);
   }
 
-  /// The study deployment id for the currently running deployment.
-  /// Returns the deployment id cached locally on the phone (if available).
-  /// Returns `null` if no study is deployed (yet).
-  String? get studyDeploymentId => (_studyDeploymentId ??=
-      Settings().preferences?.getString(STUDY_DEPLOYMENT_ID_KEY));
-
-  /// Set the study deployment id for the currently running deployment.
-  /// This study deployment id will be cached locally on the phone.
-  set studyDeploymentId(String? id) {
+  set study(SmartphoneStudy? study) {
     assert(
-        id != null,
-        'Cannot set the study deployment id to null in Settings. '
+        study != null,
+        'Cannot set the study to null in Settings. '
         "Use the 'eraseStudyDeployment()' method to erase study deployment information.");
-    _studyDeploymentId = id;
-    Settings().preferences?.setString(STUDY_DEPLOYMENT_ID_KEY, id!);
+    _study = study;
+    Settings().preferences?.setString(
+          STUDY_KEY,
+          json.encode(_$SmartphoneStudyToJson(study!)),
+        );
   }
 
-  /// The device role name for the currently running deployment.
-  ///
-  /// The role name is cached locally on the phone.
-  /// Returns `null` if no study is deployed (yet).
-  String? get deviceRoleName => (_deviceRoleName ??=
-      Settings().preferences?.getString(DEVICE_ROLE_NAME_KEY));
-
-  set deviceRoleName(String? roleName) {
-    assert(
-        roleName != null,
-        'Cannot set device role name to null in Settings. '
-        "Use the 'eraseStudyDeployment()' method to erase study deployment information.");
-    _deviceRoleName = roleName;
-    Settings().preferences?.setString(DEVICE_ROLE_NAME_KEY, roleName!);
+  /// Erase all study deployment information cached locally on this phone.
+  Future<void> eraseStudyDeployment() async {
+    _study = null;
+    await Settings().preferences!.remove(STUDY_KEY);
   }
+
+  // Need to create our own JSON serializers here, since SmartphoneStudy is not made serializable
+  Map<String, dynamic> _$SmartphoneStudyToJson(SmartphoneStudy study) =>
+      <String, dynamic>{
+        'studyId': study.studyId,
+        'studyDeploymentId': study.studyDeploymentId,
+        'deviceRoleName': study.deviceRoleName,
+        'participantId': study.participantId,
+        'participantRoleName': study.participantRoleName,
+      };
+
+  SmartphoneStudy _$SmartphoneStudyFromJson(Map<String, dynamic> json) =>
+      SmartphoneStudy(
+        studyId: json['studyId'] as String?,
+        studyDeploymentId: json['studyDeploymentId'] as String,
+        deviceRoleName: json['deviceRoleName'] as String,
+        participantId: json['participantId'] as String?,
+        participantRoleName: json['participantRoleName'] as String?,
+      );
 
   /// Use the cached study deployment?
   bool get useCachedStudyDeployment => _useCached;
@@ -74,14 +69,8 @@ class SensingBLoC {
   /// Should sensing be automatically resumed on app startup?
   bool get resumeSensingOnStartup => _resumeSensingOnStartup;
 
-  /// Erase all study deployment information cached locally on this phone.
-  Future<void> eraseStudyDeployment() async {
-    _studyDeploymentId = null;
-    await Settings().preferences!.remove(STUDY_DEPLOYMENT_ID_KEY);
-  }
-
   /// The [SmartphoneDeployment] deployed on this phone.
-  SmartphoneDeployment? get deployment => bloc.sensing.controller?.deployment;
+  SmartphoneDeployment? get deployment => sensing.controller?.deployment;
 
   /// The preferred format of the data to be uploaded according to
   /// [NameSpace]. Default using the [NameSpace.CARP].
@@ -112,7 +101,6 @@ class SensingBLoC {
   /// Initialize the BLoC.
   Future<void> initialize({
     DeploymentMode deploymentMode = DeploymentMode.local,
-    String? deploymentId,
     String dataFormat = NameSpace.CARP,
     bool useCachedStudyDeployment = true,
     bool resumeSensingOnStartup = false,
@@ -120,7 +108,6 @@ class SensingBLoC {
     await Settings().init();
     Settings().debugLevel = DebugLevel.debug;
     this.deploymentMode = deploymentMode;
-    if (deploymentId != null) studyDeploymentId = deploymentId;
     this.dataFormat = dataFormat;
     _resumeSensingOnStartup = resumeSensingOnStartup;
     _useCached = useCachedStudyDeployment;

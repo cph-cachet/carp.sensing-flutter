@@ -1,6 +1,5 @@
 /*
- * Copyright 2019-2023 Copenhagen Center for Health Technology (CACHET) at the
- * Technical University of Denmark (DTU).
+ * Copyright 2018-2024 the Technical University of Denmark (DTU).
  * Use of this source code is governed by a MIT-style license that can be
  * found in the LICENSE file.
  */
@@ -40,7 +39,7 @@ Future<void> minimalExample() async {
   await SmartPhoneClientManager().configure();
 
   // Create a study based on the protocol.
-  SmartPhoneClientManager().addStudyProtocol(protocol);
+  SmartPhoneClientManager().addStudyFromProtocol(protocol);
 
   /// Start sampling.
   SmartPhoneClientManager().start();
@@ -49,7 +48,7 @@ Future<void> minimalExample() async {
   // Create and configure a client manager for this phone, add the protocol,
   // and start sampling data.
   SmartPhoneClientManager().configure().then((_) => SmartPhoneClientManager()
-      .addStudyProtocol(protocol)
+      .addStudyFromProtocol(protocol)
       .then((_) => SmartPhoneClientManager().start()));
 
   // Listening on the data stream and print them as json.
@@ -80,6 +79,9 @@ Future<void> example_0() async {
   var phone = Smartphone();
   protocol.addPrimaryDevice(phone);
 
+  // Add a participant role
+  protocol.addParticipantRole(ParticipantRole('Participant'));
+
   // Automatically collect step count, ambient light, screen activity, and
   // battery level from the phone. Sampling is delayed by 10 seconds.
   protocol.addTaskControl(
@@ -99,7 +101,7 @@ Future<void> example_0() async {
   // create a study based on the protocol.
   SmartPhoneClientManager client = SmartPhoneClientManager();
   await client.configure();
-  Study study = await client.addStudyProtocol(protocol);
+  Study study = await client.addStudyFromProtocol(protocol);
 
   // Get the study controller and try to deploy the study.
   //
@@ -108,7 +110,8 @@ Future<void> example_0() async {
   // be used pr. default.
   // If not deployed before (i.e., cached) the study deployment will be
   // fetched from the deployment service.
-  SmartphoneDeploymentController? controller = client.getStudyRuntime(study);
+  SmartphoneDeploymentController? controller =
+      client.getStudyRuntime(study.studyDeploymentId);
   await controller?.tryDeployment();
 
   // Configure the controller.
@@ -139,6 +142,9 @@ void example_1() async {
   Smartphone phone = Smartphone();
   protocol.addPrimaryDevice(phone);
 
+  // Add a participant role
+  protocol.addParticipantRole(ParticipantRole('Participant'));
+
   // Automatically collect step count, ambient light, screen activity, and
   // battery level. Sampling is delaying by 10 seconds.
   protocol.addTaskControl(
@@ -164,11 +170,12 @@ void example_1() async {
 
   // Add the study to the client manager and get a study runtime to
   // control this deployment
-  Study study = await client.addStudy(
-    status.studyDeploymentId,
-    status.primaryDeviceStatus!.device.roleName,
-  );
-  SmartphoneDeploymentController? controller = client.getStudyRuntime(study);
+  final study = await client.addStudy(SmartphoneStudy(
+    studyDeploymentId: status.studyDeploymentId,
+    deviceRoleName: status.primaryDeviceStatus!.device.roleName,
+  ));
+  SmartphoneDeploymentController? controller =
+      client.getStudyRuntime(study.studyDeploymentId);
 
   // Deploy the study on this phone.
   await controller?.tryDeployment();
@@ -256,11 +263,12 @@ void example_2() async {
   await client.configure(deploymentService: deploymentService);
 
   // create a study runtime to control this deployment
-  Study study = await client.addStudy(
-    status.studyDeploymentId,
-    status.primaryDeviceStatus!.device.roleName,
-  );
-  SmartphoneDeploymentController? controller = client.getStudyRuntime(study);
+  final study = await client.addStudy(SmartphoneStudy(
+    studyDeploymentId: status.studyDeploymentId,
+    deviceRoleName: status.primaryDeviceStatus!.device.roleName,
+  ));
+  SmartphoneDeploymentController? controller =
+      client.getStudyRuntime(study.studyDeploymentId);
 
   // deploy the study on this phone (controller)
   await controller?.tryDeployment();
@@ -372,8 +380,8 @@ void example_3() async {
   );
 
   // add and deploy the protocol
-  final study = await client.addStudyProtocol(protocol);
-  final controller = client.getStudyRuntime(study);
+  final study = await client.addStudyFromProtocol(protocol);
+  final controller = client.getStudyRuntime(study.studyDeploymentId);
 
   // configure the controller
   controller?.configure(
@@ -820,7 +828,7 @@ void appTaskControllerExample() async {
   AppTaskController ctrl = AppTaskController();
 
   ctrl.userTaskEvents.listen((userTask) {
-    AppTask task = (userTask.executor.task as AppTask);
+    AppTask task = userTask.task;
     print('Task: ${task.title}');
     switch (userTask.state) {
       case UserTaskState.initialized:
@@ -833,13 +841,13 @@ void appTaskControllerExample() async {
         //
         break;
       case UserTaskState.started:
-        userTask.executor.start();
+        userTask.backgroundTaskExecutor.start();
         break;
       case UserTaskState.canceled:
         //
         break;
       case UserTaskState.done:
-        userTask.executor.stop();
+        userTask.backgroundTaskExecutor.stop();
         break;
       case UserTaskState.notified:
         print('Task id: ${userTask.id} was clicked in the OS.');
