@@ -26,42 +26,28 @@ Since the [`SensingBLoC`](https://github.com/cph-cachet/carp.sensing-flutter/blo
 
 ````dart
 class SensingBLoC {
+    /// The [Sensing] layer used in the app.
+  Sensing get sensing => Sensing();
+
   /// What kind of deployment are we running? Default is local.
   DeploymentMode deploymentMode => ...
 
-  /// The URI of the CAWS server to use depending on the current [deploymentMode].
-  String get uri => ...
-
-  /// The study id for the currently running deployment.
-  /// Returns the study id cached locally on the phone (if available).
+  /// The study for the currently running study deployment.
+  /// The study is cached locally on the phone.
   /// Returns `null` if no study is deployed (yet).
-  String? get studyId => ...
-
-  /// The study deployment id for the currently running deployment.
-  /// Returns the deployment id cached locally on the phone (if available).
-  /// Returns `null` if no study is deployed (yet).
-  String? get studyDeploymentId => ...
-  
-  /// The device role name for the currently running deployment.
-  /// Returns the role name cached locally on the phone (if available).
-  /// Returns `null` if no study is deployed (yet).
-  String? get deviceRoleName => ...
+  SmartphoneStudy? get study => ...
   
   /// Use the cached study deployment?
-  bool get useCachedStudyDeployment => _useCached;
+  bool get useCachedStudyDeployment => ...
 
   /// Should sensing be automatically resumed on app startup?
-  bool get resumeSensingOnStartup => _resumeSensingOnStartup;
+  bool get resumeSensingOnStartup => ...
 
   /// The [SmartphoneDeployment] deployed on this phone.
-  SmartphoneDeployment? get deployment => bloc.sensing.controller?.deployment;
+  SmartphoneDeployment? get deployment => sensing.controller?.deployment;
 
   /// What kind of deployment are we running. Default is local.
   DeploymentMode deploymentMode = DeploymentMode.local;
-
-  /// The preferred format of the data to be uploaded according to
-  /// [NameSpace]. Default using the [NameSpace.CARP].
-  String dataFormat = NameSpace.CARP;
 
   StudyDeploymentModel? _model;
 
@@ -84,7 +70,6 @@ class SensingBLoC {
   /// Initialize the BLoC.
   Future<void> initialize({
     DeploymentMode deploymentMode = DeploymentMode.local,
-    String? deploymentId,
     String dataFormat = NameSpace.CARP,
     bool useCachedStudyDeployment = true,
     bool resumeSensingOnStartup = false,
@@ -92,7 +77,6 @@ class SensingBLoC {
     await Settings().init();
     Settings().debugLevel = DebugLevel.debug;
     this.deploymentMode = deploymentMode;
-    if (deploymentId != null) studyDeploymentId = deploymentId;
     this.dataFormat = dataFormat;
     _resumeSensingOnStartup = resumeSensingOnStartup;
     _useCached = useCachedStudyDeployment;
@@ -119,7 +103,7 @@ final bloc = SensingBLoC();
 
 The BLoC basically plays three roles:
 
-* it holds core business data like `studyId`, `deploymentId`, `deviceRoleName`, and the `deployment` configuration
+* it holds core business data like the `study` and `deployment` configuration
 * it can create view models such as the `StudyDeploymentViewModel` and the list of `ProbeViewModel`s and `DeviceViewModel`s
 * it provide a set of life cycle methods for sensing like `initialize`, `connectToDevice` and `start`.
 
@@ -132,7 +116,7 @@ Configuration of sensing is done in the [`Sensing`](https://github.com/cph-cache
 This class also illustrates how the app can be run both in a "local" deployment mode and in different "CAWS" modes. Depending on the deployment mode (local or using CAWS), deployment is initialized using the [`SmartphoneDeploymentService`](https://pub.dev/documentation/carp_mobile_sensing/latest/runtime/SmartphoneDeploymentService-class.html) or the [`CarpDeploymentService`](https://pub.dev/documentation/carp_webservices/latest/carp_services/CarpDeploymentService-class.html), respectively.
 
 In the case a local deployment is used, a protocol is fetched from the `LocalStudyProtocolManager`, which is then added to the local `SmartphoneDeploymentService`.
-In the case a CAWS deployment is used, the study deployment configuration will be fetched from the `CarpDeploymentService` based on the `studyDeploymentId` fetched from an invitation (this invitation is fetched as part of the `init` method of the main `App` class).
+In the case a CAWS deployment is used, the study deployment configuration will be fetched from the `CarpDeploymentService` based on the `study`, which again is part of an `invitation` (this invitation is fetched as part of the `init` method of the main `App` class).
 
 Once, the right deployment service is configured, the `SmartPhoneClientManager` singleton is configured and the study is added (based on the deployment id and the role name of the phone) and deployed.
 When deployed, the runtime (`SmartphoneDeploymentController`) is configured and sampling can now be started or stopped. This part of `Sensing` is shown below:
@@ -142,12 +126,11 @@ When deployed, the runtime (`SmartphoneDeploymentController`) is configured and 
     // (local or CAWS), add the study, and deploy it.
     await SmartPhoneClientManager().configure(
       deploymentService: deploymentService,
+      askForPermissions: true,
     );
-    study = await SmartPhoneClientManager().addStudy(
-      bloc.studyDeploymentId!,
-      bloc.deviceRoleName!,
-    );
-    await controller?.tryDeployment();
+
+    study = await SmartPhoneClientManager().addStudy(bloc.study!);
+    await controller?.tryDeployment(useCached: bloc.useCachedStudyDeployment);
     await controller?.configure();
 ```
 

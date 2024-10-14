@@ -70,7 +70,7 @@ class SensingBLoC {
   bool get resumeSensingOnStartup => _resumeSensingOnStartup;
 
   /// The [SmartphoneDeployment] deployed on this phone.
-  SmartphoneDeployment? get deployment => bloc.sensing.controller?.deployment;
+  SmartphoneDeployment? get deployment => sensing.controller?.deployment;
 
   /// The preferred format of the data to be uploaded according to
   /// [NameSpace]. Default using the [NameSpace.CARP].
