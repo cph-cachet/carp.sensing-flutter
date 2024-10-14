@@ -55,8 +55,6 @@ void main() {
     late CarpApp app = CarpApp(
       name: "CAWS @ DTU",
       uri: uri.replace(pathSegments: []),
-      studyId: testStudyId,
-      studyDeploymentId: testDeploymentId,
     );
 
     // The authentication configuration

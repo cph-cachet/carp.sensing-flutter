@@ -53,8 +53,6 @@ void main() {
     final app = CarpApp(
       name: "CAWS @ DTU",
       uri: uri,
-      studyId: testStudyId,
-      studyDeploymentId: testDeploymentId,
     );
 
     /// The authentication configuration

@@ -10,7 +10,7 @@ class StudyDeploymentViewModel {
   Image get image => Image.asset('assets/study.png');
   String get studyDeploymentId => deployment.studyDeploymentId;
   String get deviceRoleName => deployment.deviceConfiguration.roleName;
-  String get userID => deployment.userId ?? '';
+  String get userID => deployment.participantId ?? '';
   String get dataEndpoint => deployment.dataEndPoint.toString();
 
   /// Events on the state of the study executor

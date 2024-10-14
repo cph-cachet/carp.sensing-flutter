@@ -29,10 +29,10 @@ dependency_overrides:
   #   path: ../../carp_serializable/
   # carp_core:
   #   path: ../../carp_core/
-  # carp_mobile_sensing:
-  #   path: ../../carp_mobile_sensing/
-  # carp_webservices:
-  #   path: ../carp_webservices/
+  carp_mobile_sensing:
+    path: ../../carp_mobile_sensing/
+  carp_webservices:
+    path: ../carp_webservices/
   # research_package:
   #   path: ../../../../research.package/
   # the following sampling packages are only used for unit testing

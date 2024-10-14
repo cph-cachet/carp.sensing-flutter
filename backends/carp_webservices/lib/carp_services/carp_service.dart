@@ -31,15 +31,17 @@ class CarpService extends CarpBaseService {
   // --------------------------------------------------------------------------
 
   /// The URL for the file end point for study with id [studyId].
-  String getFileEndpointUri(String? studyId) =>
+  String getFileEndpointUri([String? studyId]) =>
       "${app.uri.toString()}/api/studies/${getStudyId(studyId)}/files";
 
   /// Get a [FileStorageReference] that reference a file with [id] for the
   /// study with id [studyId].
-  /// [studyId] can be omitted if specified as part of this service's [study].
   /// [id] can be omitted if a local file is not uploaded yet.
-  FileStorageReference getFileStorageReference(
-          {String? studyId, int id = -1}) =>
+  /// [studyId] can be omitted if specified as part of this service's [study].
+  FileStorageReference getFileStorageReference([
+    int id = -1,
+    String? studyId,
+  ]) =>
       FileStorageReference._(this, getStudyId(studyId), id);
 
   /// Get a [FileStorageReference] that reference a file with the original name
@@ -49,13 +51,13 @@ class CarpService extends CarpBaseService {
   ///
   /// If more than one file with the same name exists, the first one is returned.
   /// If no files with that name exists, `null` is returned.
-  Future<FileStorageReference?> getFileStorageReferenceByName({
+  Future<FileStorageReference?> getFileStorageReferenceByName(
+    String name, {
     String? studyId,
-    required String name,
   }) async {
     final List<CarpFileResponse> files = await queryFiles(
+      'original_name==$name',
       studyId: getStudyId(studyId),
-      query: 'original_name==$name',
     );
 
     return (files.isNotEmpty)
@@ -67,14 +69,16 @@ class CarpService extends CarpBaseService {
   ///
   /// [studyId] can be omitted if specified as part of this service's [study].
   Future<List<CarpFileResponse>> getAllFiles([String? studyId]) async =>
-      await queryFiles(studyId: studyId);
+      await queryFiles(null, studyId: studyId);
 
   /// Returns file objects in the study based on a [query].
   ///
   /// [studyId] can be omitted if specified as part of this service's [study].
   /// If [query] is omitted, all file objects are returned.
   Future<List<CarpFileResponse>> queryFiles(
-      {String? studyId, String? query}) async {
+    String? query, {
+    String? studyId,
+  }) async {
     final String url = (query != null)
         ? "${getFileEndpointUri(studyId)}?query=$query"
         : getFileEndpointUri(studyId);
@@ -114,13 +118,13 @@ class CarpService extends CarpBaseService {
   /// Gets a [DocumentReference] for the specified unique [id] for study with id [studyId].
   ///
   /// [studyId] can be omitted if specified as part of this service's [study].
-  DocumentReference documentById({String? studyId, required int id}) =>
+  DocumentReference documentById(int id, {String? studyId}) =>
       DocumentReference._id(this, getStudyId(studyId), id);
 
   /// Gets a [DocumentReference] for the specified [path].
   ///
   /// [studyId] can be omitted if specified as part of this service's [study].
-  DocumentReference document({String? studyId, required String path}) =>
+  DocumentReference document(String path, {String? studyId}) =>
       DocumentReference._path(this, getStudyId(studyId), path);
 
   /// The URL for the document end point for study with id [studyId].
@@ -135,9 +139,9 @@ class CarpService extends CarpBaseService {
   /// See the [RSQL Documentation](https://developer.here.com/documentation/data-client-library/dev_guide/client/rsql.html).
   ///
   /// Can only be accessed by users who are authenticated as researchers.
-  Future<List<DocumentSnapshot>> documentsByQuery({
+  Future<List<DocumentSnapshot>> documentsByQuery(
+    String query, {
     String? studyId,
-    required String query,
   }) async {
     // GET the list of documents in this collection from the CARP web service
     http.Response response = await httpr.get(
@@ -198,8 +202,8 @@ class CarpService extends CarpBaseService {
     );
   }
 
-  /// Gets a [CollectionReference] for the [studyId] and [path].
-  CollectionReference collection({String? studyId, required String path}) =>
+  /// Gets a [CollectionReference] for the [path].
+  CollectionReference collection(String path, {String? studyId}) =>
       CollectionReference._(this, getStudyId(studyId), path);
 
   // --------------------------------------------------------------------------
@@ -207,17 +211,20 @@ class CarpService extends CarpBaseService {
   // --------------------------------------------------------------------------
 
   /// The URL for the consent document end point for [studyDeploymentId].
-  String getConsentDocumentEndpointUri(String? studyDeploymentId) =>
+  String getConsentDocumentEndpointUri([String? studyDeploymentId]) =>
       "${app.uri.toString()}/api/deployments/${getStudyDeploymentId(studyDeploymentId)}/consent-documents";
 
-  /// Create a new (signed) consent document for the [studyDeploymentId].
+  /// Create a new (signed) consent [document].
   /// Returns the created [ConsentDocument] if the document is uploaded correctly.
+  ///
+  /// If [studyDeploymentId] is specified use this, otherwise use the study
+  /// deployment id from [CarpService.study].
   @Deprecated('The Informed Consent endpoints are deprecated in CAWS. '
       'Informed Consent is uploaded as [InformedConsentInput] participant input '
       'data using a [ParticipationReference].')
-  Future<ConsentDocument> createConsentDocument({
+  Future<ConsentDocument> createConsentDocument(
+    Map<String, dynamic> document, {
     String? studyDeploymentId,
-    required Map<String, dynamic> document,
   }) async {
     debug('REQUEST: POST ${getConsentDocumentEndpointUri(studyDeploymentId)}');
 
@@ -244,14 +251,16 @@ class CarpService extends CarpBaseService {
     );
   }
 
-  /// Get a previously uploaded (signed) consent document for the [deploymentId]
-  /// and with document [id].
+  /// Get a previously uploaded (signed) consent document with document [id].
+  ///
+  /// If [studyDeploymentId] is specified use this, otherwise use the study
+  /// deployment id from [CarpService.study].
   @Deprecated('The Informed Consent endpoints are deprecated in CAWS. '
       'Informed Consent is uploaded as [InformedConsentInput] participant input '
       'data using a [ParticipationReference].')
-  Future<ConsentDocument> getConsentDocument({
+  Future<ConsentDocument> getConsentDocument(
+    int id, {
     String? studyDeploymentId,
-    required int id,
   }) async {
     String url = "${getConsentDocumentEndpointUri(studyDeploymentId)}/$id";
 

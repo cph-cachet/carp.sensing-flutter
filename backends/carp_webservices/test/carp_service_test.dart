@@ -119,10 +119,7 @@ void main() {
       group('Informed Consent', () {
         test('- create', () async {
           ConsentDocument uploaded = await CarpService().createConsentDocument(
-              document: {
-                "text": "The original terms text.",
-                "signature": "Image Blob"
-              });
+              {"text": "The original terms text.", "signature": "Image Blob"});
 
           debugPrint('$uploaded');
           debugPrint('id        : ${uploaded.id}');
@@ -139,7 +136,7 @@ void main() {
           // expect(uploaded.id, isNotNull);
 
           ConsentDocument downloaded =
-              await CarpService().getConsentDocument(id: 1);
+              await CarpService().getConsentDocument(1);
           // await CarpService().getConsentDocument(uploaded.id);
 
           debugPrint('$downloaded');
@@ -395,14 +392,14 @@ void main() {
       group("Documents & Collections - PARTICIPANT", () {
         test(' - clean up old test documents', () async {
           await CarpService()
-              .collection(path: collectionName)
+              .collection(collectionName)
               .document(userId)
               .collection('activities')
               .document('cooking')
               .delete();
 
           await CarpService()
-              .collection(path: collectionName)
+              .collection(collectionName)
               .document(userId)
               .delete();
         });
@@ -410,7 +407,7 @@ void main() {
         test(' - CRUD document', () async {
           // first create a document
           var document = await CarpService()
-              .collection(path: collectionName)
+              .collection(collectionName)
               .document(userId)
               .setData({'email': userId, 'role': 'Administrator'});
 
@@ -418,7 +415,7 @@ void main() {
 
           // create a document reference
           final reference =
-              CarpService().collection(path: collectionName).document(userId);
+              CarpService().collection(collectionName).document(userId);
 
           // get it back from the server
           final original = await reference.get();
@@ -437,7 +434,7 @@ void main() {
 
           // delete document again
           await CarpService()
-              .collection(path: collectionName)
+              .collection(collectionName)
               .document(userId)
               .delete();
         });
@@ -445,7 +442,7 @@ void main() {
         test(' - get document by id', () async {
           // first create a document
           var document = await CarpService()
-              .collection(path: collectionName)
+              .collection(collectionName)
               .document(userId)
               .setData({'email': userId, 'role': 'Administrator'});
 
@@ -453,8 +450,7 @@ void main() {
           expect(document, isNotNull);
 
           // then get it back by the id
-          var newDocument =
-              await CarpService().documentById(id: document.id).get();
+          var newDocument = await CarpService().documentById(document.id).get();
 
           debugPrint('$newDocument');
           expect(newDocument, isNotNull);
@@ -462,21 +458,21 @@ void main() {
 
           // delete document again
           await CarpService()
-              .collection(path: collectionName)
+              .collection(collectionName)
               .document(userId)
               .delete();
         });
 
         test(' - get document by path', () async {
           var document = await CarpService()
-              .collection(path: collectionName)
+              .collection(collectionName)
               .document(userId)
               .setData({'email': userId, 'role': 'Administrator'});
 
           expect(document, isNotNull);
 
           DocumentSnapshot? newDocument = await CarpService()
-              .collection(path: collectionName)
+              .collection(collectionName)
               .document(document.name)
               .get();
 
@@ -485,14 +481,14 @@ void main() {
 
           // delete document again
           await CarpService()
-              .collection(path: collectionName)
+              .collection(collectionName)
               .document(userId)
               .delete();
         });
 
         test(' - get non-existing document', () async {
           DocumentSnapshot? newDocument = await CarpService()
-              .collection(path: collectionName)
+              .collection(collectionName)
               .document('not_available')
               .get();
 
@@ -541,7 +537,7 @@ void main() {
           // is not providing an document id, so this should create a new document
           // if the collection don't exist, it is created (according to David).
           DocumentSnapshot doc1 = await CarpService()
-              .collection(path: collectionName)
+              .collection(collectionName)
               .document(userId)
               .collection('activities')
               .document('cooking')
@@ -553,7 +549,7 @@ void main() {
               doc1.path, equals('$collectionName/$userId/activities/cooking'));
 
           DocumentSnapshot? doc2 = await CarpService()
-              .collection(path: collectionName)
+              .collection(collectionName)
               .document(userId)
               .collection('activities')
               .document('cooking')
@@ -564,7 +560,7 @@ void main() {
 
           // delete document again
           await CarpService()
-              .collection(path: collectionName)
+              .collection(collectionName)
               .document(userId)
               .collection('activities')
               .document('cooking')
@@ -577,7 +573,7 @@ void main() {
 
           debugPrint('trying to upload a document w/o a name...');
           DocumentSnapshot d = await CarpService()
-              .collection(path: collectionName)
+              .collection(collectionName)
               .document()
               .setData({'email': username, 'name': 'Administrator'});
 
@@ -587,18 +583,18 @@ void main() {
 
         test(" - get a collection from path name", () async {
           await CarpService()
-              .collection(path: collectionName)
+              .collection(collectionName)
               .document(userId)
               .setData({'email': userId, 'role': 'Administrator'});
 
           CollectionReference collection =
-              await CarpService().collection(path: collectionName).get();
+              await CarpService().collection(collectionName).get();
           expect(collection.path, collectionName);
         });
 
         test(" - list documents in a collection", () async {
           List<DocumentSnapshot> documents =
-              await CarpService().collection(path: collectionName).documents;
+              await CarpService().collection(collectionName).documents;
 
           debugPrint('N = ${documents.length}');
           for (var doc in documents) {
@@ -609,7 +605,7 @@ void main() {
 
         test(" - list collections in a document", () async {
           DocumentSnapshot? newDocument = await CarpService()
-              .collection(path: collectionName)
+              .collection(collectionName)
               .document(userId)
               .get();
           newDocument?.collections.forEach((element) => debugPrint(element));
@@ -617,7 +613,7 @@ void main() {
 
         test(" - list all nested documents in a collection", () async {
           List<DocumentSnapshot> documents =
-              await CarpService().collection(path: collectionName).documents;
+              await CarpService().collection(collectionName).documents;
           for (var doc in documents) {
             debugPrint('$doc');
             for (var col in doc.collections) {
@@ -646,28 +642,28 @@ void main() {
 
         test(' - get collection from path', () async {
           CollectionReference collection =
-              await CarpService().collection(path: collectionName).get();
+              await CarpService().collection(collectionName).get();
           expect(collection.id!, greaterThan(0));
           debugPrint('$collection');
         });
 
         test(' - delete document', () async {
           var document = await CarpService()
-              .collection(path: collectionName)
+              .collection(collectionName)
               .document(userId)
               .setData({'email': userId, 'role': 'Administrator'});
 
           expect(document, isNotNull);
 
           await CarpService()
-              .collection(path: collectionName)
+              .collection(collectionName)
               .document(document.name)
               .delete();
         });
 
         test(' - delete specific document', () async {
           await CarpService()
-              .collection(path: collectionName)
+              .collection(collectionName)
               .document(userId)
               .delete();
         });
@@ -678,7 +674,7 @@ void main() {
       group("Documents & Collections - RESEARCHER", () {
         test(' - get documents by query', () async {
           var document = await CarpService()
-              .collection(path: collectionName)
+              .collection(collectionName)
               .document(userId)
               .setData({'email': userId, 'role': 'Administrator'});
 
@@ -686,7 +682,7 @@ void main() {
 
           String query = 'name==$userId';
           List<DocumentSnapshot> documents =
-              await CarpService().documentsByQuery(query: query);
+              await CarpService().documentsByQuery(query);
 
           debugPrint(
               "Found ${documents.length} document(s) for user '$userId'");
@@ -709,20 +705,19 @@ void main() {
 
         test(' - rename collection', () async {
           CollectionReference collection =
-              await CarpService().collection(path: collectionName).get();
+              await CarpService().collection(collectionName).get();
           debugPrint('Collection before rename: $collection');
           await collection.rename(newCollectionName);
           expect(collection.name, newCollectionName);
           debugPrint('Collection after rename: $collection');
-          collection =
-              await CarpService().collection(path: newCollectionName).get();
+          collection = await CarpService().collection(newCollectionName).get();
           expect(collection.name, newCollectionName);
           debugPrint('Collection after get: $collection');
         });
 
         test(' - delete collection', () async {
           CollectionReference collection =
-              await CarpService().collection(path: collectionName).get();
+              await CarpService().collection(collectionName).get();
 
           await collection.delete();
           expect(collection.id, -1);
@@ -730,7 +725,7 @@ void main() {
 
           try {
             collection =
-                await CarpService().collection(path: newCollectionName).get();
+                await CarpService().collection(newCollectionName).get();
           } catch (error) {
             debugPrint('$error');
             expect((error as CarpServiceException).httpStatus!.httpResponseCode,
@@ -776,7 +771,7 @@ void main() {
           var id = response.id;
 
           final CarpFileResponse result =
-              await CarpService().getFileStorageReference(id: id).get();
+              await CarpService().getFileStorageReference(id).get();
           debugPrint('$result');
           expect(result.id, id);
           debugPrint('result : $result');
@@ -797,7 +792,7 @@ void main() {
           expect(upResponse.id, greaterThan(0));
           var id = upResponse.id;
 
-          debugPrint('id: $id');
+          debugPrint(' $id');
 
           // need to refresh the token to have access to the newly uploaded file
           // see https://github.com/cph-cachet/carp-webservices-spring/issues/111
@@ -813,7 +808,7 @@ void main() {
           File downFile = File("test/files/img-$id.jpg");
 
           final FileDownloadTask downloadTask =
-              CarpService().getFileStorageReference(id: id).download(downFile);
+              CarpService().getFileStorageReference(id).download(downFile);
 
           int downResponse = await downloadTask.onComplete;
           expect(downResponse, 200);
@@ -826,7 +821,7 @@ void main() {
           File downFile = File("test/files/img-$id.jpg");
 
           final FileDownloadTask downloadTask =
-              CarpService().getFileStorageReference(id: id).download(downFile);
+              CarpService().getFileStorageReference(id).download(downFile);
 
           int downResponse = await downloadTask.onComplete;
           expect(downResponse, 200);
@@ -840,7 +835,7 @@ void main() {
 
         test('- get non-existing', () async {
           try {
-            await CarpService().getFileStorageReference(id: 876872).get();
+            await CarpService().getFileStorageReference(876872).get();
           } catch (error) {
             debugPrint('$error');
             expect(error, isA<CarpServiceException>());
@@ -856,7 +851,7 @@ void main() {
 
         test('- query', () async {
           final List<CarpFileResponse> results =
-              await CarpService().queryFiles(query: 'original_name==img.jpg');
+              await CarpService().queryFiles('original_name==img.jpg');
 
           if (results.isNotEmpty) {
             expect(results[0].originalName, 'img.jpg');
@@ -865,8 +860,8 @@ void main() {
         });
 
         test('- get by name', () async {
-          final FileStorageReference? reference = await CarpService()
-              .getFileStorageReferenceByName(name: 'img.jpg');
+          final FileStorageReference? reference =
+              await CarpService().getFileStorageReferenceByName('img.jpg');
 
           if (reference != null) {
             final CarpFileResponse result = await reference.get();
@@ -878,14 +873,14 @@ void main() {
         });
 
         test('- delete', () async {
-          final FileStorageReference? reference = await CarpService()
-              .getFileStorageReferenceByName(name: 'img.jpg');
+          final FileStorageReference? reference =
+              await CarpService().getFileStorageReferenceByName('img.jpg');
 
           if (reference != null) {
             expect(reference.id, isNotNull);
 
             final int result = await CarpService()
-                .getFileStorageReference(id: reference.id)
+                .getFileStorageReference(reference.id)
                 .delete();
             expect(result, greaterThan(0));
             debugPrint('result : $result');

@@ -1,6 +1,5 @@
-library mobile_sensing_app;
-
 import 'dart:async';
+import 'dart:convert';
 
 import 'package:flutter/material.dart' hide TimeOfDay;
 import 'package:flutter/services.dart';
@@ -54,7 +53,6 @@ void main() async {
   // Initialize the bloc, setting the deployment mode.
   await bloc.initialize(
     deploymentMode: DeploymentMode.local,
-    // deploymentId: testDeploymentId,
     useCachedStudyDeployment: false,
     resumeSensingOnStartup: false,
   );

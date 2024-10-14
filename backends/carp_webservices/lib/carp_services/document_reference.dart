@@ -194,8 +194,8 @@ class DocumentReference extends CarpReference {
   }
 
   /// Returns the reference of a collection contained inside of this document.
-  CollectionReference collection(String name) => (service as CarpService)
-      .collection(studyId: studyId, path: "$path/$name");
+  CollectionReference collection(String name) =>
+      (service as CarpService).collection("$path/$name", studyId: studyId);
 
   // TODO - this is deprecated and not working for now.
 //  /// Fetch the list of collections (names) in this collection.
