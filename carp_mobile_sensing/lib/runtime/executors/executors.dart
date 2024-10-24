@@ -155,11 +155,11 @@ abstract class AbstractExecutor<TConfig> implements Executor<TConfig> {
     _stateEventController.add(state.state);
   }
 
-  /// Add a data point to the [measurements] stream.
+  /// Add [measurement] to the [measurements] stream.
   void addMeasurement(Measurement measurement) =>
       _measurementsController.add(measurement);
 
-  /// Add an error to the [measurements] stream.
+  /// Add [error] to the [measurements] stream.
   void addError(Object error, [StackTrace? stacktrace]) =>
       _measurementsController.addError(error, stacktrace);
 

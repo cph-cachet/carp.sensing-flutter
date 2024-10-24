@@ -17,7 +17,7 @@ class RPAppTask extends AppTask {
 
   RPAppTask({
     super.name,
-    super.measures,
+    List<Measure>? measures,
     required super.type,
     super.title,
     super.description,
@@ -26,7 +26,12 @@ class RPAppTask extends AppTask {
     super.expire,
     super.notification,
     required this.rpTask,
-  });
+  }) {
+    // Add the survey as a measure type to be collected and later uploaded
+    //   - issue #342
+    super.measures = (measures ?? [])
+      ..add(Measure(type: SurveySamplingPackage.SURVEY));
+  }
 
   @override
   Function get fromJsonFunction => _$RPAppTaskFromJson;
