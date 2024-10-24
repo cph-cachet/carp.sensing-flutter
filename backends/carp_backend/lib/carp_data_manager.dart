@@ -125,9 +125,7 @@ class CarpDataManager extends AbstractDataManager {
       }
     }
 
-    final batches = await buffer.getDataStreamBatches(
-        // carpEndPoint.deleteWhenUploaded,
-        );
+    final batches = await buffer.getDataStreamBatches();
 
     switch (carpEndPoint.uploadMethod) {
       case CarpUploadMethod.stream:

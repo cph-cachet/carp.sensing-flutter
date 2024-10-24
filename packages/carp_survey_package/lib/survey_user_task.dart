@@ -8,7 +8,6 @@ part of 'survey.dart';
 ///
 /// The survey page to show in the app is available as the [widget].
 class SurveyUserTask extends UserTask {
-  //
   // A set if predefined commonly used task types.
   static const String SURVEY_TYPE = 'survey';
   static const String COGNITIVE_ASSESSMENT_TYPE = 'cognition';
