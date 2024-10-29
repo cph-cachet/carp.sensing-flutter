@@ -1,0 +1,50 @@
+      {
+        "id": 30,
+        "name": "messages",
+        "study_id": "d6d047d5-4cfd-479b-87ac-99f4b5fee172",
+        "study_deployment_id": "",
+        "document_id": null,
+        "documents": [
+          {
+            "id": 103,
+            "name": "ebc95008-76f9-4a08-8805-7f580bdbbee1",
+            "collection_id": 30,
+            "data": {
+              "id": "8f63d8e8-6001-4f9b-9d70-9731a25d3a92",
+              "url": "https://github.com/cph-cachet/carp.sensing-flutter/issues/434",
+              "type": "news",
+              "image": null,
+              "title": "Test news",
+              "message": "Jakob testing",
+              "subTitle": "For unit testing",
+              "timestamp": "2024-10-28T20:27:03.561Z"
+            },
+            "created_by": "9c354cd9-0fd9-49a4-910d-46b28ea43997",
+            "created_at": "2024-10-28T20:27:03.781416Z",
+            "updated_by": "9c354cd9-0fd9-49a4-910d-46b28ea43997",
+            "updated_at": "2024-10-28T20:27:03.781416Z"
+          },
+          {
+            "id": 102,
+            "name": "8d67565c-9f21-449f-bf8a-b084e15b771e",
+            "collection_id": 30,
+            "data": {
+              "id": "8d67565c-9f21-449f-bf8a-b084e15b771e",
+              "url": "https://www.who.int/initiatives/behealthy/healthy-diet",
+              "type": "article",
+              "title": "The importance of healthy eating",
+              "message": "A healthy diet is essential for good health and nutrition. It protects you against many chronic noncommunicable diseases, such as heart disease, diabetes and cancer. Eating a variety of foods and consuming less salt, sugars and saturated and industrially-produced trans-fats, are essential for healthy diet.\n\nA healthy diet comprises a combination of different foods. These include:\n\n - Staples like cereals (wheat, barley, rye, maize or rice) or starchy tubers or roots (potato, yam, taro or cassava).\n - Legumes (lentils and beans).\n - Fruit and vegetables.\n - Foods from animal sources (meat, fish, eggs and milk).\n\nHere is some useful information, based on WHO recommendations, to follow a healthy diet, and the benefits of doing so.",
+              "sub_title": "",
+              "timestamp": "2024-10-28T21:18:11.275882"
+            },
+            "created_by": "9c354cd9-0fd9-49a4-910d-46b28ea43997",
+            "created_at": "2024-10-28T20:18:11.719098Z",
+            "updated_by": "9c354cd9-0fd9-49a4-910d-46b28ea43997",
+            "updated_at": "2024-10-28T20:18:11.719098Z"
+          }
+        ],
+        "created_by": "9c354cd9-0fd9-49a4-910d-46b28ea43997",
+        "created_at": "2024-09-25T11:33:43.252362Z",
+        "updated_by": "9c354cd9-0fd9-49a4-910d-46b28ea43997",
+        "updated_at": "2024-09-25T11:33:43.252362Z"
+      }

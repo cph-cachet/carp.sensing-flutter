@@ -100,7 +100,7 @@ abstract class UserTask {
 
   /// The task executor which is used to collect the sensor measures of this user
   /// task in the background once started.
-  TaskExecutor backgroundTaskExecutor = BackgroundTaskExecutor();
+  BackgroundTaskExecutor backgroundTaskExecutor = BackgroundTaskExecutor();
 
   /// The result of this task, once done.
   Data? result;
@@ -134,6 +134,19 @@ abstract class UserTask {
     state = UserTaskState.started;
   }
 
+  /// Listen to remove the background executor when all of its underlying
+  /// probes have stopped.
+  /// Issue => https://github.com/cph-cachet/carp_studies_app/issues/341
+  void _removeExecutor() {
+    backgroundTaskExecutor.states
+        .where((event) => event == ExecutorState.stopped)
+        .listen((_) {
+      if (backgroundTaskExecutor.haveAllProbesStopped) {
+        _executor.removeExecutor(backgroundTaskExecutor);
+      }
+    });
+  }
+
   /// Callback from the app if this task is canceled.
   ///
   /// If [dequeue] is `true` the task is removed from the queue.
@@ -142,7 +155,7 @@ abstract class UserTask {
   void onCancel({bool dequeue = false}) {
     state = UserTaskState.canceled;
     if (dequeue) AppTaskController().dequeue(id);
-    _executor.removeExecutor(backgroundTaskExecutor);
+    _removeExecutor();
   }
 
   /// Callback from the app if this task expires.
@@ -152,7 +165,7 @@ abstract class UserTask {
   void onExpired() {
     state = UserTaskState.expired;
     AppTaskController().dequeue(id);
-    _executor.removeExecutor(backgroundTaskExecutor);
+    _removeExecutor();
   }
 
   /// Callback from the app when this task is done.
@@ -165,7 +178,7 @@ abstract class UserTask {
     state = UserTaskState.done;
     AppTaskController().done(id, result);
     if (dequeue) AppTaskController().dequeue(id);
-    _executor.removeExecutor(backgroundTaskExecutor);
+    _removeExecutor();
   }
 
   /// Callback from the OS when this task is clicked by the user in the

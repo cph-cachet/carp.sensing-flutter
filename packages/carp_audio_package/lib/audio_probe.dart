@@ -22,14 +22,22 @@ class AudioProbe extends Probe {
   bool _isRecording = false;
   Media? _data;
   String? _soundFileName;
+
   bool get isRecording => _isRecording;
+
+  @override
+  bool onInitialize() {
+    _recorder.openRecorder();
+    return super.onInitialize();
+  }
 
   @override
   Future<bool> onStart() async {
     if (await requestPermissions()) {
       try {
         await _startAudioRecording();
-        debug('Audio recording started - sound file : $_soundFileName');
+        debug(
+            '$runtimeType [$hashCode] - Audio recording started - sound file : $_soundFileName');
       } catch (error) {
         warning('An error occurred trying to start audio recording - $error');
         addError(error);
@@ -43,27 +51,34 @@ class AudioProbe extends Probe {
 
   @override
   Future<bool> onStop() async {
-    // when stopping the audio sampling, stop recording and collect the measurement
     if (_isRecording) {
       try {
         await _stopAudioRecording();
+        debug(' $runtimeType [$hashCode] - Audio recording stopped.');
 
-        var measurement = _data != null
-            ? Measurement(
-                sensorStartTime:
-                    _data!.startRecordingTime!.microsecondsSinceEpoch,
-                sensorEndTime: _data!.endRecordingTime?.microsecondsSinceEpoch,
-                data: _data!)
-            : null;
-
-        if (measurement != null) addMeasurement(measurement);
-        debug('Audio recording stopped - sound file : $_soundFileName');
+        // when stopping the audio sampling, stop recording and collect the measurement
+        // HOWEVER - this does not work....?
+        // issue => https://github.com/cph-cachet/carp_studies_app/issues/341
+        if (_data != null) {
+          _data?.endRecordingTime = DateTime.now().toUtc();
+          var measurement = Measurement(
+              sensorStartTime:
+                  _data!.startRecordingTime!.microsecondsSinceEpoch,
+              sensorEndTime: _data!.endRecordingTime?.microsecondsSinceEpoch,
+              data: _data!);
+          addMeasurement(measurement);
+        }
       } catch (error) {
         warning('An error occurred trying to stop audio recording - $error');
         addError(error);
       }
     }
     return true;
+  }
+
+  @override
+  Future<void> onDispose() async {
+    await _recorder.closeRecorder();
   }
 
   Future<void> _startAudioRecording() async {
@@ -77,7 +92,7 @@ class AudioProbe extends Probe {
 
     _data = Media(
       mediaType: MediaType.audio,
-      filename: 'ignored for now',
+      filename: 'no_file_available',
       startRecordingTime: DateTime.now().toUtc(),
     );
     _soundFileName = await _filePath;
@@ -86,7 +101,6 @@ class AudioProbe extends Probe {
     _isRecording = true;
 
     // start the recording
-    _recorder.openRecorder();
     await _recorder.startRecorder(
       toFile: _soundFileName,
       codec: Codec.aacMP4,
@@ -95,11 +109,10 @@ class AudioProbe extends Probe {
 
   Future<void> _stopAudioRecording() async {
     _data?.endRecordingTime = DateTime.now().toUtc();
-    _isRecording = false;
 
     // stop the recording and close the recorder
     await _recorder.stopRecorder();
-    _recorder.closeRecorder();
+    _isRecording = false;
   }
 
   /// The local path on the device where sound files are stored.

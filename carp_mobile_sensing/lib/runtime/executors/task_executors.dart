@@ -62,6 +62,17 @@ class BackgroundTaskExecutor extends TaskExecutor<BackgroundTask> {
   bool get haveAllProbesStopped =>
       !probes.any((probe) => probe.state != ExecutorState.stopped);
 
+  /// Connect all connectable devices used by the [probes] in this
+  /// background task executor.
+  Future<void> connectAllConnectableDevices() async {
+    debug(
+        '$runtimeType - Trying to connect to all connectable devices for this background executor.');
+
+    probes
+        .where((probe) => !probe.deviceManager.isConnected)
+        .forEach((probe) async => await probe.deviceManager.connect());
+  }
+
   @override
   Future<bool> onStart() async {
     // Early out if no probes.
@@ -85,22 +96,17 @@ class BackgroundTaskExecutor extends TaskExecutor<BackgroundTask> {
       }
     });
 
-    // Check if the device for this task is connected.
-    if (probes.first.deviceManager.isConnected) {
-      if (configuration?.duration != null) {
-        // If the task has a duration (optional), stop it again after this duration has passed.
-        Timer(Duration(seconds: configuration!.duration!.inSeconds.truncate()),
-            () => stop());
-      }
+    // Check if the devices for this task is connected.
+    await connectAllConnectableDevices();
 
-      // Now - finally - we can start the probes.
-      return await super.onStart();
-    } else {
-      warning(
-          'A $runtimeType could not be started since the device for this task is not connected. '
-          'Device type: ${probes.first.deviceManager.typeName}');
-      return false;
+    if (configuration?.duration != null) {
+      // If the task has a duration (optional), stop it again after this duration has passed.
+      Timer(Duration(seconds: configuration!.duration!.inSeconds.truncate()),
+          () => stop());
     }
+
+    // Now - finally - we can start the probes.
+    return await super.onStart();
   }
 
   @override
