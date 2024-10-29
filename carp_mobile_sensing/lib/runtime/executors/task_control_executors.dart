@@ -126,7 +126,7 @@ class TaskControlExecutor extends AbstractExecutor<TaskControl> {
 ///
 /// In contrast to the [TaskControlExecutor] (which runs in the background),
 /// this [AppTaskControlExecutor] will try to schedule the [AppTask] using
-/// the [AppTaskController]. This means that the [trigger] for has to be
+/// the [AppTaskController]. This means that the [trigger] has to be
 /// [Schedulable].
 class AppTaskControlExecutor extends TaskControlExecutor {
   AppTaskControlExecutor(

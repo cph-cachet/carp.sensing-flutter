@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:carp_serializable/carp_serializable.dart';
 import 'package:flutter/material.dart';
 import 'package:test/test.dart';
 // import 'package:flutter_test/flutter_test.dart';
@@ -257,19 +258,17 @@ void main() {
 
   group("Documents & Collections", () {
     test('- get by id', () async {
-      DocumentSnapshot? doc = await CarpService().documentById(167).get();
-      print(doc);
+      final doc = await CarpService().documentById(102).get();
+      print(toJsonString(doc?.data));
     });
 
     test('- get by collection', () async {
-      CollectionReference ref =
-          await CarpService().collection('localizations').get();
+      final ref = await CarpService().collection('localizations').get();
       print((ref));
     });
 
     test(' - get document by path', () async {
-      DocumentSnapshot? doc =
-          await CarpService().document('localizations/da').get();
+      final doc = await CarpService().document('localizations/da').get();
       print((doc));
     });
 

@@ -161,7 +161,6 @@ class AppTaskController {
     DateTime? triggerTime,
     bool sendNotification = true,
   }) {
-    debug('$runtimeType - Buffering task $executor for later scheduling.');
     _userTaskBuffer.add(UserTaskBufferItem(
       taskControl,
       executor,
