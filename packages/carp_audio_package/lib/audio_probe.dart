@@ -57,8 +57,6 @@ class AudioProbe extends Probe {
         debug(' $runtimeType [$hashCode] - Audio recording stopped.');
 
         // when stopping the audio sampling, stop recording and collect the measurement
-        // HOWEVER - this does not work....?
-        // issue => https://github.com/cph-cachet/carp_studies_app/issues/341
         if (_data != null) {
           _data?.endRecordingTime = DateTime.now().toUtc();
           var measurement = Measurement(
