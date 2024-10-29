@@ -1,6 +1,7 @@
-## 1.7.0
+## 1.7.1
 
-* upgrade to carp_serialization v. 2.0 & carp_mobile_sensing: 1.10.0
+* upgrade to carp_serialization v. 2.0 & carp_mobile_sensing: 1.11.0
+* Fix of [#431](https://github.com/cph-cachet/carp_studies_app/issues/341)
 
 ## 1.6.0
 
