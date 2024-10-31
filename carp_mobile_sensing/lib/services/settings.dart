@@ -131,6 +131,16 @@ class Settings {
           .create(recursive: true))
       .path;
 
+  /// The base path for storing all data (e.g. media files).
+  ///
+  ///  `<localApplicationPath>/carp/deployments/<study_deployment_id>/data`
+  ///
+  Future<
+      String> getDataBasePath(String studyDeploymentId) async => (await Directory(
+              '${await getDeploymentBasePath(studyDeploymentId)}/$CARP_DATA_FILE_PATH')
+          .create(recursive: true))
+      .path;
+
   /// The local time zone setting of this app.
   String get timezone => _timezone;
 

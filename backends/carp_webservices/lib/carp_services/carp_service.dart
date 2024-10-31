@@ -102,11 +102,7 @@ class CarpService extends CarpBaseService {
         {
           Map<String, dynamic> responseJson =
               json.decode(response.body) as Map<String, dynamic>;
-          throw CarpServiceException(
-            httpStatus: HTTPStatus(httpStatusCode, response.reasonPhrase),
-            message: responseJson["message"].toString(),
-            path: responseJson["path"].toString(),
-          );
+          throw CarpServiceException.fromMap(httpStatusCode, responseJson);
         }
     }
   }
@@ -163,11 +159,7 @@ class CarpService extends CarpBaseService {
     // All other cases are treated as an error.
     Map<String, dynamic> responseJson =
         json.decode(response.body) as Map<String, dynamic>;
-    throw CarpServiceException(
-      httpStatus: HTTPStatus(httpStatusCode, response.reasonPhrase),
-      message: responseJson["message"].toString(),
-      path: responseJson["path"].toString(),
-    );
+    throw CarpServiceException.fromMap(httpStatusCode, responseJson);
   }
 
   /// Get all documents for a study.
@@ -195,11 +187,7 @@ class CarpService extends CarpBaseService {
     // All other cases are treated as an error.
     Map<String, dynamic> responseJson =
         json.decode(response.body) as Map<String, dynamic>;
-    throw CarpServiceException(
-      httpStatus: HTTPStatus(httpStatusCode, response.reasonPhrase),
-      message: responseJson["message"].toString(),
-      path: responseJson["path"].toString(),
-    );
+    throw CarpServiceException.fromMap(httpStatusCode, responseJson);
   }
 
   /// Gets a [CollectionReference] for the [path].
@@ -244,11 +232,7 @@ class CarpService extends CarpBaseService {
     }
 
     // All other cases are treated as an error.
-    throw CarpServiceException(
-      httpStatus: HTTPStatus(httpStatusCode, response.reasonPhrase),
-      message: responseJson["message"].toString(),
-      path: responseJson["path"].toString(),
-    );
+    throw CarpServiceException.fromMap(httpStatusCode, responseJson);
   }
 
   /// Get a previously uploaded (signed) consent document with document [id].
@@ -276,11 +260,7 @@ class CarpService extends CarpBaseService {
     if (httpStatusCode == HttpStatus.ok) return ConsentDocument._(responseJson);
 
     // All other cases are treated as an error.
-    throw CarpServiceException(
-      httpStatus: HTTPStatus(httpStatusCode, response.reasonPhrase),
-      message: responseJson["message"].toString(),
-      path: responseJson["path"].toString(),
-    );
+    throw CarpServiceException.fromMap(httpStatusCode, responseJson);
   }
 
   // --------------------------------------------------------------------------

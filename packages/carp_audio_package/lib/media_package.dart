@@ -8,7 +8,9 @@ part of 'media.dart';
 ///   SamplingPackageRegistry.register(MediaSamplingPackage());
 /// ```
 class MediaSamplingPackage extends SmartphoneSamplingPackage {
-  static const String MEDIA = "${NameSpace.CARP}.media";
+  /// The name of the folder used for storing audio files.
+  static const String MEDIA_FILES_PATH = 'media';
+
   static const String VIDEO = "${NameSpace.CARP}.video";
   static const String IMAGE = "${NameSpace.CARP}.image";
 
@@ -80,7 +82,9 @@ class MediaSamplingPackage extends SmartphoneSamplingPackage {
   @override
   void onRegister() {
     FromJsonFactory().registerAll([
-      Media(filename: 'filename', mediaType: MediaType.audio),
+      AudioMedia(filename: ''),
+      ImageMedia(filename: ''),
+      VideoMedia(filename: ''),
       Noise(meanDecibel: 0, stdDecibel: 0, minDecibel: 0, maxDecibel: 0),
     ]);
   }

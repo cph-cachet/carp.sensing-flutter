@@ -923,6 +923,7 @@ FileData _$FileDataFromJson(Map<String, dynamic> json) => FileData(
       upload: json['upload'] as bool? ?? true,
     )
       ..$type = json['__type'] as String?
+      ..path = json['path'] as String?
       ..metadata = (json['metadata'] as Map<String, dynamic>?)?.map(
         (k, e) => MapEntry(k, e as String),
       );
@@ -937,6 +938,7 @@ Map<String, dynamic> _$FileDataToJson(FileData instance) {
   }
 
   writeNotNull('__type', instance.$type);
+  writeNotNull('path', instance.path);
   val['filename'] = instance.filename;
   val['upload'] = instance.upload;
   writeNotNull('metadata', instance.metadata);

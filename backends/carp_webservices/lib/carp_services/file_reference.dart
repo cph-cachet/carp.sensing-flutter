@@ -49,23 +49,14 @@ class FileStorageReference extends CarpReference {
 
     final response = await service._get(url);
     int httpStatusCode = response.statusCode;
-    Map<String, dynamic> map =
+    Map<String, dynamic> responseJson =
         json.decode(response.body) as Map<String, dynamic>;
 
     switch (httpStatusCode) {
       case HttpStatus.ok:
-        {
-          return CarpFileResponse._(map);
-        }
+        return CarpFileResponse._(responseJson);
       default:
-        // All other cases are treated as an error.
-        {
-          throw CarpServiceException(
-            httpStatus: HTTPStatus(httpStatusCode, response.reasonPhrase),
-            message: map["message"].toString(),
-            path: map["path"].toString(),
-          );
-        }
+        throw CarpServiceException.fromMap(httpStatusCode, responseJson);
     }
   }
 
@@ -80,20 +71,11 @@ class FileStorageReference extends CarpReference {
     switch (httpStatusCode) {
       case HttpStatus.ok:
       case HttpStatus.noContent:
-        {
-          return httpStatusCode;
-        }
+        return httpStatusCode;
       default:
-        // All other cases are treated as an error.
-        {
-          Map<String, dynamic> responseJson =
-              json.decode(response.body) as Map<String, dynamic>;
-          throw CarpServiceException(
-            httpStatus: HTTPStatus(httpStatusCode, response.reasonPhrase),
-            message: responseJson["message"].toString(),
-            path: responseJson["path"].toString(),
-          );
-        }
+        Map<String, dynamic> responseJson =
+            json.decode(response.body) as Map<String, dynamic>;
+        throw CarpServiceException.fromMap(httpStatusCode, responseJson);
     }
   }
 }

@@ -75,11 +75,7 @@ class DocumentReference extends CarpReference {
       }
 
       // All other cases are treated as an error.
-      throw CarpServiceException(
-        httpStatus: HTTPStatus(httpStatusCode, response.reasonPhrase),
-        message: responseJson["message"].toString(),
-        path: responseJson["path"].toString(),
-      );
+      throw CarpServiceException.fromMap(httpStatusCode, responseJson);
     } else {
       return updateData(data);
     }
@@ -110,13 +106,9 @@ class DocumentReference extends CarpReference {
 
     if (httpStatusCode == HttpStatus.ok) {
       return DocumentSnapshot._(path, responseJson);
+    } else {
+      throw CarpServiceException.fromMap(httpStatusCode, responseJson);
     }
-
-    throw CarpServiceException(
-      httpStatus: HTTPStatus(httpStatusCode, response.reasonPhrase),
-      message: responseJson["message"].toString(),
-      path: responseJson["path"].toString(),
-    );
   }
 
   /// Renames the document referred to by this [DocumentReference].
@@ -145,13 +137,9 @@ class DocumentReference extends CarpReference {
 
     if (httpStatusCode == HttpStatus.ok) {
       return DocumentSnapshot._(path, responseJson);
+    } else {
+      throw CarpServiceException.fromMap(httpStatusCode, responseJson);
     }
-
-    throw CarpServiceException(
-      httpStatus: HTTPStatus(httpStatusCode, response.reasonPhrase),
-      message: responseJson["message"].toString(),
-      path: responseJson["path"].toString(),
-    );
   }
 
   /// Reads the document referenced by this [DocumentReference].
@@ -185,11 +173,7 @@ class DocumentReference extends CarpReference {
     } else {
       final Map<String, dynamic> responseJson =
           json.decode(response.body) as Map<String, dynamic>;
-      throw CarpServiceException(
-        httpStatus: HTTPStatus(httpStatusCode, response.reasonPhrase),
-        message: responseJson["message"].toString(),
-        path: responseJson["path"].toString(),
-      );
+      throw CarpServiceException.fromMap(httpStatusCode, responseJson);
     }
   }
 

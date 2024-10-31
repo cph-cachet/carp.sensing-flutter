@@ -57,7 +57,7 @@ class SmartphoneDeploymentController extends StudyRuntime<DeviceRegistration> {
   ///
   /// This is a broadcast stream and supports multiple subscribers.
   Stream<Measurement> get measurements =>
-      _executor.measurements.map((measurement) => measurement
+      _executor.measurements.distinct().map((measurement) => measurement
         ..data = _transformer(DataTransformerSchemaRegistry()
             .lookup(deployment?.dataEndPoint?.dataFormat ?? NameSpace.CARP)!
             .transform(DataTransformerSchemaRegistry()

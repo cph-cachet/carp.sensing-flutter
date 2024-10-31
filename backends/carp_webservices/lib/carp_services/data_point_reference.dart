@@ -44,11 +44,7 @@ class DataPointReference extends CarpReference {
     }
 
     // All other cases are treated as an error.
-    throw CarpServiceException(
-      httpStatus: HTTPStatus(httpStatusCode, response.reasonPhrase),
-      message: responseJson["message"].toString(),
-      path: responseJson["path"].toString(),
-    );
+    throw CarpServiceException.fromMap(httpStatusCode, responseJson);
   }
 
   int _counter = 0;
@@ -145,11 +141,7 @@ class DataPointReference extends CarpReference {
     }
 
     // All other cases are treated as an error.
-    throw CarpServiceException(
-      httpStatus: HTTPStatus(httpStatusCode, response.reasonPhrase),
-      message: responseJson["message"].toString(),
-      path: responseJson["path"].toString(),
-    );
+    throw CarpServiceException.fromMap(httpStatusCode, responseJson);
   }
 
   /// Get all [DataPoint]s for this study.
@@ -259,11 +251,7 @@ class DataPointReference extends CarpReference {
     // All other cases are treated as an error.
     Map<String, dynamic> responseJson =
         json.decode(response.body) as Map<String, dynamic>;
-    throw CarpServiceException(
-      httpStatus: HTTPStatus(httpStatusCode, response.reasonPhrase),
-      message: responseJson["message"].toString(),
-      path: responseJson["path"].toString(),
-    );
+    throw CarpServiceException.fromMap(httpStatusCode, responseJson);
   }
 
   /// The number of data points matching the [query] for this deployment.
@@ -284,11 +272,7 @@ class DataPointReference extends CarpReference {
     // All other cases are treated as an error.
     Map<String, dynamic> responseJson =
         json.decode(response.body) as Map<String, dynamic>;
-    throw CarpServiceException(
-      httpStatus: HTTPStatus(httpStatusCode, response.reasonPhrase),
-      message: responseJson["message"].toString(),
-      path: responseJson["path"].toString(),
-    );
+    throw CarpServiceException.fromMap(httpStatusCode, responseJson);
   }
 
   /// Delete a data point with the given [id].
@@ -306,10 +290,6 @@ class DataPointReference extends CarpReference {
     // All other cases are treated as an error.
     final Map<String, dynamic> responseJson =
         json.decode(response.body) as Map<String, dynamic>;
-    throw CarpServiceException(
-      httpStatus: HTTPStatus(httpStatusCode, response.reasonPhrase),
-      message: responseJson["message"].toString(),
-      path: responseJson["path"].toString(),
-    );
+    throw CarpServiceException.fromMap(httpStatusCode, responseJson);
   }
 }

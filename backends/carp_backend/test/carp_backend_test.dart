@@ -1,3 +1,4 @@
+import 'dart:io';
 import 'dart:convert';
 import 'package:carp_serializable/carp_serializable.dart';
 import 'package:flutter/material.dart';
@@ -285,6 +286,50 @@ void main() {
     test(' - delete old document', () async {
       DocumentReference doc = CarpService().documentById(167);
       doc.delete();
+    });
+  });
+
+  group("Files", () {
+    test('- upload mp4', () async {
+      final File myFile = File("test/files/1730232460529.mp4");
+
+      final uploadTask = CarpService().getFileStorageReference().upload(
+        myFile,
+        {
+          'content-type': 'audio/mpeg',
+          'content-language': 'en',
+          'activity': 'test'
+        },
+      );
+
+      final response = await uploadTask.onComplete;
+      expect(response.id, greaterThan(0));
+      debugPrint(toJsonString(response.map));
+    });
+
+    test('- upload jpg', () async {
+      final File myFile = File("test/files/CAP7858089012525879504.jpg");
+
+      final uploadTask = CarpService().getFileStorageReference().upload(
+        myFile,
+        {
+          'content-type': 'image/jpg',
+          'content-language': 'en',
+          'activity': 'test'
+        },
+      );
+
+      final response = await uploadTask.onComplete;
+      expect(response.id, greaterThan(0));
+      debugPrint(toJsonString(response.map));
+    });
+
+    test('- get by id', () async {
+      var id = 66;
+
+      final result = await CarpService().getFileStorageReference(id).get();
+      expect(result.id, id);
+      debugPrint(toJsonString(result.map));
     });
   });
 }

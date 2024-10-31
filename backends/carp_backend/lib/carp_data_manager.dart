@@ -71,8 +71,10 @@ class CarpDataManager extends AbstractDataManager {
     buffer.initialize(deployment, measurements);
 
     // Set up a timer that uploads data on a regular basis
-    uploadTimer = Timer.periodic(Duration(minutes: carpEndPoint.uploadInterval),
-        (_) => uploadBufferedMeasurements());
+    // uploadTimer = Timer.periodic(Duration(minutes: carpEndPoint.uploadInterval),
+    //     (_) => uploadBufferedMeasurements());
+    uploadTimer = Timer.periodic(
+        Duration(minutes: 2), (_) => uploadBufferedMeasurements());
 
     // listen to connectivity events
     Connectivity()
@@ -107,77 +109,76 @@ class CarpDataManager extends AbstractDataManager {
     }
 
     // now start trying to upload data...
-    // try {
-    // check if authenticated to CAWS and fast exit if not
-    if (!CarpAuthService().authenticated) {
-      warning('No user authenticated to CAWS. Cannot upload data.');
-      return;
-    }
-
-    // check if token has expired, and try to refresh token, if so
-    if (CarpAuthService().currentUser.token!.hasExpired) {
-      try {
-        await CarpAuthService().refresh();
-      } catch (error) {
-        warning('$runtimeType - Failed to refresh access token - $error. '
-            'Cannot upload data.');
+    try {
+      // check if authenticated to CAWS and fast exit if not
+      if (!CarpAuthService().authenticated) {
+        warning('No user authenticated to CAWS. Cannot upload data.');
         return;
       }
-    }
 
-    final batches = await buffer.getDataStreamBatches();
-
-    switch (carpEndPoint.uploadMethod) {
-      case CarpUploadMethod.stream:
-        await CarpDataStreamService().appendToDataStreams(
-          studyDeploymentId,
-          batches,
-        );
-        addEvent(
-            DataManagerEvent(CarpDataManagerEventTypes.dataStreamAppended));
-        break;
-      case CarpUploadMethod.datapoint:
-        await uploadDataStreamBatchesAsDataPoint(
-          batches,
-        );
-        addEvent(DataManagerEvent(
-            CarpDataManagerEventTypes.dataPointsBatchUploaded));
-        break;
-      case CarpUploadMethod.file:
-        // TODO - implement file method.
-        warning('$runtimeType - CarpUploadMethod.file not supported (yet).');
-        break;
-      default:
-    }
-
-    // Count the total amount of measurements and check if any measurement
-    // has a separate file to be uploaded
-    var count = 0;
-    for (var batch in batches) {
-      count += batch.measurements.length;
-      for (var measurement in batch.measurements) {
-        if (measurement.data is FileData) {
-          var fileData = measurement.data as FileData;
-          if (fileData.upload) uploadFile(fileData);
+      // check if token has expired, and try to refresh token, if so
+      if (CarpAuthService().currentUser.token!.hasExpired) {
+        try {
+          await CarpAuthService().refresh();
+        } catch (error) {
+          warning('$runtimeType - Failed to refresh access token - $error. '
+              'Cannot upload data.');
+          return;
         }
       }
+
+      final batches = await buffer.getDataStreamBatches();
+
+      switch (carpEndPoint.uploadMethod) {
+        case CarpUploadMethod.stream:
+          await CarpDataStreamService().appendToDataStreams(
+            studyDeploymentId,
+            batches,
+            compress: false,
+          );
+          addEvent(
+              DataManagerEvent(CarpDataManagerEventTypes.dataStreamAppended));
+          break;
+        case CarpUploadMethod.datapoint:
+          await uploadDataStreamBatchesAsDataPoint(
+            batches,
+          );
+          addEvent(DataManagerEvent(
+              CarpDataManagerEventTypes.dataPointsBatchUploaded));
+          break;
+        case CarpUploadMethod.file:
+          // TODO - implement file method.
+          warning('$runtimeType - CarpUploadMethod.file not supported (yet).');
+          break;
+        default:
+      }
+
+      // Count the total amount of measurements and check if any measurement
+      // has a separate file to be uploaded
+      var count = 0;
+      for (var batch in batches) {
+        count += batch.measurements.length;
+        for (var measurement in batch.measurements) {
+          if (measurement.data is FileData) {
+            var fileData = measurement.data as FileData;
+            if (fileData.upload) uploadFile(fileData);
+          }
+        }
+      }
+
+      info("$runtimeType - Upload of data batches done. "
+          "${batches.length} batches with $count measurements in total uploaded.");
+
+      // if everything is uploaded successfully, then clean up the DB
+      await buffer.cleanup(carpEndPoint.deleteWhenUploaded);
+    } catch (error) {
+      warning('$runtimeType - Data upload failed - $error');
     }
-
-    info("$runtimeType - Upload of data batches done. "
-        "${batches.length} batches with $count measurements in total uploaded.");
-
-    // if everything is uploaded successfully, then clean up the DB
-    await buffer.cleanup(carpEndPoint.deleteWhenUploaded);
-    // } catch (error) {
-    //   warning('$runtimeType - Data upload failed - $error');
-    // }
   }
 
   DataPointReference? _dataPointReference;
-  DataPointReference get dataPointReference {
-    _dataPointReference ??= CarpService().dataPointReference();
-    return _dataPointReference!;
-  }
+  DataPointReference get dataPointReference =>
+      _dataPointReference ??= CarpService().dataPointReference();
 
   /// Transform all measurements in all [batches] to [DataPoint]s and upload
   /// them to CAWS using the DataPoint batch upload endpoint.
@@ -226,36 +227,43 @@ class CarpDataManager extends AbstractDataManager {
 
     info(
         "$runtimeType - File attachment upload to CAWS started - path : '${data.path}'");
-    final File file = File(data.path!);
 
-    if (!file.existsSync()) {
-      warning(
-          '$runtimeType - The file attachment is not found - skipping upload.');
-    } else {
-      final String deviceID = DeviceInfo().deviceID.toString();
-      data.metadata!['device_id'] = deviceID;
-      data.metadata!['study_deployment_id'] = studyDeploymentId;
+    try {
+      final file = File(data.path!);
 
-      // start upload
-      final FileUploadTask uploadTask =
-          CarpService().getFileStorageReference().upload(file, data.metadata);
+      if (!file.existsSync()) {
+        warning(
+            '$runtimeType - The file attachment is not found - skipping upload.');
+      } else {
+        final String deviceID = DeviceInfo().deviceID.toString();
+        data.metadata!['device_id'] = deviceID;
+        data.metadata!['study_id'] = deployment.studyId ?? '';
+        data.metadata!['study_deployment_id'] = deployment.studyDeploymentId;
 
-      // await the upload is successful
-      CarpFileResponse response = await uploadTask.onComplete;
-      int id = response.id;
+        // start upload
+        final FileUploadTask uploadTask =
+            CarpService().getFileStorageReference().upload(file, data.metadata);
 
-      addEvent(DataManagerEvent(
-        CarpDataManagerEventTypes.fileUploaded,
-        file.path,
-      ));
-      info("$runtimeType - File upload to CAWS finished - server id : $id ");
+        // await the upload is successful
+        CarpFileResponse response = await uploadTask.onComplete;
+        // int id = response.id;
 
-      // delete the local file once uploaded?
-      if (carpEndPoint.deleteWhenUploaded) {
-        file.delete();
-        addEvent(FileDataManagerEvent(
-            FileDataManagerEventTypes.fileDeleted, file.path));
+        addEvent(DataManagerEvent(
+          CarpDataManagerEventTypes.fileUploaded,
+          file.path,
+        ));
+        info(
+            "$runtimeType - File upload to CAWS finished - server response \n$response ");
+
+        // delete the local file once uploaded?
+        if (carpEndPoint.deleteWhenUploaded) {
+          file.delete();
+          addEvent(FileDataManagerEvent(
+              FileDataManagerEventTypes.fileDeleted, file.path));
+        }
       }
+    } catch (error) {
+      warning('$runtimeType - Error uploading file attachment - $error');
     }
   }
 

@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:carp_serializable/carp_serializable.dart';
 import 'package:carp_mobile_sensing/carp_mobile_sensing.dart';
 import 'package:carp_webservices/carp_auth/carp_auth.dart';
 import 'package:carp_webservices/carp_services/carp_services.dart';
@@ -735,11 +736,11 @@ void main() {
       }, skip: false);
 
       group("Files", () {
-        test('- upload', () async {
-          final File myFile = File("test/files/img.jpg");
+        test('- upload + small file', () async {
+          final file = File("test/files/img.jpg");
 
           final uploadTask = CarpService().getFileStorageReference().upload(
-            myFile,
+            file,
             {
               'content-type': 'image/jpg',
               'content-language': 'en',
@@ -749,10 +750,24 @@ void main() {
 
           final response = await uploadTask.onComplete;
           expect(response.id, greaterThan(0));
+          debugPrint(toJsonString(response.map));
+        });
 
-          debugPrint('response.storageName : ${response.storageName}');
-          debugPrint('response.studyId : ${response.studyId}');
-          debugPrint('response.createdAt : ${response.createdAt}');
+        test('- upload + BIG file', () async {
+          final file = File("test/files/CAP7858089012525879504.jpg");
+
+          final uploadTask = CarpService().getFileStorageReference().upload(
+            file,
+            {
+              'content-type': 'image/jpg',
+              'content-language': 'en',
+              'activity': 'test'
+            },
+          );
+
+          final response = await uploadTask.onComplete;
+          expect(response.id, greaterThan(0));
+          debugPrint(toJsonString(response.map));
         });
 
         test('- get', () async {
@@ -772,13 +787,12 @@ void main() {
 
           final CarpFileResponse result =
               await CarpService().getFileStorageReference(id).get();
-          debugPrint('$result');
+          debugPrint(toJsonString(result.map));
           expect(result.id, id);
-          debugPrint('result : $result');
         });
 
         test('- upload & download', () async {
-          final File upFile = File("test/files/img-25.jpg");
+          final File upFile = File("test/files/img.jpg");
 
           final FileUploadTask uploadTask = CarpService()
               .getFileStorageReference()
@@ -846,7 +860,7 @@ void main() {
         test('- get all', () async {
           final List<CarpFileResponse> results =
               await CarpService().getAllFiles(testStudyId);
-          debugPrint('result : $results');
+          results.forEach((result) => debugPrint(toJsonString((result.map))));
         });
 
         test('- query', () async {
@@ -856,7 +870,7 @@ void main() {
           if (results.isNotEmpty) {
             expect(results[0].originalName, 'img.jpg');
           }
-          debugPrint('result : $results');
+          results.forEach((result) => debugPrint(toJsonString((result.map))));
         });
 
         test('- get by name', () async {
@@ -866,7 +880,7 @@ void main() {
           if (reference != null) {
             final CarpFileResponse result = await reference.get();
             expect(result.originalName, 'img.jpg');
-            debugPrint('result : $result');
+            debugPrint(toJsonString(result.map));
           } else {
             debugPrint('File not found.');
           }

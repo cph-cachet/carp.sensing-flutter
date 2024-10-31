@@ -67,8 +67,7 @@ void main() {
     print(toJsonString(protocol));
   });
   test('Audio Data Point', () async {
-    Media media = Media(
-      mediaType: MediaType.audio,
+    MediaData media = AudioMedia(
       filename: "filename.mp3",
       startRecordingTime: DateTime.now().subtract(const Duration(days: 1)),
       endRecordingTime: DateTime.now(),
@@ -78,12 +77,11 @@ void main() {
 
     print(measurement);
     print(toJsonString(measurement));
-    expect(measurement.data, isA<Media>());
+    expect(measurement.data, isA<MediaData>());
   });
 
   test('Video Data Point', () async {
-    Media media = Media(
-      mediaType: MediaType.video,
+    MediaData media = VideoMedia(
       filename: "filename.mp3",
       startRecordingTime: DateTime.now().subtract(const Duration(days: 1)),
       endRecordingTime: DateTime.now(),
@@ -93,6 +91,6 @@ void main() {
 
     print(measurement);
     print(toJsonString(measurement));
-    expect(measurement.data, isA<Media>());
+    expect(measurement.data, isA<MediaData>());
   });
 }

@@ -78,11 +78,7 @@ class CollectionReference extends CarpReference {
     }
 
     // All other cases are treated as an error.
-    throw CarpServiceException(
-      httpStatus: HTTPStatus(httpStatusCode, response.reasonPhrase),
-      message: responseJson['message'].toString(),
-      path: responseJson["path"].toString(),
-    );
+    throw CarpServiceException.fromMap(httpStatusCode, responseJson);
   }
 
   /// Get the documents in this collection.
@@ -104,11 +100,7 @@ class CollectionReference extends CarpReference {
     }
 
     // All other cases are treated as an error.
-    throw CarpServiceException(
-      httpStatus: HTTPStatus(httpStatusCode, response.reasonPhrase),
-      message: responseJson['message'].toString(),
-      path: responseJson["path"].toString(),
-    );
+    throw CarpServiceException.fromMap(httpStatusCode, responseJson);
   }
 
   /// Returns a [DocumentReference] with the provided name in this collection.
@@ -158,11 +150,7 @@ class CollectionReference extends CarpReference {
       return;
     }
     // All other cases are treated as an error.
-    throw CarpServiceException(
-      httpStatus: HTTPStatus(httpStatusCode, response.reasonPhrase),
-      message: responseJson['message'].toString(),
-      path: responseJson["path"].toString(),
-    );
+    throw CarpServiceException.fromMap(httpStatusCode, responseJson);
   }
 
   /// Deletes the collection referred to by this [CollectionReference].
@@ -176,11 +164,7 @@ class CollectionReference extends CarpReference {
     } else {
       final Map<String, dynamic> responseJson =
           json.decode(response.body) as Map<String, dynamic>;
-      throw CarpServiceException(
-        httpStatus: HTTPStatus(httpStatusCode, response.reasonPhrase),
-        message: responseJson['message'].toString(),
-        path: responseJson["path"].toString(),
-      );
+      throw CarpServiceException.fromMap(httpStatusCode, responseJson);
     }
   }
 
