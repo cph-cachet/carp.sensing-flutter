@@ -246,14 +246,13 @@ class CarpDataManager extends AbstractDataManager {
 
         // await the upload is successful
         CarpFileResponse response = await uploadTask.onComplete;
-        // int id = response.id;
 
         addEvent(DataManagerEvent(
           CarpDataManagerEventTypes.fileUploaded,
           file.path,
         ));
         info(
-            "$runtimeType - File upload to CAWS finished - server response \n$response ");
+            "$runtimeType - File upload to CAWS finished - server file id:${response.id}.");
 
         // delete the local file once uploaded?
         if (carpEndPoint.deleteWhenUploaded) {

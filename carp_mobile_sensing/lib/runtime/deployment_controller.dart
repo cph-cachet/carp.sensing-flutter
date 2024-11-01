@@ -279,6 +279,7 @@ class SmartphoneDeploymentController extends StudyRuntime<DeviceRegistration> {
     if (useCached) {
       // restore the deployment and app task queue
       bool success = await restoreDeployment();
+      debug('$runtimeType - restore success: $success');
       if (success) {
         await AppTaskController().restoreQueue();
         return status = deployment?.status ?? StudyStatus.Deployed;

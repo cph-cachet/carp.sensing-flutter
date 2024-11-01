@@ -22,12 +22,24 @@ class SurveySamplingPackage extends SmartphoneSamplingPackage {
     AppTaskController().registerUserTaskFactory(SurveyUserTaskFactory());
   }
 
-  // no data types supported in this package and hence no probes
-  // or sampling schema are needed.
+  @override
+  DataTypeSamplingSchemeMap get samplingSchemes =>
+      DataTypeSamplingSchemeMap.from([
+        DataTypeSamplingScheme(CamsDataTypeMetaData(
+          type: SURVEY,
+          displayName: "User Survey",
+          timeType: DataTimeType.POINT,
+          dataEventType: DataEventType.ONE_TIME,
+        )),
+      ]);
 
   @override
-  DataTypeSamplingSchemeMap get samplingSchemes => DataTypeSamplingSchemeMap();
-
-  @override
-  Probe? create(String type) => null;
+  Probe? create(String type) => switch (type) {
+        SURVEY => SurveyProbe(),
+        _ => null,
+      };
 }
+
+/// A simple no-op probe that does nothing.
+/// We don't need a probe since the [SurveyUserTask] handles data collection.
+class SurveyProbe extends Probe {}

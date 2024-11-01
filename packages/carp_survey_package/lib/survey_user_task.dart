@@ -43,7 +43,7 @@ class SurveyUserTask extends UserTask {
   void _onSurveySubmit(RPTaskResult result) {
     // when we have the survey result, add it to the measurement stream
     var data = RPTaskResultData(result);
-    appTaskExecutor.addMeasurement(Measurement.fromData(data));
+    backgroundTaskExecutor.addMeasurement(Measurement.fromData(data));
     // and then stop the background executor
     backgroundTaskExecutor.stop();
     super.onDone(result: data);
@@ -51,7 +51,7 @@ class SurveyUserTask extends UserTask {
 
   void _onSurveyCancel([RPTaskResult? result]) {
     // also saved result even though it was canceled by the user
-    appTaskExecutor
+    backgroundTaskExecutor
         .addMeasurement(Measurement.fromData(RPTaskResultData(result)));
     backgroundTaskExecutor.stop();
     super.onCancel();

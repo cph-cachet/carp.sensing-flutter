@@ -125,8 +125,8 @@ class SQLiteDataManager extends AbstractDataManager {
       );
 
       debug('$runtimeType - wrote measurement to SQLite - '
-          'id: $id, type: ${measurement.data.format}, '
-          'device role name: ${measurement.taskControl?.destinationDeviceRoleName}.');
+          'id: $id, type: ${map[DATATYPE_COLUMN]}, '
+          'device role name: ${map[DEVICE_ROLE_NAME_COLUMN]}.');
     } catch (error) {
       warning('$runtimeType - Error writing measurement to database - $error');
     }
