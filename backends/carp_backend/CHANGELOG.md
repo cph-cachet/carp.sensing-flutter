@@ -1,6 +1,6 @@
 ## 1.9.0
 
-* upgrade to web_service version ^3.5
+* upgrade to web_service version 3.5
 
 ## 1.8.0
 
