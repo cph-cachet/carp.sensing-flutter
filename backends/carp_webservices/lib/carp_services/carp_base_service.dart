@@ -178,11 +178,7 @@ abstract class CarpBaseService {
     }
 
     // All other cases are treated as an error.
-    throw CarpServiceException(
-      httpStatus: HTTPStatus(httpStatusCode),
-      message: responseJson["message"].toString(),
-      path: responseJson["path"].toString(),
-    );
+    throw CarpServiceException.fromMap(httpStatusCode, responseJson);
   }
 
   /// Sends an HTTP GET request to the given [url] for this CAWS service.

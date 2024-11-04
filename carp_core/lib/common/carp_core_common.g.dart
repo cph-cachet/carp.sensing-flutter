@@ -1411,7 +1411,7 @@ PhoneNumberInput _$PhoneNumberInputFromJson(Map<String, dynamic> json) =>
       number: json['number'] as String,
     )
       ..$type = json['__type'] as String?
-      ..icoCode = json['icoCode'] as String?;
+      ..isoCode = json['isoCode'] as String?;
 
 Map<String, dynamic> _$PhoneNumberInputToJson(PhoneNumberInput instance) {
   final val = <String, dynamic>{};
@@ -1424,7 +1424,7 @@ Map<String, dynamic> _$PhoneNumberInputToJson(PhoneNumberInput instance) {
 
   writeNotNull('__type', instance.$type);
   val['countryCode'] = instance.countryCode;
-  writeNotNull('icoCode', instance.icoCode);
+  writeNotNull('isoCode', instance.isoCode);
   val['number'] = instance.number;
   return val;
 }

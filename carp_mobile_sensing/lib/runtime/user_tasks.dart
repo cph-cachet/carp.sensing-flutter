@@ -109,6 +109,8 @@ abstract class UserTask {
   UserTask(AppTaskExecutor executor) {
     _executor = executor;
     id = const Uuid().v1;
+    // add the events from the background executor to the overall stream of events
+    _executor.addExecutor(backgroundTaskExecutor);
   }
 
   /// Does this user task has a user interface (`Widget`) to show to the user?
@@ -128,24 +130,24 @@ abstract class UserTask {
       _executor.deployment,
     );
 
-    // add the events from the background executor to the overall stream of events
-    _executor.addExecutor(backgroundTaskExecutor);
+    // // add the events from the background executor to the overall stream of events
+    // _executor.addExecutor(backgroundTaskExecutor);
 
     state = UserTaskState.started;
   }
 
-  /// Listen to remove the background executor when all of its underlying
-  /// probes have stopped.
-  /// Issue => https://github.com/cph-cachet/carp_studies_app/issues/341
-  void _removeExecutor() {
-    backgroundTaskExecutor.states
-        .where((event) => event == ExecutorState.stopped)
-        .listen((_) {
-      if (backgroundTaskExecutor.haveAllProbesStopped) {
-        _executor.removeExecutor(backgroundTaskExecutor);
-      }
-    });
-  }
+  // /// Listen to remove the background executor when all of its underlying
+  // /// probes have stopped.
+  // /// Issue => https://github.com/cph-cachet/carp_studies_app/issues/341
+  // void _removeExecutor() {
+  //   backgroundTaskExecutor.states
+  //       .where((event) => event == ExecutorState.stopped)
+  //       .listen((_) {
+  //     if (backgroundTaskExecutor.haveAllProbesStopped) {
+  //       _executor.removeExecutor(backgroundTaskExecutor);
+  //     }
+  //   });
+  // }
 
   /// Callback from the app if this task is canceled.
   ///
@@ -155,7 +157,7 @@ abstract class UserTask {
   void onCancel({bool dequeue = false}) {
     state = UserTaskState.canceled;
     if (dequeue) AppTaskController().dequeue(id);
-    _removeExecutor();
+    // _removeExecutor();
   }
 
   /// Callback from the app if this task expires.
@@ -165,7 +167,7 @@ abstract class UserTask {
   void onExpired() {
     state = UserTaskState.expired;
     AppTaskController().dequeue(id);
-    _removeExecutor();
+    // _removeExecutor();
   }
 
   /// Callback from the app when this task is done.
@@ -178,7 +180,7 @@ abstract class UserTask {
     state = UserTaskState.done;
     AppTaskController().done(id, result);
     if (dequeue) AppTaskController().dequeue(id);
-    _removeExecutor();
+    // _removeExecutor();
   }
 
   /// Callback from the OS when this task is clicked by the user in the

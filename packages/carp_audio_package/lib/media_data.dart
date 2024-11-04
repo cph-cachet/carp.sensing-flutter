@@ -3,12 +3,9 @@ part of 'media.dart';
 /// Type of media.
 enum MediaType { audio, video, image }
 
-/// A datum that holds the path to media file on the local device,
+/// An abstract media data that holds the path to media file on the local device,
 /// as well as the timestamps of when the recording was started and stopped
-@JsonSerializable(includeIfNull: false, explicitToJson: true)
-class Media extends FileData {
-  static const dataType = MediaSamplingPackage.MEDIA;
-
+abstract class MediaData extends FileData {
   /// A unique id of this media file.
   late String id;
 
@@ -21,7 +18,7 @@ class Media extends FileData {
   /// The timestamp for end of recording, if available.
   DateTime? endRecordingTime;
 
-  Media({
+  MediaData({
     required super.filename,
     required this.mediaType,
     this.startRecordingTime,
@@ -29,17 +26,75 @@ class Media extends FileData {
   }) {
     id = const Uuid().v1;
   }
+}
+
+/// An audio data.
+@JsonSerializable(includeIfNull: false, explicitToJson: true)
+class AudioMedia extends MediaData {
+  static const dataType = MediaSamplingPackage.AUDIO;
+
+  AudioMedia({
+    required super.filename,
+    super.startRecordingTime,
+    super.endRecordingTime,
+  }) : super(mediaType: MediaType.audio);
 
   @override
-  Function get fromJsonFunction => _$MediaFromJson;
-  factory Media.fromJson(Map<String, dynamic> json) =>
-      FromJsonFactory().fromJson<Media>(json);
-  @override
-  Map<String, dynamic> toJson() => _$MediaToJson(this);
+  String get jsonType => dataType;
 
   @override
-  String toString() =>
-      '${super.toString()}, start: $startRecordingTime, end: $endRecordingTime';
+  Function get fromJsonFunction => _$AudioMediaFromJson;
+  factory AudioMedia.fromJson(Map<String, dynamic> json) =>
+      FromJsonFactory().fromJson<AudioMedia>(json);
+
+  @override
+  Map<String, dynamic> toJson() => _$AudioMediaToJson(this);
+}
+
+/// An image data.
+@JsonSerializable(includeIfNull: false, explicitToJson: true)
+class ImageMedia extends MediaData {
+  static const dataType = MediaSamplingPackage.IMAGE;
+
+  ImageMedia({
+    required super.filename,
+    super.startRecordingTime,
+    super.endRecordingTime,
+  }) : super(mediaType: MediaType.image);
+
+  @override
+  String get jsonType => dataType;
+
+  @override
+  Function get fromJsonFunction => _$ImageMediaFromJson;
+  factory ImageMedia.fromJson(Map<String, dynamic> json) =>
+      FromJsonFactory().fromJson<ImageMedia>(json);
+
+  @override
+  Map<String, dynamic> toJson() => _$ImageMediaToJson(this);
+}
+
+/// An video data.
+@JsonSerializable(includeIfNull: false, explicitToJson: true)
+class VideoMedia extends MediaData {
+  static const dataType = MediaSamplingPackage.VIDEO;
+
+  VideoMedia({
+    required super.filename,
+    super.startRecordingTime,
+    super.endRecordingTime,
+  }) : super(mediaType: MediaType.video);
+
+  @override
+  String get jsonType => dataType;
+
+  @override
+  Function get fromJsonFunction => _$VideoMediaFromJson;
+  factory VideoMedia.fromJson(Map<String, dynamic> json) =>
+      FromJsonFactory().fromJson<VideoMedia>(json);
+
+  @override
+  Map<String, dynamic> toJson() => _$VideoMediaToJson(this);
 }
 
 /// Holds the noise level in decibel of a noise sampling.

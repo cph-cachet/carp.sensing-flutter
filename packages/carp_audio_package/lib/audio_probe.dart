@@ -1,7 +1,7 @@
 part of 'media.dart';
 
 /// A probe recording audio from the microphone. It starts recording on [start]
-/// and stops recording on [stop], and post the recorded [Media] object to the
+/// and stops recording on [stop], and post the recorded [MediaData] object to the
 /// [measurements] stream.
 ///
 /// Note that this probe generates a lot of data and should be used with caution.
@@ -9,18 +9,15 @@ part of 'media.dart';
 /// Also note that this probe records raw sound directly from the microphone
 /// and hence records everything - including human speech - in its proximity.
 ///
-/// The audio probe generates an [Media] data measurement that holds the
+/// The audio probe generates an [MediaData] data measurement that holds the
 /// meta-data for each recording along with the actual recording in an audio file.
 /// How to upload or store this data to a data backend is up to the implementation
 /// of the [DataManager], which is used in the [Study].
 class AudioProbe extends Probe {
-  /// The name of the folder used for storing audio files.
-  static const String AUDIO_FILES_PATH = 'audio';
-
   final _recorder = FlutterSoundRecorder();
   String? _path;
   bool _isRecording = false;
-  Media? _data;
+  MediaData? _data;
   String? _soundFileName;
 
   bool get isRecording => _isRecording;
@@ -88,8 +85,7 @@ class AudioProbe extends Probe {
       return;
     }
 
-    _data = Media(
-      mediaType: MediaType.audio,
+    _data = AudioMedia(
       filename: 'no_file_available',
       startRecordingTime: DateTime.now().toUtc(),
     );
@@ -115,11 +111,11 @@ class AudioProbe extends Probe {
 
   /// The local path on the device where sound files are stored.
   /// Creates the sound directory, if not existing.
-  Future<String> get _audioPath async {
+  Future<String> get _mediaPath async {
     if (_path == null) {
-      // create a sub-directory for sound files
+      // create a sub-directory for media (audio) files
       final directory = await Directory(
-              '${await Settings().getDeploymentBasePath(deployment!.studyDeploymentId)}/${Settings.CARP_DATA_FILE_PATH}/$AUDIO_FILES_PATH')
+              '${await Settings().getDataBasePath(deployment!.studyDeploymentId)}/${MediaSamplingPackage.MEDIA_FILES_PATH}')
           .create(recursive: true);
 
       _path = directory.path;
@@ -128,9 +124,9 @@ class AudioProbe extends Probe {
   }
 
   /// The filename of the sound file.
-  /// The file is named by the unique id (uuid) of the [Media]
+  /// The file is named by the unique id (uuid) of the [MediaData]
   String get _filename => '${_data!.id}.mp4';
 
   /// The full file path to the sound file.
-  Future<String> get _filePath async => "${await _audioPath}/$_filename";
+  Future<String> get _filePath async => "${await _mediaPath}/$_filename";
 }

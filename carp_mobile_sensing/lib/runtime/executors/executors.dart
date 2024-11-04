@@ -247,9 +247,9 @@ abstract class AbstractExecutor<TConfig> implements Executor<TConfig> {
 abstract class AggregateExecutor<TConfig> extends AbstractExecutor<TConfig> {
   static final DeviceInfo deviceInfo = DeviceInfo();
   final StreamGroup<Measurement> _group = StreamGroup.broadcast();
-  final List<Executor<dynamic>> _executors = [];
+  final Set<Executor<dynamic>> _executors = {};
 
-  List<Executor<dynamic>> get executors => _executors;
+  Set<Executor<dynamic>> get executors => _executors;
 
   AggregateExecutor() : super() {
     _group.add(super.measurements);

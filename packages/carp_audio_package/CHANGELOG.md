@@ -1,7 +1,11 @@
+## 1.8.0
+
+* explicit data objects for `AudioMedia`, `ImageMedia`, and `VideoMedia` (instead of the generic `Media` data type)
+
 ## 1.7.1
 
 * upgrade to carp_serialization v. 2.0 & carp_mobile_sensing: 1.11.0
-* Fix of [#431](https://github.com/cph-cachet/carp_studies_app/issues/341)
+* fix of [#431](https://github.com/cph-cachet/carp_studies_app/issues/341)
 
 ## 1.6.0
 

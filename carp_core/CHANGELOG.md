@@ -1,9 +1,10 @@
-## 1.8.2
+## 1.8.3
 
 * upgrade to carp_serialization v. 2.0
 * type safe fromJson methods
 * nested json serialization
 * `addStudy` in client manager modified to take a `Study`
+* fix of issue [#435](https://github.com/cph-cachet/carp.sensing-flutter/issues/435)
 
 ## 1.7.1
 

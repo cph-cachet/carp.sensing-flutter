@@ -209,7 +209,7 @@ class AppTaskController {
     SmartPhoneClientManager().save();
   }
 
-  /// De-queue (remove) an [UserTask] from the [userTasks].
+  /// De-queue (remove) an [UserTask] with [id] from the [userTasks].
   void dequeue(String id) {
     UserTask? userTask = _userTaskMap[id];
     if (userTask == null) {
@@ -306,6 +306,7 @@ class AppTaskController {
 
   /// Restore the queue from persistent storage. Returns `true` if successful.
   Future<bool> restoreQueue() async {
+    debug('$runtimeType - Restoring User Task Queue');
     bool success = true;
 
     try {
@@ -315,10 +316,9 @@ class AppTaskController {
       for (var snapshot in snapshots) {
         AppTaskExecutor executor = AppTaskExecutor();
 
-        // find the deployment
+        // find the deployment based on the deployment id in the snapshot
         SmartphoneDeployment? deployment;
-        if (snapshot.studyDeploymentId != null &&
-            snapshot.deviceRoleName != null) {
+        if (snapshot.studyDeploymentId != null) {
           deployment = SmartPhoneClientManager()
               .getStudyRuntime(snapshot.studyDeploymentId!)
               ?.deployment;
@@ -328,6 +328,13 @@ class AppTaskController {
               '$runtimeType - Could not find deployment information based on snapshot: $snapshot');
         } else {
           executor.initialize(snapshot.task, deployment);
+
+          // add the stream of measurements to the overall smartphone deployment controller
+          // issue => https://github.com/cph-cachet/carp.sensing-flutter/issues/437
+          SmartPhoneClientManager()
+              .getStudyRuntime(snapshot.studyDeploymentId!)
+              ?.executor
+              .addMeasurements(executor.measurements);
 
           // now put the restored task back on the queue
           if (_userTaskFactories[executor.task.type] == null) {

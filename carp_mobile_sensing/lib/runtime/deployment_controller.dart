@@ -57,7 +57,7 @@ class SmartphoneDeploymentController extends StudyRuntime<DeviceRegistration> {
   ///
   /// This is a broadcast stream and supports multiple subscribers.
   Stream<Measurement> get measurements =>
-      _executor.measurements.map((measurement) => measurement
+      _executor.measurements.distinct().map((measurement) => measurement
         ..data = _transformer(DataTransformerSchemaRegistry()
             .lookup(deployment?.dataEndPoint?.dataFormat ?? NameSpace.CARP)!
             .transform(DataTransformerSchemaRegistry()
@@ -279,6 +279,7 @@ class SmartphoneDeploymentController extends StudyRuntime<DeviceRegistration> {
     if (useCached) {
       // restore the deployment and app task queue
       bool success = await restoreDeployment();
+      debug('$runtimeType - restore success: $success');
       if (success) {
         await AppTaskController().restoreQueue();
         return status = deployment?.status ?? StudyStatus.Deployed;

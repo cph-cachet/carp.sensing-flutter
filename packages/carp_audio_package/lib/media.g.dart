@@ -6,9 +6,8 @@ part of 'media.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-Media _$MediaFromJson(Map<String, dynamic> json) => Media(
+AudioMedia _$AudioMediaFromJson(Map<String, dynamic> json) => AudioMedia(
       filename: json['filename'] as String,
-      mediaType: $enumDecode(_$MediaTypeEnumMap, json['mediaType']),
       startRecordingTime: json['startRecordingTime'] == null
           ? null
           : DateTime.parse(json['startRecordingTime'] as String),
@@ -17,13 +16,15 @@ Media _$MediaFromJson(Map<String, dynamic> json) => Media(
           : DateTime.parse(json['endRecordingTime'] as String),
     )
       ..$type = json['__type'] as String?
+      ..path = json['path'] as String?
       ..upload = json['upload'] as bool
       ..metadata = (json['metadata'] as Map<String, dynamic>?)?.map(
         (k, e) => MapEntry(k, e as String),
       )
-      ..id = json['id'] as String;
+      ..id = json['id'] as String
+      ..mediaType = $enumDecode(_$MediaTypeEnumMap, json['mediaType']);
 
-Map<String, dynamic> _$MediaToJson(Media instance) {
+Map<String, dynamic> _$AudioMediaToJson(AudioMedia instance) {
   final val = <String, dynamic>{};
 
   void writeNotNull(String key, dynamic value) {
@@ -33,6 +34,7 @@ Map<String, dynamic> _$MediaToJson(Media instance) {
   }
 
   writeNotNull('__type', instance.$type);
+  writeNotNull('path', instance.path);
   val['filename'] = instance.filename;
   val['upload'] = instance.upload;
   writeNotNull('metadata', instance.metadata);
@@ -50,6 +52,88 @@ const _$MediaTypeEnumMap = {
   MediaType.video: 'video',
   MediaType.image: 'image',
 };
+
+ImageMedia _$ImageMediaFromJson(Map<String, dynamic> json) => ImageMedia(
+      filename: json['filename'] as String,
+      startRecordingTime: json['startRecordingTime'] == null
+          ? null
+          : DateTime.parse(json['startRecordingTime'] as String),
+      endRecordingTime: json['endRecordingTime'] == null
+          ? null
+          : DateTime.parse(json['endRecordingTime'] as String),
+    )
+      ..$type = json['__type'] as String?
+      ..path = json['path'] as String?
+      ..upload = json['upload'] as bool
+      ..metadata = (json['metadata'] as Map<String, dynamic>?)?.map(
+        (k, e) => MapEntry(k, e as String),
+      )
+      ..id = json['id'] as String
+      ..mediaType = $enumDecode(_$MediaTypeEnumMap, json['mediaType']);
+
+Map<String, dynamic> _$ImageMediaToJson(ImageMedia instance) {
+  final val = <String, dynamic>{};
+
+  void writeNotNull(String key, dynamic value) {
+    if (value != null) {
+      val[key] = value;
+    }
+  }
+
+  writeNotNull('__type', instance.$type);
+  writeNotNull('path', instance.path);
+  val['filename'] = instance.filename;
+  val['upload'] = instance.upload;
+  writeNotNull('metadata', instance.metadata);
+  val['id'] = instance.id;
+  val['mediaType'] = _$MediaTypeEnumMap[instance.mediaType]!;
+  writeNotNull(
+      'startRecordingTime', instance.startRecordingTime?.toIso8601String());
+  writeNotNull(
+      'endRecordingTime', instance.endRecordingTime?.toIso8601String());
+  return val;
+}
+
+VideoMedia _$VideoMediaFromJson(Map<String, dynamic> json) => VideoMedia(
+      filename: json['filename'] as String,
+      startRecordingTime: json['startRecordingTime'] == null
+          ? null
+          : DateTime.parse(json['startRecordingTime'] as String),
+      endRecordingTime: json['endRecordingTime'] == null
+          ? null
+          : DateTime.parse(json['endRecordingTime'] as String),
+    )
+      ..$type = json['__type'] as String?
+      ..path = json['path'] as String?
+      ..upload = json['upload'] as bool
+      ..metadata = (json['metadata'] as Map<String, dynamic>?)?.map(
+        (k, e) => MapEntry(k, e as String),
+      )
+      ..id = json['id'] as String
+      ..mediaType = $enumDecode(_$MediaTypeEnumMap, json['mediaType']);
+
+Map<String, dynamic> _$VideoMediaToJson(VideoMedia instance) {
+  final val = <String, dynamic>{};
+
+  void writeNotNull(String key, dynamic value) {
+    if (value != null) {
+      val[key] = value;
+    }
+  }
+
+  writeNotNull('__type', instance.$type);
+  writeNotNull('path', instance.path);
+  val['filename'] = instance.filename;
+  val['upload'] = instance.upload;
+  writeNotNull('metadata', instance.metadata);
+  val['id'] = instance.id;
+  val['mediaType'] = _$MediaTypeEnumMap[instance.mediaType]!;
+  writeNotNull(
+      'startRecordingTime', instance.startRecordingTime?.toIso8601String());
+  writeNotNull(
+      'endRecordingTime', instance.endRecordingTime?.toIso8601String());
+  return val;
+}
 
 Noise _$NoiseFromJson(Map<String, dynamic> json) => Noise(
       meanDecibel: (json['meanDecibel'] as num).toDouble(),

@@ -78,8 +78,10 @@ class FileUploadTask extends CarpServiceTask {
     httpr.send(request).then((http.StreamedResponse response) {
       response.stream.toStringStream().first.then((body) {
         final int httpStatusCode = response.statusCode;
-        final Map<String, dynamic> map =
+        final Map<String, dynamic> responseJson =
             json.decode(body) as Map<String, dynamic>;
+
+        debugPrint(toJsonString(responseJson));
 
         switch (httpStatusCode) {
           // CARP web service returns "201 Created" when a file is created on the server.
@@ -87,9 +89,9 @@ class FileUploadTask extends CarpServiceTask {
           case HttpStatus.created:
             {
               // save the id generated from the server
-              reference.id = map["id"] as int;
+              reference.id = responseJson["id"] as int;
               _state = TaskStateType.success;
-              _completer.complete(CarpFileResponse._(map));
+              _completer.complete(CarpFileResponse._(responseJson));
               break;
             }
           default:
@@ -99,11 +101,7 @@ class FileUploadTask extends CarpServiceTask {
               final HTTPStatus status =
                   HTTPStatus(httpStatusCode, response.reasonPhrase);
               _completer.completeError(status);
-              throw CarpServiceException(
-                httpStatus: status,
-                message: map["message"].toString(),
-                path: map["path"].toString(),
-              );
+              throw CarpServiceException.fromMap(httpStatusCode, responseJson);
             }
         }
       });
@@ -158,16 +156,11 @@ class FileDownloadTask extends CarpServiceTask {
           // All other cases are treated as an error.
           {
             _state = TaskStateType.failure;
-            final Map<String, dynamic> map =
+            final Map<String, dynamic> responseJson =
                 json.decode(response.body) as Map<String, dynamic>;
-            final HTTPStatus status =
-                HTTPStatus(httpStatusCode, response.reasonPhrase);
+
             _completer.completeError(httpStatusCode);
-            throw CarpServiceException(
-              httpStatus: status,
-              message: map["message"].toString(),
-              path: map["path"].toString(),
-            );
+            throw CarpServiceException.fromMap(httpStatusCode, responseJson);
           }
       }
     });

@@ -69,10 +69,10 @@ class PhoneNumberInput extends Data {
   /// See https://countrycode.org/ or https://en.wikipedia.org/wiki/List_of_country_calling_codes
   String countryCode;
 
-  /// The ICO 3166 code of the [countryCode], if available.
+  /// The ISO 3166 code of the [countryCode], if available.
   ///
   /// See https://en.wikipedia.org/wiki/List_of_ISO_3166_country_codes
-  String? icoCode;
+  String? isoCode;
 
   /// The phone number.
   ///

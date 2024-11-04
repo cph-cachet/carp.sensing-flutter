@@ -98,6 +98,11 @@ class SmartphoneDeploymentExecutor
     ExecutorFactory().dispose();
   }
 
+  /// Add the stream of [measurements] to the overall stream of measurements
+  /// for this deployment executor.
+  void addMeasurements(Stream<Measurement> measurements) =>
+      _group.add(measurements);
+
   /// Get the [DeviceManager] based on the [roleName].
   /// This includes both the primary device and the connected devices.
   /// Returns null if no device with [roleName] is found.

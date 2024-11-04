@@ -79,7 +79,32 @@ class CarpServiceException implements Exception {
   String? message;
   String? path;
 
+  /// Create new [CarpServiceException].
   CarpServiceException({this.httpStatus, this.message, this.path});
+
+  /// Create new [CarpServiceException] from a HTTP response [httpStatusCode] and [map].
+  factory CarpServiceException.fromMap(
+      int httpStatusCode, Map<String, dynamic> map) {
+    // we have two types of error messages - from CAWS and from NGINX
+    if (map.containsKey('path')) {
+      return CarpServiceException(
+        httpStatus: HTTPStatus(httpStatusCode),
+        message: map["message"].toString(),
+        path: map["path"].toString(),
+      );
+    } else if (map.containsKey('instance')) {
+      return CarpServiceException(
+        httpStatus: HTTPStatus(httpStatusCode),
+        message: map["detail"].toString(),
+        path: map["instance"].toString(),
+      );
+    } else {
+      return CarpServiceException(
+        httpStatus: HTTPStatus(httpStatusCode),
+        message: 'Unknown error',
+      );
+    }
+  }
 
   @override
   String toString() =>
@@ -107,6 +132,7 @@ class HTTPStatus {
     408: "Request Timeout",
     409: "Conflict",
     410: "Gone",
+    413: "Payload Too Large",
     500: "Internal Server Error",
     501: "Not Implemented",
     502: "Bad Gateway",

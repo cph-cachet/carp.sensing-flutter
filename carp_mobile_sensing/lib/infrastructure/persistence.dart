@@ -170,6 +170,7 @@ class Persistence {
             whereArgs: [deploymentId],
           ) ??
           [];
+
       if (maps.isNotEmpty) {
         final jsonString = maps[0][DEPLOYMENT_COLUMN] as String;
         deployment = SmartphoneDeployment.fromJson(
