@@ -206,17 +206,26 @@ class SmartPhoneClientManager extends ClientManager
   /// this client.
   ///
   /// This is similar to the [addStudy] method, but the study is created from the
-  /// [protocol].
+  /// [protocol]. If [studyDeploymentId] is specifies this id is used as the study
+  /// deployment id. If not specified, an UUID v1 id is generated.
   ///
   /// Returns the newly added study.
-  Future<SmartphoneStudy> addStudyFromProtocol(StudyProtocol protocol) async {
+  Future<SmartphoneStudy> addStudyFromProtocol(
+    StudyProtocol protocol, [
+    String? studyDeploymentId,
+  ]) async {
     assert(deploymentService != null,
         'Deployment Service has not been configured. Call configure() first.');
+
+    final status = await deploymentService!.createStudyDeployment(
+      protocol,
+      [],
+      studyDeploymentId,
+    );
 
     // no participant is specified in a protocol so look up the local user id
     var userId = await Settings().userId;
 
-    final status = await deploymentService!.createStudyDeployment(protocol);
     final study = SmartphoneStudy(
       studyDeploymentId: status.studyDeploymentId,
       deviceRoleName: status.primaryDeviceStatus!.device.roleName,

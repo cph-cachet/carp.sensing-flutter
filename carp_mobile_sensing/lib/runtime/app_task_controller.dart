@@ -329,6 +329,13 @@ class AppTaskController {
         } else {
           executor.initialize(snapshot.task, deployment);
 
+          // add the stream of measurements to the overall smartphone deployment controller
+          // issue => https://github.com/cph-cachet/carp.sensing-flutter/issues/437
+          SmartPhoneClientManager()
+              .getStudyRuntime(snapshot.studyDeploymentId!)
+              ?.executor
+              .addMeasurements(executor.measurements);
+
           // now put the restored task back on the queue
           if (_userTaskFactories[executor.task.type] == null) {
             warning(
