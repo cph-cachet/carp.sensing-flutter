@@ -1,7 +1,8 @@
-## 1.8.1
+## 1.8.2
 
 * upgrading to carp_mobile_sensing v. 1.11
 * fix of issue [#342](https://github.com/cph-cachet/carp_studies_app/issues/342)
+* added a no-op `SurveyProbe` to avoid warnings
 
 ## 1.7.0
 

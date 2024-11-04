@@ -1,6 +1,7 @@
-## 1.9.0
+## 1.9.1
 
 * upgrade to web_service version 3.5
+* `CarpDataEndPoint` serialized to `camelCase`
 
 ## 1.8.0
 
@@ -22,7 +23,7 @@
 
 ## 1.3.3
 
-* refreshing authetication token on upload, if needed.
+* refreshing authentication token on upload, if needed.
 
 ## 1.3.2
 

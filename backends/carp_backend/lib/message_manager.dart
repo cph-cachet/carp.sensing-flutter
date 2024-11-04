@@ -9,7 +9,10 @@ part of 'carp_backend.dart';
 
 /// A message to be shown in the message list
 @JsonSerializable(
-    fieldRename: FieldRename.snake, includeIfNull: false, explicitToJson: true)
+  fieldRename: FieldRename.snake,
+  includeIfNull: false,
+  explicitToJson: true,
+)
 class Message {
   /// ID of the message.
   late String id;

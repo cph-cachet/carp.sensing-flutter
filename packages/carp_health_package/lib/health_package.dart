@@ -80,8 +80,6 @@ class HealthSamplingPackage extends SmartphoneSamplingPackage {
         ..overrideSamplingConfiguration = HealthSamplingConfiguration(
             past: Duration(days: days), healthDataTypes: types);
 
-  final _deviceManager = HealthServiceManager();
-
   @override
   DataTypeSamplingSchemeMap get samplingSchemes =>
       DataTypeSamplingSchemeMap.from([
@@ -121,8 +119,10 @@ class HealthSamplingPackage extends SmartphoneSamplingPackage {
   @override
   String get deviceType => HealthService.DEVICE_TYPE;
 
+  HealthServiceManager? _deviceManager;
+
   @override
-  DeviceManager get deviceManager => _deviceManager;
+  DeviceManager get deviceManager => _deviceManager ??= HealthServiceManager();
 }
 
 /// Data types available on iOS via Apple Health.
