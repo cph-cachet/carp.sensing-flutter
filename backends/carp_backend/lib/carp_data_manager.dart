@@ -140,9 +140,7 @@ class CarpDataManager extends AbstractDataManager {
               DataManagerEvent(CarpDataManagerEventTypes.dataStreamAppended));
           break;
         case CarpUploadMethod.datapoint:
-          await uploadDataStreamBatchesAsDataPoint(
-            batches,
-          );
+          await uploadDataStreamBatchesAsDataPoint(batches);
           addEvent(DataManagerEvent(
               CarpDataManagerEventTypes.dataPointsBatchUploaded));
           break;
