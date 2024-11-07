@@ -51,6 +51,9 @@ class CarpDataEndPoint extends DataEndPoint {
   /// Should the local buffered data on the phone be deleted once uploaded?
   bool deleteWhenUploaded = true;
 
+  /// Should data be compressed / zipped before upload?
+  bool compress = true;
+
   /// Creates a [CarpDataEndPoint].
   CarpDataEndPoint({
     super.dataFormat,
@@ -59,6 +62,7 @@ class CarpDataEndPoint extends DataEndPoint {
     this.onlyUploadOnWiFi = false,
     this.uploadInterval = 10,
     this.deleteWhenUploaded = true,
+    this.compress = true,
   }) : super(
           type: DataEndPointTypes.CAWS,
         );

@@ -47,6 +47,10 @@ class CarpDataManager extends AbstractDataManager {
   @override
   String get type => DataEndPointTypes.CAWS;
 
+  /// Should data be compressed / zipped before upload?
+  bool get compress => carpEndPoint.compress;
+  set compress(bool compress) => carpEndPoint.compress = compress;
+
   /// The connectivity status of this data manager.
   List<ConnectivityResult> get connectivity => _connectivity;
   set connectivity(List<ConnectivityResult> status) {
@@ -134,7 +138,7 @@ class CarpDataManager extends AbstractDataManager {
           await CarpDataStreamService().appendToDataStreams(
             studyDeploymentId,
             batches,
-            compress: false,
+            compress: compress,
           );
           addEvent(
               DataManagerEvent(CarpDataManagerEventTypes.dataStreamAppended));
