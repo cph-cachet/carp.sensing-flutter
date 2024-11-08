@@ -45,7 +45,7 @@ abstract class _MovesenseProbe extends StreamProbe {
         _subscriptionId = null;
         completer.complete(false);
       }, (data) {
-        debug('$runtimeType - OnNotification, data: $data');
+        // debug('$runtimeType - OnNotification, data: $data');
         _streamController.add(data);
       }, (error, status) {
         warning(
@@ -67,7 +67,6 @@ abstract class _MovesenseProbe extends StreamProbe {
   @override
   Future<bool> onStop() async {
     super.onStop();
-    debug('$runtimeType - onStop,  _id: $_subscriptionId');
 
     if (_subscriptionId != null) Mds.unsubscribe(_subscriptionId!);
     _subscriptionId = null;

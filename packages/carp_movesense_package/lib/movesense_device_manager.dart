@@ -133,7 +133,8 @@ class MovesenseDeviceManager extends BTLEDeviceManager<MovesenseDevice> {
         configuration?.serial = serial;
         status = DeviceStatus.connected;
 
-        debug("$runtimeType - Successfully connected.");
+        debug(
+            "$runtimeType - Successfully connected to Movesense device, serial: $serial");
 
         _getDeviceInfo();
         _getBatteryStatus();
@@ -146,8 +147,22 @@ class MovesenseDeviceManager extends BTLEDeviceManager<MovesenseDevice> {
       },
       // onConnectionError
       (String error) {
-        warning("$runtimeType - Error in connecting to device: $error");
-        status = DeviceStatus.error;
+        // Note that an error might be that the device is already connected, and the error message would read like;
+        //    "Already connected to 0C:8C:DC:1B:23:BF"
+        if (error.startsWith('Already connected to')) {
+          var serial = error.split(' ').last.trim();
+          configuration?.serial = serial;
+          status = DeviceStatus.connected;
+
+          debug(
+              "$runtimeType - Successfully connected to Movesense device, serial: $serial");
+
+          _getDeviceInfo();
+          _getBatteryStatus();
+        } else {
+          warning("$runtimeType - Error in connecting to device: $error");
+          status = DeviceStatus.error;
+        }
       },
     );
 
@@ -157,6 +172,8 @@ class MovesenseDeviceManager extends BTLEDeviceManager<MovesenseDevice> {
   /// Get the detailed info about this Movesense device.
   ///
   /// See https://www.movesense.com/docs/esw/api_reference/#info
+  ///
+  /// Example response from the device is - see ../test/json/info.json
   void _getDeviceInfo() {
     debug('$runtimeType - Getting device info.');
 

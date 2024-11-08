@@ -166,7 +166,7 @@ abstract class AbstractExecutor<TConfig> implements Executor<TConfig> {
   @override
   @nonVirtual
   void initialize(TConfig configuration, [SmartphoneDeployment? deployment]) {
-    info('Initializing $this');
+    info('Initializing $this [$hashCode] - $configuration');
     _deployment = deployment;
     _configuration = configuration;
     _stateMachine.initialize();
@@ -176,28 +176,28 @@ abstract class AbstractExecutor<TConfig> implements Executor<TConfig> {
   @nonVirtual
   void start() {
     _isStarting = true;
-    info('Starting $this');
+    info('Starting $this - $configuration');
     _stateMachine.start();
   }
 
   @override
   @nonVirtual
   void restart() {
-    info('Restarting $this');
+    info('Restarting $this - $configuration');
     _stateMachine.restart();
   }
 
   @override
   @nonVirtual
   void stop() {
-    info('Stopping $this');
+    info('Stopping $this - $configuration');
     _stateMachine.stop();
   }
 
   @override
   @nonVirtual
   void dispose() {
-    info('Disposing $this');
+    info('Disposing $this - $configuration');
     _stateMachine.dispose();
   }
 
@@ -357,7 +357,7 @@ abstract class _AbstractExecutorState implements _ExecutorStateMachine {
   }
 
   void _printWarning(String operation) => warning(
-      "Trying to $operation a ${executor.runtimeType} in a state where this cannot be done - state: '${state.name}'. "
+      "Trying to $operation a ${executor.runtimeType}[${executor.hashCode}] in a state where this cannot be done - state: '${state.name}'. "
       'Ignoring this.');
 
   @override
@@ -413,7 +413,11 @@ class _StartedState extends _AbstractExecutorState {
   void restart() {
     executor.onRestart().then((restarted) {
       if (restarted) {
+        // explicitly start the executor - issue #442
+        executor._setState(_StoppedState(executor));
+
         // explicitly start the executor - issue #408
+        debug('$runtimeType - >> restarting $executor');
         executor.onStart().then((started) {
           if (started) executor._setState(_StartedState(executor));
           executor._isStarting = false;
