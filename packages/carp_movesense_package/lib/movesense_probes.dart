@@ -6,7 +6,7 @@
 
 part of 'carp_movesense_package.dart';
 
-abstract class _MovesenseProbe extends StreamProbe {
+abstract class _MovesenseStreamProbe extends StreamProbe {
   int? _subscriptionId;
 
   final StreamController<String> _streamController =
@@ -17,10 +17,11 @@ abstract class _MovesenseProbe extends StreamProbe {
       super.deviceManager as MovesenseDeviceManager;
 
   String get serial => deviceManager.serial;
+
   String uri;
   Function converter;
 
-  _MovesenseProbe(this.uri, this.converter);
+  _MovesenseStreamProbe(this.uri, this.converter);
 
   @override
   Stream<Measurement>? get stream => deviceManager.isConnected
@@ -76,25 +77,25 @@ abstract class _MovesenseProbe extends StreamProbe {
 }
 
 /// A probe collecting [MovesenseHR] events.
-class MovesenseHRProbe extends _MovesenseProbe {
+class MovesenseHRProbe extends _MovesenseStreamProbe {
   MovesenseHRProbe() : super("Meas/HR", MovesenseHR.fromMovesenseData);
 }
 
 /// A probe collecting [MovesenseECG] events at 125 Hz.
-class MovesenseECGProbe extends _MovesenseProbe {
+class MovesenseECGProbe extends _MovesenseStreamProbe {
   MovesenseECGProbe() : super("Meas/ECG/125", MovesenseECG.fromMovesenseData);
 }
 
 /// A probe collecting [MovesenseTemperature] events.
 ///
 /// Note that not all type of Movesense devices supports temperature.
-class MovesenseTemperatureProbe extends _MovesenseProbe {
+class MovesenseTemperatureProbe extends _MovesenseStreamProbe {
   MovesenseTemperatureProbe()
       : super("Meas/Temp", MovesenseTemperature.fromMovesenseData);
 }
 
 /// A probe collecting [MovesenseIMU] events at 13 Hz (lowest).
-class MovesenseIMUProbe extends _MovesenseProbe {
+class MovesenseIMUProbe extends _MovesenseStreamProbe {
   MovesenseIMUProbe() : super("Meas/IMU9/13", MovesenseIMU.fromMovesenseData);
 }
 
@@ -109,16 +110,36 @@ class MovesenseIMUProbe extends _MovesenseProbe {
 /// events. This has been tested on the MD and HR2 devices.
 ///
 /// Therefore, this probe **only** listens to single tap events.
-class MovesenseStateChangeProbe extends _MovesenseProbe {
+class MovesenseStateChangeProbe extends _MovesenseStreamProbe {
   MovesenseStateChangeProbe()
       : super("System/States/4", MovesenseStateChange.fromMovesenseData);
+}
+
+class MovesenseDeviceProbe extends MeasurementProbe {
+  @override
+  Future<Measurement?> getMeasurement() {
+    debug('$runtimeType - Getting device info.');
+
+    var serial = (deviceManager as MovesenseDeviceManager).serial;
+    var completer = Completer<Measurement>();
+
+    Mds.get(
+        Mds.createRequestUri(serial, "/Info"),
+        "{}",
+        ((data, statusCode) => completer.complete(Measurement.fromData(
+            MovesenseDeviceInformation.fromMovesenseData(json.decode(data))))),
+        (error, statusCode) =>
+            completer.complete(Measurement.fromData(Error(message: error))));
+
+    return completer.future;
+  }
 }
 
 // MULTI STATE CHANGE PROBE BELOW - with notes
 
 /// Enumeration of the type of state changes available on the Movesense device.
 /// See https://www.movesense.com/docs/esw/api_reference/#systemstates
-enum MovensenseStateChange {
+enum MovesenseState {
   movement,
   battery,
   connectors,
@@ -159,11 +180,11 @@ class MovesenseMultiStateChangeProbe extends StreamProbe {
 
   @override
   Future<bool> onStart() async {
-    _addStateSubscription(MovensenseStateChange.movement);
-    _addStateSubscription(MovensenseStateChange.connectors);
-    _addStateSubscription(MovensenseStateChange.doubleTap);
-    _addStateSubscription(MovensenseStateChange.tap);
-    _addStateSubscription(MovensenseStateChange.freeFall);
+    _addStateSubscription(MovesenseState.movement);
+    _addStateSubscription(MovesenseState.connectors);
+    _addStateSubscription(MovesenseState.doubleTap);
+    _addStateSubscription(MovesenseState.tap);
+    _addStateSubscription(MovesenseState.freeFall);
 
     return super.onStart();
   }
@@ -174,7 +195,7 @@ class MovesenseMultiStateChangeProbe extends StreamProbe {
           MovesenseStateChange.fromMovesenseData(jsonDecode(event))))
       : null;
 
-  void _addStateSubscription(MovensenseStateChange state) {
+  void _addStateSubscription(MovesenseState state) {
     int stateId = state.index;
 
     // fast out of already subscribed to this type of state change.

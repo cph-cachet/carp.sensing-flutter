@@ -173,7 +173,7 @@ class MovesenseDeviceManager extends BTLEDeviceManager<MovesenseDevice> {
   ///
   /// See https://www.movesense.com/docs/esw/api_reference/#info
   ///
-  /// Example response from the device is - see ../test/json/info.json
+  /// Example response from the device see ../test/json/info.json
   void _getDeviceInfo() {
     debug('$runtimeType - Getting device info.');
 
@@ -188,22 +188,13 @@ class MovesenseDeviceManager extends BTLEDeviceManager<MovesenseDevice> {
         debug('$runtimeType - HW: $hw');
 
         // Try to figure out the type of device based on the "hw" property
-        //
         // H3 is "HR+", H4 is "HR2", A1 is "MD"
-        switch (hw) {
-          case 'A1':
-            configuration?.deviceType = MovesenseDeviceType.MD;
-            break;
-          case 'H3':
-            configuration?.deviceType = MovesenseDeviceType.HR_PLUS;
-            break;
-          case 'H4':
-            configuration?.deviceType = MovesenseDeviceType.HR2;
-            break;
-          default:
-            configuration?.deviceType = MovesenseDeviceType.UNKNOWN;
-        }
-        debug('$runtimeType - deviceType: ${configuration?.deviceType}');
+        configuration?.deviceType = switch (hw) {
+          'A1' => MovesenseDeviceType.MD,
+          'H3' => MovesenseDeviceType.HR_PLUS,
+          'H4' => MovesenseDeviceType.HR2,
+          _ => MovesenseDeviceType.UNKNOWN,
+        };
       }),
       (error, statusCode) => {},
     );

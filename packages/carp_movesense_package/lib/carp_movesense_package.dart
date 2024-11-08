@@ -75,6 +75,7 @@ part 'movesense_device_manager.dart';
 class MovesenseSamplingPackage implements SamplingPackage {
   static const String MOVESENSE_NAMESPACE = "${NameSpace.CARP}.movesense";
 
+  static const String DEVICE_INFO = "$MOVESENSE_NAMESPACE.deviceinformation";
   static const String STATE = "$MOVESENSE_NAMESPACE.state";
   static const String HR = "$MOVESENSE_NAMESPACE.hr";
   static const String ECG = "$MOVESENSE_NAMESPACE.ecg";
@@ -95,6 +96,7 @@ class MovesenseSamplingPackage implements SamplingPackage {
 
   @override
   Probe? create(String type) => switch (type) {
+        DEVICE_INFO => MovesenseDeviceProbe(),
         STATE => MovesenseStateChangeProbe(),
         HR => MovesenseHRProbe(),
         ECG => MovesenseECGProbe(),
@@ -122,6 +124,13 @@ class MovesenseSamplingPackage implements SamplingPackage {
   @override
   DataTypeSamplingSchemeMap get samplingSchemes =>
       DataTypeSamplingSchemeMap.from([
+        DataTypeSamplingScheme(
+          DataTypeMetaData(
+            type: DEVICE_INFO,
+            displayName: "Device Information",
+            timeType: DataTimeType.POINT,
+          ),
+        ),
         DataTypeSamplingScheme(
           DataTypeMetaData(
             type: STATE,

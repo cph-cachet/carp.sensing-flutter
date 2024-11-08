@@ -39,6 +39,92 @@ enum MovesenseDeviceState {
   freeFall,
 }
 
+/// Information about used device and the platform which is running on it.
+/// Contains knowledge about the hardware version, serial number, app name or
+/// modules state.
+///
+/// See https://www.movesense.com/docs/esw/api_reference/#info
+@JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
+class MovesenseDeviceInformation extends SensorData {
+  static const dataType = MovesenseSamplingPackage.DEVICE_INFO;
+
+  String? manufacturerName;
+  String? brandName;
+  String? productName;
+  String? variant;
+  String? design;
+  String? hardwareCompatibilityId;
+  String? serial;
+  String? pcbaSerial;
+  String? softwareVersion;
+  String? hardwareType;
+  String? additionalVersionInfo;
+  String? apiLevel;
+  String? address;
+
+  MovesenseDeviceInformation([
+    this.manufacturerName,
+    this.brandName,
+    this.productName,
+    this.variant,
+    this.design,
+    this.hardwareCompatibilityId,
+    this.serial,
+    this.pcbaSerial,
+    this.softwareVersion,
+    this.hardwareType,
+    this.additionalVersionInfo,
+    this.apiLevel,
+    this.address,
+  ]) : super();
+
+  factory MovesenseDeviceInformation.fromMovesenseData(dynamic data) {
+    var deviceInfo = data["Content"] as Map<String, dynamic>;
+
+    String? manufacturerName = deviceInfo["manufacturerName"] as String;
+    String? brandName = deviceInfo["brandName"] as String;
+    String? productName = deviceInfo["productName"] as String;
+    String? variant = deviceInfo["variant"] as String;
+    String? design = deviceInfo["design"] as String;
+    String? hardwareCompatibilityId =
+        deviceInfo["hardwareCompatibilityId"] as String;
+    String? serial = deviceInfo["serial"] as String;
+    String? pcbaSerial = deviceInfo["pcbaSerial"] as String;
+    String? softwareVersion = deviceInfo["sw"] as String;
+    String? hardwareType = deviceInfo["hw"] as String;
+    String? additionalVersionInfo =
+        deviceInfo["additionalVersionInfo"] as String;
+    String? apiLevel = deviceInfo["apiLevel"] as String;
+    String? address = deviceInfo["addressInfo"]["address"] as String;
+
+    return MovesenseDeviceInformation(
+      manufacturerName,
+      brandName,
+      productName,
+      variant,
+      design,
+      hardwareCompatibilityId,
+      serial,
+      pcbaSerial,
+      softwareVersion,
+      hardwareType,
+      additionalVersionInfo,
+      apiLevel,
+      address,
+    );
+  }
+
+  @override
+  Function get fromJsonFunction => _$MovesenseDeviceInformationFromJson;
+  factory MovesenseDeviceInformation.fromJson(Map<String, dynamic> json) =>
+      FromJsonFactory().fromJson<MovesenseDeviceInformation>(json);
+  @override
+  Map<String, dynamic> toJson() => _$MovesenseDeviceInformationToJson(this);
+
+  @override
+  String get jsonType => dataType;
+}
+
 /// States API is a uniform, simplistic interface for accessing states of internal
 /// device components.
 ///
@@ -114,7 +200,7 @@ class MovesenseStateChange extends SensorData {
   @override
   Function get fromJsonFunction => _$MovesenseStateChangeFromJson;
   factory MovesenseStateChange.fromJson(Map<String, dynamic> json) =>
-      FromJsonFactory().fromJson(json) as MovesenseStateChange;
+      FromJsonFactory().fromJson<MovesenseStateChange>(json);
   @override
   Map<String, dynamic> toJson() => _$MovesenseStateChangeToJson(this);
 
@@ -151,7 +237,7 @@ class MovesenseHR extends SensorData {
   @override
   Function get fromJsonFunction => _$MovesenseHRFromJson;
   factory MovesenseHR.fromJson(Map<String, dynamic> json) =>
-      FromJsonFactory().fromJson(json) as MovesenseHR;
+      FromJsonFactory().fromJson<MovesenseHR>(json);
   @override
   Map<String, dynamic> toJson() => _$MovesenseHRToJson(this);
 
@@ -186,7 +272,7 @@ class MovesenseECG extends SensorData {
   @override
   Function get fromJsonFunction => _$MovesenseECGFromJson;
   factory MovesenseECG.fromJson(Map<String, dynamic> json) =>
-      FromJsonFactory().fromJson(json) as MovesenseECG;
+      FromJsonFactory().fromJson<MovesenseECG>(json);
   @override
   Map<String, dynamic> toJson() => _$MovesenseECGToJson(this);
 
@@ -221,7 +307,7 @@ class MovesenseTemperature extends SensorData {
   @override
   Function get fromJsonFunction => _$MovesenseTemperatureFromJson;
   factory MovesenseTemperature.fromJson(Map<String, dynamic> json) =>
-      FromJsonFactory().fromJson(json) as MovesenseTemperature;
+      FromJsonFactory().fromJson<MovesenseTemperature>(json);
   @override
   Map<String, dynamic> toJson() => _$MovesenseTemperatureToJson(this);
 
@@ -280,7 +366,7 @@ class MovesenseIMU extends SensorData {
   @override
   Function get fromJsonFunction => _$MovesenseIMUFromJson;
   factory MovesenseIMU.fromJson(Map<String, dynamic> json) =>
-      FromJsonFactory().fromJson(json) as MovesenseIMU;
+      FromJsonFactory().fromJson<MovesenseIMU>(json);
   @override
   Map<String, dynamic> toJson() => _$MovesenseIMUToJson(this);
 
