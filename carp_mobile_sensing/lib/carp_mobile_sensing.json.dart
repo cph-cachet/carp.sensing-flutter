@@ -81,6 +81,7 @@ void _registerFromJsonFunctions() {
     UserTaskState.canceled,
     DateTime.now(),
     DateTime.now(),
+    DateTime.now(),
     true,
     '',
     '',

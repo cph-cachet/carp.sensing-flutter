@@ -66,6 +66,9 @@ abstract class UserTask {
   /// The time this task was added to the queue.
   late DateTime enqueued;
 
+  /// The time this task was marked as done in the [onDone] method.
+  DateTime? doneTime;
+
   /// Returns a [Duration] until this task expires and is removed from the queue.
   /// The returned [Duration] will be negative if [this] has expired.
   /// Returns `null` if this task never expires.
@@ -177,6 +180,7 @@ abstract class UserTask {
   @mustCallSuper
   void onDone({bool dequeue = false, Data? result}) {
     this.result = result;
+    doneTime = DateTime.now();
     state = UserTaskState.done;
     AppTaskController().done(id, result);
     if (dequeue) AppTaskController().dequeue(id);

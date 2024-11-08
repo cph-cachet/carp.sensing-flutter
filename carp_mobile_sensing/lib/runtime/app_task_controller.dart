@@ -382,6 +382,7 @@ class UserTaskSnapshot extends Serializable {
   late UserTaskState state;
   late DateTime enqueued;
   late DateTime triggerTime;
+  DateTime? doneTime;
   late bool hasNotificationBeenCreated;
   String? studyDeploymentId;
   String? deviceRoleName;
@@ -392,6 +393,7 @@ class UserTaskSnapshot extends Serializable {
     this.state,
     this.enqueued,
     this.triggerTime,
+    this.doneTime,
     this.hasNotificationBeenCreated,
     this.studyDeploymentId,
     this.deviceRoleName,
@@ -403,6 +405,7 @@ class UserTaskSnapshot extends Serializable {
     state = userTask.state;
     enqueued = userTask.enqueued;
     triggerTime = userTask.triggerTime;
+    doneTime = userTask.doneTime;
     hasNotificationBeenCreated = userTask.hasNotificationBeenCreated;
     studyDeploymentId = userTask.studyDeploymentId;
     deviceRoleName =

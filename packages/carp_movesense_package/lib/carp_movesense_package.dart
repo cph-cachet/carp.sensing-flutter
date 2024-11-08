@@ -113,6 +113,7 @@ class MovesenseSamplingPackage implements SamplingPackage {
   void onRegister() {
     FromJsonFactory().registerAll([
       MovesenseDevice(),
+      MovesenseDeviceInformation(),
       MovesenseStateChange(MovesenseDeviceState.unknown),
       MovesenseHR(55),
       MovesenseECG(0, []),
