@@ -69,7 +69,7 @@ class BackgroundTaskExecutor extends TaskExecutor<BackgroundTask> {
         '$runtimeType - Trying to connect to all connectable devices for this background executor.');
 
     probes
-        .where((probe) => !probe.deviceManager.isConnected)
+        .where((probe) => !probe.deviceManager.isConnecting)
         .forEach((probe) async => await probe.deviceManager.connect());
   }
 
@@ -81,7 +81,7 @@ class BackgroundTaskExecutor extends TaskExecutor<BackgroundTask> {
     // Early out if already running (this is a background task)
     if (state == ExecutorState.started) {
       warning(
-          'Trying to start a $runtimeType but it is already started. Ignoring this.');
+          'Trying to start $this but it is already started. Ignoring this.');
       return false;
     }
 
@@ -91,7 +91,7 @@ class BackgroundTaskExecutor extends TaskExecutor<BackgroundTask> {
         states.where((event) => event == ExecutorState.stopped).listen((_) {
       if (haveAllProbesStopped) {
         debug(
-            '$runtimeType - all probes have stopped - stopping this $runtimeType too.');
+            '$runtimeType - all probes have stopped - stopping this $this too.');
         stop();
       }
     });

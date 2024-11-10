@@ -20,8 +20,8 @@ part of '../../runtime.dart';
 ///    |  +---------+    +-------------+    +---------+     +---------+ |   -> | undefined |
 ///    |  | created | -> | initialized | -> | started | <-> | stopped | |      +-----------+
 ///    |  +---------+    +-------------+    +---------+     +---------+ |
-///    |                                         |                      |      +-----------+
-///    |                                      restart                   |   -> | disposed  |
+///    |                                         |              |       |      +-----------+
+///    |                                         +--- restart --+       |   -> | disposed  |
 ///    +----------------------------------------------------------------+      +-----------+
 /// ```
 enum ExecutorState {
@@ -100,7 +100,7 @@ abstract class Executor<TConfig> {
   /// [initialize] method before calling restart.
   ///
   /// Only executors that has been started (i.e. in state [ExecutorState.started])
-  /// can be restarted.
+  /// or stopped (state [ExecutorState.stopped]) can be restarted.
   ///
   /// Calling restart automatically starts the executor if it can be restarted.
   void restart();
@@ -166,7 +166,7 @@ abstract class AbstractExecutor<TConfig> implements Executor<TConfig> {
   @override
   @nonVirtual
   void initialize(TConfig configuration, [SmartphoneDeployment? deployment]) {
-    info('Initializing $this');
+    info('Initializing $this [$hashCode] - $configuration');
     _deployment = deployment;
     _configuration = configuration;
     _stateMachine.initialize();
@@ -176,28 +176,28 @@ abstract class AbstractExecutor<TConfig> implements Executor<TConfig> {
   @nonVirtual
   void start() {
     _isStarting = true;
-    info('Starting $this');
+    info('Starting $this - $configuration');
     _stateMachine.start();
   }
 
   @override
   @nonVirtual
   void restart() {
-    info('Restarting $this');
+    info('Restarting $this - $configuration');
     _stateMachine.restart();
   }
 
   @override
   @nonVirtual
   void stop() {
-    info('Stopping $this');
+    info('Stopping $this - $configuration');
     _stateMachine.stop();
   }
 
   @override
   @nonVirtual
   void dispose() {
-    info('Disposing $this');
+    info('Disposing $this - $configuration');
     _stateMachine.dispose();
   }
 
@@ -356,8 +356,24 @@ abstract class _AbstractExecutorState implements _ExecutorStateMachine {
     executor._setState(_UndefinedState(executor));
   }
 
+  /// Internal helper function to start the executor.
+  /// Used below for both start and restart.
+  void _start() {
+    executor.onStart().then((started) {
+      if (started) {
+        executor._setState(_StartedState(executor));
+      } else {
+        // if we can't start the executor, the put it in stopped state
+        executor._setState(_StoppedState(executor));
+      }
+      executor._isStarting = false;
+    });
+  }
+
+  /// Print default warning if calling an operation in a wrong state.
   void _printWarning(String operation) => warning(
-      "Trying to $operation a ${executor.runtimeType} in a state where this cannot be done - state: '${state.name}'. "
+      "Trying to $operation a ${executor.runtimeType}[${executor.hashCode}] "
+      "in a state where this cannot be done - state: '${state.name}'. "
       'Ignoring this.');
 
   @override
@@ -394,12 +410,7 @@ class _InitializedState extends _AbstractExecutorState
   ExecutorState get state => ExecutorState.initialized;
 
   @override
-  void start() {
-    executor.onStart().then((started) {
-      if (started) executor._setState(_StartedState(executor));
-      executor._isStarting = false;
-    });
-  }
+  void start() => _start();
 }
 
 class _StartedState extends _AbstractExecutorState {
@@ -412,13 +423,7 @@ class _StartedState extends _AbstractExecutorState {
   @override
   void restart() {
     executor.onRestart().then((restarted) {
-      if (restarted) {
-        // explicitly start the executor - issue #408
-        executor.onStart().then((started) {
-          if (started) executor._setState(_StartedState(executor));
-          executor._isStarting = false;
-        });
-      }
+      if (restarted) _start();
     });
   }
 
@@ -426,7 +431,6 @@ class _StartedState extends _AbstractExecutorState {
   void stop() {
     executor.onStop().then((stopped) {
       if (stopped) executor._setState(_StoppedState(executor));
-      debug('$executor - stopped');
     });
   }
 }
@@ -443,6 +447,14 @@ class _StoppedState extends _AbstractExecutorState {
     executor.onStart().then((started) {
       if (started) executor._setState(_StartedState(executor));
       executor._isStarting = false;
+    });
+  }
+
+  @override
+  void restart() {
+    executor.onRestart().then((restarted) {
+      // if we can restart, then just start the executor
+      if (restarted) executor.start();
     });
   }
 }

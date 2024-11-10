@@ -85,11 +85,11 @@ class SmartphoneDeploymentController extends StudyRuntime<DeviceRegistration> {
   ///
   /// The [dataEndPoint] parameter is a custom [DataEndPoint] specifying where to save
   /// or upload data. If not specified, the endpoint specified in the study deployment
-  /// ([deployment.dataEndPoint]) which originates from the study protocol is used.
-  /// If no data endpoint is specified in the study protocol either, then no data
-  /// management is done, but sensing  can still be started. This is useful for
-  /// apps that wants to use the framework for in-app consumption of sensing
-  /// events without saving the data.
+  /// ([SmartphoneDeployment.dataEndPoint]) which originates from the study protocol
+  /// is used. If no data endpoint is specified in the study protocol either,
+  /// then no data management is done, but sensing  can still be started.
+  /// This is useful for apps that wants to use the framework for in-app consumption
+  /// of sensing events without saving the data.
   ///
   /// The [transformer] is a generic [DataTransformer] function which transform
   /// each collected measurement. If not specified, a 1:1 mapping is done,
@@ -120,7 +120,8 @@ class SmartphoneDeploymentController extends StudyRuntime<DeviceRegistration> {
 
     if (_dataManager == null) {
       warning(
-          "No data manager for the specified data endpoint found: '${deployment?.dataEndPoint}'.");
+          "No data manager for the specified data endpoint found: '${deployment?.dataEndPoint}'. "
+          "Data sampling will still start, but no data will be saved.");
     }
 
     // initialize the data manager, device registry, and study executor
@@ -143,19 +144,20 @@ class SmartphoneDeploymentController extends StudyRuntime<DeviceRegistration> {
     measurements.listen((_) => _samplingSize++);
     status = StudyStatus.Deployed;
 
-    print('===============================================================');
-    print('  CARP Mobile Sensing (CAMS) - $runtimeType');
-    print('===============================================================');
-    print(' deployment id : ${deployment!.studyDeploymentId}');
-    print(' deployed time : ${deployment!.deployed}');
-    print('     role name : ${deployment!.deviceConfiguration.roleName}');
-    // print('       user id : ${deployment!.userId}');
-    print('      platform : ${DeviceInfo().platform.toString()}');
-    print('     device ID : ${DeviceInfo().deviceID.toString()}');
-    print(' data endpoint : $_dataEndPoint');
-    print('  data manager : $_dataManager');
-    print('        status : ${status.toString().split('.').last}');
-    print('===============================================================');
+    var statusMsg =
+        '===============================================================\n'
+        '  CARP Mobile Sensing (CAMS) - $runtimeType\n'
+        '===============================================================\n'
+        ' deployment id : ${deployment!.studyDeploymentId}\n'
+        ' deployed time : ${deployment!.deployed}\n'
+        '     role name : ${deployment!.deviceConfiguration.roleName}\n'
+        '      platform : ${DeviceInfo().platform.toString()}\n'
+        '     device ID : ${DeviceInfo().deviceID.toString()}\n'
+        ' data endpoint : $_dataEndPoint\n'
+        '  data manager : $_dataManager\n'
+        '        status : ${status.toString().split('.').last}\n'
+        '===============================================================\n';
+    debugPrint(statusMsg);
   }
 
   /// Asking for permissions for all the measures included in this
@@ -245,7 +247,7 @@ class SmartphoneDeploymentController extends StudyRuntime<DeviceRegistration> {
     }
   }
 
-  /// Connect all connectable devices to be used in the [deployment]
+  /// Start connecting all connectable devices to be used in the [deployment]
   /// and which are available on this phone.
   Future<void> connectAllConnectableDevices() async {
     assert(deployment != null, 'Deployment is null.');
@@ -279,7 +281,6 @@ class SmartphoneDeploymentController extends StudyRuntime<DeviceRegistration> {
     if (useCached) {
       // restore the deployment and app task queue
       bool success = await restoreDeployment();
-      debug('$runtimeType - restore success: $success');
       if (success) {
         await AppTaskController().restoreQueue();
         return status = deployment?.status ?? StudyStatus.Deployed;
@@ -295,7 +296,6 @@ class SmartphoneDeploymentController extends StudyRuntime<DeviceRegistration> {
       deployment!.participantRoleName = study?.participantRoleName;
       deployment?.status = status;
       deployment!.deployed = DateTime.now().toUtc();
-      debug('$runtimeType - Deployed deployment: $deployment');
 
       // create local folder structure and store local deployment
       Settings().getCacheBasePath(deployment!.studyDeploymentId);

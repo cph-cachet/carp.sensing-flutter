@@ -117,11 +117,11 @@ class MovesenseDeviceManager extends BTLEDeviceManager<MovesenseDevice> {
 
   @override
   Future<DeviceStatus> onConnect() async {
-    if (isConnected) return status;
+    if (isConnected) return DeviceStatus.connected;
     if (btleAddress.isEmpty) {
       warning(
           '$runtimeType - cannot connect to device, BLE address is missing.');
-      return status;
+      return DeviceStatus.disconnected;
     }
 
     status = DeviceStatus.connecting;
@@ -130,33 +130,51 @@ class MovesenseDeviceManager extends BTLEDeviceManager<MovesenseDevice> {
       btleAddress,
       // onConnected
       (String serial) {
-        configuration?.serial = serial;
+        _connected(serial);
         status = DeviceStatus.connected;
-
-        debug("$runtimeType - Successfully connected.");
-
-        _getDeviceInfo();
-        _getBatteryStatus();
       },
       // onDisconnected
       () {
-        debug("$runtimeType - Device disconnected.");
-        status = DeviceStatus.disconnected;
         _batteryLevel = null;
+        status = DeviceStatus.disconnected;
       },
       // onConnectionError
       (String error) {
-        warning("$runtimeType - Error in connecting to device: $error");
-        status = DeviceStatus.error;
+        // Note that an "error" might be that the device is already connected,
+        // and the error message would read like;
+        //    "Already connected to 0C:8C:DC:1B:23:BF"
+        //
+        // In this case, we treat it as a "connected" event.
+        if (error.startsWith('Already connected to')) {
+          var serial = error.split(' ').last.trim();
+          _connected(serial);
+          status = DeviceStatus.connected;
+        } else {
+          warning("$runtimeType - Error in connecting to device: $error");
+          status = DeviceStatus.error;
+        }
       },
     );
 
     return status;
   }
 
+  /// Mark the Movesense device with [serial] as connected.
+  void _connected(String serial) {
+    configuration?.serial = serial;
+
+    debug(
+        "$runtimeType - Successfully connected to Movesense device, serial: $serial");
+
+    _getDeviceInfo();
+    _getBatteryStatus();
+  }
+
   /// Get the detailed info about this Movesense device.
   ///
   /// See https://www.movesense.com/docs/esw/api_reference/#info
+  ///
+  /// Example response from the device see ../test/json/info.json
   void _getDeviceInfo() {
     debug('$runtimeType - Getting device info.');
 
@@ -171,22 +189,13 @@ class MovesenseDeviceManager extends BTLEDeviceManager<MovesenseDevice> {
         debug('$runtimeType - HW: $hw');
 
         // Try to figure out the type of device based on the "hw" property
-        //
         // H3 is "HR+", H4 is "HR2", A1 is "MD"
-        switch (hw) {
-          case 'A1':
-            configuration?.deviceType = MovesenseDeviceType.MD;
-            break;
-          case 'H3':
-            configuration?.deviceType = MovesenseDeviceType.HR_PLUS;
-            break;
-          case 'H4':
-            configuration?.deviceType = MovesenseDeviceType.HR2;
-            break;
-          default:
-            configuration?.deviceType = MovesenseDeviceType.UNKNOWN;
-        }
-        debug('$runtimeType - deviceType: ${configuration?.deviceType}');
+        configuration?.deviceType = switch (hw) {
+          'A1' => MovesenseDeviceType.MD,
+          'H3' => MovesenseDeviceType.HR_PLUS,
+          'H4' => MovesenseDeviceType.HR2,
+          _ => MovesenseDeviceType.UNKNOWN,
+        };
       }),
       (error, statusCode) => {},
     );

@@ -1,3 +1,8 @@
+## 1.7.0
+
+* added device information measure and probe to get the device information from connected Movesense devices
+* better error handling and messages
+
 ## 1.6.0
 
 * upgrade to carp_serialization v. 2.0 & carp_mobile_sensing: 1.10.0

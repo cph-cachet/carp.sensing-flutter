@@ -44,10 +44,7 @@ abstract class TriggerExecutor<TConfig extends TriggerConfiguration>
 
   @override
   @mustCallSuper
-  Future<bool> onRestart() async {
-    timer?.cancel();
-    return true;
-  }
+  Future<bool> onRestart() async => await onStop();
 
   @override
   @mustCallSuper
@@ -58,7 +55,7 @@ abstract class TriggerExecutor<TConfig extends TriggerConfiguration>
 
   /// Called when this trigger executor is triggering.
   @mustCallSuper
-  Future<void> onTrigger() async => _controller.add(TriggerEvent());
+  void onTrigger() => _controller.add(TriggerEvent());
 }
 
 /// Abstract class for executors of triggers which can be scheduled

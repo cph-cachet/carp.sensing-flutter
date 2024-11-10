@@ -54,9 +54,12 @@ abstract class DeviceManager<TDeviceConfiguration extends DeviceConfiguration>
   /// Has this device manager been initialized?
   bool get isInitialized => status.index >= DeviceStatus.initialized.index;
 
-  /// Is this device manager connected to the real device?
-  bool get isConnected =>
+  /// Is this device manager connecting or connected to the real device?
+  bool get isConnecting =>
       status == DeviceStatus.connected || status == DeviceStatus.connecting;
+
+  /// Is this device manager connected to the real device?
+  bool get isConnected => status == DeviceStatus.connected;
 
   /// Initialize the device manager by specifying its [configuration].
   @nonVirtual
@@ -177,7 +180,7 @@ abstract class DeviceManager<TDeviceConfiguration extends DeviceConfiguration>
   /// Restart sampling of the measures using this device.
   ///
   /// This entails that all measures in the study protocol using this device's
-  /// type is restarted. This method is useful after the device is connected.
+  /// type is restarted. This method is useful after the device is (re)connected.
   @nonVirtual
   void restart() {
     info('$runtimeType - Restarting sampling...');

@@ -16,6 +16,7 @@ CarpDataEndPoint _$CarpDataEndPointFromJson(Map<String, dynamic> json) =>
       onlyUploadOnWiFi: json['onlyUploadOnWiFi'] as bool? ?? false,
       uploadInterval: (json['uploadInterval'] as num?)?.toInt() ?? 10,
       deleteWhenUploaded: json['deleteWhenUploaded'] as bool? ?? true,
+      compress: json['compress'] as bool? ?? true,
     )
       ..$type = json['__type'] as String?
       ..type = json['type'] as String;
@@ -37,6 +38,7 @@ Map<String, dynamic> _$CarpDataEndPointToJson(CarpDataEndPoint instance) {
   val['onlyUploadOnWiFi'] = instance.onlyUploadOnWiFi;
   val['uploadInterval'] = instance.uploadInterval;
   val['deleteWhenUploaded'] = instance.deleteWhenUploaded;
+  val['compress'] = instance.compress;
   return val;
 }
 

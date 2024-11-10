@@ -6,6 +6,56 @@ part of 'carp_movesense_package.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
+MovesenseDeviceInformation _$MovesenseDeviceInformationFromJson(
+        Map<String, dynamic> json) =>
+    MovesenseDeviceInformation(
+      json['manufacturerName'] as String?,
+      json['brandName'] as String?,
+      json['productName'] as String?,
+      json['variant'] as String?,
+      json['design'] as String?,
+      json['hardwareCompatibilityId'] as String?,
+      json['serial'] as String?,
+      json['pcbaSerial'] as String?,
+      json['softwareVersion'] as String?,
+      json['hardwareType'] as String?,
+      json['additionalVersionInfo'] as String?,
+      json['apiLevel'] as String?,
+      json['address'] as String?,
+    )
+      ..$type = json['__type'] as String?
+      ..sensorSpecificData = json['sensorSpecificData'] == null
+          ? null
+          : Data.fromJson(json['sensorSpecificData'] as Map<String, dynamic>);
+
+Map<String, dynamic> _$MovesenseDeviceInformationToJson(
+    MovesenseDeviceInformation instance) {
+  final val = <String, dynamic>{};
+
+  void writeNotNull(String key, dynamic value) {
+    if (value != null) {
+      val[key] = value;
+    }
+  }
+
+  writeNotNull('__type', instance.$type);
+  writeNotNull('sensorSpecificData', instance.sensorSpecificData);
+  writeNotNull('manufacturerName', instance.manufacturerName);
+  writeNotNull('brandName', instance.brandName);
+  writeNotNull('productName', instance.productName);
+  writeNotNull('variant', instance.variant);
+  writeNotNull('design', instance.design);
+  writeNotNull('hardwareCompatibilityId', instance.hardwareCompatibilityId);
+  writeNotNull('serial', instance.serial);
+  writeNotNull('pcbaSerial', instance.pcbaSerial);
+  writeNotNull('softwareVersion', instance.softwareVersion);
+  writeNotNull('hardwareType', instance.hardwareType);
+  writeNotNull('additionalVersionInfo', instance.additionalVersionInfo);
+  writeNotNull('apiLevel', instance.apiLevel);
+  writeNotNull('address', instance.address);
+  return val;
+}
+
 MovesenseStateChange _$MovesenseStateChangeFromJson(
         Map<String, dynamic> json) =>
     MovesenseStateChange(

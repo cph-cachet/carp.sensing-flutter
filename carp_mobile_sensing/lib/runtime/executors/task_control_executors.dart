@@ -90,10 +90,7 @@ class TaskControlExecutor extends AbstractExecutor<TaskControl> {
   }
 
   @override
-  Future<bool> onRestart() async {
-    triggerExecutor?.restart();
-    return true;
-  }
+  Future<bool> onRestart() async => await onStop();
 
   @override
   Future<bool> onStop() async {
