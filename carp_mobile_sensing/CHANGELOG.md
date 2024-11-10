@@ -1,3 +1,8 @@
+## 1.11.5
+
+* Fix of issue with restarting data collection on device reconnect (issue [#442](https://github.com/cph-cachet/carp.sensing-flutter/issues/442))
+* Added timestamps to user tasks when completed (issue [#441](https://github.com/cph-cachet/carp.sensing-flutter/issues/441))
+
 ## 1.11.4
 
 * Extended the `SmartphoneStudy` and `SmartphoneDeployment` to hold info on participant ID and participant role for a study running on the phone. This helps upload participant data (like informed consent) without the need to specify this every time.
