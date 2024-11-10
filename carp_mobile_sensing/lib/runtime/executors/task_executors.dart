@@ -69,7 +69,7 @@ class BackgroundTaskExecutor extends TaskExecutor<BackgroundTask> {
         '$runtimeType - Trying to connect to all connectable devices for this background executor.');
 
     probes
-        .where((probe) => !probe.deviceManager.isConnected)
+        .where((probe) => !probe.deviceManager.isConnecting)
         .forEach((probe) async => await probe.deviceManager.connect());
   }
 

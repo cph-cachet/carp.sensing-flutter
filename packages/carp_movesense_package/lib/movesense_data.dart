@@ -81,21 +81,21 @@ class MovesenseDeviceInformation extends SensorData {
   factory MovesenseDeviceInformation.fromMovesenseData(dynamic data) {
     var deviceInfo = data["Content"] as Map<String, dynamic>;
 
-    String? manufacturerName = deviceInfo["manufacturerName"] as String;
-    String? brandName = deviceInfo["brandName"] as String;
-    String? productName = deviceInfo["productName"] as String;
-    String? variant = deviceInfo["variant"] as String;
-    String? design = deviceInfo["design"] as String;
+    String? manufacturerName = deviceInfo["manufacturerName"] as String?;
+    String? brandName = deviceInfo["brandName"] as String?;
+    String? productName = deviceInfo["productName"] as String?;
+    String? variant = deviceInfo["variant"] as String?;
+    String? design = deviceInfo["design"] as String?;
     String? hardwareCompatibilityId =
-        deviceInfo["hardwareCompatibilityId"] as String;
-    String? serial = deviceInfo["serial"] as String;
-    String? pcbaSerial = deviceInfo["pcbaSerial"] as String;
-    String? softwareVersion = deviceInfo["sw"] as String;
-    String? hardwareType = deviceInfo["hw"] as String;
+        deviceInfo["hwCompatibilityId"] as String?;
+    String? serial = deviceInfo["serial"] as String?;
+    String? pcbaSerial = deviceInfo["pcbaSerial"] as String?;
+    String? softwareVersion = deviceInfo["sw"] as String?;
+    String? hardwareType = deviceInfo["hw"] as String?;
     String? additionalVersionInfo =
-        deviceInfo["additionalVersionInfo"] as String;
-    String? apiLevel = deviceInfo["apiLevel"] as String;
-    String? address = deviceInfo["addressInfo"]["address"] as String;
+        deviceInfo["additionalVersionInfo"] as String?;
+    String? apiLevel = deviceInfo["apiLevel"] as String?;
+    String? address = deviceInfo["addressInfo"][0]["address"] as String?;
 
     return MovesenseDeviceInformation(
       manufacturerName,

@@ -46,12 +46,6 @@ class FlutterLocalNotificationController implements NotificationController {
     );
 
     info('$runtimeType initialized.');
-
-    debug('$runtimeType - Pending Notifications:');
-    for (var notification in (await FlutterLocalNotificationsPlugin()
-        .pendingNotificationRequests())) {
-      debug('  - ${notification.title}');
-    }
   }
 
   final NotificationDetails _platformChannelSpecifics =

@@ -131,5 +131,11 @@ void main() {
         MovesenseIMU.fromMovesenseData(json.decode(imuJson)));
     expect(imu.dataType.toString(), MovesenseIMU.dataType);
     print(_encode(imu.toJson()));
+
+    String infoJson = File('test/json/info.json').readAsStringSync();
+    var info = Measurement.fromData(
+        MovesenseDeviceInformation.fromMovesenseData(json.decode(infoJson)));
+    expect(info.dataType.toString(), MovesenseDeviceInformation.dataType);
+    print(_encode(info.toJson()));
   });
 }

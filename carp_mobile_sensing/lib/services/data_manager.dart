@@ -178,5 +178,6 @@ class DataManagerRegistry {
     }
   }
 
+  /// Create a new data manager based on [type].
   DataManager? create(String type) => _registry[type]?.create();
 }

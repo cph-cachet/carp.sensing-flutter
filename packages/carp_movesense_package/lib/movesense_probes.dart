@@ -16,48 +16,59 @@ abstract class _MovesenseStreamProbe extends StreamProbe {
   MovesenseDeviceManager get deviceManager =>
       super.deviceManager as MovesenseDeviceManager;
 
-  String get serial => deviceManager.serial;
+  String get _serial => deviceManager.serial;
 
-  String uri;
-  Function converter;
+  final String _uri;
+  final Function _converter;
 
-  _MovesenseStreamProbe(this.uri, this.converter);
+  _MovesenseStreamProbe(this._uri, this._converter);
 
   @override
   Stream<Measurement>? get stream => deviceManager.isConnected
       ? _streamController.stream.map((event) =>
-          Measurement.fromData(converter.call(jsonDecode(event)) as Data))
+          Measurement.fromData(_converter.call(jsonDecode(event)) as Data))
       : null;
 
   @override
-  Future<bool> onStart() {
+  Future<bool> onStart() async {
     var completer = Completer<bool>();
 
     // fast out of already subscribed to this type of measurement
-    if (_subscriptionId != null) completer.complete(false);
+    if (_subscriptionId != null) return false;
 
     try {
-      _subscriptionId = Mds.subscribe("$serial/$uri", "{}", (data, status) {
+      _subscriptionId = Mds.subscribe("$_serial/$_uri", "{}",
+          // onSuccess
+          (data, status) {
         debug('$runtimeType - OnSuccess, data: $data, status: $status');
         completer.complete(super.onStart());
-      }, (error, status) {
-        warning('$runtimeType - OnError, error: $error, status: $status');
-        _streamController.addError(error);
+      },
+          // onError
+          (error, status) {
+        var errorMsg = '$runtimeType - Error, error: $error, status: $status';
+        warning(errorMsg);
+        _streamController.addError(errorMsg);
         _subscriptionId = null;
         completer.complete(false);
-      }, (data) {
-        // debug('$runtimeType - OnNotification, data: $data');
+      },
+          // onNotification
+          (data) {
         _streamController.add(data);
-      }, (error, status) {
-        warning(
-            '$runtimeType - OnSubscriptionError, error: $error, status: $status');
-        _streamController.addError(error);
+      },
+          // onSubscriptionError
+          (error, status) {
+        var errorMsg =
+            '$runtimeType - Subscription Error, error: $error, status: $status';
+        warning(errorMsg);
+        _streamController.addError(errorMsg);
         _subscriptionId = null;
         completer.complete(false);
       });
     } catch (error) {
-      warning('$runtimeType - Error, error: $error');
-      _streamController.addError(error);
+      var errorMsg =
+          '$runtimeType - Error when trying to subscribe to device - serial: $_serial, uri: $_uri, error: $error';
+      warning(errorMsg);
+      _streamController.addError(errorMsg);
       _subscriptionId = null;
       completer.complete(false);
     }
@@ -115,21 +126,24 @@ class MovesenseStateChangeProbe extends _MovesenseStreamProbe {
       : super("System/States/4", MovesenseStateChange.fromMovesenseData);
 }
 
+/// A probe collecting [MovesenseDeviceInformation] from the connected
+/// Movesense device.
 class MovesenseDeviceProbe extends MeasurementProbe {
   @override
-  Future<Measurement?> getMeasurement() {
-    debug('$runtimeType - Getting device info.');
+  Future<Measurement?> getMeasurement() async {
+    // fast out if not connected
+    if (!deviceManager.isConnected) return null;
 
     var serial = (deviceManager as MovesenseDeviceManager).serial;
     var completer = Completer<Measurement>();
 
-    Mds.get(
-        Mds.createRequestUri(serial, "/Info"),
-        "{}",
-        ((data, statusCode) => completer.complete(Measurement.fromData(
-            MovesenseDeviceInformation.fromMovesenseData(json.decode(data))))),
-        (error, statusCode) =>
-            completer.complete(Measurement.fromData(Error(message: error))));
+    Mds.get(Mds.createRequestUri(serial, "/Info"), "{}", ((info, statusCode) {
+      var data =
+          MovesenseDeviceInformation.fromMovesenseData(json.decode(info));
+      completer.complete(Measurement.fromData(data));
+    }), (error, statusCode) {
+      completer.completeError('$runtimeType - error: $error');
+    });
 
     return completer.future;
   }
