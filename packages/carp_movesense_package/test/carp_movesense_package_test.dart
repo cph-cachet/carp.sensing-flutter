@@ -59,6 +59,7 @@ void main() {
     protocol.addTaskControl(
         ImmediateTrigger(),
         BackgroundTask(measures: [
+          Measure(type: MovesenseSamplingPackage.DEVICE_INFO),
           Measure(type: MovesenseSamplingPackage.STATE),
           Measure(type: MovesenseSamplingPackage.HR),
           Measure(type: MovesenseSamplingPackage.ECG),
@@ -75,13 +76,11 @@ void main() {
   });
 
   test('StudyProtocol -> JSON -> StudyProtocol :: deep assert', () async {
-    print('#1 : $protocol');
     final studyJson = toJsonString(protocol);
 
     StudyProtocol protocolFromJson =
         StudyProtocol.fromJson(json.decode(studyJson) as Map<String, dynamic>);
     expect(toJsonString(protocolFromJson), equals(studyJson));
-    print('#2 : $protocolFromJson');
   });
 
   test('JSON File -> StudyProtocol', () {
@@ -137,5 +136,11 @@ void main() {
         MovesenseDeviceInformation.fromMovesenseData(json.decode(infoJson)));
     expect(info.dataType.toString(), MovesenseDeviceInformation.dataType);
     print(_encode(info.toJson()));
+
+    String stateJson = File('test/json/state.json').readAsStringSync();
+    var state = Measurement.fromData(
+        MovesenseStateChange.fromMovesenseData(json.decode(stateJson)));
+    expect(state.dataType.toString(), MovesenseStateChange.dataType);
+    print(_encode(state.toJson()));
   });
 }

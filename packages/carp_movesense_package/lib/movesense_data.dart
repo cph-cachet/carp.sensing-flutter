@@ -132,7 +132,7 @@ class MovesenseDeviceInformation extends SensorData {
 ///
 /// See https://www.movesense.com/docs/esw/api_reference/#systemstates
 ///
-/// **NOTE**, however, that currently there is a bug i the Movesense API and the
+/// **NOTE**, however, that currently there is a limitation to the Movesense API and the
 /// [MovesenseStateChangeProbe] is only able to collect single tap events.
 /// See issue [#15](https://github.com/petri-lipponen-movesense/mdsflutter/issues/15).
 @JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
@@ -323,7 +323,7 @@ class MovesenseTemperature extends SensorData {
 /// See https://www.movesense.com/docs/esw/api_reference/#measimu
 @JsonSerializable(fieldRename: FieldRename.none, includeIfNull: false)
 class MovesenseIMU extends SensorData {
-  static const dataType = MovesenseSamplingPackage.ECG;
+  static const dataType = MovesenseSamplingPackage.IMU;
 
   /// The device's internal timestamp of this sample in milliseconds.
   final int timestamp;
