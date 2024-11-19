@@ -1,4 +1,4 @@
-## 1.9.2
+## 1.9.3
 
 * upgrade to web_service version 3.5
 * `CarpDataEndPoint` serialized to `camelCase`

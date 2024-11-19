@@ -75,10 +75,10 @@ class CarpDataManager extends AbstractDataManager {
     buffer.initialize(deployment, measurements);
 
     // Set up a timer that uploads data on a regular basis
-    // uploadTimer = Timer.periodic(Duration(minutes: carpEndPoint.uploadInterval),
-    //     (_) => uploadBufferedMeasurements());
-    uploadTimer = Timer.periodic(
-        Duration(minutes: 1), (_) => uploadBufferedMeasurements());
+    uploadTimer = Timer.periodic(Duration(minutes: carpEndPoint.uploadInterval),
+        (_) => uploadBufferedMeasurements());
+    // uploadTimer = Timer.periodic(
+    //     Duration(minutes: 1), (_) => uploadBufferedMeasurements());
 
     // listen to connectivity events
     Connectivity()
