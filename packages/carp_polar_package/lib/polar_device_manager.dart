@@ -161,7 +161,8 @@ class PolarDeviceManager extends BTLEDeviceManager<PolarDevice> {
 
     if (configuration?.identifier == null) {
       warning('$runtimeType - cannot connect to device, identifier is null.');
-      return DeviceStatus.error;
+      // return status as initialized, so that the "user" can try to reconnect with another identifier
+      return DeviceStatus.initialized;
     } else {
       try {
         // listen for battery level events

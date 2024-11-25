@@ -377,7 +377,9 @@ enum DeviceStatus {
   /// The state of the device is unknown.
   unknown,
 
-  /// The device is in an error state.
+  /// The device is in an permanent error state.
+  /// Note that this means the the device cannot be reconnected before
+  /// is has been initialized (again).
   error,
 
   /// The device manager has been initialized, but not yet connected.

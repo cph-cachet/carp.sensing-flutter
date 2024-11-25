@@ -151,7 +151,8 @@ class MovesenseDeviceManager extends BTLEDeviceManager<MovesenseDevice> {
           status = DeviceStatus.connected;
         } else {
           warning("$runtimeType - Error in connecting to device: $error");
-          status = DeviceStatus.error;
+          // we return status to be initialized so that the user has a chance to reconnect
+          status = DeviceStatus.initialized;
         }
       },
     );
