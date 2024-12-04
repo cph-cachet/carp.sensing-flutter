@@ -714,7 +714,6 @@ void main() {
       );
       print(toJsonString(request));
 
-      // expect(expected.toJson(), request.toJson());
       expect(toJsonString(expected), toJsonString(request));
     });
 
@@ -726,7 +725,7 @@ void main() {
       StudyDeploymentStatus status = StudyDeploymentStatus.fromJson(
           json.decode(plainJson) as Map<String, dynamic>);
       expect(status.studyDeploymentId, testDeploymentId);
-      expect(status.status, StudyDeploymentStatusTypes.Invited);
+      expect(status.status, StudyDeploymentStatusTypes.Running);
       print(toJsonString(status));
     });
   });

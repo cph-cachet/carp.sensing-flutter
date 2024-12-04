@@ -17,23 +17,16 @@ AmbientLight _$AmbientLightFromJson(Map<String, dynamic> json) => AmbientLight(
           ? null
           : Data.fromJson(json['sensorSpecificData'] as Map<String, dynamic>);
 
-Map<String, dynamic> _$AmbientLightToJson(AmbientLight instance) {
-  final val = <String, dynamic>{};
-
-  void writeNotNull(String key, dynamic value) {
-    if (value != null) {
-      val[key] = value;
-    }
-  }
-
-  writeNotNull('__type', instance.$type);
-  writeNotNull('sensorSpecificData', instance.sensorSpecificData?.toJson());
-  val['meanLux'] = instance.meanLux;
-  val['stdLux'] = instance.stdLux;
-  val['minLux'] = instance.minLux;
-  val['maxLux'] = instance.maxLux;
-  return val;
-}
+Map<String, dynamic> _$AmbientLightToJson(AmbientLight instance) =>
+    <String, dynamic>{
+      if (instance.$type case final value?) '__type': value,
+      if (instance.sensorSpecificData?.toJson() case final value?)
+        'sensorSpecificData': value,
+      'meanLux': instance.meanLux,
+      'stdLux': instance.stdLux,
+      'minLux': instance.minLux,
+      'maxLux': instance.maxLux,
+    };
 
 AccelerationFeatures _$AccelerationFeaturesFromJson(
         Map<String, dynamic> json) =>
@@ -86,58 +79,53 @@ AccelerationFeatures _$AccelerationFeaturesFromJson(
       ..signalMagnitudeArea = json['signalMagnitudeArea'] as num?;
 
 Map<String, dynamic> _$AccelerationFeaturesToJson(
-    AccelerationFeatures instance) {
-  final val = <String, dynamic>{};
-
-  void writeNotNull(String key, dynamic value) {
-    if (value != null) {
-      val[key] = value;
-    }
-  }
-
-  writeNotNull('__type', instance.$type);
-  writeNotNull('sensorSpecificData', instance.sensorSpecificData?.toJson());
-  val['count'] = instance.count;
-  writeNotNull('xMean', instance.xMean);
-  writeNotNull('yMean', instance.yMean);
-  writeNotNull('zMean', instance.zMean);
-  writeNotNull('xStd', instance.xStd);
-  writeNotNull('yStd', instance.yStd);
-  writeNotNull('zStd', instance.zStd);
-  writeNotNull('xAad', instance.xAad);
-  writeNotNull('yAad', instance.yAad);
-  writeNotNull('zAad', instance.zAad);
-  writeNotNull('xMin', instance.xMin);
-  writeNotNull('yMin', instance.yMin);
-  writeNotNull('zMin', instance.zMin);
-  writeNotNull('xMax', instance.xMax);
-  writeNotNull('yMax', instance.yMax);
-  writeNotNull('zMax', instance.zMax);
-  writeNotNull('xMaxMinDiff', instance.xMaxMinDiff);
-  writeNotNull('yMaxMinDiff', instance.yMaxMinDiff);
-  writeNotNull('zMaxMinDiff', instance.zMaxMinDiff);
-  writeNotNull('xMedian', instance.xMedian);
-  writeNotNull('yMedian', instance.yMedian);
-  writeNotNull('zMedian', instance.zMedian);
-  writeNotNull('xMad', instance.xMad);
-  writeNotNull('yMad', instance.yMad);
-  writeNotNull('zMad', instance.zMad);
-  writeNotNull('xIqr', instance.xIqr);
-  writeNotNull('yIqr', instance.yIqr);
-  writeNotNull('zIqr', instance.zIqr);
-  writeNotNull('xNegCount', instance.xNegCount);
-  writeNotNull('yNegCount', instance.yNegCount);
-  writeNotNull('zNegCount', instance.zNegCount);
-  writeNotNull('xPosCount', instance.xPosCount);
-  writeNotNull('yPosCount', instance.yPosCount);
-  writeNotNull('zPosCount', instance.zPosCount);
-  writeNotNull('xAboveMean', instance.xAboveMean);
-  writeNotNull('yAboveMean', instance.yAboveMean);
-  writeNotNull('zAboveMean', instance.zAboveMean);
-  writeNotNull('xEnergy', instance.xEnergy);
-  writeNotNull('yEnergy', instance.yEnergy);
-  writeNotNull('zEnergy', instance.zEnergy);
-  writeNotNull('avgResultAcceleration', instance.avgResultAcceleration);
-  writeNotNull('signalMagnitudeArea', instance.signalMagnitudeArea);
-  return val;
-}
+        AccelerationFeatures instance) =>
+    <String, dynamic>{
+      if (instance.$type case final value?) '__type': value,
+      if (instance.sensorSpecificData?.toJson() case final value?)
+        'sensorSpecificData': value,
+      'count': instance.count,
+      if (instance.xMean case final value?) 'xMean': value,
+      if (instance.yMean case final value?) 'yMean': value,
+      if (instance.zMean case final value?) 'zMean': value,
+      if (instance.xStd case final value?) 'xStd': value,
+      if (instance.yStd case final value?) 'yStd': value,
+      if (instance.zStd case final value?) 'zStd': value,
+      if (instance.xAad case final value?) 'xAad': value,
+      if (instance.yAad case final value?) 'yAad': value,
+      if (instance.zAad case final value?) 'zAad': value,
+      if (instance.xMin case final value?) 'xMin': value,
+      if (instance.yMin case final value?) 'yMin': value,
+      if (instance.zMin case final value?) 'zMin': value,
+      if (instance.xMax case final value?) 'xMax': value,
+      if (instance.yMax case final value?) 'yMax': value,
+      if (instance.zMax case final value?) 'zMax': value,
+      if (instance.xMaxMinDiff case final value?) 'xMaxMinDiff': value,
+      if (instance.yMaxMinDiff case final value?) 'yMaxMinDiff': value,
+      if (instance.zMaxMinDiff case final value?) 'zMaxMinDiff': value,
+      if (instance.xMedian case final value?) 'xMedian': value,
+      if (instance.yMedian case final value?) 'yMedian': value,
+      if (instance.zMedian case final value?) 'zMedian': value,
+      if (instance.xMad case final value?) 'xMad': value,
+      if (instance.yMad case final value?) 'yMad': value,
+      if (instance.zMad case final value?) 'zMad': value,
+      if (instance.xIqr case final value?) 'xIqr': value,
+      if (instance.yIqr case final value?) 'yIqr': value,
+      if (instance.zIqr case final value?) 'zIqr': value,
+      if (instance.xNegCount case final value?) 'xNegCount': value,
+      if (instance.yNegCount case final value?) 'yNegCount': value,
+      if (instance.zNegCount case final value?) 'zNegCount': value,
+      if (instance.xPosCount case final value?) 'xPosCount': value,
+      if (instance.yPosCount case final value?) 'yPosCount': value,
+      if (instance.zPosCount case final value?) 'zPosCount': value,
+      if (instance.xAboveMean case final value?) 'xAboveMean': value,
+      if (instance.yAboveMean case final value?) 'yAboveMean': value,
+      if (instance.zAboveMean case final value?) 'zAboveMean': value,
+      if (instance.xEnergy case final value?) 'xEnergy': value,
+      if (instance.yEnergy case final value?) 'yEnergy': value,
+      if (instance.zEnergy case final value?) 'zEnergy': value,
+      if (instance.avgResultAcceleration case final value?)
+        'avgResultAcceleration': value,
+      if (instance.signalMagnitudeArea case final value?)
+        'signalMagnitudeArea': value,
+    };

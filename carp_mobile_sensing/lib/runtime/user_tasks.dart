@@ -197,7 +197,7 @@ abstract class UserTask {
 
   @override
   String toString() =>
-      '$runtimeType - id: $id, type: $type, title: $title, state: $state, triggerTime: $triggerTime';
+      '$runtimeType - id: $id, type: $type, name: $name, title: $title, state: $state, triggerTime: $triggerTime';
 }
 
 /// The states of a [UserTask].

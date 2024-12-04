@@ -82,7 +82,11 @@ class TaskControlExecutor extends AbstractExecutor<TaskControl> {
 
   @override
   Future<bool> onStart() async {
-    if (triggerExecutor?.state != ExecutorState.started &&
+    if (triggerExecutor == null) {
+      warning(
+          '$runtimeType - no TriggerExecutor defined - cannot start this task control executor.');
+      return false;
+    } else if (triggerExecutor?.state != ExecutorState.started &&
         !triggerExecutor!.isStarting) {
       triggerExecutor?.start();
     }
