@@ -195,7 +195,7 @@ class StudyDeployment {
     Map<String, TriggerConfiguration>? usedTriggers = _protocol.triggers;
     Set<TaskControl>? triggeredTasks = _protocol.taskControls;
 
-    _status.status = StudyDeploymentStatusTypes.DeploymentReady;
+    _status.status = StudyDeploymentStatusTypes.Running;
 
     return PrimaryDeviceDeployment(
         deviceConfiguration: device,
@@ -215,7 +215,7 @@ class StudyDeployment {
   ) {
     // assert(_protocol.primaryDevices.contains(device),
     //     'The specified primary device is not part of the protocol of this deployment.');
-    _status.status = StudyDeploymentStatusTypes.DeploymentReady;
+    _status.status = StudyDeploymentStatusTypes.Running;
     _startTime = deviceDeploymentLastUpdateDate;
   }
 
@@ -237,8 +237,9 @@ enum StudyDeploymentStatusTypes {
   /// devices still need to be deployed.
   DeployingDevices,
 
-  /// The study deployment is ready to be used.
-  DeploymentReady,
+  /// All primary devices have been successfully deployed and data collection
+  /// has started on the time specified by [StudyDeploymentStatus.startedOn].
+  Running,
 
   /// The study deployment has been stopped and no more data should be collected.
   Stopped,
@@ -312,8 +313,8 @@ class StudyDeploymentStatus extends Serializable {
       case 'DeployingDevices':
         status.status = StudyDeploymentStatusTypes.DeployingDevices;
         break;
-      case 'DeploymentReady':
-        status.status = StudyDeploymentStatusTypes.DeploymentReady;
+      case 'Running':
+        status.status = StudyDeploymentStatusTypes.Running;
         break;
       case 'Stopped':
         status.status = StudyDeploymentStatusTypes.Stopped;

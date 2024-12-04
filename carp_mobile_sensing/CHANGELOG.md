@@ -1,3 +1,7 @@
+## 1.11.6
+
+* Support for the `NoUserTaskTrigger` (issue [#453](https://github.com/cph-cachet/carp.sensing-flutter/issues/453))
+
 ## 1.11.5
 
 * Fix of issue with restarting data collection on device reconnect (issue [#442](https://github.com/cph-cachet/carp.sensing-flutter/issues/442))

@@ -52,30 +52,21 @@ PrimaryDeviceDeployment _$PrimaryDeviceDeploymentFromJson(
     )..applicationData = json['applicationData'] as Map<String, dynamic>?;
 
 Map<String, dynamic> _$PrimaryDeviceDeploymentToJson(
-    PrimaryDeviceDeployment instance) {
-  final val = <String, dynamic>{
-    'deviceConfiguration': instance.deviceConfiguration.toJson(),
-    'registration': instance.registration.toJson(),
-    'connectedDevices':
-        instance.connectedDevices.map((e) => e.toJson()).toList(),
-    'connectedDeviceRegistrations': instance.connectedDeviceRegistrations
-        .map((k, e) => MapEntry(k, e?.toJson())),
-    'tasks': instance.tasks.map((e) => e.toJson()).toList(),
-    'triggers': instance.triggers.map((k, e) => MapEntry(k, e.toJson())),
-    'taskControls': instance.taskControls.map((e) => e.toJson()).toList(),
-    'expectedParticipantData':
-        instance.expectedParticipantData.map((e) => e.toJson()).toList(),
-  };
-
-  void writeNotNull(String key, dynamic value) {
-    if (value != null) {
-      val[key] = value;
-    }
-  }
-
-  writeNotNull('applicationData', instance.applicationData);
-  return val;
-}
+        PrimaryDeviceDeployment instance) =>
+    <String, dynamic>{
+      'deviceConfiguration': instance.deviceConfiguration.toJson(),
+      'registration': instance.registration.toJson(),
+      'connectedDevices':
+          instance.connectedDevices.map((e) => e.toJson()).toList(),
+      'connectedDeviceRegistrations': instance.connectedDeviceRegistrations
+          .map((k, e) => MapEntry(k, e?.toJson())),
+      'tasks': instance.tasks.map((e) => e.toJson()).toList(),
+      'triggers': instance.triggers.map((k, e) => MapEntry(k, e.toJson())),
+      'taskControls': instance.taskControls.map((e) => e.toJson()).toList(),
+      'expectedParticipantData':
+          instance.expectedParticipantData.map((e) => e.toJson()).toList(),
+      if (instance.applicationData case final value?) 'applicationData': value,
+    };
 
 DeviceDeploymentStatus _$DeviceDeploymentStatusFromJson(
         Map<String, dynamic> json) =>
@@ -96,24 +87,17 @@ DeviceDeploymentStatus _$DeviceDeploymentStatusFromJson(
               .toList();
 
 Map<String, dynamic> _$DeviceDeploymentStatusToJson(
-    DeviceDeploymentStatus instance) {
-  final val = <String, dynamic>{};
-
-  void writeNotNull(String key, dynamic value) {
-    if (value != null) {
-      val[key] = value;
-    }
-  }
-
-  writeNotNull('__type', instance.$type);
-  val['device'] = instance.device.toJson();
-  writeNotNull('canBeDeployed', instance.canBeDeployed);
-  writeNotNull('remainingDevicesToRegisterToObtainDeployment',
-      instance.remainingDevicesToRegisterToObtainDeployment);
-  writeNotNull('remainingDevicesToRegisterBeforeDeployment',
-      instance.remainingDevicesToRegisterBeforeDeployment);
-  return val;
-}
+        DeviceDeploymentStatus instance) =>
+    <String, dynamic>{
+      if (instance.$type case final value?) '__type': value,
+      'device': instance.device.toJson(),
+      if (instance.canBeDeployed case final value?) 'canBeDeployed': value,
+      if (instance.remainingDevicesToRegisterToObtainDeployment
+          case final value?)
+        'remainingDevicesToRegisterToObtainDeployment': value,
+      if (instance.remainingDevicesToRegisterBeforeDeployment case final value?)
+        'remainingDevicesToRegisterBeforeDeployment': value,
+    };
 
 AssignedPrimaryDevice _$AssignedPrimaryDeviceFromJson(
         Map<String, dynamic> json) =>
@@ -127,20 +111,12 @@ AssignedPrimaryDevice _$AssignedPrimaryDeviceFromJson(
     );
 
 Map<String, dynamic> _$AssignedPrimaryDeviceToJson(
-    AssignedPrimaryDevice instance) {
-  final val = <String, dynamic>{
-    'device': instance.device.toJson(),
-  };
-
-  void writeNotNull(String key, dynamic value) {
-    if (value != null) {
-      val[key] = value;
-    }
-  }
-
-  writeNotNull('registration', instance.registration?.toJson());
-  return val;
-}
+        AssignedPrimaryDevice instance) =>
+    <String, dynamic>{
+      'device': instance.device.toJson(),
+      if (instance.registration?.toJson() case final value?)
+        'registration': value,
+    };
 
 StudyDeploymentStatus _$StudyDeploymentStatusFromJson(
         Map<String, dynamic> json) =>
@@ -162,25 +138,18 @@ StudyDeploymentStatus _$StudyDeploymentStatusFromJson(
           : DateTime.parse(json['startedOn'] as String);
 
 Map<String, dynamic> _$StudyDeploymentStatusToJson(
-    StudyDeploymentStatus instance) {
-  final val = <String, dynamic>{};
-
-  void writeNotNull(String key, dynamic value) {
-    if (value != null) {
-      val[key] = value;
-    }
-  }
-
-  writeNotNull('__type', instance.$type);
-  val['createdOn'] = instance.createdOn.toIso8601String();
-  val['studyDeploymentId'] = instance.studyDeploymentId;
-  val['deviceStatusList'] =
-      instance.deviceStatusList.map((e) => e.toJson()).toList();
-  val['participantStatusList'] =
-      instance.participantStatusList.map((e) => e.toJson()).toList();
-  writeNotNull('startedOn', instance.startedOn?.toIso8601String());
-  return val;
-}
+        StudyDeploymentStatus instance) =>
+    <String, dynamic>{
+      if (instance.$type case final value?) '__type': value,
+      'createdOn': instance.createdOn.toIso8601String(),
+      'studyDeploymentId': instance.studyDeploymentId,
+      'deviceStatusList':
+          instance.deviceStatusList.map((e) => e.toJson()).toList(),
+      'participantStatusList':
+          instance.participantStatusList.map((e) => e.toJson()).toList(),
+      if (instance.startedOn?.toIso8601String() case final value?)
+        'startedOn': value,
+    };
 
 ParticipantData _$ParticipantDataFromJson(Map<String, dynamic> json) =>
     ParticipantData(
@@ -259,21 +228,12 @@ StudyInvitation _$StudyInvitationFromJson(Map<String, dynamic> json) =>
       json['applicationData'] as String?,
     );
 
-Map<String, dynamic> _$StudyInvitationToJson(StudyInvitation instance) {
-  final val = <String, dynamic>{
-    'name': instance.name,
-  };
-
-  void writeNotNull(String key, dynamic value) {
-    if (value != null) {
-      val[key] = value;
-    }
-  }
-
-  writeNotNull('description', instance.description);
-  writeNotNull('applicationData', instance.applicationData);
-  return val;
-}
+Map<String, dynamic> _$StudyInvitationToJson(StudyInvitation instance) =>
+    <String, dynamic>{
+      'name': instance.name,
+      if (instance.description case final value?) 'description': value,
+      if (instance.applicationData case final value?) 'applicationData': value,
+    };
 
 ActiveParticipationInvitation _$ActiveParticipationInvitationFromJson(
         Map<String, dynamic> json) =>
@@ -285,22 +245,14 @@ ActiveParticipationInvitation _$ActiveParticipationInvitationFromJson(
         .toList();
 
 Map<String, dynamic> _$ActiveParticipationInvitationToJson(
-    ActiveParticipationInvitation instance) {
-  final val = <String, dynamic>{
-    'participation': instance.participation.toJson(),
-    'invitation': instance.invitation.toJson(),
-  };
-
-  void writeNotNull(String key, dynamic value) {
-    if (value != null) {
-      val[key] = value;
-    }
-  }
-
-  writeNotNull('assignedDevices',
-      instance.assignedDevices?.map((e) => e.toJson()).toList());
-  return val;
-}
+        ActiveParticipationInvitation instance) =>
+    <String, dynamic>{
+      'participation': instance.participation.toJson(),
+      'invitation': instance.invitation.toJson(),
+      if (instance.assignedDevices?.map((e) => e.toJson()).toList()
+          case final value?)
+        'assignedDevices': value,
+    };
 
 ParticipantStatus _$ParticipantStatusFromJson(Map<String, dynamic> json) =>
     ParticipantStatus(
@@ -336,25 +288,17 @@ CreateStudyDeployment _$CreateStudyDeploymentFromJson(
       ..apiVersion = json['apiVersion'] as String;
 
 Map<String, dynamic> _$CreateStudyDeploymentToJson(
-    CreateStudyDeployment instance) {
-  final val = <String, dynamic>{};
-
-  void writeNotNull(String key, dynamic value) {
-    if (value != null) {
-      val[key] = value;
-    }
-  }
-
-  writeNotNull('__type', instance.$type);
-  val['apiVersion'] = instance.apiVersion;
-  val['protocol'] = instance.protocol.toJson();
-  val['invitations'] = instance.invitations.map((e) => e.toJson()).toList();
-  writeNotNull(
-      'connectedDevicePreregistrations',
-      instance.connectedDevicePreregistrations
-          ?.map((k, e) => MapEntry(k, e.toJson())));
-  return val;
-}
+        CreateStudyDeployment instance) =>
+    <String, dynamic>{
+      if (instance.$type case final value?) '__type': value,
+      'apiVersion': instance.apiVersion,
+      'protocol': instance.protocol.toJson(),
+      'invitations': instance.invitations.map((e) => e.toJson()).toList(),
+      if (instance.connectedDevicePreregistrations
+              ?.map((k, e) => MapEntry(k, e.toJson()))
+          case final value?)
+        'connectedDevicePreregistrations': value,
+    };
 
 GetStudyDeploymentStatus _$GetStudyDeploymentStatusFromJson(
         Map<String, dynamic> json) =>
@@ -365,20 +309,13 @@ GetStudyDeploymentStatus _$GetStudyDeploymentStatusFromJson(
       ..apiVersion = json['apiVersion'] as String;
 
 Map<String, dynamic> _$GetStudyDeploymentStatusToJson(
-    GetStudyDeploymentStatus instance) {
-  final val = <String, dynamic>{};
-
-  void writeNotNull(String key, dynamic value) {
-    if (value != null) {
-      val[key] = value;
-    }
-  }
-
-  writeNotNull('__type', instance.$type);
-  val['apiVersion'] = instance.apiVersion;
-  writeNotNull('studyDeploymentId', instance.studyDeploymentId);
-  return val;
-}
+        GetStudyDeploymentStatus instance) =>
+    <String, dynamic>{
+      if (instance.$type case final value?) '__type': value,
+      'apiVersion': instance.apiVersion,
+      if (instance.studyDeploymentId case final value?)
+        'studyDeploymentId': value,
+    };
 
 GetStudyDeploymentStatusList _$GetStudyDeploymentStatusListFromJson(
         Map<String, dynamic> json) =>
@@ -392,21 +329,14 @@ GetStudyDeploymentStatusList _$GetStudyDeploymentStatusListFromJson(
       ..studyDeploymentId = json['studyDeploymentId'] as String?;
 
 Map<String, dynamic> _$GetStudyDeploymentStatusListToJson(
-    GetStudyDeploymentStatusList instance) {
-  final val = <String, dynamic>{};
-
-  void writeNotNull(String key, dynamic value) {
-    if (value != null) {
-      val[key] = value;
-    }
-  }
-
-  writeNotNull('__type', instance.$type);
-  val['apiVersion'] = instance.apiVersion;
-  writeNotNull('studyDeploymentId', instance.studyDeploymentId);
-  val['studyDeploymentIds'] = instance.studyDeploymentIds;
-  return val;
-}
+        GetStudyDeploymentStatusList instance) =>
+    <String, dynamic>{
+      if (instance.$type case final value?) '__type': value,
+      'apiVersion': instance.apiVersion,
+      if (instance.studyDeploymentId case final value?)
+        'studyDeploymentId': value,
+      'studyDeploymentIds': instance.studyDeploymentIds,
+    };
 
 RegisterDevice _$RegisterDeviceFromJson(Map<String, dynamic> json) =>
     RegisterDevice(
@@ -417,22 +347,15 @@ RegisterDevice _$RegisterDeviceFromJson(Map<String, dynamic> json) =>
       ..$type = json['__type'] as String?
       ..apiVersion = json['apiVersion'] as String;
 
-Map<String, dynamic> _$RegisterDeviceToJson(RegisterDevice instance) {
-  final val = <String, dynamic>{};
-
-  void writeNotNull(String key, dynamic value) {
-    if (value != null) {
-      val[key] = value;
-    }
-  }
-
-  writeNotNull('__type', instance.$type);
-  val['apiVersion'] = instance.apiVersion;
-  writeNotNull('studyDeploymentId', instance.studyDeploymentId);
-  val['deviceRoleName'] = instance.deviceRoleName;
-  val['registration'] = instance.registration.toJson();
-  return val;
-}
+Map<String, dynamic> _$RegisterDeviceToJson(RegisterDevice instance) =>
+    <String, dynamic>{
+      if (instance.$type case final value?) '__type': value,
+      'apiVersion': instance.apiVersion,
+      if (instance.studyDeploymentId case final value?)
+        'studyDeploymentId': value,
+      'deviceRoleName': instance.deviceRoleName,
+      'registration': instance.registration.toJson(),
+    };
 
 UnregisterDevice _$UnregisterDeviceFromJson(Map<String, dynamic> json) =>
     UnregisterDevice(
@@ -442,21 +365,14 @@ UnregisterDevice _$UnregisterDeviceFromJson(Map<String, dynamic> json) =>
       ..$type = json['__type'] as String?
       ..apiVersion = json['apiVersion'] as String;
 
-Map<String, dynamic> _$UnregisterDeviceToJson(UnregisterDevice instance) {
-  final val = <String, dynamic>{};
-
-  void writeNotNull(String key, dynamic value) {
-    if (value != null) {
-      val[key] = value;
-    }
-  }
-
-  writeNotNull('__type', instance.$type);
-  val['apiVersion'] = instance.apiVersion;
-  writeNotNull('studyDeploymentId', instance.studyDeploymentId);
-  val['deviceRoleName'] = instance.deviceRoleName;
-  return val;
-}
+Map<String, dynamic> _$UnregisterDeviceToJson(UnregisterDevice instance) =>
+    <String, dynamic>{
+      if (instance.$type case final value?) '__type': value,
+      'apiVersion': instance.apiVersion,
+      if (instance.studyDeploymentId case final value?)
+        'studyDeploymentId': value,
+      'deviceRoleName': instance.deviceRoleName,
+    };
 
 GetDeviceDeploymentFor _$GetDeviceDeploymentForFromJson(
         Map<String, dynamic> json) =>
@@ -468,21 +384,14 @@ GetDeviceDeploymentFor _$GetDeviceDeploymentForFromJson(
       ..apiVersion = json['apiVersion'] as String;
 
 Map<String, dynamic> _$GetDeviceDeploymentForToJson(
-    GetDeviceDeploymentFor instance) {
-  final val = <String, dynamic>{};
-
-  void writeNotNull(String key, dynamic value) {
-    if (value != null) {
-      val[key] = value;
-    }
-  }
-
-  writeNotNull('__type', instance.$type);
-  val['apiVersion'] = instance.apiVersion;
-  writeNotNull('studyDeploymentId', instance.studyDeploymentId);
-  val['primaryDeviceRoleName'] = instance.primaryDeviceRoleName;
-  return val;
-}
+        GetDeviceDeploymentFor instance) =>
+    <String, dynamic>{
+      if (instance.$type case final value?) '__type': value,
+      'apiVersion': instance.apiVersion,
+      if (instance.studyDeploymentId case final value?)
+        'studyDeploymentId': value,
+      'primaryDeviceRoleName': instance.primaryDeviceRoleName,
+    };
 
 DeviceDeployed _$DeviceDeployedFromJson(Map<String, dynamic> json) =>
     DeviceDeployed(
@@ -493,23 +402,16 @@ DeviceDeployed _$DeviceDeployedFromJson(Map<String, dynamic> json) =>
       ..$type = json['__type'] as String?
       ..apiVersion = json['apiVersion'] as String;
 
-Map<String, dynamic> _$DeviceDeployedToJson(DeviceDeployed instance) {
-  final val = <String, dynamic>{};
-
-  void writeNotNull(String key, dynamic value) {
-    if (value != null) {
-      val[key] = value;
-    }
-  }
-
-  writeNotNull('__type', instance.$type);
-  val['apiVersion'] = instance.apiVersion;
-  writeNotNull('studyDeploymentId', instance.studyDeploymentId);
-  val['primaryDeviceRoleName'] = instance.primaryDeviceRoleName;
-  val['deviceDeploymentLastUpdatedOn'] =
-      instance.deviceDeploymentLastUpdatedOn.toIso8601String();
-  return val;
-}
+Map<String, dynamic> _$DeviceDeployedToJson(DeviceDeployed instance) =>
+    <String, dynamic>{
+      if (instance.$type case final value?) '__type': value,
+      'apiVersion': instance.apiVersion,
+      if (instance.studyDeploymentId case final value?)
+        'studyDeploymentId': value,
+      'primaryDeviceRoleName': instance.primaryDeviceRoleName,
+      'deviceDeploymentLastUpdatedOn':
+          instance.deviceDeploymentLastUpdatedOn.toIso8601String(),
+    };
 
 Stop _$StopFromJson(Map<String, dynamic> json) => Stop(
       json['studyDeploymentId'] as String?,
@@ -517,20 +419,12 @@ Stop _$StopFromJson(Map<String, dynamic> json) => Stop(
       ..$type = json['__type'] as String?
       ..apiVersion = json['apiVersion'] as String;
 
-Map<String, dynamic> _$StopToJson(Stop instance) {
-  final val = <String, dynamic>{};
-
-  void writeNotNull(String key, dynamic value) {
-    if (value != null) {
-      val[key] = value;
-    }
-  }
-
-  writeNotNull('__type', instance.$type);
-  val['apiVersion'] = instance.apiVersion;
-  writeNotNull('studyDeploymentId', instance.studyDeploymentId);
-  return val;
-}
+Map<String, dynamic> _$StopToJson(Stop instance) => <String, dynamic>{
+      if (instance.$type case final value?) '__type': value,
+      'apiVersion': instance.apiVersion,
+      if (instance.studyDeploymentId case final value?)
+        'studyDeploymentId': value,
+    };
 
 GetActiveParticipationInvitations _$GetActiveParticipationInvitationsFromJson(
         Map<String, dynamic> json) =>
@@ -541,20 +435,12 @@ GetActiveParticipationInvitations _$GetActiveParticipationInvitationsFromJson(
       ..apiVersion = json['apiVersion'] as String;
 
 Map<String, dynamic> _$GetActiveParticipationInvitationsToJson(
-    GetActiveParticipationInvitations instance) {
-  final val = <String, dynamic>{};
-
-  void writeNotNull(String key, dynamic value) {
-    if (value != null) {
-      val[key] = value;
-    }
-  }
-
-  writeNotNull('__type', instance.$type);
-  val['apiVersion'] = instance.apiVersion;
-  val['accountId'] = instance.accountId;
-  return val;
-}
+        GetActiveParticipationInvitations instance) =>
+    <String, dynamic>{
+      if (instance.$type case final value?) '__type': value,
+      'apiVersion': instance.apiVersion,
+      'accountId': instance.accountId,
+    };
 
 GetParticipantData _$GetParticipantDataFromJson(Map<String, dynamic> json) =>
     GetParticipantData(
@@ -563,20 +449,13 @@ GetParticipantData _$GetParticipantDataFromJson(Map<String, dynamic> json) =>
       ..$type = json['__type'] as String?
       ..apiVersion = json['apiVersion'] as String;
 
-Map<String, dynamic> _$GetParticipantDataToJson(GetParticipantData instance) {
-  final val = <String, dynamic>{};
-
-  void writeNotNull(String key, dynamic value) {
-    if (value != null) {
-      val[key] = value;
-    }
-  }
-
-  writeNotNull('__type', instance.$type);
-  writeNotNull('studyDeploymentId', instance.studyDeploymentId);
-  val['apiVersion'] = instance.apiVersion;
-  return val;
-}
+Map<String, dynamic> _$GetParticipantDataToJson(GetParticipantData instance) =>
+    <String, dynamic>{
+      if (instance.$type case final value?) '__type': value,
+      if (instance.studyDeploymentId case final value?)
+        'studyDeploymentId': value,
+      'apiVersion': instance.apiVersion,
+    };
 
 GetParticipantDataList _$GetParticipantDataListFromJson(
         Map<String, dynamic> json) =>
@@ -590,21 +469,14 @@ GetParticipantDataList _$GetParticipantDataListFromJson(
       ..apiVersion = json['apiVersion'] as String;
 
 Map<String, dynamic> _$GetParticipantDataListToJson(
-    GetParticipantDataList instance) {
-  final val = <String, dynamic>{};
-
-  void writeNotNull(String key, dynamic value) {
-    if (value != null) {
-      val[key] = value;
-    }
-  }
-
-  writeNotNull('__type', instance.$type);
-  writeNotNull('studyDeploymentId', instance.studyDeploymentId);
-  val['apiVersion'] = instance.apiVersion;
-  val['studyDeploymentIds'] = instance.studyDeploymentIds;
-  return val;
-}
+        GetParticipantDataList instance) =>
+    <String, dynamic>{
+      if (instance.$type case final value?) '__type': value,
+      if (instance.studyDeploymentId case final value?)
+        'studyDeploymentId': value,
+      'apiVersion': instance.apiVersion,
+      'studyDeploymentIds': instance.studyDeploymentIds,
+    };
 
 SetParticipantData _$SetParticipantDataFromJson(Map<String, dynamic> json) =>
     SetParticipantData(
@@ -618,19 +490,15 @@ SetParticipantData _$SetParticipantDataFromJson(Map<String, dynamic> json) =>
       ..$type = json['__type'] as String?
       ..apiVersion = json['apiVersion'] as String;
 
-Map<String, dynamic> _$SetParticipantDataToJson(SetParticipantData instance) {
-  final val = <String, dynamic>{};
-
-  void writeNotNull(String key, dynamic value) {
-    if (value != null) {
-      val[key] = value;
-    }
-  }
-
-  writeNotNull('__type', instance.$type);
-  writeNotNull('studyDeploymentId', instance.studyDeploymentId);
-  val['apiVersion'] = instance.apiVersion;
-  writeNotNull('inputByParticipantRole', instance.inputByParticipantRole);
-  writeNotNull('data', instance.data?.map((k, e) => MapEntry(k, e?.toJson())));
-  return val;
-}
+Map<String, dynamic> _$SetParticipantDataToJson(SetParticipantData instance) =>
+    <String, dynamic>{
+      if (instance.$type case final value?) '__type': value,
+      if (instance.studyDeploymentId case final value?)
+        'studyDeploymentId': value,
+      'apiVersion': instance.apiVersion,
+      if (instance.inputByParticipantRole case final value?)
+        'inputByParticipantRole': value,
+      if (instance.data?.map((k, e) => MapEntry(k, e?.toJson()))
+          case final value?)
+        'data': value,
+    };

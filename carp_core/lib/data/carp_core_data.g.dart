@@ -75,21 +75,12 @@ Measurement _$MeasurementFromJson(Map<String, dynamic> json) => Measurement(
       data: Data.fromJson(json['data'] as Map<String, dynamic>),
     );
 
-Map<String, dynamic> _$MeasurementToJson(Measurement instance) {
-  final val = <String, dynamic>{
-    'sensorStartTime': instance.sensorStartTime,
-  };
-
-  void writeNotNull(String key, dynamic value) {
-    if (value != null) {
-      val[key] = value;
-    }
-  }
-
-  writeNotNull('sensorEndTime', instance.sensorEndTime);
-  val['data'] = instance.data.toJson();
-  return val;
-}
+Map<String, dynamic> _$MeasurementToJson(Measurement instance) =>
+    <String, dynamic>{
+      'sensorStartTime': instance.sensorStartTime,
+      if (instance.sensorEndTime case final value?) 'sensorEndTime': value,
+      'data': instance.data.toJson(),
+    };
 
 OpenDataStreams _$OpenDataStreamsFromJson(Map<String, dynamic> json) =>
     OpenDataStreams(
@@ -99,20 +90,12 @@ OpenDataStreams _$OpenDataStreamsFromJson(Map<String, dynamic> json) =>
       ..$type = json['__type'] as String?
       ..apiVersion = json['apiVersion'] as String;
 
-Map<String, dynamic> _$OpenDataStreamsToJson(OpenDataStreams instance) {
-  final val = <String, dynamic>{};
-
-  void writeNotNull(String key, dynamic value) {
-    if (value != null) {
-      val[key] = value;
-    }
-  }
-
-  writeNotNull('__type', instance.$type);
-  val['apiVersion'] = instance.apiVersion;
-  val['configuration'] = instance.configuration.toJson();
-  return val;
-}
+Map<String, dynamic> _$OpenDataStreamsToJson(OpenDataStreams instance) =>
+    <String, dynamic>{
+      if (instance.$type case final value?) '__type': value,
+      'apiVersion': instance.apiVersion,
+      'configuration': instance.configuration.toJson(),
+    };
 
 AppendToDataStreams _$AppendToDataStreamsFromJson(Map<String, dynamic> json) =>
     AppendToDataStreams(
@@ -124,21 +107,14 @@ AppendToDataStreams _$AppendToDataStreamsFromJson(Map<String, dynamic> json) =>
       ..$type = json['__type'] as String?
       ..apiVersion = json['apiVersion'] as String;
 
-Map<String, dynamic> _$AppendToDataStreamsToJson(AppendToDataStreams instance) {
-  final val = <String, dynamic>{};
-
-  void writeNotNull(String key, dynamic value) {
-    if (value != null) {
-      val[key] = value;
-    }
-  }
-
-  writeNotNull('__type', instance.$type);
-  val['apiVersion'] = instance.apiVersion;
-  val['studyDeploymentId'] = instance.studyDeploymentId;
-  val['batch'] = instance.batch.map((e) => e.toJson()).toList();
-  return val;
-}
+Map<String, dynamic> _$AppendToDataStreamsToJson(
+        AppendToDataStreams instance) =>
+    <String, dynamic>{
+      if (instance.$type case final value?) '__type': value,
+      'apiVersion': instance.apiVersion,
+      'studyDeploymentId': instance.studyDeploymentId,
+      'batch': instance.batch.map((e) => e.toJson()).toList(),
+    };
 
 GetDataStream _$GetDataStreamFromJson(Map<String, dynamic> json) =>
     GetDataStream(
@@ -149,22 +125,15 @@ GetDataStream _$GetDataStreamFromJson(Map<String, dynamic> json) =>
       ..$type = json['__type'] as String?
       ..apiVersion = json['apiVersion'] as String;
 
-Map<String, dynamic> _$GetDataStreamToJson(GetDataStream instance) {
-  final val = <String, dynamic>{};
-
-  void writeNotNull(String key, dynamic value) {
-    if (value != null) {
-      val[key] = value;
-    }
-  }
-
-  writeNotNull('__type', instance.$type);
-  val['apiVersion'] = instance.apiVersion;
-  val['dataStream'] = instance.dataStream.toJson();
-  val['fromSequenceId'] = instance.fromSequenceId;
-  writeNotNull('toSequenceIdInclusive', instance.toSequenceIdInclusive);
-  return val;
-}
+Map<String, dynamic> _$GetDataStreamToJson(GetDataStream instance) =>
+    <String, dynamic>{
+      if (instance.$type case final value?) '__type': value,
+      'apiVersion': instance.apiVersion,
+      'dataStream': instance.dataStream.toJson(),
+      'fromSequenceId': instance.fromSequenceId,
+      if (instance.toSequenceIdInclusive case final value?)
+        'toSequenceIdInclusive': value,
+    };
 
 CloseDataStreams _$CloseDataStreamsFromJson(Map<String, dynamic> json) =>
     CloseDataStreams(
@@ -175,20 +144,12 @@ CloseDataStreams _$CloseDataStreamsFromJson(Map<String, dynamic> json) =>
       ..$type = json['__type'] as String?
       ..apiVersion = json['apiVersion'] as String;
 
-Map<String, dynamic> _$CloseDataStreamsToJson(CloseDataStreams instance) {
-  final val = <String, dynamic>{};
-
-  void writeNotNull(String key, dynamic value) {
-    if (value != null) {
-      val[key] = value;
-    }
-  }
-
-  writeNotNull('__type', instance.$type);
-  val['apiVersion'] = instance.apiVersion;
-  val['studyDeploymentIds'] = instance.studyDeploymentIds;
-  return val;
-}
+Map<String, dynamic> _$CloseDataStreamsToJson(CloseDataStreams instance) =>
+    <String, dynamic>{
+      if (instance.$type case final value?) '__type': value,
+      'apiVersion': instance.apiVersion,
+      'studyDeploymentIds': instance.studyDeploymentIds,
+    };
 
 RemoveDataStreams _$RemoveDataStreamsFromJson(Map<String, dynamic> json) =>
     RemoveDataStreams(
@@ -199,17 +160,9 @@ RemoveDataStreams _$RemoveDataStreamsFromJson(Map<String, dynamic> json) =>
       ..$type = json['__type'] as String?
       ..apiVersion = json['apiVersion'] as String;
 
-Map<String, dynamic> _$RemoveDataStreamsToJson(RemoveDataStreams instance) {
-  final val = <String, dynamic>{};
-
-  void writeNotNull(String key, dynamic value) {
-    if (value != null) {
-      val[key] = value;
-    }
-  }
-
-  writeNotNull('__type', instance.$type);
-  val['apiVersion'] = instance.apiVersion;
-  val['studyDeploymentIds'] = instance.studyDeploymentIds;
-  return val;
-}
+Map<String, dynamic> _$RemoveDataStreamsToJson(RemoveDataStreams instance) =>
+    <String, dynamic>{
+      if (instance.$type case final value?) '__type': value,
+      'apiVersion': instance.apiVersion,
+      'studyDeploymentIds': instance.studyDeploymentIds,
+    };

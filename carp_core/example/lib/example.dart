@@ -110,7 +110,7 @@ void carpCoreDeploymentExample() async {
 
   // Now that all devices have been registered and deployed, the deployment is ready.
   status = await deploymentService?.getStudyDeploymentStatus(studyDeploymentId);
-  var isReady = status?.status == StudyDeploymentStatusTypes.DeploymentReady;
+  var isReady = status?.status == StudyDeploymentStatusTypes.Running;
 }
 
 /// Example of how to use the **data** sub-system domain models.
