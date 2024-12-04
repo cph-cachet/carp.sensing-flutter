@@ -602,3 +602,25 @@ class UserTaskTrigger extends TriggerConfiguration {
   @override
   Map<String, dynamic> toJson() => _$UserTaskTriggerToJson(this);
 }
+
+/// A trigger that triggers only if a [UserTask] with [taskName] is NOT already
+/// on the task list.
+///
+/// Typically used to make sure that a specific task is always on the task list.
+/// Note that the [NoUserTaskTriggerExecutor] only checks the task list once pr
+/// minute, so a minute may pass before this trigger triggers.
+@JsonSerializable(includeIfNull: false, explicitToJson: true)
+class NoUserTaskTrigger extends TriggerConfiguration {
+  /// The name of the task to look for, matching [TaskConfiguration.name].
+  String taskName;
+
+  /// Create a [NoUserTaskTrigger] that trigger is [taskName] is not on the task list.
+  NoUserTaskTrigger({required this.taskName}) : super();
+
+  @override
+  Function get fromJsonFunction => _$NoUserTaskTriggerFromJson;
+  factory NoUserTaskTrigger.fromJson(Map<String, dynamic> json) =>
+      FromJsonFactory().fromJson<NoUserTaskTrigger>(json);
+  @override
+  Map<String, dynamic> toJson() => _$NoUserTaskTriggerToJson(this);
+}

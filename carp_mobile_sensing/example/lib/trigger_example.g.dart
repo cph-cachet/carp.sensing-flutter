@@ -16,18 +16,11 @@ RemoteTrigger _$RemoteTriggerFromJson(Map<String, dynamic> json) =>
       ..$type = json['__type'] as String?
       ..sourceDeviceRoleName = json['sourceDeviceRoleName'] as String?;
 
-Map<String, dynamic> _$RemoteTriggerToJson(RemoteTrigger instance) {
-  final val = <String, dynamic>{};
-
-  void writeNotNull(String key, dynamic value) {
-    if (value != null) {
-      val[key] = value;
-    }
-  }
-
-  writeNotNull('__type', instance.$type);
-  writeNotNull('sourceDeviceRoleName', instance.sourceDeviceRoleName);
-  val['uri'] = instance.uri;
-  val['interval'] = instance.interval.inMicroseconds;
-  return val;
-}
+Map<String, dynamic> _$RemoteTriggerToJson(RemoteTrigger instance) =>
+    <String, dynamic>{
+      if (instance.$type case final value?) '__type': value,
+      if (instance.sourceDeviceRoleName case final value?)
+        'sourceDeviceRoleName': value,
+      'uri': instance.uri,
+      'interval': instance.interval.inMicroseconds,
+    };

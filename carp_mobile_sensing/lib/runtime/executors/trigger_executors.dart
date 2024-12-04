@@ -504,3 +504,30 @@ class UserTaskTriggerExecutor extends TriggerExecutor<UserTaskTrigger> {
     return super.onStop();
   }
 }
+
+/// Executes an [NoUserTaskTrigger].
+/// Runs once pr minute.
+class NoUserTaskTriggerExecutor extends TriggerExecutor<NoUserTaskTrigger> {
+  Timer? _timer;
+
+  @override
+  Future<bool> onStart() async {
+    _timer = Timer.periodic(Duration(minutes: 1), (_) {
+      print(AppTaskController().userTaskQueue);
+      if (!AppTaskController()
+          .userTaskQueue
+          .where((task) => task.state == UserTaskState.enqueued)
+          .any((task) => task.name == configuration!.taskName)) {
+        onTrigger();
+      }
+    });
+
+    return true;
+  }
+
+  @override
+  Future<bool> onStop() async {
+    _timer?.cancel();
+    return super.onStop();
+  }
+}

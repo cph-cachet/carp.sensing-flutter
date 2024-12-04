@@ -21,21 +21,16 @@ SmartphoneApplicationData _$SmartphoneApplicationDataFromJson(
     );
 
 Map<String, dynamic> _$SmartphoneApplicationDataToJson(
-    SmartphoneApplicationData instance) {
-  final val = <String, dynamic>{};
-
-  void writeNotNull(String key, dynamic value) {
-    if (value != null) {
-      val[key] = value;
-    }
-  }
-
-  writeNotNull('studyDescription', instance.studyDescription?.toJson());
-  writeNotNull('dataEndPoint', instance.dataEndPoint?.toJson());
-  writeNotNull('privacySchemaName', instance.privacySchemaName);
-  writeNotNull('applicationData', instance.applicationData);
-  return val;
-}
+        SmartphoneApplicationData instance) =>
+    <String, dynamic>{
+      if (instance.studyDescription?.toJson() case final value?)
+        'studyDescription': value,
+      if (instance.dataEndPoint?.toJson() case final value?)
+        'dataEndPoint': value,
+      if (instance.privacySchemaName case final value?)
+        'privacySchemaName': value,
+      if (instance.applicationData case final value?) 'applicationData': value,
+    };
 
 SmartphoneStudyProtocol _$SmartphoneStudyProtocolFromJson(
         Map<String, dynamic> json) =>
@@ -84,39 +79,35 @@ SmartphoneStudyProtocol _$SmartphoneStudyProtocolFromJson(
               .toSet();
 
 Map<String, dynamic> _$SmartphoneStudyProtocolToJson(
-    SmartphoneStudyProtocol instance) {
-  final val = <String, dynamic>{};
-
-  void writeNotNull(String key, dynamic value) {
-    if (value != null) {
-      val[key] = value;
-    }
-  }
-
-  writeNotNull('applicationData', instance.applicationData);
-  val['id'] = instance.id;
-  val['createdOn'] = instance.createdOn.toIso8601String();
-  val['version'] = instance.version;
-  val['description'] = instance.description;
-  val['ownerId'] = instance.ownerId;
-  val['name'] = instance.name;
-  writeNotNull('participantRoles',
-      instance.participantRoles?.map((e) => e.toJson()).toList());
-  val['primaryDevices'] =
-      instance.primaryDevices.map((e) => e.toJson()).toList();
-  writeNotNull('connectedDevices',
-      instance.connectedDevices?.map((e) => e.toJson()).toList());
-  writeNotNull(
-      'connections', instance.connections?.map((e) => e.toJson()).toList());
-  writeNotNull('assignedDevices',
-      instance.assignedDevices?.map((k, e) => MapEntry(k, e.toList())));
-  val['tasks'] = instance.tasks.map((e) => e.toJson()).toList();
-  val['triggers'] = instance.triggers.map((k, e) => MapEntry(k, e.toJson()));
-  val['taskControls'] = instance.taskControls.map((e) => e.toJson()).toList();
-  writeNotNull('expectedParticipantData',
-      instance.expectedParticipantData?.map((e) => e.toJson()).toList());
-  return val;
-}
+        SmartphoneStudyProtocol instance) =>
+    <String, dynamic>{
+      if (instance.applicationData case final value?) 'applicationData': value,
+      'id': instance.id,
+      'createdOn': instance.createdOn.toIso8601String(),
+      'version': instance.version,
+      'description': instance.description,
+      'ownerId': instance.ownerId,
+      'name': instance.name,
+      if (instance.participantRoles?.map((e) => e.toJson()).toList()
+          case final value?)
+        'participantRoles': value,
+      'primaryDevices': instance.primaryDevices.map((e) => e.toJson()).toList(),
+      if (instance.connectedDevices?.map((e) => e.toJson()).toList()
+          case final value?)
+        'connectedDevices': value,
+      if (instance.connections?.map((e) => e.toJson()).toList()
+          case final value?)
+        'connections': value,
+      if (instance.assignedDevices?.map((k, e) => MapEntry(k, e.toList()))
+          case final value?)
+        'assignedDevices': value,
+      'tasks': instance.tasks.map((e) => e.toJson()).toList(),
+      'triggers': instance.triggers.map((k, e) => MapEntry(k, e.toJson())),
+      'taskControls': instance.taskControls.map((e) => e.toJson()).toList(),
+      if (instance.expectedParticipantData?.map((e) => e.toJson()).toList()
+          case final value?)
+        'expectedParticipantData': value,
+    };
 
 StudyDescription _$StudyDescriptionFromJson(Map<String, dynamic> json) =>
     StudyDescription(
@@ -131,24 +122,19 @@ StudyDescription _$StudyDescriptionFromJson(Map<String, dynamic> json) =>
               json['responsible'] as Map<String, dynamic>),
     )..$type = json['__type'] as String?;
 
-Map<String, dynamic> _$StudyDescriptionToJson(StudyDescription instance) {
-  final val = <String, dynamic>{};
-
-  void writeNotNull(String key, dynamic value) {
-    if (value != null) {
-      val[key] = value;
-    }
-  }
-
-  writeNotNull('__type', instance.$type);
-  val['title'] = instance.title;
-  writeNotNull('description', instance.description);
-  writeNotNull('purpose', instance.purpose);
-  writeNotNull('studyDescriptionUrl', instance.studyDescriptionUrl);
-  writeNotNull('privacyPolicyUrl', instance.privacyPolicyUrl);
-  writeNotNull('responsible', instance.responsible?.toJson());
-  return val;
-}
+Map<String, dynamic> _$StudyDescriptionToJson(StudyDescription instance) =>
+    <String, dynamic>{
+      if (instance.$type case final value?) '__type': value,
+      'title': instance.title,
+      if (instance.description case final value?) 'description': value,
+      if (instance.purpose case final value?) 'purpose': value,
+      if (instance.studyDescriptionUrl case final value?)
+        'studyDescriptionUrl': value,
+      if (instance.privacyPolicyUrl case final value?)
+        'privacyPolicyUrl': value,
+      if (instance.responsible?.toJson() case final value?)
+        'responsible': value,
+    };
 
 StudyResponsible _$StudyResponsibleFromJson(Map<String, dynamic> json) =>
     StudyResponsible(
@@ -160,44 +146,28 @@ StudyResponsible _$StudyResponsibleFromJson(Map<String, dynamic> json) =>
       address: json['address'] as String?,
     )..$type = json['__type'] as String?;
 
-Map<String, dynamic> _$StudyResponsibleToJson(StudyResponsible instance) {
-  final val = <String, dynamic>{};
-
-  void writeNotNull(String key, dynamic value) {
-    if (value != null) {
-      val[key] = value;
-    }
-  }
-
-  writeNotNull('__type', instance.$type);
-  val['id'] = instance.id;
-  val['name'] = instance.name;
-  writeNotNull('title', instance.title);
-  writeNotNull('email', instance.email);
-  writeNotNull('address', instance.address);
-  writeNotNull('affiliation', instance.affiliation);
-  return val;
-}
+Map<String, dynamic> _$StudyResponsibleToJson(StudyResponsible instance) =>
+    <String, dynamic>{
+      if (instance.$type case final value?) '__type': value,
+      'id': instance.id,
+      'name': instance.name,
+      if (instance.title case final value?) 'title': value,
+      if (instance.email case final value?) 'email': value,
+      if (instance.address case final value?) 'address': value,
+      if (instance.affiliation case final value?) 'affiliation': value,
+    };
 
 DataEndPoint _$DataEndPointFromJson(Map<String, dynamic> json) => DataEndPoint(
       type: json['type'] as String,
       dataFormat: json['dataFormat'] as String? ?? NameSpace.CARP,
     )..$type = json['__type'] as String?;
 
-Map<String, dynamic> _$DataEndPointToJson(DataEndPoint instance) {
-  final val = <String, dynamic>{};
-
-  void writeNotNull(String key, dynamic value) {
-    if (value != null) {
-      val[key] = value;
-    }
-  }
-
-  writeNotNull('__type', instance.$type);
-  val['type'] = instance.type;
-  val['dataFormat'] = instance.dataFormat;
-  return val;
-}
+Map<String, dynamic> _$DataEndPointToJson(DataEndPoint instance) =>
+    <String, dynamic>{
+      if (instance.$type case final value?) '__type': value,
+      'type': instance.type,
+      'dataFormat': instance.dataFormat,
+    };
 
 FileDataEndPoint _$FileDataEndPointFromJson(Map<String, dynamic> json) =>
     FileDataEndPoint(
@@ -209,24 +179,16 @@ FileDataEndPoint _$FileDataEndPointFromJson(Map<String, dynamic> json) =>
       publicKey: json['publicKey'] as String?,
     )..$type = json['__type'] as String?;
 
-Map<String, dynamic> _$FileDataEndPointToJson(FileDataEndPoint instance) {
-  final val = <String, dynamic>{};
-
-  void writeNotNull(String key, dynamic value) {
-    if (value != null) {
-      val[key] = value;
-    }
-  }
-
-  writeNotNull('__type', instance.$type);
-  val['type'] = instance.type;
-  val['dataFormat'] = instance.dataFormat;
-  val['bufferSize'] = instance.bufferSize;
-  val['zip'] = instance.zip;
-  val['encrypt'] = instance.encrypt;
-  writeNotNull('publicKey', instance.publicKey);
-  return val;
-}
+Map<String, dynamic> _$FileDataEndPointToJson(FileDataEndPoint instance) =>
+    <String, dynamic>{
+      if (instance.$type case final value?) '__type': value,
+      'type': instance.type,
+      'dataFormat': instance.dataFormat,
+      'bufferSize': instance.bufferSize,
+      'zip': instance.zip,
+      'encrypt': instance.encrypt,
+      if (instance.publicKey case final value?) 'publicKey': value,
+    };
 
 SQLiteDataEndPoint _$SQLiteDataEndPointFromJson(Map<String, dynamic> json) =>
     SQLiteDataEndPoint(
@@ -234,20 +196,12 @@ SQLiteDataEndPoint _$SQLiteDataEndPointFromJson(Map<String, dynamic> json) =>
       dataFormat: json['dataFormat'] as String? ?? NameSpace.CARP,
     )..$type = json['__type'] as String?;
 
-Map<String, dynamic> _$SQLiteDataEndPointToJson(SQLiteDataEndPoint instance) {
-  final val = <String, dynamic>{};
-
-  void writeNotNull(String key, dynamic value) {
-    if (value != null) {
-      val[key] = value;
-    }
-  }
-
-  writeNotNull('__type', instance.$type);
-  val['type'] = instance.type;
-  val['dataFormat'] = instance.dataFormat;
-  return val;
-}
+Map<String, dynamic> _$SQLiteDataEndPointToJson(SQLiteDataEndPoint instance) =>
+    <String, dynamic>{
+      if (instance.$type case final value?) '__type': value,
+      'type': instance.type,
+      'dataFormat': instance.dataFormat,
+    };
 
 PersistentSamplingConfiguration _$PersistentSamplingConfigurationFromJson(
         Map<String, dynamic> json) =>
@@ -258,19 +212,12 @@ PersistentSamplingConfiguration _$PersistentSamplingConfigurationFromJson(
           : DateTime.parse(json['lastTime'] as String);
 
 Map<String, dynamic> _$PersistentSamplingConfigurationToJson(
-    PersistentSamplingConfiguration instance) {
-  final val = <String, dynamic>{};
-
-  void writeNotNull(String key, dynamic value) {
-    if (value != null) {
-      val[key] = value;
-    }
-  }
-
-  writeNotNull('__type', instance.$type);
-  writeNotNull('lastTime', instance.lastTime?.toIso8601String());
-  return val;
-}
+        PersistentSamplingConfiguration instance) =>
+    <String, dynamic>{
+      if (instance.$type case final value?) '__type': value,
+      if (instance.lastTime?.toIso8601String() case final value?)
+        'lastTime': value,
+    };
 
 HistoricSamplingConfiguration _$HistoricSamplingConfigurationFromJson(
         Map<String, dynamic> json) =>
@@ -288,21 +235,14 @@ HistoricSamplingConfiguration _$HistoricSamplingConfigurationFromJson(
           : DateTime.parse(json['lastTime'] as String);
 
 Map<String, dynamic> _$HistoricSamplingConfigurationToJson(
-    HistoricSamplingConfiguration instance) {
-  final val = <String, dynamic>{};
-
-  void writeNotNull(String key, dynamic value) {
-    if (value != null) {
-      val[key] = value;
-    }
-  }
-
-  writeNotNull('__type', instance.$type);
-  writeNotNull('lastTime', instance.lastTime?.toIso8601String());
-  val['past'] = instance.past.inMicroseconds;
-  val['future'] = instance.future.inMicroseconds;
-  return val;
-}
+        HistoricSamplingConfiguration instance) =>
+    <String, dynamic>{
+      if (instance.$type case final value?) '__type': value,
+      if (instance.lastTime?.toIso8601String() case final value?)
+        'lastTime': value,
+      'past': instance.past.inMicroseconds,
+      'future': instance.future.inMicroseconds,
+    };
 
 IntervalSamplingConfiguration _$IntervalSamplingConfigurationFromJson(
         Map<String, dynamic> json) =>
@@ -315,20 +255,13 @@ IntervalSamplingConfiguration _$IntervalSamplingConfigurationFromJson(
           : DateTime.parse(json['lastTime'] as String);
 
 Map<String, dynamic> _$IntervalSamplingConfigurationToJson(
-    IntervalSamplingConfiguration instance) {
-  final val = <String, dynamic>{};
-
-  void writeNotNull(String key, dynamic value) {
-    if (value != null) {
-      val[key] = value;
-    }
-  }
-
-  writeNotNull('__type', instance.$type);
-  writeNotNull('lastTime', instance.lastTime?.toIso8601String());
-  val['interval'] = instance.interval.inMicroseconds;
-  return val;
-}
+        IntervalSamplingConfiguration instance) =>
+    <String, dynamic>{
+      if (instance.$type case final value?) '__type': value,
+      if (instance.lastTime?.toIso8601String() case final value?)
+        'lastTime': value,
+      'interval': instance.interval.inMicroseconds,
+    };
 
 PeriodicSamplingConfiguration _$PeriodicSamplingConfigurationFromJson(
         Map<String, dynamic> json) =>
@@ -342,21 +275,14 @@ PeriodicSamplingConfiguration _$PeriodicSamplingConfigurationFromJson(
           : DateTime.parse(json['lastTime'] as String);
 
 Map<String, dynamic> _$PeriodicSamplingConfigurationToJson(
-    PeriodicSamplingConfiguration instance) {
-  final val = <String, dynamic>{};
-
-  void writeNotNull(String key, dynamic value) {
-    if (value != null) {
-      val[key] = value;
-    }
-  }
-
-  writeNotNull('__type', instance.$type);
-  writeNotNull('lastTime', instance.lastTime?.toIso8601String());
-  val['interval'] = instance.interval.inMicroseconds;
-  val['duration'] = instance.duration.inMicroseconds;
-  return val;
-}
+        PeriodicSamplingConfiguration instance) =>
+    <String, dynamic>{
+      if (instance.$type case final value?) '__type': value,
+      if (instance.lastTime?.toIso8601String() case final value?)
+        'lastTime': value,
+      'interval': instance.interval.inMicroseconds,
+      'duration': instance.duration.inMicroseconds,
+    };
 
 OnlineService<TRegistration> _$OnlineServiceFromJson<
         TRegistration extends DeviceRegistration>(Map<String, dynamic> json) =>
@@ -373,24 +299,16 @@ OnlineService<TRegistration> _$OnlineServiceFromJson<
 
 Map<String, dynamic>
     _$OnlineServiceToJson<TRegistration extends DeviceRegistration>(
-        OnlineService<TRegistration> instance) {
-  final val = <String, dynamic>{};
-
-  void writeNotNull(String key, dynamic value) {
-    if (value != null) {
-      val[key] = value;
-    }
-  }
-
-  writeNotNull('__type', instance.$type);
-  val['roleName'] = instance.roleName;
-  writeNotNull('isOptional', instance.isOptional);
-  writeNotNull(
-      'defaultSamplingConfiguration',
-      instance.defaultSamplingConfiguration
-          ?.map((k, e) => MapEntry(k, e.toJson())));
-  return val;
-}
+            OnlineService<TRegistration> instance) =>
+        <String, dynamic>{
+          if (instance.$type case final value?) '__type': value,
+          'roleName': instance.roleName,
+          if (instance.isOptional case final value?) 'isOptional': value,
+          if (instance.defaultSamplingConfiguration
+                  ?.map((k, e) => MapEntry(k, e.toJson()))
+              case final value?)
+            'defaultSamplingConfiguration': value,
+        };
 
 SmartphoneDeployment _$SmartphoneDeploymentFromJson(
         Map<String, dynamic> json) =>
@@ -447,35 +365,29 @@ SmartphoneDeployment _$SmartphoneDeploymentFromJson(
       ..status = $enumDecode(_$StudyStatusEnumMap, json['status']);
 
 Map<String, dynamic> _$SmartphoneDeploymentToJson(
-    SmartphoneDeployment instance) {
-  final val = <String, dynamic>{};
-
-  void writeNotNull(String key, dynamic value) {
-    if (value != null) {
-      val[key] = value;
-    }
-  }
-
-  writeNotNull('applicationData', instance.applicationData);
-  val['deviceConfiguration'] = instance.deviceConfiguration.toJson();
-  val['registration'] = instance.registration.toJson();
-  val['connectedDevices'] =
-      instance.connectedDevices.map((e) => e.toJson()).toList();
-  val['connectedDeviceRegistrations'] = instance.connectedDeviceRegistrations
-      .map((k, e) => MapEntry(k, e?.toJson()));
-  val['tasks'] = instance.tasks.map((e) => e.toJson()).toList();
-  val['triggers'] = instance.triggers.map((k, e) => MapEntry(k, e.toJson()));
-  val['taskControls'] = instance.taskControls.map((e) => e.toJson()).toList();
-  val['expectedParticipantData'] =
-      instance.expectedParticipantData.map((e) => e.toJson()).toList();
-  writeNotNull('studyId', instance.studyId);
-  val['studyDeploymentId'] = instance.studyDeploymentId;
-  writeNotNull('participantId', instance.participantId);
-  writeNotNull('participantRoleName', instance.participantRoleName);
-  writeNotNull('deployed', instance.deployed?.toIso8601String());
-  val['status'] = _$StudyStatusEnumMap[instance.status]!;
-  return val;
-}
+        SmartphoneDeployment instance) =>
+    <String, dynamic>{
+      if (instance.applicationData case final value?) 'applicationData': value,
+      'deviceConfiguration': instance.deviceConfiguration.toJson(),
+      'registration': instance.registration.toJson(),
+      'connectedDevices':
+          instance.connectedDevices.map((e) => e.toJson()).toList(),
+      'connectedDeviceRegistrations': instance.connectedDeviceRegistrations
+          .map((k, e) => MapEntry(k, e?.toJson())),
+      'tasks': instance.tasks.map((e) => e.toJson()).toList(),
+      'triggers': instance.triggers.map((k, e) => MapEntry(k, e.toJson())),
+      'taskControls': instance.taskControls.map((e) => e.toJson()).toList(),
+      'expectedParticipantData':
+          instance.expectedParticipantData.map((e) => e.toJson()).toList(),
+      if (instance.studyId case final value?) 'studyId': value,
+      'studyDeploymentId': instance.studyDeploymentId,
+      if (instance.participantId case final value?) 'participantId': value,
+      if (instance.participantRoleName case final value?)
+        'participantRoleName': value,
+      if (instance.deployed?.toIso8601String() case final value?)
+        'deployed': value,
+      'status': _$StudyStatusEnumMap[instance.status]!,
+    };
 
 const _$StudyStatusEnumMap = {
   StudyStatus.DeploymentNotStarted: 'DeploymentNotStarted',
@@ -508,27 +420,20 @@ AppTask _$AppTaskFromJson(Map<String, dynamic> json) => AppTask(
       notification: json['notification'] as bool? ?? false,
     )..$type = json['__type'] as String?;
 
-Map<String, dynamic> _$AppTaskToJson(AppTask instance) {
-  final val = <String, dynamic>{};
-
-  void writeNotNull(String key, dynamic value) {
-    if (value != null) {
-      val[key] = value;
-    }
-  }
-
-  writeNotNull('__type', instance.$type);
-  val['name'] = instance.name;
-  writeNotNull('measures', instance.measures?.map((e) => e.toJson()).toList());
-  val['type'] = instance.type;
-  val['title'] = instance.title;
-  val['description'] = instance.description;
-  val['instructions'] = instance.instructions;
-  writeNotNull('minutesToComplete', instance.minutesToComplete);
-  writeNotNull('expire', instance.expire?.inMicroseconds);
-  val['notification'] = instance.notification;
-  return val;
-}
+Map<String, dynamic> _$AppTaskToJson(AppTask instance) => <String, dynamic>{
+      if (instance.$type case final value?) '__type': value,
+      'name': instance.name,
+      if (instance.measures?.map((e) => e.toJson()).toList() case final value?)
+        'measures': value,
+      'type': instance.type,
+      'title': instance.title,
+      'description': instance.description,
+      'instructions': instance.instructions,
+      if (instance.minutesToComplete case final value?)
+        'minutesToComplete': value,
+      if (instance.expire?.inMicroseconds case final value?) 'expire': value,
+      'notification': instance.notification,
+    };
 
 FunctionTask _$FunctionTaskFromJson(Map<String, dynamic> json) => FunctionTask(
       name: json['name'] as String?,
@@ -539,58 +444,37 @@ FunctionTask _$FunctionTaskFromJson(Map<String, dynamic> json) => FunctionTask(
           ?.map((e) => Measure.fromJson(e as Map<String, dynamic>))
           .toList();
 
-Map<String, dynamic> _$FunctionTaskToJson(FunctionTask instance) {
-  final val = <String, dynamic>{};
-
-  void writeNotNull(String key, dynamic value) {
-    if (value != null) {
-      val[key] = value;
-    }
-  }
-
-  writeNotNull('__type', instance.$type);
-  val['name'] = instance.name;
-  writeNotNull('measures', instance.measures?.map((e) => e.toJson()).toList());
-  writeNotNull('description', instance.description);
-  return val;
-}
+Map<String, dynamic> _$FunctionTaskToJson(FunctionTask instance) =>
+    <String, dynamic>{
+      if (instance.$type case final value?) '__type': value,
+      'name': instance.name,
+      if (instance.measures?.map((e) => e.toJson()).toList() case final value?)
+        'measures': value,
+      if (instance.description case final value?) 'description': value,
+    };
 
 NoOpTrigger _$NoOpTriggerFromJson(Map<String, dynamic> json) => NoOpTrigger()
   ..$type = json['__type'] as String?
   ..sourceDeviceRoleName = json['sourceDeviceRoleName'] as String?;
 
-Map<String, dynamic> _$NoOpTriggerToJson(NoOpTrigger instance) {
-  final val = <String, dynamic>{};
-
-  void writeNotNull(String key, dynamic value) {
-    if (value != null) {
-      val[key] = value;
-    }
-  }
-
-  writeNotNull('__type', instance.$type);
-  writeNotNull('sourceDeviceRoleName', instance.sourceDeviceRoleName);
-  return val;
-}
+Map<String, dynamic> _$NoOpTriggerToJson(NoOpTrigger instance) =>
+    <String, dynamic>{
+      if (instance.$type case final value?) '__type': value,
+      if (instance.sourceDeviceRoleName case final value?)
+        'sourceDeviceRoleName': value,
+    };
 
 ImmediateTrigger _$ImmediateTriggerFromJson(Map<String, dynamic> json) =>
     ImmediateTrigger()
       ..$type = json['__type'] as String?
       ..sourceDeviceRoleName = json['sourceDeviceRoleName'] as String?;
 
-Map<String, dynamic> _$ImmediateTriggerToJson(ImmediateTrigger instance) {
-  final val = <String, dynamic>{};
-
-  void writeNotNull(String key, dynamic value) {
-    if (value != null) {
-      val[key] = value;
-    }
-  }
-
-  writeNotNull('__type', instance.$type);
-  writeNotNull('sourceDeviceRoleName', instance.sourceDeviceRoleName);
-  return val;
-}
+Map<String, dynamic> _$ImmediateTriggerToJson(ImmediateTrigger instance) =>
+    <String, dynamic>{
+      if (instance.$type case final value?) '__type': value,
+      if (instance.sourceDeviceRoleName case final value?)
+        'sourceDeviceRoleName': value,
+    };
 
 OneTimeTrigger _$OneTimeTriggerFromJson(Map<String, dynamic> json) =>
     OneTimeTrigger()
@@ -600,40 +484,26 @@ OneTimeTrigger _$OneTimeTriggerFromJson(Map<String, dynamic> json) =>
           ? null
           : DateTime.parse(json['triggerTimestamp'] as String);
 
-Map<String, dynamic> _$OneTimeTriggerToJson(OneTimeTrigger instance) {
-  final val = <String, dynamic>{};
-
-  void writeNotNull(String key, dynamic value) {
-    if (value != null) {
-      val[key] = value;
-    }
-  }
-
-  writeNotNull('__type', instance.$type);
-  writeNotNull('sourceDeviceRoleName', instance.sourceDeviceRoleName);
-  writeNotNull(
-      'triggerTimestamp', instance.triggerTimestamp?.toIso8601String());
-  return val;
-}
+Map<String, dynamic> _$OneTimeTriggerToJson(OneTimeTrigger instance) =>
+    <String, dynamic>{
+      if (instance.$type case final value?) '__type': value,
+      if (instance.sourceDeviceRoleName case final value?)
+        'sourceDeviceRoleName': value,
+      if (instance.triggerTimestamp?.toIso8601String() case final value?)
+        'triggerTimestamp': value,
+    };
 
 PassiveTrigger _$PassiveTriggerFromJson(Map<String, dynamic> json) =>
     PassiveTrigger()
       ..$type = json['__type'] as String?
       ..sourceDeviceRoleName = json['sourceDeviceRoleName'] as String?;
 
-Map<String, dynamic> _$PassiveTriggerToJson(PassiveTrigger instance) {
-  final val = <String, dynamic>{};
-
-  void writeNotNull(String key, dynamic value) {
-    if (value != null) {
-      val[key] = value;
-    }
-  }
-
-  writeNotNull('__type', instance.$type);
-  writeNotNull('sourceDeviceRoleName', instance.sourceDeviceRoleName);
-  return val;
-}
+Map<String, dynamic> _$PassiveTriggerToJson(PassiveTrigger instance) =>
+    <String, dynamic>{
+      if (instance.$type case final value?) '__type': value,
+      if (instance.sourceDeviceRoleName case final value?)
+        'sourceDeviceRoleName': value,
+    };
 
 DelayedTrigger _$DelayedTriggerFromJson(Map<String, dynamic> json) =>
     DelayedTrigger(
@@ -642,20 +512,13 @@ DelayedTrigger _$DelayedTriggerFromJson(Map<String, dynamic> json) =>
       ..$type = json['__type'] as String?
       ..sourceDeviceRoleName = json['sourceDeviceRoleName'] as String?;
 
-Map<String, dynamic> _$DelayedTriggerToJson(DelayedTrigger instance) {
-  final val = <String, dynamic>{};
-
-  void writeNotNull(String key, dynamic value) {
-    if (value != null) {
-      val[key] = value;
-    }
-  }
-
-  writeNotNull('__type', instance.$type);
-  writeNotNull('sourceDeviceRoleName', instance.sourceDeviceRoleName);
-  val['delay'] = instance.delay.inMicroseconds;
-  return val;
-}
+Map<String, dynamic> _$DelayedTriggerToJson(DelayedTrigger instance) =>
+    <String, dynamic>{
+      if (instance.$type case final value?) '__type': value,
+      if (instance.sourceDeviceRoleName case final value?)
+        'sourceDeviceRoleName': value,
+      'delay': instance.delay.inMicroseconds,
+    };
 
 PeriodicTrigger _$PeriodicTriggerFromJson(Map<String, dynamic> json) =>
     PeriodicTrigger(
@@ -664,20 +527,13 @@ PeriodicTrigger _$PeriodicTriggerFromJson(Map<String, dynamic> json) =>
       ..$type = json['__type'] as String?
       ..sourceDeviceRoleName = json['sourceDeviceRoleName'] as String?;
 
-Map<String, dynamic> _$PeriodicTriggerToJson(PeriodicTrigger instance) {
-  final val = <String, dynamic>{};
-
-  void writeNotNull(String key, dynamic value) {
-    if (value != null) {
-      val[key] = value;
-    }
-  }
-
-  writeNotNull('__type', instance.$type);
-  writeNotNull('sourceDeviceRoleName', instance.sourceDeviceRoleName);
-  val['period'] = instance.period.inMicroseconds;
-  return val;
-}
+Map<String, dynamic> _$PeriodicTriggerToJson(PeriodicTrigger instance) =>
+    <String, dynamic>{
+      if (instance.$type case final value?) '__type': value,
+      if (instance.sourceDeviceRoleName case final value?)
+        'sourceDeviceRoleName': value,
+      'period': instance.period.inMicroseconds,
+    };
 
 DateTimeTrigger _$DateTimeTriggerFromJson(Map<String, dynamic> json) =>
     DateTimeTrigger(
@@ -686,20 +542,13 @@ DateTimeTrigger _$DateTimeTriggerFromJson(Map<String, dynamic> json) =>
       ..$type = json['__type'] as String?
       ..sourceDeviceRoleName = json['sourceDeviceRoleName'] as String?;
 
-Map<String, dynamic> _$DateTimeTriggerToJson(DateTimeTrigger instance) {
-  final val = <String, dynamic>{};
-
-  void writeNotNull(String key, dynamic value) {
-    if (value != null) {
-      val[key] = value;
-    }
-  }
-
-  writeNotNull('__type', instance.$type);
-  writeNotNull('sourceDeviceRoleName', instance.sourceDeviceRoleName);
-  val['schedule'] = instance.schedule.toIso8601String();
-  return val;
-}
+Map<String, dynamic> _$DateTimeTriggerToJson(DateTimeTrigger instance) =>
+    <String, dynamic>{
+      if (instance.$type case final value?) '__type': value,
+      if (instance.sourceDeviceRoleName case final value?)
+        'sourceDeviceRoleName': value,
+      'schedule': instance.schedule.toIso8601String(),
+    };
 
 RecurrentScheduledTrigger _$RecurrentScheduledTriggerFromJson(
         Map<String, dynamic> json) =>
@@ -718,28 +567,22 @@ RecurrentScheduledTrigger _$RecurrentScheduledTriggerFromJson(
       ..period = Duration(microseconds: (json['period'] as num).toInt());
 
 Map<String, dynamic> _$RecurrentScheduledTriggerToJson(
-    RecurrentScheduledTrigger instance) {
-  final val = <String, dynamic>{};
-
-  void writeNotNull(String key, dynamic value) {
-    if (value != null) {
-      val[key] = value;
-    }
-  }
-
-  writeNotNull('__type', instance.$type);
-  writeNotNull('sourceDeviceRoleName', instance.sourceDeviceRoleName);
-  val['type'] = _$RecurrentTypeEnumMap[instance.type]!;
-  val['time'] = instance.time.toJson();
-  writeNotNull('end', instance.end?.toIso8601String());
-  val['separationCount'] = instance.separationCount;
-  writeNotNull('maxNumberOfSampling', instance.maxNumberOfSampling);
-  writeNotNull('dayOfWeek', instance.dayOfWeek);
-  writeNotNull('weekOfMonth', instance.weekOfMonth);
-  writeNotNull('dayOfMonth', instance.dayOfMonth);
-  val['period'] = instance.period.inMicroseconds;
-  return val;
-}
+        RecurrentScheduledTrigger instance) =>
+    <String, dynamic>{
+      if (instance.$type case final value?) '__type': value,
+      if (instance.sourceDeviceRoleName case final value?)
+        'sourceDeviceRoleName': value,
+      'type': _$RecurrentTypeEnumMap[instance.type]!,
+      'time': instance.time.toJson(),
+      if (instance.end?.toIso8601String() case final value?) 'end': value,
+      'separationCount': instance.separationCount,
+      if (instance.maxNumberOfSampling case final value?)
+        'maxNumberOfSampling': value,
+      if (instance.dayOfWeek case final value?) 'dayOfWeek': value,
+      if (instance.weekOfMonth case final value?) 'weekOfMonth': value,
+      if (instance.dayOfMonth case final value?) 'dayOfMonth': value,
+      'period': instance.period.inMicroseconds,
+    };
 
 const _$RecurrentTypeEnumMap = {
   RecurrentType.daily: 'daily',
@@ -755,20 +598,13 @@ CronScheduledTrigger _$CronScheduledTriggerFromJson(
       ..cronExpression = json['cronExpression'] as String;
 
 Map<String, dynamic> _$CronScheduledTriggerToJson(
-    CronScheduledTrigger instance) {
-  final val = <String, dynamic>{};
-
-  void writeNotNull(String key, dynamic value) {
-    if (value != null) {
-      val[key] = value;
-    }
-  }
-
-  writeNotNull('__type', instance.$type);
-  writeNotNull('sourceDeviceRoleName', instance.sourceDeviceRoleName);
-  val['cronExpression'] = instance.cronExpression;
-  return val;
-}
+        CronScheduledTrigger instance) =>
+    <String, dynamic>{
+      if (instance.$type case final value?) '__type': value,
+      if (instance.sourceDeviceRoleName case final value?)
+        'sourceDeviceRoleName': value,
+      'cronExpression': instance.cronExpression,
+    };
 
 SamplingEventTrigger _$SamplingEventTriggerFromJson(
         Map<String, dynamic> json) =>
@@ -782,21 +618,15 @@ SamplingEventTrigger _$SamplingEventTriggerFromJson(
       ..sourceDeviceRoleName = json['sourceDeviceRoleName'] as String?;
 
 Map<String, dynamic> _$SamplingEventTriggerToJson(
-    SamplingEventTrigger instance) {
-  final val = <String, dynamic>{};
-
-  void writeNotNull(String key, dynamic value) {
-    if (value != null) {
-      val[key] = value;
-    }
-  }
-
-  writeNotNull('__type', instance.$type);
-  writeNotNull('sourceDeviceRoleName', instance.sourceDeviceRoleName);
-  val['measureType'] = instance.measureType;
-  writeNotNull('triggerCondition', instance.triggerCondition?.toJson());
-  return val;
-}
+        SamplingEventTrigger instance) =>
+    <String, dynamic>{
+      if (instance.$type case final value?) '__type': value,
+      if (instance.sourceDeviceRoleName case final value?)
+        'sourceDeviceRoleName': value,
+      'measureType': instance.measureType,
+      if (instance.triggerCondition?.toJson() case final value?)
+        'triggerCondition': value,
+    };
 
 ConditionalSamplingEventTrigger _$ConditionalSamplingEventTriggerFromJson(
         Map<String, dynamic> json) =>
@@ -807,20 +637,13 @@ ConditionalSamplingEventTrigger _$ConditionalSamplingEventTriggerFromJson(
       ..sourceDeviceRoleName = json['sourceDeviceRoleName'] as String?;
 
 Map<String, dynamic> _$ConditionalSamplingEventTriggerToJson(
-    ConditionalSamplingEventTrigger instance) {
-  final val = <String, dynamic>{};
-
-  void writeNotNull(String key, dynamic value) {
-    if (value != null) {
-      val[key] = value;
-    }
-  }
-
-  writeNotNull('__type', instance.$type);
-  writeNotNull('sourceDeviceRoleName', instance.sourceDeviceRoleName);
-  val['measureType'] = instance.measureType;
-  return val;
-}
+        ConditionalSamplingEventTrigger instance) =>
+    <String, dynamic>{
+      if (instance.$type case final value?) '__type': value,
+      if (instance.sourceDeviceRoleName case final value?)
+        'sourceDeviceRoleName': value,
+      'measureType': instance.measureType,
+    };
 
 ConditionalPeriodicTrigger _$ConditionalPeriodicTriggerFromJson(
         Map<String, dynamic> json) =>
@@ -831,20 +654,13 @@ ConditionalPeriodicTrigger _$ConditionalPeriodicTriggerFromJson(
       ..sourceDeviceRoleName = json['sourceDeviceRoleName'] as String?;
 
 Map<String, dynamic> _$ConditionalPeriodicTriggerToJson(
-    ConditionalPeriodicTrigger instance) {
-  final val = <String, dynamic>{};
-
-  void writeNotNull(String key, dynamic value) {
-    if (value != null) {
-      val[key] = value;
-    }
-  }
-
-  writeNotNull('__type', instance.$type);
-  writeNotNull('sourceDeviceRoleName', instance.sourceDeviceRoleName);
-  val['period'] = instance.period.inMicroseconds;
-  return val;
-}
+        ConditionalPeriodicTrigger instance) =>
+    <String, dynamic>{
+      if (instance.$type case final value?) '__type': value,
+      if (instance.sourceDeviceRoleName case final value?)
+        'sourceDeviceRoleName': value,
+      'period': instance.period.inMicroseconds,
+    };
 
 RandomRecurrentTrigger _$RandomRecurrentTriggerFromJson(
         Map<String, dynamic> json) =>
@@ -861,25 +677,18 @@ RandomRecurrentTrigger _$RandomRecurrentTriggerFromJson(
           : DateTime.parse(json['lastTriggerTimestamp'] as String);
 
 Map<String, dynamic> _$RandomRecurrentTriggerToJson(
-    RandomRecurrentTrigger instance) {
-  final val = <String, dynamic>{};
-
-  void writeNotNull(String key, dynamic value) {
-    if (value != null) {
-      val[key] = value;
-    }
-  }
-
-  writeNotNull('__type', instance.$type);
-  writeNotNull('sourceDeviceRoleName', instance.sourceDeviceRoleName);
-  val['startTime'] = instance.startTime.toJson();
-  val['endTime'] = instance.endTime.toJson();
-  val['minNumberOfTriggers'] = instance.minNumberOfTriggers;
-  val['maxNumberOfTriggers'] = instance.maxNumberOfTriggers;
-  writeNotNull(
-      'lastTriggerTimestamp', instance.lastTriggerTimestamp?.toIso8601String());
-  return val;
-}
+        RandomRecurrentTrigger instance) =>
+    <String, dynamic>{
+      if (instance.$type case final value?) '__type': value,
+      if (instance.sourceDeviceRoleName case final value?)
+        'sourceDeviceRoleName': value,
+      'startTime': instance.startTime.toJson(),
+      'endTime': instance.endTime.toJson(),
+      'minNumberOfTriggers': instance.minNumberOfTriggers,
+      'maxNumberOfTriggers': instance.maxNumberOfTriggers,
+      if (instance.lastTriggerTimestamp?.toIso8601String() case final value?)
+        'lastTriggerTimestamp': value,
+    };
 
 UserTaskTrigger _$UserTaskTriggerFromJson(Map<String, dynamic> json) =>
     UserTaskTrigger(
@@ -890,21 +699,14 @@ UserTaskTrigger _$UserTaskTriggerFromJson(Map<String, dynamic> json) =>
       ..$type = json['__type'] as String?
       ..sourceDeviceRoleName = json['sourceDeviceRoleName'] as String?;
 
-Map<String, dynamic> _$UserTaskTriggerToJson(UserTaskTrigger instance) {
-  final val = <String, dynamic>{};
-
-  void writeNotNull(String key, dynamic value) {
-    if (value != null) {
-      val[key] = value;
-    }
-  }
-
-  writeNotNull('__type', instance.$type);
-  writeNotNull('sourceDeviceRoleName', instance.sourceDeviceRoleName);
-  val['taskName'] = instance.taskName;
-  val['triggerCondition'] = _$UserTaskStateEnumMap[instance.triggerCondition]!;
-  return val;
-}
+Map<String, dynamic> _$UserTaskTriggerToJson(UserTaskTrigger instance) =>
+    <String, dynamic>{
+      if (instance.$type case final value?) '__type': value,
+      if (instance.sourceDeviceRoleName case final value?)
+        'sourceDeviceRoleName': value,
+      'taskName': instance.taskName,
+      'triggerCondition': _$UserTaskStateEnumMap[instance.triggerCondition]!,
+    };
 
 const _$UserTaskStateEnumMap = {
   UserTaskState.initialized: 'initialized',
@@ -918,6 +720,21 @@ const _$UserTaskStateEnumMap = {
   UserTaskState.undefined: 'undefined',
 };
 
+NoUserTaskTrigger _$NoUserTaskTriggerFromJson(Map<String, dynamic> json) =>
+    NoUserTaskTrigger(
+      taskName: json['taskName'] as String,
+    )
+      ..$type = json['__type'] as String?
+      ..sourceDeviceRoleName = json['sourceDeviceRoleName'] as String?;
+
+Map<String, dynamic> _$NoUserTaskTriggerToJson(NoUserTaskTrigger instance) =>
+    <String, dynamic>{
+      if (instance.$type case final value?) '__type': value,
+      if (instance.sourceDeviceRoleName case final value?)
+        'sourceDeviceRoleName': value,
+      'taskName': instance.taskName,
+    };
+
 FileData _$FileDataFromJson(Map<String, dynamic> json) => FileData(
       filename: json['filename'] as String,
       upload: json['upload'] as bool? ?? true,
@@ -928,22 +745,13 @@ FileData _$FileDataFromJson(Map<String, dynamic> json) => FileData(
         (k, e) => MapEntry(k, e as String),
       );
 
-Map<String, dynamic> _$FileDataToJson(FileData instance) {
-  final val = <String, dynamic>{};
-
-  void writeNotNull(String key, dynamic value) {
-    if (value != null) {
-      val[key] = value;
-    }
-  }
-
-  writeNotNull('__type', instance.$type);
-  writeNotNull('path', instance.path);
-  val['filename'] = instance.filename;
-  val['upload'] = instance.upload;
-  writeNotNull('metadata', instance.metadata);
-  return val;
-}
+Map<String, dynamic> _$FileDataToJson(FileData instance) => <String, dynamic>{
+      if (instance.$type case final value?) '__type': value,
+      if (instance.path case final value?) 'path': value,
+      'filename': instance.filename,
+      'upload': instance.upload,
+      if (instance.metadata case final value?) 'metadata': value,
+    };
 
 Heartbeat _$HeartbeatFromJson(Map<String, dynamic> json) => Heartbeat(
       period: (json['period'] as num).toInt(),
@@ -951,18 +759,9 @@ Heartbeat _$HeartbeatFromJson(Map<String, dynamic> json) => Heartbeat(
       deviceRoleName: json['deviceRoleName'] as String,
     )..$type = json['__type'] as String?;
 
-Map<String, dynamic> _$HeartbeatToJson(Heartbeat instance) {
-  final val = <String, dynamic>{};
-
-  void writeNotNull(String key, dynamic value) {
-    if (value != null) {
-      val[key] = value;
-    }
-  }
-
-  writeNotNull('__type', instance.$type);
-  val['period'] = instance.period;
-  val['deviceType'] = instance.deviceType;
-  val['deviceRoleName'] = instance.deviceRoleName;
-  return val;
-}
+Map<String, dynamic> _$HeartbeatToJson(Heartbeat instance) => <String, dynamic>{
+      if (instance.$type case final value?) '__type': value,
+      'period': instance.period,
+      'deviceType': instance.deviceType,
+      'deviceRoleName': instance.deviceRoleName,
+    };

@@ -21,27 +21,21 @@ UserTaskSnapshot _$UserTaskSnapshotFromJson(Map<String, dynamic> json) =>
       json['deviceRoleName'] as String?,
     )..$type = json['__type'] as String?;
 
-Map<String, dynamic> _$UserTaskSnapshotToJson(UserTaskSnapshot instance) {
-  final val = <String, dynamic>{};
-
-  void writeNotNull(String key, dynamic value) {
-    if (value != null) {
-      val[key] = value;
-    }
-  }
-
-  writeNotNull('__type', instance.$type);
-  val['id'] = instance.id;
-  val['task'] = instance.task.toJson();
-  val['state'] = _$UserTaskStateEnumMap[instance.state]!;
-  val['enqueued'] = instance.enqueued.toIso8601String();
-  val['triggerTime'] = instance.triggerTime.toIso8601String();
-  writeNotNull('doneTime', instance.doneTime?.toIso8601String());
-  val['hasNotificationBeenCreated'] = instance.hasNotificationBeenCreated;
-  writeNotNull('studyDeploymentId', instance.studyDeploymentId);
-  writeNotNull('deviceRoleName', instance.deviceRoleName);
-  return val;
-}
+Map<String, dynamic> _$UserTaskSnapshotToJson(UserTaskSnapshot instance) =>
+    <String, dynamic>{
+      if (instance.$type case final value?) '__type': value,
+      'id': instance.id,
+      'task': instance.task.toJson(),
+      'state': _$UserTaskStateEnumMap[instance.state]!,
+      'enqueued': instance.enqueued.toIso8601String(),
+      'triggerTime': instance.triggerTime.toIso8601String(),
+      if (instance.doneTime?.toIso8601String() case final value?)
+        'doneTime': value,
+      'hasNotificationBeenCreated': instance.hasNotificationBeenCreated,
+      if (instance.studyDeploymentId case final value?)
+        'studyDeploymentId': value,
+      if (instance.deviceRoleName case final value?) 'deviceRoleName': value,
+    };
 
 const _$UserTaskStateEnumMap = {
   UserTaskState.initialized: 'initialized',
