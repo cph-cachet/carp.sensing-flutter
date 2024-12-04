@@ -1,0 +1,14 @@
+{
+  "sensorStartTime": 1702466084263551,
+  "data": {
+    "__type": "dk.cachet.carp.polar.hr",
+    "samples": [
+      {
+        "hr": 56,
+        "rrsMs": [],
+        "contactStatus": false,
+        "contactStatusSupported": false
+      }
+    ]
+  }
+}
