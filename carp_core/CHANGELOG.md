@@ -1,3 +1,7 @@
+## 1.8.4
+
+* fix of issue [#452](https://github.com/cph-cachet/carp.sensing-flutter/issues/452)
+
 ## 1.8.3
 
 * upgrade to carp_serialization v. 2.0
