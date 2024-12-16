@@ -155,6 +155,9 @@ class MovesenseDeviceManager extends BTLEDeviceManager<MovesenseDevice> {
           status = DeviceStatus.initialized;
         }
       },
+      // onBleConnected
+      // - for now we ignore this callback
+      (_) {},
     );
 
     return status;
