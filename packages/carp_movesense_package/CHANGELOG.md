@@ -1,3 +1,7 @@
+## 1.7.3
+
+* fix of [#455](https://github.com/cph-cachet/carp.sensing-flutter/issues/455)
+
 ## 1.7.2
 
 * added device information measure and probe to get the device information from connected Movesense devices

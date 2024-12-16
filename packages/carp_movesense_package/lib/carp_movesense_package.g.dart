@@ -29,32 +29,28 @@ MovesenseDeviceInformation _$MovesenseDeviceInformationFromJson(
           : Data.fromJson(json['sensorSpecificData'] as Map<String, dynamic>);
 
 Map<String, dynamic> _$MovesenseDeviceInformationToJson(
-    MovesenseDeviceInformation instance) {
-  final val = <String, dynamic>{};
-
-  void writeNotNull(String key, dynamic value) {
-    if (value != null) {
-      val[key] = value;
-    }
-  }
-
-  writeNotNull('__type', instance.$type);
-  writeNotNull('sensorSpecificData', instance.sensorSpecificData);
-  writeNotNull('manufacturerName', instance.manufacturerName);
-  writeNotNull('brandName', instance.brandName);
-  writeNotNull('productName', instance.productName);
-  writeNotNull('variant', instance.variant);
-  writeNotNull('design', instance.design);
-  writeNotNull('hardwareCompatibilityId', instance.hardwareCompatibilityId);
-  writeNotNull('serial', instance.serial);
-  writeNotNull('pcbaSerial', instance.pcbaSerial);
-  writeNotNull('softwareVersion', instance.softwareVersion);
-  writeNotNull('hardwareType', instance.hardwareType);
-  writeNotNull('additionalVersionInfo', instance.additionalVersionInfo);
-  writeNotNull('apiLevel', instance.apiLevel);
-  writeNotNull('address', instance.address);
-  return val;
-}
+        MovesenseDeviceInformation instance) =>
+    <String, dynamic>{
+      if (instance.$type case final value?) '__type': value,
+      if (instance.sensorSpecificData case final value?)
+        'sensorSpecificData': value,
+      if (instance.manufacturerName case final value?)
+        'manufacturerName': value,
+      if (instance.brandName case final value?) 'brandName': value,
+      if (instance.productName case final value?) 'productName': value,
+      if (instance.variant case final value?) 'variant': value,
+      if (instance.design case final value?) 'design': value,
+      if (instance.hardwareCompatibilityId case final value?)
+        'hardwareCompatibilityId': value,
+      if (instance.serial case final value?) 'serial': value,
+      if (instance.pcbaSerial case final value?) 'pcbaSerial': value,
+      if (instance.softwareVersion case final value?) 'softwareVersion': value,
+      if (instance.hardwareType case final value?) 'hardwareType': value,
+      if (instance.additionalVersionInfo case final value?)
+        'additionalVersionInfo': value,
+      if (instance.apiLevel case final value?) 'apiLevel': value,
+      if (instance.address case final value?) 'address': value,
+    };
 
 MovesenseStateChange _$MovesenseStateChangeFromJson(
         Map<String, dynamic> json) =>
@@ -68,21 +64,14 @@ MovesenseStateChange _$MovesenseStateChangeFromJson(
           : Data.fromJson(json['sensorSpecificData'] as Map<String, dynamic>);
 
 Map<String, dynamic> _$MovesenseStateChangeToJson(
-    MovesenseStateChange instance) {
-  final val = <String, dynamic>{};
-
-  void writeNotNull(String key, dynamic value) {
-    if (value != null) {
-      val[key] = value;
-    }
-  }
-
-  writeNotNull('__type', instance.$type);
-  writeNotNull('sensorSpecificData', instance.sensorSpecificData);
-  val['state'] = _$MovesenseDeviceStateEnumMap[instance.state]!;
-  val['timestamp'] = instance.timestamp;
-  return val;
-}
+        MovesenseStateChange instance) =>
+    <String, dynamic>{
+      if (instance.$type case final value?) '__type': value,
+      if (instance.sensorSpecificData case final value?)
+        'sensorSpecificData': value,
+      'state': _$MovesenseDeviceStateEnumMap[instance.state]!,
+      'timestamp': instance.timestamp,
+    };
 
 const _$MovesenseDeviceStateEnumMap = {
   MovesenseDeviceState.unknown: 'unknown',
@@ -105,21 +94,14 @@ MovesenseHR _$MovesenseHRFromJson(Map<String, dynamic> json) => MovesenseHR(
           ? null
           : Data.fromJson(json['sensorSpecificData'] as Map<String, dynamic>);
 
-Map<String, dynamic> _$MovesenseHRToJson(MovesenseHR instance) {
-  final val = <String, dynamic>{};
-
-  void writeNotNull(String key, dynamic value) {
-    if (value != null) {
-      val[key] = value;
-    }
-  }
-
-  writeNotNull('__type', instance.$type);
-  writeNotNull('sensorSpecificData', instance.sensorSpecificData);
-  val['hr'] = instance.hr;
-  writeNotNull('rr', instance.rr);
-  return val;
-}
+Map<String, dynamic> _$MovesenseHRToJson(MovesenseHR instance) =>
+    <String, dynamic>{
+      if (instance.$type case final value?) '__type': value,
+      if (instance.sensorSpecificData case final value?)
+        'sensorSpecificData': value,
+      'hr': instance.hr,
+      if (instance.rr case final value?) 'rr': value,
+    };
 
 MovesenseECG _$MovesenseECGFromJson(Map<String, dynamic> json) => MovesenseECG(
       (json['timestamp'] as num).toInt(),
@@ -132,21 +114,14 @@ MovesenseECG _$MovesenseECGFromJson(Map<String, dynamic> json) => MovesenseECG(
           ? null
           : Data.fromJson(json['sensorSpecificData'] as Map<String, dynamic>);
 
-Map<String, dynamic> _$MovesenseECGToJson(MovesenseECG instance) {
-  final val = <String, dynamic>{};
-
-  void writeNotNull(String key, dynamic value) {
-    if (value != null) {
-      val[key] = value;
-    }
-  }
-
-  writeNotNull('__type', instance.$type);
-  writeNotNull('sensorSpecificData', instance.sensorSpecificData);
-  val['timestamp'] = instance.timestamp;
-  val['samples'] = instance.samples;
-  return val;
-}
+Map<String, dynamic> _$MovesenseECGToJson(MovesenseECG instance) =>
+    <String, dynamic>{
+      if (instance.$type case final value?) '__type': value,
+      if (instance.sensorSpecificData case final value?)
+        'sensorSpecificData': value,
+      'timestamp': instance.timestamp,
+      'samples': instance.samples,
+    };
 
 MovesenseTemperature _$MovesenseTemperatureFromJson(
         Map<String, dynamic> json) =>
@@ -160,21 +135,14 @@ MovesenseTemperature _$MovesenseTemperatureFromJson(
           : Data.fromJson(json['sensorSpecificData'] as Map<String, dynamic>);
 
 Map<String, dynamic> _$MovesenseTemperatureToJson(
-    MovesenseTemperature instance) {
-  final val = <String, dynamic>{};
-
-  void writeNotNull(String key, dynamic value) {
-    if (value != null) {
-      val[key] = value;
-    }
-  }
-
-  writeNotNull('__type', instance.$type);
-  writeNotNull('sensorSpecificData', instance.sensorSpecificData);
-  val['timestamp'] = instance.timestamp;
-  val['measurement'] = instance.measurement;
-  return val;
-}
+        MovesenseTemperature instance) =>
+    <String, dynamic>{
+      if (instance.$type case final value?) '__type': value,
+      if (instance.sensorSpecificData case final value?)
+        'sensorSpecificData': value,
+      'timestamp': instance.timestamp,
+      'measurement': instance.measurement,
+    };
 
 MovesenseIMU _$MovesenseIMUFromJson(Map<String, dynamic> json) => MovesenseIMU(
       (json['timestamp'] as num).toInt(),
@@ -196,23 +164,16 @@ MovesenseIMU _$MovesenseIMUFromJson(Map<String, dynamic> json) => MovesenseIMU(
           ? null
           : Data.fromJson(json['sensorSpecificData'] as Map<String, dynamic>);
 
-Map<String, dynamic> _$MovesenseIMUToJson(MovesenseIMU instance) {
-  final val = <String, dynamic>{};
-
-  void writeNotNull(String key, dynamic value) {
-    if (value != null) {
-      val[key] = value;
-    }
-  }
-
-  writeNotNull('__type', instance.$type);
-  writeNotNull('sensorSpecificData', instance.sensorSpecificData);
-  val['timestamp'] = instance.timestamp;
-  val['accelerometer'] = instance.accelerometer;
-  val['gyroscope'] = instance.gyroscope;
-  val['magnetometer'] = instance.magnetometer;
-  return val;
-}
+Map<String, dynamic> _$MovesenseIMUToJson(MovesenseIMU instance) =>
+    <String, dynamic>{
+      if (instance.$type case final value?) '__type': value,
+      if (instance.sensorSpecificData case final value?)
+        'sensorSpecificData': value,
+      'timestamp': instance.timestamp,
+      'accelerometer': instance.accelerometer,
+      'gyroscope': instance.gyroscope,
+      'magnetometer': instance.magnetometer,
+    };
 
 MovesenseAccelerometerSample _$MovesenseAccelerometerSampleFromJson(
         Map<String, dynamic> json) =>
@@ -281,26 +242,18 @@ MovesenseDevice _$MovesenseDeviceFromJson(Map<String, dynamic> json) =>
             k, SamplingConfiguration.fromJson(e as Map<String, dynamic>)),
       );
 
-Map<String, dynamic> _$MovesenseDeviceToJson(MovesenseDevice instance) {
-  final val = <String, dynamic>{};
-
-  void writeNotNull(String key, dynamic value) {
-    if (value != null) {
-      val[key] = value;
-    }
-  }
-
-  writeNotNull('__type', instance.$type);
-  val['roleName'] = instance.roleName;
-  writeNotNull('isOptional', instance.isOptional);
-  writeNotNull(
-      'defaultSamplingConfiguration', instance.defaultSamplingConfiguration);
-  writeNotNull('address', instance.address);
-  writeNotNull('serial', instance.serial);
-  writeNotNull('name', instance.name);
-  val['deviceType'] = _$MovesenseDeviceTypeEnumMap[instance.deviceType]!;
-  return val;
-}
+Map<String, dynamic> _$MovesenseDeviceToJson(MovesenseDevice instance) =>
+    <String, dynamic>{
+      if (instance.$type case final value?) '__type': value,
+      'roleName': instance.roleName,
+      if (instance.isOptional case final value?) 'isOptional': value,
+      if (instance.defaultSamplingConfiguration case final value?)
+        'defaultSamplingConfiguration': value,
+      if (instance.address case final value?) 'address': value,
+      if (instance.serial case final value?) 'serial': value,
+      if (instance.name case final value?) 'name': value,
+      'deviceType': _$MovesenseDeviceTypeEnumMap[instance.deviceType]!,
+    };
 
 const _$MovesenseDeviceTypeEnumMap = {
   MovesenseDeviceType.UNKNOWN: 'UNKNOWN',
