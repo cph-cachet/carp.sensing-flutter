@@ -14,13 +14,13 @@ class CarpUser {
   String id;
 
   /// The user's email
-  String email;
+  String? email;
 
   /// User's first name
-  String firstName;
+  String? firstName;
 
   /// User's last name
-  String lastName;
+  String? lastName;
 
   /// The list of roles that this user has in CARP.
   List<dynamic> roles = [];
@@ -32,10 +32,10 @@ class CarpUser {
   CarpUser({
     required this.username,
     required this.id,
-    required this.firstName,
-    required this.lastName,
-    required this.email,
-    required this.roles,
+    this.firstName,
+    this.lastName,
+    this.email,
+    this.roles = const [],
     this.token,
   });
 
@@ -57,10 +57,10 @@ class CarpUser {
     return CarpUser(
       username: jwt['preferred_username'] as String,
       id: jwt['sub'] as String,
-      firstName: jwt['given_name'] as String,
-      lastName: jwt['family_name'] as String,
-      email: jwt['email'] as String,
-      roles: jwt['realm_access']['roles'] as List<dynamic>,
+      firstName: jwt['given_name'] as String?,
+      lastName: jwt['family_name'] as String?,
+      email: jwt['email'] as String?,
+      roles: jwt['realm_access']['roles'] as List<dynamic>? ?? [],
       token: OAuthToken.fromTokenResponse(token),
     );
   }
