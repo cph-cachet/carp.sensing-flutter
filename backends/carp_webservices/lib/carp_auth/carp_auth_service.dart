@@ -117,7 +117,11 @@ class CarpAuthService {
     _manager!.userChanges().listen((user) {
       if (user != null) {
         _currentUser = getCurrentUserProfile(user);
-        _authEventController.add(AuthEvent.authenticated);
+        if (_currentUser != null) {
+          _authEventController.add(AuthEvent.authenticated);
+        } else {
+          _authEventController.add(AuthEvent.failed);
+        }
       }
     });
   }
@@ -128,28 +132,27 @@ class CarpAuthService {
   /// The discovery URL in the [authProperties] is used to find the Identity Server.
   ///
   /// Returns the signed in user (with an [OAuthToken] access token), if successful.
-  /// Throws a [CarpServiceException] if not successful.
+  ///  Throws a [CarpServiceException] if not successful.
   Future<CarpUser> authenticate() async {
     assert(_manager != null, 'Manager not configured. Call configure() first.');
-
-    if (!_manager!.didInit) {
-      await initManager();
-    }
+    if (!_manager!.didInit) await initManager();
 
     OidcUser? response = await manager!.loginAuthorizationCodeFlow();
 
     if (response != null) {
       _currentUser = getCurrentUserProfile(response);
-      currentUser.authenticated(OAuthToken.fromTokenResponse(response.token));
-      _authEventController.add(AuthEvent.authenticated);
-      return currentUser;
+
+      if (_currentUser != null) {
+        _currentUser!
+            .authenticated(OAuthToken.fromTokenResponse(response.token));
+        _authEventController.add(AuthEvent.authenticated);
+        return currentUser;
+      }
     }
 
-    // All other cases are treated as a failed attempt and throws an error
+    // All other cases are treated as a failed attempt
     _authEventController.add(AuthEvent.failed);
-    _currentUser = null;
 
-    // auth error response from CARP is in the form
     throw CarpServiceException(
       httpStatus: HTTPStatus(401),
       message: 'Authentication failed.',
@@ -167,10 +170,7 @@ class CarpAuthService {
     required String password,
   }) async {
     assert(_manager != null, 'Manager not configured. Call configure() first.');
-
-    if (!_manager!.didInit) {
-      await initManager();
-    }
+    if (!_manager!.didInit) await initManager();
 
     final OidcUser? response = await manager?.loginPassword(
       username: username,
@@ -179,17 +179,18 @@ class CarpAuthService {
 
     if (response != null) {
       _currentUser = getCurrentUserProfile(response);
-      currentUser.authenticated(OAuthToken.fromTokenResponse(response.token));
-      _authEventController.add(AuthEvent.refreshed);
-      return currentUser;
+
+      if (_currentUser != null) {
+        _currentUser!
+            .authenticated(OAuthToken.fromTokenResponse(response.token));
+        _authEventController.add(AuthEvent.authenticated);
+        return currentUser;
+      }
     }
 
-    // All other cases are treated as a failed attempt and throws an error
+    // All other cases are treated as a failed attempt
     _authEventController.add(AuthEvent.failed);
-    _currentUser = null;
 
-    // auth error response from CARP is on the form
-    //      {error: invalid_grant, error_description: Bad credentials}
     throw CarpServiceException(
       httpStatus: HTTPStatus(401),
       message: 'Authentication failed.',
@@ -207,30 +208,27 @@ class CarpAuthService {
   /// Throws a [CarpServiceException] if not successful.
   Future<CarpUser> refresh() async {
     assert(_manager != null, 'Manager not configured. Call configure() first.');
-
-    if (!_manager!.didInit) {
-      await initManager();
-    }
+    if (!_manager!.didInit) await initManager();
 
     final OidcUser? response = await manager?.refreshToken();
 
-    print('reposnse : $response');
-
     if (response != null) {
-      currentUser = getCurrentUserProfile(response);
-      currentUser.authenticated(OAuthToken.fromTokenResponse(response.token));
-      _authEventController.add(AuthEvent.refreshed);
-      return currentUser;
+      _currentUser = getCurrentUserProfile(response);
+
+      if (_currentUser != null) {
+        _currentUser!
+            .authenticated(OAuthToken.fromTokenResponse(response.token));
+        _authEventController.add(AuthEvent.authenticated);
+        return currentUser;
+      }
     }
 
-    // All other cases are treated as a failed attempt and throws an error
+    // All other cases are treated as a failed attempt
     _authEventController.add(AuthEvent.failed);
 
-    // auth error response from CARP is on the form
-    //      {error: invalid_grant, error_description: Bad credentials}
     throw CarpServiceException(
       httpStatus: HTTPStatus(401),
-      message: 'Token refresh failed.',
+      message: 'Authentication failed.',
     );
   }
 
@@ -265,10 +263,13 @@ class CarpAuthService {
   // USERS
   // --------------------------------------------------------------------------
 
-  /// Gets the CARP profile of the current user from the JWT token
-  CarpUser getCurrentUserProfile(OidcUser response) {
-    var jwt = JwtDecoder.decode(response.token.accessToken!);
-    return CarpUser.fromJWT(jwt, response.token);
+  /// Gets the CARP profile of the current user from the JWT token of [user].
+  /// Returns null if the the [user] don't have an access token.
+  CarpUser? getCurrentUserProfile(OidcUser user) {
+    if (user.token.accessToken == null) return null;
+
+    var jwt = JwtDecoder.decode(user.token.accessToken!);
+    return CarpUser.fromJWT(jwt, user.token);
   }
 
   /// Makes sure that the [CarpApp] or [CarpUser] is configured, by throwing a

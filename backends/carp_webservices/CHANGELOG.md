@@ -1,3 +1,7 @@
+## 3.5.2
+
+* fix of issues [#457](https://github.com/cph-cachet/carp.sensing-flutter/issues/457)
+
 ## 3.5.1
 
 * upgrade to carp_serialization v. 2.0 & carp_mobile_sensing: 1.10.0
