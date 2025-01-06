@@ -23,46 +23,40 @@ RPAppTask _$RPAppTaskFromJson(Map<String, dynamic> json) => RPAppTask(
       rpTask: RPTask.fromJson(json['rpTask'] as Map<String, dynamic>),
     )..$type = json['__type'] as String?;
 
-Map<String, dynamic> _$RPAppTaskToJson(RPAppTask instance) {
-  final val = <String, dynamic>{};
-
-  void writeNotNull(String key, dynamic value) {
-    if (value != null) {
-      val[key] = value;
-    }
-  }
-
-  writeNotNull('__type', instance.$type);
-  val['name'] = instance.name;
-  writeNotNull('measures', instance.measures?.map((e) => e.toJson()).toList());
-  val['type'] = instance.type;
-  val['title'] = instance.title;
-  val['description'] = instance.description;
-  val['instructions'] = instance.instructions;
-  writeNotNull('minutesToComplete', instance.minutesToComplete);
-  writeNotNull('expire', instance.expire?.inMicroseconds);
-  val['notification'] = instance.notification;
-  val['rpTask'] = instance.rpTask.toJson();
-  return val;
-}
+Map<String, dynamic> _$RPAppTaskToJson(RPAppTask instance) => <String, dynamic>{
+      if (instance.$type case final value?) '__type': value,
+      'name': instance.name,
+      if (instance.measures?.map((e) => e.toJson()).toList() case final value?)
+        'measures': value,
+      'type': instance.type,
+      'title': instance.title,
+      'description': instance.description,
+      'instructions': instance.instructions,
+      if (instance.minutesToComplete case final value?)
+        'minutesToComplete': value,
+      if (instance.expire?.inMicroseconds case final value?) 'expire': value,
+      'notification': instance.notification,
+      'rpTask': instance.rpTask.toJson(),
+    };
 
 RPTaskResultData _$RPTaskResultDataFromJson(Map<String, dynamic> json) =>
     RPTaskResultData(
-      json['surveyResult'] == null
+      $enumDecodeNullable(_$SurveyStatusEnumMap, json['status']) ??
+          SurveyStatus.unknown,
+      json['result'] == null
           ? null
-          : RPTaskResult.fromJson(json['surveyResult'] as Map<String, dynamic>),
+          : RPTaskResult.fromJson(json['result'] as Map<String, dynamic>),
     )..$type = json['__type'] as String?;
 
-Map<String, dynamic> _$RPTaskResultDataToJson(RPTaskResultData instance) {
-  final val = <String, dynamic>{};
+Map<String, dynamic> _$RPTaskResultDataToJson(RPTaskResultData instance) =>
+    <String, dynamic>{
+      if (instance.$type case final value?) '__type': value,
+      'status': _$SurveyStatusEnumMap[instance.status]!,
+      if (instance.result?.toJson() case final value?) 'result': value,
+    };
 
-  void writeNotNull(String key, dynamic value) {
-    if (value != null) {
-      val[key] = value;
-    }
-  }
-
-  writeNotNull('__type', instance.$type);
-  writeNotNull('surveyResult', instance.surveyResult?.toJson());
-  return val;
-}
+const _$SurveyStatusEnumMap = {
+  SurveyStatus.unknown: 'unknown',
+  SurveyStatus.submitted: 'submitted',
+  SurveyStatus.canceled: 'canceled',
+};

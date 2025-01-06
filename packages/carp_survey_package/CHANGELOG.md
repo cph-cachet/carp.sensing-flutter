@@ -1,3 +1,7 @@
+## 1.8.3
+
+* added a `SurveyStatus` to the survey results to know if a survey was "submitted" or "canceled"
+
 ## 1.8.2
 
 * upgrading to carp_mobile_sensing v. 1.11

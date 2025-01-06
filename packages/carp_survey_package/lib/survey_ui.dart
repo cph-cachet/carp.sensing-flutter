@@ -23,9 +23,7 @@ class SurveyPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return RPUITask(
       task: task as RPOrderedTask,
-      onSubmit: (result) {
-        resultCallback(result);
-      },
+      onSubmit: resultCallback,
       onCancel: onSurveyCancel,
     );
   }

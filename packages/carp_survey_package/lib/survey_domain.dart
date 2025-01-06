@@ -42,15 +42,23 @@ class RPAppTask extends AppTask {
   Map<String, dynamic> toJson() => _$RPAppTaskToJson(this);
 }
 
+/// The status of a finished survey.
+enum SurveyStatus { unknown, submitted, canceled }
+
 /// Holds information about the result of a survey.
 @JsonSerializable(includeIfNull: false, explicitToJson: true)
 class RPTaskResultData extends Data {
   static const dataType = SurveySamplingPackage.SURVEY;
 
-  // The survey result.
-  RPTaskResult? surveyResult;
+  /// The status of [result] (was the survey submitted or canceled?)
+  /// When a survey is canceled, [result] holds the data inputted by the user
+  /// until it was canceled.
+  SurveyStatus status;
 
-  RPTaskResultData([this.surveyResult]);
+  // The survey result.
+  RPTaskResult? result;
+
+  RPTaskResultData([this.status = SurveyStatus.unknown, this.result]);
 
   @override
   Function get fromJsonFunction => _$RPTaskResultDataFromJson;
