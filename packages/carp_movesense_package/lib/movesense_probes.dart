@@ -16,7 +16,7 @@ abstract class _MovesenseStreamProbe extends StreamProbe {
   MovesenseDeviceManager get deviceManager =>
       super.deviceManager as MovesenseDeviceManager;
 
-  String get _serial => deviceManager.serial;
+  String? get _serial => deviceManager.serial;
 
   final String _uri;
   final Function _converter;
@@ -32,6 +32,9 @@ abstract class _MovesenseStreamProbe extends StreamProbe {
   @override
   Future<bool> onStart() async {
     var completer = Completer<bool>();
+
+    // fast out if not connected to device
+    if (_serial == null) return false;
 
     // fast out of already subscribed to this type of measurement
     if (_subscriptionId != null) return false;
@@ -131,11 +134,14 @@ class MovesenseStateChangeProbe extends _MovesenseStreamProbe {
 class MovesenseDeviceProbe extends MeasurementProbe {
   @override
   Future<Measurement?> getMeasurement() async {
+    var completer = Completer<Measurement>();
+    var serial = (deviceManager as MovesenseDeviceManager).serial;
+
     // fast out if not connected
     if (!deviceManager.isConnected) return null;
 
-    var serial = (deviceManager as MovesenseDeviceManager).serial;
-    var completer = Completer<Measurement>();
+    // fast out if no serial number (typically not connected)
+    if (serial == null) return null;
 
     Mds.get(Mds.createRequestUri(serial, "/Info"), "{}", ((info, statusCode) {
       var data =

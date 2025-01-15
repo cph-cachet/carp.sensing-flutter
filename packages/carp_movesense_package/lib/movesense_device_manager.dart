@@ -113,7 +113,8 @@ class MovesenseDeviceManager extends BTLEDeviceManager<MovesenseDevice> {
   // String? get address => configuration?.address;
 
   /// The serial number of the connected Movesense device.
-  String get serial => configuration?.serial ?? '???';
+  /// Returns null if not connected.
+  String? get serial => configuration?.serial;
 
   @override
   Future<DeviceStatus> onConnect() async {
@@ -180,10 +181,13 @@ class MovesenseDeviceManager extends BTLEDeviceManager<MovesenseDevice> {
   ///
   /// Example response from the device see ../test/json/info.json
   void _getDeviceInfo() {
+    // fast out if not connected
+    if (serial == null) return;
+
     debug('$runtimeType - Getting device info.');
 
     Mds.get(
-      Mds.createRequestUri(serial, "/Info"),
+      Mds.createRequestUri(serial!, "/Info"),
       "{}",
       ((data, statusCode) {
         debug('$runtimeType - Movesense Device Info:\n$data');
@@ -209,12 +213,15 @@ class MovesenseDeviceManager extends BTLEDeviceManager<MovesenseDevice> {
   /// We can subscribe to battery state changes, but they come so rarely that its
   /// better to request the status.
   void _getBatteryStatus() {
+    // fast out if not connected
+    if (serial == null) return;
+
     _batteryLevel = 80;
     debug('$runtimeType - Setting up battery monitoring.');
 
     Timer.periodic(const Duration(minutes: 10), (_) {
       Mds.get(
-        Mds.createRequestUri(serial, "/System/States/1"),
+        Mds.createRequestUri(serial!, "/System/States/1"),
         "{}",
         ((data, statusCode) {
           final dataContent = json.decode(data);
