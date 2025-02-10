@@ -23,23 +23,17 @@ HealthSamplingConfiguration _$HealthSamplingConfigurationFromJson(
       ..future = Duration(microseconds: (json['future'] as num).toInt());
 
 Map<String, dynamic> _$HealthSamplingConfigurationToJson(
-    HealthSamplingConfiguration instance) {
-  final val = <String, dynamic>{};
-
-  void writeNotNull(String key, dynamic value) {
-    if (value != null) {
-      val[key] = value;
-    }
-  }
-
-  writeNotNull('__type', instance.$type);
-  writeNotNull('lastTime', instance.lastTime?.toIso8601String());
-  val['past'] = instance.past.inMicroseconds;
-  val['future'] = instance.future.inMicroseconds;
-  val['healthDataTypes'] =
-      instance.healthDataTypes.map((e) => _$HealthDataTypeEnumMap[e]!).toList();
-  return val;
-}
+        HealthSamplingConfiguration instance) =>
+    <String, dynamic>{
+      if (instance.$type case final value?) '__type': value,
+      if (instance.lastTime?.toIso8601String() case final value?)
+        'lastTime': value,
+      'past': instance.past.inMicroseconds,
+      'future': instance.future.inMicroseconds,
+      'healthDataTypes': instance.healthDataTypes
+          .map((e) => _$HealthDataTypeEnumMap[e]!)
+          .toList(),
+    };
 
 const _$HealthDataTypeEnumMap = {
   HealthDataType.ACTIVE_ENERGY_BURNED: 'ACTIVE_ENERGY_BURNED',
@@ -51,6 +45,7 @@ const _$HealthDataTypeEnumMap = {
   HealthDataType.BLOOD_PRESSURE_DIASTOLIC: 'BLOOD_PRESSURE_DIASTOLIC',
   HealthDataType.BLOOD_PRESSURE_SYSTOLIC: 'BLOOD_PRESSURE_SYSTOLIC',
   HealthDataType.BODY_FAT_PERCENTAGE: 'BODY_FAT_PERCENTAGE',
+  HealthDataType.LEAN_BODY_MASS: 'LEAN_BODY_MASS',
   HealthDataType.BODY_MASS_INDEX: 'BODY_MASS_INDEX',
   HealthDataType.BODY_TEMPERATURE: 'BODY_TEMPERATURE',
   HealthDataType.BODY_WATER_MASS: 'BODY_WATER_MASS',
@@ -134,6 +129,8 @@ const _$HealthDataTypeEnumMap = {
   HealthDataType.BIRTH_DATE: 'BIRTH_DATE',
   HealthDataType.BLOOD_TYPE: 'BLOOD_TYPE',
   HealthDataType.MENSTRUATION_FLOW: 'MENSTRUATION_FLOW',
+  HealthDataType.WATER_TEMPERATURE: 'WATER_TEMPERATURE',
+  HealthDataType.UNDERWATER_DEPTH: 'UNDERWATER_DEPTH',
   HealthDataType.HIGH_HEART_RATE_EVENT: 'HIGH_HEART_RATE_EVENT',
   HealthDataType.LOW_HEART_RATE_EVENT: 'LOW_HEART_RATE_EVENT',
   HealthDataType.IRREGULAR_HEART_RATE_EVENT: 'IRREGULAR_HEART_RATE_EVENT',
@@ -155,33 +152,64 @@ HealthData _$HealthDataFromJson(Map<String, dynamic> json) => HealthData(
       json['source_name'] as String,
     )..$type = json['__type'] as String?;
 
-Map<String, dynamic> _$HealthDataToJson(HealthData instance) {
-  final val = <String, dynamic>{};
-
-  void writeNotNull(String key, dynamic value) {
-    if (value != null) {
-      val[key] = value;
-    }
-  }
-
-  writeNotNull('__type', instance.$type);
-  val['uuid'] = instance.uuid;
-  val['value'] = instance.value;
-  val['unit'] = instance.unit;
-  val['date_from'] = instance.dateFrom.toIso8601String();
-  val['date_to'] = instance.dateTo.toIso8601String();
-  val['data_type'] = instance.dataType;
-  val['platform'] = _$HealthPlatformEnumMap[instance.platform]!;
-  val['device_id'] = instance.deviceId;
-  val['source_id'] = instance.sourceId;
-  val['source_name'] = instance.sourceName;
-  return val;
-}
+Map<String, dynamic> _$HealthDataToJson(HealthData instance) =>
+    <String, dynamic>{
+      if (instance.$type case final value?) '__type': value,
+      'uuid': instance.uuid,
+      'value': instance.value,
+      'unit': instance.unit,
+      'date_from': instance.dateFrom.toIso8601String(),
+      'date_to': instance.dateTo.toIso8601String(),
+      'data_type': instance.dataType,
+      'platform': _$HealthPlatformEnumMap[instance.platform]!,
+      'device_id': instance.deviceId,
+      'source_id': instance.sourceId,
+      'source_name': instance.sourceName,
+    };
 
 const _$HealthPlatformEnumMap = {
   HealthPlatform.APPLE_HEALTH: 'APPLE_HEALTH',
   HealthPlatform.GOOGLE_HEALTH_CONNECT: 'GOOGLE_HEALTH_CONNECT',
 };
+
+HealthAppTask _$HealthAppTaskFromJson(Map<String, dynamic> json) =>
+    HealthAppTask(
+      type: json['type'] as String? ?? HealthUserTask.HEALTH_ASSESSMENT_TYPE,
+      name: json['name'] as String?,
+      title: json['title'] as String? ?? '',
+      description: json['description'] as String? ?? '',
+      instructions: json['instructions'] as String? ?? '',
+      minutesToComplete: (json['minutesToComplete'] as num?)?.toInt(),
+      expire: json['expire'] == null
+          ? null
+          : Duration(microseconds: (json['expire'] as num).toInt()),
+      notification: json['notification'] as bool? ?? false,
+      measures: (json['measures'] as List<dynamic>?)
+              ?.map((e) => Measure.fromJson(e as Map<String, dynamic>))
+              .toList() ??
+          const [],
+      types: (json['types'] as List<dynamic>?)
+              ?.map((e) => $enumDecode(_$HealthDataTypeEnumMap, e))
+              .toList() ??
+          const [],
+    )..$type = json['__type'] as String?;
+
+Map<String, dynamic> _$HealthAppTaskToJson(HealthAppTask instance) =>
+    <String, dynamic>{
+      if (instance.$type case final value?) '__type': value,
+      'name': instance.name,
+      if (instance.measures?.map((e) => e.toJson()).toList() case final value?)
+        'measures': value,
+      'type': instance.type,
+      'title': instance.title,
+      'description': instance.description,
+      'instructions': instance.instructions,
+      if (instance.minutesToComplete case final value?)
+        'minutesToComplete': value,
+      if (instance.expire?.inMicroseconds case final value?) 'expire': value,
+      'notification': instance.notification,
+      'types': instance.types.map((e) => _$HealthDataTypeEnumMap[e]!).toList(),
+    };
 
 HealthService _$HealthServiceFromJson(Map<String, dynamic> json) =>
     HealthService(
@@ -195,21 +223,13 @@ HealthService _$HealthServiceFromJson(Map<String, dynamic> json) =>
             k, SamplingConfiguration.fromJson(e as Map<String, dynamic>)),
       );
 
-Map<String, dynamic> _$HealthServiceToJson(HealthService instance) {
-  final val = <String, dynamic>{};
-
-  void writeNotNull(String key, dynamic value) {
-    if (value != null) {
-      val[key] = value;
-    }
-  }
-
-  writeNotNull('__type', instance.$type);
-  val['roleName'] = instance.roleName;
-  writeNotNull('isOptional', instance.isOptional);
-  writeNotNull(
-      'defaultSamplingConfiguration',
-      instance.defaultSamplingConfiguration
-          ?.map((k, e) => MapEntry(k, e.toJson())));
-  return val;
-}
+Map<String, dynamic> _$HealthServiceToJson(HealthService instance) =>
+    <String, dynamic>{
+      if (instance.$type case final value?) '__type': value,
+      'roleName': instance.roleName,
+      if (instance.isOptional case final value?) 'isOptional': value,
+      if (instance.defaultSamplingConfiguration
+              ?.map((k, e) => MapEntry(k, e.toJson()))
+          case final value?)
+        'defaultSamplingConfiguration': value,
+    };

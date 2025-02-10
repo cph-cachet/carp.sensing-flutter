@@ -1,3 +1,9 @@
+## 3.0.0
+
+* upgrading to health v. 12.x
+* improving on requesting permissions for different health probes (issue [#461](https://github.com/cph-cachet/carp.sensing-flutter/issues/461))
+* added support for `HealthAppTask` which are app task used to collect health data
+
 ## 2.11.0
 
 * upgrading to health v. 11.x

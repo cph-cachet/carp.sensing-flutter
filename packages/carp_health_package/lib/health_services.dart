@@ -30,11 +30,11 @@ class HealthService extends OnlineService {
 
 /// A [DeviceManager] for the [HealthService].
 class HealthServiceManager extends OnlineServiceManager<HealthService> {
-  // HealthFactory? _service;
+  Health? _service;
 
   /// A handle to the [Health] plugin.
   /// Returns null if the service is not yet configured.
-  Health? get service => configuration != null ? Health() : null;
+  Health? get service => configuration == null ? null : _service ??= Health();
 
   @override
   String get id => (configuration != null)
@@ -46,8 +46,16 @@ class HealthServiceManager extends OnlineServiceManager<HealthService> {
   @override
   String? get displayName => 'Health Service';
 
+  final List<HealthDataType> _types = [];
+
   /// Which health data types should this service access.
-  List<HealthDataType> types = [];
+  List<HealthDataType> get types => _types.toSet().toList();
+
+  /// Add a set of health [types] this service should access.
+  void addTypes(List<HealthDataType> types) {
+    _types.addAll(types);
+    _hasPermissions = false;
+  }
 
   HealthServiceManager([
     HealthService? configuration,
@@ -72,56 +80,56 @@ class HealthServiceManager extends OnlineServiceManager<HealthService> {
   // There is an issue with Apple Health.
   // When asking for "hasPermissions" on the service, it always return "null".
   //  - https://github.com/cph-cachet/flutter-plugins/issues/892
-  //
-  // So need to keep track of status here.
-  //
-  // There is an issue with Android / Health Connect.
-  // When asking for "requestAuthorization" on the service, it never returns.
-  //  - https://github.com/cph-cachet/flutter-plugins/issues/897
-  //
-  // So - can't await this call.
+
+  /// Check if the service has permissions to access the list of health [types].
+  ///
+  /// This method is called by the [HealthProbe] when it needs to access health
+  /// data and is a more specific method than [hasPermissions].
+  ///
+  /// Note that this method always return false on iOS, as there is no way to
+  /// know if permissions are granted.
+  Future<bool> hasHealthPermissions(List<HealthDataType> types) async {
+    if (types.isEmpty) return true;
+
+    info(
+        '$runtimeType - Checking permissions for health types: $types on ${Platform.operatingSystem}');
+
+    try {
+      return await service?.hasPermissions(types) ?? false;
+    } catch (error) {
+      warning('$runtimeType - Error getting permission status - $error');
+    }
+    return false;
+  }
+
+  /// Request permissions for the list of health [types].
+  ///
+  /// This method is called by the [HealthProbe] when it needs to access health data
+  /// and is a more specific method than [requestPermissions].
+  Future<bool> requestHealthPermissions(List<HealthDataType> types) async {
+    if (types.isEmpty) return true;
+
+    info(
+        '$runtimeType - Requesting permissions for health types: $types on ${Platform.operatingSystem}');
+
+    try {
+      return await service?.requestAuthorization(types) ?? false;
+    } catch (error) {
+      warning('$runtimeType - Error requesting permissions - $error');
+    }
+    return false;
+  }
 
   bool _hasPermissions = false;
 
   @override
-  Future<bool> onHasPermissions() async {
-    if (!_hasPermissions) {
-      if (types.isNotEmpty) {
-        try {
-          if (Platform.isIOS) {
-            // the only way to know if permissions is granted on iOS is via the
-            // requestAuthorization() method (see issue above)
-            _hasPermissions =
-                await service?.requestAuthorization(types) ?? false;
-          } else if (Platform.isAndroid) {
-            _hasPermissions = await service?.hasPermissions(types) ?? false;
-          }
-        } catch (error) {
-          warning('$runtimeType - Error getting permission status - $error');
-        }
-      } else {
-        _hasPermissions = true;
-      }
-    }
-    return _hasPermissions;
-  }
+  Future<bool> onHasPermissions() async => _hasPermissions
+      ? true
+      : _hasPermissions = await hasHealthPermissions(types);
 
   @override
-  Future<void> onRequestPermissions() async {
-    if (types.isNotEmpty) {
-      try {
-        if (Platform.isIOS) {
-          _hasPermissions = await service?.requestAuthorization(types) ?? false;
-        } else if (Platform.isAndroid) {
-          // on Android the requestAuthorization() method never returns - so
-          // don't await it
-          service?.requestAuthorization(types);
-        }
-      } catch (error) {
-        warning('$runtimeType - Error requesting permissions - $error');
-      }
-    }
-  }
+  Future<void> onRequestPermissions() async =>
+      _hasPermissions = await requestHealthPermissions(types);
 
   @override
   Future<bool> canConnect() async => true;
@@ -131,10 +139,7 @@ class HealthServiceManager extends OnlineServiceManager<HealthService> {
 
   @override
   Future<bool> onDisconnect() async {
-    // Clear the permission to access the current list of types.
-    // New types may be included in a new sampling configuration.
     _hasPermissions = false;
-    types = [];
     return true;
   }
 }

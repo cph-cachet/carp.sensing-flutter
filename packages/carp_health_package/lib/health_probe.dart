@@ -6,19 +6,13 @@ part of 'health_package.dart';
 /// again is a [HistoricSamplingConfiguration].
 /// This means that when started, it will try to collect data back to the last
 /// time data was collected.
+///
 /// Hence, this probe is suited for configuration using a trigger that
 /// collects data on a regular basis. This could be a [PeriodicTrigger] or it
 /// could be configured as an [AppTask] asking the user to collect the data
 /// on a regular basis.
-///
-/// Note that even though this probe is a [StreamProbe], the health measure is a
-/// one-time measure, which needs to be triggered to collect the data. The stream
-/// probe is used since this probe can return a lot of health data, which need to
-/// be streamed back to the mobile sensing framework.
-class HealthProbe extends StreamProbe {
+class HealthProbe extends Probe {
   final StreamController<Measurement> _ctrl = StreamController.broadcast();
-
-  @override
   Stream<Measurement> get stream => _ctrl.stream;
 
   @override
@@ -57,59 +51,85 @@ class HealthProbe extends StreamProbe {
   @override
   bool onInitialize() {
     validateHealthDataTypes();
-    deviceManager.types = samplingConfiguration.healthDataTypes;
+    deviceManager.addTypes(samplingConfiguration.healthDataTypes);
     return true;
   }
 
-  /// Request permission to access health data specified in the [samplingConfiguration].
+  /// Does this probe have permissions to access health data specified in
+  /// the [samplingConfiguration]?
+  Future<bool> hasPermissions() async => await deviceManager
+      .hasHealthPermissions(samplingConfiguration.healthDataTypes);
+
+  /// Request permission to access health data specified in the [samplingConfiguration]
+  /// for this probe.
+  ///
+  /// Note that this will show the Permission dialog to the user, asking for
+  /// access to the health data.
+  /// If the user denies access, this method will return false.
+  ///
+  /// Note that on Android, if the user denies access to the health data types
+  /// TWICE, then the permissions are permanently denied and the app cannot ask
+  /// anymore. In this case, this method cannot be used to request permissions.
+  /// Instead, the user must manually go to the settings of the phone and enable
+  /// the permissions.
   @override
   Future<bool> requestPermissions() async {
-    bool permission = await deviceManager.hasPermissions();
-    if (!permission) await deviceManager.requestPermissions();
-    return (await deviceManager.hasPermissions());
+    bool permission = await hasPermissions();
+    if (!permission) {
+      permission = await deviceManager
+          .requestHealthPermissions(samplingConfiguration.healthDataTypes);
+    }
+    return permission;
   }
 
   @override
   Future<bool> onStart() async {
-    super.onStart();
+    // Check if we have permissions to access health data and fast out if not.
+    if (!await hasPermissions()) return false;
 
-    DateTime start = samplingConfiguration.lastTime ??
-        DateTime.now().subtract(samplingConfiguration.past);
-    DateTime end = DateTime.now();
-    List<HealthDataType> healthDataTypes =
-        samplingConfiguration.healthDataTypes;
+    if (await super.onStart()) {
+      DateTime start = samplingConfiguration.lastTime ??
+          DateTime.now().subtract(samplingConfiguration.past);
+      DateTime end = DateTime.now();
+      List<HealthDataType> healthDataTypes =
+          samplingConfiguration.healthDataTypes;
 
-    if (healthDataTypes.isEmpty) {
-      warning(
-          "$runtimeType - Trying to collect health data but the list of health data type to collect is empty. "
-          "Did you add any types to the protocol which are available on this platform (iOS or Android)?");
-    } else {
-      debug(
-          '$runtimeType - Collecting health data, types: $healthDataTypes, start: ${start.toUtc()}, end: ${end.toUtc()}');
-      try {
-        List<HealthDataPoint>? data =
-            await deviceManager.service?.getHealthDataFromTypes(
-                  startTime: start,
-                  endTime: end,
-                  types: healthDataTypes,
-                ) ??
-                [];
+      if (healthDataTypes.isEmpty) {
+        warning(
+            "$runtimeType - Trying to collect health data but the list of health data type to collect is empty. "
+            "Did you add any types to the protocol which are available on this platform (iOS or Android)?");
+      } else {
         debug(
-            '$runtimeType - Retrieved ${data.length} health data points of types: $healthDataTypes');
+            '$runtimeType - Collecting health data, types: $healthDataTypes, start: ${start.toUtc()}, end: ${end.toUtc()}');
+        try {
+          List<HealthDataPoint>? data =
+              await deviceManager.service?.getHealthDataFromTypes(
+                    startTime: start,
+                    endTime: end,
+                    types: healthDataTypes,
+                  ) ??
+                  [];
+          debug(
+              '$runtimeType - Retrieved ${data.length} health data points of types: $healthDataTypes');
 
-        // Convert HealthDataPoint to measurements and add them to the stream.
-        for (var data in data) {
-          _ctrl.add(Measurement(
-              sensorStartTime: data.dateFrom.microsecondsSinceEpoch,
-              sensorEndTime: data.dateTo.microsecondsSinceEpoch,
-              data: HealthData.fromHealthDataPoint(data)));
+          // Convert HealthDataPoint to measurements and add them the measurements stream.
+          for (var data in data) {
+            addMeasurement(Measurement(
+                sensorStartTime: data.dateFrom.microsecondsSinceEpoch,
+                sensorEndTime: data.dateTo.microsecondsSinceEpoch,
+                data: HealthData.fromHealthDataPoint(data)));
+          }
+
+          // Automatically stop this probe after it is done adding the measurements.
+          Future.delayed(const Duration(seconds: 5), () => stop());
+        } catch (exception) {
+          warning("$runtimeType - Error collecting health data. $exception");
+          _ctrl.addError(exception);
+          return false;
         }
-      } catch (exception) {
-        warning("$runtimeType - Error collecting health data. $exception");
-        _ctrl.addError(exception);
-        return false;
       }
+      return true;
     }
-    return true;
+    return false;
   }
 }

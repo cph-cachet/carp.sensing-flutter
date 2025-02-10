@@ -453,7 +453,7 @@ void main() {
 
     StudyDeploymentStatus? status_3 = await SmartphoneDeploymentService()
         .deployed(status_1.studyDeploymentId);
-    expect(status_3?.status, StudyDeploymentStatusTypes.DeploymentReady);
+    expect(status_3?.status, StudyDeploymentStatusTypes.Running);
     expect(status_3?.studyDeploymentId, status_1.studyDeploymentId);
     print(toJsonString(status_3));
     expect(

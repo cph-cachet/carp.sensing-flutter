@@ -1,6 +1,7 @@
 part of 'survey.dart';
 
-/// Specify the configuration of a [RPTask] as a special case of an [AppTask].
+/// A [RPAppTask] is a special case of an [AppTask] which can take an Research
+/// Package (RP) Task.
 /// This can be a survey, a cognitive test, or other tasks that implements the
 /// [RPTask] from the Research Package.
 ///
@@ -17,7 +18,6 @@ class RPAppTask extends AppTask {
 
   RPAppTask({
     super.name,
-    List<Measure>? measures,
     required super.type,
     super.title,
     super.description,
@@ -25,12 +25,23 @@ class RPAppTask extends AppTask {
     super.minutesToComplete,
     super.expire,
     super.notification,
+    List<Measure>? measures,
     required this.rpTask,
   }) {
-    // Add the survey as a measure type to be collected and later uploaded
+    measures ??= [];
+
+    // Add the survey as a measure type to be collected and later uploaded, if not already added.
     //   - issue #342
-    super.measures = (measures ?? [])
-      ..add(Measure(type: SurveySamplingPackage.SURVEY));
+    if (measures
+            .firstWhere(
+              (Measure measure) => measure.type == SurveySamplingPackage.SURVEY,
+              orElse: () => Measure(type: 'none'),
+            )
+            .type !=
+        SurveySamplingPackage.SURVEY) {
+      measures.add(Measure(type: SurveySamplingPackage.SURVEY));
+    }
+    super.measures = measures;
   }
 
   @override

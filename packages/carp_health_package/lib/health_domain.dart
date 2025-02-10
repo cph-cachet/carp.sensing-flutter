@@ -159,3 +159,44 @@ class HealthData extends Data {
       ', dateFrom: $dateFrom'
       ', dateTo: $dateTo';
 }
+
+/// An [AppTask] that can be used  to collect health data.
+@JsonSerializable(includeIfNull: false, explicitToJson: true)
+class HealthAppTask extends AppTask {
+  List<HealthDataType> types;
+
+  HealthAppTask({
+    super.type = HealthUserTask.HEALTH_ASSESSMENT_TYPE,
+    super.name,
+    super.title,
+    super.description,
+    super.instructions,
+    super.minutesToComplete,
+    super.expire,
+    super.notification,
+    List<Measure>? measures,
+    this.types = const [],
+  }) {
+    measures ??= [];
+    // if the list of measures doesn't already contains a health measure for the
+    // list of health data types, add it.
+    if (measures
+            .firstWhere(
+              (Measure measure) => measure.type == HealthSamplingPackage.HEALTH,
+              orElse: () => Measure(type: 'none'),
+            )
+            .type !=
+        HealthSamplingPackage.HEALTH) {
+      measures.add(HealthSamplingPackage.getHealthMeasure(types));
+    }
+    super.measures = measures;
+  }
+
+  @override
+  Function get fromJsonFunction => _$HealthAppTaskFromJson;
+  factory HealthAppTask.fromJson(Map<String, dynamic> json) =>
+      FromJsonFactory().fromJson<HealthAppTask>(json);
+
+  @override
+  Map<String, dynamic> toJson() => _$HealthAppTaskToJson(this);
+}
