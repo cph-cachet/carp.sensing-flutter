@@ -1,7 +1,8 @@
-## 1.8.4
+## 1.8.5
 
 * added a `SurveyStatus` to the survey results to know if a survey was "submitted" or "canceled"
 * refix of issue [#342](https://github.com/cph-cachet/carp_studies_app/issues/342)
+* removed `HEALTH_ASSESSMENT_TYPE`. Now part of carp_health_package
 
 ## 1.8.2
 
