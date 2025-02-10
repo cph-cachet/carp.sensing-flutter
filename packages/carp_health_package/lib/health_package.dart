@@ -23,6 +23,7 @@ part 'health_domain.dart';
 part 'health_package.g.dart';
 part 'health_probe.dart';
 part 'health_services.dart';
+part 'health_user_task.dart';
 
 /// The health sampling package supports the following overall measure type:
 ///
@@ -102,6 +103,7 @@ class HealthSamplingPackage extends SmartphoneSamplingPackage {
     FromJsonFactory().registerAll([
       HealthService(),
       HealthSamplingConfiguration(healthDataTypes: []),
+      HealthAppTask(type: ''),
       HealthData(
           '',
           NumericHealthValue(numericValue: 6),
@@ -114,6 +116,7 @@ class HealthSamplingPackage extends SmartphoneSamplingPackage {
           '',
           ''),
     ]);
+    AppTaskController().registerUserTaskFactory(HealthUserTaskFactory());
   }
 
   @override

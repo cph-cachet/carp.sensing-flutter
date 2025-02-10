@@ -1,6 +1,6 @@
 name: carp_health_package
 description: CARP health sampling package. Samples health data from Apple Health or Google Fit.
-version: 2.11.0
+version: 3.0.0
 homepage: https://github.com/cph-cachet/carp.sensing-flutter/tree/master/packages/carp_health_package
 
 environment:
@@ -15,7 +15,7 @@ dependencies:
   carp_core: ^1.8.0
   carp_mobile_sensing: ^1.11.0
 
-  health: ^11.0.0
+  health: ^12.0.0
   json_annotation: ^4.8.0
 
 # Overriding carp libraries to use the local copy

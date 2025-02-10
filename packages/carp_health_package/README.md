@@ -32,7 +32,8 @@ dependencies:
   ...
 `````
 
-Then, follow the setup guides in the [health](https://pub.dev/packages/health#setup) plugin.
+Then, follow the setup guides in the [health](https://pub.dev/packages/health#setup) plugin. Note that there are quite a lot of details to getting the Health plugin to work, including handling permissions.
+For example, on Android, if the user denies access to the health data types TWICE, then the permissions are permanently denied and the app cannot ask anymore. In this case, the app cannot be used to request permissions. Instead, the user must manually go to the settings of the phone and enable the permissions. So make sure to follow the guideline carefully.
 
 ### Android Integration
 
@@ -111,7 +112,7 @@ Before creating a study and running it, register this package in the
 SamplingPackageRegistry().register(HealthSamplingPackage());
 `````
 
-When defining a study protocol with a health device, it would look like this:
+Now we can define a study protocol with a health device:
 
 ```dart
   // Create a study protocol
@@ -131,7 +132,40 @@ When defining a study protocol with a health device, it would look like this:
   protocol.addConnectedDevice(healthService, phone);
 ```
 
-Data sampling can now be configured by a measure in the protocol. This measure is created using the factory method `getHealthMeasure` that takes a list of of [`HealthDataType`](https://pub.dev/documentation/health/latest/health/HealthDataType.html) types.
+There are two ways to use the health package in a CAMS protocol:
+
+* Defining a [**App Task**](https://github.com/cph-cachet/carp.sensing-flutter/wiki/4.-The-AppTask-Model) where the user is asked to collect his/her own health data
+* Defining a [**Background Sensing Task**](https://github.com/cph-cachet/carp.sensing-flutter/wiki/3.-Using-CARP-Mobile-Sensing#defining-a-study-protocol), where health data is collected in the background
+
+### Health App Task
+
+Defining an app task to collect health data is done using the `HealthAppTask` task, like shown below:
+
+```dart
+  // Create a health app task for the user to collect his own health data once pr. day
+  protocol.addTaskControl(
+      PeriodicTrigger(period: Duration(hours: 24)),
+      HealthAppTask(
+          title: "Press here to collect your physical health data",
+          description:
+              "This will collect your weight, exercise time, steps, and sleep "
+              "time from the Health database on the phone.",
+          types: [
+            HealthDataType.WEIGHT,
+            HealthDataType.STEPS,
+            HealthDataType.BASAL_ENERGY_BURNED,
+            HealthDataType.SLEEP_SESSION,
+          ]),
+      phone);
+```
+
+In this case, a user task will be added to the task list once per day and when the user clicks (start) this user task, the health data types specified in the list of `types` are collected. Once data collection is done, the user task is marked as done in the task list.
+
+> **NOTE** - a `HealthAppTask` will ask the user to give permissions to collect the listed types, if not granted. This will open up the OS-level permission dialogue on both Android and iOS.
+
+### Background Sensing Task
+
+Background sampling of health data can be configured by a measure in the protocol. This measure is created using the factory method `HealthSamplingPackage.getHealthMeasure()` that takes a list of of [`HealthDataType`](https://pub.dev/documentation/health/latest/health/HealthDataType.html) types.
 
 ```dart
   // Automatically collect a set of health data every hour.
@@ -148,7 +182,39 @@ Data sampling can now be configured by a measure in the protocol. This measure i
       healthService);
 ```
 
-The health measures are [one-time measures](https://github.com/cph-cachet/carp.sensing-flutter/wiki/A.-Measure-Types#event-based-vs-one-time-measures), which implies that health data is collected when the measure is triggered. In the example above, this happens periodically - once pr. hour. Configuration of what data to collect is done via the [`HealthSamplingConfiguration`](https://pub.dev/documentation/carp_health_package/latest/health_package/HealthSamplingConfiguration-class.html) which is used to override the default configuration (default is to collect nothing). The `getHealthMeasure()` factory method is a convenient way to create a `Measure` with the correct `HealthSamplingConfiguration`.
+Background sensing of health data is done by the `HealthService` specified in the protocol above.
+
+> **NOTE** - background collection of health data **does not** ask for permissions (this will cause the app to show the Health permission dialogue at an arbitrary time to the user, which is not compliant to [the UX guidelines from Google](https://developer.android.com/health-and-fitness/guides/health-connect/design/permissions-and-data) and Apple to only show this dialogue in the context where the collection of health data is explained to the user). Handling of permissions is done via the `HealthService` by using the `hasPermissions()` and `requestPermissions(()` methods.
+
+> **NOTE** - Health data can only be collected when the app is in the foreground and the phone is unlocked. This applies both for Android and iOS. Hence, the term "background sensing" should be taken with a gran of salt.
+
+One way to ensure that health data is collected while the app is in foreground, is to add the collection of health measures to an App Task (e.g., a survey):
+
+```dart
+  protocol.addTaskControl(
+      RecurrentScheduledTrigger(
+        type: RecurrentType.daily,
+        time: TimeOfDay(hour: 13),
+      ),
+      RPAppTask(
+          type: SurveyUserTask.SURVEY_TYPE,
+          name: 'WHO-5 Survey',
+          rpTask: who5Task,
+          measures: [
+            Measure(type: SensorSamplingPackage.AMBIENT_LIGHT),
+            HealthSamplingPackage.getHealthMeasure([
+              HealthDataType.HEART_RATE,
+              HealthDataType.STEPS,
+            ])
+          ]),
+      phone);
+```
+
+In this case, ambient light, heart rate and steps are collected as part of the user filling in a WHO-5 survey.
+
+### Configuration
+
+The health measures are [one-time measures](https://github.com/cph-cachet/carp.sensing-flutter/wiki/A.-Measure-Types#event-based-vs-one-time-measures), which implies that health data is collected when the measure is triggered. In the examples above, this happens either when the user click the user task or periodically (once pr. hour). Configuration of what data to collect is done via the [`HealthSamplingConfiguration`](https://pub.dev/documentation/carp_health_package/latest/health_package/HealthSamplingConfiguration-class.html) which is used to override the default configuration (default is to collect nothing). The `getHealthMeasure()` factory method is a convenient way to create a `Measure` with the correct `HealthSamplingConfiguration`.
 
 The `HealthSamplingConfiguration` can be configured to collect a set of [`HealthDataType`](https://pub.dev/documentation/health/latest/health/HealthDataType-class.html) data, like:
 
@@ -163,30 +229,6 @@ The `HealthSamplingConfiguration` can be configured to collect a set of [`Health
 See the [`HealthDataType`](https://pub.dev/documentation/health/latest/health/HealthDataType.html) documentation for a complete list.
 
 A `HealthSamplingConfiguration` is a [`HistoricSamplingConfiguration`](https://pub.dev/documentation/carp_mobile_sensing/latest/domain/HistoricSamplingConfiguration-class.html). This means that when triggered, the task and measure will try to collect data back to the last time data was collected. Hence, this measure is suited for configuration using some trigger that collects data on a regular basis, like the `PeriodicTrigger` used above.
-However, it can also be configured using as an [`AppTask`](https://pub.dev/documentation/carp_mobile_sensing/latest/domain/AppTask-class.html) that asks the user to collect the data.
-
-```dart
-  // Create an app task for the user to collect his own health data once pr. day
-  protocol.addTaskControl(
-      PeriodicTrigger(period: Duration(hours: 24)),
-      AppTask(
-          type: 'health',
-          title: "Press here to collect your physical health data",
-          description:
-              "This will collect your weight, exercise time, steps, and sleep "
-              "time from the Health database on the phone.",
-          measures: [
-            HealthSamplingPackage.getHealthMeasure([
-              HealthDataType.WEIGHT,
-              HealthDataType.STEPS,
-              HealthDataType.BASAL_ENERGY_BURNED,
-              HealthDataType.SLEEP_SESSION,
-            ])
-          ]),
-      healthService);
-```
-
-> **NOTE** - Health data can only be collected when the app is in the foreground and the phone is unlocked. This applies both for Android and iOS.
 
 See the `example.dart` file for a full example of how to set up a CAMS study protocol for this sampling package.
 

@@ -63,22 +63,38 @@ void main() async {
         ])),
       healthService);
 
-  // Create an app task for the user to collect his own health data once pr. day
+  // Create a health app task for the user to collect his own health data once pr. day
   protocol.addTaskControl(
       PeriodicTrigger(period: Duration(hours: 24)),
-      AppTask(
-          type: 'health',
+      HealthAppTask(
           title: "Press here to collect your physical health data",
           description:
               "This will collect your weight, exercise time, steps, and sleep "
               "time from the Health database on the phone.",
-          measures: [
-            HealthSamplingPackage.getHealthMeasure([
-              HealthDataType.WEIGHT,
-              HealthDataType.STEPS,
-              HealthDataType.BASAL_ENERGY_BURNED,
-              HealthDataType.SLEEP_SESSION,
-            ])
+          types: [
+            HealthDataType.WEIGHT,
+            HealthDataType.STEPS,
+            HealthDataType.BASAL_ENERGY_BURNED,
+            HealthDataType.SLEEP_SESSION,
           ]),
-      healthService);
+      phone);
+
+  // Create a app task with a WHO-5 survey that also collects some health data.
+  // protocol.addTaskControl(
+  //     RecurrentScheduledTrigger(
+  //       type: RecurrentType.daily,
+  //       time: TimeOfDay(hour: 13),
+  //     ),
+  //     RPAppTask(
+  //         type: SurveyUserTask.SURVEY_TYPE,
+  //         name: 'WHO-5 Survey',
+  //         rpTask: who5Task,
+  //         measures: [
+  //           Measure(type: SensorSamplingPackage.AMBIENT_LIGHT),
+  //           HealthSamplingPackage.getHealthMeasure([
+  //             HealthDataType.HEART_RATE,
+  //             HealthDataType.STEPS,
+  //           ])
+  //         ]),
+  //     phone);
 }
