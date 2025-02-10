@@ -11,7 +11,6 @@ class SurveyUserTask extends UserTask {
   // A set if predefined commonly used task types.
   static const String SURVEY_TYPE = 'survey';
   static const String COGNITIVE_ASSESSMENT_TYPE = 'cognition';
-  static const String HEALTH_ASSESSMENT_TYPE = 'health';
   static const String AUDIO_TYPE = 'audio';
   static const String VIDEO_TYPE = 'video';
   static const String IMAGE_TYPE = 'image';

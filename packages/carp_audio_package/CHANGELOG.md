@@ -1,6 +1,7 @@
-## 1.8.0
+## 1.8.1
 
 * explicit data objects for `AudioMedia`, `ImageMedia`, and `VideoMedia` (instead of the generic `Media` data type)
+* removing `Permission.camera` from video/image measures, since this has to be requested in the app and not by CAMS
 
 ## 1.7.1
 

@@ -44,7 +44,8 @@ class MediaSamplingPackage extends SmartphoneSamplingPackage {
             displayName: "Video Recording",
             timeType: DataTimeType.TIME_SPAN,
             dataEventType: DataEventType.ONE_TIME,
-            permissions: [Permission.camera],
+            // don't automatically request permission for camera - should be done in the app
+            // permissions: [Permission.camera],
           ),
         ),
         DataTypeSamplingScheme(
@@ -53,7 +54,8 @@ class MediaSamplingPackage extends SmartphoneSamplingPackage {
             displayName: "Image Capture",
             timeType: DataTimeType.POINT,
             dataEventType: DataEventType.ONE_TIME,
-            permissions: [Permission.camera],
+            // don't automatically request permission for camera - should be done in the app
+            // permissions: [Permission.camera],
           ),
         ),
         DataTypeSamplingScheme(
