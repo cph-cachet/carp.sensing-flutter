@@ -5,7 +5,7 @@
  * found in the LICENSE file.
  */
 
-part of communication;
+part of 'communication.dart';
 
 /// Holds a list of text (SMS) messages from the device.
 @JsonSerializable(includeIfNull: false, explicitToJson: true)

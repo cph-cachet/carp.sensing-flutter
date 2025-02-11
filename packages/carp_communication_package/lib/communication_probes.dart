@@ -5,7 +5,7 @@
  * found in the LICENSE file.
  */
 
-part of communication;
+part of 'communication.dart';
 
 /// A probe that collects the phone log from this device.
 ///

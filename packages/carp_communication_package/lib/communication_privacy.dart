@@ -5,7 +5,7 @@
  * found in the LICENSE file.
  */
 
-part of communication;
+part of 'communication.dart';
 
 /// A [TextMessage] anonymizer function. Anonymizes:
 ///  - address

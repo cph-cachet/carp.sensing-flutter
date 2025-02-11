@@ -5,7 +5,7 @@
  * found in the LICENSE file.
  */
 
-part of communication;
+part of 'communication.dart';
 
 /// This is the base class for this communication sampling package.
 ///

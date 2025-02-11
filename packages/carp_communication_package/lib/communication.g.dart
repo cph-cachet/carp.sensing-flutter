@@ -14,20 +14,11 @@ TextMessageLog _$TextMessageLogFromJson(Map<String, dynamic> json) =>
           const [],
     )..$type = json['__type'] as String?;
 
-Map<String, dynamic> _$TextMessageLogToJson(TextMessageLog instance) {
-  final val = <String, dynamic>{};
-
-  void writeNotNull(String key, dynamic value) {
-    if (value != null) {
-      val[key] = value;
-    }
-  }
-
-  writeNotNull('__type', instance.$type);
-  val['textMessageLog'] =
-      instance.textMessageLog.map((e) => e.toJson()).toList();
-  return val;
-}
+Map<String, dynamic> _$TextMessageLogToJson(TextMessageLog instance) =>
+    <String, dynamic>{
+      if (instance.$type case final value?) '__type': value,
+      'textMessageLog': instance.textMessageLog.map((e) => e.toJson()).toList(),
+    };
 
 TextMessage _$TextMessageFromJson(Map<String, dynamic> json) => TextMessage(
       id: (json['id'] as num?)?.toInt(),
@@ -44,27 +35,21 @@ TextMessage _$TextMessageFromJson(Map<String, dynamic> json) => TextMessage(
       status: $enumDecodeNullable(_$SmsStatusEnumMap, json['status']),
     )..$type = json['__type'] as String?;
 
-Map<String, dynamic> _$TextMessageToJson(TextMessage instance) {
-  final val = <String, dynamic>{};
-
-  void writeNotNull(String key, dynamic value) {
-    if (value != null) {
-      val[key] = value;
-    }
-  }
-
-  writeNotNull('__type', instance.$type);
-  writeNotNull('id', instance.id);
-  writeNotNull('address', instance.address);
-  writeNotNull('body', instance.body);
-  writeNotNull('size', instance.size);
-  writeNotNull('read', instance.read);
-  writeNotNull('date', instance.date?.toIso8601String());
-  writeNotNull('dateSent', instance.dateSent?.toIso8601String());
-  writeNotNull('type', _$SmsTypeEnumMap[instance.type]);
-  writeNotNull('status', _$SmsStatusEnumMap[instance.status]);
-  return val;
-}
+Map<String, dynamic> _$TextMessageToJson(TextMessage instance) =>
+    <String, dynamic>{
+      if (instance.$type case final value?) '__type': value,
+      if (instance.id case final value?) 'id': value,
+      if (instance.address case final value?) 'address': value,
+      if (instance.body case final value?) 'body': value,
+      if (instance.size case final value?) 'size': value,
+      if (instance.read case final value?) 'read': value,
+      if (instance.date?.toIso8601String() case final value?) 'date': value,
+      if (instance.dateSent?.toIso8601String() case final value?)
+        'dateSent': value,
+      if (_$SmsTypeEnumMap[instance.type] case final value?) 'type': value,
+      if (_$SmsStatusEnumMap[instance.status] case final value?)
+        'status': value,
+    };
 
 const _$SmsTypeEnumMap = {
   SmsType.MESSAGE_TYPE_ALL: 'MESSAGE_TYPE_ALL',
@@ -92,21 +77,12 @@ PhoneLog _$PhoneLogFromJson(Map<String, dynamic> json) => PhoneLog(
           const [],
     )..$type = json['__type'] as String?;
 
-Map<String, dynamic> _$PhoneLogToJson(PhoneLog instance) {
-  final val = <String, dynamic>{};
-
-  void writeNotNull(String key, dynamic value) {
-    if (value != null) {
-      val[key] = value;
-    }
-  }
-
-  writeNotNull('__type', instance.$type);
-  val['start'] = instance.start.toIso8601String();
-  val['end'] = instance.end.toIso8601String();
-  val['phoneLog'] = instance.phoneLog.map((e) => e.toJson()).toList();
-  return val;
-}
+Map<String, dynamic> _$PhoneLogToJson(PhoneLog instance) => <String, dynamic>{
+      if (instance.$type case final value?) '__type': value,
+      'start': instance.start.toIso8601String(),
+      'end': instance.end.toIso8601String(),
+      'phoneLog': instance.phoneLog.map((e) => e.toJson()).toList(),
+    };
 
 PhoneCall _$PhoneCallFromJson(Map<String, dynamic> json) => PhoneCall(
       json['timestamp'] == null
@@ -119,23 +95,15 @@ PhoneCall _$PhoneCallFromJson(Map<String, dynamic> json) => PhoneCall(
       json['name'] as String?,
     );
 
-Map<String, dynamic> _$PhoneCallToJson(PhoneCall instance) {
-  final val = <String, dynamic>{};
-
-  void writeNotNull(String key, dynamic value) {
-    if (value != null) {
-      val[key] = value;
-    }
-  }
-
-  writeNotNull('timestamp', instance.timestamp?.toIso8601String());
-  writeNotNull('callType', instance.callType);
-  writeNotNull('duration', instance.duration);
-  writeNotNull('formattedNumber', instance.formattedNumber);
-  writeNotNull('number', instance.number);
-  writeNotNull('name', instance.name);
-  return val;
-}
+Map<String, dynamic> _$PhoneCallToJson(PhoneCall instance) => <String, dynamic>{
+      if (instance.timestamp?.toIso8601String() case final value?)
+        'timestamp': value,
+      if (instance.callType case final value?) 'callType': value,
+      if (instance.duration case final value?) 'duration': value,
+      if (instance.formattedNumber case final value?) 'formattedNumber': value,
+      if (instance.number case final value?) 'number': value,
+      if (instance.name case final value?) 'name': value,
+    };
 
 Calendar _$CalendarFromJson(Map<String, dynamic> json) => Calendar(
       DateTime.parse(json['start'] as String),
@@ -146,22 +114,12 @@ Calendar _$CalendarFromJson(Map<String, dynamic> json) => Calendar(
           const [],
     )..$type = json['__type'] as String?;
 
-Map<String, dynamic> _$CalendarToJson(Calendar instance) {
-  final val = <String, dynamic>{};
-
-  void writeNotNull(String key, dynamic value) {
-    if (value != null) {
-      val[key] = value;
-    }
-  }
-
-  writeNotNull('__type', instance.$type);
-  val['calendarEvents'] =
-      instance.calendarEvents.map((e) => e.toJson()).toList();
-  val['start'] = instance.start.toIso8601String();
-  val['end'] = instance.end.toIso8601String();
-  return val;
-}
+Map<String, dynamic> _$CalendarToJson(Calendar instance) => <String, dynamic>{
+      if (instance.$type case final value?) '__type': value,
+      'calendarEvents': instance.calendarEvents.map((e) => e.toJson()).toList(),
+      'start': instance.start.toIso8601String(),
+      'end': instance.end.toIso8601String(),
+    };
 
 CalendarEvent _$CalendarEventFromJson(Map<String, dynamic> json) =>
     CalendarEvent(
@@ -176,23 +134,15 @@ CalendarEvent _$CalendarEventFromJson(Map<String, dynamic> json) =>
       (json['attendees'] as List<dynamic>?)?.map((e) => e as String?).toList(),
     );
 
-Map<String, dynamic> _$CalendarEventToJson(CalendarEvent instance) {
-  final val = <String, dynamic>{};
-
-  void writeNotNull(String key, dynamic value) {
-    if (value != null) {
-      val[key] = value;
-    }
-  }
-
-  writeNotNull('eventId', instance.eventId);
-  writeNotNull('calendarId', instance.calendarId);
-  writeNotNull('title', instance.title);
-  writeNotNull('description', instance.description);
-  writeNotNull('start', instance.start?.toIso8601String());
-  writeNotNull('end', instance.end?.toIso8601String());
-  writeNotNull('allDay', instance.allDay);
-  writeNotNull('location', instance.location);
-  writeNotNull('attendees', instance.attendees);
-  return val;
-}
+Map<String, dynamic> _$CalendarEventToJson(CalendarEvent instance) =>
+    <String, dynamic>{
+      if (instance.eventId case final value?) 'eventId': value,
+      if (instance.calendarId case final value?) 'calendarId': value,
+      if (instance.title case final value?) 'title': value,
+      if (instance.description case final value?) 'description': value,
+      if (instance.start?.toIso8601String() case final value?) 'start': value,
+      if (instance.end?.toIso8601String() case final value?) 'end': value,
+      if (instance.allDay case final value?) 'allDay': value,
+      if (instance.location case final value?) 'location': value,
+      if (instance.attendees case final value?) 'attendees': value,
+    };

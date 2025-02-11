@@ -1,3 +1,7 @@
+## 1.7.0
+
+* upgrade of APK error caused by `call_log` plugin - replaced by `call_e_log`
+
 ## 1.6.1
 
 * upgrade to carp_serialization v. 2.0 & carp_mobile_sensing: 1.10.0
