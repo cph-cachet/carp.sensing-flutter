@@ -1,22 +1,4 @@
-/*
- * Copyright 2018-2022 Copenhagen Center for Health Technology (CACHET) at the
- * Technical University of Denmark (DTU).
- * Use of this source code is governed by a MIT-style license that can be
- * found in the LICENSE file.
- */
 part of 'apps.dart';
-
-// /// A probe collecting a list of installed apps on this device.
-// ///
-// /// Note that this probe only runs on Android.
-// class AppsProbe extends MeasurementProbe {
-//   @override
-//   Future<Measurement> getMeasurement() async {
-//     List<Application> apps = await DeviceApps.getInstalledApplications();
-//     return Measurement.fromData(Apps(
-//         apps.map((application) => App.fromApplication(application)).toList()));
-//   }
-// }
 
 /// A probe collecting a list of installed apps on this device.
 ///

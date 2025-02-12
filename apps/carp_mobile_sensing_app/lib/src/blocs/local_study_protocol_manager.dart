@@ -226,7 +226,7 @@ class LocalStudyProtocolManager implements StudyProtocolManager {
     // --------- APP PACKAGE EXAMPLES -------------
     //
 
-    // Add an automatic task that collects the list of installed apps
+    // Add a task that collects the list of installed apps
     // and a log of app usage activity
     protocol.addTaskControl(
         // PeriodicTrigger(period: const Duration(minutes: 1)),

@@ -31,14 +31,11 @@ class Apps extends Data {
 /// Depending on the Android version, some attributes may not be available.
 @JsonSerializable(includeIfNull: false, explicitToJson: true)
 class App {
-  /// Name of the package.
-  String? packageName;
-
   /// Displayable name of the application.
-  String? appName;
+  String? name;
 
-  /// Full path to the base APK for this application.
-  String? apkFilePath;
+  /// The name of the application package.
+  String? packageName;
 
   /// Public name of the application (e.g., 1.0.0).
   /// The version name of this package, as specified by the <manifest> tag's
@@ -48,27 +45,8 @@ class App {
   /// Unique version id for the application.
   int? versionCode;
 
-  /// Full path to the default directory assigned to the package for its
-  /// persistent data.
-  String? dataDir;
-
-  /// Whether the application is installed in the device's system image
-  /// An application downloaded by the user won't be a system app.
-  bool? systemApp;
-
   /// The time at which the app was first installed in milliseconds.
   int? installTimeMillis;
-
-  /// The time at which the app was last updated in milliseconds.
-  int? updateTimeMillis;
-
-  /// The category of this application.
-  /// The information may come from the application itself or the system.
-  String? category;
-
-  /// Whether the app is enabled (installed and visible)
-  /// or disabled (installed, but not visible).
-  bool? enabled;
 
   /// What framework the app was built with.
   ///  * flutter,
@@ -79,46 +57,20 @@ class App {
   String? builtWith;
 
   App({
+    this.name,
     this.packageName,
-    this.appName,
-    this.apkFilePath,
     this.versionName,
     this.versionCode,
-    this.dataDir,
-    this.systemApp,
     this.installTimeMillis,
-    this.updateTimeMillis,
-    this.category,
-    this.enabled,
   }) : super();
-
-  // App.fromApplication(Application application) : super() {
-  //   packageName = application.packageName;
-  //   appName = application.appName;
-  //   apkFilePath = application.apkFilePath;
-  //   versionName = application.versionName;
-  //   versionCode = application.versionCode;
-  //   dataDir = application.dataDir;
-  //   systemApp = application.systemApp;
-  //   installTimeMillis = application.installTimeMillis;
-  //   updateTimeMillis = application.updateTimeMillis;
-  //   enabled = application.enabled;
-  //   category = application.category.name;
-  // }
 
   /// Create an [App] object from an [AppInfo] object.
   App.fromAppInfo(AppInfo app) : super() {
+    name = app.name;
     packageName = app.packageName;
-    appName = app.name;
-    // apkFilePath = app.apkFilePath;
     versionName = app.versionName;
     versionCode = app.versionCode;
-    // dataDir = app.dataDir;
-    // systemApp = app.systemApp;
     installTimeMillis = app.installedTimestamp;
-    // updateTimeMillis = app.updateTimeMillis;
-    // enabled = app.enabled;
-    // category = app.category.name;
     builtWith = app.builtWith.name;
   }
 
@@ -128,17 +80,12 @@ class App {
   @override
   String toString() {
     return 'App {'
-        'appName: $appName, '
-        'apkFilePath: $apkFilePath, '
+        'name: $name, '
         'packageName: $packageName, '
         'versionName: $versionName, '
         'versionCode: $versionCode, '
-        'dataDir: $dataDir, '
-        'systemApp: $systemApp, '
         'installTimeMillis: $installTimeMillis, '
-        'updateTimeMillis: $updateTimeMillis, '
-        'category: $category, '
-        'enabled: $enabled'
+        'builtWith: $builtWith'
         '}';
   }
 }
@@ -170,11 +117,11 @@ class AppUsage extends Data {
 /// Holds information about usage for a specific app.
 @JsonSerializable(includeIfNull: false, explicitToJson: true)
 class AppUsageInfo {
+  /// The name of the application
+  String name;
+
   /// The full name of the application package
   String packageName;
-
-  /// The name of the application
-  String appName;
 
   /// The amount of time the application has been used
   /// in the specified interval
@@ -190,8 +137,8 @@ class AppUsageInfo {
   DateTime lastForeground;
 
   AppUsageInfo(
+    this.name,
     this.packageName,
-    this.appName,
     this.usage,
     this.startDate,
     this.endDate,
@@ -200,8 +147,8 @@ class AppUsageInfo {
 
   AppUsageInfo.fromAppUsageInfo(app_usage.AppUsageInfo info)
       : this(
-          info.packageName,
           info.appName,
+          info.packageName,
           info.usage,
           info.startDate,
           info.endDate,
@@ -214,5 +161,5 @@ class AppUsageInfo {
 
   @override
   String toString() =>
-      'App Usage: $packageName - $appName, duration: $usage [$startDate, $endDate]';
+      'App Usage: $packageName - $name, duration: $usage [$startDate, $endDate]';
 }

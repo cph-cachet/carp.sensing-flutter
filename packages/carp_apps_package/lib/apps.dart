@@ -1,11 +1,17 @@
+/*
+ * Copyright 2018-2025 Copenhagen Center for Health Technology (CACHET) at the
+ * Technical University of Denmark (DTU).
+ * Use of this source code is governed by a MIT-style license that can be
+ * found in the LICENSE file.
+ */
+
 /// A library for collecting data from apps on the phone.
-library carp_apps_package;
+library;
 
 import 'dart:io';
 import 'dart:async';
 
 import 'package:json_annotation/json_annotation.dart';
-// import 'package:device_apps/device_apps.dart';
 import 'package:installed_apps/installed_apps.dart';
 import 'package:installed_apps/app_info.dart';
 import 'package:app_usage/app_usage.dart' as app_usage;
