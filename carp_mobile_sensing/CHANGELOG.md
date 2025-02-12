@@ -2,6 +2,7 @@
 
 * upgrade of Android APK
 * bumped minimum Flutter SDK requirement to 3.3
+* upgrade of plugins to latest versions
 
 ## 1.11.6
 

@@ -6,7 +6,7 @@
 [![MIT License](https://img.shields.io/badge/license-MIT-purple.svg)](https://opensource.org/licenses/MIT)
 [![arXiv](https://img.shields.io/badge/arXiv-2006.11904-green.svg)](https://arxiv.org/abs/2006.11904)
 
-This library contains the core Flutter package for the [CARP Mobile Sensing (CAMS)](https://carp.cachet.dk/cams/) framework.
+This library contains the core Flutter package for the [CARP Mobile Sensing (CAMS)](https://carp.dk/cams/) framework.
 Supports cross-platform (iOS and Android) mobile sensing.
 
 For an overview of all CAMS packages, see [CARP Mobile Sensing in Flutter](https://github.com/cph-cachet/carp.sensing-flutter).
@@ -81,10 +81,7 @@ The pedometer (step count) probe uses `NSMotion` on iOS and the `NSMotionUsageDe
 
 The [Dart API doc](https://pub.dartlang.org/documentation/carp_mobile_sensing/latest/) describes the different libraries and classes.
 
-The CAMS [wiki][wiki] contains detailed documentation on the CARP Mobile Sensing Framework, including
-the [domain model](https://github.com/cph-cachet/carp.sensing-flutter/wiki/2.-Domain-Model),
-how to use it by create a [study configuration](https://github.com/cph-cachet/carp.sensing-flutter/wiki/3.-Using-CARP-Mobile-Sensing),
-how to [extend](https://github.com/cph-cachet/carp.sensing-flutter/wiki/5.-Extending-CARP-Mobile-Sensing) it, and
+The CAMS [wiki][wiki] contains detailed documentation on the CARP Mobile Sensing Framework, including the [domain model](https://github.com/cph-cachet/carp.sensing-flutter/wiki/2.-Domain-Model), how to use it by create a [study configuration](https://github.com/cph-cachet/carp.sensing-flutter/wiki/3.-Using-CARP-Mobile-Sensing), how to [extend](https://github.com/cph-cachet/carp.sensing-flutter/wiki/5.-Extending-CARP-Mobile-Sensing) it, and
 an overview of the available [measure types](https://github.com/cph-cachet/carp.sensing-flutter/wiki/A.-Measure-Types).
 
 More scientific documentation of CAMS is available in the following papers:
@@ -223,7 +220,7 @@ Please read about existing issues and file new feature requests and bug reports 
 
 ## License
 
-This software is copyright (c) the [Technical University of Denmark (DTU)](https://www.dtu.dk) and is part of the [Copenhagen Research Platform](https://carp.cachet.dk/).
+This software is copyright (c) the [Technical University of Denmark (DTU)](https://www.dtu.dk) and is part of the [Copenhagen Research Platform](https://carp.dk/).
 This software is available 'as-is' under a [MIT license](LICENSE).
 
 <!-- LINKS  -->
