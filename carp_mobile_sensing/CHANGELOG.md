@@ -1,3 +1,8 @@
+## 1.12.0
+
+* upgrade of Android APK
+* bumped minimum Flutter SDK requirement to 3.3
+
 ## 1.11.6
 
 * Support for the `NoUserTaskTrigger` (issue [#453](https://github.com/cph-cachet/carp.sensing-flutter/issues/453))

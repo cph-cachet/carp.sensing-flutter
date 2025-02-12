@@ -21,7 +21,7 @@
 /// The infrastructure layer should be generic and adaptable, implementing the
 /// interfaces or abstractions that are defined by the domain layer."
 /// From [Domain-Driven Design (DDD): A Guide to Building Scalable, High-Performance Systems](https://romanglushach.medium.com/domain-driven-design-ddd-a-guide-to-building-scalable-high-performance-systems-5314a7fe053c) by Roman Glushach.
-library infrastructure;
+library;
 
 import 'dart:async';
 import 'dart:convert';

@@ -14,7 +14,7 @@
 ///  - acceleration features
 ///  - ambient light
 ///  - pedometer (step events)
-library sensors;
+library;
 
 import 'dart:async';
 import 'dart:io' show Platform;

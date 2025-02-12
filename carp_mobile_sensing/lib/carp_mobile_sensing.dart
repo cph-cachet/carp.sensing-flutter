@@ -17,7 +17,7 @@
 /// business needs and terminology of the domain experts, users, and stakeholders.
 /// From [Domain-Driven Design (DDD): A Guide to Building Scalable, High-Performance Systems](https://romanglushach.medium.com/domain-driven-design-ddd-a-guide-to-building-scalable-high-performance-systems-5314a7fe053c) by Roman Glushach.
 ///
-library carp_mobile_sensing;
+library;
 
 import 'package:carp_serializable/carp_serializable.dart';
 import 'package:carp_core/carp_core.dart';

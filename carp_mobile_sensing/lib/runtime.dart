@@ -8,7 +8,7 @@
 /// Contains classes for running the sensing framework incl.
 /// the [SmartphoneDeploymentExecutor], [TaskExecutor] and different types of
 /// [Probe]s.
-library runtime;
+library;
 
 import 'dart:async';
 import 'dart:math';

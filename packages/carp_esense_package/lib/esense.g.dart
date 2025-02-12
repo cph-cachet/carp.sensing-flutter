@@ -13,21 +13,13 @@ ESenseButton _$ESenseButtonFromJson(Map<String, dynamic> json) => ESenseButton(
       ..$type = json['__type'] as String?
       ..timestamp = DateTime.parse(json['timestamp'] as String);
 
-Map<String, dynamic> _$ESenseButtonToJson(ESenseButton instance) {
-  final val = <String, dynamic>{};
-
-  void writeNotNull(String key, dynamic value) {
-    if (value != null) {
-      val[key] = value;
-    }
-  }
-
-  writeNotNull('__type', instance.$type);
-  val['timestamp'] = instance.timestamp.toIso8601String();
-  val['device_name'] = instance.deviceName;
-  val['pressed'] = instance.pressed;
-  return val;
-}
+Map<String, dynamic> _$ESenseButtonToJson(ESenseButton instance) =>
+    <String, dynamic>{
+      if (instance.$type case final value?) '__type': value,
+      'timestamp': instance.timestamp.toIso8601String(),
+      'device_name': instance.deviceName,
+      'pressed': instance.pressed,
+    };
 
 ESenseSensor _$ESenseSensorFromJson(Map<String, dynamic> json) => ESenseSensor(
       deviceName: json['device_name'] as String,
@@ -43,23 +35,15 @@ ESenseSensor _$ESenseSensorFromJson(Map<String, dynamic> json) => ESenseSensor(
           .toList(),
     )..$type = json['__type'] as String?;
 
-Map<String, dynamic> _$ESenseSensorToJson(ESenseSensor instance) {
-  final val = <String, dynamic>{};
-
-  void writeNotNull(String key, dynamic value) {
-    if (value != null) {
-      val[key] = value;
-    }
-  }
-
-  writeNotNull('__type', instance.$type);
-  val['timestamp'] = instance.timestamp.toIso8601String();
-  val['device_name'] = instance.deviceName;
-  writeNotNull('packet_index', instance.packetIndex);
-  writeNotNull('accel', instance.accel);
-  writeNotNull('gyro', instance.gyro);
-  return val;
-}
+Map<String, dynamic> _$ESenseSensorToJson(ESenseSensor instance) =>
+    <String, dynamic>{
+      if (instance.$type case final value?) '__type': value,
+      'timestamp': instance.timestamp.toIso8601String(),
+      'device_name': instance.deviceName,
+      if (instance.packetIndex case final value?) 'packet_index': value,
+      if (instance.accel case final value?) 'accel': value,
+      if (instance.gyro case final value?) 'gyro': value,
+    };
 
 ESenseDevice _$ESenseDeviceFromJson(Map<String, dynamic> json) => ESenseDevice(
       roleName: json['roleName'] as String? ?? ESenseDevice.DEFAULT_ROLENAME,
@@ -74,21 +58,13 @@ ESenseDevice _$ESenseDeviceFromJson(Map<String, dynamic> json) => ESenseDevice(
             k, SamplingConfiguration.fromJson(e as Map<String, dynamic>)),
       );
 
-Map<String, dynamic> _$ESenseDeviceToJson(ESenseDevice instance) {
-  final val = <String, dynamic>{};
-
-  void writeNotNull(String key, dynamic value) {
-    if (value != null) {
-      val[key] = value;
-    }
-  }
-
-  writeNotNull('__type', instance.$type);
-  val['roleName'] = instance.roleName;
-  writeNotNull('isOptional', instance.isOptional);
-  writeNotNull(
-      'defaultSamplingConfiguration', instance.defaultSamplingConfiguration);
-  writeNotNull('deviceName', instance.deviceName);
-  val['samplingRate'] = instance.samplingRate;
-  return val;
-}
+Map<String, dynamic> _$ESenseDeviceToJson(ESenseDevice instance) =>
+    <String, dynamic>{
+      if (instance.$type case final value?) '__type': value,
+      'roleName': instance.roleName,
+      if (instance.isOptional case final value?) 'isOptional': value,
+      if (instance.defaultSamplingConfiguration case final value?)
+        'defaultSamplingConfiguration': value,
+      if (instance.deviceName case final value?) 'deviceName': value,
+      'samplingRate': instance.samplingRate,
+    };
