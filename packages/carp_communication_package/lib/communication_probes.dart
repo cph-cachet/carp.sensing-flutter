@@ -69,7 +69,7 @@ StreamController<Measurement> _textMessageProbeController =
 
 /// The top-level call-back method for handling in-coming SMS messages when
 /// the app is in the background.
-void backgrounMessageHandler(SmsMessage message) async {
+void backgroundMessageHandler(SmsMessage message) async {
   _textMessageProbeController
       .add(Measurement.fromData(TextMessage.fromSmsMessage(message)));
 }
@@ -93,7 +93,7 @@ class TextMessageProbe extends StreamProbe {
         _textMessageProbeController
             .add(Measurement.fromData(TextMessage.fromSmsMessage(message)));
       },
-      onBackgroundMessage: backgrounMessageHandler,
+      onBackgroundMessage: backgroundMessageHandler,
     );
     return true;
   }
