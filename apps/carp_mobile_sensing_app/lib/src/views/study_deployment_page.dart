@@ -180,10 +180,8 @@ class _TaskPanel extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final ThemeData themeData = Theme.of(context);
-    final List<Widget> children = task!.measures
-            ?.map((measure) => _MeasureLine(measure: measure))
-            .toList() ??
-        [];
+    final List<Widget> children =
+        task!.measures?.map((measure) => _MeasureLine(measure)).toList() ?? [];
 
     return Container(
       padding: const EdgeInsets.symmetric(vertical: 16.0),
@@ -208,19 +206,24 @@ class _TaskPanel extends StatelessWidget {
 }
 
 class _MeasureLine extends StatelessWidget {
-  _MeasureLine({this.measure});
+  _MeasureLine(this.measure);
 
-  final Measure? measure;
+  final Measure measure;
 
   @override
   Widget build(BuildContext context) {
     final ThemeData themeData = Theme.of(context);
-    final Icon icon = (ProbeDescription.probeTypeIcon[measure!.type] != null)
-        ? Icon(ProbeDescription.probeTypeIcon[measure!.type]!.icon, size: 25)
-        : Icon(Icons.error, size: 25);
+    final Icon icon =
+        (ProbeDescription.descriptors[measure!.type]?.icon != null)
+            ? Icon(ProbeDescription.descriptors[measure!.type]!.icon?.icon,
+                size: 25)
+            : Icon(Icons.error, size: 25);
 
-    final String name = ProbeDescription.descriptors[measure?.type]?.name ??
-        measure.runtimeType.toString();
+    final String name = SamplingPackageRegistry()
+            .samplingSchemes[measure.type]
+            ?.dataType
+            .displayName ??
+        measure.type.split('.').last.toUpperCase();
 
     final List<Widget> columnChildren = [];
     columnChildren.add(Text(name));
