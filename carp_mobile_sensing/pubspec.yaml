@@ -27,7 +27,7 @@ dependencies:
   package_info_plus: '>=6.0.0 <9.0.0'
   flutter_local_notifications: ^18.0.0 # For sending notification on AppTask
   cron: ^0.6.0                         # For scheduling / triggering cron jobs
-  timezone: ^0.10.0                    # For collecting time zone information
+  timezone: ^0.9.0                    # For collecting time zone information
   flutter_timezone: ^4.0.0             # For getting local time zone for scheduling notifications
 
   # probe-dependent plugins
