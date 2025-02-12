@@ -70,6 +70,14 @@ class App {
   /// or disabled (installed, but not visible).
   bool? enabled;
 
+  /// What framework the app was built with.
+  ///  * flutter,
+  ///  * react_native,
+  ///  * xamarin,
+  ///  * ionic,
+  ///  * native_or_others,
+  String? builtWith;
+
   App({
     this.packageName,
     this.appName,
@@ -84,18 +92,34 @@ class App {
     this.enabled,
   }) : super();
 
-  App.fromApplication(Application application) : super() {
-    packageName = application.packageName;
-    appName = application.appName;
-    apkFilePath = application.apkFilePath;
-    versionName = application.versionName;
-    versionCode = application.versionCode;
-    dataDir = application.dataDir;
-    systemApp = application.systemApp;
-    installTimeMillis = application.installTimeMillis;
-    updateTimeMillis = application.updateTimeMillis;
-    enabled = application.enabled;
-    category = application.category.name;
+  // App.fromApplication(Application application) : super() {
+  //   packageName = application.packageName;
+  //   appName = application.appName;
+  //   apkFilePath = application.apkFilePath;
+  //   versionName = application.versionName;
+  //   versionCode = application.versionCode;
+  //   dataDir = application.dataDir;
+  //   systemApp = application.systemApp;
+  //   installTimeMillis = application.installTimeMillis;
+  //   updateTimeMillis = application.updateTimeMillis;
+  //   enabled = application.enabled;
+  //   category = application.category.name;
+  // }
+
+  /// Create an [App] object from an [AppInfo] object.
+  App.fromAppInfo(AppInfo app) : super() {
+    packageName = app.packageName;
+    appName = app.name;
+    // apkFilePath = app.apkFilePath;
+    versionName = app.versionName;
+    versionCode = app.versionCode;
+    // dataDir = app.dataDir;
+    // systemApp = app.systemApp;
+    installTimeMillis = app.installedTimestamp;
+    // updateTimeMillis = app.updateTimeMillis;
+    // enabled = app.enabled;
+    // category = app.category.name;
+    builtWith = app.builtWith.name;
   }
 
   factory App.fromJson(Map<String, dynamic> json) => _$AppFromJson(json);

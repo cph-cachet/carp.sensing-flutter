@@ -1,3 +1,8 @@
+## 1.7.0
+
+* replacing the `device_apps` plugin with the `installed_apps` plugin
+* adjusting the `App` data class accordingly (`installed_apps` unfortunately has less information)
+
 ## 1.6.0
 
 * upgrade to carp_serialization v. 2.0 & carp_mobile_sensing: 1.10.0

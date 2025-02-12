@@ -6,15 +6,28 @@
  */
 part of 'apps.dart';
 
+// /// A probe collecting a list of installed apps on this device.
+// ///
+// /// Note that this probe only runs on Android.
+// class AppsProbe extends MeasurementProbe {
+//   @override
+//   Future<Measurement> getMeasurement() async {
+//     List<Application> apps = await DeviceApps.getInstalledApplications();
+//     return Measurement.fromData(Apps(
+//         apps.map((application) => App.fromApplication(application)).toList()));
+//   }
+// }
+
 /// A probe collecting a list of installed apps on this device.
 ///
 /// Note that this probe only runs on Android.
 class AppsProbe extends MeasurementProbe {
   @override
   Future<Measurement> getMeasurement() async {
-    List<Application> apps = await DeviceApps.getInstalledApplications();
-    return Measurement.fromData(Apps(
-        apps.map((application) => App.fromApplication(application)).toList()));
+    List<AppInfo> apps = await InstalledApps.getInstalledApps(true);
+
+    return Measurement.fromData(
+        Apps(apps.map((app) => App.fromAppInfo(app)).toList()));
   }
 }
 
