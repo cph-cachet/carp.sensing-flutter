@@ -18,7 +18,7 @@
 /// value objects, aggregates, services, events, and other elements that capture
 /// the essence and meaning of the domain."
 /// From [Domain-Driven Design (DDD): A Guide to Building Scalable, High-Performance Systems](https://romanglushach.medium.com/domain-driven-design-ddd-a-guide-to-building-scalable-high-performance-systems-5314a7fe053c) by Roman Glushach.
-library domain;
+library;
 
 import 'dart:io';
 import 'package:device_info_plus/device_info_plus.dart';

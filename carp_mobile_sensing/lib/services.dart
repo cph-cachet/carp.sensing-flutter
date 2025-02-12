@@ -6,7 +6,7 @@
  */
 
 /// This library holds the definition of all CAMS services used for sensing.
-library services;
+library;
 
 import 'dart:async';
 import 'dart:io';

@@ -14,7 +14,7 @@ import 'package:carp_audio_package/media.dart';
 import 'package:carp_health_package/health_package.dart';
 // import 'package:health/health.dart';
 
-// import 'package:carp_apps_package/apps.dart';
+import 'package:carp_apps_package/apps.dart';
 import 'package:carp_backend/carp_backend.dart';
 // import 'package:carp_webservices/carp_auth/carp_auth.dart';
 // import 'package:carp_webservices/carp_services/carp_services.dart';
@@ -36,7 +36,7 @@ void main() {
     SamplingPackageRegistry().register(ContextSamplingPackage());
     SamplingPackageRegistry().register(MediaSamplingPackage());
     // SamplingPackageRegistry().register(CommunicationSamplingPackage());
-    // SamplingPackageRegistry().register(AppsSamplingPackage());
+    SamplingPackageRegistry().register(AppsSamplingPackage());
     SamplingPackageRegistry().register(ESenseSamplingPackage());
     SamplingPackageRegistry().register(PolarSamplingPackage());
     SamplingPackageRegistry().register(HealthSamplingPackage());

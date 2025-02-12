@@ -330,7 +330,9 @@ class ConditionalSamplingEventTriggerExecutor
         ?.measurementsByType(configuration!.measureType)
         .listen((measurement) {
       if (configuration!.triggerCondition != null &&
-          configuration!.triggerCondition!(measurement)) onTrigger();
+          configuration!.triggerCondition!(measurement)) {
+        onTrigger();
+      }
     });
     return true;
   }
@@ -350,7 +352,9 @@ class ConditionalPeriodicTriggerExecutor
     // create a recurrent timer that checks the conditions periodically
     timer = Timer.periodic(configuration!.period, (_) {
       if (configuration!.triggerCondition != null &&
-          configuration!.triggerCondition!()) onTrigger();
+          configuration!.triggerCondition!()) {
+        onTrigger();
+      }
     });
     return true;
   }

@@ -55,14 +55,14 @@ class ProbeDescription {
           'Noise',
           "Ambient noise level in decibel as detected by the phone's microphone.",
         ),
-        // AppsSamplingPackage.APPS: ProbeDescriptor(
-        //   'Apps',
-        //   'Collects a list of installed apps.',
-        // ),
-        // AppsSamplingPackage.APP_USAGE: ProbeDescriptor(
-        //   'App Usage',
-        //   'Collects app usage statistics.',
-        // ),
+        AppsSamplingPackage.APPS: ProbeDescriptor(
+          'Apps',
+          'Collects a list of installed apps.',
+        ),
+        AppsSamplingPackage.APP_USAGE: ProbeDescriptor(
+          'App Usage',
+          'Collects app usage statistics.',
+        ),
         // CommunicationSamplingPackage.TEXT_MESSAGE_LOG: ProbeDescriptor(
         //   'Text Messages',
         //   'Collects the SMS message log.',
@@ -206,10 +206,10 @@ class ProbeDescription {
             Icon(Icons.mic, size: 50, color: CachetColors.ORANGE),
         MediaSamplingPackage.NOISE:
             Icon(Icons.hearing, size: 50, color: CachetColors.YELLOW),
-        // AppsSamplingPackage.APPS:
-        //     Icon(Icons.apps, size: 50, color: CachetColors.LIGHT_GREEN),
-        // AppsSamplingPackage.APP_USAGE:
-        //     Icon(Icons.get_app, size: 50, color: CachetColors.LIGHT_GREEN),
+        AppsSamplingPackage.APPS:
+            Icon(Icons.apps, size: 50, color: CachetColors.LIGHT_GREEN),
+        AppsSamplingPackage.APP_USAGE:
+            Icon(Icons.get_app, size: 50, color: CachetColors.LIGHT_GREEN),
         // CommunicationSamplingPackage.TEXT_MESSAGE_LOG:
         //     Icon(Icons.textsms, size: 50, color: CACHET.LIGHT_PURPLE),
         // CommunicationSamplingPackage.TEXT_MESSAGE:

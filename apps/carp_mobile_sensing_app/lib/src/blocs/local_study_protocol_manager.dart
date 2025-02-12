@@ -226,21 +226,16 @@ class LocalStudyProtocolManager implements StudyProtocolManager {
     // --------- APP PACKAGE EXAMPLES -------------
     //
 
-    // // Add an automatic task that collects the list of installed apps
-    // // and a log of app usage activity
-    // protocol.addTaskControl(
-    //     PeriodicTrigger(
-    //       period: const Duration(minutes: 1),
-    //       duration: const Duration(seconds: 10),
-    //     ),
-    //     AutomaticTask()
-    //       ..addMeasures(SamplingPackageRegistry().common.getMeasureList(
-    //         types: [
-    //           AppsSamplingPackage.APPS,
-    //           AppsSamplingPackage.APP_USAGE,
-    //         ],
-    //       )),
-    //     phone);
+    // Add a task that collects the list of installed apps
+    // and a log of app usage activity
+    protocol.addTaskControl(
+        // PeriodicTrigger(period: const Duration(minutes: 1)),
+        ImmediateTrigger(),
+        BackgroundTask(measures: [
+          Measure(type: AppsSamplingPackage.APPS),
+          Measure(type: AppsSamplingPackage.APP_USAGE),
+        ]),
+        phone);
 
     //
     // --------- eSENSE PACKAGE EXAMPLES -------------

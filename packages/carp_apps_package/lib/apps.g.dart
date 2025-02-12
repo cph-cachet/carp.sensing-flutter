@@ -12,56 +12,28 @@ Apps _$AppsFromJson(Map<String, dynamic> json) => Apps(
           .toList(),
     )..$type = json['__type'] as String?;
 
-Map<String, dynamic> _$AppsToJson(Apps instance) {
-  final val = <String, dynamic>{};
-
-  void writeNotNull(String key, dynamic value) {
-    if (value != null) {
-      val[key] = value;
-    }
-  }
-
-  writeNotNull('__type', instance.$type);
-  val['installedApps'] = instance.installedApps.map((e) => e.toJson()).toList();
-  return val;
-}
+Map<String, dynamic> _$AppsToJson(Apps instance) => <String, dynamic>{
+      if (instance.$type case final value?) '__type': value,
+      'installedApps': instance.installedApps.map((e) => e.toJson()).toList(),
+    };
 
 App _$AppFromJson(Map<String, dynamic> json) => App(
+      name: json['name'] as String?,
       packageName: json['packageName'] as String?,
-      appName: json['appName'] as String?,
-      apkFilePath: json['apkFilePath'] as String?,
       versionName: json['versionName'] as String?,
       versionCode: (json['versionCode'] as num?)?.toInt(),
-      dataDir: json['dataDir'] as String?,
-      systemApp: json['systemApp'] as bool?,
       installTimeMillis: (json['installTimeMillis'] as num?)?.toInt(),
-      updateTimeMillis: (json['updateTimeMillis'] as num?)?.toInt(),
-      category: json['category'] as String?,
-      enabled: json['enabled'] as bool?,
-    );
+    )..builtWith = json['builtWith'] as String?;
 
-Map<String, dynamic> _$AppToJson(App instance) {
-  final val = <String, dynamic>{};
-
-  void writeNotNull(String key, dynamic value) {
-    if (value != null) {
-      val[key] = value;
-    }
-  }
-
-  writeNotNull('packageName', instance.packageName);
-  writeNotNull('appName', instance.appName);
-  writeNotNull('apkFilePath', instance.apkFilePath);
-  writeNotNull('versionName', instance.versionName);
-  writeNotNull('versionCode', instance.versionCode);
-  writeNotNull('dataDir', instance.dataDir);
-  writeNotNull('systemApp', instance.systemApp);
-  writeNotNull('installTimeMillis', instance.installTimeMillis);
-  writeNotNull('updateTimeMillis', instance.updateTimeMillis);
-  writeNotNull('category', instance.category);
-  writeNotNull('enabled', instance.enabled);
-  return val;
-}
+Map<String, dynamic> _$AppToJson(App instance) => <String, dynamic>{
+      if (instance.name case final value?) 'name': value,
+      if (instance.packageName case final value?) 'packageName': value,
+      if (instance.versionName case final value?) 'versionName': value,
+      if (instance.versionCode case final value?) 'versionCode': value,
+      if (instance.installTimeMillis case final value?)
+        'installTimeMillis': value,
+      if (instance.builtWith case final value?) 'builtWith': value,
+    };
 
 AppUsage _$AppUsageFromJson(Map<String, dynamic> json) => AppUsage(
       DateTime.parse(json['start'] as String),
@@ -73,25 +45,16 @@ AppUsage _$AppUsageFromJson(Map<String, dynamic> json) => AppUsage(
           const {},
     )..$type = json['__type'] as String?;
 
-Map<String, dynamic> _$AppUsageToJson(AppUsage instance) {
-  final val = <String, dynamic>{};
-
-  void writeNotNull(String key, dynamic value) {
-    if (value != null) {
-      val[key] = value;
-    }
-  }
-
-  writeNotNull('__type', instance.$type);
-  val['start'] = instance.start.toIso8601String();
-  val['end'] = instance.end.toIso8601String();
-  val['usage'] = instance.usage.map((k, e) => MapEntry(k, e.toJson()));
-  return val;
-}
+Map<String, dynamic> _$AppUsageToJson(AppUsage instance) => <String, dynamic>{
+      if (instance.$type case final value?) '__type': value,
+      'start': instance.start.toIso8601String(),
+      'end': instance.end.toIso8601String(),
+      'usage': instance.usage.map((k, e) => MapEntry(k, e.toJson())),
+    };
 
 AppUsageInfo _$AppUsageInfoFromJson(Map<String, dynamic> json) => AppUsageInfo(
+      json['name'] as String,
       json['packageName'] as String,
-      json['appName'] as String,
       Duration(microseconds: (json['usage'] as num).toInt()),
       DateTime.parse(json['startDate'] as String),
       DateTime.parse(json['endDate'] as String),
@@ -100,8 +63,8 @@ AppUsageInfo _$AppUsageInfoFromJson(Map<String, dynamic> json) => AppUsageInfo(
 
 Map<String, dynamic> _$AppUsageInfoToJson(AppUsageInfo instance) =>
     <String, dynamic>{
+      'name': instance.name,
       'packageName': instance.packageName,
-      'appName': instance.appName,
       'usage': instance.usage.inMicroseconds,
       'startDate': instance.startDate.toIso8601String(),
       'endDate': instance.endDate.toIso8601String(),

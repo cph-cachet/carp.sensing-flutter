@@ -17,9 +17,9 @@ void main() {
   group('Apps Tests', () {
     test(' - installed apps', () {
       Apps d = Apps([
-        App(appName: 'MUBS'),
-        App(appName: 'mCardia'),
-        App(appName: 'Safari'),
+        App(name: 'MUBS'),
+        App(name: 'mCardia'),
+        App(name: 'Safari'),
       ]);
       print(d);
       print(_encode(d));

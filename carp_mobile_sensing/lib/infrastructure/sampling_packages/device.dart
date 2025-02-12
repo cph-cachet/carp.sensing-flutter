@@ -13,7 +13,7 @@
 ///  - screen events
 ///  - free memory
 ///  - time zone
-library device;
+library;
 
 import 'dart:async';
 import 'dart:io' show Platform;
