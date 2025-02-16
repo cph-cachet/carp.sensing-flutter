@@ -21,26 +21,18 @@ CarpDataEndPoint _$CarpDataEndPointFromJson(Map<String, dynamic> json) =>
       ..$type = json['__type'] as String?
       ..type = json['type'] as String;
 
-Map<String, dynamic> _$CarpDataEndPointToJson(CarpDataEndPoint instance) {
-  final val = <String, dynamic>{};
-
-  void writeNotNull(String key, dynamic value) {
-    if (value != null) {
-      val[key] = value;
-    }
-  }
-
-  writeNotNull('__type', instance.$type);
-  val['type'] = instance.type;
-  val['dataFormat'] = instance.dataFormat;
-  val['uploadMethod'] = _$CarpUploadMethodEnumMap[instance.uploadMethod]!;
-  val['name'] = instance.name;
-  val['onlyUploadOnWiFi'] = instance.onlyUploadOnWiFi;
-  val['uploadInterval'] = instance.uploadInterval;
-  val['deleteWhenUploaded'] = instance.deleteWhenUploaded;
-  val['compress'] = instance.compress;
-  return val;
-}
+Map<String, dynamic> _$CarpDataEndPointToJson(CarpDataEndPoint instance) =>
+    <String, dynamic>{
+      if (instance.$type case final value?) '__type': value,
+      'type': instance.type,
+      'dataFormat': instance.dataFormat,
+      'uploadMethod': _$CarpUploadMethodEnumMap[instance.uploadMethod]!,
+      'name': instance.name,
+      'onlyUploadOnWiFi': instance.onlyUploadOnWiFi,
+      'uploadInterval': instance.uploadInterval,
+      'deleteWhenUploaded': instance.deleteWhenUploaded,
+      'compress': instance.compress,
+    };
 
 const _$CarpUploadMethodEnumMap = {
   CarpUploadMethod.stream: 'stream',
@@ -62,26 +54,16 @@ Message _$MessageFromJson(Map<String, dynamic> json) => Message(
           : DateTime.parse(json['timestamp'] as String),
     );
 
-Map<String, dynamic> _$MessageToJson(Message instance) {
-  final val = <String, dynamic>{
-    'id': instance.id,
-    'type': _$MessageTypeEnumMap[instance.type]!,
-    'timestamp': instance.timestamp.toIso8601String(),
-  };
-
-  void writeNotNull(String key, dynamic value) {
-    if (value != null) {
-      val[key] = value;
-    }
-  }
-
-  writeNotNull('title', instance.title);
-  writeNotNull('sub_title', instance.subTitle);
-  writeNotNull('message', instance.message);
-  writeNotNull('url', instance.url);
-  writeNotNull('image', instance.image);
-  return val;
-}
+Map<String, dynamic> _$MessageToJson(Message instance) => <String, dynamic>{
+      'id': instance.id,
+      'type': _$MessageTypeEnumMap[instance.type]!,
+      'timestamp': instance.timestamp.toIso8601String(),
+      if (instance.title case final value?) 'title': value,
+      if (instance.subTitle case final value?) 'sub_title': value,
+      if (instance.message case final value?) 'message': value,
+      if (instance.url case final value?) 'url': value,
+      if (instance.image case final value?) 'image': value,
+    };
 
 const _$MessageTypeEnumMap = {
   MessageType.announcement: 'announcement',

@@ -310,12 +310,11 @@ class LocalStudyProtocolManager implements StudyProtocolManager {
     //
     // --------- C3+ PACKAGE EXAMPLES -------------
     //
-    // Known DTU C3+ devices:
-    //  - Movesense MD : 220330000122 : 0C:8C:DC:3F:B2:CD
-    //  - Movesense    : 233830000687 : 0C:8C:DC:1B:23:3E
+    // Known DTU C3+ devices: ED:AD:D4:3D:3F:72
 
     var c3 = CortriumDevice(
       name: 'Cortrium C3+',
+      identifier: 'ED:AD:D4:3D:3F:72',
     );
 
     protocol.addConnectedDevice(c3, phone);
@@ -324,7 +323,7 @@ class LocalStudyProtocolManager implements StudyProtocolManager {
         ImmediateTrigger(),
         BackgroundTask(measures: [
           Measure(type: CortriumSamplingPackage.ECG),
-          // Measure(type: CortriumSamplingPackage.BUTTON),
+          Measure(type: CortriumSamplingPackage.BUTTON),
           // Measure(type: CortriumSamplingPackage.ACCELEROMETER),
         ]),
         c3);

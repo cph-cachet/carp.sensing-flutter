@@ -3,6 +3,7 @@ import 'package:carp_mobile_sensing/carp_mobile_sensing.dart';
 import 'package:carp_webservices/carp_auth/carp_auth.dart';
 import 'package:carp_webservices/carp_services/carp_services.dart';
 import 'package:carp_backend/carp_backend.dart';
+import 'package:flutter/material.dart';
 import 'package:research_package/model.dart';
 
 void main() async {
@@ -176,7 +177,7 @@ void main() async {
   // the CarpService() singleton for accessing CAWS. Hence,
   // CarpService needs to be authenticated and initialized before
   // using the CarpResourceManager.
-  CarpResourceManager icManager = CarpResourceManager();
+  InformedConsentManager icManager = CarpResourceManager();
   icManager.initialize();
 
   // Create a simple informed consent...
@@ -195,4 +196,58 @@ void main() async {
 
   // Get the informed consent back as a RPOrderedTask, if available.
   RPOrderedTask? myConsent = await icManager.getInformedConsent();
+
+  // --------------------------------------------------
+  // HANDLING MESSAGES CARP
+  // --------------------------------------------------
+
+  // Create and initialize the message manager.
+  MessageManager messageManager = CarpResourceManager();
+  messageManager.initialize();
+
+  // Create a message and upload it to CAWS.
+  messageManager.setMessage(Message(
+    id: '123',
+    title: 'Great News!',
+    message: 'There are great news from CARP',
+    type: MessageType.news,
+  ));
+
+  // Get all messages from CAWS.
+  messageManager.getMessages().then((messages) {
+    print('Messages: $messages');
+  });
+
+  // Get a specific message from CAWS.
+  messageManager.getMessage('123').then((message) {
+    print('Message: $message');
+  });
+
+  // Delete a specific message from CAWS.
+  messageManager.deleteMessage('123').then((_) {
+    print('Message deleted...');
+  });
+
+  // --------------------------------------------------
+  // HANDLING TRANSLATION FILES
+  // --------------------------------------------------
+
+  // Create and initialize the message manager.
+  LocalizationManager localizationManager = CarpResourceManager();
+  localizationManager.initialize();
+
+  // A Danish locale
+  var locale = Locale('da');
+
+  // Create a translation file for Danish and upload it to CAWS.
+  localizationManager.setLocalizations(locale, {
+    'morning': 'morgen',
+    'midday': 'middag',
+    'evening': 'aften',
+  });
+
+  // Get translation file for Danish
+  if (localizationManager.isSupported(locale)) {
+    localizationManager.getLocalizations(locale);
+  }
 }

@@ -13,12 +13,13 @@ For documentation on how to use CAMS, see the [CAMS wiki][wiki].
 
 This library supports:
 
-* downloading a study invitation
-* download a study deployment
-* uploading collected data
-* getting and uploading an informed consent document
-* getting and uploading translations
-* getting and uploading messages
+* downloading a **study invitation**
+* download a **study deployment**
+* getting and uploading **resources**
+  * informed consent document
+  * translation files
+  * messages
+* uploading collected **data**
 
 from/to a CAWS server.
 
@@ -127,6 +128,108 @@ await controller?.configure();
 // Start sampling
 controller?.start();
 ```
+
+## Getting and Uploading Resources
+
+CAWS handles three types of special-purpose resources:
+
+* The informed consent document to be shown to the user
+* A set of messages and news items to be show to the user
+* Translation files that can help translate the text used in a study deployment protocol (like the text is a user survey)
+
+Each of the are handled by an [InformedConsentManager](https://pub.dev/documentation/carp_backend/latest/carp_backend/InformedConsentManager-class.html), [MessageManager](https://pub.dev/documentation/carp_backend/latest/carp_backend/MessageManager-class.html), and [LocalizationManager](https://pub.dev/documentation/carp_backend/latest/carp_backend/LocalizationManager-class.html), respectively. All of these managers are implemented in the [CarpResourceManager](https://pub.dev/documentation/carp_backend/latest/carp_backend/CarpResourceManager-class.html) manager.
+
+### Informed Consent Documents
+
+Here is an example of uploading and downloading an informed consent document to be shown to the user (via the [Research Package](https://pub.dev/packages/research_package)):
+
+```dart
+  // Create and initialize the informed consent manager.
+  //
+  // The CarpResourceManager() is a singleton that uses the
+  // the CarpService() singleton for accessing CAWS. Hence,
+  // CarpService needs to be authenticated and initialized before
+  // using the CarpResourceManager.
+  CarpResourceManager icManager = CarpResourceManager();
+  icManager.initialize();
+
+  // Create a simple informed consent...
+  final consent = RPOrderedTask(identifier: '12', steps: [
+    RPInstructionStep(
+      identifier: "1",
+      title: "Welcome!",
+    )..text = "Welcome to this study! ",
+    RPCompletionStep(
+        identifier: "2",
+        title: "Thank You!",
+        text: "We saved your consent document."),
+  ]);
+  // .. and upload it to CAWS.
+  await icManager.setInformedConsent(consent);
+
+  // Get the informed consent back as a RPOrderedTask, if available.
+  RPOrderedTask? myConsent = await icManager.getInformedConsent();
+  ```
+
+### Messages
+
+Below are examples of how messages are handled:
+
+```dart
+  // Create and initialize the message manager.
+  MessageManager messageManager = CarpResourceManager();
+  messageManager.initialize();
+
+  // Create a message and upload it to CAWS.
+  messageManager.setMessage(Message(
+    id: '123',
+    title: 'Great News!',
+    message: 'There are great news from CARP',
+    type: MessageType.news,
+  ));
+
+  // Get all messages from CAWS.
+  messageManager.getMessages().then((messages) {
+    print('Messages: $messages');
+  });
+
+  // Get a specific message from CAWS.
+  messageManager.getMessage('123').then((message) {
+    print('Message: $message');
+  });
+
+  // Delete a specific message from CAWS.
+  messageManager.deleteMessage('123').then((_) {
+    print('Message deleted...');
+  });
+```
+
+### Translations Files
+
+Translations files can be up- and downloaded like this:
+
+```dart
+  // Create and initialize the message manager.
+  LocalizationManager localizationManager = CarpResourceManager();
+  localizationManager.initialize();
+
+  // A Danish locale
+  var locale = Locale('da');
+
+  // Create a translation file for Danish and upload it to CAWS.
+  localizationManager.setLocalizations(locale, {
+    'morning': 'morgen',
+    'midday': 'middag',
+    'evening': 'aften',
+  });
+
+  // Get translation file for Danish
+  if (localizationManager.isSupported(locale)) {
+    localizationManager.getLocalizations(locale);
+  }
+```
+
+Using translations in an app is a whole separate topic, which is supported by the [Research Package](https://pub.dev/packages/research_package) and described in this tutorial on [Localization Support in Research Package](https://carp.dk/localization/). An example of using localization downloaded from CAWS can be found in the [CARP Studies App](https://github.com/cph-cachet/carp_studies_app). In the `carp_study_app.dart` file a [RPLocalizationsDelegate](https://pub.dev/documentation/research_package/latest/ui/RPLocalizationsDelegate-class.html) is used, which again used a [ResourceLocalizationLoader](https://github.com/cph-cachet/carp_studies_app/blob/master/lib/data/localization_loader.dart) to load the translations from CAWS.
 
 ## Uploading of Data to CARP
 

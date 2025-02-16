@@ -152,7 +152,6 @@ class CarpDataManager extends AbstractDataManager {
         // TODO - implement file method.
         warning('$runtimeType - CarpUploadMethod.file not supported (yet).');
         break;
-      default:
     }
 
     // Count the total amount of measurements and check if any measurement
