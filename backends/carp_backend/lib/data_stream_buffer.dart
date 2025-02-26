@@ -69,12 +69,18 @@ class DataStreamBuffer {
 
     // get all measurement not uploaded yet for this stream
     const where = '${SQLiteDataManager.UPLOADED_COLUMN} = ? AND '
+        '${SQLiteDataManager.DEPLOYMENT_ID_COLUMN} = ? AND '
         '${SQLiteDataManager.DEVICE_ROLE_NAME_COLUMN} = ? AND '
         '${SQLiteDataManager.DATATYPE_COLUMN} = ?';
     final List<Map<String, dynamic>> maps = await database?.query(
           SQLiteDataManager.MEASUREMENT_TABLE_NAME,
           where: where,
-          whereArgs: [0, stream.deviceRoleName, stream.dataType],
+          whereArgs: [
+            0,
+            dataStream.studyDeploymentId,
+            dataStream.deviceRoleName,
+            dataStream.dataType,
+          ],
         ) ??
         [];
 
