@@ -154,20 +154,7 @@ class SmartphoneStudyProtocol extends StudyProtocol
   @override
   bool addPrimaryDevice(PrimaryDeviceConfiguration primaryDevice) {
     super.addPrimaryDevice(primaryDevice);
-
-    // add the trigger, task, error, and heartbeat measures to the protocol since
-    // CAMS always collects and upload this data from the primary device (the phone)
-    addTaskControl(
-      NoOpTrigger(),
-      BackgroundTask(measures: [
-        Measure(type: Heartbeat.dataType),
-        Measure(type: Error.dataType),
-        Measure(type: CarpDataTypes.TRIGGERED_TASK_TYPE_NAME),
-        Measure(type: CarpDataTypes.COMPLETED_TASK_TYPE_NAME)
-      ]),
-      primaryDevice,
-      Control.Start,
-    );
+    _addSamplingTaskControl(primaryDevice);
 
     return true;
   }
@@ -178,21 +165,25 @@ class SmartphoneStudyProtocol extends StudyProtocol
     PrimaryDeviceConfiguration primaryDevice,
   ) {
     super.addConnectedDevice(device, primaryDevice);
+    _addSamplingTaskControl(device);
 
-    // add the trigger, task, and heartbeat measures to the protocol since CAMS
-    // always collects and upload this data from any device
+    return true;
+  }
+
+  // Add the trigger, task, error, and heartbeat measures to the protocol since
+  // CAMS always collects and upload this data from any device.
+  void _addSamplingTaskControl(DeviceConfiguration device) {
     addTaskControl(
       NoOpTrigger(),
       BackgroundTask(measures: [
         Measure(type: Heartbeat.dataType),
+        Measure(type: CarpDataTypes.ERROR_TYPE_NAME),
         Measure(type: CarpDataTypes.TRIGGERED_TASK_TYPE_NAME),
         Measure(type: CarpDataTypes.COMPLETED_TASK_TYPE_NAME)
       ]),
       device,
       Control.Start,
     );
-
-    return true;
   }
 
   factory SmartphoneStudyProtocol.fromJson(Map<String, dynamic> json) =>
