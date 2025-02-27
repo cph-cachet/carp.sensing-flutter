@@ -23,9 +23,7 @@ class WeatherService extends OnlineService {
   WeatherService({
     String? roleName,
     required this.apiKey,
-  }) : super(
-          roleName: roleName ?? DEFAULT_ROLE_NAME,
-        );
+  }) : super(roleName: roleName ?? DEFAULT_ROLE_NAME);
 
   @override
   Function get fromJsonFunction => _$WeatherServiceFromJson;

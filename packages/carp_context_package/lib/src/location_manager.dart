@@ -257,12 +257,22 @@ class LocationManager {
   /// The last know location, if any.
   Location? get lastKnownLocation => _lastKnownLocation;
 
-  /// Gets the current location of the phone.
+  /// Gets the current location of the phone. In case the location cannot be
+  /// obtained within a few seconds, the last known location is returned.
   ///
-  /// Throws an error if location cannot be obtained within a few seconds or
-  /// if the app does not have permission to access location.
-  Future<Location> getLocation() async => _lastKnownLocation =
-      await onLocationChanged.first.timeout(const Duration(seconds: 6));
+  /// Throws an error if the app does not have permission to access location.
+  Future<Location> getLocation() async {
+    try {
+      _lastKnownLocation =
+          await onLocationChanged.first.timeout(const Duration(seconds: 6));
+    } catch (_) {}
+
+    if (_lastKnownLocation == null) {
+      warning('$runtimeType - Could not get location.');
+      throw StateError('Could not get location.');
+    }
+    return _lastKnownLocation!;
+  }
 
   // The following implementation of getLocation() does not work, since the
   // _provider.getLocation() method sometimes never returns.

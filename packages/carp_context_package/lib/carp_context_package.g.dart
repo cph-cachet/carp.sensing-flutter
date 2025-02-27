@@ -11,20 +11,11 @@ Activity _$ActivityFromJson(Map<String, dynamic> json) => Activity(
       confidence: (json['confidence'] as num).toInt(),
     )..$type = json['__type'] as String?;
 
-Map<String, dynamic> _$ActivityToJson(Activity instance) {
-  final val = <String, dynamic>{};
-
-  void writeNotNull(String key, dynamic value) {
-    if (value != null) {
-      val[key] = value;
-    }
-  }
-
-  writeNotNull('__type', instance.$type);
-  val['confidence'] = instance.confidence;
-  val['type'] = _$ActivityTypeEnumMap[instance.type]!;
-  return val;
-}
+Map<String, dynamic> _$ActivityToJson(Activity instance) => <String, dynamic>{
+      if (instance.$type case final value?) '__type': value,
+      'confidence': instance.confidence,
+      'type': _$ActivityTypeEnumMap[instance.type]!,
+    };
 
 const _$ActivityTypeEnumMap = {
   ActivityType.IN_VEHICLE: 'IN_VEHICLE',
@@ -59,35 +50,92 @@ Location _$LocationFromJson(Map<String, dynamic> json) => Location(
           ? null
           : Data.fromJson(json['sensorSpecificData'] as Map<String, dynamic>);
 
-Map<String, dynamic> _$LocationToJson(Location instance) {
-  final val = <String, dynamic>{};
+Map<String, dynamic> _$LocationToJson(Location instance) => <String, dynamic>{
+      if (instance.$type case final value?) '__type': value,
+      if (instance.sensorSpecificData?.toJson() case final value?)
+        'sensorSpecificData': value,
+      'latitude': instance.latitude,
+      'longitude': instance.longitude,
+      if (instance.altitude case final value?) 'altitude': value,
+      if (instance.accuracy case final value?) 'accuracy': value,
+      if (instance.verticalAccuracy case final value?)
+        'verticalAccuracy': value,
+      if (instance.speed case final value?) 'speed': value,
+      if (instance.speedAccuracy case final value?) 'speedAccuracy': value,
+      if (instance.heading case final value?) 'heading': value,
+      if (instance.headingAccuracy case final value?) 'headingAccuracy': value,
+      if (instance.time?.toIso8601String() case final value?) 'time': value,
+      if (instance.isMock case final value?) 'isMock': value,
+      if (instance.elapsedRealtimeNanos case final value?)
+        'elapsedRealtimeNanos': value,
+      if (instance.elapsedRealtimeUncertaintyNanos case final value?)
+        'elapsedRealtimeUncertaintyNanos': value,
+      if (instance.satellites case final value?) 'satellites': value,
+      if (instance.provider case final value?) 'provider': value,
+    };
 
-  void writeNotNull(String key, dynamic value) {
-    if (value != null) {
-      val[key] = value;
-    }
-  }
+CurrentLocation _$CurrentLocationFromJson(Map<String, dynamic> json) =>
+    CurrentLocation(
+      latitude: (json['latitude'] as num?)?.toDouble() ?? 0,
+      longitude: (json['longitude'] as num?)?.toDouble() ?? 0,
+      altitude: (json['altitude'] as num?)?.toDouble(),
+      accuracy: (json['accuracy'] as num?)?.toDouble(),
+      verticalAccuracy: (json['verticalAccuracy'] as num?)?.toDouble(),
+      speed: (json['speed'] as num?)?.toDouble(),
+      speedAccuracy: (json['speedAccuracy'] as num?)?.toDouble(),
+      heading: (json['heading'] as num?)?.toDouble(),
+      time:
+          json['time'] == null ? null : DateTime.parse(json['time'] as String),
+      isMock: json['isMock'] as bool?,
+      headingAccuracy: (json['headingAccuracy'] as num?)?.toDouble(),
+      elapsedRealtimeNanos: (json['elapsedRealtimeNanos'] as num?)?.toDouble(),
+      elapsedRealtimeUncertaintyNanos:
+          (json['elapsedRealtimeUncertaintyNanos'] as num?)?.toDouble(),
+      satellites: (json['satellites'] as num?)?.toInt(),
+      provider: json['provider'] as String?,
+    )
+      ..$type = json['__type'] as String?
+      ..sensorSpecificData = json['sensorSpecificData'] == null
+          ? null
+          : Data.fromJson(json['sensorSpecificData'] as Map<String, dynamic>);
 
-  writeNotNull('__type', instance.$type);
-  writeNotNull('sensorSpecificData', instance.sensorSpecificData?.toJson());
-  val['latitude'] = instance.latitude;
-  val['longitude'] = instance.longitude;
-  writeNotNull('altitude', instance.altitude);
-  writeNotNull('accuracy', instance.accuracy);
-  writeNotNull('verticalAccuracy', instance.verticalAccuracy);
-  writeNotNull('speed', instance.speed);
-  writeNotNull('speedAccuracy', instance.speedAccuracy);
-  writeNotNull('heading', instance.heading);
-  writeNotNull('headingAccuracy', instance.headingAccuracy);
-  writeNotNull('time', instance.time?.toIso8601String());
-  writeNotNull('isMock', instance.isMock);
-  writeNotNull('elapsedRealtimeNanos', instance.elapsedRealtimeNanos);
-  writeNotNull('elapsedRealtimeUncertaintyNanos',
-      instance.elapsedRealtimeUncertaintyNanos);
-  writeNotNull('satellites', instance.satellites);
-  writeNotNull('provider', instance.provider);
-  return val;
-}
+Map<String, dynamic> _$CurrentLocationToJson(CurrentLocation instance) =>
+    <String, dynamic>{
+      if (instance.$type case final value?) '__type': value,
+      if (instance.sensorSpecificData?.toJson() case final value?)
+        'sensorSpecificData': value,
+      'latitude': instance.latitude,
+      'longitude': instance.longitude,
+      if (instance.altitude case final value?) 'altitude': value,
+      if (instance.accuracy case final value?) 'accuracy': value,
+      if (instance.verticalAccuracy case final value?)
+        'verticalAccuracy': value,
+      if (instance.speed case final value?) 'speed': value,
+      if (instance.speedAccuracy case final value?) 'speedAccuracy': value,
+      if (instance.heading case final value?) 'heading': value,
+      if (instance.headingAccuracy case final value?) 'headingAccuracy': value,
+      if (instance.time?.toIso8601String() case final value?) 'time': value,
+      if (instance.isMock case final value?) 'isMock': value,
+      if (instance.elapsedRealtimeNanos case final value?)
+        'elapsedRealtimeNanos': value,
+      if (instance.elapsedRealtimeUncertaintyNanos case final value?)
+        'elapsedRealtimeUncertaintyNanos': value,
+      if (instance.satellites case final value?) 'satellites': value,
+      if (instance.provider case final value?) 'provider': value,
+    };
+
+LocationSamplingConfiguration _$LocationSamplingConfigurationFromJson(
+        Map<String, dynamic> json) =>
+    LocationSamplingConfiguration(
+      once: json['once'] as bool? ?? false,
+    )..$type = json['__type'] as String?;
+
+Map<String, dynamic> _$LocationSamplingConfigurationToJson(
+        LocationSamplingConfiguration instance) =>
+    <String, dynamic>{
+      if (instance.$type case final value?) '__type': value,
+      'once': instance.once,
+    };
 
 Weather _$WeatherFromJson(Map<String, dynamic> json) => Weather()
   ..$type = json['__type'] as String?
@@ -115,39 +163,32 @@ Weather _$WeatherFromJson(Map<String, dynamic> json) => Weather()
   ..tempMin = (json['tempMin'] as num?)?.toDouble()
   ..tempMax = (json['tempMax'] as num?)?.toDouble();
 
-Map<String, dynamic> _$WeatherToJson(Weather instance) {
-  final val = <String, dynamic>{};
-
-  void writeNotNull(String key, dynamic value) {
-    if (value != null) {
-      val[key] = value;
-    }
-  }
-
-  writeNotNull('__type', instance.$type);
-  writeNotNull('country', instance.country);
-  writeNotNull('areaName', instance.areaName);
-  writeNotNull('weatherMain', instance.weatherMain);
-  writeNotNull('weatherDescription', instance.weatherDescription);
-  writeNotNull('date', instance.date?.toIso8601String());
-  writeNotNull('sunrise', instance.sunrise?.toIso8601String());
-  writeNotNull('sunset', instance.sunset?.toIso8601String());
-  writeNotNull('latitude', instance.latitude);
-  writeNotNull('longitude', instance.longitude);
-  writeNotNull('pressure', instance.pressure);
-  writeNotNull('windSpeed', instance.windSpeed);
-  writeNotNull('windDegree', instance.windDegree);
-  writeNotNull('humidity', instance.humidity);
-  writeNotNull('cloudiness', instance.cloudiness);
-  writeNotNull('rainLastHour', instance.rainLastHour);
-  writeNotNull('rainLast3Hours', instance.rainLast3Hours);
-  writeNotNull('snowLastHour', instance.snowLastHour);
-  writeNotNull('snowLast3Hours', instance.snowLast3Hours);
-  writeNotNull('temperature', instance.temperature);
-  writeNotNull('tempMin', instance.tempMin);
-  writeNotNull('tempMax', instance.tempMax);
-  return val;
-}
+Map<String, dynamic> _$WeatherToJson(Weather instance) => <String, dynamic>{
+      if (instance.$type case final value?) '__type': value,
+      if (instance.country case final value?) 'country': value,
+      if (instance.areaName case final value?) 'areaName': value,
+      if (instance.weatherMain case final value?) 'weatherMain': value,
+      if (instance.weatherDescription case final value?)
+        'weatherDescription': value,
+      if (instance.date?.toIso8601String() case final value?) 'date': value,
+      if (instance.sunrise?.toIso8601String() case final value?)
+        'sunrise': value,
+      if (instance.sunset?.toIso8601String() case final value?) 'sunset': value,
+      if (instance.latitude case final value?) 'latitude': value,
+      if (instance.longitude case final value?) 'longitude': value,
+      if (instance.pressure case final value?) 'pressure': value,
+      if (instance.windSpeed case final value?) 'windSpeed': value,
+      if (instance.windDegree case final value?) 'windDegree': value,
+      if (instance.humidity case final value?) 'humidity': value,
+      if (instance.cloudiness case final value?) 'cloudiness': value,
+      if (instance.rainLastHour case final value?) 'rainLastHour': value,
+      if (instance.rainLast3Hours case final value?) 'rainLast3Hours': value,
+      if (instance.snowLastHour case final value?) 'snowLastHour': value,
+      if (instance.snowLast3Hours case final value?) 'snowLast3Hours': value,
+      if (instance.temperature case final value?) 'temperature': value,
+      if (instance.tempMin case final value?) 'tempMin': value,
+      if (instance.tempMax case final value?) 'tempMax': value,
+    };
 
 WeatherService _$WeatherServiceFromJson(Map<String, dynamic> json) =>
     WeatherService(
@@ -162,64 +203,41 @@ WeatherService _$WeatherServiceFromJson(Map<String, dynamic> json) =>
             k, SamplingConfiguration.fromJson(e as Map<String, dynamic>)),
       );
 
-Map<String, dynamic> _$WeatherServiceToJson(WeatherService instance) {
-  final val = <String, dynamic>{};
-
-  void writeNotNull(String key, dynamic value) {
-    if (value != null) {
-      val[key] = value;
-    }
-  }
-
-  writeNotNull('__type', instance.$type);
-  val['roleName'] = instance.roleName;
-  writeNotNull('isOptional', instance.isOptional);
-  writeNotNull(
-      'defaultSamplingConfiguration',
-      instance.defaultSamplingConfiguration
-          ?.map((k, e) => MapEntry(k, e.toJson())));
-  val['apiKey'] = instance.apiKey;
-  return val;
-}
+Map<String, dynamic> _$WeatherServiceToJson(WeatherService instance) =>
+    <String, dynamic>{
+      if (instance.$type case final value?) '__type': value,
+      'roleName': instance.roleName,
+      if (instance.isOptional case final value?) 'isOptional': value,
+      if (instance.defaultSamplingConfiguration
+              ?.map((k, e) => MapEntry(k, e.toJson()))
+          case final value?)
+        'defaultSamplingConfiguration': value,
+      'apiKey': instance.apiKey,
+    };
 
 OMHContextDataPoint _$OMHContextDataPointFromJson(Map<String, dynamic> json) =>
     OMHContextDataPoint(
       DataPoint.fromJson(json['datapoint'] as Map<String, dynamic>),
     )..$type = json['__type'] as String?;
 
-Map<String, dynamic> _$OMHContextDataPointToJson(OMHContextDataPoint instance) {
-  final val = <String, dynamic>{};
-
-  void writeNotNull(String key, dynamic value) {
-    if (value != null) {
-      val[key] = value;
-    }
-  }
-
-  writeNotNull('__type', instance.$type);
-  val['datapoint'] = instance.datapoint.toJson();
-  return val;
-}
+Map<String, dynamic> _$OMHContextDataPointToJson(
+        OMHContextDataPoint instance) =>
+    <String, dynamic>{
+      if (instance.$type case final value?) '__type': value,
+      'datapoint': instance.datapoint.toJson(),
+    };
 
 GeoPosition _$GeoPositionFromJson(Map<String, dynamic> json) => GeoPosition(
       (json['latitude'] as num).toDouble(),
       (json['longitude'] as num).toDouble(),
     )..$type = json['__type'] as String?;
 
-Map<String, dynamic> _$GeoPositionToJson(GeoPosition instance) {
-  final val = <String, dynamic>{};
-
-  void writeNotNull(String key, dynamic value) {
-    if (value != null) {
-      val[key] = value;
-    }
-  }
-
-  writeNotNull('__type', instance.$type);
-  val['latitude'] = instance.latitude;
-  val['longitude'] = instance.longitude;
-  return val;
-}
+Map<String, dynamic> _$GeoPositionToJson(GeoPosition instance) =>
+    <String, dynamic>{
+      if (instance.$type case final value?) '__type': value,
+      'latitude': instance.latitude,
+      'longitude': instance.longitude,
+    };
 
 GeofenceSamplingConfiguration _$GeofenceSamplingConfigurationFromJson(
         Map<String, dynamic> json) =>
@@ -235,43 +253,27 @@ GeofenceSamplingConfiguration _$GeofenceSamplingConfigurationFromJson(
           : DateTime.parse(json['lastTime'] as String);
 
 Map<String, dynamic> _$GeofenceSamplingConfigurationToJson(
-    GeofenceSamplingConfiguration instance) {
-  final val = <String, dynamic>{};
-
-  void writeNotNull(String key, dynamic value) {
-    if (value != null) {
-      val[key] = value;
-    }
-  }
-
-  writeNotNull('__type', instance.$type);
-  writeNotNull('lastTime', instance.lastTime?.toIso8601String());
-  val['center'] = instance.center.toJson();
-  val['radius'] = instance.radius;
-  val['dwell'] = instance.dwell.inMicroseconds;
-  val['name'] = instance.name;
-  return val;
-}
+        GeofenceSamplingConfiguration instance) =>
+    <String, dynamic>{
+      if (instance.$type case final value?) '__type': value,
+      if (instance.lastTime?.toIso8601String() case final value?)
+        'lastTime': value,
+      'center': instance.center.toJson(),
+      'radius': instance.radius,
+      'dwell': instance.dwell.inMicroseconds,
+      'name': instance.name,
+    };
 
 Geofence _$GeofenceFromJson(Map<String, dynamic> json) => Geofence(
       type: $enumDecode(_$GeofenceTypeEnumMap, json['type']),
       name: json['name'] as String,
     )..$type = json['__type'] as String?;
 
-Map<String, dynamic> _$GeofenceToJson(Geofence instance) {
-  final val = <String, dynamic>{};
-
-  void writeNotNull(String key, dynamic value) {
-    if (value != null) {
-      val[key] = value;
-    }
-  }
-
-  writeNotNull('__type', instance.$type);
-  val['name'] = instance.name;
-  val['type'] = _$GeofenceTypeEnumMap[instance.type]!;
-  return val;
-}
+Map<String, dynamic> _$GeofenceToJson(Geofence instance) => <String, dynamic>{
+      if (instance.$type case final value?) '__type': value,
+      'name': instance.name,
+      'type': _$GeofenceTypeEnumMap[instance.type]!,
+    };
 
 const _$GeofenceTypeEnumMap = {
   GeofenceType.ENTER: 'ENTER',
@@ -289,25 +291,17 @@ AirQuality _$AirQualityFromJson(Map<String, dynamic> json) => AirQuality(
           _$AirQualityLevelEnumMap, json['airQualityLevel']),
     )..$type = json['__type'] as String?;
 
-Map<String, dynamic> _$AirQualityToJson(AirQuality instance) {
-  final val = <String, dynamic>{};
-
-  void writeNotNull(String key, dynamic value) {
-    if (value != null) {
-      val[key] = value;
-    }
-  }
-
-  writeNotNull('__type', instance.$type);
-  val['airQualityIndex'] = instance.airQualityIndex;
-  writeNotNull('source', instance.source);
-  writeNotNull('place', instance.place);
-  val['latitude'] = instance.latitude;
-  val['longitude'] = instance.longitude;
-  writeNotNull(
-      'airQualityLevel', _$AirQualityLevelEnumMap[instance.airQualityLevel]);
-  return val;
-}
+Map<String, dynamic> _$AirQualityToJson(AirQuality instance) =>
+    <String, dynamic>{
+      if (instance.$type case final value?) '__type': value,
+      'airQualityIndex': instance.airQualityIndex,
+      if (instance.source case final value?) 'source': value,
+      if (instance.place case final value?) 'place': value,
+      'latitude': instance.latitude,
+      'longitude': instance.longitude,
+      if (_$AirQualityLevelEnumMap[instance.airQualityLevel] case final value?)
+        'airQualityLevel': value,
+    };
 
 const _$AirQualityLevelEnumMap = {
   AirQualityLevel.UNKNOWN: 'UNKNOWN',
@@ -333,25 +327,17 @@ AirQualityService _$AirQualityServiceFromJson(Map<String, dynamic> json) =>
             k, SamplingConfiguration.fromJson(e as Map<String, dynamic>)),
       );
 
-Map<String, dynamic> _$AirQualityServiceToJson(AirQualityService instance) {
-  final val = <String, dynamic>{};
-
-  void writeNotNull(String key, dynamic value) {
-    if (value != null) {
-      val[key] = value;
-    }
-  }
-
-  writeNotNull('__type', instance.$type);
-  val['roleName'] = instance.roleName;
-  writeNotNull('isOptional', instance.isOptional);
-  writeNotNull(
-      'defaultSamplingConfiguration',
-      instance.defaultSamplingConfiguration
-          ?.map((k, e) => MapEntry(k, e.toJson())));
-  val['apiKey'] = instance.apiKey;
-  return val;
-}
+Map<String, dynamic> _$AirQualityServiceToJson(AirQualityService instance) =>
+    <String, dynamic>{
+      if (instance.$type case final value?) '__type': value,
+      'roleName': instance.roleName,
+      if (instance.isOptional case final value?) 'isOptional': value,
+      if (instance.defaultSamplingConfiguration
+              ?.map((k, e) => MapEntry(k, e.toJson()))
+          case final value?)
+        'defaultSamplingConfiguration': value,
+      'apiKey': instance.apiKey,
+    };
 
 Mobility _$MobilityFromJson(Map<String, dynamic> json) => Mobility(
       timestamp: json['timestamp'] == null
@@ -369,28 +355,23 @@ Mobility _$MobilityFromJson(Map<String, dynamic> json) => Mobility(
       distanceTraveled: (json['distanceTraveled'] as num?)?.toDouble(),
     )..$type = json['__type'] as String?;
 
-Map<String, dynamic> _$MobilityToJson(Mobility instance) {
-  final val = <String, dynamic>{};
-
-  void writeNotNull(String key, dynamic value) {
-    if (value != null) {
-      val[key] = value;
-    }
-  }
-
-  writeNotNull('__type', instance.$type);
-  writeNotNull('timestamp', instance.timestamp?.toIso8601String());
-  writeNotNull('date', instance.date?.toIso8601String());
-  writeNotNull('numberOfStops', instance.numberOfStops);
-  writeNotNull('numberOfMoves', instance.numberOfMoves);
-  writeNotNull('numberOfPlaces', instance.numberOfPlaces);
-  writeNotNull('locationVariance', instance.locationVariance);
-  writeNotNull('entropy', instance.entropy);
-  writeNotNull('normalizedEntropy', instance.normalizedEntropy);
-  writeNotNull('homeStay', instance.homeStay);
-  writeNotNull('distanceTraveled', instance.distanceTraveled);
-  return val;
-}
+Map<String, dynamic> _$MobilityToJson(Mobility instance) => <String, dynamic>{
+      if (instance.$type case final value?) '__type': value,
+      if (instance.timestamp?.toIso8601String() case final value?)
+        'timestamp': value,
+      if (instance.date?.toIso8601String() case final value?) 'date': value,
+      if (instance.numberOfStops case final value?) 'numberOfStops': value,
+      if (instance.numberOfMoves case final value?) 'numberOfMoves': value,
+      if (instance.numberOfPlaces case final value?) 'numberOfPlaces': value,
+      if (instance.locationVariance case final value?)
+        'locationVariance': value,
+      if (instance.entropy case final value?) 'entropy': value,
+      if (instance.normalizedEntropy case final value?)
+        'normalizedEntropy': value,
+      if (instance.homeStay case final value?) 'homeStay': value,
+      if (instance.distanceTraveled case final value?)
+        'distanceTraveled': value,
+    };
 
 MobilitySamplingConfiguration _$MobilitySamplingConfigurationFromJson(
         Map<String, dynamic> json) =>
@@ -408,23 +389,16 @@ MobilitySamplingConfiguration _$MobilitySamplingConfigurationFromJson(
           : DateTime.parse(json['lastTime'] as String);
 
 Map<String, dynamic> _$MobilitySamplingConfigurationToJson(
-    MobilitySamplingConfiguration instance) {
-  final val = <String, dynamic>{};
-
-  void writeNotNull(String key, dynamic value) {
-    if (value != null) {
-      val[key] = value;
-    }
-  }
-
-  writeNotNull('__type', instance.$type);
-  writeNotNull('lastTime', instance.lastTime?.toIso8601String());
-  val['usePriorContexts'] = instance.usePriorContexts;
-  val['stopRadius'] = instance.stopRadius;
-  val['placeRadius'] = instance.placeRadius;
-  val['stopDuration'] = instance.stopDuration.inMicroseconds;
-  return val;
-}
+        MobilitySamplingConfiguration instance) =>
+    <String, dynamic>{
+      if (instance.$type case final value?) '__type': value,
+      if (instance.lastTime?.toIso8601String() case final value?)
+        'lastTime': value,
+      'usePriorContexts': instance.usePriorContexts,
+      'stopRadius': instance.stopRadius,
+      'placeRadius': instance.placeRadius,
+      'stopDuration': instance.stopDuration.inMicroseconds,
+    };
 
 LocationService _$LocationServiceFromJson(Map<String, dynamic> json) =>
     LocationService(
@@ -451,32 +425,28 @@ LocationService _$LocationServiceFromJson(Map<String, dynamic> json) =>
             k, SamplingConfiguration.fromJson(e as Map<String, dynamic>)),
       );
 
-Map<String, dynamic> _$LocationServiceToJson(LocationService instance) {
-  final val = <String, dynamic>{};
-
-  void writeNotNull(String key, dynamic value) {
-    if (value != null) {
-      val[key] = value;
-    }
-  }
-
-  writeNotNull('__type', instance.$type);
-  val['roleName'] = instance.roleName;
-  writeNotNull('isOptional', instance.isOptional);
-  writeNotNull(
-      'defaultSamplingConfiguration',
-      instance.defaultSamplingConfiguration
-          ?.map((k, e) => MapEntry(k, e.toJson())));
-  val['accuracy'] = _$GeolocationAccuracyEnumMap[instance.accuracy]!;
-  val['distance'] = instance.distance;
-  val['interval'] = instance.interval.inMicroseconds;
-  writeNotNull('notificationTitle', instance.notificationTitle);
-  writeNotNull('notificationMessage', instance.notificationMessage);
-  writeNotNull('notificationDescription', instance.notificationDescription);
-  writeNotNull('notificationIconName', instance.notificationIconName);
-  val['notificationOnTapBringToFront'] = instance.notificationOnTapBringToFront;
-  return val;
-}
+Map<String, dynamic> _$LocationServiceToJson(LocationService instance) =>
+    <String, dynamic>{
+      if (instance.$type case final value?) '__type': value,
+      'roleName': instance.roleName,
+      if (instance.isOptional case final value?) 'isOptional': value,
+      if (instance.defaultSamplingConfiguration
+              ?.map((k, e) => MapEntry(k, e.toJson()))
+          case final value?)
+        'defaultSamplingConfiguration': value,
+      'accuracy': _$GeolocationAccuracyEnumMap[instance.accuracy]!,
+      'distance': instance.distance,
+      'interval': instance.interval.inMicroseconds,
+      if (instance.notificationTitle case final value?)
+        'notificationTitle': value,
+      if (instance.notificationMessage case final value?)
+        'notificationMessage': value,
+      if (instance.notificationDescription case final value?)
+        'notificationDescription': value,
+      if (instance.notificationIconName case final value?)
+        'notificationIconName': value,
+      'notificationOnTapBringToFront': instance.notificationOnTapBringToFront,
+    };
 
 const _$GeolocationAccuracyEnumMap = {
   GeolocationAccuracy.powerSave: 'powerSave',

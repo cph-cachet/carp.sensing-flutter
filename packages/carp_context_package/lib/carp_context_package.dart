@@ -1,11 +1,11 @@
 /// A library for collecting context information on:
-///  * location
+///  * location (both as one-time and continuous location data)
 ///  * geofence
 ///  * activity
 ///  * weather
 ///  * air quality
 ///  * mobility features
-library carp_context_package;
+library;
 
 import 'dart:async';
 import 'dart:math' as math;
@@ -34,6 +34,7 @@ part 'src/activity/activity_data.dart';
 part 'src/activity/activity_probe.dart';
 part 'src/location/location_data.dart';
 part 'src/location/location_probes.dart';
+part 'src/location/location_configuration.dart';
 part 'src/weather/weather_data.dart';
 part 'src/weather/weather_probe.dart';
 part 'src/weather/weather_services.dart';
