@@ -29,6 +29,15 @@ class CarpDataManagerFactory implements DataManagerFactory {
 ///       the old DataPoint batch endpoint in CAWS.
 ///   * [CarpUploadMethod.file] - Collect measurements in a SQLite DB file and
 ///       upload as a `db` file
+///
+/// Data is buffered locally in a [DataStreamBuffer] and uploaded to CAWS
+/// on a regular basis, as specified in the [CarpDataEndPoint.uploadInterval].
+/// However, if debug mode is set to "debug", data is uploaded every minute.
+///
+/// If the [CarpDataEndPoint.onlyUploadOnWiFi] is set to `true`, data is only
+/// uploaded when the device is connected to a WiFi network.
+/// The [CarpDataManager] listens to connectivity changes and only uploads data
+/// when the device is connected to the internet.
 class CarpDataManager extends AbstractDataManager {
   late CarpDataEndPoint carpEndPoint;
   DataStreamBuffer buffer = DataStreamBuffer();
@@ -74,11 +83,13 @@ class CarpDataManager extends AbstractDataManager {
 
     buffer.initialize(deployment, measurements);
 
-    // Set up a timer that uploads data on a regular basis
-    uploadTimer = Timer.periodic(Duration(minutes: carpEndPoint.uploadInterval),
-        (_) => uploadBufferedMeasurements());
-    // uploadTimer = Timer.periodic(
-    //     Duration(minutes: 1), (_) => uploadBufferedMeasurements());
+    // Set up a timer that uploads data on a regular basis depending on debug level
+    int uploadInterval = Settings().debugLevel == DebugLevel.debug
+        ? 1
+        : carpEndPoint.uploadInterval;
+
+    uploadTimer = Timer.periodic(
+        Duration(minutes: uploadInterval), (_) => uploadBufferedMeasurements());
 
     // listen to connectivity events
     Connectivity()

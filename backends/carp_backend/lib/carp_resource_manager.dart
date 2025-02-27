@@ -8,10 +8,10 @@
 part of 'carp_backend.dart';
 
 /// Implementation of [InformedConsentManager], [LocalizationManager], and
-/// [MessageManager] in the CARP service.
+/// [MessageManager] in the CARP services (CAWS) API.
 ///
-/// Also supports local caching of these resources locally on the phone
-/// (except for messages, which is assumed to be handled by the app).
+/// Also supports caching of informed consent and localization resources locally
+/// on the phone. Messages are not cached - they are assumed to be handled by the app.
 class CarpResourceManager
     implements InformedConsentManager, LocalizationManager, MessageManager {
   /// The base path for resources - both on the CARP server and locally on the phone
