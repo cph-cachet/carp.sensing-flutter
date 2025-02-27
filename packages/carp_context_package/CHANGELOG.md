@@ -1,3 +1,9 @@
+## 1.11.0
+
+* fix of [#471](https://github.com/cph-cachet/carp.sensing-flutter/issues/471)
+* the `CURRENT_LOCATION` is deprecated, but still available
+* added a `LocationSamplingConfiguration` which can be configured to only collect location once, and hence makes it possible to use a `LOCATION` measure instead of a `CURRENT_LOCATION`
+
 ## 1.10.1
 
 * upgrade to carp_serialization v. 2.0 & carp_mobile_sensing: 1.10.0
