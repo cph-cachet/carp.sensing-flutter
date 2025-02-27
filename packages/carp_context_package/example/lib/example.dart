@@ -40,10 +40,15 @@ void main() async {
   protocol.addConnectedDevice(locationService, phone);
 
   // Add a background task that collects location on a regular basis
+  // using a periodic trigger and a location sampling configuration that only
+  // collects location data once.
+  // See issue https://github.com/cph-cachet/carp.sensing-flutter/issues/471
   protocol.addTaskControl(
       PeriodicTrigger(period: Duration(minutes: 5)),
       BackgroundTask(measures: [
-        (Measure(type: ContextSamplingPackage.CURRENT_LOCATION)),
+        Measure(type: ContextSamplingPackage.LOCATION)
+          ..overrideSamplingConfiguration =
+              LocationSamplingConfiguration(once: true),
       ]),
       locationService);
 

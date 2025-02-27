@@ -1,8 +1,9 @@
-## 1.12.0
+## 1.12.1
 
 * upgrade of Android APK
 * bumped minimum Flutter SDK requirement to 3.3
 * upgrade of plugins to latest versions
+* Fix of [#470](https://github.com/cph-cachet/carp.sensing-flutter/issues/470)
 
 ## 1.11.6
 
