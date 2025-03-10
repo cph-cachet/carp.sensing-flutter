@@ -1,3 +1,8 @@
+## 1.10.0
+
+* upgrading gradle version to 8.6
+* upgrading compilesdkversion to 35 and agp to 8.1.0
+
 ## 1.9.0
 
 * upgrading gradle version and file system
