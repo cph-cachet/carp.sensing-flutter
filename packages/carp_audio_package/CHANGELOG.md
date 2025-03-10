@@ -1,3 +1,9 @@
+## 1.9.0
+
+* upgrading gradle version and file system
+* upgrading flutter_sound package
+* upgrading compilesdkversion, minsdkversion, targetsdkversion
+
 ## 1.8.1
 
 * explicit data objects for `AudioMedia`, `ImageMedia`, and `VideoMedia` (instead of the generic `Media` data type)
