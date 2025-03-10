@@ -1,7 +1,7 @@
 name: carp_audio_package
 description: CARP Media Sampling Package. Samples audio, video, image, and noise.
-version: 1.10.0
-homepage: https://github.com/cph-cachet/carp.sensing-flutter/tree/master/packages/carp_audio_package
+version: 1.10.1
+homepage: https://github.com/cph-cachet/carp.sensing-flutter/tree/main/packages/carp_audio_package
 
 environment:
   sdk: ">=3.2.0 <4.0.0"
