@@ -1,4 +1,6 @@
 ## 1.10.1
+ 
+* changing pub.dev link to main instead of master branch
 
 ## 1.10.0
 
