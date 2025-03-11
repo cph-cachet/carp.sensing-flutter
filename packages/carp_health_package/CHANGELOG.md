@@ -1,4 +1,4 @@
-## 3.0.0
+## 3.0.1
 
 * upgrading to health v. 12.x
 * improving on requesting permissions for different health probes (issue [#461](https://github.com/cph-cachet/carp.sensing-flutter/issues/461))

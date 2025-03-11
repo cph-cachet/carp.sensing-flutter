@@ -1,4 +1,4 @@
-## 1.11.0
+## 1.11.1
 
 * fix of [#471](https://github.com/cph-cachet/carp.sensing-flutter/issues/471)
 * the `CURRENT_LOCATION` is deprecated, but still available

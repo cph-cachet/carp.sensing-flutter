@@ -11,7 +11,6 @@ This packages supports sampling of the following [`Measure`](https://github.com/
 
 * `dk.cachet.carp.activity`
 * `dk.cachet.carp.location`
-* `dk.cachet.carp.currentlocation`
 * `dk.cachet.carp.geofence`
 * `dk.cachet.carp.mobility`
 * `dk.cachet.carp.weather`
@@ -40,7 +39,8 @@ dependencies:
 
 This context package make use of what Apple and Google denote as sensitive information, especially location. Therefore it is important to configure the app to access location information. Please read carefully the [**instructions on how to setup the permission_handler plugin**]( https://pub.dev/packages/permission_handler#setup) - both for Android and iOS.
 
-> Note that this context package **DOES NOT** asks for accessing location. This should be done by the app since the app should (according to the Apple and Google guidelines) tell the user why location is accessed. The Android Developers documentation contain a good description of how to [request location access at runtime](https://developer.android.com/develop/sensors-and-location/location/permissions#request-location-access-runtime).
+> [!IMPORTANT]  
+> This context package **DOES NOT** asks for accessing location. This should be done by the app since the app should (according to the Apple and Google guidelines) tell the user why location is accessed. The Android Developers documentation contain a good description of how to [request location access at runtime](https://developer.android.com/develop/sensors-and-location/location/permissions#request-location-access-runtime).
 
 ### Android
 
@@ -69,7 +69,8 @@ Add the following to your app's `AndroidManifest.xml` file located in `android/a
 </manifest>
 ````
 
-> **NOTE:** For Android 10 (API 29 and later) use the following permission:
+> [!NOTE]  
+> For Android 10 (API 29 and later) use the following permission:
 >
 > `<uses-permission android:name="android.permission.ACTIVITY_RECOGNITION" />`
 >
@@ -184,7 +185,6 @@ protocol.addTaskControl(
 All of the location-based measures;
 
 * `LOCATION`
-* `CURRENT_LOCATION`
 * `GEOFENCE`
 * `MOBILITY`
 
@@ -199,16 +199,35 @@ final locationService = LocationService(
 
 protocol.addConnectedDevice(locationService, phone);
 
-// Add a background task that collects location every 5 minutes
+// Add a background task that continuously collects location and mobility
+// patterns. Delays sampling by 5 minutes.
 protocol.addTaskControl(
-    PeriodicTrigger(period: Duration(minutes: 5)),
+    DelayedTrigger(delay: Duration(minutes: 5)),
     BackgroundTask(measures: [
-      (Measure(type: ContextSamplingPackage.CURRENT_LOCATION)),
+      Measure(type: ContextSamplingPackage.LOCATION),
+      Measure(type: ContextSamplingPackage.MOBILITY)
     ]),
     locationService);
 ```
 
-> Note that you would often need to balance the configuration of the `LocationService` with the measure you are collecting. For example, if only using the `MOBILITY` measure, a lower `accuracy`, `distance`, and sampling `interval` could be used.
+> [!TIP]
+> You would often need to balance the configuration of the `LocationService` with the measure you are collecting. For example, if only using the `MOBILITY` measure, a lower `accuracy`, `distance`, and sampling `interval` could be used.
+
+If you only want to collect location information one time during a measurement, you can override the sampling configuration using a `LocationSamplingConfiguration` like this:
+
+```dart
+// Add a background task that collects location on a regular basis
+// using a periodic trigger and a location sampling configuration that only
+// collects location data once.
+protocol.addTaskControl(
+    PeriodicTrigger(period: Duration(minutes: 5)),
+    BackgroundTask(measures: [
+      Measure(type: ContextSamplingPackage.LOCATION)
+        ..overrideSamplingConfiguration =
+            LocationSamplingConfiguration(once: true),
+    ]),
+    locationService);
+```
 
 ### Weather and Air Quality Measures
 

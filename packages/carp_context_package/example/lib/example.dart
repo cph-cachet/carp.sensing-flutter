@@ -39,6 +39,16 @@ void main() async {
       interval: const Duration(minutes: 1));
   protocol.addConnectedDevice(locationService, phone);
 
+  // Add a background task that continuously collects location and mobility
+  // patterns. Delays sampling by 5 minutes.
+  protocol.addTaskControl(
+      DelayedTrigger(delay: Duration(minutes: 5)),
+      BackgroundTask(measures: [
+        Measure(type: ContextSamplingPackage.LOCATION),
+        Measure(type: ContextSamplingPackage.MOBILITY)
+      ]),
+      locationService);
+
   // Add a background task that collects location on a regular basis
   // using a periodic trigger and a location sampling configuration that only
   // collects location data once.
@@ -49,16 +59,6 @@ void main() async {
         Measure(type: ContextSamplingPackage.LOCATION)
           ..overrideSamplingConfiguration =
               LocationSamplingConfiguration(once: true),
-      ]),
-      locationService);
-
-  // Add a background task that continuously collects location and mobility
-  // patterns. Delays sampling by 5 minutes.
-  protocol.addTaskControl(
-      DelayedTrigger(delay: Duration(minutes: 5)),
-      BackgroundTask(measures: [
-        Measure(type: ContextSamplingPackage.LOCATION),
-        Measure(type: ContextSamplingPackage.MOBILITY)
       ]),
       locationService);
 
