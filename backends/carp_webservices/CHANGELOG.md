@@ -1,3 +1,8 @@
+## 3.6.0
+
+* updating gradle file structure
+* bumping oidc version
+
 ## 3.5.2
 
 * fix of issues [#457](https://github.com/cph-cachet/carp.sensing-flutter/issues/457)
