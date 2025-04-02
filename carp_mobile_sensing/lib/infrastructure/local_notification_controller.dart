@@ -94,8 +94,6 @@ class FlutterLocalNotificationController implements NotificationController {
       time,
       _platformChannelSpecifics,
       androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
-      uiLocalNotificationDateInterpretation:
-          UILocalNotificationDateInterpretation.absoluteTime,
     );
 
     return id;
@@ -124,8 +122,6 @@ class FlutterLocalNotificationController implements NotificationController {
       time,
       _platformChannelSpecifics,
       androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
-      uiLocalNotificationDateInterpretation:
-          UILocalNotificationDateInterpretation.absoluteTime,
       matchDateTimeComponents: recurrence,
     );
 
@@ -166,8 +162,6 @@ class FlutterLocalNotificationController implements NotificationController {
         time,
         _platformChannelSpecifics,
         androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
-        uiLocalNotificationDateInterpretation:
-            UILocalNotificationDateInterpretation.absoluteTime,
         payload: task.id,
       );
       task.hasNotificationBeenCreated = true;
