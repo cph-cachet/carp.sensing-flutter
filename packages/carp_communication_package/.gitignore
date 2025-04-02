@@ -24,6 +24,7 @@ ios/Runner/GeneratedPluginRegistrant.*
 
 # CMake
 cmake-build-*/
+.cxx/
 
 # Crashlytics plugin (for Android Studio and IntelliJ)
 com_crashlytics_export_strings.xml

@@ -1,6 +1,7 @@
-## 1.7.0
+## 1.7.1
 
 * upgrade of APK error caused by `call_log` plugin - replaced by `call_e_log`
+* upgrade to latest Flutter plugins
 
 ## 1.6.1
 
