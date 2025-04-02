@@ -1,7 +1,8 @@
-## 1.7.0
+## 1.7.1
 
 * replacing the `device_apps` plugin with the `installed_apps` plugin
 * adjusting the `App` data class accordingly (`installed_apps` unfortunately has less information)
+* upgrading packages and cleanup in example
 
 ## 1.6.0
 

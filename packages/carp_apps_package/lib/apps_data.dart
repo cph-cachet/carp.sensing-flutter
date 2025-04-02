@@ -38,7 +38,7 @@ class App {
   String? packageName;
 
   /// Public name of the application (e.g., 1.0.0).
-  /// The version name of this package, as specified by the <manifest> tag's
+  /// The version name of this package, as specified by the `manifest` tag's
   /// `versionName` attribute.
   String? versionName;
 
