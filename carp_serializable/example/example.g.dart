@@ -20,20 +20,11 @@ B _$BFromJson(Map<String, dynamic> json) => B(
       json['str'] as String?,
     )..$type = json['__type'] as String?;
 
-Map<String, dynamic> _$BToJson(B instance) {
-  final val = <String, dynamic>{};
-
-  void writeNotNull(String key, dynamic value) {
-    if (value != null) {
-      val[key] = value;
-    }
-  }
-
-  writeNotNull('__type', instance.$type);
-  val['index'] = instance.index;
-  writeNotNull('str', instance.str);
-  return val;
-}
+Map<String, dynamic> _$BToJson(B instance) => <String, dynamic>{
+      if (instance.$type case final value?) '__type': value,
+      'index': instance.index,
+      if (instance.str case final value?) 'str': value,
+    };
 
 C _$CFromJson(Map<String, dynamic> json) => C(
       (json['index'] as num).toInt(),
