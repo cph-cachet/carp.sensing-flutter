@@ -38,6 +38,7 @@ build/
 **/generated_plugin_registrant.dart
 .pub-cache/
 .pub/
+.cxx/
 build/
 flutter_*.png
 linked_*.ds

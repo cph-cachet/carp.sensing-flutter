@@ -1,3 +1,7 @@
+## 2.0.1
+
+* bumped Flutter version to 3
+
 ## 2.0.0
 
 * type safe annotation in class factor method, like this; `FromJsonFactory().fromJson<A>(json)`
