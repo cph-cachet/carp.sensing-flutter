@@ -22,14 +22,6 @@ class ContextSamplingPackage extends SmartphoneSamplingPackage {
   ///  * No sampling configuration needed.
   static const String ACTIVITY = "${NameSpace.CARP}.activity";
 
-  /// Measure type for one-time collection of current location.
-  ///  * One-time measure.
-  ///  * Uses the [LocationService] connected device for data collection.
-  ///  * No sampling configuration needed.
-  @Deprecated(
-      'Use LOCATION instead and override the sampling schema to use a LocationSamplingConfiguration that only collect data once.')
-  static const String CURRENT_LOCATION = "${NameSpace.CARP}.currentlocation";
-
   /// Measure type for continuos collection of location data.
   ///  * Event-based measure.
   ///  * Uses the [LocationService] connected device for data collection.
@@ -65,7 +57,8 @@ class ContextSamplingPackage extends SmartphoneSamplingPackage {
   static const String WEATHER = "${NameSpace.CARP}.weather";
 
   @override
-  DataTypeSamplingSchemeMap get samplingSchemes => DataTypeSamplingSchemeMap.from([
+  DataTypeSamplingSchemeMap get samplingSchemes =>
+      DataTypeSamplingSchemeMap.from([
         DataTypeSamplingScheme(
           CamsDataTypeMetaData(
             type: ACTIVITY,
@@ -86,7 +79,10 @@ class ContextSamplingPackage extends SmartphoneSamplingPackage {
       LocationSamplingConfiguration(),
       MobilitySamplingConfiguration(),
       GeofenceSamplingConfiguration(
-          name: '', center: GeoPosition(1.1, 1.1), dwell: const Duration(), radius: 1.0),
+          name: '',
+          center: GeoPosition(1.1, 1.1),
+          dwell: const Duration(),
+          radius: 1.0),
       LocationService(),
       WeatherService(apiKey: ''),
       AirQualityService(apiKey: ''),
@@ -99,7 +95,6 @@ class ContextSamplingPackage extends SmartphoneSamplingPackage {
       AirQuality(airQualityIndex: 0, latitude: 0, longitude: 0),
       Geofence(type: GeofenceType.DWELL, name: ''),
       Location(),
-      CurrentLocation(),
       Mobility(),
       Weather()
     ]);
@@ -123,14 +118,8 @@ class LocationSamplingPackage extends SmartphoneSamplingPackage {
   final _deviceManager = LocationServiceManager();
 
   @override
-  DataTypeSamplingSchemeMap get samplingSchemes => DataTypeSamplingSchemeMap.from([
-        DataTypeSamplingScheme(CamsDataTypeMetaData(
-          type: ContextSamplingPackage.CURRENT_LOCATION,
-          displayName: "Current Location",
-          timeType: DataTimeType.POINT,
-          dataEventType: DataEventType.ONE_TIME,
-          permissions: [Permission.locationAlways],
-        )),
+  DataTypeSamplingSchemeMap get samplingSchemes =>
+      DataTypeSamplingSchemeMap.from([
         DataTypeSamplingScheme(DataTypeMetaData(
           type: ContextSamplingPackage.LOCATION,
           displayName: "Location",
@@ -159,7 +148,6 @@ class LocationSamplingPackage extends SmartphoneSamplingPackage {
 
   @override
   Probe? create(String type) => switch (type) {
-        ContextSamplingPackage.CURRENT_LOCATION => CurrentLocationProbe(),
         ContextSamplingPackage.LOCATION => ConfigurableLocationProbe(),
         ContextSamplingPackage.GEOFENCE => GeofenceProbe(),
         ContextSamplingPackage.MOBILITY => MobilityProbe(),
@@ -178,7 +166,8 @@ class AirQualitySamplingPackage extends SmartphoneSamplingPackage {
   final DeviceManager _deviceManager = AirQualityServiceManager();
 
   @override
-  DataTypeSamplingSchemeMap get samplingSchemes => DataTypeSamplingSchemeMap.from([
+  DataTypeSamplingSchemeMap get samplingSchemes =>
+      DataTypeSamplingSchemeMap.from([
         DataTypeSamplingScheme(
           DataTypeMetaData(
             type: ContextSamplingPackage.AIR_QUALITY,
@@ -189,7 +178,8 @@ class AirQualitySamplingPackage extends SmartphoneSamplingPackage {
       ]);
 
   @override
-  Probe? create(String type) => type == ContextSamplingPackage.AIR_QUALITY ? AirQualityProbe() : null;
+  Probe? create(String type) =>
+      type == ContextSamplingPackage.AIR_QUALITY ? AirQualityProbe() : null;
 
   @override
   String get deviceType => AirQualityService.DEVICE_TYPE;
@@ -203,7 +193,8 @@ class WeatherSamplingPackage extends SmartphoneSamplingPackage {
   final DeviceManager _deviceManager = WeatherServiceManager();
 
   @override
-  DataTypeSamplingSchemeMap get samplingSchemes => DataTypeSamplingSchemeMap.from([
+  DataTypeSamplingSchemeMap get samplingSchemes =>
+      DataTypeSamplingSchemeMap.from([
         DataTypeSamplingScheme(
           DataTypeMetaData(
             type: ContextSamplingPackage.WEATHER,
@@ -214,7 +205,8 @@ class WeatherSamplingPackage extends SmartphoneSamplingPackage {
       ]);
 
   @override
-  Probe? create(String type) => type == ContextSamplingPackage.WEATHER ? WeatherProbe() : null;
+  Probe? create(String type) =>
+      type == ContextSamplingPackage.WEATHER ? WeatherProbe() : null;
 
   @override
   String get deviceType => WeatherService.DEVICE_TYPE;

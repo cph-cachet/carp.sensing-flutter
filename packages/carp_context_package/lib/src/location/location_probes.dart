@@ -7,28 +7,6 @@
 
 part of '../../carp_context_package.dart';
 
-/// Collects current (one-time) location information from the underlying OS's location API.
-/// Is a [MeasurementProbe] that collects one [Location] at a time.
-@Deprecated(
-    'CURRENT_LOCATION measures should not be used. Use LOCATION instead')
-class CurrentLocationProbe extends MeasurementProbe {
-  @override
-  LocationServiceManager get deviceManager =>
-      super.deviceManager as LocationServiceManager;
-
-  @override
-  Future<Measurement> getMeasurement() async {
-    try {
-      final location = await deviceManager.manager.getLocation();
-      return Measurement.fromData(CurrentLocation.fromLocation(location));
-    } catch (error) {
-      warning('$runtimeType - Error getting location - $error');
-      return Measurement.fromData(
-          Error(message: '$runtimeType - Error getting location: $error'));
-    }
-  }
-}
-
 /// Collects streaming location information from the underlying OS's location API.
 /// Is a [StreamProbe] that generates a [Location] data point every time
 /// location is changed.
