@@ -8,9 +8,6 @@ part of 'survey.dart';
 
 RPAppTask _$RPAppTaskFromJson(Map<String, dynamic> json) => RPAppTask(
       name: json['name'] as String?,
-      measures: (json['measures'] as List<dynamic>?)
-          ?.map((e) => Measure.fromJson(e as Map<String, dynamic>))
-          .toList(),
       type: json['type'] as String,
       title: json['title'] as String? ?? '',
       description: json['description'] as String? ?? '',
@@ -20,6 +17,9 @@ RPAppTask _$RPAppTaskFromJson(Map<String, dynamic> json) => RPAppTask(
           ? null
           : Duration(microseconds: (json['expire'] as num).toInt()),
       notification: json['notification'] as bool? ?? false,
+      measures: (json['measures'] as List<dynamic>?)
+          ?.map((e) => Measure.fromJson(e as Map<String, dynamic>))
+          .toList(),
       rpTask: RPTask.fromJson(json['rpTask'] as Map<String, dynamic>),
     )..$type = json['__type'] as String?;
 
