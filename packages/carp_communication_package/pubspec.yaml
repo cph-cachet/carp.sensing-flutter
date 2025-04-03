@@ -7,6 +7,10 @@ environment:
   sdk: ">=3.3.0 <4.0.0"
   flutter: ">=3.19.0"
 
+platforms:
+  android:
+  ios:
+
 dependencies:
   flutter:
     sdk: flutter
@@ -18,7 +22,7 @@ dependencies:
   json_annotation: ^4.8.0
   telephony: ^0.2.0
   call_e_log: ^0.0.4
-  device_calendar: ^4.3.2
+  # device_calendar: ^4.3.2
   crypto: ^3.0.1
   permission_handler: ^11.1.0  
   
@@ -33,11 +37,6 @@ dependency_overrides:
   #   path: ../../carp_mobile_sensing/
   device_calendar:
     git: https://github.com/bardram/device_calendar
-
-# This package only supports iOS and Android
-platforms:
-  android:
-  ios:
 
 dev_dependencies:
   flutter_lints: any
