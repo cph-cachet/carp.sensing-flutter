@@ -176,6 +176,7 @@ void main() {
 
     var transformedData =
         DataTransformerSchemaRegistry().lookup(NameSpace.OMH)!.transform(data);
+    print(toJsonString(transformedData));
 
     Stream<Data> dataStream = StreamController<Data>().stream;
 
