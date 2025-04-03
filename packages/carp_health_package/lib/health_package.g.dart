@@ -125,6 +125,7 @@ const _$HealthDataTypeEnumMap = {
   HealthDataType.HEADACHE_SEVERE: 'HEADACHE_SEVERE',
   HealthDataType.HEADACHE_UNSPECIFIED: 'HEADACHE_UNSPECIFIED',
   HealthDataType.NUTRITION: 'NUTRITION',
+  HealthDataType.UV_INDEX: 'UV_INDEX',
   HealthDataType.GENDER: 'GENDER',
   HealthDataType.BIRTH_DATE: 'BIRTH_DATE',
   HealthDataType.BLOOD_TYPE: 'BLOOD_TYPE',
@@ -185,9 +186,8 @@ HealthAppTask _$HealthAppTaskFromJson(Map<String, dynamic> json) =>
           : Duration(microseconds: (json['expire'] as num).toInt()),
       notification: json['notification'] as bool? ?? false,
       measures: (json['measures'] as List<dynamic>?)
-              ?.map((e) => Measure.fromJson(e as Map<String, dynamic>))
-              .toList() ??
-          const [],
+          ?.map((e) => Measure.fromJson(e as Map<String, dynamic>))
+          .toList(),
       types: (json['types'] as List<dynamic>?)
               ?.map((e) => $enumDecode(_$HealthDataTypeEnumMap, e))
               .toList() ??

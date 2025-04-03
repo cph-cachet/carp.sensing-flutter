@@ -1,3 +1,8 @@
+## 3.1.0
+
+* upgrade to halth plugins v. 12.1.0
+* fixing issues in flutter analyze
+
 ## 3.0.1
 
 * upgrading to health v. 12.x
