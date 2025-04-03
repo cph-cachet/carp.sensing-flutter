@@ -18,7 +18,10 @@ dependencies:
   json_annotation: ^4.8.0
   telephony: ^0.2.0
   call_e_log: ^0.0.4
-  device_calendar: ^4.3.2
+  # TODO: Remove this dependency when the issue is fixed in device_calendar
+  device_calendar:
+    git:
+      url: https://github.com/bardram/device_calendar.git
   crypto: ^3.0.1
   permission_handler: ^11.0.0  
   
