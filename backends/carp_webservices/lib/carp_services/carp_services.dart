@@ -1,5 +1,5 @@
 /*
- * Copyright 2018-2024 the Technical University of Denmark (DTU).
+ * Copyright 2018 the Technical University of Denmark (DTU).
  * Use of this source code is governed by a MIT-style license that can be
  * found in the LICENSE file.
  */
@@ -31,7 +31,7 @@
 /// where `authProperties`, `username`, and `password` are parameters for setting up
 /// authentication, and `app` is configuring the participation service to use the
 /// right CAWS instance.
-library carp_services;
+library;
 
 import 'dart:async';
 import 'dart:convert';
