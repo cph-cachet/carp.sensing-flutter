@@ -1,6 +1,7 @@
-## 1.7.4
+## 1.7.5
 
 * fix of [#378](https://github.com/cph-cachet/carp_studies_app/issues/378)
+* upgrade to latest Flutter plugins
 
 ## 1.7.3
 
