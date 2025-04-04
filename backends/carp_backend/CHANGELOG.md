@@ -1,10 +1,11 @@
-## 1.9.5
+## 1.9.6
 
 * upgrade to web_service version 3.5
 * `CarpDataEndPoint` serialized to `camelCase`
 * fix of compression of data ([#443](https://github.com/cph-cachet/carp.sensing-flutter/issues/443))
 * fix of issue [#468](https://github.com/cph-cachet/carp.sensing-flutter/issues/468) on wrong deployment id
 * update of README to include handling of resources
+* upgrade to latest Flutter version
 
 ## 1.8.0
 

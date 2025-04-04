@@ -1,11 +1,11 @@
 name: carp_webservices_example
 description: An small example of how to usee the CARP web service package.
-homepage: https://github.com/cph-cachet/carp.sensing-flutter/tree/master/carp_core
+homepage: https://github.com/cph-cachet/carp.sensing-flutter
 publish_to: none
 
 environment:
-  sdk: ">=2.17.0 <4.0.0"
-  flutter: ">=3.0.0"
+  sdk: ">=3.3.0 <4.0.0"
+  flutter: ">=3.19.0"
 
 dependencies:
   flutter:
@@ -24,6 +24,8 @@ dependencies:
   oidc: ^0.9.0+1
 
 dev_dependencies:
+  test: any
+  flutter_lints: any
 
 # The following section is specific to Flutter.
 flutter:

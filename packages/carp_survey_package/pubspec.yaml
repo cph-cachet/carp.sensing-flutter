@@ -1,11 +1,15 @@
 name: carp_survey_package
 description: CARP survey sampling package. Samples survey data from the CARP Research Package and Cognition Package.
-version: 1.8.5
+version: 1.8.6
 homepage: https://github.com/cph-cachet/carp.sensing-flutter/tree/master/packages/carp_survey_package
 
 environment:
-  sdk: ">=3.2.0 <4.0.0"
-  flutter: ">=3.16.0"
+  sdk: ">=3.3.0 <4.0.0"
+  flutter: ">=3.19.0"
+
+platforms:
+  android:
+  ios:
 
 dependencies:
   flutter:

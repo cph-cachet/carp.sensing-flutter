@@ -3,7 +3,7 @@
 This library contains a sampling package for
 the [`carp_mobile_sensing`](https://pub.dartlang.org/packages/carp_mobile_sensing) framework
 to work with the [Polar](https://www.polar.com/) heart rate devices.
-This packages supports sampling of the following [`Measure`](https://pub.dev/documentation/carp_core/latest/carp_core_protocols/Measure-class.html) types (note that the package defines its own namespace of `dk.cachet.carp.polar`):
+This packages supports sampling of the following [`Measure`](https://pub.dev/documentation/carp_core/latest/carp_core_common/Measure-class.html) types (note that the package defines its own namespace of `dk.cachet.carp.polar`):
 
 * `dk.cachet.carp.polar.accelerometer` : Accelerometer
 * `dk.cachet.carp.polar.gyroscope` : Gyroscope
@@ -16,9 +16,9 @@ This packages supports sampling of the following [`Measure`](https://pub.dev/doc
 This package uses the Flutter [polar](https://pub.dev/packages/polar) plugin, which again is based on the official [Polar API](https://github.com/polarofficial/polar-ble-sdk).
 The following devices are supported:
 
-* [H10 Heart rate sensor](https://github.com/polarofficial/polar-ble-sdk#h10-heart-rate-sensor)
-* [H9 Heart rate sensor](https://github.com/polarofficial/polar-ble-sdk#h9-heart-rate-sensor)
-* [Polar Verity Sense Optical heart rate sensor](https://github.com/polarofficial/polar-ble-sdk#polar-verity-sense-optical-heart-rate-sensor)
+* [H10 Heart rate sensor](https://github.com/polarofficial/polar-ble-sdk/blob/master/documentation/products/PolarH10.md)
+* [H9 Heart rate sensor](https://github.com/polarofficial/polar-ble-sdk/blob/master/documentation/products/PolarH9.md)
+* [Polar Verity Sense Optical heart rate sensor](https://github.com/polarofficial/polar-ble-sdk/blob/master/documentation/products/PolarVeritySense.md)
 
 See the `carp_mobile_sensing` [wiki](https://github.com/cph-cachet/carp.sensing-flutter/wiki) for further documentation, particularly on available [measure types](https://github.com/cph-cachet/carp.sensing-flutter/wiki/A.-Measure-Types).
 See the [CARP Mobile Sensing App](https://github.com/cph-cachet/carp.sensing-flutter/tree/master/apps/carp_mobile_sensing_app) for an example of how to build a mobile sensing app in Flutter.
@@ -87,8 +87,8 @@ Add the following to your app's `manifest.xml` file located in `android/app/src/
         android:maxSdkVersion="30" />
 ```
 
-> **NOTE:** The first time the app starts, make sure to allow it to access the phone location.
-This is necessary to use BLE on Android.
+> [!NOTE]  
+> The first time the app starts, make sure to allow it to access the phone location. This is necessary to use BLE on Android.
 
 ### iOS Integration
 
@@ -160,14 +160,15 @@ Collection of Polar measures can be added to a study protocol like this.
 ````
 
 Before executing a study with an Polar measure, register this package in the
-[SamplingPackageRegistry](https://pub.dartlang.org/documentation/carp_mobile_sensing/latest/runtime/SamplingPackageRegistry.html).
+[SamplingPackageRegistry](https://pub.dev/documentation/carp_mobile_sensing/latest/runtime/SamplingPackageRegistry-class.html).
 
 `````dart
 SamplingPackageRegistry().register(PolarSamplingPackage());
 `````
 
-**NOTE** that the Polar device `identifier` must be specified before the phone can connect to the device via BLE.
+> [!NOTE]
+> The Polar device `identifier` must be specified before the phone can connect to the device via BLE.
 This entails that a Polar device and its probes should not be connected and resumed, before the device identifier is know.
 
-Also note that the package does not handle permissions for Bluetooth scanning / connectivity.
-This should be handled on an app level.
+> [!IMPORTANT]
+> The package does not handle permissions for Bluetooth scanning / connectivity. This should be handled on an app level.

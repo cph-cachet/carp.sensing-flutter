@@ -1,7 +1,8 @@
-## 3.6.0
+## 3.6.2
 
-* updating gradle file structure
+* updating gradle file structure and fix of build errors in example app
 * bumping oidc version
+* upgrade to latest Flutter version
 
 ## 3.5.2
 

@@ -136,20 +136,13 @@ PolarAccelerometer _$PolarAccelerometerFromJson(Map<String, dynamic> json) =>
           ? null
           : Data.fromJson(json['sensorSpecificData'] as Map<String, dynamic>);
 
-Map<String, dynamic> _$PolarAccelerometerToJson(PolarAccelerometer instance) {
-  final val = <String, dynamic>{};
-
-  void writeNotNull(String key, dynamic value) {
-    if (value != null) {
-      val[key] = value;
-    }
-  }
-
-  writeNotNull('__type', instance.$type);
-  writeNotNull('sensorSpecificData', instance.sensorSpecificData);
-  val['samples'] = instance.samples;
-  return val;
-}
+Map<String, dynamic> _$PolarAccelerometerToJson(PolarAccelerometer instance) =>
+    <String, dynamic>{
+      if (instance.$type case final value?) '__type': value,
+      if (instance.sensorSpecificData case final value?)
+        'sensorSpecificData': value,
+      'samples': instance.samples,
+    };
 
 PolarGyroscope _$PolarGyroscopeFromJson(Map<String, dynamic> json) =>
     PolarGyroscope(
@@ -162,20 +155,13 @@ PolarGyroscope _$PolarGyroscopeFromJson(Map<String, dynamic> json) =>
           ? null
           : Data.fromJson(json['sensorSpecificData'] as Map<String, dynamic>);
 
-Map<String, dynamic> _$PolarGyroscopeToJson(PolarGyroscope instance) {
-  final val = <String, dynamic>{};
-
-  void writeNotNull(String key, dynamic value) {
-    if (value != null) {
-      val[key] = value;
-    }
-  }
-
-  writeNotNull('__type', instance.$type);
-  writeNotNull('sensorSpecificData', instance.sensorSpecificData);
-  val['samples'] = instance.samples;
-  return val;
-}
+Map<String, dynamic> _$PolarGyroscopeToJson(PolarGyroscope instance) =>
+    <String, dynamic>{
+      if (instance.$type case final value?) '__type': value,
+      if (instance.sensorSpecificData case final value?)
+        'sensorSpecificData': value,
+      'samples': instance.samples,
+    };
 
 PolarMagnetometer _$PolarMagnetometerFromJson(Map<String, dynamic> json) =>
     PolarMagnetometer(
@@ -189,20 +175,13 @@ PolarMagnetometer _$PolarMagnetometerFromJson(Map<String, dynamic> json) =>
           ? null
           : Data.fromJson(json['sensorSpecificData'] as Map<String, dynamic>);
 
-Map<String, dynamic> _$PolarMagnetometerToJson(PolarMagnetometer instance) {
-  final val = <String, dynamic>{};
-
-  void writeNotNull(String key, dynamic value) {
-    if (value != null) {
-      val[key] = value;
-    }
-  }
-
-  writeNotNull('__type', instance.$type);
-  writeNotNull('sensorSpecificData', instance.sensorSpecificData);
-  val['samples'] = instance.samples;
-  return val;
-}
+Map<String, dynamic> _$PolarMagnetometerToJson(PolarMagnetometer instance) =>
+    <String, dynamic>{
+      if (instance.$type case final value?) '__type': value,
+      if (instance.sensorSpecificData case final value?)
+        'sensorSpecificData': value,
+      'samples': instance.samples,
+    };
 
 PolarPPG _$PolarPPGFromJson(Map<String, dynamic> json) => PolarPPG(
       type: $enumDecode(_$PpgDataTypeEnumMap, json['type']),
@@ -215,21 +194,13 @@ PolarPPG _$PolarPPGFromJson(Map<String, dynamic> json) => PolarPPG(
           ? null
           : Data.fromJson(json['sensorSpecificData'] as Map<String, dynamic>);
 
-Map<String, dynamic> _$PolarPPGToJson(PolarPPG instance) {
-  final val = <String, dynamic>{};
-
-  void writeNotNull(String key, dynamic value) {
-    if (value != null) {
-      val[key] = value;
-    }
-  }
-
-  writeNotNull('__type', instance.$type);
-  writeNotNull('sensorSpecificData', instance.sensorSpecificData);
-  val['samples'] = instance.samples;
-  val['type'] = _$PpgDataTypeEnumMap[instance.type]!;
-  return val;
-}
+Map<String, dynamic> _$PolarPPGToJson(PolarPPG instance) => <String, dynamic>{
+      if (instance.$type case final value?) '__type': value,
+      if (instance.sensorSpecificData case final value?)
+        'sensorSpecificData': value,
+      'samples': instance.samples,
+      'type': _$PpgDataTypeEnumMap[instance.type]!,
+    };
 
 const _$PpgDataTypeEnumMap = {
   PpgDataType.ppg3_ambient1: 'ppg3_ambient1',
@@ -246,20 +217,12 @@ PolarPPI _$PolarPPIFromJson(Map<String, dynamic> json) => PolarPPI(
           ? null
           : Data.fromJson(json['sensorSpecificData'] as Map<String, dynamic>);
 
-Map<String, dynamic> _$PolarPPIToJson(PolarPPI instance) {
-  final val = <String, dynamic>{};
-
-  void writeNotNull(String key, dynamic value) {
-    if (value != null) {
-      val[key] = value;
-    }
-  }
-
-  writeNotNull('__type', instance.$type);
-  writeNotNull('sensorSpecificData', instance.sensorSpecificData);
-  val['samples'] = instance.samples;
-  return val;
-}
+Map<String, dynamic> _$PolarPPIToJson(PolarPPI instance) => <String, dynamic>{
+      if (instance.$type case final value?) '__type': value,
+      if (instance.sensorSpecificData case final value?)
+        'sensorSpecificData': value,
+      'samples': instance.samples,
+    };
 
 PolarECG _$PolarECGFromJson(Map<String, dynamic> json) => PolarECG(
       samples: (json['samples'] as List<dynamic>)
@@ -271,20 +234,12 @@ PolarECG _$PolarECGFromJson(Map<String, dynamic> json) => PolarECG(
           ? null
           : Data.fromJson(json['sensorSpecificData'] as Map<String, dynamic>);
 
-Map<String, dynamic> _$PolarECGToJson(PolarECG instance) {
-  final val = <String, dynamic>{};
-
-  void writeNotNull(String key, dynamic value) {
-    if (value != null) {
-      val[key] = value;
-    }
-  }
-
-  writeNotNull('__type', instance.$type);
-  writeNotNull('sensorSpecificData', instance.sensorSpecificData);
-  val['samples'] = instance.samples;
-  return val;
-}
+Map<String, dynamic> _$PolarECGToJson(PolarECG instance) => <String, dynamic>{
+      if (instance.$type case final value?) '__type': value,
+      if (instance.sensorSpecificData case final value?)
+        'sensorSpecificData': value,
+      'samples': instance.samples,
+    };
 
 PolarHR _$PolarHRFromJson(Map<String, dynamic> json) => PolarHR(
       samples: (json['samples'] as List<dynamic>)
@@ -296,20 +251,12 @@ PolarHR _$PolarHRFromJson(Map<String, dynamic> json) => PolarHR(
           ? null
           : Data.fromJson(json['sensorSpecificData'] as Map<String, dynamic>);
 
-Map<String, dynamic> _$PolarHRToJson(PolarHR instance) {
-  final val = <String, dynamic>{};
-
-  void writeNotNull(String key, dynamic value) {
-    if (value != null) {
-      val[key] = value;
-    }
-  }
-
-  writeNotNull('__type', instance.$type);
-  writeNotNull('sensorSpecificData', instance.sensorSpecificData);
-  val['samples'] = instance.samples;
-  return val;
-}
+Map<String, dynamic> _$PolarHRToJson(PolarHR instance) => <String, dynamic>{
+      if (instance.$type case final value?) '__type': value,
+      if (instance.sensorSpecificData case final value?)
+        'sensorSpecificData': value,
+      'samples': instance.samples,
+    };
 
 PolarDevice _$PolarDeviceFromJson(Map<String, dynamic> json) => PolarDevice(
       roleName: json['roleName'] as String? ?? PolarDevice.DEFAULT_ROLE_NAME,
@@ -332,28 +279,21 @@ PolarDevice _$PolarDeviceFromJson(Map<String, dynamic> json) => PolarDevice(
       ..address = json['address'] as String?
       ..rssi = (json['rssi'] as num?)?.toInt();
 
-Map<String, dynamic> _$PolarDeviceToJson(PolarDevice instance) {
-  final val = <String, dynamic>{};
-
-  void writeNotNull(String key, dynamic value) {
-    if (value != null) {
-      val[key] = value;
-    }
-  }
-
-  writeNotNull('__type', instance.$type);
-  val['roleName'] = instance.roleName;
-  writeNotNull('isOptional', instance.isOptional);
-  writeNotNull(
-      'defaultSamplingConfiguration', instance.defaultSamplingConfiguration);
-  writeNotNull('settings', instance.settings);
-  writeNotNull('identifier', instance.identifier);
-  writeNotNull('address', instance.address);
-  writeNotNull('deviceType', _$PolarDeviceTypeEnumMap[instance.deviceType]);
-  writeNotNull('name', instance.name);
-  writeNotNull('rssi', instance.rssi);
-  return val;
-}
+Map<String, dynamic> _$PolarDeviceToJson(PolarDevice instance) =>
+    <String, dynamic>{
+      if (instance.$type case final value?) '__type': value,
+      'roleName': instance.roleName,
+      if (instance.isOptional case final value?) 'isOptional': value,
+      if (instance.defaultSamplingConfiguration case final value?)
+        'defaultSamplingConfiguration': value,
+      if (instance.settings case final value?) 'settings': value,
+      if (instance.identifier case final value?) 'identifier': value,
+      if (instance.address case final value?) 'address': value,
+      if (_$PolarDeviceTypeEnumMap[instance.deviceType] case final value?)
+        'deviceType': value,
+      if (instance.name case final value?) 'name': value,
+      if (instance.rssi case final value?) 'rssi': value,
+    };
 
 const _$PolarDeviceTypeEnumMap = {
   PolarDeviceType.UNKNOWN: 'UNKNOWN',

@@ -102,7 +102,9 @@ class LocalStudyProtocolManager implements StudyProtocolManager {
     protocol.addTaskControl(
         PeriodicTrigger(period: Duration(seconds: 20)),
         BackgroundTask(measures: [
-          Measure(type: ContextSamplingPackage.CURRENT_LOCATION),
+          Measure(type: ContextSamplingPackage.LOCATION)
+            ..overrideSamplingConfiguration =
+                LocationSamplingConfiguration(once: true),
         ]),
         locationService);
 

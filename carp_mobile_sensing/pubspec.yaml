@@ -7,6 +7,11 @@ environment:
   sdk: ">=3.3.0 <4.0.0"
   flutter: ">=3.19.0"
 
+# This package only supports iOS and Android
+platforms:
+  android:
+  ios:
+  
 dependencies:
   flutter:
     sdk: flutter
@@ -53,11 +58,6 @@ dev_dependencies:
   json_serializable: any
   test: any
   flutter_lints: any
-
-# This package only supports iOS and Android
-platforms:
-  android:
-  ios:
 
 
 # Useful pubspec commands:

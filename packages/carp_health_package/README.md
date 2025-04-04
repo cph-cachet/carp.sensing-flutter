@@ -39,7 +39,8 @@ For example, on Android, if the user denies access to the health data types TWIC
 
 This sampling package **only** supports Google [Health Connect](https://health.google/health-connect-android/). To configure your app to use Health Connect, follow the documentation on the [`health`](https://pub.dev/packages/health#health-connect-android-option-2) package and on the [Android Developer page](https://developer.android.com/guide/health-and-fitness/health-connect/get-started).
 
-Note that Health Connect requires API level 34 and quite some edits to the `Manifest.xml` file, including declaring permissions to **all** the health data types you want to access. Read more on [Health Connect data types and permissions](https://developer.android.com/health-and-fitness/guides/health-connect/plan/data-types). If you are targeting SDK levels < 34 make sure to install the Health Connect app. Read more on the ["Get started with Health Connect "](https://developer.android.com/health-and-fitness/guides/health-connect/develop/get-started) page.
+> [!IMPORTANT]  
+> Health Connect requires API level 34 and quite some edits to the `Manifest.xml` file, including declaring permissions to **all** the health data types you want to access. Read more on [Health Connect data types and permissions](https://developer.android.com/health-and-fitness/guides/health-connect/plan/data-types). If you are targeting SDK levels < 34 make sure to install the Health Connect app. Read more on the ["Get started with Health Connect "](https://developer.android.com/health-and-fitness/guides/health-connect/develop/get-started) page.
 
 ```xml
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
@@ -161,7 +162,8 @@ Defining an app task to collect health data is done using the `HealthAppTask` ta
 
 In this case, a user task will be added to the task list once per day and when the user clicks (start) this user task, the health data types specified in the list of `types` are collected. Once data collection is done, the user task is marked as done in the task list.
 
-> **NOTE** - a `HealthAppTask` will ask the user to give permissions to collect the listed types, if not granted. This will open up the OS-level permission dialogue on both Android and iOS.
+> [!NOTE]  
+> A `HealthAppTask` will ask the user to give permissions to collect the listed types, if not granted. This will open up the OS-level permission dialogue on both Android and iOS.
 
 ### Background Sensing Task
 
@@ -184,9 +186,11 @@ Background sampling of health data can be configured by a measure in the protoco
 
 Background sensing of health data is done by the `HealthService` specified in the protocol above.
 
-> **NOTE** - background collection of health data **does not** ask for permissions (this will cause the app to show the Health permission dialogue at an arbitrary time to the user, which is not compliant to [the UX guidelines from Google](https://developer.android.com/health-and-fitness/guides/health-connect/design/permissions-and-data) and Apple to only show this dialogue in the context where the collection of health data is explained to the user). Handling of permissions is done via the `HealthService` by using the `hasPermissions()` and `requestPermissions(()` methods.
+> [!NOTE]  
+> Background collection of health data **does not** ask for permissions (this will cause the app to show the Health permission dialogue at an arbitrary time to the user, which is not compliant to [the UX guidelines from Google](https://developer.android.com/health-and-fitness/guides/health-connect/design/permissions-and-data) and Apple to only show this dialogue in the context where the collection of health data is explained to the user). Handling of permissions is done via the `HealthService` by using the `hasPermissions()` and `requestPermissions(()` methods.
 
-> **NOTE** - Health data can only be collected when the app is in the foreground and the phone is unlocked. This applies both for Android and iOS. Hence, the term "background sensing" should be taken with a gran of salt.
+> [!NOTE]  
+> Health data can only be collected when the app is in the foreground and the phone is unlocked. This applies both for Android and iOS. Hence, the term "background sensing" should be taken with a gran of salt.
 
 One way to ensure that health data is collected while the app is in foreground, is to add the collection of health measures to an App Task (e.g., a survey):
 

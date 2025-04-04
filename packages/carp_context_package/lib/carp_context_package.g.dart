@@ -74,56 +74,6 @@ Map<String, dynamic> _$LocationToJson(Location instance) => <String, dynamic>{
       if (instance.provider case final value?) 'provider': value,
     };
 
-CurrentLocation _$CurrentLocationFromJson(Map<String, dynamic> json) =>
-    CurrentLocation(
-      latitude: (json['latitude'] as num?)?.toDouble() ?? 0,
-      longitude: (json['longitude'] as num?)?.toDouble() ?? 0,
-      altitude: (json['altitude'] as num?)?.toDouble(),
-      accuracy: (json['accuracy'] as num?)?.toDouble(),
-      verticalAccuracy: (json['verticalAccuracy'] as num?)?.toDouble(),
-      speed: (json['speed'] as num?)?.toDouble(),
-      speedAccuracy: (json['speedAccuracy'] as num?)?.toDouble(),
-      heading: (json['heading'] as num?)?.toDouble(),
-      time:
-          json['time'] == null ? null : DateTime.parse(json['time'] as String),
-      isMock: json['isMock'] as bool?,
-      headingAccuracy: (json['headingAccuracy'] as num?)?.toDouble(),
-      elapsedRealtimeNanos: (json['elapsedRealtimeNanos'] as num?)?.toDouble(),
-      elapsedRealtimeUncertaintyNanos:
-          (json['elapsedRealtimeUncertaintyNanos'] as num?)?.toDouble(),
-      satellites: (json['satellites'] as num?)?.toInt(),
-      provider: json['provider'] as String?,
-    )
-      ..$type = json['__type'] as String?
-      ..sensorSpecificData = json['sensorSpecificData'] == null
-          ? null
-          : Data.fromJson(json['sensorSpecificData'] as Map<String, dynamic>);
-
-Map<String, dynamic> _$CurrentLocationToJson(CurrentLocation instance) =>
-    <String, dynamic>{
-      if (instance.$type case final value?) '__type': value,
-      if (instance.sensorSpecificData?.toJson() case final value?)
-        'sensorSpecificData': value,
-      'latitude': instance.latitude,
-      'longitude': instance.longitude,
-      if (instance.altitude case final value?) 'altitude': value,
-      if (instance.accuracy case final value?) 'accuracy': value,
-      if (instance.verticalAccuracy case final value?)
-        'verticalAccuracy': value,
-      if (instance.speed case final value?) 'speed': value,
-      if (instance.speedAccuracy case final value?) 'speedAccuracy': value,
-      if (instance.heading case final value?) 'heading': value,
-      if (instance.headingAccuracy case final value?) 'headingAccuracy': value,
-      if (instance.time?.toIso8601String() case final value?) 'time': value,
-      if (instance.isMock case final value?) 'isMock': value,
-      if (instance.elapsedRealtimeNanos case final value?)
-        'elapsedRealtimeNanos': value,
-      if (instance.elapsedRealtimeUncertaintyNanos case final value?)
-        'elapsedRealtimeUncertaintyNanos': value,
-      if (instance.satellites case final value?) 'satellites': value,
-      if (instance.provider case final value?) 'provider': value,
-    };
-
 LocationSamplingConfiguration _$LocationSamplingConfigurationFromJson(
         Map<String, dynamic> json) =>
     LocationSamplingConfiguration(

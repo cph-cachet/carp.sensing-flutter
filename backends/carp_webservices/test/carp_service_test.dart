@@ -304,8 +304,9 @@ void main() {
               List<DataPoint> data =
                   await CarpService().dataPointReference().getAll();
 
-              data.forEach(
-                  (datapoint) => debugPrint(_encode((datapoint.toJson()))));
+              for (var datapoint in data) {
+                debugPrint(_encode((datapoint.toJson())));
+              }
               expect(data, isNotNull);
               debugPrint('N=${data.length}');
             },
@@ -860,7 +861,9 @@ void main() {
         test('- get all', () async {
           final List<CarpFileResponse> results =
               await CarpService().getAllFiles(testStudyId);
-          results.forEach((result) => debugPrint(toJsonString((result.map))));
+          for (var result in results) {
+            debugPrint(toJsonString((result.map)));
+          }
         });
 
         test('- query', () async {
@@ -870,7 +873,9 @@ void main() {
           if (results.isNotEmpty) {
             expect(results[0].originalName, 'img.jpg');
           }
-          results.forEach((result) => debugPrint(toJsonString((result.map))));
+          for (var result in results) {
+            debugPrint(toJsonString((result.map)));
+          }
         });
 
         test('- get by name', () async {
