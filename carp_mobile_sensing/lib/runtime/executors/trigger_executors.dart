@@ -517,7 +517,6 @@ class NoUserTaskTriggerExecutor extends TriggerExecutor<NoUserTaskTrigger> {
   @override
   Future<bool> onStart() async {
     _timer = Timer.periodic(Duration(minutes: 1), (_) {
-      print(AppTaskController().userTaskQueue);
       if (!AppTaskController()
           .userTaskQueue
           .where((task) => task.state == UserTaskState.enqueued)
