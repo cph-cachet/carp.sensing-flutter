@@ -57,6 +57,7 @@ Add the following to your app's `AndroidManifest.xml` file located in `android/a
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_BACKGROUND_LOCATION" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_LOCATION" />
     <uses-permission android:name="android.permission.WAKE_LOCK" />
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
@@ -75,6 +76,11 @@ Add the following to your app's `AndroidManifest.xml` file located in `android/a
 > `<uses-permission android:name="android.permission.ACTIVITY_RECOGNITION" />`
 >
 > See [Privacy changes in Android 10](https://developer.android.com/about/versions/10/privacy/changes#physical-activity-recognition).
+
+> [!NOTE]  
+> For Android 14 (API 34 and later) [foreground service types are required](https://developer.android.com/about/versions/14/changes/fgs-types-required) and you should add
+>
+> `<uses-permission android:name="android.permission.FOREGROUND_SERVICE_LOCATION" />`
 
 ### iOS
 
