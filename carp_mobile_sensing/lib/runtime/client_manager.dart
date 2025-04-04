@@ -141,15 +141,15 @@ class SmartPhoneClientManager extends ClientManager
     this.deviceController.registerAllAvailableDevices();
 
     var statusMsg =
-        '==========================================================='
-        '  CARP Mobile Sensing (CAMS) - $runtimeType'
-        '==========================================================='
-        '             device : ${registration.deviceDisplayName}'
-        ' deployment service : ${this.deploymentService}'
-        '  device controller : ${this.deviceController}'
-        '  available devices : ${this.deviceController.devicesToString()}'
-        '        persistence : ${Persistence().databaseName.split('/').last}'
-        '===========================================================';
+        '===========================================================\n'
+        '  CARP Mobile Sensing (CAMS) - $runtimeType\n'
+        '===========================================================\n'
+        '             device : ${registration.deviceDisplayName}\n'
+        ' deployment service : ${this.deploymentService}\n'
+        '  device controller : ${this.deviceController}\n'
+        '  available devices : ${this.deviceController.devicesToString()}\n'
+        '        persistence : ${Persistence().databaseName.split('/').last}\n'
+        '===========================================================\n';
     debugPrint(statusMsg);
 
     _state = ClientManagerState.configured;
