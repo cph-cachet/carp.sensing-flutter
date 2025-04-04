@@ -16,22 +16,14 @@ MovisensStepCount _$MovisensStepCountFromJson(Map<String, dynamic> json) =>
       steps: (json['steps'] as num).toInt(),
     )..$type = json['__type'] as String?;
 
-Map<String, dynamic> _$MovisensStepCountToJson(MovisensStepCount instance) {
-  final val = <String, dynamic>{};
-
-  void writeNotNull(String key, dynamic value) {
-    if (value != null) {
-      val[key] = value;
-    }
-  }
-
-  writeNotNull('__type', instance.$type);
-  val['timestamp'] = instance.timestamp.toIso8601String();
-  val['deviceId'] = instance.deviceId;
-  val['type'] = instance.type;
-  val['steps'] = instance.steps;
-  return val;
-}
+Map<String, dynamic> _$MovisensStepCountToJson(MovisensStepCount instance) =>
+    <String, dynamic>{
+      if (instance.$type case final value?) '__type': value,
+      'timestamp': instance.timestamp.toIso8601String(),
+      'deviceId': instance.deviceId,
+      'type': instance.type,
+      'steps': instance.steps,
+    };
 
 MovisensBodyPosition _$MovisensBodyPositionFromJson(
         Map<String, dynamic> json) =>
@@ -45,22 +37,14 @@ MovisensBodyPosition _$MovisensBodyPositionFromJson(
     )..$type = json['__type'] as String?;
 
 Map<String, dynamic> _$MovisensBodyPositionToJson(
-    MovisensBodyPosition instance) {
-  final val = <String, dynamic>{};
-
-  void writeNotNull(String key, dynamic value) {
-    if (value != null) {
-      val[key] = value;
-    }
-  }
-
-  writeNotNull('__type', instance.$type);
-  val['timestamp'] = instance.timestamp.toIso8601String();
-  val['deviceId'] = instance.deviceId;
-  val['type'] = instance.type;
-  val['bodyPosition'] = instance.bodyPosition;
-  return val;
-}
+        MovisensBodyPosition instance) =>
+    <String, dynamic>{
+      if (instance.$type case final value?) '__type': value,
+      'timestamp': instance.timestamp.toIso8601String(),
+      'deviceId': instance.deviceId,
+      'type': instance.type,
+      'bodyPosition': instance.bodyPosition,
+    };
 
 MovisensInclination _$MovisensInclinationFromJson(Map<String, dynamic> json) =>
     MovisensInclination(
@@ -74,24 +58,17 @@ MovisensInclination _$MovisensInclinationFromJson(Map<String, dynamic> json) =>
       z: (json['z'] as num).toInt(),
     )..$type = json['__type'] as String?;
 
-Map<String, dynamic> _$MovisensInclinationToJson(MovisensInclination instance) {
-  final val = <String, dynamic>{};
-
-  void writeNotNull(String key, dynamic value) {
-    if (value != null) {
-      val[key] = value;
-    }
-  }
-
-  writeNotNull('__type', instance.$type);
-  val['timestamp'] = instance.timestamp.toIso8601String();
-  val['deviceId'] = instance.deviceId;
-  val['type'] = instance.type;
-  val['x'] = instance.x;
-  val['y'] = instance.y;
-  val['z'] = instance.z;
-  return val;
-}
+Map<String, dynamic> _$MovisensInclinationToJson(
+        MovisensInclination instance) =>
+    <String, dynamic>{
+      if (instance.$type case final value?) '__type': value,
+      'timestamp': instance.timestamp.toIso8601String(),
+      'deviceId': instance.deviceId,
+      'type': instance.type,
+      'x': instance.x,
+      'y': instance.y,
+      'z': instance.z,
+    };
 
 MovisensMovementAcceleration _$MovisensMovementAccelerationFromJson(
         Map<String, dynamic> json) =>
@@ -105,22 +82,14 @@ MovisensMovementAcceleration _$MovisensMovementAccelerationFromJson(
     )..$type = json['__type'] as String?;
 
 Map<String, dynamic> _$MovisensMovementAccelerationToJson(
-    MovisensMovementAcceleration instance) {
-  final val = <String, dynamic>{};
-
-  void writeNotNull(String key, dynamic value) {
-    if (value != null) {
-      val[key] = value;
-    }
-  }
-
-  writeNotNull('__type', instance.$type);
-  val['timestamp'] = instance.timestamp.toIso8601String();
-  val['deviceId'] = instance.deviceId;
-  val['type'] = instance.type;
-  val['movementAcceleration'] = instance.movementAcceleration;
-  return val;
-}
+        MovisensMovementAcceleration instance) =>
+    <String, dynamic>{
+      if (instance.$type case final value?) '__type': value,
+      'timestamp': instance.timestamp.toIso8601String(),
+      'deviceId': instance.deviceId,
+      'type': instance.type,
+      'movementAcceleration': instance.movementAcceleration,
+    };
 
 MovisensMET _$MovisensMETFromJson(Map<String, dynamic> json) => MovisensMET(
       deviceId: json['deviceId'] as String,
@@ -131,22 +100,14 @@ MovisensMET _$MovisensMETFromJson(Map<String, dynamic> json) => MovisensMET(
       met: (json['met'] as num).toInt(),
     )..$type = json['__type'] as String?;
 
-Map<String, dynamic> _$MovisensMETToJson(MovisensMET instance) {
-  final val = <String, dynamic>{};
-
-  void writeNotNull(String key, dynamic value) {
-    if (value != null) {
-      val[key] = value;
-    }
-  }
-
-  writeNotNull('__type', instance.$type);
-  val['timestamp'] = instance.timestamp.toIso8601String();
-  val['deviceId'] = instance.deviceId;
-  val['type'] = instance.type;
-  val['met'] = instance.met;
-  return val;
-}
+Map<String, dynamic> _$MovisensMETToJson(MovisensMET instance) =>
+    <String, dynamic>{
+      if (instance.$type case final value?) '__type': value,
+      'timestamp': instance.timestamp.toIso8601String(),
+      'deviceId': instance.deviceId,
+      'type': instance.type,
+      'met': instance.met,
+    };
 
 MovisensMETLevel _$MovisensMETLevelFromJson(Map<String, dynamic> json) =>
     MovisensMETLevel(
@@ -161,25 +122,17 @@ MovisensMETLevel _$MovisensMETLevelFromJson(Map<String, dynamic> json) =>
       vigorous: (json['vigorous'] as num).toInt(),
     )..$type = json['__type'] as String?;
 
-Map<String, dynamic> _$MovisensMETLevelToJson(MovisensMETLevel instance) {
-  final val = <String, dynamic>{};
-
-  void writeNotNull(String key, dynamic value) {
-    if (value != null) {
-      val[key] = value;
-    }
-  }
-
-  writeNotNull('__type', instance.$type);
-  val['timestamp'] = instance.timestamp.toIso8601String();
-  val['deviceId'] = instance.deviceId;
-  val['type'] = instance.type;
-  val['sedentary'] = instance.sedentary;
-  val['light'] = instance.light;
-  val['moderate'] = instance.moderate;
-  val['vigorous'] = instance.vigorous;
-  return val;
-}
+Map<String, dynamic> _$MovisensMETLevelToJson(MovisensMETLevel instance) =>
+    <String, dynamic>{
+      if (instance.$type case final value?) '__type': value,
+      'timestamp': instance.timestamp.toIso8601String(),
+      'deviceId': instance.deviceId,
+      'type': instance.type,
+      'sedentary': instance.sedentary,
+      'light': instance.light,
+      'moderate': instance.moderate,
+      'vigorous': instance.vigorous,
+    };
 
 MovisensHR _$MovisensHRFromJson(Map<String, dynamic> json) => MovisensHR(
       deviceId: json['deviceId'] as String,
@@ -190,22 +143,14 @@ MovisensHR _$MovisensHRFromJson(Map<String, dynamic> json) => MovisensHR(
       hr: (json['hr'] as num).toInt(),
     )..$type = json['__type'] as String?;
 
-Map<String, dynamic> _$MovisensHRToJson(MovisensHR instance) {
-  final val = <String, dynamic>{};
-
-  void writeNotNull(String key, dynamic value) {
-    if (value != null) {
-      val[key] = value;
-    }
-  }
-
-  writeNotNull('__type', instance.$type);
-  val['timestamp'] = instance.timestamp.toIso8601String();
-  val['deviceId'] = instance.deviceId;
-  val['type'] = instance.type;
-  val['hr'] = instance.hr;
-  return val;
-}
+Map<String, dynamic> _$MovisensHRToJson(MovisensHR instance) =>
+    <String, dynamic>{
+      if (instance.$type case final value?) '__type': value,
+      'timestamp': instance.timestamp.toIso8601String(),
+      'deviceId': instance.deviceId,
+      'type': instance.type,
+      'hr': instance.hr,
+    };
 
 MovisensHRV _$MovisensHRVFromJson(Map<String, dynamic> json) => MovisensHRV(
       deviceId: json['deviceId'] as String,
@@ -216,22 +161,14 @@ MovisensHRV _$MovisensHRVFromJson(Map<String, dynamic> json) => MovisensHRV(
       hrv: (json['hrv'] as num).toInt(),
     )..$type = json['__type'] as String?;
 
-Map<String, dynamic> _$MovisensHRVToJson(MovisensHRV instance) {
-  final val = <String, dynamic>{};
-
-  void writeNotNull(String key, dynamic value) {
-    if (value != null) {
-      val[key] = value;
-    }
-  }
-
-  writeNotNull('__type', instance.$type);
-  val['timestamp'] = instance.timestamp.toIso8601String();
-  val['deviceId'] = instance.deviceId;
-  val['type'] = instance.type;
-  val['hrv'] = instance.hrv;
-  return val;
-}
+Map<String, dynamic> _$MovisensHRVToJson(MovisensHRV instance) =>
+    <String, dynamic>{
+      if (instance.$type case final value?) '__type': value,
+      'timestamp': instance.timestamp.toIso8601String(),
+      'deviceId': instance.deviceId,
+      'type': instance.type,
+      'hrv': instance.hrv,
+    };
 
 MovisensIsHrvValid _$MovisensIsHrvValidFromJson(Map<String, dynamic> json) =>
     MovisensIsHrvValid(
@@ -243,22 +180,14 @@ MovisensIsHrvValid _$MovisensIsHrvValidFromJson(Map<String, dynamic> json) =>
       isHrvValid: json['isHrvValid'] as bool,
     )..$type = json['__type'] as String?;
 
-Map<String, dynamic> _$MovisensIsHrvValidToJson(MovisensIsHrvValid instance) {
-  final val = <String, dynamic>{};
-
-  void writeNotNull(String key, dynamic value) {
-    if (value != null) {
-      val[key] = value;
-    }
-  }
-
-  writeNotNull('__type', instance.$type);
-  val['timestamp'] = instance.timestamp.toIso8601String();
-  val['deviceId'] = instance.deviceId;
-  val['type'] = instance.type;
-  val['isHrvValid'] = instance.isHrvValid;
-  return val;
-}
+Map<String, dynamic> _$MovisensIsHrvValidToJson(MovisensIsHrvValid instance) =>
+    <String, dynamic>{
+      if (instance.$type case final value?) '__type': value,
+      'timestamp': instance.timestamp.toIso8601String(),
+      'deviceId': instance.deviceId,
+      'type': instance.type,
+      'isHrvValid': instance.isHrvValid,
+    };
 
 MovisensEDA _$MovisensEDAFromJson(Map<String, dynamic> json) => MovisensEDA(
       deviceId: json['deviceId'] as String,
@@ -269,22 +198,14 @@ MovisensEDA _$MovisensEDAFromJson(Map<String, dynamic> json) => MovisensEDA(
       edaSclMean: (json['edaSclMean'] as num).toDouble(),
     )..$type = json['__type'] as String?;
 
-Map<String, dynamic> _$MovisensEDAToJson(MovisensEDA instance) {
-  final val = <String, dynamic>{};
-
-  void writeNotNull(String key, dynamic value) {
-    if (value != null) {
-      val[key] = value;
-    }
-  }
-
-  writeNotNull('__type', instance.$type);
-  val['timestamp'] = instance.timestamp.toIso8601String();
-  val['deviceId'] = instance.deviceId;
-  val['type'] = instance.type;
-  val['edaSclMean'] = instance.edaSclMean;
-  return val;
-}
+Map<String, dynamic> _$MovisensEDAToJson(MovisensEDA instance) =>
+    <String, dynamic>{
+      if (instance.$type case final value?) '__type': value,
+      'timestamp': instance.timestamp.toIso8601String(),
+      'deviceId': instance.deviceId,
+      'type': instance.type,
+      'edaSclMean': instance.edaSclMean,
+    };
 
 MovisensSkinTemperature _$MovisensSkinTemperatureFromJson(
         Map<String, dynamic> json) =>
@@ -298,22 +219,14 @@ MovisensSkinTemperature _$MovisensSkinTemperatureFromJson(
     )..$type = json['__type'] as String?;
 
 Map<String, dynamic> _$MovisensSkinTemperatureToJson(
-    MovisensSkinTemperature instance) {
-  final val = <String, dynamic>{};
-
-  void writeNotNull(String key, dynamic value) {
-    if (value != null) {
-      val[key] = value;
-    }
-  }
-
-  writeNotNull('__type', instance.$type);
-  val['timestamp'] = instance.timestamp.toIso8601String();
-  val['deviceId'] = instance.deviceId;
-  val['type'] = instance.type;
-  val['skinTemperature'] = instance.skinTemperature;
-  return val;
-}
+        MovisensSkinTemperature instance) =>
+    <String, dynamic>{
+      if (instance.$type case final value?) '__type': value,
+      'timestamp': instance.timestamp.toIso8601String(),
+      'deviceId': instance.deviceId,
+      'type': instance.type,
+      'skinTemperature': instance.skinTemperature,
+    };
 
 MovisensRespiration _$MovisensRespirationFromJson(Map<String, dynamic> json) =>
     MovisensRespiration(
@@ -325,22 +238,15 @@ MovisensRespiration _$MovisensRespirationFromJson(Map<String, dynamic> json) =>
       value: (json['value'] as num).toInt(),
     )..$type = json['__type'] as String?;
 
-Map<String, dynamic> _$MovisensRespirationToJson(MovisensRespiration instance) {
-  final val = <String, dynamic>{};
-
-  void writeNotNull(String key, dynamic value) {
-    if (value != null) {
-      val[key] = value;
-    }
-  }
-
-  writeNotNull('__type', instance.$type);
-  val['timestamp'] = instance.timestamp.toIso8601String();
-  val['deviceId'] = instance.deviceId;
-  val['type'] = instance.type;
-  val['value'] = instance.value;
-  return val;
-}
+Map<String, dynamic> _$MovisensRespirationToJson(
+        MovisensRespiration instance) =>
+    <String, dynamic>{
+      if (instance.$type case final value?) '__type': value,
+      'timestamp': instance.timestamp.toIso8601String(),
+      'deviceId': instance.deviceId,
+      'type': instance.type,
+      'value': instance.value,
+    };
 
 MovisensTapMarker _$MovisensTapMarkerFromJson(Map<String, dynamic> json) =>
     MovisensTapMarker(
@@ -352,22 +258,14 @@ MovisensTapMarker _$MovisensTapMarkerFromJson(Map<String, dynamic> json) =>
       tapMarker: (json['tapMarker'] as num).toInt(),
     )..$type = json['__type'] as String?;
 
-Map<String, dynamic> _$MovisensTapMarkerToJson(MovisensTapMarker instance) {
-  final val = <String, dynamic>{};
-
-  void writeNotNull(String key, dynamic value) {
-    if (value != null) {
-      val[key] = value;
-    }
-  }
-
-  writeNotNull('__type', instance.$type);
-  val['timestamp'] = instance.timestamp.toIso8601String();
-  val['deviceId'] = instance.deviceId;
-  val['type'] = instance.type;
-  val['tapMarker'] = instance.tapMarker;
-  return val;
-}
+Map<String, dynamic> _$MovisensTapMarkerToJson(MovisensTapMarker instance) =>
+    <String, dynamic>{
+      if (instance.$type case final value?) '__type': value,
+      'timestamp': instance.timestamp.toIso8601String(),
+      'deviceId': instance.deviceId,
+      'type': instance.type,
+      'tapMarker': instance.tapMarker,
+    };
 
 MovisensDevice _$MovisensDeviceFromJson(Map<String, dynamic> json) =>
     MovisensDevice(
@@ -389,28 +287,20 @@ MovisensDevice _$MovisensDeviceFromJson(Map<String, dynamic> json) =>
             k, SamplingConfiguration.fromJson(e as Map<String, dynamic>)),
       );
 
-Map<String, dynamic> _$MovisensDeviceToJson(MovisensDevice instance) {
-  final val = <String, dynamic>{};
-
-  void writeNotNull(String key, dynamic value) {
-    if (value != null) {
-      val[key] = value;
-    }
-  }
-
-  writeNotNull('__type', instance.$type);
-  val['roleName'] = instance.roleName;
-  writeNotNull('isOptional', instance.isOptional);
-  writeNotNull(
-      'defaultSamplingConfiguration', instance.defaultSamplingConfiguration);
-  val['deviceName'] = instance.deviceName;
-  val['sensorLocation'] = _$SensorLocationEnumMap[instance.sensorLocation]!;
-  val['weight'] = instance.weight;
-  val['height'] = instance.height;
-  val['age'] = instance.age;
-  val['sex'] = _$SexEnumMap[instance.sex]!;
-  return val;
-}
+Map<String, dynamic> _$MovisensDeviceToJson(MovisensDevice instance) =>
+    <String, dynamic>{
+      if (instance.$type case final value?) '__type': value,
+      'roleName': instance.roleName,
+      if (instance.isOptional case final value?) 'isOptional': value,
+      if (instance.defaultSamplingConfiguration case final value?)
+        'defaultSamplingConfiguration': value,
+      'deviceName': instance.deviceName,
+      'sensorLocation': _$SensorLocationEnumMap[instance.sensorLocation]!,
+      'weight': instance.weight,
+      'height': instance.height,
+      'age': instance.age,
+      'sex': _$SexEnumMap[instance.sex]!,
+    };
 
 const _$SensorLocationEnumMap = {
   SensorLocation.RightSideHip: 'RightSideHip',

@@ -29,6 +29,7 @@
 .packages
 .pub-cache/
 .pub/
+.cxx/
 /build/
 
 # Web related

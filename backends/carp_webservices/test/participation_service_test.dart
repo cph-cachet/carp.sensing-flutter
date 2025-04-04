@@ -53,7 +53,7 @@ void main() {
         final invitations = await CarpParticipationService()
             .getActiveParticipationInvitations();
 
-        print(toJsonString(invitations));
+        debugPrint(toJsonString(invitations));
         expect(invitations, isNotNull);
 
         var invitation = invitations.firstWhere(

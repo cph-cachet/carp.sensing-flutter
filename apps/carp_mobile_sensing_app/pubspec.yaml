@@ -5,8 +5,12 @@ homepage: https://github.com/cph-cachet/carp.sensing-flutter/tree/master/apps/ca
 publish_to: 'none' 
 
 environment:
-  sdk: ">=3.2.0 <4.0.0"
-  flutter: ">=3.16.0"
+  sdk: ">=3.3.0 <4.0.0"
+  flutter: ">=3.19.0"
+
+platforms:
+  android:
+  ios:
 
 dependencies:
   flutter:
@@ -77,6 +81,16 @@ dependency_overrides:
   #     url: https://github.com/fairuzmn/flutterlocation.git
   #     ref: location-v5.5.0.0-dev.9-fix
   #     path: packages/location
+  
+  # due to this issue https://github.com/builttoroam/device_calendar/issues/586 
+  device_calendar:
+    git: https://github.com/bardram/device_calendar
+
+  # due to this issue https://github.com/petri-lipponen-movesense/mdsflutter/issues/36 
+  mdsflutter:
+    git:
+      url: https://github.com/Panosfunk/mdsflutter.git
+      ref: master
 
 dev_dependencies:
   flutter_test:

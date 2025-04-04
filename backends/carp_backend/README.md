@@ -23,7 +23,8 @@ This library supports:
 
 from/to a CAWS server.
 
-> Note that this library does nothing on its own and is only to be used as part of the overall [CARP Mobile Sensing](https://pub.dev/packages/carp_mobile_sensing) ecosystem. See the [CAMS wiki][wiki] for documentation on how to use CAMS, and checkout the [CARP Mobile Sening Demo App](https://github.com/cph-cachet/carp.sensing-flutter/tree/master/apps/carp_mobile_sensing_app) for a full example of an app using CARP Mobile Sensing and CAWS, including this library.
+> [!NOTE]
+> This package does nothing on its own and is only to be used as part of the overall [CARP Mobile Sensing](https://pub.dev/packages/carp_mobile_sensing) ecosystem. See the [CAMS wiki][wiki] for documentation on how to use CAMS, and checkout the [CARP Mobile Sening Demo App](https://github.com/cph-cachet/carp.sensing-flutter/tree/master/apps/carp_mobile_sensing_app) for a full example of an app using CARP Mobile Sensing and CAWS, including this library.
 
 ## Using the Plugin
 

@@ -28,6 +28,7 @@
 .packages
 .pub-cache/
 .pub/
+.cxx/
 build/
 
 # Android related
@@ -38,6 +39,9 @@ build/
 **/android/gradlew.bat
 **/android/local.properties
 **/android/**/GeneratedPluginRegistrant.java
+**/android/.cxx/
+**/android/.idea/
+**/android/.gradle/
 
 # iOS/XCode related
 **/ios/**/*.mode1v3

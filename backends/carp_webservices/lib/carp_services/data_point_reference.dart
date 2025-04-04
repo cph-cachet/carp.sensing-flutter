@@ -112,7 +112,9 @@ class DataPointReference extends CarpReference {
 
       // CARP web service returns 200 or 201 when a file is uploaded to the server
       if ((httpStatusCode == HttpStatus.ok) ||
-          (httpStatusCode == HttpStatus.created)) return;
+          (httpStatusCode == HttpStatus.created)) {
+        return;
+      }
 
       // everything else is an exception
       response.stream.toStringStream().first.then((body) {

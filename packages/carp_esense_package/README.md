@@ -144,4 +144,5 @@ protocol.addTaskControl(
     eSense);
 ````
 
-> **NOTE** that the eSense device must be paired with the phone via BLE **before** CAMS can connect to it.
+> [!IMPORTANT]  
+> The eSense device must be paired with the phone via BLE **before** CAMS can connect to it.

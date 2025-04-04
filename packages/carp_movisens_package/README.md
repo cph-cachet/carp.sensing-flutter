@@ -6,7 +6,8 @@ This library contains a [`carp_mobile_sensing`](https://pub.dartlang.org/package
 * [EcgMove 4](https://docs.movisens.com/Sensors/EcgMove4/)
 * [EdaMove 4](https://docs.movisens.com/Sensors/EdaMove4/)
 
-> **NOTE** - as stressed by Movisens, none of the Movisens devices are medical devices. Do not use them for medical purposes.
+> [!IMPORTANT]
+> As stressed by Movisens, none of the Movisens devices are medical devices. Do not use them for medical purposes.
 
 This packages supports sampling of the following [`Measure`](https://pub.dev/documentation/carp_core/latest/carp_core_protocols/Measure-class.html) types:
 

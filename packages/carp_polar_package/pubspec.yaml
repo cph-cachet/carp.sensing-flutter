@@ -1,11 +1,15 @@
 name: carp_polar_package
 description: The CARP Polar sampling package. Samples sensor data from the Polar H9, H10, and Verity Sense devices.
-version: 1.6.1
-homepage: https://github.com/cph-cachet/carp.sensing-flutter/tree/master/packages/carp_polar_package
+version: 1.6.2
+homepage: https://github.com/cph-cachet/carp.sensing-flutter
 
 environment:
-  sdk: ">=3.2.0 <4.0.0"
-  flutter: ">=3.6.0"
+  sdk: ">=3.3.0 <4.0.0"
+  flutter: ">=3.19.0"
+
+platforms:
+  android:
+  ios:
 
 dependencies:
   flutter:

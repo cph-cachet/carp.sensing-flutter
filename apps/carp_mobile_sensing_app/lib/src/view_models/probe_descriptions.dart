@@ -107,11 +107,6 @@ class ProbeDescription {
           Icon(Icons.screen_lock_portrait,
               size: 50, color: CachetColors.LIGHT_PURPLE),
         ),
-        ContextSamplingPackage.CURRENT_LOCATION: ProbeDescriptor(
-          'Current Location',
-          "Current location colleted from the phone's GPS sensor.",
-          Icon(Icons.location_searching, size: 50, color: CachetColors.GREY_1),
-        ),
         ContextSamplingPackage.LOCATION: ProbeDescriptor(
           'Location Tracking',
           "Continuous location tracking from the phone's GPS sensor.",

@@ -1,7 +1,8 @@
-## 1.7.1
+## 1.7.2
 
 * Upgrade to carp_core v. 1.8 & carp_serialization v. 2.0
 * Type safe `fromJson()` methods & nested json serialization
+* Upgrade to latest Flutter plugins
 
 ## 1.6.0
 

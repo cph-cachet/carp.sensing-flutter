@@ -5,7 +5,7 @@
  * found in the LICENSE file.
  */
 
-library carp_backend;
+library;
 
 import 'dart:async';
 import 'dart:io';

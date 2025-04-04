@@ -1,11 +1,11 @@
 name: carp_backend_example
 description: An example of how to usee the carp_backend package to upload data to CARP.
-homepage: https://github.com/cph-cachet/carp.sensing-flutter/tree/master/carp_core
+homepage: https://github.com/cph-cachet/carp.sensing-flutter
 publish_to: none
 
 environment:
-  sdk: ">=3.2.0 <4.0.0"
-  flutter: ">=3.16.0"
+  sdk: ">=3.3.0 <4.0.0"
+  flutter: ">=3.19.0"
 
 dependencies:
   flutter:
@@ -29,6 +29,6 @@ dependencies:
   carp_backend:
     path: ../
 
-dependency_overrides:
-
 dev_dependencies:
+  test: any
+  flutter_lints: any

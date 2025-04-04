@@ -1,4 +1,9 @@
-## 1.11.1
+## 1.12.0
+
+* removing the deprecated `CURRENT_LOCATION` - see [why](https://github.com/cph-cachet/carp.sensing-flutter/issues/471#issuecomment-2774787144)
+* upgrade to latest weather and air_quality plugins
+
+## 1.11.2
 
 * fix of [#471](https://github.com/cph-cachet/carp.sensing-flutter/issues/471)
 * the `CURRENT_LOCATION` is deprecated, but still available

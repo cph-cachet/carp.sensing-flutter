@@ -12,21 +12,13 @@ Connectivity _$ConnectivityFromJson(Map<String, dynamic> json) => Connectivity()
       .map((e) => $enumDecode(_$ConnectivityStatusEnumMap, e))
       .toList();
 
-Map<String, dynamic> _$ConnectivityToJson(Connectivity instance) {
-  final val = <String, dynamic>{};
-
-  void writeNotNull(String key, dynamic value) {
-    if (value != null) {
-      val[key] = value;
-    }
-  }
-
-  writeNotNull('__type', instance.$type);
-  val['connectivityStatus'] = instance.connectivityStatus
-      .map((e) => _$ConnectivityStatusEnumMap[e]!)
-      .toList();
-  return val;
-}
+Map<String, dynamic> _$ConnectivityToJson(Connectivity instance) =>
+    <String, dynamic>{
+      if (instance.$type case final value?) '__type': value,
+      'connectivityStatus': instance.connectivityStatus
+          .map((e) => _$ConnectivityStatusEnumMap[e]!)
+          .toList(),
+    };
 
 const _$ConnectivityStatusEnumMap = {
   ConnectivityStatus.bluetooth: 'bluetooth',
@@ -51,21 +43,13 @@ Bluetooth _$BluetoothFromJson(Map<String, dynamic> json) => Bluetooth(
           .map((e) => BluetoothDevice.fromJson(e as Map<String, dynamic>))
           .toList();
 
-Map<String, dynamic> _$BluetoothToJson(Bluetooth instance) {
-  final val = <String, dynamic>{};
-
-  void writeNotNull(String key, dynamic value) {
-    if (value != null) {
-      val[key] = value;
-    }
-  }
-
-  writeNotNull('__type', instance.$type);
-  val['startScan'] = instance.startScan.toIso8601String();
-  writeNotNull('endScan', instance.endScan?.toIso8601String());
-  val['scanResult'] = instance.scanResult.map((e) => e.toJson()).toList();
-  return val;
-}
+Map<String, dynamic> _$BluetoothToJson(Bluetooth instance) => <String, dynamic>{
+      if (instance.$type case final value?) '__type': value,
+      'startScan': instance.startScan.toIso8601String(),
+      if (instance.endScan?.toIso8601String() case final value?)
+        'endScan': value,
+      'scanResult': instance.scanResult.map((e) => e.toJson()).toList(),
+    };
 
 BluetoothDevice _$BluetoothDeviceFromJson(Map<String, dynamic> json) =>
     BluetoothDevice(
@@ -77,24 +61,15 @@ BluetoothDevice _$BluetoothDeviceFromJson(Map<String, dynamic> json) =>
       txPowerLevel: (json['txPowerLevel'] as num?)?.toInt(),
     );
 
-Map<String, dynamic> _$BluetoothDeviceToJson(BluetoothDevice instance) {
-  final val = <String, dynamic>{
-    'advertisementName': instance.advertisementName,
-    'bluetoothDeviceId': instance.bluetoothDeviceId,
-    'bluetoothDeviceName': instance.bluetoothDeviceName,
-    'connectable': instance.connectable,
-  };
-
-  void writeNotNull(String key, dynamic value) {
-    if (value != null) {
-      val[key] = value;
-    }
-  }
-
-  writeNotNull('txPowerLevel', instance.txPowerLevel);
-  val['rssi'] = instance.rssi;
-  return val;
-}
+Map<String, dynamic> _$BluetoothDeviceToJson(BluetoothDevice instance) =>
+    <String, dynamic>{
+      'advertisementName': instance.advertisementName,
+      'bluetoothDeviceId': instance.bluetoothDeviceId,
+      'bluetoothDeviceName': instance.bluetoothDeviceName,
+      'connectable': instance.connectable,
+      if (instance.txPowerLevel case final value?) 'txPowerLevel': value,
+      'rssi': instance.rssi,
+    };
 
 Wifi _$WifiFromJson(Map<String, dynamic> json) => Wifi(
       ssid: json['ssid'] as String?,
@@ -102,18 +77,9 @@ Wifi _$WifiFromJson(Map<String, dynamic> json) => Wifi(
       ip: json['ip'] as String?,
     )..$type = json['__type'] as String?;
 
-Map<String, dynamic> _$WifiToJson(Wifi instance) {
-  final val = <String, dynamic>{};
-
-  void writeNotNull(String key, dynamic value) {
-    if (value != null) {
-      val[key] = value;
-    }
-  }
-
-  writeNotNull('__type', instance.$type);
-  writeNotNull('ssid', instance.ssid);
-  writeNotNull('bssid', instance.bssid);
-  writeNotNull('ip', instance.ip);
-  return val;
-}
+Map<String, dynamic> _$WifiToJson(Wifi instance) => <String, dynamic>{
+      if (instance.$type case final value?) '__type': value,
+      if (instance.ssid case final value?) 'ssid': value,
+      if (instance.bssid case final value?) 'bssid': value,
+      if (instance.ip case final value?) 'ip': value,
+    };

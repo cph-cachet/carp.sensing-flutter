@@ -86,7 +86,9 @@ void main() {
         // debugPrint(toJsonString(batch));
 
         int length = 0;
-        batch.forEach((item) => length += item.measurements.length);
+        for (var item in batch) {
+          length += item.measurements.length;
+        }
 
         await CarpDataStreamService()
             .appendToDataStreams(testDeploymentId, batch, compress: false);
@@ -118,7 +120,9 @@ void main() {
         ];
 
         int length = 0;
-        batch.forEach((item) => length += item.measurements.length);
+        for (var item in batch) {
+          length += item.measurements.length;
+        }
 
         // debugPrint(toJsonString(batch));
         await CarpDataStreamService().appendToDataStreams(
@@ -159,7 +163,9 @@ void main() {
         ];
 
         int length = 0;
-        batch.forEach((item) => length += item.measurements.length);
+        for (var item in batch) {
+          length += item.measurements.length;
+        }
 
         await CarpDataStreamService().appendToDataStreams(
           testDeploymentId,

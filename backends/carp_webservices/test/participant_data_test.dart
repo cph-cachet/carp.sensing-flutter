@@ -152,7 +152,7 @@ void main() {
                 Measure(type: DeviceSamplingPackage.BATTERY_STATE),
               ]),
               childPhone);
-        print(toJsonString(protocol));
+        debugPrint(toJsonString(protocol));
       },
     );
   });

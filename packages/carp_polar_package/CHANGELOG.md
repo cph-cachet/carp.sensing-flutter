@@ -1,7 +1,9 @@
-## 1.6.1
+## 1.6.2
 
 * upgrade to carp_serialization v. 2.0 & carp_mobile_sensing: 1.10.0
 * fix of error on reconnect
+* upgrade to latest Flutter version
+* update of README
 
 ## 1.5.0
 

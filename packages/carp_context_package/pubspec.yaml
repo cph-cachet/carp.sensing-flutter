@@ -1,11 +1,15 @@
 name: carp_context_package
 description: CARP context sampling package. Samples location, mobility, activity, weather, air-quality, and geofence.
-version: 1.11.1
+version: 1.12.0
 homepage: https://github.com/cph-cachet/carp.sensing-flutter/tree/main/packages/carp_context_package
 
 environment:
-  sdk: ">=3.2.0 <4.0.0"
-  flutter: ">=3.16.0"
+  sdk: ">=3.3.0 <4.0.0"
+  flutter: ">=3.19.0"
+
+platforms:
+  android:
+  ios:
 
 dependencies:
   flutter:
