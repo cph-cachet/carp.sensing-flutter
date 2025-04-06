@@ -1,6 +1,5 @@
 /*
- * Copyright 2021-2023 Copenhagen Center for Health Technology (CACHET) at the
- * Technical University of Denmark (DTU).
+ * Copyright 2021 the Technical University of Denmark (DTU).
  * Use of this source code is governed by a MIT-style license that can be
  * found in the LICENSE file.
  */
@@ -141,16 +140,17 @@ class SmartPhoneClientManager extends ClientManager
     // look up and register all connected devices and services on this client
     this.deviceController.registerAllAvailableDevices();
 
-    print('===========================================================');
-    print('  CARP Mobile Sensing (CAMS) - $runtimeType');
-    print('===========================================================');
-    print('             device : ${registration.deviceDisplayName}');
-    print(' deployment service : ${this.deploymentService}');
-    print('  device controller : ${this.deviceController}');
-    print('  available devices : ${this.deviceController.devicesToString()}');
-    print(
-        '        persistence : ${Persistence().databaseName.split('/').last}');
-    print('===========================================================');
+    var statusMsg =
+        '===========================================================\n'
+        '  CARP Mobile Sensing (CAMS) - $runtimeType\n'
+        '===========================================================\n'
+        '             device : ${registration.deviceDisplayName}\n'
+        ' deployment service : ${this.deploymentService}\n'
+        '  device controller : ${this.deviceController}\n'
+        '  available devices : ${this.deviceController.devicesToString()}\n'
+        '        persistence : ${Persistence().databaseName.split('/').last}\n'
+        '===========================================================\n';
+    debugPrint(statusMsg);
 
     _state = ClientManagerState.configured;
   }

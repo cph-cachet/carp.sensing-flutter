@@ -1,6 +1,5 @@
 /*
- * Copyright 2020-2023 Copenhagen Center for Health Technology (CACHET) at the
- * Technical University of Denmark (DTU).
+ * Copyright 2020 the Technical University of Denmark (DTU).
  * Use of this source code is governed by a MIT-style license that can be
  * found in the LICENSE file.
  */
@@ -259,6 +258,7 @@ class AppTaskController {
           "$runtimeType - Could not find User Task - id is not valid: '$id'");
     } else {
       userTask.state = UserTaskState.done;
+      userTask.doneTime = DateTime.now();
       userTask.result = result;
       _controller.sink.add(userTask);
       info('$runtimeType - Marked $userTask as done');
@@ -348,6 +348,7 @@ class AppTaskController {
             userTask.state = snapshot.state;
             userTask.enqueued = snapshot.enqueued;
             userTask.triggerTime = snapshot.triggerTime;
+            userTask.doneTime = snapshot.doneTime;
 
             _userTaskMap[userTask.id] = userTask;
             debug(
@@ -422,6 +423,8 @@ class UserTaskSnapshot extends Serializable {
   Map<String, dynamic> toJson() => _$UserTaskSnapshotToJson(this);
 
   @override
-  String toString() =>
-      '$runtimeType - id:$id, task: $task, state: $state, enqueued: $enqueued, triggerTime: $triggerTime, studyDeploymentId: $studyDeploymentId, deviceRoleName: $deviceRoleName';
+  String toString() => '$runtimeType - id:$id, '
+      'task: $task, state: ${state.name}, enqueued: $enqueued, '
+      'triggerTime: $triggerTime, doneTime: $doneTime, '
+      'studyDeploymentId: $studyDeploymentId, deviceRoleName: $deviceRoleName';
 }

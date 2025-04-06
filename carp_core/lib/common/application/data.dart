@@ -202,18 +202,38 @@ class EDA extends SensorData {
   Map<String, dynamic> toJson() => _$EDAToJson(this);
 }
 
-/// Indicates the interactive task with [taskName] was completed.
-/// [taskData] holds the result of a completed interactive task, or null if
-/// no result is collected.
+/// Data about an interactive user task with [taskName], which has been completed.
+///
+/// [taskType] indicates the type of task completed.
+/// [taskData] holds the result of the task, or null if no result is collected.
 @JsonSerializable(includeIfNull: false, explicitToJson: true)
 class CompletedTask extends Data {
   static const dataType = CarpDataTypes.COMPLETED_TASK_TYPE_NAME;
 
+  /// The name of the task which was completed.
+  /// This is the name of the task as specified in the study protocol.
   String taskName;
+
+  /// The type of task which was completed, if specified.
+  ///
+  /// Known types are:
+  ///  - informed_consent - a task collecting informed consent from the user
+  ///  - survey - a survey task
+  ///  - cognition - a cognitive assessment task
+  ///  - audio - an audio task
+  ///  - video - a video task
+  ///  - image - an image task
+  ///  - health - a task collecting health data
+  ///  - sensing - a task collecting sensing data continuously
+  ///  - one_time_sensing - a task collecting sensing data once
+  String? taskType;
+
+  /// The result of the completed task, if any.
   Data? taskData;
 
   CompletedTask({
     required this.taskName,
+    this.taskType,
     this.taskData,
   }) : super();
 
