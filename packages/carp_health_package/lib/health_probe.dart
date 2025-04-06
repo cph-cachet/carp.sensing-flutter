@@ -102,7 +102,7 @@ class HealthProbe extends Probe {
         debug(
             '$runtimeType - Collecting health data, types: $healthDataTypes, start: ${start.toUtc()}, end: ${end.toUtc()}');
         try {
-          List<HealthDataPoint>? data =
+          List<HealthDataPoint>? healthDataPoints =
               await deviceManager.service?.getHealthDataFromTypes(
                     startTime: start,
                     endTime: end,
@@ -110,10 +110,10 @@ class HealthProbe extends Probe {
                   ) ??
                   [];
           debug(
-              '$runtimeType - Retrieved ${data.length} health data points of types: $healthDataTypes');
+              '$runtimeType - Retrieved ${healthDataPoints.length} health data points of types: $healthDataTypes');
 
           // Convert HealthDataPoint to measurements and add them the measurements stream.
-          for (var data in data) {
+          for (var data in healthDataPoints) {
             addMeasurement(Measurement(
                 sensorStartTime: data.dateFrom.microsecondsSinceEpoch,
                 sensorEndTime: data.dateTo.microsecondsSinceEpoch,

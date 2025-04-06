@@ -62,6 +62,7 @@ class SmartphoneDeploymentExecutor
         .listen((userTask) {
       addMeasurement(Measurement.fromData(CompletedTask(
         taskName: userTask.name,
+        taskType: userTask.type,
         taskData: userTask.result,
       )));
     });

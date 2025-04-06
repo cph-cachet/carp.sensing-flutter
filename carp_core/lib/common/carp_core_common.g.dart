@@ -993,6 +993,7 @@ Map<String, dynamic> _$EDAToJson(EDA instance) => <String, dynamic>{
 CompletedTask _$CompletedTaskFromJson(Map<String, dynamic> json) =>
     CompletedTask(
       taskName: json['taskName'] as String,
+      taskType: json['taskType'] as String?,
       taskData: json['taskData'] == null
           ? null
           : Data.fromJson(json['taskData'] as Map<String, dynamic>),
@@ -1002,6 +1003,7 @@ Map<String, dynamic> _$CompletedTaskToJson(CompletedTask instance) =>
     <String, dynamic>{
       if (instance.$type case final value?) '__type': value,
       'taskName': instance.taskName,
+      if (instance.taskType case final value?) 'taskType': value,
       if (instance.taskData?.toJson() case final value?) 'taskData': value,
     };
 
