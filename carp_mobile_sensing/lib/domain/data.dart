@@ -1,6 +1,5 @@
 /*
- * Copyright 2018-2022 Copenhagen Center for Health Technology (CACHET) at the
- * Technical University of Denmark (DTU).
+ * Copyright 2018 the Technical University of Denmark (DTU).
  * Use of this source code is governed by a MIT-style license that can be
  * found in the LICENSE file.
  */
@@ -31,6 +30,10 @@ class FileData extends Data {
   /// Create a new [FileData] based the file path and whether it is
   /// to be uploaded or not.
   FileData({required this.filename, this.upload = true}) : super();
+
+  @override
+  bool equivalentTo(Data other) =>
+      other is FileData && filename == other.filename;
 
   @override
   Function get fromJsonFunction => _$FileDataFromJson;
@@ -71,15 +74,13 @@ class Heartbeat extends Data {
 
 /// Data about an [AppTask] that has been completed.
 ///
+/// [taskName] is the name of the completed app task.
 /// [taskType] indicates the type of task completed.
+/// [completedAt] is the time this task was completed (in UTC).
 /// [taskData] holds the result of the task, or null if no result is collected.
 @JsonSerializable(includeIfNull: false, explicitToJson: true)
 class CompletedAppTask extends CompletedTask {
-  static const dataType = '${CarpDataTypes.CARP_NAMESPACE}.completed_app_task';
-
-  /// The name of the task which was completed.
-  /// This is the name of the task as specified in the study protocol.
-  String taskName;
+  static const dataType = '${CarpDataTypes.CARP_NAMESPACE}.completedapptask';
 
   /// The type of task which was completed, if specified.
   ///
@@ -93,16 +94,24 @@ class CompletedAppTask extends CompletedTask {
   ///  - health - a task collecting health data
   ///  - sensing - a task collecting sensing data continuously
   ///  - one_time_sensing - a task collecting sensing data once
-  String? taskType;
+  String taskType;
 
-  /// The result of the completed task, if any.
-  Data? taskData;
+  /// The time when the task was completed in UTC.
+  late DateTime completedAt;
 
   CompletedAppTask({
     required super.taskName,
-    this.taskType,
+    required this.taskType,
     super.taskData,
-  }) : super();
+  }) : super() {
+    completedAt = DateTime.now().toUtc();
+  }
+
+  @override
+  bool equivalentTo(Data other) =>
+      other is CompletedAppTask &&
+      taskName == other.taskName &&
+      taskType == other.taskType;
 
   @override
   Function get fromJsonFunction => _$CompletedAppTaskFromJson;

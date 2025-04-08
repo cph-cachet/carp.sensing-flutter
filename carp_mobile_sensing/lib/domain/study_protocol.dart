@@ -170,16 +170,19 @@ class SmartphoneStudyProtocol extends StudyProtocol
     return true;
   }
 
-  // Add the trigger, task, error, and heartbeat measures to the protocol since
-  // CAMS always collects and upload this data from any device.
+  // Add the trigger, task completed, error, and heartbeat measures to the protocol
+  // since CAMS always collects and upload this data from any device.
   void _addSamplingTaskControl(DeviceConfiguration device) {
     addTaskControl(
       NoOpTrigger(),
       BackgroundTask(measures: [
-        Measure(type: Heartbeat.dataType),
+        // CARP Core measures
         Measure(type: CarpDataTypes.ERROR_TYPE_NAME),
         Measure(type: CarpDataTypes.TRIGGERED_TASK_TYPE_NAME),
-        Measure(type: CarpDataTypes.COMPLETED_TASK_TYPE_NAME)
+        Measure(type: CarpDataTypes.COMPLETED_TASK_TYPE_NAME),
+        // CAMS specific measures
+        Measure(type: Heartbeat.dataType),
+        Measure(type: CompletedAppTask.dataType),
       ]),
       device,
       Control.Start,

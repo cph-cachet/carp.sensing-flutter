@@ -86,19 +86,23 @@ class CarpResourceManager
     if (result == null) {
       _assertCarpService();
 
-      DocumentSnapshot? document =
-          await CarpService().document(_getResourcePath(resource)).get();
-      info('Resource downloaded : $document');
+      if (CarpService().study?.studyId == null) {
+        warning("Study id is null - cannot get informed consent from server");
+      } else {
+        DocumentSnapshot? document =
+            await CarpService().document(_getResourcePath(resource)).get();
+        info('Resource downloaded : $document');
 
-      result = (document != null) ? document.data : null;
+        result = (document != null) ? document.data : null;
 
-      if (result != null) {
-        info("Saving '$resource' to local cache.");
-        try {
-          final json = jsonEncode(result);
-          File(await _cacheFilename(resource)).writeAsStringSync(json);
-        } catch (exception) {
-          warning("Failed to save local cache for '$resource' - $exception");
+        if (result != null) {
+          info("Saving '$resource' to local cache.");
+          try {
+            final json = jsonEncode(result);
+            File(await _cacheFilename(resource)).writeAsStringSync(json);
+          } catch (exception) {
+            warning("Failed to save local cache for '$resource' - $exception");
+          }
         }
       }
     }
@@ -235,24 +239,28 @@ class CarpResourceManager
     if (result == null) {
       _assertCarpService();
 
-      info('Getting language locale from server. '
-          'study_id: ${CarpService().study?.studyId}, '
-          'path: ${_getLocalizationsPath(locale)}');
-      DocumentSnapshot? document =
-          await CarpService().document(_getLocalizationsPath(locale)).get();
+      if (CarpService().study?.studyId == null) {
+        warning("Study id is null - cannot get language locale from server");
+      } else {
+        info('Getting language locale from server. '
+            'study_id: ${CarpService().study?.studyId}, '
+            'path: ${_getLocalizationsPath(locale)}');
+        DocumentSnapshot? document =
+            await CarpService().document(_getLocalizationsPath(locale)).get();
 
-      info('Localization downloaded : $document');
+        info('Localization downloaded : $document');
 
-      result = document?.data;
+        result = document?.data;
 
-      if (cache && result != null) {
-        info("Saving localization for '$locale' to local cache.");
-        try {
-          final json = jsonEncode(result);
-          File(await _cacheLocalizationFilename(locale))
-              .writeAsStringSync(json);
-        } catch (exception) {
-          warning("Failed to save local cache for '$locale' - $exception");
+        if (cache && result != null) {
+          info("Saving localization for '$locale' to local cache.");
+          try {
+            final json = jsonEncode(result);
+            File(await _cacheLocalizationFilename(locale))
+                .writeAsStringSync(json);
+          } catch (exception) {
+            warning("Failed to save local cache for '$locale' - $exception");
+          }
         }
       }
     }

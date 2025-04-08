@@ -1,4 +1,4 @@
-## 1.12.3
+## 1.12.4
 
 * upgrade of Android APK
 * bumped minimum Flutter SDK requirement to 3.3
@@ -132,7 +132,7 @@
 
 * This entails a set of **breaking** changes to the domain model:
   * CARP cores now comes with a range of pre-defined Measure Types (e.g., `geolocation`, `stepcount`, etc.). These CARP Core measures has replaced the previous CAMS versions of these. However, most of the "old" measures are kept, so there should be backward compatibility.
-  * Important new measures type is the `TriggeredTask`, `CompletedTask`, which now automatically collected data on when and how a trigger and task are done.
+  * Important new measure types are the `TriggeredTask`, `CompletedTask`, which now automatically collected data on when and how a trigger and task are done.
   * A `Heartbeat` measurement has been added, which sends a measure every 5 minutes for each device (incl. the phone), if connected. This can be used to retrospectively check if sampling has been running (typically used in our so-called [Coverage tests](https://carp.cachet.dk/sampling-coverage-in-mobile-sensing-on-android-11/)).
   * In the protocol, triggering is now controlled by the `Control` class, which basically states if sampling should be started or stopped. So, instead of adding a `TriggeredTask` to a protocol you now add a `TaskControl` instead.
   * As part of this, the states of sampling has changed from "resumed" and "paused" to "started" and "stopped" (to reflect the `Control` state of a `TaskControl`).
