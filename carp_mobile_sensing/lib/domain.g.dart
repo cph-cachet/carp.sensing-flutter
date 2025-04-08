@@ -765,3 +765,20 @@ Map<String, dynamic> _$HeartbeatToJson(Heartbeat instance) => <String, dynamic>{
       'deviceType': instance.deviceType,
       'deviceRoleName': instance.deviceRoleName,
     };
+
+CompletedAppTask _$CompletedAppTaskFromJson(Map<String, dynamic> json) =>
+    CompletedAppTask(
+      taskName: json['taskName'] as String,
+      taskType: json['taskType'] as String?,
+      taskData: json['taskData'] == null
+          ? null
+          : Data.fromJson(json['taskData'] as Map<String, dynamic>),
+    )..$type = json['__type'] as String?;
+
+Map<String, dynamic> _$CompletedAppTaskToJson(CompletedAppTask instance) =>
+    <String, dynamic>{
+      if (instance.$type case final value?) '__type': value,
+      'taskName': instance.taskName,
+      if (instance.taskType case final value?) 'taskType': value,
+      if (instance.taskData?.toJson() case final value?) 'taskData': value,
+    };
