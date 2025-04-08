@@ -1,6 +1,5 @@
 /*
- * Copyright 2020-2022 Copenhagen Center for Health Technology (CACHET) at the
- * Technical University of Denmark (DTU).
+ * Copyright 2020 the Technical University of Denmark (DTU).
  * Use of this source code is governed by a MIT-style license that can be
  * found in the LICENSE file.
  */
@@ -197,7 +196,8 @@ abstract class UserTask {
 
   @override
   String toString() =>
-      '$runtimeType - id: $id, type: $type, name: $name, title: $title, state: $state, triggerTime: $triggerTime';
+      '$runtimeType - id: $id, type: $type, name: $name, title: $title, '
+      'state: ${state.name}, triggerTime: $triggerTime. doneTime: $doneTime';
 }
 
 /// The states of a [UserTask].
