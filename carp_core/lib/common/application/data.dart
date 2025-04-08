@@ -222,6 +222,10 @@ class CompletedTask extends Data {
   }) : super();
 
   @override
+  bool equivalentTo(Data other) =>
+      other is CompletedTask && taskName == other.taskName;
+
+  @override
   Function get fromJsonFunction => _$CompletedTaskFromJson;
   factory CompletedTask.fromJson(Map<String, dynamic> json) =>
       FromJsonFactory().fromJson<CompletedTask>(json);

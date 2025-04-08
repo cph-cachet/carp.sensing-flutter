@@ -411,8 +411,8 @@ class CronScheduledTrigger extends TriggerConfiguration implements Schedulable {
 
 /// A trigger that triggers when some sampling event occurs.
 ///
-/// For example, if [measureType] is `dk.cachet.carp.completedtask` the [triggerCondition]
-/// can be a [CompletedTask] with a specific [taskName].
+/// For example, if [measureType] is [CompletedAppTask.dataType] the [triggerCondition]
+/// can be a [CompletedAppTask] with a specific [CompletedAppTask.taskName].
 @JsonSerializable(includeIfNull: false, explicitToJson: true)
 class SamplingEventTrigger extends TriggerConfiguration {
   /// The data type of the event to look for.
@@ -423,7 +423,7 @@ class SamplingEventTrigger extends TriggerConfiguration {
 
   /// The specific sampling value to compare with for triggering this trigger.
   ///
-  /// When comparing, the [Data.equivalentTo] method. is used. Hence, the
+  /// When comparing, the [Data.equivalentTo] method is used. Hence, the
   /// sampled data must be "equivalent" to this [triggerCondition] in order to
   /// trigger based on an event.
   /// Note that the `equivalentTo` method must be overwritten in

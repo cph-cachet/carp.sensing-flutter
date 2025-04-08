@@ -48,6 +48,8 @@ void _registerFromJsonFunctions() {
   // Data classes
   FromJsonFactory().registerAll([
     Heartbeat(period: 1, deviceRoleName: '', deviceType: ''),
+    CompletedAppTask(taskName: '', taskType: ''),
+    FileData(filename: ''),
     DeviceInformation(),
     BatteryState(),
     FreeMemory(),

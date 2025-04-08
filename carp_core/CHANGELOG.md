@@ -1,4 +1,4 @@
-## 1.8.4
+## 1.8.6
 
 * fix of issue [#452](https://github.com/cph-cachet/carp.sensing-flutter/issues/452)
 
