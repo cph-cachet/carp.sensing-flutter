@@ -68,3 +68,46 @@ class Heartbeat extends Data {
   @override
   Map<String, dynamic> toJson() => _$HeartbeatToJson(this);
 }
+
+/// Data about an [AppTask] that has been completed.
+///
+/// [taskType] indicates the type of task completed.
+/// [taskData] holds the result of the task, or null if no result is collected.
+@JsonSerializable(includeIfNull: false, explicitToJson: true)
+class CompletedAppTask extends CompletedTask {
+  static const dataType = '${CarpDataTypes.CARP_NAMESPACE}.completed_app_task';
+
+  /// The name of the task which was completed.
+  /// This is the name of the task as specified in the study protocol.
+  String taskName;
+
+  /// The type of task which was completed, if specified.
+  ///
+  /// Known types are:
+  ///  - informed_consent - a task collecting informed consent from the user
+  ///  - survey - a survey task
+  ///  - cognition - a cognitive assessment task
+  ///  - audio - an audio task
+  ///  - video - a video task
+  ///  - image - an image task
+  ///  - health - a task collecting health data
+  ///  - sensing - a task collecting sensing data continuously
+  ///  - one_time_sensing - a task collecting sensing data once
+  String? taskType;
+
+  /// The result of the completed task, if any.
+  Data? taskData;
+
+  CompletedAppTask({
+    required super.taskName,
+    this.taskType,
+    super.taskData,
+  }) : super();
+
+  @override
+  Function get fromJsonFunction => _$CompletedAppTaskFromJson;
+  factory CompletedAppTask.fromJson(Map<String, dynamic> json) =>
+      FromJsonFactory().fromJson<CompletedAppTask>(json);
+  @override
+  Map<String, dynamic> toJson() => _$CompletedAppTaskToJson(this);
+}

@@ -1,7 +1,6 @@
-## 1.8.5
+## 1.8.4
 
 * fix of issue [#452](https://github.com/cph-cachet/carp.sensing-flutter/issues/452)
-* added `dataType` to `CompletedTask` (issue [#482](https://github.com/cph-cachet/carp.sensing-flutter/issues/482))
 
 ## 1.8.3
 

@@ -204,7 +204,6 @@ class EDA extends SensorData {
 
 /// Data about an interactive user task with [taskName], which has been completed.
 ///
-/// [taskType] indicates the type of task completed.
 /// [taskData] holds the result of the task, or null if no result is collected.
 @JsonSerializable(includeIfNull: false, explicitToJson: true)
 class CompletedTask extends Data {
@@ -214,26 +213,11 @@ class CompletedTask extends Data {
   /// This is the name of the task as specified in the study protocol.
   String taskName;
 
-  /// The type of task which was completed, if specified.
-  ///
-  /// Known types are:
-  ///  - informed_consent - a task collecting informed consent from the user
-  ///  - survey - a survey task
-  ///  - cognition - a cognitive assessment task
-  ///  - audio - an audio task
-  ///  - video - a video task
-  ///  - image - an image task
-  ///  - health - a task collecting health data
-  ///  - sensing - a task collecting sensing data continuously
-  ///  - one_time_sensing - a task collecting sensing data once
-  String? taskType;
-
   /// The result of the completed task, if any.
   Data? taskData;
 
   CompletedTask({
     required this.taskName,
-    this.taskType,
     this.taskData,
   }) : super();
 
