@@ -1,4 +1,4 @@
-## 1.9.6
+## 1.9.7
 
 * upgrade to web_service version 3.5
 * `CarpDataEndPoint` serialized to `camelCase`
@@ -6,6 +6,7 @@
 * fix of issue [#468](https://github.com/cph-cachet/carp.sensing-flutter/issues/468) on wrong deployment id
 * update of README to include handling of resources
 * upgrade to latest Flutter version
+* graceful handling if the study id is missing (CAWS issus [#245](https://github.com/cph-cachet/carp-webservices-spring/issues/245))
 
 ## 1.8.0
 
