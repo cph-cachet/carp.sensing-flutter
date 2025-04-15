@@ -1,5 +1,5 @@
-import UIKit
 import Flutter
+import UIKit
 import flutter_local_notifications
 // import awesome_notifications
 
@@ -9,7 +9,7 @@ import flutter_local_notifications
     _ application: UIApplication,
     didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?
   ) -> Bool {
-    
+
     // The following adds notification support.
     //
     // Note that CAMS have implementation for BOTH flutter_local_notifications
