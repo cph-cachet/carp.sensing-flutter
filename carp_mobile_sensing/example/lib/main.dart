@@ -340,7 +340,7 @@ class LocalStudyProtocolManager implements StudyProtocolManager {
     // protocol.addTaskControl(
     //   ElapsedTimeTrigger(elapsedTime: const Duration(seconds: 10)),
     //   AppTask(
-    //     type: BackgroundSensingUserTask.ONE_TIME_SENSING_TYPE,
+    //     type: BackgroundSensingUserTask.SENSING_TYPE,
     //     title: "Elapsed Time Trigger - App Task",
     //     description: 'Collection of Device Information.',
     //     measures: [Measure(type: DeviceSamplingPackage.DEVICE_INFORMATION)],
@@ -353,7 +353,7 @@ class LocalStudyProtocolManager implements StudyProtocolManager {
     // protocol.addTaskControl(
     //     CronScheduledTrigger.parse(cronExpression: '45 11 * * *'),
     //     AppTask(
-    //       type: BackgroundSensingUserTask.ONE_TIME_SENSING_TYPE,
+    //       type: BackgroundSensingUserTask.SENSING_TYPE,
     //       title: "Cron - every day at 11:45",
     //       measures: [Measure(type: DeviceSamplingPackage.DEVICE_INFORMATION)],
     //       notification: true,
