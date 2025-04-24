@@ -92,8 +92,7 @@ class CompletedAppTask extends CompletedTask {
   ///  - video - a video task
   ///  - image - an image task
   ///  - health - a task collecting health data
-  ///  - sensing - a task collecting sensing data continuously
-  ///  - one_time_sensing - a task collecting sensing data once
+  ///  - sensing - a task collecting sensing data
   String taskType;
 
   /// The time when the task was completed in UTC.

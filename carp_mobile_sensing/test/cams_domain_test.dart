@@ -78,7 +78,7 @@ void main() {
     );
 
     var sensingAppTask = AppTask(
-      type: BackgroundSensingUserTask.ONE_TIME_SENSING_TYPE,
+      type: BackgroundSensingUserTask.SENSING_TYPE,
       title: "Location, Weather & Air Quality",
       description: "Collect location, weather and air quality",
     )..addMeasures([

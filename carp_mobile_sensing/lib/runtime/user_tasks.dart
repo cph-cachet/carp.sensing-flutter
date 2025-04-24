@@ -16,21 +16,16 @@ abstract class UserTaskFactory {
   UserTask create(AppTaskExecutor executor);
 }
 
-/// A [UserTaskFactory] that can create the non-UI sensing tasks:
-///  * [OneTimeBackgroundSensingUserTask]
-///  * [BackgroundSensingUserTask]
+/// A [UserTaskFactory] that can create a non-UI sensing task.
 class SensingUserTaskFactory implements UserTaskFactory {
   @override
   List<String> types = [
     BackgroundSensingUserTask.SENSING_TYPE,
-    BackgroundSensingUserTask.ONE_TIME_SENSING_TYPE,
   ];
 
   @override
   UserTask create(AppTaskExecutor executor) =>
-      (executor.task.type == BackgroundSensingUserTask.ONE_TIME_SENSING_TYPE)
-          ? OneTimeBackgroundSensingUserTask(executor)
-          : BackgroundSensingUserTask(executor);
+      BackgroundSensingUserTask(executor);
 }
 
 /// A task that the user of the app needs to attend to.
@@ -240,10 +235,6 @@ class BackgroundSensingUserTask extends UserTask {
   /// A type of sensing user task which can be started and stopped.
   static const String SENSING_TYPE = 'sensing';
 
-  /// A type of sensing user task which can be started once.
-  /// See [OneTimeBackgroundSensingUserTask].
-  static const String ONE_TIME_SENSING_TYPE = 'one_time_sensing';
-
   BackgroundSensingUserTask(super.executor);
 
   @override
@@ -256,21 +247,5 @@ class BackgroundSensingUserTask extends UserTask {
   void onDone({dequeue = false, Data? result}) {
     super.onDone(dequeue: dequeue, result: result);
     backgroundTaskExecutor.stop();
-  }
-}
-
-/// A non-UI sensing task that collects sensor data once.
-/// For example collecting location data.
-///
-/// It starts sensing when the [onStart] methods is called and then
-/// automatically stops after 10 seconds.
-class OneTimeBackgroundSensingUserTask extends BackgroundSensingUserTask {
-  OneTimeBackgroundSensingUserTask(super.executor);
-
-  /// Start sensing for 10 seconds, whereafter it is stops automatically.
-  @override
-  void onStart() {
-    super.onStart();
-    Timer(const Duration(seconds: 10), () => super.onDone());
   }
 }
