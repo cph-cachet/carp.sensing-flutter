@@ -1,3 +1,7 @@
+## 1.10.2
+
+* downgrading flutter_sound to 9.26.0
+
 ## 1.10.1
  
 * changing pub.dev link to main instead of master branch
