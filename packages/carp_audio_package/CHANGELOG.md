@@ -1,3 +1,7 @@
+## 1.10.3
+
+* upgrading flutter_sound to 9.28.0
+
 ## 1.10.2
 
 * downgrading flutter_sound to 9.26.0
