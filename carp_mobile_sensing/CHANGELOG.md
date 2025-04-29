@@ -1,6 +1,6 @@
-## 1.12.5
+## 1.12.6
 
-* getting rid of `ONE_TIME_SENSING_TYPE` - not there is only one type of sensing user task ( [#488](https://github.com/cph-cachet/carp.sensing-flutter/issues/488))
+* deprecating the `ONE_TIME_SENSING_TYPE` - not there is only one type of sensing user task ( [#488](https://github.com/cph-cachet/carp.sensing-flutter/issues/488))
 
 ## 1.12.4
 

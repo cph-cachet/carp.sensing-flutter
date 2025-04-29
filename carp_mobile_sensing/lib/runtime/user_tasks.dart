@@ -21,6 +21,7 @@ class SensingUserTaskFactory implements UserTaskFactory {
   @override
   List<String> types = [
     BackgroundSensingUserTask.SENSING_TYPE,
+    BackgroundSensingUserTask.ONE_TIME_SENSING_TYPE,
   ];
 
   @override
@@ -232,8 +233,13 @@ enum UserTaskState {
 /// It starts when the [onStart] methods is called and stops when the
 /// [onDone] methods is called.
 class BackgroundSensingUserTask extends UserTask {
-  /// A type of sensing user task which can be started and stopped.
+  /// A background sensing user task which can be started and stopped.
   static const String SENSING_TYPE = 'sensing';
+
+  /// A background sensing user task which runs once and then stops.
+  @Deprecated('Use BackgroundSensingUserTask.SENSING_TYPE instead. '
+      'This will be removed in a future version.')
+  static const String ONE_TIME_SENSING_TYPE = 'one_time_sensing';
 
   BackgroundSensingUserTask(super.executor);
 
