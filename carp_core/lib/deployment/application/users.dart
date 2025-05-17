@@ -105,8 +105,29 @@ class ActiveParticipationInvitation {
 
   // The following are user-friendly getters for the most used info in an invitation.
 
+  String? _studyId;
+
   /// The ID of the study.
-  String? get studyId => invitation.applicationData;
+  ///
+  /// The study ID is extracted from the application data of the [invitation].
+  /// If the application data is a JSON string, it is parsed to extract the study ID.
+  /// If the application data is not a JSON string, it is returned directly.
+  /// If the application data is null, null is returned.
+  String? get studyId {
+    if (_studyId != null) return _studyId;
+    if (invitation.applicationData == null) return null;
+
+    if (invitation.applicationData!.startsWith('{')) {
+      // The application data is a JSON string, so we need to parse it.
+      final appData =
+          json.decode(invitation.applicationData!) as Map<String, dynamic>;
+      _studyId = appData['studyId'] as String?;
+    } else {
+      // The application data is not a JSON string, so we can return it directly.
+      _studyId = invitation.applicationData;
+    }
+    return _studyId;
+  }
 
   /// The study deployment ID.
   String get studyDeploymentId => participation.studyDeploymentId;

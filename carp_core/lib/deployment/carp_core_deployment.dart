@@ -11,6 +11,8 @@
 /// definition in Kotlin.
 library carp_core_deployment;
 
+import 'dart:convert';
+
 import 'package:carp_core/carp_core.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:carp_serializable/carp_serializable.dart';

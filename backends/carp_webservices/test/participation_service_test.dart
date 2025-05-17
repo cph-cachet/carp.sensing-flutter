@@ -59,8 +59,11 @@ void main() {
         var invitation = invitations.firstWhere(
             (invitation) => invitation.studyDeploymentId == testDeploymentId);
         expect(invitation, isNotNull);
+        expect(invitation.studyId, testStudyId);
+        expect(invitation.studyDeploymentId, testDeploymentId);
 
         debugPrint(toJsonString(invitation));
+        debugPrint(invitation.studyId);
       },
       skip: false,
     );
