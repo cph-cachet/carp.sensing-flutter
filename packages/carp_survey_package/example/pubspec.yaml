@@ -11,7 +11,7 @@ dependencies:
     sdk: flutter
   carp_core: ^1.1.0
   carp_mobile_sensing: ^1.11.0
-  research_package: ^1.4.0
+  research_package: ^2.0.0
   cognition_package: ^1.5.0
 
   # carp_core:
