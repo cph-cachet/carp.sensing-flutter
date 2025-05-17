@@ -28,7 +28,7 @@ abstract class InformedConsentManager {
   /// domain model.
   ///
   /// If there is no informed consent, `null` is returned.
-  Future<RPOrderedTask?> getInformedConsent();
+  Future<RPOrderedTask?> getInformedConsent({bool refresh = false});
 
   /// Set the informed consent to be used for this study.
   ///

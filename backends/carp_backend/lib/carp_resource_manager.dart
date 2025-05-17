@@ -46,18 +46,23 @@ class CarpResourceManager
         "CARP Service has not been configured - call 'CarpService().configure()' first.");
     assert(CarpAuthService().currentUser.isAuthenticated,
         "No user is authenticated - call 'CarpService().authenticate()' first.");
+    assert(CarpService().study != null,
+        "No study is configured - set a valid study first.");
   }
+
+  String get _studyDeploymentId => CarpService().study!.studyDeploymentId;
 
   /// The path for the [resource] at the CARP server
   String _getResourcePath(Type resource) =>
       '$RESOURCE_PATH/${_resourceNames[resource]}';
 
   /// The full path and filename of the local cache of the [resource]
+  /// Cache is stored in the "resources" directory under the current study deployment.
   Future<String> _cacheFilename(Type resource) async {
     if (_cacheResourcePath == null) {
-      final directory =
-          await Directory('${await Settings().carpBasePath}/$RESOURCE_PATH')
-              .create(recursive: true);
+      final directory = await Directory(
+              '${await Settings().getDeploymentBasePath(_studyDeploymentId)}/$RESOURCE_PATH')
+          .create(recursive: true);
       _cacheResourcePath = directory.path;
     }
     return '$_cacheResourcePath/${_resourceNames[resource]}.json';
@@ -132,14 +137,20 @@ class CarpResourceManager
     DocumentSnapshot? document =
         await CarpService().document(_getResourcePath(resource)).get();
 
-    // also trying to delete local cached version
+    _removeCachedResource(resource);
+
+    return (document == null);
+  }
+
+  Future<void> _removeCachedResource(Type resource) async {
+    _assertCarpService();
+    info("Removing cached resource of type '$resource'.");
+
     try {
       File(await _cacheFilename(resource)).deleteSync();
     } catch (exception) {
       warning("Failed to delete local cache for '$resource' - $exception");
     }
-
-    return (document == null);
   }
 
   // --------------------------------------------------------------------------
@@ -196,21 +207,21 @@ class CarpResourceManager
   String _getLocalizationsPath(Locale locale) =>
       '$LOCALIZATION_PATH/${locale.languageCode}';
 
-  /// The full path and filename of the local cache of the [locale]
+  /// The full path and filename of the local cache of the [locale].
+  /// Cache is stored in the "localization" directory under the current study deployment.
   Future<String> _cacheLocalizationFilename(Locale locale) async {
     if (_cacheLocalizationPath == null) {
-      final directory =
-          await Directory('${await Settings().carpBasePath}/$LOCALIZATION_PATH')
-              .create(recursive: true);
+      final directory = await Directory(
+              '${await Settings().getDeploymentBasePath(_studyDeploymentId)}/$LOCALIZATION_PATH')
+          .create(recursive: true);
       _cacheLocalizationPath = directory.path;
     }
     return '$_cacheLocalizationPath/${locale.languageCode}.json';
   }
 
   // TODO - we cannot know if a specific locale is supported before
-  //        we have tried to download it from the server....
-  //        So - for now, we always return true, since this method is
-  //        is not async.
+  // we have tried to download it from the server...
+  // So - for now, we always return true, since this method is not async.
   @override
   bool isSupported(Locale locale) => true;
 

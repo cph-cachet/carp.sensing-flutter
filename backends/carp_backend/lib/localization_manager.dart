@@ -23,7 +23,10 @@ abstract class LocalizationManager {
   /// For example, the Danish translation is named `da`
   ///
   /// If there is no language resource, `null` is returned.
-  Future<Map<String, String>?> getLocalizations(Locale locale);
+  Future<Map<String, String>?> getLocalizations(
+    Locale locale, {
+    bool refresh = false,
+  });
 
   /// Set localization mapping for the specified [locale].
   ///
