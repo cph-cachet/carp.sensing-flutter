@@ -82,19 +82,12 @@ class FileDataManager extends AbstractDataManager {
   Future<void> onDone() async => await close();
 
   /// The full path where data files are stored on the device.
-  Future<String> get path async {
-    if (_path == null) {
-      final directory = await Directory(
-              '${await Settings().getDeploymentBasePath(studyDeploymentId)}/${Settings.CARP_DATA_FILE_PATH}')
-          .create(recursive: true);
-      _path = directory.path;
-    }
-    return _path!;
-  }
+  Future<String> get path async =>
+      Settings().getDataBasePath(studyDeploymentId);
 
   /// Full path and filename according to this format:
   ///
-  ///   `~/carp/deployments/<study_deployment_id>/data/carp-data-yyyy-mm-dd-hh-mm-ss-ms.json.zip`
+  ///   `~/carp/deployments/<study_deployment_id>/data/carp-data-yyyy-mm-dd-hh-mm-ss-ms.json`
   ///
   /// where the date is in UTC format / zulu time.
   Future<String> get filename async {

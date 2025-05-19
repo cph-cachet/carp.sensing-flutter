@@ -9,7 +9,7 @@ part of 'carp_backend.dart';
 
 /// Handles retrieving and storing language localization mappings.
 abstract class LocalizationManager {
-  Future<void> initialize() async {}
+  void initialize() {}
 
   /// Whether resources for the given [locale] can be loaded by this manager.
   ///

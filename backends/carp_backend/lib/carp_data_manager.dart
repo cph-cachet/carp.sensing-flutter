@@ -42,7 +42,7 @@ class CarpDataManager extends AbstractDataManager {
   late CarpDataEndPoint carpEndPoint;
   DataStreamBuffer buffer = DataStreamBuffer();
   Timer? uploadTimer;
-  List<ConnectivityResult> _connectivity = [ConnectivityResult.none];
+  List<ConnectivityResult> _connectivity = [];
 
   /// Make sure to create and initialize the [CarpDataManager].
   static void ensureInitialized() =>
@@ -91,7 +91,8 @@ class CarpDataManager extends AbstractDataManager {
     uploadTimer = Timer.periodic(
         Duration(minutes: uploadInterval), (_) => uploadBufferedMeasurements());
 
-    // listen to connectivity events
+    // Check the current connectivity status and listen for changes
+    Connectivity().checkConnectivity().then((status) => connectivity = status);
     Connectivity()
         .onConnectivityChanged
         .listen((status) => connectivity = status);
@@ -281,7 +282,8 @@ class CarpDataManager extends AbstractDataManager {
   @override
   Future<void> close() async {
     uploadTimer?.cancel();
-    super.close();
+    await uploadBufferedMeasurements();
+    await super.close();
   }
 
   @override

@@ -10,7 +10,7 @@ part of 'carp_backend.dart';
 /// Handles retrieving and storing informed consent definitions as [RPOrderedTask]
 /// json definitions.
 abstract class InformedConsentManager {
-  Future<void> initialize() async {}
+  void initialize() {}
 
   /// The latest downloaded informed consent document.
   ///
