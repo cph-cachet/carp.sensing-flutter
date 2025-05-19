@@ -107,16 +107,8 @@ class Settings {
     if (_deploymentBasePaths[studyDeploymentId] == null) {
       final path =
           '${await carpBasePath}/$CARP_DEPLOYMENT_FILE_PATH/$studyDeploymentId';
-
       _deploymentBasePaths[studyDeploymentId] = path;
-
-      var directory = Directory(path);
-      await directory.exists().then((exists) {
-        if (!exists) {
-          debug('$runtimeType - Creating deployment base path: $path');
-          directory.createSync(recursive: true);
-        }
-      });
+      Directory(path).createSync(recursive: true);
     }
 
     return _deploymentBasePaths[studyDeploymentId]!;
@@ -126,34 +118,54 @@ class Settings {
   ///
   ///  `<localApplicationPath>/carp/deployments/<study_deployment_id>/cache`
   ///
-  Future<String> getCacheBasePath(String studyDeploymentId) async {
-    var cachePath =
-        '${await getDeploymentBasePath(studyDeploymentId)}/$CARP_CACHE_FILE_PATH';
-
-    var directory = Directory(cachePath);
-    await directory.exists().then((exists) {
-      debug('$runtimeType - Creating CACHE path: $cachePath');
-      if (!exists) directory.createSync(recursive: true);
-    });
-
-    return cachePath;
-  }
+  Future<
+      String> getCacheBasePath(String studyDeploymentId) async => (await Directory(
+              '${await getDeploymentBasePath(studyDeploymentId)}/$CARP_CACHE_FILE_PATH')
+          .create(recursive: true))
+      .path;
 
   /// The base path for storing all data (e.g. media files).
   ///
   ///  `<localApplicationPath>/carp/deployments/<study_deployment_id>/data`
   ///
-  Future<String> getDataBasePath(String studyDeploymentId) async {
-    var dataPath =
-        '${await getDeploymentBasePath(studyDeploymentId)}/$CARP_DATA_FILE_PATH';
+  Future<
+      String> getDataBasePath(String studyDeploymentId) async => (await Directory(
+              '${await getDeploymentBasePath(studyDeploymentId)}/$CARP_DATA_FILE_PATH')
+          .create(recursive: true))
+      .path;
 
-    var directory = Directory(dataPath);
-    await directory.exists().then((exists) {
-      if (!exists) directory.createSync(recursive: true);
-    });
+  // /// The base path for storing all cached data.
+  // ///
+  // ///  `<localApplicationPath>/carp/deployments/<study_deployment_id>/cache`
+  // ///
+  // Future<String> getCacheBasePath(String studyDeploymentId) async {
+  //   var cachePath =
+  //       '${await getDeploymentBasePath(studyDeploymentId)}/$CARP_CACHE_FILE_PATH';
 
-    return dataPath;
-  }
+  //   var directory = Directory(cachePath);
+  //   await directory.exists().then((exists) {
+  //     debug('$runtimeType - Creating CACHE path: $cachePath');
+  //     if (!exists) directory.createSync(recursive: true);
+  //   });
+
+  //   return cachePath;
+  // }
+
+  // /// The base path for storing all data (e.g. media files).
+  // ///
+  // ///  `<localApplicationPath>/carp/deployments/<study_deployment_id>/data`
+  // ///
+  // Future<String> getDataBasePath(String studyDeploymentId) async {
+  //   var dataPath =
+  //       '${await getDeploymentBasePath(studyDeploymentId)}/$CARP_DATA_FILE_PATH';
+
+  //   var directory = Directory(dataPath);
+  //   await directory.exists().then((exists) {
+  //     if (!exists) directory.createSync(recursive: true);
+  //   });
+
+  //   return dataPath;
+  // }
 
   /// The local time zone setting of this app.
   String get timezone => _timezone;

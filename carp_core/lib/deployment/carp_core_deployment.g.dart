@@ -225,7 +225,7 @@ StudyInvitation _$StudyInvitationFromJson(Map<String, dynamic> json) =>
     StudyInvitation(
       json['name'] as String,
       json['description'] as String?,
-      json['applicationData'] as String?,
+      json['applicationData'],
     );
 
 Map<String, dynamic> _$StudyInvitationToJson(StudyInvitation instance) =>

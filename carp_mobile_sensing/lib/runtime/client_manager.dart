@@ -328,7 +328,7 @@ class SmartPhoneClientManager extends ClientManager
 
         // deploy the study using the cached deployment
         final controller = getStudyRuntime(study.studyDeploymentId);
-        await controller?.tryDeployment(useCached: true);
+        await controller?.tryDeployment();
         await controller?.configure();
 
         // if this study was running when the app was closed, restart sampling
