@@ -15,7 +15,7 @@
 ///
 /// See the [`carp.clients`](https://github.com/cph-cachet/carp.core-kotlin/blob/develop/docs/carp-clients.md)
 /// definition in Kotlin.
-library carp_core_client;
+library;
 
 import 'dart:async';
 import 'package:meta/meta.dart';

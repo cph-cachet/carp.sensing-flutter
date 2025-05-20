@@ -9,7 +9,7 @@
 ///
 /// See the [`carp.protocols`](https://github.com/cph-cachet/carp.core-kotlin/blob/develop/docs/carp-protocols.md)
 /// definition in Kotlin.
-library carp_core_protocols;
+library;
 
 import 'package:json_annotation/json_annotation.dart';
 import 'package:carp_serializable/carp_serializable.dart';

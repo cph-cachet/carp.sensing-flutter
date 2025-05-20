@@ -9,9 +9,7 @@
 ///
 /// See the [`carp.deployments`](https://github.com/cph-cachet/carp.core-kotlin/blob/develop/docs/carp-deployments.md)
 /// definition in Kotlin.
-library carp_core_deployment;
-
-import 'dart:convert';
+library;
 
 import 'package:carp_core/carp_core.dart';
 import 'package:json_annotation/json_annotation.dart';

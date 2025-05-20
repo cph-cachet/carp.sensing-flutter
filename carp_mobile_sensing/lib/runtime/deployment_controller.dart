@@ -389,8 +389,7 @@ class SmartphoneDeploymentController extends StudyRuntime<DeviceRegistration> {
     executor.dispose();
     await dataManager?.close();
 
-    // TODO - update documentation
-    // await eraseDeployment();
+    await eraseDeployment();
 
     await super.remove();
   }
