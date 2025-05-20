@@ -1,3 +1,7 @@
+## 1.9.1
+
+* removing empty example app
+
 ## 1.9.0
 
 * upgraded research package major version
