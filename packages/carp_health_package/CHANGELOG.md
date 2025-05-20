@@ -1,3 +1,7 @@
+## 3.2.0
+
+* Fix of [#472](https://github.com/cph-cachet/carp.sensing-flutter/issues/472)
+
 ## 3.1.0
 
 * upgrade to halth plugins v. 12.1.0
