@@ -73,6 +73,12 @@ class FileUploadTask extends CarpServiceTask {
     metadata['size'] = (await file.length()).toString();
     request.fields['metadata'] = json.encode(metadata);
 
+    if (reference.service.study != null) {
+      // add deployment id if available
+      request.fields['deployment_id'] =
+          reference.service.study!.studyDeploymentId;
+    }
+
     request.files.add(ClonableMultipartFile.fromFileSync(file.path));
 
     httpr.send(request).then((http.StreamedResponse response) {

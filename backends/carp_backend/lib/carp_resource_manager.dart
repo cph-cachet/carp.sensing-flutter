@@ -46,18 +46,25 @@ class CarpResourceManager
         "CARP Service has not been configured - call 'CarpService().configure()' first.");
     assert(CarpAuthService().currentUser.isAuthenticated,
         "No user is authenticated - call 'CarpService().authenticate()' first.");
+    assert(CarpService().study != null,
+        "No study is configured - set a valid study first.");
   }
+
+  String get _studyDeploymentId => CarpService().study!.studyDeploymentId;
 
   /// The path for the [resource] at the CARP server
   String _getResourcePath(Type resource) =>
       '$RESOURCE_PATH/${_resourceNames[resource]}';
 
-  /// The full path and filename of the local cache of the [resource]
+  /// The full path and filename of the local cache of the [resource].
+  /// Create the directory if it does not exist.
+  /// The filename is the name of the resource, e.g. "informed_consent.json"
+  /// and the file is stored in the "resources" directory under the current study deployment.
   Future<String> _cacheFilename(Type resource) async {
     if (_cacheResourcePath == null) {
-      final directory =
-          await Directory('${await Settings().carpBasePath}/$RESOURCE_PATH')
-              .create(recursive: true);
+      final directory = await Directory(
+              '${await Settings().getDeploymentBasePath(_studyDeploymentId)}/$RESOURCE_PATH')
+          .create(recursive: true);
       _cacheResourcePath = directory.path;
     }
     return '$_cacheResourcePath/${_resourceNames[resource]}.json';
@@ -70,15 +77,18 @@ class CarpResourceManager
     info("Getting resource of type '$resource', refresh: $refresh.");
 
     Map<String, dynamic>? result;
+    final filename = await _cacheFilename(resource);
 
     // first try to get local cache
     if (!refresh) {
       try {
-        String jsonString =
-            File(await _cacheFilename(resource)).readAsStringSync();
+        info(
+            "Getting resource of type '$resource' from file cache : $filename");
+        String jsonString = File(filename).readAsStringSync();
         result = json.decode(jsonString) as Map<String, dynamic>;
       } catch (exception) {
         warning("Failed to read cache of type '$resource' - $exception");
+        result = null;
       }
     }
 
@@ -96,10 +106,10 @@ class CarpResourceManager
         result = (document != null) ? document.data : null;
 
         if (result != null) {
-          info("Saving '$resource' to local cache.");
           try {
+            info('Saving resource to cache : $filename');
             final json = jsonEncode(result);
-            File(await _cacheFilename(resource)).writeAsStringSync(json);
+            File(filename).writeAsStringSync(json);
           } catch (exception) {
             warning("Failed to save local cache for '$resource' - $exception");
           }
@@ -132,14 +142,20 @@ class CarpResourceManager
     DocumentSnapshot? document =
         await CarpService().document(_getResourcePath(resource)).get();
 
-    // also trying to delete local cached version
+    _removeCachedResource(resource);
+
+    return (document == null);
+  }
+
+  Future<void> _removeCachedResource(Type resource) async {
+    _assertCarpService();
+    info("Removing cached resource of type '$resource'.");
+
     try {
       File(await _cacheFilename(resource)).deleteSync();
     } catch (exception) {
       warning("Failed to delete local cache for '$resource' - $exception");
     }
-
-    return (document == null);
   }
 
   // --------------------------------------------------------------------------
@@ -147,7 +163,10 @@ class CarpResourceManager
   // --------------------------------------------------------------------------
 
   @override
-  Future<void> initialize() async {}
+  void initialize() {
+    _cacheResourcePath = null;
+    _cacheLocalizationPath = null;
+  }
 
   // --------------------------------------------------------------------------
   // INFORMED CONSENT
@@ -196,21 +215,21 @@ class CarpResourceManager
   String _getLocalizationsPath(Locale locale) =>
       '$LOCALIZATION_PATH/${locale.languageCode}';
 
-  /// The full path and filename of the local cache of the [locale]
+  /// The full path and filename of the local cache of the [locale].
+  /// Cache is stored in the "localization" directory under the current study deployment.
   Future<String> _cacheLocalizationFilename(Locale locale) async {
     if (_cacheLocalizationPath == null) {
-      final directory =
-          await Directory('${await Settings().carpBasePath}/$LOCALIZATION_PATH')
-              .create(recursive: true);
+      final directory = await Directory(
+              '${await Settings().getDeploymentBasePath(_studyDeploymentId)}/$LOCALIZATION_PATH')
+          .create(recursive: true);
       _cacheLocalizationPath = directory.path;
     }
     return '$_cacheLocalizationPath/${locale.languageCode}.json';
   }
 
   // TODO - we cannot know if a specific locale is supported before
-  //        we have tried to download it from the server....
-  //        So - for now, we always return true, since this method is
-  //        is not async.
+  // we have tried to download it from the server...
+  // So - for now, we always return true, since this method is not async.
   @override
   bool isSupported(Locale locale) => true;
 
@@ -221,11 +240,11 @@ class CarpResourceManager
     bool cache = true,
   }) async {
     Map<String, dynamic>? result;
+    final filename = await _cacheLocalizationFilename(locale);
 
     // first try to get local cache
     if (!refresh) {
       try {
-        String filename = await _cacheLocalizationFilename(locale);
         info('Getting language locale from cache : $filename');
         String jsonString = File(filename).readAsStringSync();
         result = json.decode(jsonString) as Map<String, dynamic>;
@@ -245,7 +264,7 @@ class CarpResourceManager
         info('Getting language locale from server. '
             'study_id: ${CarpService().study?.studyId}, '
             'path: ${_getLocalizationsPath(locale)}');
-        DocumentSnapshot? document =
+        final document =
             await CarpService().document(_getLocalizationsPath(locale)).get();
 
         info('Localization downloaded : $document');
@@ -256,8 +275,7 @@ class CarpResourceManager
           info("Saving localization for '$locale' to local cache.");
           try {
             final json = jsonEncode(result);
-            File(await _cacheLocalizationFilename(locale))
-                .writeAsStringSync(json);
+            File(filename).writeAsStringSync(json);
           } catch (exception) {
             warning("Failed to save local cache for '$locale' - $exception");
           }

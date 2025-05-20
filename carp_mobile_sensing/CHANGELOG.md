@@ -1,6 +1,13 @@
+## 1.13.0
+
+* Fix of [#491](https://github.com/cph-cachet/carp.sensing-flutter/issues/491)
+* Fix of [#492](https://github.com/cph-cachet/carp.sensing-flutter/issues/492)
+* Fix of [#493](https://github.com/cph-cachet/carp.sensing-flutter/issues/493)
+* Fix of [#494](https://github.com/cph-cachet/carp.sensing-flutter/issues/494)
+
 ## 1.12.6
 
-* deprecating the `ONE_TIME_SENSING_TYPE` - now there is only one type of sensing user task ( [#488](https://github.com/cph-cachet/carp.sensing-flutter/issues/488))
+* deprecating the `ONE_TIME_SENSING_TYPE` - now there is only one type of sensing user task ([#488](https://github.com/cph-cachet/carp.sensing-flutter/issues/488))
 
 ## 1.12.4
 

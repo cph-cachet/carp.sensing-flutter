@@ -328,10 +328,10 @@ class SmartphoneDeploymentController extends StudyRuntime<DeviceRegistration> {
           "$runtimeType - Erasing deployment cache for deployment '$studyDeploymentId'.");
       await Persistence().eraseDeployment(studyDeploymentId!);
 
-      final name = await Settings().getCacheBasePath(studyDeploymentId!);
+      final name = await Settings().getDeploymentBasePath(studyDeploymentId!);
       await File(name).delete(recursive: true);
     } catch (exception) {
-      warning('Failed to delete deployment - $exception');
+      warning('Failed to erase deployment - $exception');
     }
   }
 
@@ -390,6 +390,7 @@ class SmartphoneDeploymentController extends StudyRuntime<DeviceRegistration> {
     await dataManager?.close();
 
     await eraseDeployment();
+
     await super.remove();
   }
 

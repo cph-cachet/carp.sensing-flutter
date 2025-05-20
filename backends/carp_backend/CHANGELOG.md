@@ -1,3 +1,7 @@
+## 1.10.0
+
+* Fix of [#492](https://github.com/cph-cachet/carp.sensing-flutter/issues/492)
+
 ## 1.9.7
 
 * upgrade to web_service version 3.5

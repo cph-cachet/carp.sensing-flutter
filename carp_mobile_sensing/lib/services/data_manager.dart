@@ -136,6 +136,7 @@ abstract class AbstractDataManager implements DataManager {
   @override
   @mustCallSuper
   Future<void> close() async {
+    info('Closing $runtimeType...');
     _subscription?.cancel();
     addEvent(DataManagerEvent(DataManagerEventTypes.closed));
   }

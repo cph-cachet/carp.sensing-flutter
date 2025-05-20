@@ -42,7 +42,7 @@ class CarpDataManager extends AbstractDataManager {
   late CarpDataEndPoint carpEndPoint;
   DataStreamBuffer buffer = DataStreamBuffer();
   Timer? uploadTimer;
-  List<ConnectivityResult> _connectivity = [ConnectivityResult.none];
+  List<ConnectivityResult> _connectivity = [];
 
   /// Make sure to create and initialize the [CarpDataManager].
   static void ensureInitialized() =>
@@ -91,7 +91,8 @@ class CarpDataManager extends AbstractDataManager {
     uploadTimer = Timer.periodic(
         Duration(minutes: uploadInterval), (_) => uploadBufferedMeasurements());
 
-    // listen to connectivity events
+    // Check the current connectivity status and listen for changes
+    Connectivity().checkConnectivity().then((status) => connectivity = status);
     Connectivity()
         .onConnectivityChanged
         .listen((status) => connectivity = status);
@@ -124,68 +125,68 @@ class CarpDataManager extends AbstractDataManager {
     }
 
     // now start trying to upload data...
-    // try {
-    // check if authenticated to CAWS and fast exit if not
-    if (!CarpAuthService().authenticated) {
-      warning('No user authenticated to CAWS. Cannot upload data.');
-      return;
-    }
-
-    // check if token has expired, and try to refresh token, if so
-    if (CarpAuthService().currentUser.token!.hasExpired) {
-      try {
-        await CarpAuthService().refresh();
-      } catch (error) {
-        warning('$runtimeType - Failed to refresh access token - $error. '
-            'Cannot upload data.');
+    try {
+      // check if authenticated to CAWS and fast exit if not
+      if (!CarpAuthService().authenticated) {
+        warning('No user authenticated to CAWS. Cannot upload data.');
         return;
       }
-    }
 
-    final batches = await buffer.getDataStreamBatches();
-
-    switch (carpEndPoint.uploadMethod) {
-      case CarpUploadMethod.stream:
-        await CarpDataStreamService().appendToDataStreams(
-          studyDeploymentId,
-          batches,
-          compress: compress,
-        );
-        addEvent(
-            DataManagerEvent(CarpDataManagerEventTypes.dataStreamAppended));
-        break;
-      case CarpUploadMethod.datapoint:
-        await uploadDataStreamBatchesAsDataPoint(batches);
-        addEvent(DataManagerEvent(
-            CarpDataManagerEventTypes.dataPointsBatchUploaded));
-        break;
-      case CarpUploadMethod.file:
-        // TODO - implement file method.
-        warning('$runtimeType - CarpUploadMethod.file not supported (yet).');
-        break;
-    }
-
-    // Count the total amount of measurements and check if any measurement
-    // has a separate file to be uploaded
-    var count = 0;
-    for (var batch in batches) {
-      count += batch.measurements.length;
-      for (var measurement in batch.measurements) {
-        if (measurement.data is FileData) {
-          var fileData = measurement.data as FileData;
-          if (fileData.upload) uploadFile(fileData);
+      // check if token has expired, and try to refresh token, if so
+      if (CarpAuthService().currentUser.token!.hasExpired) {
+        try {
+          await CarpAuthService().refresh();
+        } catch (error) {
+          warning('$runtimeType - Failed to refresh access token - $error. '
+              'Cannot upload data.');
+          return;
         }
       }
+
+      final batches = await buffer.getDataStreamBatches();
+
+      switch (carpEndPoint.uploadMethod) {
+        case CarpUploadMethod.stream:
+          await CarpDataStreamService().appendToDataStreams(
+            studyDeploymentId,
+            batches,
+            compress: compress,
+          );
+          addEvent(
+              DataManagerEvent(CarpDataManagerEventTypes.dataStreamAppended));
+          break;
+        case CarpUploadMethod.datapoint:
+          await uploadDataStreamBatchesAsDataPoint(batches);
+          addEvent(DataManagerEvent(
+              CarpDataManagerEventTypes.dataPointsBatchUploaded));
+          break;
+        case CarpUploadMethod.file:
+          // TODO - implement file method.
+          warning('$runtimeType - CarpUploadMethod.file not supported (yet).');
+          break;
+      }
+
+      // Count the total amount of measurements and check if any measurement
+      // has a separate file to be uploaded
+      var count = 0;
+      for (var batch in batches) {
+        count += batch.measurements.length;
+        for (var measurement in batch.measurements) {
+          if (measurement.data is FileData) {
+            var fileData = measurement.data as FileData;
+            if (fileData.upload) uploadFile(fileData);
+          }
+        }
+      }
+
+      info("$runtimeType - Upload of data batches done. "
+          "${batches.length} batches with $count measurements in total uploaded.");
+
+      // if everything is uploaded successfully, then clean up the DB
+      await buffer.cleanup(carpEndPoint.deleteWhenUploaded);
+    } catch (error) {
+      warning('$runtimeType - Data upload failed - $error');
     }
-
-    info("$runtimeType - Upload of data batches done. "
-        "${batches.length} batches with $count measurements in total uploaded.");
-
-    // if everything is uploaded successfully, then clean up the DB
-    await buffer.cleanup(carpEndPoint.deleteWhenUploaded);
-    // } catch (error) {
-    //   warning('$runtimeType - Data upload failed - $error');
-    // }
   }
 
   DataPointReference? _dataPointReference;
@@ -281,7 +282,8 @@ class CarpDataManager extends AbstractDataManager {
   @override
   Future<void> close() async {
     uploadTimer?.cancel();
-    super.close();
+    await uploadBufferedMeasurements();
+    await super.close();
   }
 
   @override

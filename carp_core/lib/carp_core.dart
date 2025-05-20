@@ -1,6 +1,6 @@
 /// This library contains the entire carp_core API the CARP Mobile Sensing (CAMS)
 /// framework implemented in Flutter.
-library carp_core;
+library;
 
 import 'package:carp_serializable/carp_serializable.dart';
 import 'package:carp_core/deployment/carp_core_deployment.dart';

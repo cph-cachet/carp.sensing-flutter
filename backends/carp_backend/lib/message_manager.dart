@@ -80,7 +80,7 @@ enum MessageType {
 
 abstract class MessageManager {
   /// Initialize the [MessageManager].
-  Future<void> initialize() async {}
+  void initialize() {}
 
   /// Get a message based on its id.
   ///

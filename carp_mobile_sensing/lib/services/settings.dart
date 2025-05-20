@@ -16,10 +16,9 @@ part of '../services.dart';
 class Settings {
   static const String USER_ID_KEY = 'user_id';
 
+  static const String CARP_DEPLOYMENT_FILE_PATH = 'deployments';
   static const String CARP_DATA_FILE_PATH = 'data';
   static const String CARP_CACHE_FILE_PATH = 'cache';
-  static const String CARP_RESOURCE_FILE_PATH = 'resources';
-  static const String CARP_DEPLOYMENT_FILE_PATH = 'deployments';
 
   static final Settings _instance = Settings._();
   factory Settings() => _instance;
@@ -31,8 +30,7 @@ class Settings {
   String? _packageName;
   String? _version;
   String? _buildNumber;
-  String? _localApplicationPath;
-  String? _carpBasePath;
+  String? _localApplicationPath, _carpBasePath;
   final Map<String, String> _deploymentBasePaths = {};
   String _timezone = 'Europe/Copenhagen';
   bool _initialized = false;
@@ -91,9 +89,11 @@ class Settings {
   ///
   Future<String> get carpBasePath async {
     if (_carpBasePath == null) {
-      final directory = await Directory('${await localApplicationPath}/carp')
-          .create(recursive: true);
-      _carpBasePath = directory.path;
+      _carpBasePath = '${await localApplicationPath}/carp';
+      var directory = Directory(_carpBasePath!);
+      await directory.exists().then((exists) {
+        if (!exists) directory.createSync(recursive: true);
+      });
     }
 
     return _carpBasePath!;
@@ -105,17 +105,10 @@ class Settings {
   ///
   Future<String> getDeploymentBasePath(String studyDeploymentId) async {
     if (_deploymentBasePaths[studyDeploymentId] == null) {
-      final path = await carpBasePath;
-      final directory =
-          await Directory('$path/$CARP_DEPLOYMENT_FILE_PATH/$studyDeploymentId')
-              .create(recursive: true);
-      await Directory(
-              '$path/$CARP_DEPLOYMENT_FILE_PATH/$studyDeploymentId/$CARP_CACHE_FILE_PATH')
-          .create(recursive: true);
-      await Directory(
-              '$path/$CARP_DEPLOYMENT_FILE_PATH/$studyDeploymentId/$CARP_DATA_FILE_PATH')
-          .create(recursive: true);
-      _deploymentBasePaths[studyDeploymentId] = directory.path;
+      final path =
+          '${await carpBasePath}/$CARP_DEPLOYMENT_FILE_PATH/$studyDeploymentId';
+      _deploymentBasePaths[studyDeploymentId] = path;
+      Directory(path).createSync(recursive: true);
     }
 
     return _deploymentBasePaths[studyDeploymentId]!;
@@ -141,6 +134,39 @@ class Settings {
           .create(recursive: true))
       .path;
 
+  // /// The base path for storing all cached data.
+  // ///
+  // ///  `<localApplicationPath>/carp/deployments/<study_deployment_id>/cache`
+  // ///
+  // Future<String> getCacheBasePath(String studyDeploymentId) async {
+  //   var cachePath =
+  //       '${await getDeploymentBasePath(studyDeploymentId)}/$CARP_CACHE_FILE_PATH';
+
+  //   var directory = Directory(cachePath);
+  //   await directory.exists().then((exists) {
+  //     debug('$runtimeType - Creating CACHE path: $cachePath');
+  //     if (!exists) directory.createSync(recursive: true);
+  //   });
+
+  //   return cachePath;
+  // }
+
+  // /// The base path for storing all data (e.g. media files).
+  // ///
+  // ///  `<localApplicationPath>/carp/deployments/<study_deployment_id>/data`
+  // ///
+  // Future<String> getDataBasePath(String studyDeploymentId) async {
+  //   var dataPath =
+  //       '${await getDeploymentBasePath(studyDeploymentId)}/$CARP_DATA_FILE_PATH';
+
+  //   var directory = Directory(dataPath);
+  //   await directory.exists().then((exists) {
+  //     if (!exists) directory.createSync(recursive: true);
+  //   });
+
+  //   return dataPath;
+  // }
+
   /// The local time zone setting of this app.
   String get timezone => _timezone;
 
@@ -157,8 +183,7 @@ class Settings {
     _version = _packageInfo!.version;
     _buildNumber = _packageInfo!.buildNumber;
 
-    await localApplicationPath;
-    await carpBasePath;
+    await localApplicationPath.then((_) => carpBasePath);
 
     debug('$runtimeType - Shared Preferences:');
     _preferences!

@@ -79,7 +79,7 @@ abstract class CarpBaseService {
   /// Returns [studyId] if not null. Otherwise returns the studyId specified in
   /// the [study], if available.
   /// Throws an error if study id cannot be resolved.
-  String getStudyId(String? studyId) {
+  String getStudyId([String? studyId]) {
     if (studyId != null) {
       return studyId;
     } else if (study != null && study?.studyId != null) {
@@ -95,7 +95,7 @@ abstract class CarpBaseService {
   /// Returns [studyDeploymentId] if not null. Otherwise returns the study
   /// deployment ID specified in the [study], if available.
   /// Throws an error if study deployment id cannot be resolved.
-  String getStudyDeploymentId(String? studyDeploymentId) {
+  String getStudyDeploymentId([String? studyDeploymentId]) {
     if (studyDeploymentId != null) return studyDeploymentId;
     if (study != null) return study!.studyDeploymentId;
 

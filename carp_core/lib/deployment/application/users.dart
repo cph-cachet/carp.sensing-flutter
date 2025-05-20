@@ -75,7 +75,7 @@ class StudyInvitation {
   /// This can be used by infrastructures or concrete applications which require
   /// exchanging additional data between the study and client subsystems,
   /// outside of scope or not yet supported by CARP core.
-  String? applicationData;
+  dynamic applicationData;
 
   StudyInvitation(
     this.name, [
@@ -105,8 +105,27 @@ class ActiveParticipationInvitation {
 
   // The following are user-friendly getters for the most used info in an invitation.
 
+  String? _studyId;
+
   /// The ID of the study.
-  String? get studyId => invitation.applicationData;
+  ///
+  /// The study ID is extracted from the application data of the [invitation].
+  String? get studyId {
+    if (_studyId != null) return _studyId;
+    if (invitation.applicationData == null) return null;
+
+    if (invitation.applicationData is String) {
+      // The application data is a plain String, so we can return it directly.
+      _studyId = invitation.applicationData as String;
+    } else {
+      if (invitation.applicationData is Map<String, dynamic>) {
+        // The application data is JSON, so we can to parse it.
+        final appData = invitation.applicationData! as Map<String, dynamic>;
+        _studyId = appData['studyId'] as String?;
+      }
+    }
+    return _studyId;
+  }
 
   /// The study deployment ID.
   String get studyDeploymentId => participation.studyDeploymentId;

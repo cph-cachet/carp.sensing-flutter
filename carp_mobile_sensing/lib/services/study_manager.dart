@@ -13,7 +13,7 @@ part of '../services.dart';
 /// See [FileStudyProtocolManager] for an example.
 abstract class StudyProtocolManager {
   /// Initialize the study manager.
-  Future<void> initialize();
+  void initialize();
 
   /// Get a [SmartphoneStudyProtocol] based on its [id].
   /// Returns `null` if no protocol exists.

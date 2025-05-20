@@ -6,7 +6,7 @@
 ///
 /// See the [`carp-data`](https://github.com/cph-cachet/carp.core-kotlin/blob/develop/docs/carp-data.md)
 /// definition in Kotlin.
-library carp_core_data;
+library;
 
 import 'package:json_annotation/json_annotation.dart';
 import 'package:carp_serializable/carp_serializable.dart';
