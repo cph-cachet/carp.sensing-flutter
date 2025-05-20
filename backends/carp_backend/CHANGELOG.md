@@ -1,3 +1,7 @@
+## 1.11.0
+
+* upgrading research_package major version 
+
 ## 1.10.0
 
 * Fix of [#492](https://github.com/cph-cachet/carp.sensing-flutter/issues/492)
