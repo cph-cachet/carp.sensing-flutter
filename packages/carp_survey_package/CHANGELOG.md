@@ -1,3 +1,8 @@
+## 1.9.0
+
+* upgraded research package major version
+* created example apps
+
 ## 1.8.6
 
 * added a `SurveyStatus` to the survey results to know if a survey was "submitted" or "canceled"
