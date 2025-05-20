@@ -1,3 +1,7 @@
+## 3.7.0
+
+* fix of issues [#467](https://github.com/cph-cachet/carp.sensing-flutter/issues/467)
+
 ## 3.6.2
 
 * updating gradle file structure and fix of build errors in example app
