@@ -87,8 +87,6 @@ class BluetoothProbe extends BufferingPeriodicStreamProbe {
       List<String> remoteIds =
           (samplingConfiguration as BluetoothScanPeriodicSamplingConfiguration)
               .withRemoteIds;
-
-      print("remoteIds: $remoteIds");
     }
     _data = Bluetooth();
     try {
