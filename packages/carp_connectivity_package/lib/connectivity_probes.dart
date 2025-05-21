@@ -70,11 +70,31 @@ class BluetoothProbe extends BufferingPeriodicStreamProbe {
   Future<Measurement?> getMeasurement() async =>
       _data != null ? Measurement.fromData(_data!) : null;
 
+  List<Guid> services = [];
+  List<String> remoteIds = [];
+
   @override
   void onSamplingStart() {
+    if (samplingConfiguration is BluetoothScanPeriodicSamplingConfiguration) {
+      // if a BT-specific sampling configuration is used, we need to
+      // extract the services and remoteIds from it so FlutterBluePlus can
+      // perform filtered scanning
+      List<Guid> services =
+          (samplingConfiguration as BluetoothScanPeriodicSamplingConfiguration)
+              .withServices
+              .map((e) => Guid(e))
+              .toList();
+      List<String> remoteIds =
+          (samplingConfiguration as BluetoothScanPeriodicSamplingConfiguration)
+              .withRemoteIds;
+
+      print("remoteIds: $remoteIds");
+    }
     _data = Bluetooth();
     try {
       FlutterBluePlus.startScan(
+          withServices: services,
+          withRemoteIds: remoteIds,
           timeout: samplingConfiguration?.duration ??
               const Duration(milliseconds: DEFAULT_TIMEOUT));
     } catch (error) {
