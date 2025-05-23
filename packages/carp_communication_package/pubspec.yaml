@@ -16,11 +16,10 @@ dependencies:
     sdk: flutter
 
   carp_serializable: ^2.0.0
-  carp_core: ^1.8.0
-  carp_mobile_sensing: ^1.12.0
+  carp_core: ^1.9.0
+  carp_mobile_sensing: ^1.13.0
 
   json_annotation: ^4.8.0
-  # telephony: ^0.2.0
   another_telephony: ^0.4.0
   call_e_log: ^0.0.4
   # device_calendar: ^4.3.2
@@ -36,6 +35,8 @@ dependency_overrides:
   #   path: ../../carp_core/
   # carp_mobile_sensing:
   #   path: ../../carp_mobile_sensing/
+
+  # in order to publish the package, use "flutter pub publish --skip-validation"
   device_calendar:
     git: https://github.com/bardram/device_calendar
 
