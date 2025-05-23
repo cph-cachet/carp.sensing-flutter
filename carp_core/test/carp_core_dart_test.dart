@@ -140,6 +140,26 @@ void main() {
     expect(toJsonString(protocolFromJson), equals(studyJson));
   });
 
+  test('JSON -> Invitations', () async {
+    final loadedJson =
+        File('test/json/carp.core-dart/invitations.json').readAsStringSync();
+
+    final jsonList = json.decode(loadedJson) as List<dynamic>;
+
+    final invitations = jsonList
+        .map((invitation) => ActiveParticipationInvitation.fromJson(
+            invitation as Map<String, dynamic>))
+        .toList();
+
+    print(toJsonString(invitations));
+
+    expect(invitations, isList);
+    // check if we can read the studyId as a plain string
+    expect(invitations[0].studyId, isNotNull);
+    // check if we can read the studyId as JSON
+    expect(invitations[invitations.length - 1].studyId, isNotNull);
+  });
+
   test('ScheduledTrigger', () async {
     var st = ScheduledTrigger(
         time: const TimeOfDay(hour: 12),
