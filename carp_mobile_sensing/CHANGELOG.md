@@ -1,9 +1,10 @@
-## 1.13.0
+## 1.13.1
 
 * Fix of [#491](https://github.com/cph-cachet/carp.sensing-flutter/issues/491)
 * Fix of [#492](https://github.com/cph-cachet/carp.sensing-flutter/issues/492)
 * Fix of [#493](https://github.com/cph-cachet/carp.sensing-flutter/issues/493)
 * Fix of [#494](https://github.com/cph-cachet/carp.sensing-flutter/issues/494)
+* Fix of [#498](https://github.com/cph-cachet/carp.sensing-flutter/issues/498)
 
 ## 1.12.6
 
