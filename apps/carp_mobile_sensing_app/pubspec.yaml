@@ -34,7 +34,7 @@ dependencies:
   # carp_esense_package: ^0.30.2
   # carp_movisens_package: ^0.32.0
 
-  research_package: ^1.7.0
+  research_package: ^2.0.0
   # health: ^8.1.0
 
 # Overriding carp libraries to use the local copy
@@ -69,13 +69,15 @@ dependency_overrides:
     path: ../../backends/carp_webservices/
   carp_movesense_package:
     path: ../../packages/carp_movesense_package/
-  carp_cortrium_package:
-    path: ../../../carp_cortrium_package/
+  # carp_cortrium_package:
+  #   path: ../../../../carp_cortrium_package/
 
   # research_package:
   #   path: ../../../../research.package/
+
   # esense_flutter:
   #   path: ../../../../flutter-plugins/packages/esense_flutter/
+  
   # location:
   #   git:
   #     url: https://github.com/fairuzmn/flutterlocation.git
@@ -91,6 +93,10 @@ dependency_overrides:
     git:
       url: https://github.com/Panosfunk/mdsflutter.git
       ref: master
+
+  # due to this issue https://github.com/cph-cachet/carp_studies_app/issues/427
+  polar: 7.5.1
+
 
 dev_dependencies:
   flutter_test:

@@ -9,7 +9,7 @@ import 'dart:io';
 import 'dart:convert';
 
 import 'package:json_annotation/json_annotation.dart';
-import 'package:telephony/telephony.dart';
+import 'package:another_telephony/telephony.dart';
 import 'package:call_e_log/call_log.dart';
 import 'package:device_calendar/device_calendar.dart' as cal;
 import 'package:crypto/crypto.dart';

@@ -197,32 +197,32 @@ class LocalStudyProtocolManager implements StudyProtocolManager {
     // --------- COMMUNICATION PACKAGE EXAMPLES -------------
     //
 
-    // // Add an automatic task that collects SMS messages in/out
-    // protocol.addTaskControl(
-    //     ImmediateTrigger(),
-    //     AutomaticTask()
-    //       ..addMeasures(SamplingPackageRegistry().common.getMeasureList(
-    //         types: [
-    //           CommunicationSamplingPackage.TEXT_MESSAGE,
-    //         ],
-    //       )),
-    //     phone);
+    // Add an automatic task that collects SMS messages in/out
+    protocol.addTaskControl(
+        ImmediateTrigger(),
+        BackgroundTask(
+          measures: [
+            Measure(type: CommunicationSamplingPackage.TEXT_MESSAGE),
+          ],
+        ),
+        phone);
 
-    // // Add an automatic task that collects the logs for:
-    // //  * in/out SMS
-    // //  * in/out phone calls
-    // //  * calendar entries
-    // protocol.addTaskControl(
-    //     ImmediateTrigger(),
-    //     AutomaticTask()
-    //       ..addMeasures(SamplingPackageRegistry().common.getMeasureList(
-    //         types: [
-    //           CommunicationSamplingPackage.PHONE_LOG,
-    //           CommunicationSamplingPackage.TEXT_MESSAGE_LOG,
-    //           CommunicationSamplingPackage.CALENDAR,
-    //         ],
-    //       )),
-    //     phone);
+    // Add an automatic task that collects the logs for:
+    //  * SMS log (in/out)
+    //  * phone call log (in/out)
+    //  * calendar entries
+    //
+    // every 30 minutes.
+    protocol.addTaskControl(
+        PeriodicTrigger(period: Duration(minutes: 30)),
+        BackgroundTask(
+          measures: [
+            Measure(type: CommunicationSamplingPackage.PHONE_LOG),
+            Measure(type: CommunicationSamplingPackage.TEXT_MESSAGE_LOG),
+            Measure(type: CommunicationSamplingPackage.CALENDAR),
+          ],
+        ),
+        phone);
 
     //
     // --------- APP PACKAGE EXAMPLES -------------
@@ -314,21 +314,21 @@ class LocalStudyProtocolManager implements StudyProtocolManager {
     //
     // Known DTU C3+ devices: ED:AD:D4:3D:3F:72
 
-    var c3 = CortriumDevice(
-      name: 'Cortrium C3+',
-      identifier: 'ED:AD:D4:3D:3F:72',
-    );
+    // var c3 = CortriumDevice(
+    //   name: 'Cortrium C3+',
+    //   identifier: 'ED:AD:D4:3D:3F:72',
+    // );
 
-    protocol.addConnectedDevice(c3, phone);
+    // protocol.addConnectedDevice(c3, phone);
 
-    protocol.addTaskControl(
-        ImmediateTrigger(),
-        BackgroundTask(measures: [
-          Measure(type: CortriumSamplingPackage.ECG),
-          Measure(type: CortriumSamplingPackage.BUTTON),
-          // Measure(type: CortriumSamplingPackage.ACCELEROMETER),
-        ]),
-        c3);
+    // protocol.addTaskControl(
+    //     ImmediateTrigger(),
+    //     BackgroundTask(measures: [
+    //       Measure(type: CortriumSamplingPackage.ECG),
+    //       Measure(type: CortriumSamplingPackage.BUTTON),
+    //       // Measure(type: CortriumSamplingPackage.ACCELEROMETER),
+    //     ]),
+    //     c3);
 
     //
     // --------- HEALTH PACKAGE EXAMPLES -------------

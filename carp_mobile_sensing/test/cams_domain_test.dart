@@ -125,6 +125,8 @@ void main() {
     final device = Measurement.fromData(
         DeviceInformation(platform: 'iOS', deviceId: '1234abcd'));
     print(toJsonString(device));
+    final timezone = Measurement.fromData(Timezone('CPH'));
+    print(toJsonString(timezone));
   });
 
   test('SmartphoneStudyProtocol -> JSON', () async {
@@ -224,6 +226,16 @@ void main() {
     expect(deployment.dataEndPoint?.type, DataEndPointTypes.SQLITE);
     expect(deployment.expectedParticipantData.length, 1);
     expect(deployment.getApplicationData('uiTheme'), 'black');
+  });
+
+  test('JSON File -> Measurement', () async {
+    final plainJson = File('test/json/measurement.json').readAsStringSync();
+
+    final measurement =
+        Measurement.fromJson(json.decode(plainJson) as Map<String, dynamic>);
+
+    expect(measurement.data, isA<Timezone>());
+    print(toJsonString(measurement));
   });
 
   test('Triggers -> JSON -> Triggers', () async {

@@ -1,0 +1,7 @@
+{
+  "__type": "dk.cachet.carp.common.application.devices.MACAddressDeviceRegistration",
+  "deviceId": "00:00:00:00:00:00",
+  "deviceDisplayName": "Test MAC Address",
+  "registrationCreatedOn": "2025-05-23T09:30:20.460690Z",
+  "macAddress": "00:00:00:00:00:00"
+}

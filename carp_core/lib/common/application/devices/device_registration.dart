@@ -89,15 +89,15 @@ class DefaultDeviceRegistration extends DeviceRegistration {
 class MACAddressDeviceRegistration extends DeviceRegistration {
   /// The MAC address, represented according to the recommended IEEE 802 standard notation.
   /// Six groups of two upper case hexadecimal digits, separate by hyphens (-).
-  String address;
+  String macAddress;
 
-  /// Create a new [MACAddressDeviceRegistration] with a unique MAC [address].
+  /// Create a new [MACAddressDeviceRegistration] with a unique MAC [macAddress].
   MACAddressDeviceRegistration({
     String? deviceId,
     super.deviceDisplayName,
     super.registrationCreatedOn,
-    required this.address,
-  }) : super(deviceId: deviceId ?? address);
+    required this.macAddress,
+  }) : super(deviceId: deviceId ?? macAddress);
 
   @override
   Function get fromJsonFunction => _$MACAddressDeviceRegistrationFromJson;

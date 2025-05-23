@@ -1,0 +1,263 @@
+[
+  {
+    "participation": {
+      "studyDeploymentId": "df88808d-154f-4b93-b0db-2732badc6b20",
+      "participantId": "7155dc2d-e6b4-40e8-9779-937ea581c65a",
+      "assignedRoles": {
+        "__type": "dk.cachet.carp.common.application.users.AssignedTo.Roles",
+        "roleNames": [
+          "Participant"
+        ]
+      }
+    },
+    "invitation": {
+      "name": "SLEEPINESS Test (leaving study)",
+      "applicationData": "d4a7824d-304f-4870-8bb3-16871151b6f7"
+    },
+    "assignedDevices": [
+      {
+        "device": {
+          "__type": "dk.cachet.carp.common.application.devices.Smartphone",
+          "roleName": "Primary Phone",
+          "isPrimaryDevice": true
+        },
+        "registration": {
+          "__type": "dk.cachet.carp.common.application.devices.DefaultDeviceRegistration",
+          "deviceId": "SP1A.210812.016",
+          "deviceDisplayName": "SP1A.210812.016 - SM-G970F SAMSUNG [SDK 31]",
+          "registrationCreatedOn": "2024-05-28T10:52:35.395144Z"
+        }
+      }
+    ]
+  },
+  {
+    "participation": {
+      "studyDeploymentId": "04f7c048-c322-4939-a660-be95b0dd3681",
+      "participantId": "76a07207-1cf7-4e54-8d0e-38fd00822cf9",
+      "assignedRoles": {
+        "__type": "dk.cachet.carp.common.application.users.AssignedTo.Roles",
+        "roleNames": [
+          "Participant"
+        ]
+      }
+    },
+    "invitation": {
+      "name": "carp_webservices unit test",
+      "applicationData": "b7a4d433-c267-4d2c-b182-67bbbc37279b"
+    },
+    "assignedDevices": [
+      {
+        "device": {
+          "__type": "dk.cachet.carp.common.application.devices.Smartphone",
+          "roleName": "Participant's phone",
+          "defaultSamplingConfiguration": {
+            "dk.cachet.carp.geolocation": {
+              "__type": "dk.cachet.carp.common.application.sampling.BatteryAwareSamplingConfiguration",
+              "normal": {
+                "__type": "dk.cachet.carp.common.application.sampling.GranularitySamplingConfiguration",
+                "granularity": "Detailed"
+              },
+              "low": {
+                "__type": "dk.cachet.carp.common.application.sampling.GranularitySamplingConfiguration",
+                "granularity": "Coarse"
+              }
+            }
+          },
+          "isPrimaryDevice": true
+        },
+        "registration": {
+          "__type": "dk.cachet.carp.common.application.devices.DefaultDeviceRegistration",
+          "deviceId": "933417fb-a5a3-4700-820a-2b19e776c1d7",
+          "deviceDisplayName": "Samsung A10",
+          "registrationCreatedOn": "2024-10-04T13:26:34.107636Z"
+        }
+      }
+    ]
+  },
+  {
+    "participation": {
+      "studyDeploymentId": "68434137-ffbb-4a59-9078-0383a1e36e02",
+      "participantId": "b2c3d895-4292-40d5-99af-c572b1378d88",
+      "assignedRoles": {
+        "__type": "dk.cachet.carp.common.application.users.AssignedTo.Roles",
+        "roleNames": [
+          "Participant"
+        ]
+      }
+    },
+    "invitation": {
+      "name": "CARP Demo 2.0",
+      "description": "Study testing data upload, especially the surveys due to issue #342 ",
+      "applicationData": "694890b1-f42f-4263-8296-3bfaff9ff190"
+    },
+    "assignedDevices": [
+      {
+        "device": {
+          "__type": "dk.cachet.carp.common.application.devices.Smartphone",
+          "roleName": "Primary Phone",
+          "isPrimaryDevice": true
+        }
+      }
+    ]
+  },
+  {
+    "participation": {
+      "studyDeploymentId": "59b39435-e3ef-47cd-b841-fdb842319b98",
+      "participantId": "11737f82-3aac-493d-b93b-5cff06e3e4b1",
+      "assignedRoles": {
+        "__type": "dk.cachet.carp.common.application.users.AssignedTo.Roles",
+        "roleNames": [
+          "Participant"
+        ]
+      }
+    },
+    "invitation": {
+      "name": "CARP Demo Study v. 3.0",
+      "applicationData": "d5f0b7a1-149a-4f0d-9ef8-346e58e82b98"
+    },
+    "assignedDevices": [
+      {
+        "device": {
+          "__type": "dk.cachet.carp.common.application.devices.Smartphone",
+          "roleName": "Primary Phone",
+          "isPrimaryDevice": true
+        },
+        "registration": {
+          "__type": "dk.cachet.carp.common.application.devices.DefaultDeviceRegistration",
+          "deviceId": "SP1A.210812.016",
+          "deviceDisplayName": "SP1A.210812.016 - SM-G970F SAMSUNG [SDK 31]",
+          "registrationCreatedOn": "2024-11-04T20:48:03.201162Z"
+        }
+      }
+    ]
+  },
+  {
+    "participation": {
+      "studyDeploymentId": "c8cea177-d174-40c1-92ef-69135ff2b2a3",
+      "participantId": "4bf63526-e95c-4bbc-b939-8625669a592d",
+      "assignedRoles": {
+        "__type": "dk.cachet.carp.common.application.users.AssignedTo.Roles",
+        "roleNames": [
+          "Participant"
+        ]
+      }
+    },
+    "invitation": {
+      "name": "CATCH Test II",
+      "description": "Also collecting Movesense Device Info",
+      "applicationData": "1acb0d91-4295-4378-b0a2-66a3d201748b"
+    },
+    "assignedDevices": [
+      {
+        "device": {
+          "__type": "dk.cachet.carp.common.application.devices.Smartphone",
+          "roleName": "Primary Phone",
+          "isPrimaryDevice": true
+        },
+        "registration": {
+          "__type": "dk.cachet.carp.common.application.devices.DefaultDeviceRegistration",
+          "deviceId": "SP1A.210812.016",
+          "deviceDisplayName": "SP1A.210812.016 - SM-G970F SAMSUNG [SDK 31]",
+          "registrationCreatedOn": "2024-11-08T14:52:23.752143Z"
+        }
+      }
+    ]
+  },
+  {
+    "participation": {
+      "studyDeploymentId": "983c39d6-082e-4660-87b3-1ed6d45f3770",
+      "participantId": "c658261c-7d20-453e-81d5-b23e8a029fb3",
+      "assignedRoles": {
+        "__type": "dk.cachet.carp.common.application.users.AssignedTo.Roles",
+        "roleNames": [
+          "Participant"
+        ]
+      }
+    },
+    "invitation": {
+      "name": "CATCH Test III",
+      "description": "Reviewed protocol.",
+      "applicationData": "8b6ce249-73eb-484a-9a17-cacad44c8830"
+    },
+    "assignedDevices": [
+      {
+        "device": {
+          "__type": "dk.cachet.carp.common.application.devices.Smartphone",
+          "roleName": "Primary Phone",
+          "isPrimaryDevice": true
+        },
+        "registration": {
+          "__type": "dk.cachet.carp.common.application.devices.DefaultDeviceRegistration",
+          "deviceId": "UP1A.231005.007",
+          "deviceDisplayName": "UP1A.231005.007 - SM-A546B SAMSUNG [SDK 34]",
+          "registrationCreatedOn": "2025-01-08T11:30:47.739854Z"
+        }
+      }
+    ]
+  },
+  {
+    "participation": {
+      "studyDeploymentId": "0d4566c4-c2d3-4080-b0a4-acd45ab6982e",
+      "participantId": "3f7f48ad-09d6-4723-aa0c-d4df7306f4c3",
+      "assignedRoles": {
+        "__type": "dk.cachet.carp.common.application.users.AssignedTo.Roles",
+        "roleNames": [
+          "Participant"
+        ]
+      }
+    },
+    "invitation": {
+      "name": "Neuropathy testing at Roskilde Hospital",
+      "applicationData": "ff2477ef-1146-4715-a4e8-1be315a18661"
+    },
+    "assignedDevices": [
+      {
+        "device": {
+          "__type": "dk.cachet.carp.common.application.devices.Smartphone",
+          "roleName": "Primary Phone",
+          "isPrimaryDevice": true
+        },
+        "registration": {
+          "__type": "dk.cachet.carp.common.application.devices.DefaultDeviceRegistration",
+          "deviceId": "UP1A.231005.007",
+          "deviceDisplayName": "UP1A.231005.007 - SM-A546B SAMSUNG [SDK 34]",
+          "registrationCreatedOn": "2025-05-18T17:56:39.898804Z"
+        }
+      }
+    ]
+  },
+  {
+    "participation": {
+      "studyDeploymentId": "c7807220-2b60-46e8-8301-4c0c2ab18bbd",
+      "participantId": "bf0641a4-0a8e-4424-9e62-9e12bf0821d4",
+      "assignedRoles": {
+        "__type": "dk.cachet.carp.common.application.users.AssignedTo.Roles",
+        "roleNames": [
+          "Participant"
+        ]
+      }
+    },
+    "invitation": {
+      "name": "DEMO Study w. Timezone",
+      "description": "20/5-2025 - w. Timezone",
+      "applicationData": {
+        "studyId": "9d04bd24-4109-4b84-a6f0-9f76a1dd0ce8"
+      }
+    },
+    "assignedDevices": [
+      {
+        "device": {
+          "__type": "dk.cachet.carp.common.application.devices.Smartphone",
+          "roleName": "Primary Phone",
+          "isPrimaryDevice": true
+        },
+        "registration": {
+          "__type": "dk.cachet.carp.common.application.devices.DefaultDeviceRegistration",
+          "deviceId": "UP1A.231005.007",
+          "deviceDisplayName": "UP1A.231005.007 - SM-A546B SAMSUNG [SDK 34]",
+          "registrationCreatedOn": "2025-05-20T10:50:12.102168Z"
+        }
+      }
+    ]
+  }
+]

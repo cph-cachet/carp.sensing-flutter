@@ -207,8 +207,10 @@ class Timezone extends Data {
   bool equivalentTo(Data other) =>
       (other is Timezone) ? timezone == other.timezone : false;
 
+  @override
+  Function get fromJsonFunction => _$TimezoneFromJson;
   factory Timezone.fromJson(Map<String, dynamic> json) =>
-      _$TimezoneFromJson(json);
+      FromJsonFactory().fromJson<Timezone>(json);
   @override
   Map<String, dynamic> toJson() => _$TimezoneToJson(this);
 }

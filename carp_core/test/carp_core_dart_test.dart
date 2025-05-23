@@ -140,6 +140,41 @@ void main() {
     expect(toJsonString(protocolFromJson), equals(studyJson));
   });
 
+  test('JSON -> Invitations', () async {
+    final loadedJson =
+        File('test/json/carp.core-dart/invitations.json').readAsStringSync();
+
+    final jsonList = json.decode(loadedJson) as List<dynamic>;
+
+    final invitations = jsonList
+        .map((invitation) => ActiveParticipationInvitation.fromJson(
+            invitation as Map<String, dynamic>))
+        .toList();
+
+    print(toJsonString(invitations));
+
+    expect(invitations, isList);
+    // check if we can read the studyId as a plain string
+    expect(invitations[0].studyId, isNotNull);
+    // check if we can read the studyId as JSON
+    expect(invitations[invitations.length - 1].studyId, isNotNull);
+  });
+
+  test('JSON -> MACAddressDeviceRegistration', () async {
+    // MACAddressDeviceRegistration macAddress = MACAddressDeviceRegistration(
+    //     macAddress: '00:00:00:00:00:00', deviceDisplayName: 'Test MAC Address');
+    // print(toJsonString(macAddress));
+
+    final loadedJson =
+        File('test/json/carp.core-dart/mac_address.json').readAsStringSync();
+    final loadedMacAddress = MACAddressDeviceRegistration.fromJson(
+        json.decode(loadedJson) as Map<String, dynamic>);
+    expect(loadedMacAddress.macAddress, '00:00:00:00:00:00');
+    expect(loadedMacAddress.deviceDisplayName, 'Test MAC Address');
+
+    print(toJsonString(loadedMacAddress));
+  });
+
   test('ScheduledTrigger', () async {
     var st = ScheduledTrigger(
         time: const TimeOfDay(hour: 12),

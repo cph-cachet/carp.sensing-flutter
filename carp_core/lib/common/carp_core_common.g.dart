@@ -380,7 +380,7 @@ MACAddressDeviceRegistration _$MACAddressDeviceRegistrationFromJson(
       registrationCreatedOn: json['registrationCreatedOn'] == null
           ? null
           : DateTime.parse(json['registrationCreatedOn'] as String),
-      address: json['address'] as String,
+      macAddress: json['macAddress'] as String,
     )..$type = json['__type'] as String?;
 
 Map<String, dynamic> _$MACAddressDeviceRegistrationToJson(
@@ -390,7 +390,7 @@ Map<String, dynamic> _$MACAddressDeviceRegistrationToJson(
       'deviceId': instance.deviceId,
       'deviceDisplayName': instance.deviceDisplayName,
       'registrationCreatedOn': instance.registrationCreatedOn.toIso8601String(),
-      'address': instance.address,
+      'macAddress': instance.macAddress,
     };
 
 Smartphone _$SmartphoneFromJson(Map<String, dynamic> json) => Smartphone(

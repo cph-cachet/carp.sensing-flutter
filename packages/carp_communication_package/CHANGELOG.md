@@ -1,3 +1,7 @@
+## 1.8.0
+
+* replacing the `telephony` plugin with the `another_telephony` plugin (issue [#464](https://github.com/cph-cachet/carp.sensing-flutter/issues/464))
+
 ## 1.7.1
 
 * upgrade of APK error caused by `call_log` plugin - replaced by `call_e_log`
