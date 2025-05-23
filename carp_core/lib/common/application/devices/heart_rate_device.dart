@@ -39,7 +39,7 @@ class BLEHeartRateDevice
         deviceId: deviceId,
         deviceDisplayName: deviceDisplayName,
         registrationCreatedOn: registrationCreatedOn,
-        address: address ?? '??????',
+        macAddress: address ?? '??????',
       );
 
   @override

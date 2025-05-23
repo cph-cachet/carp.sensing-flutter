@@ -86,6 +86,7 @@ void _registerFromJsonFunctions() {
     AccountIdentity(),
     EmailAccountIdentity(''),
     UsernameAccountIdentity(''),
+    MACAddressDeviceRegistration(macAddress: ''),
   ]);
 
   // REQUESTS

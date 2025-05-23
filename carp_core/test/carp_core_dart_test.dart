@@ -160,6 +160,21 @@ void main() {
     expect(invitations[invitations.length - 1].studyId, isNotNull);
   });
 
+  test('JSON -> MACAddressDeviceRegistration', () async {
+    // MACAddressDeviceRegistration macAddress = MACAddressDeviceRegistration(
+    //     macAddress: '00:00:00:00:00:00', deviceDisplayName: 'Test MAC Address');
+    // print(toJsonString(macAddress));
+
+    final loadedJson =
+        File('test/json/carp.core-dart/mac_address.json').readAsStringSync();
+    final loadedMacAddress = MACAddressDeviceRegistration.fromJson(
+        json.decode(loadedJson) as Map<String, dynamic>);
+    expect(loadedMacAddress.macAddress, '00:00:00:00:00:00');
+    expect(loadedMacAddress.deviceDisplayName, 'Test MAC Address');
+
+    print(toJsonString(loadedMacAddress));
+  });
+
   test('ScheduledTrigger', () async {
     var st = ScheduledTrigger(
         time: const TimeOfDay(hour: 12),
