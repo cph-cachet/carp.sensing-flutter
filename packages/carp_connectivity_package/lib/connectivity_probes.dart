@@ -56,8 +56,10 @@ class WifiProbe extends IntervalProbe {
 
 /// The [BluetoothProbe] scans for nearby and visible Bluetooth devices and
 /// collects a [Bluetooth] measurement that lists each device found during the scan.
+///
 /// Uses a [PeriodicSamplingConfiguration] for configuration the [interval]
-/// and [duration] of the scan.
+/// and [duration] of the scan. Can also be configured to filter by
+/// [services] and [remoteIds] by using a [BluetoothScanPeriodicSamplingConfiguration].
 class BluetoothProbe extends BufferingPeriodicStreamProbe {
   /// Default timeout for bluetooth scan - 4 secs
   static const DEFAULT_TIMEOUT = 4 * 1000;
@@ -70,25 +72,28 @@ class BluetoothProbe extends BufferingPeriodicStreamProbe {
   Future<Measurement?> getMeasurement() async =>
       _data != null ? Measurement.fromData(_data!) : null;
 
-  List<Guid> services = [];
-  List<String> remoteIds = [];
+  // if a BT-specific sampling configuration is used, we need to
+  // extract the services and remoteIds from it so FlutterBluePlus can
+  // perform filtered scanning
+
+  List<Guid> get services => (samplingConfiguration
+          is BluetoothScanPeriodicSamplingConfiguration)
+      ? (samplingConfiguration as BluetoothScanPeriodicSamplingConfiguration)
+          .withServices
+          .map((e) => Guid(e))
+          .toList()
+      : [];
+
+  List<String> get remoteIds => (samplingConfiguration
+          is BluetoothScanPeriodicSamplingConfiguration)
+      ? (samplingConfiguration as BluetoothScanPeriodicSamplingConfiguration)
+          .withRemoteIds
+      : [];
 
   @override
   void onSamplingStart() {
-    if (samplingConfiguration is BluetoothScanPeriodicSamplingConfiguration) {
-      // if a BT-specific sampling configuration is used, we need to
-      // extract the services and remoteIds from it so FlutterBluePlus can
-      // perform filtered scanning
-      List<Guid> services =
-          (samplingConfiguration as BluetoothScanPeriodicSamplingConfiguration)
-              .withServices
-              .map((e) => Guid(e))
-              .toList();
-      List<String> remoteIds =
-          (samplingConfiguration as BluetoothScanPeriodicSamplingConfiguration)
-              .withRemoteIds;
-    }
     _data = Bluetooth();
+
     try {
       FlutterBluePlus.startScan(
           withServices: services,

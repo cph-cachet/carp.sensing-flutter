@@ -89,39 +89,3 @@ class PeriodicSamplingConfiguration extends IntervalSamplingConfiguration {
   factory PeriodicSamplingConfiguration.fromJson(Map<String, dynamic> json) =>
       FromJsonFactory().fromJson<PeriodicSamplingConfiguration>(json);
 }
-
-/// A sampling configuration specifying how to collect data on a regular basis
-/// for a specific period, specifically for Bluetooth scanning.
-///
-/// Data collection will be started as specified by the [interval] for a time
-/// period specified as the [duration]. Added for bluetooth scanning is filtering
-/// on the [withServices] and [withRemoteIds] to only collect data from
-/// specific services and remote ids.
-///
-/// Filtering on remoteIds allows Android to scan for devices in the background
-/// without needing to be in the foreground. This is not possible on iOS.
-@JsonSerializable(includeIfNull: false, explicitToJson: true)
-class BluetoothScanPeriodicSamplingConfiguration
-    extends PeriodicSamplingConfiguration {
-  /// The sampling duration.
-  List<String> withServices;
-  List<String> withRemoteIds;
-
-  BluetoothScanPeriodicSamplingConfiguration({
-    required super.interval,
-    required super.duration,
-    this.withServices = [],
-    this.withRemoteIds = [],
-  });
-
-  @override
-  Map<String, dynamic> toJson() =>
-      _$BluetoothScanPeriodicSamplingConfigurationToJson(this);
-  @override
-  Function get fromJsonFunction =>
-      _$BluetoothScanPeriodicSamplingConfigurationFromJson;
-  factory BluetoothScanPeriodicSamplingConfiguration.fromJson(
-          Map<String, dynamic> json) =>
-      FromJsonFactory()
-          .fromJson<BluetoothScanPeriodicSamplingConfiguration>(json);
-}
