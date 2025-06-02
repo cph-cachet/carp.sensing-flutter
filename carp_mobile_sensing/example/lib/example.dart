@@ -24,22 +24,20 @@ Future<void> minimalExample() async {
   )
     ..addPrimaryDevice(phone)
     ..addTaskControl(
-      DelayedTrigger(delay: const Duration(seconds: 10)),
-      BackgroundTask(measures: [
-        Measure(type: SensorSamplingPackage.STEP_COUNT),
-        Measure(type: SensorSamplingPackage.AMBIENT_LIGHT),
-        Measure(type: DeviceSamplingPackage.SCREEN_EVENT),
-        Measure(type: DeviceSamplingPackage.BATTERY_STATE),
-      ]),
-      phone,
-      Control.Start,
-    );
+        DelayedTrigger(delay: const Duration(seconds: 10)),
+        BackgroundTask(measures: [
+          Measure(type: SensorSamplingPackage.STEP_COUNT),
+          Measure(type: SensorSamplingPackage.AMBIENT_LIGHT),
+          Measure(type: DeviceSamplingPackage.SCREEN_EVENT),
+          Measure(type: DeviceSamplingPackage.BATTERY_STATE),
+        ]),
+        phone);
 
   // Create and configure a client manager for this phone.
   await SmartPhoneClientManager().configure();
 
   // Create a study based on the protocol.
-  SmartPhoneClientManager().addStudyFromProtocol(protocol);
+  await SmartPhoneClientManager().addStudyFromProtocol(protocol);
 
   /// Start sampling.
   SmartPhoneClientManager().start();
@@ -51,10 +49,11 @@ Future<void> minimalExample() async {
       .addStudyFromProtocol(protocol)
       .then((_) => SmartPhoneClientManager().start()));
 
-  // Listening on the data stream and print them as json.
-  SmartPhoneClientManager()
-      .measurements
-      .listen((measurement) => print(toJsonString(measurement)));
+  // Listening on the measurements stream.
+  SmartPhoneClientManager().measurements.listen((measurement) {
+    // Do something with the measurement, e.g. print the json.
+    print(toJsonString(measurement));
+  });
 
   // Stop sampling again.
   SmartPhoneClientManager().stop();

@@ -169,23 +169,6 @@ class LocalStudyProtocolManager implements StudyProtocolManager {
     // Add a participant role
     protocol.addParticipantRole(ParticipantRole('Participant'));
 
-    // Issue #403
-    protocol.addTaskControl(
-      RemoteTrigger(
-          interval: const Duration(seconds: 5), uri: 'http://google.com/'),
-      BackgroundTask(
-          measures: [Measure(type: DeviceSamplingPackage.DEVICE_INFORMATION)]),
-      phone,
-    );
-
-    // // Issue #384
-    // protocol.addTaskControl(
-    //     PeriodicTrigger(period: const Duration(seconds: 5)),
-    //     BackgroundTask(
-    //       measures: [Measure(type: DeviceSamplingPackage.DEVICE_INFORMATION)],
-    //     ),
-    //     phone);
-
     // Collect timezone info every time the app restarts.
     protocol.addTaskControl(
         ImmediateTrigger(),
@@ -194,13 +177,13 @@ class LocalStudyProtocolManager implements StudyProtocolManager {
         ]),
         phone);
 
-    // // Collect device info only once, when this study is deployed.
-    // protocol.addTaskControl(
-    //   OneTimeTrigger(),
-    //   BackgroundTask(
-    //       measures: [Measure(type: DeviceSamplingPackage.DEVICE_INFORMATION)]),
-    //   phone,
-    // );
+    // Collect device info only once, when this study is deployed.
+    protocol.addTaskControl(
+      OneTimeTrigger(),
+      BackgroundTask(
+          measures: [Measure(type: DeviceSamplingPackage.DEVICE_INFORMATION)]),
+      phone,
+    );
 
     // Add background measures from the [DeviceSamplingPackage] and
     // [SensorSamplingPackage] sampling packages.
@@ -248,20 +231,20 @@ class LocalStudyProtocolManager implements StudyProtocolManager {
     //   phone,
     // );
 
-    // // Extract acceleration features every minute over 10 seconds
-    // protocol.addTaskControl(
-    //   ImmediateTrigger(),
-    //   BackgroundTask(
-    //     measures: [
-    //       Measure(type: SensorSamplingPackage.ACCELERATION_FEATURES)
-    //         ..overrideSamplingConfiguration = PeriodicSamplingConfiguration(
-    //           interval: const Duration(minutes: 1),
-    //           duration: const Duration(seconds: 10),
-    //         ),
-    //     ],
-    //   ),
-    //   phone,
-    // );
+    // Extract acceleration features every minute over 10 seconds
+    protocol.addTaskControl(
+      ImmediateTrigger(),
+      BackgroundTask(
+        measures: [
+          Measure(type: SensorSamplingPackage.ACCELERATION_FEATURES)
+            ..overrideSamplingConfiguration = PeriodicSamplingConfiguration(
+              interval: const Duration(minutes: 1),
+              duration: const Duration(seconds: 10),
+            ),
+        ],
+      ),
+      phone,
+    );
 
     // // Example of how to start and stop sampling using the Control.Start and
     // // Control.Stop method

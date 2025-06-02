@@ -124,8 +124,8 @@ class LocalStudyProtocolManager implements StudyProtocolManager {
     // Add a background task that collects weather every 30 minutes.
     protocol.addTaskControl(
         PeriodicTrigger(period: Duration(seconds: 30)),
-        BackgroundTask()
-          ..addMeasure(Measure(type: ContextSamplingPackage.WEATHER)),
+        BackgroundTask(
+            measures: [Measure(type: ContextSamplingPackage.WEATHER)]),
         weatherService);
 
     // // Define the online air quality service and add it as a 'device'
@@ -243,48 +243,48 @@ class LocalStudyProtocolManager implements StudyProtocolManager {
     // --------- eSENSE PACKAGE EXAMPLES -------------
     //
 
-    // // Define the sSense device and add its measures
-    // ESenseDevice eSense = ESenseDevice(
-    //   deviceName: 'eSense-0332',
-    //   samplingRate: 10,
-    // );
-    // protocol.addConnectedDevice(eSense, phone);
+    // Define the sSense device and add its measures
+    ESenseDevice eSense = ESenseDevice(
+      deviceName: 'eSense-0332',
+      samplingRate: 10,
+    );
+    protocol.addConnectedDevice(eSense, phone);
 
-    // protocol.addTaskControl(
-    //     ImmediateTrigger(),
-    //     BackgroundTask(measures: [
-    //       Measure(type: ESenseSamplingPackage.ESENSE_BUTTON),
-    //       Measure(type: ESenseSamplingPackage.ESENSE_SENSOR)
-    //     ]),
-    //     eSense);
+    protocol.addTaskControl(
+        ImmediateTrigger(),
+        BackgroundTask(measures: [
+          Measure(type: ESenseSamplingPackage.ESENSE_BUTTON),
+          Measure(type: ESenseSamplingPackage.ESENSE_SENSOR)
+        ]),
+        eSense);
 
     //
     // --------- POLAR PACKAGE EXAMPLES -------------
     //
 
     // define the Polar device and add its measures
-    var polar = PolarDevice(
-      identifier: 'B5FC172F',
-      name: 'Polar H10 HR Monitor',
-      deviceType: PolarDeviceType.H10,
-    );
+    // var polar = PolarDevice(
+    //   identifier: 'B5FC172F',
+    //   name: 'Polar H10 HR Monitor',
+    //   deviceType: PolarDeviceType.H10,
+    // );
     // var polar = PolarDevice(
     //   identifier: 'B36B5B21',
     //   name: 'Polar HR Sense',
     //   deviceType: PolarDeviceType.SENSE,
     // );
 
-    protocol.addConnectedDevice(polar, phone);
+    // protocol.addConnectedDevice(polar, phone);
 
-    protocol.addTaskControl(
-        ImmediateTrigger(),
-        BackgroundTask(measures: [
-          Measure(type: PolarSamplingPackage.HR),
-          // Measure(type: PolarSamplingPackage.ECG),
-          // Measure(type: PolarSamplingPackage.PPG),
-          // Measure(type: PolarSamplingPackage.PPI),
-        ]),
-        polar);
+    // protocol.addTaskControl(
+    //     ImmediateTrigger(),
+    //     BackgroundTask(measures: [
+    //       Measure(type: PolarSamplingPackage.HR),
+    //       // Measure(type: PolarSamplingPackage.ECG),
+    //       // Measure(type: PolarSamplingPackage.PPG),
+    //       // Measure(type: PolarSamplingPackage.PPI),
+    //     ]),
+    //     polar);
 
     //
     // --------- MOVESENSE PACKAGE EXAMPLES -------------
@@ -292,22 +292,23 @@ class LocalStudyProtocolManager implements StudyProtocolManager {
     // Known DTU Movensense devices:
     //  - Movesense MD : 220330000122 : 0C:8C:DC:3F:B2:CD
     //  - Movesense    : 233830000687 : 0C:8C:DC:1B:23:3E
+    //  - Movesense    : 233830000652 : 0C:8C:DC:1B:23:1B
 
-    // var movesense = MovesenseDevice(
-    //   address: '0C:8C:DC:3F:B2:CD',
-    //   name: 'Movesense MD 2203300 00122',
-    // );
+    var movesense = MovesenseDevice(
+      address: '0C:8C:DC:1B:23:1B',
+      name: 'Movesense 23383000 0652',
+    );
 
-    // protocol.addConnectedDevice(movesense, phone);
+    protocol.addConnectedDevice(movesense, phone);
 
-    // protocol.addTaskControl(
-    //     ImmediateTrigger(),
-    //     BackgroundTask(measures: [
-    //       Measure(type: MovesenseSamplingPackage.STATE),
-    //       Measure(type: MovesenseSamplingPackage.HR),
-    //       Measure(type: MovesenseSamplingPackage.ECG),
-    //     ]),
-    //     movesense);
+    protocol.addTaskControl(
+        ImmediateTrigger(),
+        BackgroundTask(measures: [
+          Measure(type: MovesenseSamplingPackage.STATE),
+          Measure(type: MovesenseSamplingPackage.HR),
+          Measure(type: MovesenseSamplingPackage.ECG),
+        ]),
+        movesense);
 
     //
     // --------- C3+ PACKAGE EXAMPLES -------------

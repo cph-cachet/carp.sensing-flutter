@@ -40,6 +40,10 @@ class DeviceDescription {
             'Movisens',
             'Movisens Sensor',
             Icon(Icons.watch, size: 50, color: CachetColors.CYAN)),
+        MovesenseDevice.DEVICE_TYPE: DeviceTypeDescriptor(
+            'Movesense',
+            'Movesense ECG Sensor',
+            Icon(Icons.watch, size: 50, color: CachetColors.CYAN)),
         // CortriumDevice.DEVICE_TYPE: DeviceTypeDescriptor(
         //     'Cortrium',
         //     'Cortrium ECG Holter Monitor',
