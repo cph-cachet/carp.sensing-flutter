@@ -83,3 +83,35 @@ Map<String, dynamic> _$WifiToJson(Wifi instance) => <String, dynamic>{
       if (instance.bssid case final value?) 'bssid': value,
       if (instance.ip case final value?) 'ip': value,
     };
+
+BluetoothScanPeriodicSamplingConfiguration
+    _$BluetoothScanPeriodicSamplingConfigurationFromJson(
+            Map<String, dynamic> json) =>
+        BluetoothScanPeriodicSamplingConfiguration(
+          interval: Duration(microseconds: (json['interval'] as num).toInt()),
+          duration: Duration(microseconds: (json['duration'] as num).toInt()),
+          withServices: (json['withServices'] as List<dynamic>?)
+                  ?.map((e) => e as String)
+                  .toList() ??
+              const [],
+          withRemoteIds: (json['withRemoteIds'] as List<dynamic>?)
+                  ?.map((e) => e as String)
+                  .toList() ??
+              const [],
+        )
+          ..$type = json['__type'] as String?
+          ..lastTime = json['lastTime'] == null
+              ? null
+              : DateTime.parse(json['lastTime'] as String);
+
+Map<String, dynamic> _$BluetoothScanPeriodicSamplingConfigurationToJson(
+        BluetoothScanPeriodicSamplingConfiguration instance) =>
+    <String, dynamic>{
+      if (instance.$type case final value?) '__type': value,
+      if (instance.lastTime?.toIso8601String() case final value?)
+        'lastTime': value,
+      'interval': instance.interval.inMicroseconds,
+      'duration': instance.duration.inMicroseconds,
+      'withServices': instance.withServices,
+      'withRemoteIds': instance.withRemoteIds,
+    };
