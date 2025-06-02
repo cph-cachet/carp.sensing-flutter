@@ -1,3 +1,7 @@
+## 1.8.0
+
+* added BluetoothScanPeriodicSamplingConfiguration
+
 ## 1.7.2
 
 * Upgrade to carp_core v. 1.8 & carp_serialization v. 2.0
