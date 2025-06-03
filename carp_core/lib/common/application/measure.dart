@@ -23,8 +23,12 @@ class Measure extends Serializable {
   /// [DeviceConfiguration].
   SamplingConfiguration? overrideSamplingConfiguration;
 
-  /// Create a measure by specifying its [type].
-  Measure({required this.type}) : super();
+  /// Create a measure by specifying its [type] and optionally a
+  /// [samplingConfiguration] to override the default sampling configuration.
+  Measure({required this.type, SamplingConfiguration? samplingConfiguration})
+      : super() {
+    overrideSamplingConfiguration = samplingConfiguration;
+  }
 
   @override
   Function get fromJsonFunction => _$MeasureFromJson;

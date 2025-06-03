@@ -1,4 +1,4 @@
-part of connectivity;
+part of '../connectivity.dart';
 
 class ConnectivitySamplingPackage extends SmartphoneSamplingPackage {
   /// Measure type for continuous collection of connectivity status of the phone
@@ -73,6 +73,10 @@ class ConnectivitySamplingPackage extends SmartphoneSamplingPackage {
       Connectivity(),
       Bluetooth(),
       Wifi(),
+      BluetoothScanPeriodicSamplingConfiguration(
+        interval: const Duration(minutes: 10),
+        duration: const Duration(seconds: 10),
+      ),
     ]);
 
     // registering default privacy functions

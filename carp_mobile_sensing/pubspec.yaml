@@ -25,15 +25,15 @@ dependencies:
   statistics: '>=1.1.0 <1.3.0'
   sample_statistics: ^0.2.0  
   path_provider: ^2.0.0
-  sqflite: ^2.2.8                     # For local storage in SQLite DB
+  sqflite: ^2.2.8                         # For local storage in SQLite DB
   archive: ^4.0.0
-  permission_handler: ^11.0.0  
+  permission_handler: '>=11.0.0 <13.0.0'  # For requesting permissions on Android and iOS
   shared_preferences: ^2.2.0
   package_info_plus: '>=6.0.0 <9.0.0'
-  flutter_local_notifications: ^19.0.0 # For sending notification on AppTask
-  cron: ^0.6.0                         # For scheduling / triggering cron jobs
-  timezone: ^0.10.0                    # For collecting time zone information
-  flutter_timezone: ^4.0.0             # For getting local time zone for scheduling notifications
+  flutter_local_notifications: ^19.0.0    # For sending notification on AppTask
+  cron: ^0.6.0                            # For scheduling / triggering cron jobs
+  timezone: ^0.10.0                       # For collecting time zone information
+  flutter_timezone: ^4.0.0                # For getting local time zone for scheduling notifications
 
   # probe-dependent plugins
   device_info_plus: '>=9.0.0 <12.0.0'

@@ -1,4 +1,4 @@
-part of connectivity;
+part of '../connectivity.dart';
 
 /// A [Bluetooth] anonymizer function. Anonymizes the name and discovery
 /// name of each discovered bluetooth device.

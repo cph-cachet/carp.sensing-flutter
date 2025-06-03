@@ -2,7 +2,7 @@
 /// * bluetooth info from nearby devices
 /// * connectivity status
 /// * wifi status
-library connectivity;
+library;
 
 import 'dart:async';
 import 'dart:convert';

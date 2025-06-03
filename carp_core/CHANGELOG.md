@@ -1,8 +1,9 @@
-## 1.9.2
+## 1.9.3
 
 * fix of issue [#491](https://github.com/cph-cachet/carp.sensing-flutter/issues/491)
 * fix of issue [#452](https://github.com/cph-cachet/carp.sensing-flutter/issues/452)
 * fix of issue [#499](https://github.com/cph-cachet/carp.sensing-flutter/issues/499) and [#258](https://github.com/cph-cachet/carp-webservices-spring/issues/258)
+* adding `samplingConfiguration` to the constructor of `Measure`
 
 ## 1.8.3
 

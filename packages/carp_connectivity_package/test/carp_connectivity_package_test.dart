@@ -39,6 +39,37 @@ void main() {
             .toList(),
       phone,
     );
+
+    // also add a PeriodicSamplingConfiguration
+    protocol.addTaskControl(
+        ImmediateTrigger(),
+        BackgroundTask(
+          measures: [
+            Measure(type: ConnectivitySamplingPackage.BLUETOOTH)
+              ..overrideSamplingConfiguration = PeriodicSamplingConfiguration(
+                interval: const Duration(minutes: 10),
+                duration: const Duration(seconds: 10),
+              ),
+          ],
+        ),
+        phone);
+
+    // also add a BluetoothScanPeriodicSamplingConfiguration
+    protocol.addTaskControl(
+        ImmediateTrigger(),
+        BackgroundTask(
+          measures: [
+            Measure(type: ConnectivitySamplingPackage.BLUETOOTH)
+              ..overrideSamplingConfiguration =
+                  BluetoothScanPeriodicSamplingConfiguration(
+                interval: const Duration(minutes: 10),
+                duration: const Duration(seconds: 10),
+                withRemoteIds: ['123', '456'],
+                withServices: ['service1', 'service2'],
+              ),
+          ],
+        ),
+        phone);
   });
 
   test('CAMSStudyProtocol -> JSON', () async {

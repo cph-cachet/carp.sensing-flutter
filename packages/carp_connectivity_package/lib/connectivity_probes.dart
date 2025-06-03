@@ -5,7 +5,7 @@
  * found in the LICENSE file.
  */
 
-part of connectivity;
+part of '../connectivity.dart';
 
 /// The [ConnectivityProbe] listens to the connectivity status of the phone and
 /// collect a [Connectivity] data point every time the connectivity state changes.
