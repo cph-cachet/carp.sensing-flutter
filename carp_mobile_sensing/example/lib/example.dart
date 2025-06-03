@@ -233,21 +233,17 @@ void example_2() async {
     Control.Start,
   );
 
-  // specify details of a light measure
+  // specify sampling configuration of a light measure
   var lightMeasure = Measure(
-    type: SensorSamplingPackage.AMBIENT_LIGHT,
-  )..overrideSamplingConfiguration = PeriodicSamplingConfiguration(
-      interval: const Duration(minutes: 10),
-      duration: const Duration(seconds: 20),
-    );
+      type: SensorSamplingPackage.AMBIENT_LIGHT,
+      samplingConfiguration: PeriodicSamplingConfiguration(
+        interval: const Duration(minutes: 10),
+        duration: const Duration(seconds: 20),
+      ));
 
-  // add it to the study to start immediately
-  protocol.addTaskControl(
-    ImmediateTrigger(),
-    BackgroundTask(name: 'Light')..addMeasure(lightMeasure),
-    phone,
-    Control.Start,
-  );
+  // add it to the protocol
+  protocol.addTaskControl(ImmediateTrigger(),
+      BackgroundTask(name: 'Light')..addMeasure(lightMeasure), phone);
 
   // use the on-phone deployment service
   DeploymentService deploymentService = SmartphoneDeploymentService();

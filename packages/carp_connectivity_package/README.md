@@ -95,7 +95,7 @@ import 'package:carp_connectivity_package/connectivity.dart';
 `````
 
 Before creating a study and running it, register this package in the
-[`SamplingPackageRegistry`](https://pub.dartlang.org/documentation/carp_mobile_sensing/latest/runtime/SamplingPackageRegistry.html).
+[`SamplingPackageRegistry`](https://pub.dev/documentation/carp_mobile_sensing/latest/runtime/SamplingPackageRegistry-class.html).
 
 `````dart
 SamplingPackageRegistry().register(ConnectivitySamplingPackage());
@@ -123,6 +123,24 @@ protocol.addTaskControl(
       Measure(type: ConnectivitySamplingPackage.CONNECTIVITY),
       Measure(type: ConnectivitySamplingPackage.BLUETOOTH),
       Measure(type: ConnectivitySamplingPackage.WIFI),
+    ]),
+    phone);
+```
+
+The [`BluetoothScanPeriodicSamplingConfiguration`](https://pub.dev/documentation/carp_connectivity_package/latest/connectivity/BluetoothScanPeriodicSamplingConfiguration-class.html) configuration can be used to specify how Bluetooth scanning is to take place:
+
+```dart
+protocol.addTaskControl(
+    ImmediateTrigger(),
+    BackgroundTask(measures: [
+      Measure(
+          type: ConnectivitySamplingPackage.BLUETOOTH,
+          samplingConfiguration: BluetoothScanPeriodicSamplingConfiguration(
+            interval: const Duration(minutes: 10),
+            duration: const Duration(seconds: 10),
+            withRemoteIds: ['123', '456'],
+            withServices: ['service1', 'service2'],
+          ))
     ]),
     phone);
 ```

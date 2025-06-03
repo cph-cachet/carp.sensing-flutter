@@ -1,6 +1,7 @@
-## 1.8.1
+## 1.8.1+1
 
-* added BluetoothScanPeriodicSamplingConfiguration
+* added `BluetoothScanPeriodicSamplingConfiguration`
+* update of README
 
 ## 1.7.2
 

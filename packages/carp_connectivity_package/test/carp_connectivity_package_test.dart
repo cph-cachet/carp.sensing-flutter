@@ -57,18 +57,16 @@ void main() {
     // also add a BluetoothScanPeriodicSamplingConfiguration
     protocol.addTaskControl(
         ImmediateTrigger(),
-        BackgroundTask(
-          measures: [
-            Measure(type: ConnectivitySamplingPackage.BLUETOOTH)
-              ..overrideSamplingConfiguration =
-                  BluetoothScanPeriodicSamplingConfiguration(
+        BackgroundTask(measures: [
+          Measure(
+              type: ConnectivitySamplingPackage.BLUETOOTH,
+              samplingConfiguration: BluetoothScanPeriodicSamplingConfiguration(
                 interval: const Duration(minutes: 10),
                 duration: const Duration(seconds: 10),
                 withRemoteIds: ['123', '456'],
                 withServices: ['service1', 'service2'],
-              ),
-          ],
-        ),
+              ))
+        ]),
         phone);
   });
 
