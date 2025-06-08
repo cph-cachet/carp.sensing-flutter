@@ -219,37 +219,37 @@ class ProbeDescription {
           'Health data collected from the phone.',
           Icon(Icons.heart_broken, size: 50, color: CachetColors.RED),
         ),
-        MovesenseSamplingPackage.HR: ProbeDescriptor(
-          'Movesense HR',
-          'Movesense Heart Rate.',
-          Icon(Icons.heart_broken, size: 50, color: CachetColors.CYAN),
-        ),
-        MovesenseSamplingPackage.ECG: ProbeDescriptor(
-          'Movesense ECG',
-          'Movesense Electrocardiogram.',
-          Icon(Icons.monitor_heart_rounded,
-              size: 50, color: CachetColors.GREEN),
-        ),
-        MovesenseSamplingPackage.TEMPERATURE: ProbeDescriptor(
-          'Movesense Skin Temperature',
-          'Movesense Skin Temperature.',
-          Icon(Icons.boy_rounded, size: 50, color: CachetColors.CYAN),
-        ),
-        MovesenseSamplingPackage.STATE: ProbeDescriptor(
-          'Movesense State',
-          'Movesense Tap Marker.',
-          Icon(Icons.fingerprint, size: 50, color: CachetColors.CYAN),
-        ),
-        MovesenseSamplingPackage.IMU: ProbeDescriptor(
-          'Movesense Movement',
-          'Movesense Inertial Movement Unit (IMU).',
-          Icon(Icons.moving, size: 50, color: CachetColors.CYAN),
-        ),
-        // CortriumSamplingPackage.ECG: ProbeDescriptor(
-        //   'C3+ ECG',
-        //   'C3+ Electrocardiogram.',
-        //   Icon(Icons.monitor_heart_rounded, size: 50, color: CachetColors.BLUE),
+        // MovesenseSamplingPackage.HR: ProbeDescriptor(
+        //   'Movesense HR',
+        //   'Movesense Heart Rate.',
+        //   Icon(Icons.heart_broken, size: 50, color: CachetColors.CYAN),
         // ),
+        // MovesenseSamplingPackage.ECG: ProbeDescriptor(
+        //   'Movesense ECG',
+        //   'Movesense Electrocardiogram.',
+        //   Icon(Icons.monitor_heart_rounded,
+        //       size: 50, color: CachetColors.GREEN),
+        // ),
+        // MovesenseSamplingPackage.TEMPERATURE: ProbeDescriptor(
+        //   'Movesense Skin Temperature',
+        //   'Movesense Skin Temperature.',
+        //   Icon(Icons.boy_rounded, size: 50, color: CachetColors.CYAN),
+        // ),
+        // MovesenseSamplingPackage.STATE: ProbeDescriptor(
+        //   'Movesense State',
+        //   'Movesense Tap Marker.',
+        //   Icon(Icons.fingerprint, size: 50, color: CachetColors.CYAN),
+        // ),
+        // MovesenseSamplingPackage.IMU: ProbeDescriptor(
+        //   'Movesense Movement',
+        //   'Movesense Inertial Movement Unit (IMU).',
+        //   Icon(Icons.moving, size: 50, color: CachetColors.CYAN),
+        // ),
+        CortriumSamplingPackage.ECG: ProbeDescriptor(
+          'C3+ ECG',
+          'C3+ Electrocardiogram.',
+          Icon(Icons.monitor_heart_rounded, size: 50, color: CachetColors.BLUE),
+        ),
       };
 
   static Map<ExecutorState, String> get probeStateLabel => {
