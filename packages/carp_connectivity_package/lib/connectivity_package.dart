@@ -21,8 +21,7 @@ class ConnectivitySamplingPackage extends SmartphoneSamplingPackage {
   static const String WIFI = "${NameSpace.CARP}.wifi";
 
   @override
-  DataTypeSamplingSchemeMap get samplingSchemes =>
-      DataTypeSamplingSchemeMap.from([
+  DataTypeSamplingSchemeMap get samplingSchemes => DataTypeSamplingSchemeMap.from([
         DataTypeSamplingScheme(
           CamsDataTypeMetaData(
             type: CONNECTIVITY,
@@ -80,12 +79,8 @@ class ConnectivitySamplingPackage extends SmartphoneSamplingPackage {
     ]);
 
     // registering default privacy functions
-    DataTransformerSchemaRegistry()
-        .lookup(PrivacySchema.DEFAULT)!
-        .add(BLUETOOTH, bluetoothNameAnonymizer);
-    DataTransformerSchemaRegistry()
-        .lookup(PrivacySchema.DEFAULT)!
-        .add(WIFI, wifiNameAnonymizer);
+    DataTransformerSchemaRegistry().lookup(PrivacySchema.DEFAULT)!.add(BLUETOOTH, bluetoothNameAnonymizer);
+    DataTransformerSchemaRegistry().lookup(PrivacySchema.DEFAULT)!.add(WIFI, wifiNameAnonymizer);
   }
 }
 
@@ -100,29 +95,34 @@ class ConnectivitySamplingPackage extends SmartphoneSamplingPackage {
 /// Filtering on remoteIds allows Android to scan for devices in the background
 /// without needing to be in the foreground. This is not possible on iOS.
 @JsonSerializable(includeIfNull: false, explicitToJson: true)
-class BluetoothScanPeriodicSamplingConfiguration
-    extends PeriodicSamplingConfiguration {
+class BluetoothScanPeriodicSamplingConfiguration extends PeriodicSamplingConfiguration {
   /// List of Bluetooth service UUIDs to filter the scan results.
   List<String> withServices;
 
   /// List of remote device IDs to filter the scan results.
   List<String> withRemoteIds;
 
+  /// Use Package `flutter_beacon` to enable beacon monitoring while the app is in background.
+  bool useBeaconMonitoring;
+
+  /// List of beacon regions to monitor and/or range using the `flutter_beacon` package.
+  ///
+  /// When [useBeaconMonitoring] is true, the app will monitor these regions, potentially in the background if platform permissions and conditions allow.
+  List<BeaconRegion?> beaconRegions;
+
   BluetoothScanPeriodicSamplingConfiguration({
     required super.interval,
     required super.duration,
     this.withServices = const [],
     this.withRemoteIds = const [],
+    this.beaconRegions = const [],
+    this.useBeaconMonitoring = false,
   });
 
   @override
-  Map<String, dynamic> toJson() =>
-      _$BluetoothScanPeriodicSamplingConfigurationToJson(this);
+  Map<String, dynamic> toJson() => _$BluetoothScanPeriodicSamplingConfigurationToJson(this);
   @override
-  Function get fromJsonFunction =>
-      _$BluetoothScanPeriodicSamplingConfigurationFromJson;
-  factory BluetoothScanPeriodicSamplingConfiguration.fromJson(
-          Map<String, dynamic> json) =>
-      FromJsonFactory()
-          .fromJson<BluetoothScanPeriodicSamplingConfiguration>(json);
+  Function get fromJsonFunction => _$BluetoothScanPeriodicSamplingConfigurationFromJson;
+  factory BluetoothScanPeriodicSamplingConfiguration.fromJson(Map<String, dynamic> json) =>
+      FromJsonFactory().fromJson<BluetoothScanPeriodicSamplingConfiguration>(json);
 }
