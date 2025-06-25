@@ -101,9 +101,10 @@ class BluetoothProbe extends BufferingPeriodicStreamProbe {
         _startMonitoring();
       } else {
         FlutterBluePlus.startScan(
-            withServices: services,
-            withRemoteIds: remoteIds,
-            timeout: samplingConfiguration?.duration ?? const Duration(milliseconds: DEFAULT_TIMEOUT));
+          withServices: services,
+          withRemoteIds: remoteIds,
+          timeout: samplingConfiguration?.duration ?? const Duration(milliseconds: DEFAULT_TIMEOUT),
+        );
       }
     } catch (error) {
       FlutterBluePlus.stopScan();
@@ -135,13 +136,13 @@ class BluetoothProbe extends BufferingPeriodicStreamProbe {
         beaconRegions.isEmpty ? [] : beaconRegions.map((beaconRegion) => beaconRegion!.toRegion()).toList();
 
     try {
-      _streamMonitoring = flutterBeacon.monitoring(regions).listen((MonitoringResult result) {
+      _streamMonitoring = flutterBeacon.monitoring(regions).listen((MonitoringResult result) async {
         if (result.monitoringState == MonitoringState.inside) {
           info('🚪 Entered region: ${result.region.identifier}');
           _startRanging(result.region);
         } else if (result.monitoringState == MonitoringState.outside) {
           info('🚪 Exited region: ${result.region.identifier}');
-          _stopMonitoring();
+          await _stopMonitoring();
         }
       });
     } catch (e) {
@@ -163,10 +164,10 @@ class BluetoothProbe extends BufferingPeriodicStreamProbe {
     });
   }
 
-  void _stopMonitoring() {
-    _streamRanging?.cancel();
+  Future<void> _stopMonitoring() async {
+    await _streamRanging?.cancel();
     _streamRanging = null;
-    _streamMonitoring?.cancel();
+    await _streamMonitoring?.cancel();
     _streamMonitoring = null;
   }
 }
