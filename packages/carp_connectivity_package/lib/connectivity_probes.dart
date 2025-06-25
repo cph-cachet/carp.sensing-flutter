@@ -117,7 +117,7 @@ class BluetoothProbe extends BufferingPeriodicStreamProbe {
   void onSamplingEnd() {
     if (useBeaconMonitoring) {
       info('stopping monitoring kinda');
-      //_stopMonitoring();
+      _stopMonitoring();
     } else {
       FlutterBluePlus.stopScan();
     }
