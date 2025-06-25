@@ -136,13 +136,13 @@ class BluetoothProbe extends BufferingPeriodicStreamProbe {
         beaconRegions.isEmpty ? [] : beaconRegions.map((beaconRegion) => beaconRegion!.toRegion()).toList();
 
     try {
-      _streamMonitoring = flutterBeacon.monitoring(regions).listen((MonitoringResult result) async {
+      _streamMonitoring = flutterBeacon.monitoring(regions).listen((MonitoringResult result) {
         if (result.monitoringState == MonitoringState.inside) {
           info('🚪 Entered region: ${result.region.identifier}');
           _startRanging(result.region);
         } else if (result.monitoringState == MonitoringState.outside) {
           info('🚪 Exited region: ${result.region.identifier}');
-          await _stopMonitoring();
+          _stopMonitoring();
         }
       });
     } catch (e) {
@@ -164,10 +164,10 @@ class BluetoothProbe extends BufferingPeriodicStreamProbe {
     });
   }
 
-  Future<void> _stopMonitoring() async {
-    await _streamRanging?.cancel();
+  void _stopMonitoring() {
+    _streamRanging?.cancel();
     _streamRanging = null;
-    await _streamMonitoring?.cancel();
+    _streamMonitoring?.cancel();
     _streamMonitoring = null;
   }
 }
