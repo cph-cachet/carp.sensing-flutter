@@ -132,7 +132,14 @@ class BluetoothProbe extends BufferingPeriodicStreamProbe {
   }
 
   Future<void> _startMonitoring() async {
-    await flutterBeacon.initializeScanning;
+    info('start monitoring & initializing scanning.');
+    try {
+      await flutterBeacon.initializeScanning;
+    } catch (e) {
+      warning('error happened while initializing scanner $e');
+    }
+    info('initialized scanner');
+
     List<Region> regions =
         beaconRegions.isEmpty ? [] : beaconRegions.map((beaconRegion) => beaconRegion!.toRegion()).toList();
 
