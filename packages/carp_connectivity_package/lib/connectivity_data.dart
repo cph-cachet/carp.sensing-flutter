@@ -216,12 +216,23 @@ class Wifi extends Data {
   String toString() => '${super.toString()}, SSID: $ssid, BSSID: $bssid, IP: $ip';
 }
 
-/// Beacon Region
+/// Beacon Region to use when monitoring for beacons.
 @JsonSerializable(includeIfNull: false, explicitToJson: true)
 class BeaconRegion {
+  /// A unique identifier for the beacon region.
+  /// Used to distinguish between different regions being monitored.
   String identifier;
+
+  /// The proximity UUID of the beacon.
+  /// This is a 128-bit value used to identify a group of related beacons.
   String uuid;
+
+  /// The major value of the beacon region (optional).
+  /// Used to further distinguish a subset of beacons within the same UUID.
   int? major;
+
+  /// The minor value of the beacon region (optional).
+  /// Provides a finer granularity within a group of beacons identified by the same UUID and major value.
   int? minor;
 
   BeaconRegion({
