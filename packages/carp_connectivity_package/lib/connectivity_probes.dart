@@ -150,7 +150,7 @@ class BluetoothProbe extends BufferingPeriodicStreamProbe {
           info('🚪 Entered region: ${result.region.identifier}');
           _startRanging(result.region);
         } else if (result.monitoringState == MonitoringState.outside) {
-          info('🚪 Exited region: ${result.region.identifier}');
+          info('Not in region: ${result.region.identifier}');
           _stopMonitoring();
         }
       });
