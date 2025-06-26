@@ -1,4 +1,3 @@
-
 /*
  * Copyright 2018 Copenhagen Center for Health Technology (CACHET) at the
  * Technical University of Denmark (DTU).

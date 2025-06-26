@@ -6,8 +6,6 @@ library;
 
 import 'dart:async';
 import 'dart:convert';
-import 'dart:developer';
-import 'dart:math';
 
 import 'package:dchs_flutter_beacon/dchs_flutter_beacon.dart';
 import 'package:flutter_blue_plus/flutter_blue_plus.dart';
