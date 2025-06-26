@@ -91,7 +91,7 @@ dependency_overrides:
   # due to this issue https://github.com/petri-lipponen-movesense/mdsflutter/issues/36 
   mdsflutter:
     git:
-    url: https://github.com/Panosfunk/mdsflutter.git
+      url: https://github.com/Panosfunk/mdsflutter.git
       ref: master
 
   # due to this issue https://github.com/cph-cachet/carp_studies_app/issues/427
