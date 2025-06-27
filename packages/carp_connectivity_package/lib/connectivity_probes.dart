@@ -89,6 +89,10 @@ class BluetoothProbe extends BufferingPeriodicStreamProbe {
       ? (samplingConfiguration as BluetoothScanPeriodicSamplingConfiguration).beaconRegions
       : [];
 
+  int get beaconDistance => (samplingConfiguration is BluetoothScanPeriodicSamplingConfiguration)
+      ? (samplingConfiguration as BluetoothScanPeriodicSamplingConfiguration).beaconDistance
+      : 2;
+
   StreamSubscription<MonitoringResult>? _streamMonitoring;
   StreamSubscription<RangingResult>? _streamRanging;
 
@@ -161,7 +165,7 @@ class BluetoothProbe extends BufferingPeriodicStreamProbe {
 
   void _startRanging(Region region) {
     _streamRanging = flutterBeacon.ranging([region]).listen((RangingResult result) {
-      final closeBeacons = result.beacons.where((beacon) => beacon.accuracy <= 2.0);
+      final closeBeacons = result.beacons.where((beacon) => beacon.accuracy <= beaconDistance);
 
       for (var beacon in closeBeacons) {
         info('✅ beacon in range: ${beacon.proximityUUID}, ${beacon.accuracy} m');

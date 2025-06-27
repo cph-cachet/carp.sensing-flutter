@@ -110,6 +110,10 @@ class BluetoothScanPeriodicSamplingConfiguration extends PeriodicSamplingConfigu
   /// When [useBeaconMonitoring] is true, the app will monitor these regions, potentially in the background if platform permissions and conditions allow.
   List<BeaconRegion?> beaconRegions;
 
+  /// When a device is within this distance from the beacon, a predefined event is triggered.
+  /// Defaults to 2 meters.
+  int beaconDistance;
+
   BluetoothScanPeriodicSamplingConfiguration({
     required super.interval,
     required super.duration,
@@ -117,6 +121,7 @@ class BluetoothScanPeriodicSamplingConfiguration extends PeriodicSamplingConfigu
     this.withRemoteIds = const [],
     this.beaconRegions = const [],
     this.useBeaconMonitoring = false,
+    this.beaconDistance = 2,
   });
 
   @override
