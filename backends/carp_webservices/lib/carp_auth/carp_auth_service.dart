@@ -159,6 +159,17 @@ class CarpAuthService {
     );
   }
 
+  Future<CarpUser> authenticateAnonymous(
+    // required OidcToken token,
+  ) async {
+    assert(_manager != null, 'Manager not configured. Call configure() first.');
+    if (!_manager!.didInit) await initManager();
+
+    // OidcUser? user = await OidcUser.fromIdToken(token: token);
+    // return getCurrentUserProfile(user) ?? CarpUser.fromJWT({}, token);
+    return CarpUser(username: 'anonymous', id: 'id');
+  }
+
   /// Authenticate to this CARP service using a [username] and [password].
   ///
   /// The discovery URL in the [authProperties] is used to find the Identity Server.
