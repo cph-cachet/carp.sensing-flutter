@@ -133,5 +133,15 @@ void main() {
       },
       skip: false,
     );
+
+    test(
+      '- get informed consent document',
+      () async {
+        final participation = CarpParticipationService().participation();
+        final consent = await participation.getInformedConsentByRole();
+        debugPrint(toJsonString(consent));
+        expect(consent, isNotNull);
+      },
+    );
   });
 }
