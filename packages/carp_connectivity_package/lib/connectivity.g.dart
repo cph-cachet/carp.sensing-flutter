@@ -84,6 +84,21 @@ Map<String, dynamic> _$WifiToJson(Wifi instance) => <String, dynamic>{
       if (instance.ip case final value?) 'ip': value,
     };
 
+BeaconRegion _$BeaconRegionFromJson(Map<String, dynamic> json) => BeaconRegion(
+      identifier: json['identifier'] as String,
+      uuid: json['uuid'] as String,
+      major: (json['major'] as num?)?.toInt(),
+      minor: (json['minor'] as num?)?.toInt(),
+    );
+
+Map<String, dynamic> _$BeaconRegionToJson(BeaconRegion instance) =>
+    <String, dynamic>{
+      'identifier': instance.identifier,
+      'uuid': instance.uuid,
+      if (instance.major case final value?) 'major': value,
+      if (instance.minor case final value?) 'minor': value,
+    };
+
 BluetoothScanPeriodicSamplingConfiguration
     _$BluetoothScanPeriodicSamplingConfigurationFromJson(
             Map<String, dynamic> json) =>
@@ -98,6 +113,14 @@ BluetoothScanPeriodicSamplingConfiguration
                   ?.map((e) => e as String)
                   .toList() ??
               const [],
+          beaconRegions: (json['beaconRegions'] as List<dynamic>?)
+                  ?.map((e) => e == null
+                      ? null
+                      : BeaconRegion.fromJson(e as Map<String, dynamic>))
+                  .toList() ??
+              const [],
+          useBeaconMonitoring: json['useBeaconMonitoring'] as bool? ?? false,
+          beaconDistance: (json['beaconDistance'] as num?)?.toInt() ?? 2,
         )
           ..$type = json['__type'] as String?
           ..lastTime = json['lastTime'] == null
@@ -114,4 +137,7 @@ Map<String, dynamic> _$BluetoothScanPeriodicSamplingConfigurationToJson(
       'duration': instance.duration.inMicroseconds,
       'withServices': instance.withServices,
       'withRemoteIds': instance.withRemoteIds,
+      'useBeaconMonitoring': instance.useBeaconMonitoring,
+      'beaconRegions': instance.beaconRegions.map((e) => e?.toJson()).toList(),
+      'beaconDistance': instance.beaconDistance,
     };
