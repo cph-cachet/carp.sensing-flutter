@@ -294,42 +294,43 @@ class LocalStudyProtocolManager implements StudyProtocolManager {
     //  - Movesense    : 233830000687 : 0C:8C:DC:1B:23:3E
     //  - Movesense    : 233830000652 : 0C:8C:DC:1B:23:1B
 
-    var movesense = MovesenseDevice(
-      address: '0C:8C:DC:1B:23:1B',
-      name: 'Movesense 23383000 0652',
-    );
+    // var movesense = MovesenseDevice(
+    //   address: '0C:8C:DC:1B:23:1B',
+    //   name: 'Movesense 23383000 0652',
+    // );
 
-    protocol.addConnectedDevice(movesense, phone);
+    // protocol.addConnectedDevice(movesense, phone);
 
-    protocol.addTaskControl(
-        ImmediateTrigger(),
-        BackgroundTask(measures: [
-          Measure(type: MovesenseSamplingPackage.STATE),
-          Measure(type: MovesenseSamplingPackage.HR),
-          Measure(type: MovesenseSamplingPackage.ECG),
-        ]),
-        movesense);
+    // protocol.addTaskControl(
+    //     ImmediateTrigger(),
+    //     BackgroundTask(measures: [
+    //       Measure(type: MovesenseSamplingPackage.STATE),
+    //       Measure(type: MovesenseSamplingPackage.HR),
+    //       Measure(type: MovesenseSamplingPackage.ECG),
+    //     ]),
+    //     movesense);
 
     //
     // --------- C3+ PACKAGE EXAMPLES -------------
     //
     // Known DTU C3+ devices: ED:AD:D4:3D:3F:72
 
-    // var c3 = CortriumDevice(
-    //   name: 'Cortrium C3+',
-    //   identifier: 'ED:AD:D4:3D:3F:72',
-    // );
+    var c3 = CortriumDevice(
+      name: 'Cortrium C3+',
+      identifier: 'ED:AD:D4:3D:3F:72',
+    );
 
-    // protocol.addConnectedDevice(c3, phone);
+    protocol.addConnectedDevice(c3, phone);
 
-    // protocol.addTaskControl(
-    //     ImmediateTrigger(),
-    //     BackgroundTask(measures: [
-    //       Measure(type: CortriumSamplingPackage.ECG),
-    //       Measure(type: CortriumSamplingPackage.BUTTON),
-    //       // Measure(type: CortriumSamplingPackage.ACCELEROMETER),
-    //     ]),
-    //     c3);
+    protocol.addTaskControl(
+        ImmediateTrigger(),
+        BackgroundTask(measures: [
+          Measure(type: CortriumSamplingPackage.ECG),
+          // Measure(type: CortriumSamplingPackage.BUTTON),
+          Measure(type: CortriumSamplingPackage.BATTERY),
+          Measure(type: CortriumSamplingPackage.ACCELEROMETER),
+        ]),
+        c3);
 
     //
     // --------- HEALTH PACKAGE EXAMPLES -------------

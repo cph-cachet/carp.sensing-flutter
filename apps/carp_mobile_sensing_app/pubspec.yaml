@@ -69,8 +69,8 @@ dependency_overrides:
     path: ../../backends/carp_webservices/
   carp_movesense_package:
     path: ../../packages/carp_movesense_package/
-  # carp_cortrium_package:
-  #   path: ../../../../carp_cortrium_package/
+  carp_cortrium_package:
+    path: ../../../carp_cortrium_package/
 
   # research_package:
   #   path: ../../../../research.package/
