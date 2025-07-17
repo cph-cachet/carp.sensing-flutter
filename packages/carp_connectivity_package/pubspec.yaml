@@ -21,7 +21,9 @@ dependencies:
   network_info_plus: ^6.0.0    # wifi ssid name
   flutter_blue_plus: ^1.35.0   # bluetooth scan
   crypto: ^3.0.0               # hashing sensitive data
-  permission_handler: '>=11.0.0 <13.0.0'  
+  permission_handler: '>=11.0.0 <13.0.0'
+  dchs_flutter_beacon: ^0.6.4
+
 
 # Overriding carp libraries to use the local copy
 # Remove this before release of package
