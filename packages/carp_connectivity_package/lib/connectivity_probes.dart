@@ -113,17 +113,9 @@ class BluetoothProbe extends BufferingPeriodicStreamProbe {
 }
 
 class BeaconProbe extends BufferingPeriodicStreamProbe {
-  /// Default timeout for Bluetooth scan - 4 secs
+  /// Default timeout for bluetooth scan - 4 secs
   static const DEFAULT_TIMEOUT = 4 * 1000;
   Data? _data;
-
-  final StreamController<List<BeaconDevice>> _rangingController = StreamController<List<BeaconDevice>>.broadcast();
-
-  @override
-  Stream<List<BeaconDevice>> get bufferingStream => _rangingController.stream;
-
-  StreamSubscription<MonitoringResult>? _streamMonitoring;
-  StreamSubscription<RangingResult>? _streamRanging;
 
   @override
   Future<Measurement?> getMeasurement() async => _data != null ? Measurement.fromData(_data!) : null;
@@ -136,28 +128,25 @@ class BeaconProbe extends BufferingPeriodicStreamProbe {
       ? (samplingConfiguration as BeaconRangingPeriodicSamplingConfiguration).beaconDistance
       : 2;
 
-  @override
-  void onSamplingStart() async {
-    info('Sampling started');
-    _data = BeaconData();
+  StreamSubscription<MonitoringResult>? _streamMonitoring;
+  StreamSubscription<RangingResult>? _streamRanging;
 
+  @override
+  void onSamplingStart() {
+    _data = BeaconData();
     try {
-      await flutterBeacon.initializeScanning;
       _startMonitoring();
     } catch (error) {
-      warning('Error initializing beacon scanning: $error');
-      _data = Error(message: 'Error scanning for Bluetooth - $error');
+      _data = Error(message: 'Error scanning for bluetooth - $error');
     }
   }
 
   @override
   void onSamplingEnd() {
-    info('Sampling ended, stopping monitoring and ranging');
+    info('stopping monitoring');
     _stopMonitoring();
 
-    if (_data is BeaconData) {
-      (_data as BeaconData).endScan = DateTime.now();
-    }
+    if (_data is BeaconData) (_data as BeaconData).endScan = DateTime.now();
   }
 
   @override
@@ -169,9 +158,17 @@ class BeaconProbe extends BufferingPeriodicStreamProbe {
     }
   }
 
-  void _startMonitoring() {
-    info('Starting region monitoring');
-    List<Region> regions = beaconRegions.isEmpty ? [] : beaconRegions.map((r) => r!.toRegion()).toList();
+  Future<void> _startMonitoring() async {
+    info('start monitoring & initializing scanning.');
+    try {
+      await flutterBeacon.initializeScanning;
+    } catch (e) {
+      warning('error happened while initializing scanner $e');
+    }
+    info('initialized scanner');
+
+    List<Region> regions =
+        beaconRegions.isEmpty ? [] : beaconRegions.map((beaconRegion) => beaconRegion!.toRegion()).toList();
 
     try {
       _streamMonitoring = flutterBeacon.monitoring(regions).listen((MonitoringResult result) {
@@ -180,19 +177,51 @@ class BeaconProbe extends BufferingPeriodicStreamProbe {
           _startRanging(result.region);
         } else if (result.monitoringState == MonitoringState.outside) {
           info('Not in region: ${result.region.identifier}');
-          _stopRanging();
+          _stopMonitoring();
         }
       });
     } catch (e) {
-      warning('Error starting monitoring: $e');
+      info('Error starting monitoring: $e');
     }
   }
 
   void _startRanging(Region region) {
-    info('Starting ranging in region: ${region.identifier}');
-    _stopRanging();
-    _streamRanging = flutterBeacon.ranging([region]).listen((RangingResult result) {
-      final closeBeacons = result.beacons
+    _streamRanging = flutterBeacon.ranging([region]).listen(
+      (RangingResult result) {
+        final closeBeacons = result.beacons.where((beacon) => beacon.accuracy <= beaconDistance);
+
+        for (var beacon in closeBeacons) {
+          info('✅ beacon in range: ${beacon.proximityUUID}, ${beacon.accuracy} m');
+          (_data as BeaconData).addBluetoothDevicesFromRangingResults(
+            BeaconDevice(
+              rssi: beacon.rssi,
+              major: beacon.major,
+              minor: beacon.minor,
+              accuracy: beacon.accuracy,
+            ),
+          );
+        }
+      },
+    );
+  }
+
+  void _stopMonitoring() {
+    _streamRanging?.cancel();
+    _streamRanging = null;
+    _streamMonitoring?.cancel();
+    _streamMonitoring = null;
+  }
+
+  @override
+  Stream<List<BeaconDevice>> get bufferingStream {
+    List<Region> regions = beaconRegions.isEmpty ? [] : beaconRegions.map((r) => r!.toRegion()).toList();
+
+    if (regions.isEmpty) {
+      return Stream.empty();
+    }
+
+    return flutterBeacon.ranging(regions).map((result) {
+      return result.beacons
           .where((b) => b.accuracy <= beaconDistance)
           .map((b) => BeaconDevice(
                 rssi: b.rssi,
@@ -201,23 +230,6 @@ class BeaconProbe extends BufferingPeriodicStreamProbe {
                 accuracy: b.accuracy,
               ))
           .toList();
-
-      _rangingController.add(closeBeacons);
-
-      for (var device in closeBeacons) {
-        (_data as BeaconData).addBluetoothDevicesFromRangingResults(device);
-      }
     });
-  }
-
-  void _stopMonitoring() {
-    _stopRanging();
-    _streamMonitoring?.cancel();
-    _streamMonitoring = null;
-  }
-
-  void _stopRanging() {
-    _streamRanging?.cancel();
-    _streamRanging = null;
   }
 }
