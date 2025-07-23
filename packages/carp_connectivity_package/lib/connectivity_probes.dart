@@ -184,6 +184,8 @@ class BeaconProbe extends StreamProbe {
 
   @override
   Future<bool> onStart() async {
+    _data = BeaconData();
+
     _startMonitoring();
 
     return super.onStart();
