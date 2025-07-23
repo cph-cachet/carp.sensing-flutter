@@ -112,13 +112,10 @@ class BluetoothProbe extends BufferingPeriodicStreamProbe {
   }
 }
 
-class BeaconProbe extends BufferingPeriodicStreamProbe {
+class BeaconProbe extends StreamProbe {
   /// Default timeout for bluetooth scan - 4 secs
   static const DEFAULT_TIMEOUT = 4 * 1000;
   Data? _data;
-
-  @override
-  Future<Measurement?> getMeasurement() async => _data != null ? Measurement.fromData(_data!) : null;
 
   List<BeaconRegion?> get beaconRegions => (samplingConfiguration is BeaconRangingPeriodicSamplingConfiguration)
       ? (samplingConfiguration as BeaconRangingPeriodicSamplingConfiguration).beaconRegions
@@ -130,33 +127,6 @@ class BeaconProbe extends BufferingPeriodicStreamProbe {
 
   StreamSubscription<MonitoringResult>? _streamMonitoring;
   StreamSubscription<RangingResult>? _streamRanging;
-
-  @override
-  void onSamplingStart() {
-    _data = BeaconData();
-    try {
-      _startMonitoring();
-    } catch (error) {
-      _data = Error(message: 'Error scanning for bluetooth - $error');
-    }
-  }
-
-  @override
-  void onSamplingEnd() {
-    info('stopping monitoring');
-    _stopMonitoring();
-
-    if (_data is BeaconData) (_data as BeaconData).endScan = DateTime.now();
-  }
-
-  @override
-  void onSamplingData(event) {
-    if (event is List<BeaconDevice>) {
-      for (var device in event) {
-        (_data as BeaconData).addBluetoothDevicesFromRangingResults(device);
-      }
-    }
-  }
 
   Future<void> _startMonitoring() async {
     info('start monitoring & initializing scanning.');
@@ -213,23 +183,30 @@ class BeaconProbe extends BufferingPeriodicStreamProbe {
   }
 
   @override
-  Stream<List<BeaconDevice>> get bufferingStream {
-    List<Region> regions = beaconRegions.isEmpty ? [] : beaconRegions.map((r) => r!.toRegion()).toList();
+  Future<bool> onStart() async {
+    _startMonitoring();
 
-    if (regions.isEmpty) {
-      return Stream.empty();
-    }
-
-    return flutterBeacon.ranging(regions).map((result) {
-      return result.beacons
-          .where((b) => b.accuracy <= beaconDistance)
-          .map((b) => BeaconDevice(
-                rssi: b.rssi,
-                major: b.major,
-                minor: b.minor,
-                accuracy: b.accuracy,
-              ))
-          .toList();
-    });
+    return super.onStart();
   }
+
+  @override
+  Stream<Measurement> get stream => flutterBeacon.ranging(beaconRegions.map((e) => e!.toRegion()).toList()).map(
+        (RangingResult result) {
+          final closeBeacons = result.beacons.where((beacon) => beacon.accuracy <= beaconDistance);
+          if (closeBeacons.isNotEmpty) {
+            return Measurement.fromData(BeaconData()
+              ..startScan = DateTime.now()
+              ..scanResult = closeBeacons
+                  .map((beacon) => BeaconDevice(
+                        rssi: beacon.rssi,
+                        uuid: beacon.proximityUUID,
+                        major: beacon.major,
+                        minor: beacon.minor,
+                        accuracy: beacon.accuracy,
+                      ))
+                  .toList());
+          }
+          return Measurement.fromData(BeaconData());
+        },
+      );
 }
