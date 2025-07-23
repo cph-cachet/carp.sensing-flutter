@@ -153,14 +153,6 @@ BluetoothScanPeriodicSamplingConfiguration
                   ?.map((e) => e as String)
                   .toList() ??
               const [],
-          beaconRegions: (json['beaconRegions'] as List<dynamic>?)
-                  ?.map((e) => e == null
-                      ? null
-                      : BeaconRegion.fromJson(e as Map<String, dynamic>))
-                  .toList() ??
-              const [],
-          useBeaconMonitoring: json['useBeaconMonitoring'] as bool? ?? false,
-          beaconDistance: (json['beaconDistance'] as num?)?.toInt() ?? 2,
         )
           ..$type = json['__type'] as String?
           ..lastTime = json['lastTime'] == null
@@ -177,9 +169,6 @@ Map<String, dynamic> _$BluetoothScanPeriodicSamplingConfigurationToJson(
       'duration': instance.duration.inMicroseconds,
       'withServices': instance.withServices,
       'withRemoteIds': instance.withRemoteIds,
-      'useBeaconMonitoring': instance.useBeaconMonitoring,
-      'beaconRegions': instance.beaconRegions.map((e) => e?.toJson()).toList(),
-      'beaconDistance': instance.beaconDistance,
     };
 
 BeaconRangingPeriodicSamplingConfiguration
