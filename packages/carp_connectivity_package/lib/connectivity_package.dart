@@ -123,26 +123,12 @@ class BluetoothScanPeriodicSamplingConfiguration extends PeriodicSamplingConfigu
   /// List of remote device IDs to filter the scan results.
   List<String> withRemoteIds;
 
-  /// Use Package `flutter_beacon` to enable beacon monitoring while the app is in background.
-  bool useBeaconMonitoring;
-
-  /// List of beacon regions to monitor and/or range using the `flutter_beacon` package.
-  ///
-  /// When [useBeaconMonitoring] is true, the app will monitor these regions, potentially in the background if platform permissions and conditions allow.
-  List<BeaconRegion?> beaconRegions;
-
-  /// When a device is within this distance from the beacon, a predefined event is triggered.
-  /// Defaults to 2 meters.
-  int beaconDistance;
 
   BluetoothScanPeriodicSamplingConfiguration({
     required super.interval,
     required super.duration,
     this.withServices = const [],
     this.withRemoteIds = const [],
-    this.beaconRegions = const [],
-    this.useBeaconMonitoring = false,
-    this.beaconDistance = 2,
   });
 
   @override
