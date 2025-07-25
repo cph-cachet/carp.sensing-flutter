@@ -1,3 +1,8 @@
+## 1.9.4
+
+* fix of issue [#506](https://github.com/cph-cachet/carp.sensing-flutter/issues/506)
+* added unit tests for input data types
+
 ## 1.9.3
 
 * fix of issue [#491](https://github.com/cph-cachet/carp.sensing-flutter/issues/491)
