@@ -31,4 +31,50 @@ void main() async {
         Measure(type: ConnectivitySamplingPackage.WIFI),
       ]),
       phone);
+
+  // If you want to scan for nearby bluetooth devices, you can use a
+  // [BluetoothScanPeriodicSamplingConfiguration] to configure the scan.
+  // This will scan for bluetooth devices every 10 minutes for 10 seconds.
+  // You can also filter by remoteIds and services.
+  protocol.addTaskControl(
+      ImmediateTrigger(),
+      BackgroundTask(measures: [
+        Measure(
+            type: ConnectivitySamplingPackage.BLUETOOTH,
+            samplingConfiguration: BluetoothScanPeriodicSamplingConfiguration(
+              interval: const Duration(minutes: 10),
+              duration: const Duration(seconds: 10),
+              withRemoteIds: ['123', '456'],
+              withServices: ['service1', 'service2'],
+            ))
+      ]),
+      phone);
+
+  // If you want to collect iBeacon measurements, you can use a
+  // [BeaconRangingPeriodicSamplingConfiguration] to configure the scan.
+  // This will scan for iBeacons in the specified regions which are closer than
+  // 2 meters. The regions are specified by their identifier and UUID.
+  //
+  // See the dchs_flutter_beacon plugin for more information on how to set up
+  // iBeacon regions.
+  protocol.addTaskControl(
+      ImmediateTrigger(),
+      BackgroundTask(measures: [
+        Measure(
+            type: ConnectivitySamplingPackage.BEACON,
+            samplingConfiguration: BeaconRangingPeriodicSamplingConfiguration(
+              beaconDistance: 2, // 2 meters
+              beaconRegions: [
+                BeaconRegion(
+                  identifier: 'region1',
+                  uuid: '12345678-1234-1234-1234-123456789012',
+                ),
+                BeaconRegion(
+                  identifier: 'region2',
+                  uuid: '12345678-1234-1234-1234-123456789012',
+                ),
+              ],
+            ))
+      ]),
+      phone);
 }
