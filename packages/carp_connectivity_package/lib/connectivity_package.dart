@@ -20,6 +20,13 @@ class ConnectivitySamplingPackage extends SmartphoneSamplingPackage {
   ///  * Use a [IntervalSamplingConfiguration] for configuration.
   static const String WIFI = "${NameSpace.CARP}.wifi";
 
+  /// Measure type for Beacon ranging to detect and estimate proximity to
+  /// Bluetooth beacons (e.g., iBeacon, Eddystone).
+  /// * Typically returns beacon identifiers (UUID, major, minor) and
+  ///    estimated distance or RSSI.
+  ///  * Use a [PeriodicSamplingConfiguration] for configuration.
+  static const String BEACON = "${NameSpace.CARP}.beacon";
+
   @override
   DataTypeSamplingSchemeMap get samplingSchemes => DataTypeSamplingSchemeMap.from([
         DataTypeSamplingScheme(
@@ -49,6 +56,18 @@ class ConnectivitySamplingPackage extends SmartphoneSamplingPackage {
             IntervalSamplingConfiguration(
               interval: const Duration(minutes: 10),
             )),
+        DataTypeSamplingScheme(
+          CamsDataTypeMetaData(
+            type: BEACON,
+            displayName: "Ranging beacons in proximity",
+            timeType: DataTimeType.POINT,
+            permissions: [Permission.bluetoothScan, Permission.locationAlways],
+          ),
+          PeriodicSamplingConfiguration(
+            interval: const Duration(minutes: 10),
+            duration: const Duration(seconds: 10),
+          ),
+        ),
       ]);
 
   @override
@@ -60,6 +79,8 @@ class ConnectivitySamplingPackage extends SmartphoneSamplingPackage {
         return BluetoothProbe();
       case WIFI:
         return WifiProbe();
+      case BEACON:
+        return BeaconProbe();
       default:
         return null;
     }
@@ -102,26 +123,12 @@ class BluetoothScanPeriodicSamplingConfiguration extends PeriodicSamplingConfigu
   /// List of remote device IDs to filter the scan results.
   List<String> withRemoteIds;
 
-  /// Use Package `flutter_beacon` to enable beacon monitoring while the app is in background.
-  bool useBeaconMonitoring;
-
-  /// List of beacon regions to monitor and/or range using the `flutter_beacon` package.
-  ///
-  /// When [useBeaconMonitoring] is true, the app will monitor these regions, potentially in the background if platform permissions and conditions allow.
-  List<BeaconRegion?> beaconRegions;
-
-  /// When a device is within this distance from the beacon, a predefined event is triggered.
-  /// Defaults to 2 meters.
-  int beaconDistance;
 
   BluetoothScanPeriodicSamplingConfiguration({
     required super.interval,
     required super.duration,
     this.withServices = const [],
     this.withRemoteIds = const [],
-    this.beaconRegions = const [],
-    this.useBeaconMonitoring = false,
-    this.beaconDistance = 2,
   });
 
   @override
@@ -130,4 +137,28 @@ class BluetoothScanPeriodicSamplingConfiguration extends PeriodicSamplingConfigu
   Function get fromJsonFunction => _$BluetoothScanPeriodicSamplingConfigurationFromJson;
   factory BluetoothScanPeriodicSamplingConfiguration.fromJson(Map<String, dynamic> json) =>
       FromJsonFactory().fromJson<BluetoothScanPeriodicSamplingConfiguration>(json);
+}
+
+@JsonSerializable(includeIfNull: false, explicitToJson: true)
+class BeaconRangingPeriodicSamplingConfiguration extends PeriodicSamplingConfiguration {
+  /// List of beacon regions to monitor and/or range using the `flutter_beacon` package.
+  List<BeaconRegion?> beaconRegions;
+
+  /// When a device is within this distance from the beacon, a predefined event is triggered.
+  /// Defaults to 2 meters.
+  int beaconDistance;
+
+  BeaconRangingPeriodicSamplingConfiguration({
+    required super.interval,
+    required super.duration,
+    this.beaconRegions = const [],
+    this.beaconDistance = 2,
+  });
+
+  @override
+  Map<String, dynamic> toJson() => _$BeaconRangingPeriodicSamplingConfigurationToJson(this);
+  @override
+  Function get fromJsonFunction => _$BeaconRangingPeriodicSamplingConfigurationFromJson;
+  factory BeaconRangingPeriodicSamplingConfiguration.fromJson(Map<String, dynamic> json) =>
+      FromJsonFactory().fromJson<BeaconRangingPeriodicSamplingConfiguration>(json);
 }

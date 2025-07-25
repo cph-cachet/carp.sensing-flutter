@@ -183,6 +183,48 @@ class BluetoothDevice {
       ', rssi: $rssi';
 }
 
+/// Beacon device data.
+@JsonSerializable(includeIfNull: false, explicitToJson: true)
+class BeaconDevice {
+  /// The RSSI signal strength to the device.
+  int rssi;
+
+  /// Beacon UUID (for iBeacon).
+  String? uuid;
+
+  /// Major value (for iBeacon).
+  int? major;
+
+  /// Minor value (for iBeacon).
+  int? minor;
+
+  double? accuracy;
+
+  BeaconDevice({
+    required this.rssi,
+    this.uuid,
+    this.major,
+    this.minor,
+    this.accuracy,
+  }) : super();
+
+  factory BeaconDevice.fromRangingResult(BeaconDevice result) => BeaconDevice(
+        uuid: result.uuid,
+        major: result.major,
+        minor: result.minor,
+        accuracy: result.accuracy,
+        rssi: result.rssi,
+      );
+
+  factory BeaconDevice.fromJson(Map<String, dynamic> json) => _$BeaconDeviceFromJson(json);
+  Map<String, dynamic> toJson() => _$BeaconDeviceToJson(this);
+
+  @override
+  String toString() => '$runtimeType - '
+      ', uuid: $uuid, major: $major, minor: $minor, accuracy: $accuracy'
+      ', rssi: $rssi';
+}
+
 /// A [Data] holding wifi connectivity status in terms of connected SSID
 /// and BSSID.
 ///
@@ -216,9 +258,55 @@ class Wifi extends Data {
   String toString() => '${super.toString()}, SSID: $ssid, BSSID: $bssid, IP: $ip';
 }
 
+/// A [Data] holding information of nearby Bluetooth devices.
+@JsonSerializable(includeIfNull: false, explicitToJson: true)
+class BeaconData extends Data {
+  static const dataType = ConnectivitySamplingPackage.BLUETOOTH;
+
+  /// Timestamp of scan start.
+  late DateTime startScan;
+
+  /// Timestamp of scan end, if available.
+  DateTime? endScan;
+
+  /// A map of [BeaconDevice] indexed by their [bluetoothDeviceId] to make
+  /// sure that the same device only appears once.
+  final Map<String, BeaconDevice> _scanResult = {};
+
+  /// The list of [BeaconDevice] found in a scan.
+  List<BeaconDevice> get scanResult => _scanResult.values.toList();
+  set scanResult(List<BeaconDevice> devices) => _scanResult.addEntries(
+        devices.map(
+          (device) => MapEntry(
+            device.uuid ?? '',
+            device,
+          ),
+        ),
+      );
+
+  BeaconData({DateTime? startScan, this.endScan}) : super() {
+    this.startScan = startScan ?? DateTime.now();
+  }
+
+  void addBluetoothDevice(BeaconDevice device) => _scanResult[device.uuid ?? ''] = device;
+
+  void addBluetoothDevicesFromRangingResults(BeaconDevice result) {
+    addBluetoothDevice(BeaconDevice.fromRangingResult(result));
+  }
+
+  @override
+  Function get fromJsonFunction => _$BeaconDataFromJson;
+  factory BeaconData.fromJson(Map<String, dynamic> json) => FromJsonFactory().fromJson<BeaconData>(json);
+  @override
+  Map<String, dynamic> toJson() => _$BeaconDataToJson(this);
+
+  @override
+  String toString() => '${super.toString()}, scanResult: $scanResult';
+}
+
 /// Beacon Region to use when monitoring for beacons.
 @JsonSerializable(includeIfNull: false, explicitToJson: true)
-class BeaconRegion {
+class BeaconRegion extends Data {
   /// A unique identifier for the beacon region.
   /// Used to distinguish between different regions being monitored.
   String identifier;
@@ -250,6 +338,11 @@ class BeaconRegion {
       minor: minor,
     );
   }
+
+  factory BeaconRegion.fromJson(Map<String, dynamic> json) => FromJsonFactory().fromJson<BeaconRegion>(json);
+
+  @override
+  Map<String, dynamic> toJson() => _$BeaconRegionToJson(this);
 
   @override
   String toString() => '${super.toString()}, Identifier: $identifier, UUID: $uuid, Major: $major, Minor: $minor';
