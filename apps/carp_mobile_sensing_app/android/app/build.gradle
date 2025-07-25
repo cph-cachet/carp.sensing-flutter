@@ -7,10 +7,11 @@ plugins {
 
 android {
     namespace = "dk.cachet.carp_mobile_sensing_app"
-    compileSdk = flutter.compileSdkVersion
-    ndkVersion = flutter.ndkVersion
+    compileSdk = 36
+    ndkVersion = "27.0.12077973"
 
     compileOptions {
+        coreLibraryDesugaringEnabled = true
         sourceCompatibility = JavaVersion.VERSION_1_8
         targetCompatibility = JavaVersion.VERSION_1_8
     }
@@ -41,7 +42,8 @@ android {
 
 dependencies {
     // Use to implement Health Connect. Requires SDK level 34.
-    implementation "androidx.health.connect:connect-client:1.1.0-alpha03"
+    implementation "androidx.health.connect:connect-client:1.1.0-rc02"
+    coreLibraryDesugaring 'com.android.tools:desugar_jdk_libs:2.1.5'
 }
 
 flutter {
