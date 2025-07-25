@@ -98,6 +98,8 @@ class ConnectivitySamplingPackage extends SmartphoneSamplingPackage {
         interval: const Duration(minutes: 10),
         duration: const Duration(seconds: 10),
       ),
+      BeaconRangingPeriodicSamplingConfiguration(
+          beaconDistance: 2, beaconRegions: [])
     ]);
 
     // registering default privacy functions

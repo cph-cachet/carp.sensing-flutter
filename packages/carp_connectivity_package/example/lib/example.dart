@@ -63,7 +63,7 @@ void main() async {
         Measure(
             type: ConnectivitySamplingPackage.BEACON,
             samplingConfiguration: BeaconRangingPeriodicSamplingConfiguration(
-              beaconDistance: 2, // 2 meters
+              beaconDistance: 2,
               beaconRegions: [
                 BeaconRegion(
                   identifier: 'region1',
