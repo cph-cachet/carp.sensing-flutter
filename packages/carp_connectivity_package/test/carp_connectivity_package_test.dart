@@ -68,6 +68,27 @@ void main() {
               ))
         ]),
         phone);
+
+    protocol.addTaskControl(
+        ImmediateTrigger(),
+        BackgroundTask(measures: [
+          Measure(
+              type: ConnectivitySamplingPackage.BEACON,
+              samplingConfiguration: BeaconRangingPeriodicSamplingConfiguration(
+                beaconDistance: 2,
+                beaconRegions: [
+                  BeaconRegion(
+                    identifier: 'region1',
+                    uuid: '12345678-1234-1234-1234-123456789012',
+                  ),
+                  BeaconRegion(
+                    identifier: 'region2',
+                    uuid: '12345678-1234-1234-1234-123456789012',
+                  ),
+                ],
+              ))
+        ]),
+        phone);
   });
 
   test('CAMSStudyProtocol -> JSON', () async {

@@ -12,6 +12,7 @@ This packages supports sampling of the following [`Measure`](https://github.com/
 * `dk.cachet.carp.wifi`
 * `dk.cachet.carp.connectivity`
 * `dk.cachet.carp.bluetooth`
+* `dk.cachet.carp.beacon`
 
 See the [wiki](https://github.com/cph-cachet/carp.sensing-flutter/wiki) for further documentation, particularly on available [measure types](https://github.com/cph-cachet/carp.sensing-flutter/wiki/A.-Measure-Types).
 See the [CARP Mobile Sensing App](https://github.com/cph-cachet/carp.sensing-flutter/tree/master/apps/carp_mobile_sensing_app) for an example of how to build a mobile sensing app in Flutter.
@@ -55,7 +56,7 @@ Add the following to your app's `AndroidManifest.xml` file located in `android/a
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
-
+    <uses-permission android:name="android.permission.ACCESS_BACKGROUND_LOCATION" />
 </manifest>
 ````
 
@@ -70,8 +71,10 @@ and here for the [iOS](https://developer.apple.com/documentation/systemconfigura
 To enable bluetooth tracking, add these permissions in the `Info.plist` file located in `ios/Runner`:
 
 ````xml
+<!-- Bluetooth Privacy -->
+<!-- for iOS 13 + -->
 <key>NSBluetoothAlwaysUsageDescription</key>
-<string>Bluetooth needed</string>
+<string>Reason why app needs bluetooth</string>
 <key>UIBackgroundModes</key>
   <array>
   <string>bluetooth-central</string>
@@ -82,6 +85,21 @@ To enable bluetooth tracking, add these permissions in the `Info.plist` file loc
 ````
 
 > Note that on iOS, it is [impossible to do a general Bluetooth scan when the screen is off or the app is in background](https://developer.apple.com/forums/thread/652592). This will simply result in an empty scan. Hence, bluetooth devices are only collected when the app is in the foreground.
+
+To collect iBeacon measurements, please follow the setup described in the [dchs_flutter_beacon](https://pub.dev/packages/dchs_flutter_beacon) plugin. Especially, for iOS you need permissions to access location information in the `Info.plist` file:
+
+````xml
+<!-- When in use -->
+<key>NSLocationWhenInUseUsageDescription</key>
+<string>Reason why app needs location</string>
+<!-- Always -->
+<!-- for iOS 11 + -->
+<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
+<string>Reason why app needs location</string>
+<!-- for iOS 9/10 -->
+<key>NSLocationAlwaysUsageDescription</key>
+<string>Reason why app needs location</string>
+````
 
 ## Using it
 
@@ -143,4 +161,29 @@ protocol.addTaskControl(
           ))
     ]),
     phone);
+```
+
+If you want to collect iBeacon measurements, you can use a [BeaconRangingPeriodicSamplingConfiguration] to configure the scan. The following example will scan for iBeacons in the specified regions which are closer than 2 meters. The regions are specified by their identifier and UUID. See the [dchs_flutter_beacon](https://pub.dev/packages/dchs_flutter_beacon) plugin for more information on how to set up iBeacon regions.
+
+```dart
+  protocol.addTaskControl(
+      ImmediateTrigger(),
+      BackgroundTask(measures: [
+        Measure(
+            type: ConnectivitySamplingPackage.BEACON,
+            samplingConfiguration: BeaconRangingPeriodicSamplingConfiguration(
+              beaconDistance: 2, 
+              beaconRegions: [
+                BeaconRegion(
+                  identifier: 'region1',
+                  uuid: '12345678-1234-1234-1234-123456789012',
+                ),
+                BeaconRegion(
+                  identifier: 'region2',
+                  uuid: '12345678-1234-1234-1234-123456789012',
+                ),
+              ],
+            ))
+      ]),
+      phone);
 ```

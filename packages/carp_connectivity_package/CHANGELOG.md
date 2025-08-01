@@ -1,3 +1,8 @@
+## 1.9.0
+
+* added support for scanning iBeacons using the [dchs_flutter_beacon](https://pub.dev/packages/dchs_flutter_beacon) plugin
+* use the `BEACON` measure type for collecting `BeaconData` within a set of specific regions as specified in a `BeaconRangingPeriodicSamplingConfiguration`
+
 ## 1.8.1+1
 
 * added `BluetoothScanPeriodicSamplingConfiguration`
