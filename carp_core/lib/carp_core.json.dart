@@ -154,6 +154,7 @@ void _registerFromJsonFunctions() {
     SexInput(value: Sex.Female),
     FullNameInput(),
     AddressInput(),
+    PhoneNumberInput(countryCode: '', number: ''),
     SocialSecurityNumberInput(socialSecurityNumber: '', country: ''),
     InformedConsentInput(name: '', userId: '', consent: '', signatureImage: ''),
     DiagnosisInput(icd11Code: ''),

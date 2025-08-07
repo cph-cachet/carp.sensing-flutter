@@ -300,4 +300,88 @@ void main() {
     expect(task.getUrl('12345-1234', 'ecec573e-442b-4563-8e2c-62b7693011df', 1),
         'https://cans.cachet.dk/portal/playground/studies/ecec573e-442b-4563-8e2c-62b7693011df/settings?participant=12345-1234&trigger_id=1');
   });
+
+  group('InputData - deep assert', () {
+    test('- CustomInput', () async {
+      final dataJson = toJsonString(CustomInput(value: {'key': 'value'}));
+
+      final dataFromJson =
+          CustomInput.fromJson(json.decode(dataJson) as Map<String, dynamic>);
+      print(toJsonString(dataFromJson));
+      expect(toJsonString(dataFromJson), equals(dataJson));
+    });
+
+    test('- SexInput', () async {
+      final dataJson = toJsonString(SexInput(value: Sex.Male));
+
+      final dataFromJson =
+          SexInput.fromJson(json.decode(dataJson) as Map<String, dynamic>);
+      print(toJsonString(dataFromJson));
+      expect(toJsonString(dataFromJson), equals(dataJson));
+    });
+
+    test('- PhoneNumberInput', () async {
+      final dataJson = toJsonString(
+          PhoneNumberInput(countryCode: '+45', number: '12345678'));
+
+      final dataFromJson = PhoneNumberInput.fromJson(
+          json.decode(dataJson) as Map<String, dynamic>);
+      print(toJsonString(dataFromJson));
+      expect(toJsonString(dataFromJson), equals(dataJson));
+    });
+
+    test('- SocialSecurityNumberInput', () async {
+      final dataJson = toJsonString(SocialSecurityNumberInput(
+          country: '45', socialSecurityNumber: '123456-7890'));
+
+      final dataFromJson = SocialSecurityNumberInput.fromJson(
+          json.decode(dataJson) as Map<String, dynamic>);
+      print(toJsonString(dataFromJson));
+      expect(toJsonString(dataFromJson), equals(dataJson));
+    });
+
+    test('- FullNameInput', () async {
+      final dataJson = toJsonString(
+          FullNameInput(firstName: 'John', middleName: 'A.', lastName: 'Doe'));
+
+      final dataFromJson =
+          FullNameInput.fromJson(json.decode(dataJson) as Map<String, dynamic>);
+      print(toJsonString(dataFromJson));
+      expect(toJsonString(dataFromJson), equals(dataJson));
+    });
+
+    test('- AddressInput', () async {
+      final dataJson =
+          toJsonString(AddressInput(street: 'Main St', city: 'Anytown'));
+
+      final dataFromJson =
+          AddressInput.fromJson(json.decode(dataJson) as Map<String, dynamic>);
+      print(toJsonString(dataFromJson));
+      expect(toJsonString(dataFromJson), equals(dataJson));
+    });
+
+    test('- DiagnosisInput', () async {
+      final dataJson =
+          toJsonString(DiagnosisInput(diagnosis: 'Flu', icd11Code: '123456'));
+
+      final dataFromJson = DiagnosisInput.fromJson(
+          json.decode(dataJson) as Map<String, dynamic>);
+      print(toJsonString(dataFromJson));
+      expect(toJsonString(dataFromJson), equals(dataJson));
+    });
+
+    test('- InformedConsentInput', () async {
+      final dataJson = toJsonString(InformedConsentInput(
+        userId: '12345',
+        name: 'John Doe',
+        consent: 'true',
+        signatureImage: 'blob',
+      ));
+
+      final dataFromJson = InformedConsentInput.fromJson(
+          json.decode(dataJson) as Map<String, dynamic>);
+      print(toJsonString(dataFromJson));
+      expect(toJsonString(dataFromJson), equals(dataJson));
+    });
+  });
 }
