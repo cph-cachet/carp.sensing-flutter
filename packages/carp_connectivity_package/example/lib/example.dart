@@ -22,13 +22,13 @@ void main() async {
   protocol.addPrimaryDevice(phone);
 
   // Add an automatic task that immediately starts collecting connectivity,
-  // nearby bluetooth devices, and wifi information.
+  // wifi information, and nearby bluetooth devices.
   protocol.addTaskControl(
       ImmediateTrigger(),
       BackgroundTask(measures: [
         Measure(type: ConnectivitySamplingPackage.CONNECTIVITY),
-        Measure(type: ConnectivitySamplingPackage.BLUETOOTH),
         Measure(type: ConnectivitySamplingPackage.WIFI),
+        Measure(type: ConnectivitySamplingPackage.BLUETOOTH),
       ]),
       phone);
 
@@ -42,8 +42,8 @@ void main() async {
         Measure(
             type: ConnectivitySamplingPackage.BLUETOOTH,
             samplingConfiguration: BluetoothScanPeriodicSamplingConfiguration(
-              interval: const Duration(minutes: 10),
-              duration: const Duration(seconds: 10),
+              interval: const Duration(minutes: 20),
+              duration: const Duration(seconds: 15),
               withRemoteIds: ['123', '456'],
               withServices: ['service1', 'service2'],
             ))

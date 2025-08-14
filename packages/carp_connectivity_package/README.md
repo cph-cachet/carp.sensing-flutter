@@ -84,7 +84,8 @@ To enable bluetooth tracking, add these permissions in the `Info.plist` file loc
 </array>
 ````
 
-> Note that on iOS, it is [impossible to do a general Bluetooth scan when the screen is off or the app is in background](https://developer.apple.com/forums/thread/652592). This will simply result in an empty scan. Hence, bluetooth devices are only collected when the app is in the foreground.
+> [!NOTE]
+> On iOS, it is [impossible to do a general Bluetooth scan when the screen is off or the app is in background](https://developer.apple.com/forums/thread/652592). This will simply result in an empty scan. Hence, bluetooth devices are only collected when the app is in the foreground.
 
 To collect iBeacon measurements, please follow the setup described in the [dchs_flutter_beacon](https://pub.dev/packages/dchs_flutter_beacon) plugin. Especially, for iOS you need permissions to access location information in the `Info.plist` file:
 
@@ -134,13 +135,13 @@ Smartphone phone = Smartphone();
 protocol.addPrimaryDevice(phone);
 
 // Add an automatic task that immediately starts collecting connectivity,
-// nearby bluetooth devices, and wifi information.
+// wifi information, and nearby bluetooth devices.
 protocol.addTaskControl(
     ImmediateTrigger(),
     BackgroundTask(measures: [
       Measure(type: ConnectivitySamplingPackage.CONNECTIVITY),
-      Measure(type: ConnectivitySamplingPackage.BLUETOOTH),
       Measure(type: ConnectivitySamplingPackage.WIFI),
+      Measure(type: ConnectivitySamplingPackage.BLUETOOTH),
     ]),
     phone);
 ```
@@ -154,8 +155,8 @@ protocol.addTaskControl(
       Measure(
           type: ConnectivitySamplingPackage.BLUETOOTH,
           samplingConfiguration: BluetoothScanPeriodicSamplingConfiguration(
-            interval: const Duration(minutes: 10),
-            duration: const Duration(seconds: 10),
+            interval: const Duration(minutes: 20),
+            duration: const Duration(seconds: 15),
             withRemoteIds: ['123', '456'],
             withServices: ['service1', 'service2'],
           ))
@@ -163,7 +164,13 @@ protocol.addTaskControl(
     phone);
 ```
 
-If you want to collect iBeacon measurements, you can use a [BeaconRangingPeriodicSamplingConfiguration] to configure the scan. The following example will scan for iBeacons in the specified regions which are closer than 2 meters. The regions are specified by their identifier and UUID. See the [dchs_flutter_beacon](https://pub.dev/packages/dchs_flutter_beacon) plugin for more information on how to set up iBeacon regions.
+The default configuration scans every 10 minutes for 10 seconds, and does not specify any remote IDs or services.
+
+If you want to collect iBeacon measurements, you need to configure the scanning by setting a [`BeaconRangingPeriodicSamplingConfiguration`](https://pub.dev/documentation/carp_connectivity_package/latest/connectivity/BeaconRangingPeriodicSamplingConfiguration-class.html).
+The following example will scan for iBeacons in the specified regions which are closer than 2 meters. The regions are specified by their identifier and UUID. See the [dchs_flutter_beacon](https://pub.dev/packages/dchs_flutter_beacon) plugin for more information on how to set up iBeacon regions.
+
+> [!NOTE]
+> There is no default sampling configuration for iBeacons. You need to specify at least one region to scan for.
 
 ```dart
   protocol.addTaskControl(

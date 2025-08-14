@@ -246,7 +246,25 @@ class BeaconData extends Data {
   set scanResult(List<BeaconDevice> devices) => _scanResult
       .addEntries(devices.map((device) => MapEntry(device.uuid, device)));
 
+  /// Creates a [BeaconData] instance with the specified region.
   BeaconData({required this.region}) : super();
+
+  /// Creates a [BeaconData] instance from a region and a list of beacons.
+  BeaconData.fromRegionAndBeacons({
+    required this.region,
+    required List<Beacon> beacons,
+  }) : super() {
+    scanResult = beacons
+        .map((beacon) => BeaconDevice(
+              uuid: beacon.proximityUUID,
+              rssi: beacon.rssi,
+              major: beacon.major,
+              minor: beacon.minor,
+              accuracy: beacon.accuracy,
+              proximity: beacon.proximity,
+            ))
+        .toList();
+  }
 
   void addBeaconDevice(BeaconDevice device) =>
       _scanResult[device.uuid] = device;
@@ -299,14 +317,15 @@ class BeaconDevice {
     this.proximity,
   }) : super();
 
-  factory BeaconDevice.fromRegionAndBeacon(Beacon beacon) => BeaconDevice(
-        rssi: beacon.rssi,
-        uuid: beacon.proximityUUID,
-        major: beacon.major,
-        minor: beacon.minor,
-        accuracy: beacon.accuracy,
-        proximity: beacon.proximity,
-      );
+  BeaconDevice.fromRegionAndBeacon(Beacon beacon)
+      : this(
+          rssi: beacon.rssi,
+          uuid: beacon.proximityUUID,
+          major: beacon.major,
+          minor: beacon.minor,
+          accuracy: beacon.accuracy,
+          proximity: beacon.proximity,
+        );
 
   factory BeaconDevice.fromJson(Map<String, dynamic> json) =>
       _$BeaconDeviceFromJson(json);

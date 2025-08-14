@@ -13,16 +13,18 @@ class ConnectivityProbe extends StreamProbe {
   @override
   Future<bool> onStart() async {
     // collect the current connectivity status on sampling start
-    var connectivityStatus = await connectivity.Connectivity().checkConnectivity();
-    addMeasurement(Measurement.fromData(Connectivity.fromConnectivityResult(connectivityStatus)));
+    var connectivityStatus =
+        await connectivity.Connectivity().checkConnectivity();
+    addMeasurement(Measurement.fromData(
+        Connectivity.fromConnectivityResult(connectivityStatus)));
 
     return super.onStart();
   }
 
   @override
-  Stream<Measurement> get stream => connectivity.Connectivity()
-      .onConnectivityChanged
-      .map((event) => Measurement.fromData(Connectivity.fromConnectivityResult(event)));
+  Stream<Measurement> get stream =>
+      connectivity.Connectivity().onConnectivityChanged.map((event) =>
+          Measurement.fromData(Connectivity.fromConnectivityResult(event)));
 }
 
 // This probe requests access to location permissions (both on Android and iOS).
@@ -67,17 +69,24 @@ class BluetoothProbe extends BufferingPeriodicStreamProbe {
   Stream<dynamic> get bufferingStream => FlutterBluePlus.scanResults;
 
   @override
-  Future<Measurement?> getMeasurement() async => _data != null ? Measurement.fromData(_data!) : null;
+  Future<Measurement?> getMeasurement() async =>
+      _data != null ? Measurement.fromData(_data!) : null;
 
   // if a BT-specific sampling configuration is used, we need to
   // extract the services and remoteIds from it so FlutterBluePlus can
   // perform filtered scanning
-  List<Guid> get services => (samplingConfiguration is BluetoothScanPeriodicSamplingConfiguration)
-      ? (samplingConfiguration as BluetoothScanPeriodicSamplingConfiguration).withServices.map((e) => Guid(e)).toList()
+  List<Guid> get services => (samplingConfiguration
+          is BluetoothScanPeriodicSamplingConfiguration)
+      ? (samplingConfiguration as BluetoothScanPeriodicSamplingConfiguration)
+          .withServices
+          .map((e) => Guid(e))
+          .toList()
       : [];
 
-  List<String> get remoteIds => (samplingConfiguration is BluetoothScanPeriodicSamplingConfiguration)
-      ? (samplingConfiguration as BluetoothScanPeriodicSamplingConfiguration).withRemoteIds
+  List<String> get remoteIds => (samplingConfiguration
+          is BluetoothScanPeriodicSamplingConfiguration)
+      ? (samplingConfiguration as BluetoothScanPeriodicSamplingConfiguration)
+          .withRemoteIds
       : [];
 
   @override
@@ -88,7 +97,8 @@ class BluetoothProbe extends BufferingPeriodicStreamProbe {
       FlutterBluePlus.startScan(
         withServices: services,
         withRemoteIds: remoteIds,
-        timeout: samplingConfiguration?.duration ?? const Duration(milliseconds: DEFAULT_TIMEOUT),
+        timeout: samplingConfiguration?.duration ??
+            const Duration(milliseconds: DEFAULT_TIMEOUT),
       );
     } catch (error) {
       FlutterBluePlus.stopScan();
@@ -122,7 +132,10 @@ class BeaconProbe extends StreamProbe {
       super.samplingConfiguration as BeaconRangingPeriodicSamplingConfiguration;
 
   List<Region> get beaconRegions =>
-      samplingConfiguration?.beaconRegions.map((region) => region.toRegion()).toList() ?? [];
+      samplingConfiguration?.beaconRegions
+          .map((region) => region.toRegion())
+          .toList() ??
+      [];
 
   int get beaconDistance => samplingConfiguration?.beaconDistance ?? 2;
 
@@ -130,12 +143,13 @@ class BeaconProbe extends StreamProbe {
   bool onInitialize() {
     super.onInitialize();
     if (beaconRegions.isEmpty) {
-      warning('$runtimeType - No beacon regions specified for monitoring. Will not start monitoring.');
+      warning(
+          '$runtimeType - No beacon regions specified for monitoring. Will not start monitoring.');
       return false;
     }
 
     try {
-      info('$runtimeType - Initializing iBeacon scanning.');
+      info('$runtimeType - Initializing iBeacon scanning...');
       flutterBeacon.initializeScanning.then((_) {
         info('$runtimeType - Initialized.');
         return true;
@@ -152,31 +166,27 @@ class BeaconProbe extends StreamProbe {
 
   @override
   Stream<Measurement> get stream async* {
-    await for (final monitoringResult in flutterBeacon.monitoring(beaconRegions)) {
+    await for (final monitoringResult
+        in flutterBeacon.monitoring(beaconRegions)) {
       if (monitoringResult.monitoringState == MonitoringState.inside) {
-        info('$runtimeType - Entered region: ${monitoringResult.region.identifier}');
+        debug(
+            '$runtimeType - Entered region: ${monitoringResult.region.identifier}');
 
         yield* flutterBeacon.ranging(beaconRegions).map(
           (rangingResult) {
-            final closeBeacons = rangingResult.beacons.where((beacon) => beacon.accuracy <= beaconDistance);
+            final closeBeacons = rangingResult.beacons
+                .where((beacon) => beacon.accuracy <= beaconDistance)
+                .toList();
 
-            return Measurement.fromData(
-              BeaconData(region: rangingResult.region.identifier)
-                ..scanResult = closeBeacons
-                    .map((beacon) => BeaconDevice(
-                          uuid: beacon.proximityUUID,
-                          rssi: beacon.rssi,
-                          major: beacon.major,
-                          minor: beacon.minor,
-                          accuracy: beacon.accuracy,
-                          proximity: beacon.proximity,
-                        ))
-                    .toList(),  
-            );
+            return Measurement.fromData(BeaconData.fromRegionAndBeacons(
+              region: rangingResult.region.identifier,
+              beacons: closeBeacons,
+            ));
           },
         );
       } else if (monitoringResult.monitoringState == MonitoringState.outside) {
-        info('$runtimeType - Exited region: ${monitoringResult.region.identifier}');
+        debug(
+            '$runtimeType - Exited region: ${monitoringResult.region.identifier}');
       }
     }
   }
