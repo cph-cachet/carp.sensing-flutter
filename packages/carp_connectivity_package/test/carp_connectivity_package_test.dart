@@ -15,7 +15,7 @@ void main() {
   setUp(
     () {
       // Initialization of serialization
-      CarpMobileSensing();
+      CarpMobileSensing.ensureInitialized();
 
       // register the context sampling package
       SamplingPackageRegistry().register(ConnectivitySamplingPackage());
@@ -35,7 +35,10 @@ void main() {
       protocol.addTaskControl(
         ImmediateTrigger(),
         BackgroundTask()
-          ..measures = SamplingPackageRegistry().dataTypes.map((type) => Measure(type: type.type)).toList(),
+          ..measures = SamplingPackageRegistry()
+              .dataTypes
+              .map((type) => Measure(type: type.type))
+              .toList(),
         phone,
       );
 
@@ -59,7 +62,8 @@ void main() {
           BackgroundTask(measures: [
             Measure(
                 type: ConnectivitySamplingPackage.BLUETOOTH,
-                samplingConfiguration: BluetoothScanPeriodicSamplingConfiguration(
+                samplingConfiguration:
+                    BluetoothScanPeriodicSamplingConfiguration(
                   interval: const Duration(minutes: 10),
                   duration: const Duration(seconds: 10),
                   withRemoteIds: ['123', '456'],
@@ -101,7 +105,8 @@ void main() {
     print('#1 : $protocol');
     final studyJson = toJsonString(protocol);
 
-    StudyProtocol protocolFromJson = StudyProtocol.fromJson(json.decode(studyJson) as Map<String, dynamic>);
+    StudyProtocol protocolFromJson =
+        StudyProtocol.fromJson(json.decode(studyJson) as Map<String, dynamic>);
     expect(toJsonString(protocolFromJson), equals(studyJson));
     print('#2 : $protocolFromJson');
   });
@@ -110,7 +115,8 @@ void main() {
     // Read the study protocol from json file
     String plainJson = File('test/json/study_protocol.json').readAsStringSync();
 
-    StudyProtocol protocol = StudyProtocol.fromJson(json.decode(plainJson) as Map<String, dynamic>);
+    StudyProtocol protocol =
+        StudyProtocol.fromJson(json.decode(plainJson) as Map<String, dynamic>);
 
     expect(protocol.ownerId, 'alex@uni.dk');
     expect(protocol.primaryDevice.roleName, Smartphone.DEFAULT_ROLE_NAME);
@@ -134,21 +140,23 @@ void main() {
   });
 
   test('Beacon  -> JSON', () async {
-    BeaconData data = BeaconData(region: "TestB1")..addBeaconDevice(
-      BeaconDevice(
-        uuid: 'fda50693-a4e2-4fb1-afcf-c6eb07647825',
-        rssi: -60,
-        proximity: Proximity.near,
-      ),
-    );
-  
+    BeaconData data = BeaconData(region: "TestB1")
+      ..addBeaconDevice(
+        BeaconDevice(
+          uuid: 'fda50693-a4e2-4fb1-afcf-c6eb07647825',
+          rssi: -60,
+          proximity: Proximity.near,
+        ),
+      );
+
     final measurement = Measurement.fromData(data);
 
     print(toJsonString(measurement));
   });
 
   test('Connectivity  -> JSON', () async {
-    Connectivity data = Connectivity()..connectivityStatus = [ConnectivityStatus.bluetooth];
+    Connectivity data = Connectivity()
+      ..connectivityStatus = [ConnectivityStatus.bluetooth];
 
     final measurement = Measurement.fromData(data);
 

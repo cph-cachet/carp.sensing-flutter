@@ -4,6 +4,8 @@
 include: package:flutter_lints/flutter.yaml
 
 analyzer:
+  errors:
+    deprecated_member_use_from_same_package: ignore
   exclude: [build/**]
   language:
     strict-casts: true
@@ -17,3 +19,5 @@ linter:
     depend_on_referenced_packages: true
     avoid_print: false
     use_string_in_part_of_directives: true
+    deprecated_member_use_from_same_package: false
+    
