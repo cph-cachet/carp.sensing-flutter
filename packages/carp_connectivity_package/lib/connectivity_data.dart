@@ -114,6 +114,13 @@ class Bluetooth extends Data {
     }
   }
 
+  void addBluetoothDevicesFromRangingResults(
+    Beacon result,
+    String beaconName,
+  ) {
+    addBluetoothDevice(BluetoothDevice.fromRangingResult(result, beaconName));
+  }
+
   @override
   Function get fromJsonFunction => _$BluetoothFromJson;
   factory Bluetooth.fromJson(Map<String, dynamic> json) =>
@@ -164,6 +171,16 @@ class BluetoothDevice {
         rssi: result.rssi,
       );
 
+  factory BluetoothDevice.fromRangingResult(Beacon result, String beaconName) =>
+      BluetoothDevice(
+        bluetoothDeviceId: beaconName,
+        bluetoothDeviceName: beaconName,
+        connectable: false,
+        txPowerLevel: result.txPower,
+        advertisementName: beaconName,
+        rssi: result.rssi,
+      );
+
   factory BluetoothDevice.fromJson(Map<String, dynamic> json) =>
       _$BluetoothDeviceFromJson(json);
   Map<String, dynamic> toJson() => _$BluetoothDeviceToJson(this);
@@ -210,4 +227,112 @@ class Wifi extends Data {
   @override
   String toString() =>
       '${super.toString()}, SSID: $ssid, BSSID: $bssid, IP: $ip';
+}
+
+/// A [Data] holding information of nearby Beacon devices.
+@JsonSerializable(includeIfNull: false, explicitToJson: true)
+class BeaconData extends Data {
+  static const dataType = ConnectivitySamplingPackage.BEACON;
+
+  /// The unique identifier of the region that this beacon belongs to.
+  String region;
+
+  /// A map of [BeaconDevice] indexed by their UUID to make
+  /// sure that the same device only appears once.
+  final Map<String, BeaconDevice> _scanResult = {};
+
+  /// The list of [BeaconDevice] found in a scan.
+  List<BeaconDevice> get scanResult => _scanResult.values.toList();
+  set scanResult(List<BeaconDevice> devices) => _scanResult
+      .addEntries(devices.map((device) => MapEntry(device.uuid, device)));
+
+  /// Creates a [BeaconData] instance with the specified region.
+  BeaconData({required this.region}) : super();
+
+  /// Creates a [BeaconData] instance from a region and a list of beacons.
+  BeaconData.fromRegionAndBeacons({
+    required this.region,
+    required List<Beacon> beacons,
+  }) : super() {
+    scanResult = beacons
+        .map((beacon) => BeaconDevice(
+              uuid: beacon.proximityUUID,
+              rssi: beacon.rssi,
+              major: beacon.major,
+              minor: beacon.minor,
+              accuracy: beacon.accuracy,
+              proximity: beacon.proximity,
+            ))
+        .toList();
+  }
+
+  void addBeaconDevice(BeaconDevice device) =>
+      _scanResult[device.uuid] = device;
+
+  void addBeaconDevicesFromRangingResults(RangingResult result) {
+    region = result.region.identifier;
+    for (var beacon in result.beacons) {
+      addBeaconDevice(BeaconDevice.fromRegionAndBeacon(beacon));
+    }
+  }
+
+  @override
+  Function get fromJsonFunction => _$BeaconDataFromJson;
+  factory BeaconData.fromJson(Map<String, dynamic> json) =>
+      FromJsonFactory().fromJson<BeaconData>(json);
+  @override
+  Map<String, dynamic> toJson() => _$BeaconDataToJson(this);
+
+  @override
+  String toString() => '${super.toString()}, scanResult: $scanResult';
+}
+
+/// Beacon device data.
+@JsonSerializable(includeIfNull: false, explicitToJson: true)
+class BeaconDevice {
+  /// The proximity UUID of beacon.
+  String uuid;
+
+  /// The RSSI signal strength to the device.
+  int rssi;
+
+  /// Major value (for iBeacon).
+  int? major;
+
+  /// Minor value (for iBeacon).
+  int? minor;
+
+  /// The accuracy of distance of beacon in meter.
+  double? accuracy;
+
+  /// The proximity of beacon.
+  final Proximity? proximity;
+
+  BeaconDevice({
+    required this.rssi,
+    required this.uuid,
+    this.major,
+    this.minor,
+    this.accuracy,
+    this.proximity,
+  }) : super();
+
+  BeaconDevice.fromRegionAndBeacon(Beacon beacon)
+      : this(
+          rssi: beacon.rssi,
+          uuid: beacon.proximityUUID,
+          major: beacon.major,
+          minor: beacon.minor,
+          accuracy: beacon.accuracy,
+          proximity: beacon.proximity,
+        );
+
+  factory BeaconDevice.fromJson(Map<String, dynamic> json) =>
+      _$BeaconDeviceFromJson(json);
+  Map<String, dynamic> toJson() => _$BeaconDeviceToJson(this);
+
+  @override
+  String toString() => '$runtimeType - '
+      ', uuid: $uuid, major: $major, minor: $minor, accuracy: $accuracy'
+      ', rssi: $rssi';
 }

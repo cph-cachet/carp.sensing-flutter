@@ -1,6 +1,6 @@
 {
-  "id": "62c13ff1-cffd-4b18-bc04-58d7b882dd77",
-  "createdOn": "2025-06-03T06:38:28.601596Z",
+  "id": "aec1d280-eb33-4694-a83c-8e356cca3292",
+  "createdOn": "2025-07-25T10:34:06.769594Z",
   "version": 0,
   "ownerId": "alex@uni.dk",
   "name": "Connectivity package test",
@@ -81,6 +81,10 @@
         {
           "__type": "dk.cachet.carp.common.application.tasks.Measure.DataStream",
           "type": "dk.cachet.carp.wifi"
+        },
+        {
+          "__type": "dk.cachet.carp.common.application.tasks.Measure.DataStream",
+          "type": "dk.cachet.carp.beacon"
         }
       ]
     },
@@ -121,6 +125,30 @@
           }
         }
       ]
+    },
+    {
+      "__type": "dk.cachet.carp.common.application.tasks.BackgroundTask",
+      "name": "Task #10",
+      "measures": [
+        {
+          "__type": "dk.cachet.carp.common.application.tasks.Measure.DataStream",
+          "type": "dk.cachet.carp.beacon",
+          "overrideSamplingConfiguration": {
+            "__type": "dk.cachet.carp.common.application.sampling.BeaconRangingPeriodicSamplingConfiguration",
+            "beaconRegions": [
+              {
+                "identifier": "region1",
+                "uuid": "12345678-1234-1234-1234-123456789012"
+              },
+              {
+                "identifier": "region2",
+                "uuid": "12345678-1234-1234-1234-123456789012"
+              }
+            ],
+            "beaconDistance": 2
+          }
+        }
+      ]
     }
   ],
   "triggers": {
@@ -133,6 +161,10 @@
       "sourceDeviceRoleName": "Primary Phone"
     },
     "2": {
+      "__type": "dk.cachet.carp.common.application.triggers.ImmediateTrigger",
+      "sourceDeviceRoleName": "Primary Phone"
+    },
+    "3": {
       "__type": "dk.cachet.carp.common.application.triggers.ImmediateTrigger",
       "sourceDeviceRoleName": "Primary Phone"
     }
@@ -153,6 +185,12 @@
     {
       "triggerId": 2,
       "taskName": "Task #9",
+      "destinationDeviceRoleName": "Primary Phone",
+      "control": "Start"
+    },
+    {
+      "triggerId": 3,
+      "taskName": "Task #10",
       "destinationDeviceRoleName": "Primary Phone",
       "control": "Start"
     }

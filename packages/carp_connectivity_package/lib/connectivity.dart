@@ -7,6 +7,7 @@ library;
 import 'dart:async';
 import 'dart:convert';
 
+import 'package:dchs_flutter_beacon/dchs_flutter_beacon.dart';
 import 'package:flutter_blue_plus/flutter_blue_plus.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:connectivity_plus/connectivity_plus.dart' as connectivity;
